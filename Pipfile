@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[dev-packages]
+ipython = "*"
+twine = "*"
+
+
+[packages]
+"delegator.py" = "*"
+whaaaaat = "*"
+
+
+[requires]
+python_version = "3.5"
