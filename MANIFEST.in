@@ -1,0 +1,4 @@
+include .bumpversion.cfg
+include README.rst
+
+global-exclude *.py[cod] __pycache__ *.so *.dylib
