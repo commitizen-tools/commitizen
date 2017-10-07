@@ -6,9 +6,11 @@ name = "pypi"
 [dev-packages]
 ipython = "*"
 twine = "*"
+bumpversion = "*"
 
 
 [packages]
+
 "delegator.py" = "*"
 whaaaaat = "*"
 
