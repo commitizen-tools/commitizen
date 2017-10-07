@@ -37,18 +37,39 @@ def registered(*args, **kwargs):
     logger.info(_r)
 
 
-def commiter(name=None):
+name = None
+
+
+def commiter():
     """Loaded commitizen.
 
     :rtype: instance of implemented BaseCommitizen
     """
-    if name is None:
-        logger.debug('Loading default commitizen')
-        name = 'cz_angular'
-
+    global name
     return registry[name]()
 
 
+def set_commiter(new_name):
+    global name
+    logger.debug('Updating commiter name')
+    name = new_name
+
+
+def show_example(args):
+    _commiter = commiter()
+    _commiter.show_example()
+
+
+def show_info(args):
+    _commiter = commiter()
+    _commiter.show_info()
+
+
+def show_schema(args):
+    _commiter = commiter()
+    _commiter.show_schema()
+
+
 def run(args):
-    _commiter = commiter(name=args.use_cz)
+    _commiter = commiter()
     _commiter.run()
