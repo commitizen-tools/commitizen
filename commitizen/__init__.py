@@ -1,6 +1,7 @@
 import logging
 import logging.config
 from commitizen.cz import registry
+from commitizen.cz.cz_base import BaseCommitizen  # noqa
 
 
 LOGGING = {
@@ -36,9 +37,18 @@ def registered(*args, **kwargs):
     logger.info(_r)
 
 
-def commiter():
+def commiter(name=None):
     """Loaded commitizen.
 
     :rtype: instance of implemented BaseCommitizen
     """
-    return registry['cz_angular']()
+    if name is None:
+        logger.debug('Loading default commitizen')
+        name = 'cz_angular'
+
+    return registry[name]()
+
+
+def run(args):
+    _commiter = commiter(name=args.use_cz)
+    _commiter.run()

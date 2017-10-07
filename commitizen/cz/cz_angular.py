@@ -11,7 +11,8 @@ class AngularCz(BaseCommitizen):
             {
                 'type': 'list',
                 'name': 'prefix',
-                'message': 'Commit prefix?',
+                'message': ('Select the type of change you are committing: '
+                            '(Use arrow keys)'),
                 'choices': [
                     {
                         'value': 'feat',
