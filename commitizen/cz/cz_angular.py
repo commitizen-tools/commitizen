@@ -11,8 +11,7 @@ class AngularCz(BaseCommitizen):
             {
                 'type': 'list',
                 'name': 'prefix',
-                'message': ('Select the type of change you are committing: '
-                            '(Use arrow keys)'),
+                'message': 'Select the type of change you are committing',
                 'choices': [
                     {
                         'value': 'feat',
@@ -58,25 +57,25 @@ class AngularCz(BaseCommitizen):
                 'type': 'input',
                 'name': 'scope',
                 'message': ('Scope. Could be anything specifying place of the '
-                            'commit change (users, db, poll)')
+                            'commit change (users, db, poll):')
             },
             {
                 'type': 'input',
                 'name': 'subject',
                 'message': ('Subject. Concise description of the changes. '
-                            'Imperative, lower case and no final dot')
+                            'Imperative, lower case and no final dot:')
             },
             {
                 'type': 'input',
                 'name': 'body',
                 'message': ('Body. Motivation for the change and contrast this '
-                            'with previous behavior')
+                            'with previous behavior:')
             },
             {
                 'type': 'input',
                 'name': 'footer',
                 'message': ('Footer. Information about Breaking Changes and '
-                            'reference issues that this commit closes')
+                            'reference issues that this commit closes:')
             }
         ]
         return questions
