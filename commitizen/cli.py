@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 def get_parser(config):
     description = (
-        'Commitizen is a python cli tool to generate conventional commits.\n'
+        'Commitizen is a cli tool to generate conventional commits.\n'
         'For more information about the topic go to '
         'https://conventionalcommits.org/'
     )

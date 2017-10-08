@@ -71,7 +71,7 @@ Usage
 
     usage: cz [-h] [--debug] [-n NAME] {all,commit,c,example,info,schema} ...
 
-    Commitizen is a python cli tool to generate conventional commits.
+    Commitizen is a cli tool to generate conventional commits.
     For more information about the topic go to https://conventionalcommits.org/
 
     optional arguments:
