@@ -2,11 +2,9 @@
 Commitizen
 =============
 
-::
-
     Python 3 command line utility to standardize commit messages
 
-[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square)](https://conventionalcommits.org)
+[!][Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square)](https://conventionalcommits.org)
 
 
 About
@@ -22,6 +20,8 @@ By default it uses `angular guidelines <https://github.com/angular/angular.js/bl
 Installation
 =============
 
+::
+
     pip install commitizen
 
 
@@ -30,13 +30,32 @@ Usage
 
 Run in your terminal
 
+::
+
     cz
 
 Help
 =====
 
+::
 
-    cz --help
+    usage: cz [-h] [--debug] [-n NAME] {all,commit,c,example,info,schema} ...
+
+    Commitizen is a python cli tool to generate conventional commits.
+    For more information about the topic go to https://conventionalcommits.org/
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      --debug               use debug mode
+      -n NAME, --name NAME  use the given commitizen
+
+    commands:
+      {all,commit,c,example,info,schema}
+        all                 show available commitizens
+        commit (c)          create new commit
+        example             show commit example
+        info                show information about the cz
+        schema              show commit schema
 
 Creating a commiter
 ========================
@@ -132,8 +151,9 @@ So at the end we would have
     ├── cz_jira.py
     └── setup.py
 
-And that's it, you can install it without uploading by doing
-:code:`pip install .`
+And that's it, you can install it without uploading to pypi by simply doing
+:code:`pip install .` If you feel like it should be part of the repo, create a
+PR.
 
 
 Todo
