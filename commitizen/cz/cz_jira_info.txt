@@ -1,0 +1,84 @@
+Smart Commits allow repository committers to perform actions such as transitioning JIRA Software
+issues or creating Crucible code reviews by embedding specific commands into their commit messages.
+
+You can:
+* comment on issues
+* record time tracking information against issues
+* transition issues to any status defined in the JIRA Software project's workflow.
+
+There are other actions available if you use Crucible.
+
+Each Smart Commit message must not span more than one line (i.e. you cannot use a carriage return in
+the command), but you can add multiple commands to the same line. See this example below.
+
+Smart Commit commands
+---------------------
+
+The basic command line syntax for a Smart Commit message is:
+
+<ignored text> <ISSUE_KEY> <ignored text> #<COMMAND> <optional COMMAND_ARGUMENTS>
+
+Any text between the issue key and the Smart Commit command is ignored.
+
+There are three Smart Commit commands you can use in your commit messages:
+* comment
+* time
+* transition
+
+
+Comment
+-------
+
+Description
+
+Adds a comment to a JIRA Software issue.
+
+Syntax
+
+<ignored text> ISSUE_KEY <ignored text> #comment <comment_string>
+
+Example
+
+JRA-34 #comment corrected indent issue
+
+Notes
+
+The committer's email address must match the email address of a single JIRA Software user with
+permission to comment on issues in that particular project.
+
+
+Time
+----
+
+Description
+
+Records time tracking information against an issue.
+
+Syntax
+
+<ignored text> ISSUE_KEY <ignored text> #time <value>w <value>d <value>h <value>m <comment_string>
+
+Example
+
+JRA-34 #time 1w 2d 4h 30m Total work logged
+
+
+Workflow transitions
+--------------------
+
+Description
+
+Transitions a JIRA Software issue to a particular workflow state.
+
+Syntax
+
+<ignored text> ISSUE_KEY <ignored text> #<transition_name> <comment_string>
+
+Example
+
+JRA-090 #close Fixed this today
+
+
+More information
+----------------
+https://confluence.atlassian.com/fisheye/using-smart-commits-298976812.html

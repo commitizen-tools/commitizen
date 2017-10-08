@@ -58,25 +58,25 @@ class ConventionalChangelogCz(BaseCommitizen):
                 'type': 'input',
                 'name': 'scope',
                 'message': ('Scope. Could be anything specifying place of the '
-                            'commit change (users, db, poll):')
+                            'commit change (users, db, poll):\n')
             },
             {
                 'type': 'input',
                 'name': 'subject',
                 'message': ('Subject. Concise description of the changes. '
-                            'Imperative, lower case and no final dot:')
+                            'Imperative, lower case and no final dot:\n')
             },
             {
                 'type': 'input',
                 'name': 'body',
                 'message': ('Body. Motivation for the change and contrast this '
-                            'with previous behavior:')
+                            'with previous behavior:\n')
             },
             {
                 'type': 'input',
                 'name': 'footer',
                 'message': ('Footer. Information about Breaking Changes and '
-                            'reference issues that this commit closes:')
+                            'reference issues that this commit closes:\n')
             }
         ]
         return questions

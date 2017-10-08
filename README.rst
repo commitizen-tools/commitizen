@@ -5,6 +5,7 @@ Commitizen
     Python 3 command line utility to standardize commit messages
 
 
+
 .. image:: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square
     :alt: Conventional Commits
     :target: https://conventionalcommits.org
@@ -18,7 +19,7 @@ Commitizen
     :target: https://pypi.org/project/commitizen/
 
 
-.. contents:: Table of Contents
+.. contents::
     :depth: 2
 
 
@@ -36,8 +37,8 @@ Based on `conventional commits <https://conventionalcommits.org/>`_
 Commitizens
 ===========
 
-* `angular's conventional-changelog <https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit>`_
-
+* cz_conventional_changelog: `angular's conventional changelog <https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit>`_
+* cz_jira: `jira smart commits <https://confluence.atlassian.com/fisheye/using-smart-commits-298976812.html>`_
 
 
 Installation

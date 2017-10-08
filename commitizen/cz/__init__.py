@@ -1,6 +1,7 @@
 import importlib
 import pkgutil
 from commitizen.cz.cz_conventional_changelog import ConventionalChangelogCz
+from commitizen.cz.cz_jira import JiraSmartCz
 
 
 registry = {
@@ -11,5 +12,6 @@ registry = {
 }
 
 registry.update({
-    'cz_conventional_changelog': ConventionalChangelogCz
+    'cz_conventional_changelog': ConventionalChangelogCz,
+    'cz_jira': JiraSmartCz
 })
