@@ -83,7 +83,7 @@ Help
 Configuration
 ==============
 
-You can create in your project folder a filled called :code:`.cz`, :code:`.cz.cfg` or in your :code:`setup.cfg`
+You can create in your project folder a file called :code:`.cz`, :code:`.cz.cfg` or in your :code:`setup.cfg`
 or if you want to configure the global default in your user's home folder a :code:`.cz` file
 with the following information:
 
