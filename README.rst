@@ -24,6 +24,8 @@ This client tool prompts the user with information about the commit.
 
 Based on `conventional commits <https://conventionalcommits.org/>`_
 
+.. image:: docs/images/example.png
+    :alt: Example running commitizen
 
 Current commitizens
 ===================
