@@ -40,7 +40,7 @@ Installation
     pip install commitizen
 
 
-Usage
+Commiting
 ======
 
 Run in your terminal
@@ -49,14 +49,14 @@ Run in your terminal
 
     cz commit
 
-or
+or the shortcut
 
 ::
 
     cz c
 
 
-Help
+Usage
 =====
 
 ::
