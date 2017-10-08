@@ -69,7 +69,7 @@ Usage
 
 ::
 
-    usage: cz [-h] [--debug] [-n NAME] {all,commit,c,example,info,schema} ...
+    usage: cz [-h] [--debug] [-n NAME] {ls,commit,c,example,info,schema} ...
 
     Commitizen is a cli tool to generate conventional commits.
     For more information about the topic go to https://conventionalcommits.org/
@@ -80,8 +80,8 @@ Usage
       -n NAME, --name NAME  use the given commitizen
 
     commands:
-      {all,commit,c,example,info,schema}
-        all                 show available commitizens
+      {ls,commit,c,example,info,schema}
+        ls                 show available commitizens
         commit (c)          create new commit
         example             show commit example
         info                show information about the cz

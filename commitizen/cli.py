@@ -30,8 +30,8 @@ def get_parser(config):
     subparser = parser.add_subparsers(title='commands')
     # subparser.add_argument('--debug', default=False)
 
-    allcz = subparser.add_parser('all', help='show available commitizens')
-    allcz.set_defaults(func=registered)
+    lscz = subparser.add_parser('ls', help='show available commitizens')
+    lscz.set_defaults(func=registered)
 
     commit = subparser.add_parser('commit', aliases=['c'],
                                   help='create new commit')
