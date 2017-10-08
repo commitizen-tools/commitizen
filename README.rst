@@ -37,8 +37,16 @@ Based on `conventional commits <https://conventionalcommits.org/>`_
 Commitizens
 ===========
 
+These are the available commiting styles by default:
+
 * cz_conventional_changelog: `angular's conventional changelog <https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit>`_
 * cz_jira: `jira smart commits <https://confluence.atlassian.com/fisheye/using-smart-commits-298976812.html>`_
+
+
+The installed ones can be checked with:
+
+::
+    cz ls
 
 
 Installation
