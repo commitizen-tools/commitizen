@@ -1,6 +1,6 @@
 import importlib
 import pkgutil
-from commitizen.cz.cz_angular import AngularCz
+from commitizen.cz.cz_conventional_changelog import ConventionalChangelogCz
 
 
 registry = {
@@ -11,5 +11,5 @@ registry = {
 }
 
 registry.update({
-    'cz_angular': AngularCz
+    'cz_conventional_changelog': ConventionalChangelogCz
 })

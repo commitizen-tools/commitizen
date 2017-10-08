@@ -2,10 +2,10 @@ import os
 from commitizen.cz.cz_base import BaseCommitizen
 
 
-__all__ = ['AngularCz']
+__all__ = ['ConventionalChangelogCz']
 
 
-class AngularCz(BaseCommitizen):
+class ConventionalChangelogCz(BaseCommitizen):
 
     def questions(self):
         questions = [
@@ -120,7 +120,7 @@ class AngularCz(BaseCommitizen):
 
     def info(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        filepath = os.path.join(dir_path, 'cz_angular_info.txt')
+        filepath = os.path.join(dir_path, 'cz_conventional_changelog_info.txt')
         with open(filepath, 'r') as f:
             content = f.read()
         return content

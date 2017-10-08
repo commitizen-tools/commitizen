@@ -36,7 +36,7 @@ Based on `conventional commits <https://conventionalcommits.org/>`_
 Commitizens
 ===========
 
-* `angular guidelines <https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit>`_
+* `angular's conventional-changelog <https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit>`_
 
 
 

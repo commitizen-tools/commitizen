@@ -51,7 +51,7 @@ def get_parser(config):
 
 def load_cfg():
     defaults = {
-        'name': 'cz_angular'
+        'name': 'cz_conventional_changelog'
     }
     config = RawConfigParser('')
 
