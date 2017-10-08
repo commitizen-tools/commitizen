@@ -4,8 +4,18 @@ Commitizen
 
     Python 3 command line utility to standardize commit messages
 
-[!][Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square)](https://conventionalcommits.org)
 
+.. |conventional-commits| image:: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square
+    :alt: Conventional Commits
+    :target: https://conventionalcommits.org
+
+.. |version| image:: https://img.shields.io/pypi/v/commitizen.svg?style=flat-square
+    :alt: PyPI Package latest release
+    :target: https://pypi.org/project/commitizen/
+
+.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/commitizen.svg?style=flat-square
+    :alt: Supported versions
+    :target: https://pypi.org/project/commitizen/
 
 About
 =======
@@ -14,7 +24,12 @@ This client tool prompts the user with information about the commit.
 
 Based on `conventional commits <https://conventionalcommits.org/>`_
 
-By default it uses `angular guidelines <https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit>`_
+
+Current commitizens
+===================
+
+`angular guidelines <https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit>`_
+
 
 
 Installation
@@ -32,7 +47,14 @@ Run in your terminal
 
 ::
 
-    cz
+    cz commit
+
+or
+
+::
+
+    cz c
+
 
 Help
 =====
@@ -56,6 +78,20 @@ Help
         example             show commit example
         info                show information about the cz
         schema              show commit schema
+
+
+Configuration
+==============
+
+You can create in your project folder a filled called :code:`.cz`, :code:`.cz.cfg` or in your :code:`setup.cfg`
+or if you want to configure the global default in your user's home folder a :code:`.cz` file
+with the following information:
+
+::
+
+    [commitizen]
+    name = cz_angular
+
 
 Creating a commiter
 ========================
