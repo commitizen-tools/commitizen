@@ -46,6 +46,7 @@ These are the available commiting styles by default:
 The installed ones can be checked with:
 
 ::
+
     cz ls
 
 
