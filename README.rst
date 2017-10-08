@@ -5,15 +5,15 @@ Commitizen
     Python 3 command line utility to standardize commit messages
 
 
-.. |conventional-commits| image:: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square
+.. image:: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square
     :alt: Conventional Commits
     :target: https://conventionalcommits.org
 
-.. |version| image:: https://img.shields.io/pypi/v/commitizen.svg?style=flat-square
+.. image:: https://img.shields.io/pypi/v/commitizen.svg?style=flat-square
     :alt: PyPI Package latest release
     :target: https://pypi.org/project/commitizen/
 
-.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/commitizen.svg?style=flat-square
+..  image:: https://img.shields.io/pypi/pyversions/commitizen.svg?style=flat-square
     :alt: Supported versions
     :target: https://pypi.org/project/commitizen/
 
@@ -181,7 +181,7 @@ The next file required is :code:`setup.py` modified from flask version
 
 So at the end we would have
 
-.. code-block::
+::
 
     .
     ├── cz_jira.py
