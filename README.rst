@@ -17,6 +17,11 @@ Commitizen
     :alt: Supported versions
     :target: https://pypi.org/project/commitizen/
 
+
+.. contents:: Table of Contents
+    :depth: 2
+
+
 About
 =======
 
@@ -27,10 +32,11 @@ Based on `conventional commits <https://conventionalcommits.org/>`_
 .. image:: docs/images/example.png
     :alt: Example running commitizen
 
-Current commitizens
-===================
 
-`angular guidelines <https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit>`_
+Commitizens
+===========
+
+* `angular guidelines <https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit>`_
 
 
 
@@ -43,7 +49,7 @@ Installation
 
 
 Commiting
-======
+=========
 
 Run in your terminal
 
