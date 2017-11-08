@@ -96,4 +96,5 @@ setup(
     cmdclass={
         'upload': UploadCommand,
     },
+    python_requires='>=3.4'
 )
