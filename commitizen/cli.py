@@ -1,14 +1,21 @@
-import os
 import io
+import os
+import sys
 import logging
 import argparse
-from pathlib import Path
 from configparser import RawConfigParser
 from commitizen import (registered, run, set_commiter, show_example,
                         show_info, show_schema)
 
 
+req_version = (3, )
+cur_version = sys.version_info
 logger = logging.getLogger(__name__)
+
+if cur_version > req_version:
+    from pathlib import Path
+else:
+    from pathlib2 import Path
 
 
 def get_parser(config):
@@ -33,8 +40,13 @@ def get_parser(config):
     lscz = subparser.add_parser('ls', help='show available commitizens')
     lscz.set_defaults(func=registered)
 
-    commit = subparser.add_parser('commit', aliases=['c'],
-                                  help='create new commit')
+    if cur_version > req_version:
+        commit = subparser.add_parser('commit', aliases=['c'],
+                                      help='create new commit')
+    else:
+        commit = subparser.add_parser('commit', help='create new commit')
+        commit = subparser.add_parser('c', help='alias for commit')
+
     commit.set_defaults(func=run)
 
     example = subparser.add_parser('example', help='show commit example')

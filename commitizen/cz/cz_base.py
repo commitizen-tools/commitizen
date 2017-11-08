@@ -3,6 +3,7 @@ import sys
 import logging
 import delegator
 from abc import ABCMeta, abstractmethod
+from future.utils import with_metaclass
 from tempfile import NamedTemporaryFile
 from whaaaaat import style_from_dict, Token, prompt
 
@@ -10,7 +11,7 @@ from whaaaaat import style_from_dict, Token, prompt
 logger = logging.getLogger(__name__)
 
 
-class BaseCommitizen(metaclass=ABCMeta):
+class BaseCommitizen(with_metaclass(ABCMeta)):
 
     style = style_from_dict({
         Token.Separator: '#6C6C6C',
