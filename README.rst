@@ -5,7 +5,6 @@ Commitizen
     Python 3 command line utility to standardize commit messages
 
 
-
 .. image:: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square
     :alt: Conventional Commits
     :target: https://conventionalcommits.org
@@ -33,6 +32,20 @@ Based on `conventional commits <https://conventionalcommits.org/>`_
 .. image:: docs/images/example.png
     :alt: Example running commitizen
 
+This is an example of how the git messages history would look like:
+
+::
+
+    docs: improved commitizens tab in readme
+    feat(cz): jira smart commits
+    refactor(cli): renamed all to ls command
+    refactor(cz): renamed angular cz to conventional changelog cz
+    feat: info command for angular
+    docs(README): added badges
+    docs(LICENSE): new one
+    docs(README): added about, installation, creating, etc
+    chore(bumpversion): configured and added as dev dep
+    feat(config): new loads from ~/.cz and working project .cz .cz.cfg and setup.cfg
 
 Commitizens
 ===========
@@ -108,7 +121,7 @@ with the following information:
 ::
 
     [commitizen]
-    name = cz_angular
+    name = cz_conventional_changelog
 
 
 Creating a commiter
