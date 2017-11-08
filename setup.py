@@ -18,7 +18,10 @@ URL = 'https://github.com/woile/commitizen'
 EMAIL = 'santiwilly@gmail.com'
 AUTHOR = 'Santiago Fraire'
 REQUIRED = [
-    'delegator.py', 'whaaaaat'
+    'delegator.py', 'whaaaaat',
+    'pathlib2; python_version < "3.4"',
+    'future; python_version < "3.4"',
+    'configparser; python_version < "3.5"'
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -55,8 +58,8 @@ class UploadCommand(Command):
         except OSError:
             pass
 
-        self.status('Building Source and Wheel (py3) distribution…')
-        os.system('{0} setup.py sdist bdist_wheel'.format(sys.executable))
+        self.status('Building Source and Wheel (universal) distribution…')
+        os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
 
         self.status('Uploading the package to PyPi via Twine…')
         os.system('twine upload dist/*')
@@ -84,7 +87,7 @@ setup(
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3 :: Only',
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
@@ -95,6 +98,5 @@ setup(
     # $ setup.py publish support.
     cmdclass={
         'upload': UploadCommand,
-    },
-    python_requires='>=3.4'
+    }
 )
