@@ -222,6 +222,16 @@ And that's it, you can install it without uploading to pypi by simply doing
 :code:`pip install .` If you feel like it should be part of the repo, create a
 PR.
 
+Python 2 support
+=================
+
+Support for the old version of python (python 2) is limited, there are some
+things that won't work, like aliases of commands, so, to commit run:
+
+::
+
+    cz commit
+
 
 Todo
 ====
