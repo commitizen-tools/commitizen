@@ -63,7 +63,7 @@ def get_parser(config):
 
 def load_cfg():
     defaults = {
-        'name': 'cz_conventional_changelog'
+        'name': 'cz_conventional_commits'
     }
     config = RawConfigParser('')
 

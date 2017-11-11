@@ -52,7 +52,7 @@ Commitizens
 
 These are the available commiting styles by default:
 
-* cz_conventional_changelog: `angular's conventional changelog <https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit>`_
+* cz_conventional_commits: `conventional commits <https://conventionalcommits.org/>`_
 * cz_jira: `jira smart commits <https://confluence.atlassian.com/fisheye/using-smart-commits-298976812.html>`_
 
 
@@ -121,7 +121,7 @@ with the following information:
 ::
 
     [commitizen]
-    name = cz_conventional_changelog
+    name = cz_conventional_commits
 
 
 Creating a commiter

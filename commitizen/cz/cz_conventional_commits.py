@@ -2,10 +2,10 @@ import os
 from commitizen.cz.cz_base import BaseCommitizen
 
 
-__all__ = ['ConventionalChangelogCz']
+__all__ = ['ConventionalCommitsCz']
 
 
-class ConventionalChangelogCz(BaseCommitizen):
+class ConventionalCommitsCz(BaseCommitizen):
 
     def questions(self):
         questions = [
@@ -120,7 +120,7 @@ class ConventionalChangelogCz(BaseCommitizen):
 
     def info(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        filepath = os.path.join(dir_path, 'cz_conventional_changelog_info.txt')
+        filepath = os.path.join(dir_path, 'cz_conventional_commits_info.txt')
         with open(filepath, 'r') as f:
             content = f.read()
         return content
