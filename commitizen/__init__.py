@@ -1,3 +1,4 @@
+import sys
 import logging
 import logging.config
 from commitizen.cz import registry
@@ -46,7 +47,15 @@ def commiter():
     :rtype: instance of implemented BaseCommitizen
     """
     global name
-    return registry[name]()
+    try:
+        _cz = registry[name]()
+    except KeyError:
+        msg_error = ('The commiter has not been found in the system.\n\n'
+                     'Try running \'pip install {name}\'\n')
+        logger.info(msg_error.format(name=name))
+        sys.exit(1)
+    else:
+        return _cz
 
 
 def set_commiter(new_name):

@@ -18,9 +18,8 @@ URL = 'https://github.com/woile/commitizen'
 EMAIL = 'santiwilly@gmail.com'
 AUTHOR = 'Santiago Fraire'
 REQUIRED = [
-    'delegator.py', 'whaaaaat',
+    'delegator.py', 'whaaaaat', 'future',
     'pathlib2; python_version < "3.4"',
-    'future; python_version < "3.4"',
     'configparser; python_version < "3.5"'
 ]
 
