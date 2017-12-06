@@ -21,6 +21,12 @@ Commitizen
 .. contents::
     :depth: 2
 
+Motivation
+==========
+
+Creating a tool that allowed each project to define their own commiting rules. 
+Making it easy for teams to be consistent with the commiting rules of each project.
+
 
 About
 =======
