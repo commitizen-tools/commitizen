@@ -5,6 +5,14 @@ from commitizen.cz.cz_base import BaseCommitizen
 __all__ = ['ConventionalCommitsCz']
 
 
+def parse_scope(text=None):
+    if text is None:
+        return None
+    text = text.strip().title().split()
+    text[0] = text[0].lower()
+    return ''.join(text)
+
+
 class ConventionalCommitsCz(BaseCommitizen):
 
     def questions(self):
@@ -90,12 +98,12 @@ class ConventionalCommitsCz(BaseCommitizen):
         message = ''
 
         if prefix:
-            message += '{0}'.format(prefix)
+            message += '{0}'.format(prefix.lower().strip('.').strip())
             if scope:
-                message += '({0})'.format(scope)
+                message += '({0})'.format(parse_scope(scope))
             message += ': '
         if subject:
-            message += '{0}'.format(subject)
+            message += '{0}'.format(subject.lower().strip('.').strip())
         if body:
             message += '\n\n{0}'.format(body)
         if footer:
