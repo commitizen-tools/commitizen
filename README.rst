@@ -21,14 +21,25 @@ Commitizen
 .. contents::
     :depth: 2
 
-Motivation
+About
 ==========
 
-Creating a tool that allowed each project to define their own commiting rules. 
-Making it easy for teams to be consistent with the commiting rules of each project.
+This is an interactive tool to commit based on some rules (like conventional commits).
+
+It comes with some defaults commit styles, like jira, conventional commits, etc, and it's easily extendable.
+
+It's useful for teams, because it is possible to standardize the commiting style.
 
 
-About
+Installation
+=============
+
+::
+
+    pip install commitizen
+
+
+Info
 =======
 
 This client tool prompts the user with information about the commit.
@@ -68,13 +79,6 @@ The installed ones can be checked with:
 
     cz ls
 
-
-Installation
-=============
-
-::
-
-    pip install commitizen
 
 
 Commiting
