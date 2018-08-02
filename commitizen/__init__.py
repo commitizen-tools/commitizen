@@ -3,6 +3,7 @@ import logging
 import logging.config
 from commitizen.cz import registry
 from commitizen.cz.cz_base import BaseCommitizen  # noqa
+from commitizen.__version__ import __version__
 
 
 LOGGING = {
@@ -82,3 +83,7 @@ def show_schema(args):
 def run(args):
     _commiter = commiter()
     _commiter.run()
+
+
+def version():
+    logger.info(__version__)

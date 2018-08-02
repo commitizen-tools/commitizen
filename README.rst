@@ -102,19 +102,21 @@ Usage
 
 ::
 
-    usage: cz [-h] [--debug] [-n NAME] {ls,commit,c,example,info,schema} ...
+    usage: cz [-h] [--debug] [-n NAME] [--version]
+            {ls,commit,c,example,info,schema} ...
 
     Commitizen is a cli tool to generate conventional commits.
     For more information about the topic go to https://conventionalcommits.org/
 
     optional arguments:
-      -h, --help            show this help message and exit
-      --debug               use debug mode
-      -n NAME, --name NAME  use the given commitizen
+    -h, --help            show this help message and exit
+    --debug               use debug mode
+    -n NAME, --name NAME  use the given commitizen
+    --version             get the version of the installed commitizen
 
     commands:
-      {ls,commit,c,example,info,schema}
-        ls                 show available commitizens
+    {ls,commit,c,example,info,schema}
+        ls                  show available commitizens
         commit (c)          create new commit
         example             show commit example
         info                show information about the cz
