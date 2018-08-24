@@ -78,8 +78,11 @@ def get_parser(config):
 def load_cfg():
     defaults = {"name": "cz_conventional_commits"}
     config = RawConfigParser("")
+    try:
+        home = str(Path.home())
+    except AttributeError:
+        home = os.path.expanduser("~")
 
-    home = str(Path.home())
     config_file = ".cz"
 
     # load cfg from home folder
