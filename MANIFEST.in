@@ -1,5 +1,5 @@
 include .bumpversion.cfg
 include README.rst
 include LICENSE
-
+include commitizen/cz/*.txt
 global-exclude *.py[cod] __pycache__ *.so *.dylib
