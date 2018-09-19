@@ -5,11 +5,10 @@ from commitizen.cz.cz_base import BaseCommitizen
 __all__ = ['ConventionalCommitsCz']
 
 
-def parse_scope(text=None):
-    if text is None:
-        return None
+def parse_scope(text):
+    init_char = text[0]
     text = text.strip().title().split()
-    text[0] = text[0].lower()
+    text[0] = init_char
     return ''.join(text)
 
 
@@ -60,19 +59,21 @@ class ConventionalCommitsCz(BaseCommitizen):
                                  'auxiliary tools and libraries such as '
                                  'documentation generation'),
                     },
-                ]
+                ],
             },
             {
                 'type': 'input',
                 'name': 'scope',
                 'message': ('Scope. Could be anything specifying place of the '
-                            'commit change (users, db, poll):\n')
+                            'commit change (users, db, poll):\n'),
+                'filter': parse_scope
             },
             {
                 'type': 'input',
                 'name': 'subject',
                 'message': ('Subject. Concise description of the changes. '
-                            'Imperative, lower case and no final dot:\n')
+                            'Imperative, lower case and no final dot:\n'),
+                'filter': lambda value: value.lower().strip('.').strip()
             },
             {
                 'type': 'input',
@@ -98,12 +99,12 @@ class ConventionalCommitsCz(BaseCommitizen):
         message = ''
 
         if prefix:
-            message += '{0}'.format(prefix.lower().strip('.').strip())
+            message += '{0}'.format(prefix)
             if scope:
-                message += '({0})'.format(parse_scope(scope))
+                message += '({0})'.format(scope)
             message += ': '
         if subject:
-            message += '{0}'.format(subject.lower().strip('.').strip())
+            message += '{0}'.format(subject)
         if body:
             message += '\n\n{0}'.format(body)
         if footer:
