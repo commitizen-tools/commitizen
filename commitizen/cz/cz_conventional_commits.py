@@ -8,7 +8,7 @@ __all__ = ['ConventionalCommitsCz']
 def parse_scope(text):
     init_char = text[0]
     text = text.strip().title().split()
-    text[0] = init_char
+    text = init_char + text[1:]
     return ''.join(text)
 
 
