@@ -3,7 +3,7 @@ import os
 import sys
 import logging
 import argparse
-from configparser import RawConfigParser
+from configparser import RawConfigParser, NoSectionError
 from commitizen import (
     registered,
     run,
@@ -84,29 +84,27 @@ def load_cfg():
         home = os.path.expanduser("~")
 
     config_file = ".cz"
-
-    # load cfg from home folder
     global_cfg = os.path.join(home, config_file)
-    if os.path.exists(global_cfg):
-        config.readfp(io.open(global_cfg, "rt", encoding="utf-8"))
-        log_config = io.StringIO()
-        config.write(log_config)
-        defaults.update(dict(config.items("commitizen")))
 
     # load cfg from current project
-    configs = ["setup.cfg", ".cz.cfg"]
+    configs = ["setup.cfg", ".cz.cfg", config_file, global_cfg]
     for cfg in configs:
         if not os.path.exists(config_file) and os.path.exists(cfg):
             config_file = cfg
             break
 
-    config_file_exists = os.path.exists(config_file)
-    if config_file_exists:
-        logger.debug('Reading file "%s"', config_file)
-        config.readfp(io.open(config_file, "rt", encoding="utf-8"))
-        log_config = io.StringIO()
-        config.write(log_config)
-        defaults.update(dict(config.items("commitizen")))
+        config_file_exists = os.path.exists(config_file)
+        if config_file_exists:
+            logger.debug('Reading file "%s"', config_file)
+            config.readfp(io.open(config_file, "rt", encoding="utf-8"))
+            log_config = io.StringIO()
+            config.write(log_config)
+            try:
+                defaults.update(dict(config.items("commitizen")))
+                break
+            except NoSectionError:
+                # The file does not have commitizen section
+                continue
 
     return defaults
 
