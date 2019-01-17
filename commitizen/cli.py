@@ -3,6 +3,7 @@ import os
 import sys
 import logging
 import argparse
+from pathlib import Path
 from configparser import RawConfigParser, NoSectionError
 from commitizen import (
     registered,
@@ -15,14 +16,7 @@ from commitizen import (
 )
 
 
-req_version = (3,)
-cur_version = sys.version_info
 logger = logging.getLogger(__name__)
-
-if cur_version > req_version:
-    from pathlib import Path
-else:
-    from pathlib2 import Path
 
 
 def get_parser(config):
@@ -55,12 +49,7 @@ def get_parser(config):
     lscz = subparser.add_parser("ls", help="show available commitizens")
     lscz.set_defaults(func=registered)
 
-    if cur_version > req_version:
-        commit = subparser.add_parser("commit", aliases=["c"], help="create new commit")
-    else:
-        commit = subparser.add_parser("commit", help="create new commit")
-        commit = subparser.add_parser("c", help="alias for commit")
-
+    commit = subparser.add_parser("commit", aliases=["c"], help="create new commit")
     commit.set_defaults(func=run)
 
     example = subparser.add_parser("example", help="show commit example")
@@ -78,10 +67,7 @@ def get_parser(config):
 def load_cfg():
     defaults = {"name": "cz_conventional_commits"}
     config = RawConfigParser("")
-    try:
-        home = str(Path.home())
-    except AttributeError:
-        home = os.path.expanduser("~")
+    home = str(Path.home())
 
     config_file = ".cz"
     global_cfg = os.path.join(home, config_file)

@@ -46,7 +46,7 @@ This client tool prompts the user with information about the commit.
 
 Based on `conventional commits <https://conventionalcommits.org/>`_
 
-.. image:: docs/images/example.png
+.. image:: docs/images/demo.gif
     :alt: Example running commitizen
 
 This is an example of how the git messages history would look like:
@@ -245,8 +245,17 @@ things that won't work, like aliases of commands, so, to commit run:
     cz commit
 
 
-Todo
-====
+Contributing
+============
 
-- [ ] auto changelog integration
-- [ ] tests
+
+1. Clone the repo.
+2. Add your modifications
+3. Run :code:`python setup.py test --pytest-args --cov=./commitizen`
+
+
+Testing
+========
+
+
+    pytest -s --cov-report term-missing --cov=commitizen tests/

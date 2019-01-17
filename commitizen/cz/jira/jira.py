@@ -1,17 +1,17 @@
 import os
-from commitizen.cz.cz_base import BaseCommitizen
-from whaaaaat import Validator, ValidationError
+from commitizen.cz.base import BaseCommitizen
+# from whaaaaat import Validator, ValidationError
 
 
 __all__ = ['JiraSmartCz']
 
 
-class RequiredValidator(Validator):
-    def validate(self, document, *args, **kwargs):
-        if not document.text:
-            raise ValidationError(
-                message='This field is required',
-                cursor_position=len(document.text))
+# class RequiredValidator(Validator):
+#     def validate(self, document, *args, **kwargs):
+#         if not document.text:
+#             raise ValidationError(
+#                 message='This field is required',
+#                 cursor_position=len(document.text))
 
 
 class JiraSmartCz(BaseCommitizen):
@@ -22,14 +22,14 @@ class JiraSmartCz(BaseCommitizen):
                 'type': 'input',
                 'name': 'message',
                 'message': 'Git commit message (required):\n',
-                'validate': RequiredValidator,
+                # 'validate': RequiredValidator,
                 'filter': lambda x: x.strip()
             },
             {
                 'type': 'input',
                 'name': 'issues',
                 'message': 'Jira Issue ID(s) separated by spaces (required):\n',
-                'validate': RequiredValidator,
+                # 'validate': RequiredValidator,
                 'filter': lambda x: x.strip()
             },
             {
@@ -71,7 +71,7 @@ class JiraSmartCz(BaseCommitizen):
 
     def info(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        filepath = os.path.join(dir_path, 'cz_jira_info.txt')
+        filepath = os.path.join(dir_path, 'jira_info.txt')
         with open(filepath, 'r') as f:
             content = f.read()
         return content
