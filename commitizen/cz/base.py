@@ -3,25 +3,13 @@ import sys
 import logging
 import delegator
 from abc import ABCMeta, abstractmethod
-from future.utils import with_metaclass
 from tempfile import NamedTemporaryFile
-from whaaaaat import style_from_dict, Token, prompt
-
+from questionary import prompt
 
 logger = logging.getLogger(__name__)
 
 
-class BaseCommitizen(with_metaclass(ABCMeta)):
-
-    style = style_from_dict({
-        Token.Separator: '#6C6C6C',
-        Token.QuestionMark: '#FF9D00 bold',
-        Token.Selected: '#5F819D',
-        Token.Pointer: '#FF9D00 bold',
-        Token.Instruction: '',  # default
-        Token.Answer: '#5F819D bold',
-        Token.Question: '',
-    })
+class BaseCommitizen(metaclass=ABCMeta):
 
     @abstractmethod
     def questions(self):
@@ -86,7 +74,7 @@ class BaseCommitizen(with_metaclass(ABCMeta)):
 
     def run(self, *args, **kwargs):
         questions = self.questions()
-        answers = prompt(questions, style=self.style)
+        answers = prompt(questions)
         logger.debug('Answers:\n %s', answers)
         m = self.message(answers)
         logger.debug('Commit message generated:\n %s', m)

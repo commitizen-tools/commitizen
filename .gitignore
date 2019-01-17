@@ -45,6 +45,7 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
+.pytest_cache
 
 # Translations
 *.mo
@@ -104,3 +105,6 @@ venv.bak/
 .mypy_cache/
 
 .vscode/
+
+# build
+poetry.lock

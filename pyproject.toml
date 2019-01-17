@@ -1,0 +1,56 @@
+[tool.black]
+line-length = 88
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  # The following are specific to Black, you probably don't want those.
+  | blib2to3
+  | tests/data
+  | profiling
+)/
+'''
+
+[tool.poetry]
+name = "commitizen"
+version = "0.9.11"
+description = "Python commitizen client tool"
+authors = ["Santiago Fraire <santiwilly@gmail.com>"]
+license = "MIT"
+keywords = ["commitizen", "conventional", "commits", "git"]
+readme = "README.rst"
+homepage = "https://github.com/woile/commitizen"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: Implementation :: CPython",
+]
+
+[tool.poetry.dependencies]
+python = ">3.6"
+questionary = "^1.0"
+"delegator.py" = "^0.1.1"
+
+[tool.poetry.dev-dependencies]
+ipython = "^7.2"
+bumpversion = "^0.5.3"
+black = "^18.3-alpha.0"
+pytest = "^4.0"
+flake8 = "^3.6"
+pytest-cov = "^2.6"
+
+[tool.poetry.scripts]
+cz = "commitizen.cli:main"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
