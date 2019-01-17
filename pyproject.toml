@@ -21,7 +21,7 @@ exclude = '''
 
 [tool.poetry]
 name = "commitizen"
-version = "0.9.11"
+version = "1.0.0b1"
 description = "Python commitizen client tool"
 authors = ["Santiago Fraire <santiwilly@gmail.com>"]
 license = "MIT"

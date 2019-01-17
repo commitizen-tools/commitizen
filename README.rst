@@ -46,7 +46,7 @@ This client tool prompts the user with information about the commit.
 
 Based on `conventional commits <https://conventionalcommits.org/>`_
 
-.. image:: docs/images/example.png
+.. image:: docs/images/demo.gif
     :alt: Example running commitizen
 
 This is an example of how the git messages history would look like:
