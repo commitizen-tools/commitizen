@@ -258,10 +258,5 @@ Contributing
 
 1. Clone the repo.
 2. Add your modifications
-3. Run :code:`python setup.py test --pytest-args --cov=./commitizen`
-
-
-Testing
-========
-
-    pytest -s --cov-report term-missing --cov=commitizen tests/
+3. Create a virtualenv
+4. Run :code:`pytest -s --cov-report term-missing --cov=commitizen tests/`
