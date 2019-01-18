@@ -2,6 +2,7 @@ import sys
 import logging
 import logging.config
 from commitizen.cz import registry
+from commitizen.cz.base import BaseCommitizen  # noqa
 from commitizen.__version__ import __version__
 
 

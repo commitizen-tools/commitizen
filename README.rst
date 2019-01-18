@@ -17,16 +17,23 @@ Commitizen
     :alt: Supported versions
     :target: https://pypi.org/project/commitizen/
 
+.. image:: docs/images/demo.gif
+    :alt: Example running commitizen
 
 .. contents::
     :depth: 2
+
+.. warning::
+
+    Beta is available and has support only for python 3
+
 
 About
 ==========
 
 This is an interactive tool to commit based on some rules (like conventional commits).
 
-It comes with some defaults commit styles, like jira, conventional commits, etc, and it's easily extendable.
+It comes with some defaults commit styles, like conventional commits and jira and it's easily extendable.
 
 It's useful for teams, because it is possible to standardize the commiting style.
 
@@ -39,29 +46,33 @@ Installation
     pip install commitizen
 
 
-Info
-=======
+For beta
+
+::
+
+    sudo pip3 install -U commitizen --pre
+
+
+Information
+===========
 
 This client tool prompts the user with information about the commit.
 
 Based on `conventional commits <https://conventionalcommits.org/>`_
 
-.. image:: docs/images/demo.gif
-    :alt: Example running commitizen
-
 This is an example of how the git messages history would look like:
 
 ::
 
+    BREAKING CHANGE: command send has been removed
+    fix: minor typos in code
+    feat: new command update
     docs: improved commitizens tab in readme
     feat(cz): jira smart commits
     refactor(cli): renamed all to ls command
-    refactor(cz): renamed angular cz to conventional changelog cz
     feat: info command for angular
     docs(README): added badges
-    docs(LICENSE): new one
     docs(README): added about, installation, creating, etc
-    chore(bumpversion): configured and added as dev dep
     feat(config): new loads from ~/.cz and working project .cz .cz.cfg and setup.cfg
 
 Commitizens
@@ -237,13 +248,9 @@ PR.
 Python 2 support
 =================
 
-Support for the old version of python (python 2) is limited, there are some
-things that won't work, like aliases of commands, so, to commit run:
+There's no longer support for python 2. Nor planned suppport.
 
-::
-
-    cz commit
-
+Feel free to create a PR.
 
 Contributing
 ============
@@ -256,6 +263,5 @@ Contributing
 
 Testing
 ========
-
 
     pytest -s --cov-report term-missing --cov=commitizen tests/

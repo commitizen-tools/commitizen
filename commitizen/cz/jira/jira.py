@@ -1,17 +1,8 @@
 import os
 from commitizen.cz.base import BaseCommitizen
-# from whaaaaat import Validator, ValidationError
 
 
 __all__ = ['JiraSmartCz']
-
-
-# class RequiredValidator(Validator):
-#     def validate(self, document, *args, **kwargs):
-#         if not document.text:
-#             raise ValidationError(
-#                 message='This field is required',
-#                 cursor_position=len(document.text))
 
 
 class JiraSmartCz(BaseCommitizen):
