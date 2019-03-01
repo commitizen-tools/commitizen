@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class BaseCommitizen(metaclass=ABCMeta):
-
     @abstractmethod
     def questions(self):
         """Questions regarding the commit message.
@@ -32,11 +31,11 @@ class BaseCommitizen(metaclass=ABCMeta):
         """
 
     def commit(self, message: str):
-        f = NamedTemporaryFile('wb', delete=False)
-        f.write(message.encode('utf-8'))
+        f = NamedTemporaryFile("wb", delete=False)
+        f.write(message.encode("utf-8"))
         f.close()
 
-        c = cmd.run(f'git commit -a -F {f.name}')
+        c = cmd.run(f"git commit -a -F {f.name}")
         print(c.out or c.err)
 
         os.unlink(f.name)
@@ -75,9 +74,9 @@ class BaseCommitizen(metaclass=ABCMeta):
     def run(self, *args, **kwargs):
         questions = self.questions()
         answers = prompt(questions)
-        logger.debug('Answers:\n %s', answers)
+        logger.debug("Answers:\n %s", answers)
         m = self.message(answers)
-        logger.debug('Commit message generated:\n %s', m)
+        logger.debug("Commit message generated:\n %s", m)
 
         c = self.commit(m)
 
@@ -85,7 +84,7 @@ class BaseCommitizen(metaclass=ABCMeta):
             logger.warning(c.err)
             sys.exit(1)
 
-        if 'nothing added' not in c.out:
-            logger.info('Commit successful!')
+        if "nothing added" not in c.out:
+            logger.info("Commit successful!")
 
         sys.exit(0)
