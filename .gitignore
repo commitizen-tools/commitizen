@@ -105,6 +105,7 @@ venv.bak/
 .mypy_cache/
 
 .vscode/
+*.bak
 
 # build
 poetry.lock

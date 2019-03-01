@@ -1,7 +1,7 @@
 import os
 import sys
 import logging
-import delegator
+from commitizen import cmd
 from abc import ABCMeta, abstractmethod
 from tempfile import NamedTemporaryFile
 from questionary import prompt
@@ -31,12 +31,12 @@ class BaseCommitizen(metaclass=ABCMeta):
         :rtype: string
         """
 
-    def commit(self, message):
+    def commit(self, message: str):
         f = NamedTemporaryFile('wb', delete=False)
         f.write(message.encode('utf-8'))
         f.close()
 
-        c = delegator.run('git commit -a -F {0}'.format(f.name), block=True)
+        c = cmd.run(f'git commit -a -F {f.name}')
         print(c.out or c.err)
 
         os.unlink(f.name)

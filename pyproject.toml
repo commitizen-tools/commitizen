@@ -38,7 +38,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = ">3.6"
 questionary = "^1.0"
-"delegator.py" = "^0.1.1"
+decli = "^0.5.0"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.2"
@@ -47,6 +47,7 @@ black = "^18.3-alpha.0"
 pytest = "^4.0"
 flake8 = "^3.6"
 pytest-cov = "^2.6"
+pytest-mock = "^1.10"
 
 [tool.poetry.scripts]
 cz = "commitizen.cli:main"
