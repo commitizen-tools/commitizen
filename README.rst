@@ -17,6 +17,10 @@ Commitizen
     :alt: Supported versions
     :target: https://pypi.org/project/commitizen/
 
+.. image:: https://img.shields.io/codecov/c/github/Woile/commitizen.svg?style=flat-square
+    :alt: Codecov
+    :target: https://codecov.io/gh/Woile/commitizen
+
 .. image:: docs/images/demo.gif
     :alt: Example running commitizen
 
@@ -50,7 +54,7 @@ For beta
 
 ::
 
-    sudo pip3 install -U commitizen --pre
+    sudo pip3 install -U commitizen
 
 
 Information

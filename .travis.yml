@@ -1,0 +1,15 @@
+language: python
+python:
+  - "3.6"
+  - "3.7"
+dist: xenial
+sudo: true
+install:
+  - pip install -U poetry
+  - poetry install
+
+script:
+  - poetry run pytest -s --cov-report term-missing --cov=commitizen tests/
+
+after_success:
+  - codecov

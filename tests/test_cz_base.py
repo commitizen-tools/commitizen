@@ -3,11 +3,6 @@ import pytest
 from commitizen.cz.base import BaseCommitizen
 
 
-class PopenMock:
-    def communicate(self):
-        return b"commit done", b""
-
-
 class DummyCz(BaseCommitizen):
     def questions(self):
         return [{"type": "input", "name": "commit", "message": "Initial commit:\n"}]

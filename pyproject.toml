@@ -48,6 +48,7 @@ pytest = "^4.0"
 flake8 = "^3.6"
 pytest-cov = "^2.6"
 pytest-mock = "^1.10"
+codecov = "^2.0"
 
 [tool.poetry.scripts]
 cz = "commitizen.cli:main"
