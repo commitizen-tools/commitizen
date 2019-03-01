@@ -5,6 +5,10 @@ Commitizen
     Python 3 command line utility to standardize commit messages
 
 
+.. image:: https://img.shields.io/travis/Woile/commitizen.svg?style=flat-square
+    :alt: Travis
+    :target: https://travis-ci.org/Woile/commitizen
+
 .. image:: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square
     :alt: Conventional Commits
     :target: https://conventionalcommits.org
@@ -26,10 +30,6 @@ Commitizen
 
 .. contents::
     :depth: 2
-
-.. warning::
-
-    Beta is available and has support only for python 3
 
 
 About
@@ -170,9 +170,6 @@ and :code:`message`. The others are optionals.
         def questions(self):
             """Questions regarding the commit message.
 
-            Must have 'whaaaaat' format.
-            More info: https://github.com/finklabs/whaaaaat/
-
             :rtype: list
             """
             questions = [
@@ -254,11 +251,10 @@ Python 2 support
 
 There's no longer support for python 2. Nor planned suppport.
 
-Feel free to create a PR.
-
 Contributing
 ============
 
+Feel free to create a PR.
 
 1. Clone the repo.
 2. Add your modifications
