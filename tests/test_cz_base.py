@@ -1,4 +1,5 @@
 import pytest
+
 from commitizen.cz.base import BaseCommitizen
 
 
@@ -8,15 +9,6 @@ class DummyCz(BaseCommitizen):
 
     def message(self, answers):
         return answers["commit"]
-
-    def example(self):
-        return "example"
-
-    def schema(self):
-        return "schema"
-
-    def info(self):
-        return "info"
 
 
 def test_base_raises_error():
@@ -32,3 +24,52 @@ def test_questions():
 def test_message():
     cz = DummyCz()
     assert cz.message({"commit": "holis"}) == "holis"
+
+
+def test_example():
+    cz = DummyCz()
+    with pytest.raises(NotImplementedError):
+        cz.example()
+
+
+def test_schema():
+    cz = DummyCz()
+    with pytest.raises(NotImplementedError):
+        cz.schema()
+
+
+def test_info():
+    cz = DummyCz()
+    with pytest.raises(NotImplementedError):
+        cz.info()
+
+
+def test_show_example():
+    cz = DummyCz()
+    with pytest.raises(NotImplementedError):
+        cz.show_example()
+
+
+def test_show_schema():
+    cz = DummyCz()
+    with pytest.raises(NotImplementedError):
+        cz.show_schema()
+
+
+def test_show_info():
+    cz = DummyCz()
+    with pytest.raises(NotImplementedError):
+        cz.show_info()
+
+
+def test_commit(mocker):
+    process_mock = mocker.Mock()
+    attrs = {"communicate.return_value": (b"commit done", b"")}
+    process_mock.configure_mock(**attrs)
+
+    m = mocker.patch("subprocess.Popen")
+    m.return_value = process_mock
+
+    cz = DummyCz()
+    c = cz.commit("test: run test")
+    assert c.out == "commit done"

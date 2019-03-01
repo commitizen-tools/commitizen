@@ -3,69 +3,70 @@ import os
 import sys
 import logging
 import argparse
+from decli import cli
 from pathlib import Path
 from configparser import RawConfigParser, NoSectionError
-from commitizen import (
-    registered,
-    run,
-    set_commiter,
-    show_example,
-    show_info,
-    show_schema,
-    version,
-)
+from commitizen.application import Application
+from commitizen import deafults
 
 
 logger = logging.getLogger(__name__)
-
-
-def get_parser(config):
-    description = (
+data = {
+    "prog": "cz",
+    "description": (
         "Commitizen is a cli tool to generate conventional commits.\n"
         "For more information about the topic go to "
         "https://conventionalcommits.org/"
-    )
-
-    formater = argparse.RawDescriptionHelpFormatter
-    parser = argparse.ArgumentParser(
-        prog="cz", description=description, formatter_class=formater
-    )
-    parser.set_defaults(func=run)
-    parser.add_argument(
-        "--debug", action="store_true", default=False, help="use debug mode"
-    )
-    parser.add_argument(
-        "-n", "--name", default=config.get("name"), help="use the given commitizen"
-    )
-    parser.add_argument(
-        "--version",
-        action="store_true",
-        default=False,
-        help="get the version of the installed commitizen",
-    )
-
-    subparser = parser.add_subparsers(title="commands")
-
-    lscz = subparser.add_parser("ls", help="show available commitizens")
-    lscz.set_defaults(func=registered)
-
-    commit = subparser.add_parser("commit", aliases=["c"], help="create new commit")
-    commit.set_defaults(func=run)
-
-    example = subparser.add_parser("example", help="show commit example")
-    example.set_defaults(func=show_example)
-
-    info = subparser.add_parser("info", help="show information about the cz")
-    info.set_defaults(func=show_info)
-
-    schema = subparser.add_parser("schema", help="show commit schema")
-    schema.set_defaults(func=show_schema)
-
-    return parser
+    ),
+    "formatter_class": argparse.RawDescriptionHelpFormatter,
+    "arguments": [
+        {"name": "--debug", "action": "store_true", "help": "use debug mode"},
+        {
+            "name": ["-n", "--name"],
+            "default": deafults.NAME,
+            "help": "use the given commitizen",
+        },
+        {
+            "name": ["--version"],
+            "action": "store_true",
+            "help": "get the version of the installed commitizen",
+        },
+    ],
+    "subcommands": {
+        "title": "commands",
+        "commands": [
+            {
+                "name": "ls",
+                "help": "show available commitizens",
+                "func": lambda app: app.detected_cz,
+            },
+            {
+                "name": ["commit", "c"],
+                "help": "create new commit",
+                "func": lambda app: app.cz.run,
+            },
+            {
+                "name": "example",
+                "help": "show commit example",
+                "func": lambda app: app.cz.show_example,
+            },
+            {
+                "name": "info",
+                "help": "show information about the cz",
+                "func": lambda app: app.cz.show_info,
+            },
+            {
+                "name": "schema",
+                "help": "show commit schema",
+                "func": lambda app: app.cz.show_schema,
+            },
+        ],
+    },
+}
 
 
 def load_cfg():
-    defaults = {"name": "cz_conventional_commits"}
+    settings = {"name": deafults.NAME}
     config = RawConfigParser("")
     home = str(Path.home())
 
@@ -86,26 +87,35 @@ def load_cfg():
             log_config = io.StringIO()
             config.write(log_config)
             try:
-                defaults.update(dict(config.items("commitizen")))
+                settings.update(dict(config.items("commitizen")))
                 break
             except NoSectionError:
                 # The file does not have commitizen section
                 continue
 
-    return defaults
+    return settings
 
 
 def main():
     config = load_cfg()
-    parser = get_parser(config)
+    parser = cli(data)
+
+    # Show help if no arg provided
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+        raise SystemExit(1)
+
     args = parser.parse_args()
+    app = Application(**config)
+
+    if args.name:
+        app.name = args.name
 
     if args.debug:
         logging.getLogger("commitizen").setLevel(logging.DEBUG)
 
     if args.version:
-        logger.info(version())
+        logger.info(app.version)
         sys.exit(0)
 
-    set_commiter(args.name)
-    args.func(args)
+    args.func(app)(args)
