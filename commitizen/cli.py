@@ -23,7 +23,6 @@ data = {
         {"name": "--debug", "action": "store_true", "help": "use debug mode"},
         {
             "name": ["-n", "--name"],
-            "default": deafults.NAME,
             "help": "use the given commitizen",
         },
         {
@@ -78,7 +77,6 @@ def load_cfg():
     for cfg in configs:
         if not os.path.exists(config_file) and os.path.exists(cfg):
             config_file = cfg
-            break
 
         config_file_exists = os.path.exists(config_file)
         if config_file_exists:
