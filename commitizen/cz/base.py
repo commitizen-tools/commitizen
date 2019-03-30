@@ -1,7 +1,7 @@
 import os
 import sys
 import logging
-from commitizen import cmd
+from commitizen import cmd, out
 from abc import ABCMeta, abstractmethod
 from tempfile import NamedTemporaryFile
 from questionary import prompt
@@ -10,6 +10,9 @@ logger = logging.getLogger(__name__)
 
 
 class BaseCommitizen(metaclass=ABCMeta):
+    def __init__(self, config: dict):
+        self.config = config
+
     @abstractmethod
     def questions(self):
         """Questions regarding the commit message.
@@ -36,7 +39,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         f.close()
 
         c = cmd.run(f"git commit -a -F {f.name}")
-        print(c.out or c.err)
+        out.write(c.out or c.err)
 
         os.unlink(f.name)
         return c
@@ -63,13 +66,13 @@ class BaseCommitizen(metaclass=ABCMeta):
         raise NotImplementedError("Not Implemented yet")
 
     def show_example(self, *args, **kwargs):
-        logger.info(self.example())
+        out.write(self.example())
 
     def show_schema(self, *args, **kwargs):
-        logger.info(self.schema())
+        out.write(self.schema())
 
     def show_info(self, *args, **kwargs):
-        logger.info(self.info())
+        out.write(self.info())
 
     def run(self, *args, **kwargs):
         questions = self.questions()

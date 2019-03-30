@@ -3,11 +3,12 @@ import os
 import sys
 import logging
 import argparse
+import warnings
 from decli import cli
 from pathlib import Path
 from configparser import RawConfigParser, NoSectionError
-from commitizen.application import Application
-from commitizen import deafults
+from commitizen import deafults, commands, out
+from commitizen.__version__ import __version__
 
 
 logger = logging.getLogger(__name__)
@@ -25,6 +26,7 @@ data = {
             "name": ["-n", "--name"],
             "help": "use the given commitizen",
         },
+        {"name": ["-n", "--name"], "help": "use the given commitizen"},
         {
             "name": ["--version"],
             "action": "store_true",
@@ -37,28 +39,24 @@ data = {
             {
                 "name": "ls",
                 "help": "show available commitizens",
-                "func": lambda app: app.detected_cz,
+                "func": commands.ListCz,
             },
             {
                 "name": ["commit", "c"],
                 "help": "create new commit",
-                "func": lambda app: app.cz.run,
+                "func": commands.Commit,
             },
             {
                 "name": "example",
                 "help": "show commit example",
-                "func": lambda app: app.cz.show_example,
+                "func": commands.Example,
             },
             {
                 "name": "info",
                 "help": "show information about the cz",
-                "func": lambda app: app.cz.show_info,
+                "func": commands.Info,
             },
-            {
-                "name": "schema",
-                "help": "show commit schema",
-                "func": lambda app: app.cz.show_schema,
-            },
+            {"name": "schema", "help": "show commit schema", "func": commands.Schema},
         ],
     },
 }
@@ -104,16 +102,19 @@ def main():
         raise SystemExit(1)
 
     args = parser.parse_args()
-    app = Application(**config)
 
     if args.name:
-        app.name = args.name
+        config.update({"name": args.name})
 
     if args.debug:
+        warnings.warn(
+            "Debug will be deprecated in next major version. "
+            "Please remove it from your scripts"
+        )
         logging.getLogger("commitizen").setLevel(logging.DEBUG)
 
     if args.version:
-        logger.info(app.version)
-        sys.exit(0)
+        out.line(__version__)
+        raise SystemExit()
 
-    args.func(app)(args)
+    args.func(config)(args)

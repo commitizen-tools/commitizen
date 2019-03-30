@@ -1,4 +1,5 @@
 import pytest
+from commitizen import deafults
 from commitizen.cz.conventional_commits.conventional_commits import (
     parse_scope,
     parse_subject,
@@ -6,6 +7,7 @@ from commitizen.cz.conventional_commits.conventional_commits import (
     ConventionalCommitsCz,
 )
 
+config = {"name": deafults.NAME}
 
 valid_scopes = ["", "simple", "dash-separated", "camelCase" "UPPERCASE"]
 
@@ -47,14 +49,14 @@ def test_subject_transformations():
 
 
 def test_questions():
-    conventional_commits = ConventionalCommitsCz()
+    conventional_commits = ConventionalCommitsCz(config)
     questions = conventional_commits.questions()
     assert isinstance(questions, list)
     assert isinstance(questions[0], dict)
 
 
 def test_small_answer():
-    conventional_commits = ConventionalCommitsCz()
+    conventional_commits = ConventionalCommitsCz(config)
     answers = {
         "prefix": "fix",
         "scope": "users",
@@ -67,7 +69,7 @@ def test_small_answer():
 
 
 def test_long_answer():
-    conventional_commits = ConventionalCommitsCz()
+    conventional_commits = ConventionalCommitsCz(config)
     answers = {
         "prefix": "fix",
         "scope": "users",
@@ -84,20 +86,20 @@ def test_long_answer():
 
 def test_example():
     """just testing a string is returned. not the content"""
-    conventional_commits = ConventionalCommitsCz()
+    conventional_commits = ConventionalCommitsCz(config)
     example = conventional_commits.example()
     assert isinstance(example, str)
 
 
 def test_schema():
     """just testing a string is returned. not the content"""
-    conventional_commits = ConventionalCommitsCz()
+    conventional_commits = ConventionalCommitsCz(config)
     schema = conventional_commits.schema()
     assert isinstance(schema, str)
 
 
 def test_info():
     """just testing a string is returned. not the content"""
-    conventional_commits = ConventionalCommitsCz()
+    conventional_commits = ConventionalCommitsCz(config)
     info = conventional_commits.info()
     assert isinstance(info, str)
