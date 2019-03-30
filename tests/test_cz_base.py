@@ -1,6 +1,8 @@
 import pytest
-
+from commitizen import deafults
 from commitizen.cz.base import BaseCommitizen
+
+config = {"name": deafults.NAME}
 
 
 class DummyCz(BaseCommitizen):
@@ -13,51 +15,51 @@ class DummyCz(BaseCommitizen):
 
 def test_base_raises_error():
     with pytest.raises(TypeError):
-        BaseCommitizen()
+        BaseCommitizen(config)
 
 
 def test_questions():
-    cz = DummyCz()
+    cz = DummyCz(config)
     assert isinstance(cz.questions(), list)
 
 
 def test_message():
-    cz = DummyCz()
+    cz = DummyCz(config)
     assert cz.message({"commit": "holis"}) == "holis"
 
 
 def test_example():
-    cz = DummyCz()
+    cz = DummyCz(config)
     with pytest.raises(NotImplementedError):
         cz.example()
 
 
 def test_schema():
-    cz = DummyCz()
+    cz = DummyCz(config)
     with pytest.raises(NotImplementedError):
         cz.schema()
 
 
 def test_info():
-    cz = DummyCz()
+    cz = DummyCz(config)
     with pytest.raises(NotImplementedError):
         cz.info()
 
 
 def test_show_example():
-    cz = DummyCz()
+    cz = DummyCz(config)
     with pytest.raises(NotImplementedError):
         cz.show_example()
 
 
 def test_show_schema():
-    cz = DummyCz()
+    cz = DummyCz(config)
     with pytest.raises(NotImplementedError):
         cz.show_schema()
 
 
 def test_show_info():
-    cz = DummyCz()
+    cz = DummyCz(config)
     with pytest.raises(NotImplementedError):
         cz.show_info()
 
@@ -70,6 +72,6 @@ def test_commit(mocker):
     m = mocker.patch("subprocess.Popen")
     m.return_value = process_mock
 
-    cz = DummyCz()
+    cz = DummyCz(config)
     c = cz.commit("test: run test")
     assert c.out == "commit done"
