@@ -22,10 +22,6 @@ data = {
     "formatter_class": argparse.RawDescriptionHelpFormatter,
     "arguments": [
         {"name": "--debug", "action": "store_true", "help": "use debug mode"},
-        {
-            "name": ["-n", "--name"],
-            "help": "use the given commitizen",
-        },
         {"name": ["-n", "--name"], "help": "use the given commitizen"},
         {
             "name": ["--version"],
