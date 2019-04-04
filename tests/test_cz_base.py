@@ -1,8 +1,8 @@
 import pytest
-from commitizen import deafults
+from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
 
-config = {"name": deafults.NAME}
+config = {"name": defaults.name}
 
 
 class DummyCz(BaseCommitizen):

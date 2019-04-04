@@ -1,9 +1,9 @@
 import pytest
-from commitizen import factory, deafults, BaseCommitizen
+from commitizen import factory, defaults, BaseCommitizen
 
 
 def test_factory():
-    config = {"name": deafults.NAME}
+    config = {"name": defaults.name}
     r = factory.commiter_factory(config)
     assert isinstance(r, BaseCommitizen)
 

@@ -1,5 +1,5 @@
 import pytest
-from commitizen import deafults
+from commitizen import defaults
 from commitizen.cz.conventional_commits.conventional_commits import (
     parse_scope,
     parse_subject,
@@ -7,7 +7,7 @@ from commitizen.cz.conventional_commits.conventional_commits import (
     ConventionalCommitsCz,
 )
 
-config = {"name": deafults.NAME}
+config = {"name": defaults.name}
 
 valid_scopes = ["", "simple", "dash-separated", "camelCase" "UPPERCASE"]
 

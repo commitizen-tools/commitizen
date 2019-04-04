@@ -1,8 +1,8 @@
 # import pytest
 from unittest import mock
-from commitizen import deafults, commands
+from commitizen import defaults, commands
 
-config = {"name": deafults.NAME}
+config = {"name": defaults.name}
 
 
 def test_commit():
