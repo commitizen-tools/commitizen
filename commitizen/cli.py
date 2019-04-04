@@ -75,7 +75,7 @@ def load_cfg():
         config_file_exists = os.path.exists(config_file)
         if config_file_exists:
             logger.debug('Reading file "%s"', config_file)
-            config.readfp(io.open(config_file, "rt", encoding="utf-8"))
+            config.read_file(io.open(config_file, "rt", encoding="utf-8"))
             log_config = io.StringIO()
             config.write(log_config)
             try:

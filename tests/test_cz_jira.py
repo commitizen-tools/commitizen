@@ -1,8 +1,8 @@
 from commitizen.cz.jira import JiraSmartCz
-from commitizen import deafults
+from commitizen import defaults
 
 
-config = {"name": deafults.NAME}
+config = {"name": defaults.name}
 
 
 def test_questions():
