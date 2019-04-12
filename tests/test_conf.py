@@ -1,0 +1,104 @@
+import os
+import pytest
+from commitizen import config, defaults
+
+
+PYPROJECT = """
+[tool.commitizen]
+name = "cz_jira"
+version = "1.0.0"
+
+[tool.black]
+line-length = 88
+target-version = ['py36', 'py37', 'py38']
+"""
+
+RAW_CONFIG = """
+[commitizen]
+name = cz_jira
+version = 1.0.0
+"""
+
+_config = {"name": "cz_jira", "version": "1.0.0"}
+
+
+@pytest.fixture
+def configure_supported_files():
+    original = defaults.config_files.copy()
+
+    # patch the defaults to include tests
+    defaults.config_files = [os.path.join("tests", f) for f in defaults.config_files]
+    yield
+    defaults.config_files = original
+
+
+@pytest.fixture
+def config_files_manager(request):
+    filename = request.param
+    filepath = os.path.join("tests", filename)
+    with open(filepath, "w") as f:
+        if "toml" in filename:
+            f.write(PYPROJECT)
+        else:
+            f.write(RAW_CONFIG)
+    yield
+    os.remove(filepath)
+
+
+@pytest.fixture
+def empty_pyproject_ok_cz():
+    pyproject = "tests/pyproject.toml"
+    cz = "tests/.cz"
+    with open(pyproject, "w") as f:
+        f.write("")
+    with open(cz, "w") as f:
+        f.write(RAW_CONFIG)
+    yield
+    os.remove(pyproject)
+    os.remove(cz)
+
+
+def test_no_pyproject(mocker):
+    with mocker.patch("os.path.isfile", return_value=False):
+        assert config.has_pyproject() is False
+
+
+def test_has_pyproject(mocker):
+    with mocker.patch("os.path.isfile", return_value=True):
+        assert config.has_pyproject() is True
+
+
+def test_read_pyproject_conf():
+    assert config.read_pyproject_conf(PYPROJECT) == _config
+
+
+def test_read_pyproject_conf_empty():
+    assert config.read_pyproject_conf("") == {}
+
+
+def test_read_raw_parser_conf():
+    assert config.read_raw_parser_conf(RAW_CONFIG) == _config
+
+
+def test_read_raw_parser_conf_empty():
+    assert config.read_raw_parser_conf("") == {}
+
+
+@pytest.mark.parametrize(
+    "config_files_manager", defaults.config_files.copy(), indirect=True
+)
+def test_load_conf(config_files_manager, configure_supported_files):
+    cfg = config.read_cfg()
+    assert cfg == _config
+
+
+def test_conf_is_loaded_with_empty_pyproject_but_ok_cz(
+    empty_pyproject_ok_cz, configure_supported_files
+):
+    cfg = config.read_cfg()
+    assert cfg == _config
+
+
+def test_conf_returns_default_when_no_files(configure_supported_files):
+    cfg = config.read_cfg()
+    assert cfg == defaults.settings

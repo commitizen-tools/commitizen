@@ -7,7 +7,7 @@ import warnings
 from decli import cli
 from pathlib import Path
 from configparser import RawConfigParser, NoSectionError
-from commitizen import deafults, commands, out
+from commitizen import defaults, commands, out, config
 from commitizen.__version__ import __version__
 
 
@@ -53,13 +53,29 @@ data = {
                 "func": commands.Info,
             },
             {"name": "schema", "help": "show commit schema", "func": commands.Schema},
+            {
+                "name": "bump",
+                "help": "bump semantic version based on the git log",
+                "func": commands.Bump,
+                "arguments": [
+                    {
+                        "name": "--dry-run",
+                        "action": "store_true",
+                        "help": "show output to stdout",
+                    },
+                    {
+                        "name": "--branch",
+                        "help": "brach used to compare latest tag"
+                    }
+                ],
+            },
         ],
     },
 }
 
 
 def load_cfg():
-    settings = {"name": deafults.NAME}
+    settings = {"name": defaults.name}
     config = RawConfigParser("")
     home = str(Path.home())
 
@@ -89,7 +105,7 @@ def load_cfg():
 
 
 def main():
-    config = load_cfg()
+    conf = config.read_cfg()
     parser = cli(data)
 
     # Show help if no arg provided
@@ -100,7 +116,7 @@ def main():
     args = parser.parse_args()
 
     if args.name:
-        config.update({"name": args.name})
+        conf.update({"name": args.name})
 
     if args.debug:
         warnings.warn(
@@ -113,4 +129,4 @@ def main():
         out.line(__version__)
         raise SystemExit()
 
-    args.func(config)(args)
+    args.func(conf)(args)
