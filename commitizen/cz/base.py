@@ -38,7 +38,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         f.write(message.encode("utf-8"))
         f.close()
 
-        c = cmd.run(f"git commit -a -F {f.name}")
+        c = cmd.run(f"git commit -F {f.name}")
         out.write(c.out or c.err)
 
         os.unlink(f.name)
