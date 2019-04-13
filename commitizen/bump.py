@@ -47,11 +47,11 @@ def prerelease_generator(current_version: str, prerelease: Optional[str] = None)
         return ""
 
     version = Version(current_version)
-    new_prerelease: int = 0
+    new_prerelease_number: int = 0
     if version.is_prerelease and prerelease.startswith(version.pre[0]):
         prev_prerelease: int = list(version.pre)[1]
-        new_prerelease = prev_prerelease + 1
-    pre_version = f"{prerelease}{new_prerelease}"
+        new_prerelease_number = prev_prerelease + 1
+    pre_version = f"{prerelease}{new_prerelease_number}"
     return pre_version
 
 

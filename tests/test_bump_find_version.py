@@ -1,4 +1,5 @@
 import pytest
+import itertools
 from commitizen.bump import generate_version
 from packaging.version import Version
 
@@ -58,13 +59,13 @@ tdd_cases = [
 
 
 @pytest.mark.parametrize(
-    "test_input,expected", tdd_cases + weird_cases + simple_flow + unexpected_cases
+    "test_input,expected",
+    itertools.chain(tdd_cases, weird_cases, simple_flow, unexpected_cases),
 )
 def test_generate_version(test_input, expected):
     current_version = test_input[0]
     increment = test_input[1]
     prerelease = test_input[2]
-    assert (
-        generate_version(current_version, increment=increment, prerelease=prerelease)
-        == Version(expected)
-    )
+    assert generate_version(
+        current_version, increment=increment, prerelease=prerelease
+    ) == Version(expected)

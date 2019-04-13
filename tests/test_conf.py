@@ -7,6 +7,10 @@ PYPROJECT = """
 [tool.commitizen]
 name = "cz_jira"
 version = "1.0.0"
+files = [
+    "commitizen/__version__.py",
+    "pyproject.toml"
+]
 
 [tool.black]
 line-length = 88
@@ -17,9 +21,21 @@ RAW_CONFIG = """
 [commitizen]
 name = cz_jira
 version = 1.0.0
+files = [
+    "commitizen/__version__.py",
+    "pyproject.toml"
+    ]
 """
 
-_config = {"name": "cz_jira", "version": "1.0.0"}
+_config = {"name": "cz_jira", "version": "1.0.0", "files": [
+    "commitizen/__version__.py",
+    "pyproject.toml"
+]}
+
+_new_config = {"name": "cz_jira", "version": "2.0.0", "files": [
+    "commitizen/__version__.py",
+    "pyproject.toml"
+]}
 
 
 @pytest.fixture
@@ -102,3 +118,13 @@ def test_conf_is_loaded_with_empty_pyproject_but_ok_cz(
 def test_conf_returns_default_when_no_files(configure_supported_files):
     cfg = config.read_cfg()
     assert cfg == defaults.settings
+
+
+@pytest.mark.parametrize(
+    "config_files_manager", defaults.config_files.copy(), indirect=True
+)
+def test_set_key(config_files_manager, configure_supported_files):
+    config.read_cfg()
+    config.set_key("version", "2.0.0")
+    cfg = config.read_cfg()
+    assert cfg == _new_config
