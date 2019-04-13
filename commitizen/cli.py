@@ -66,7 +66,11 @@ data = {
                     {
                         "name": "--branch",
                         "help": "brach used to compare latest tag"
-                    }
+                    },
+                    {
+                        "name": "--tag_format",
+                        "help": "format used to tag the commmit and read it"
+                    },
                 ],
             },
         ],
