@@ -3,7 +3,7 @@ from collections import defaultdict
 from itertools import zip_longest
 from string import Template
 from packaging.version import Version
-from typing import List, Optional
+from typing import List, Optional, Union
 
 MAJOR = "MAJOR"
 MINOR = "MINOR"
@@ -86,7 +86,7 @@ def semver_generator(current_version: str, increment: str = None) -> str:
 
 
 def generate_version(
-    current_version: str, increment: str = None, prerelease: Optional[str] = None
+    current_version: str, increment: str, prerelease: Optional[str] = None
 ) -> Version:
     """Based on the given increment a proper semver will be generated.
 
@@ -106,7 +106,7 @@ def generate_version(
     return Version(f"{semver}{pre_version}")
 
 
-def update_version_in_files(old_version: str, new_version: str, files: list):
+def update_version_in_files(current_version: str, new_version: str, files: list):
     """Change old version to the new one in every file given.
 
     Note that this version is not the tag formatted one.
@@ -119,14 +119,30 @@ def update_version_in_files(old_version: str, new_version: str, files: list):
             filedata = file.read()
 
         # Replace the target string
-        filedata = filedata.replace(old_version, new_version)
+        filedata = filedata.replace(current_version, new_version)
 
         # Write the file out again
         with open(filepath, "w") as file:
             file.write(filedata)
 
 
-def create_tag(version: Version, tag_format: str):
+def create_tag(version: Union[Version, str], tag_format: Optional[str] = None):
+    """The tag and the software version might be different.
+
+    That's why this function exists.
+
+    Example:
+
+    | tag | version (PEP 0440) |
+    | --- | ------- |
+    | v0.9.0 | 0.9.0 |
+    | ver1.0.0 | 1.0.0 |
+    | ver1.0.0.a0 | 1.0.0a0 |
+
+    """
+    if isinstance(version, str):
+        version = Version(version)
+
     if not tag_format:
         return version.public
 
@@ -134,6 +150,7 @@ def create_tag(version: Version, tag_format: str):
     prerelease = ""
     if version.is_prerelease:
         prerelease = f"{version.pre[0]}{version.pre[1]}"
+
     t = Template(tag_format)
     return t.safe_substitute(
         version=version, major=major, minor=minor, patch=patch, prerelease=prerelease

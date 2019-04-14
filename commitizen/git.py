@@ -8,17 +8,28 @@ def tag(tag: str):
     return c
 
 
-def commit(message: str):
+def commit(message: str, args=""):
     f = NamedTemporaryFile("wb", delete=False)
     f.write(message.encode("utf-8"))
     f.close()
+    c = cmd.run(f"git commit {args} -F {f.name}")
     os.unlink(f.name)
-    c = cmd.run(f"git commit -F {f.name}")
     return c
 
 
-def filter_commits(start: str, end: str = "HEAD") -> list:
-    c = cmd.run(f"git log --pretty=format:'%s' {start}...{end}")
-    if not c.err:
+def get_commits(start: str, end: str = "HEAD", from_beginning: bool = False) -> list:
+
+    c = cmd.run(f"git log --pretty=format:%s {start}...{end}")
+
+    if from_beginning:
+        c = cmd.run(f"git log --pretty=format:%s {end}")
+
+    if not c.out:
         return []
+
     return c.out.split("\n")
+
+
+def tag_exist(tag: str) -> bool:
+    c = cmd.run(f"git tag --list {tag}")
+    return tag in c.out
