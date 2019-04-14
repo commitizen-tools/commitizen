@@ -2,7 +2,7 @@
 Commitizen
 =============
 
-    Python 3 command line utility to standardize commit messages
+    Python 3 command line utility to standardize commit messages and bump version
 
 
 .. image:: https://img.shields.io/travis/Woile/commitizen.svg?style=flat-square
@@ -35,11 +35,14 @@ Commitizen
 About
 ==========
 
-This is an interactive tool to commit based on some rules (like conventional commits).
+Interactive tool to commit based on established rules (like conventional commits).
 
-It comes with some defaults commit styles, like conventional commits and jira and it's easily extendable.
+It comes with some defaults commit styles,
+like conventional commits and jira and it's easily extendable.
 
 It's useful for teams, because it is possible to standardize the commiting style.
+
+Also includes an automatic version bump system based on semver.
 
 
 Installation
@@ -47,18 +50,31 @@ Installation
 
 ::
 
-    pip install commitizen
+    pip install -U commitizen
+
+::
+
+    poetry add commitizen --dev
 
 
-For beta
+**Global installation**
 
 ::
 
     sudo pip3 install -U commitizen
 
+Features
+========
 
-Information
-===========
+- Prompt your commit rules to the user
+- Display information about your commit rules (schema, example, info)
+- Auto **bump** version based on semver using your rules (currently there is only support for conventionalcommits)
+- Future: New documentation
+- Future: Autochangelog
+
+
+Commit rules
+============
 
 This client tool prompts the user with information about the commit.
 
@@ -117,8 +133,9 @@ Usage
 
 ::
 
+    $ cz --help
     usage: cz [-h] [--debug] [-n NAME] [--version]
-            {ls,commit,c,example,info,schema} ...
+            {ls,commit,c,example,info,schema,bump} ...
 
     Commitizen is a cli tool to generate conventional commits.
     For more information about the topic go to https://conventionalcommits.org/
@@ -130,26 +147,49 @@ Usage
     --version             get the version of the installed commitizen
 
     commands:
-    {ls,commit,c,example,info,schema}
+    {ls,commit,c,example,info,schema,bump}
         ls                  show available commitizens
         commit (c)          create new commit
         example             show commit example
         info                show information about the cz
         schema              show commit schema
+        bump                bump semantic version based on the git log
 
 
 Configuration
 ==============
 
-You can create in your project folder a file called :code:`.cz`, :code:`.cz.cfg` or in your :code:`setup.cfg`
-or if you want to configure the global default in your user's home folder a :code:`.cz` file
-with the following information:
+**New!**: Support for ``pyproject.toml``
+
+In your ``pyproject.toml`` you can add an entry like this:
+
+::
+
+    [tool.commitizen]
+    name = cz_conventional_commits
+    version = "0.1.0"
+    files = [
+        "src/__version__.py",
+        "pyproject.toml"
+    ]
+
+
+Also, you can create in your project folder a file called
+:code:`.cz`, :code:`.cz.cfg` or in your :code:`setup.cfg`
+or if you want to configure the global default in your user's home
+folder a :code:`.cz` file with the following information:
 
 ::
 
     [commitizen]
     name = cz_conventional_commits
+    version = 0.1.0
+    files = [
+        "src/__version__.py",
+        "pyproject.toml"
+        ]
 
+The extra tab at the end (``]``) is required.
 
 Creating a commiter
 ========================
