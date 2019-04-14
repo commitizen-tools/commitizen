@@ -71,6 +71,24 @@ data = {
                         "name": "--tag_format",
                         "help": "format used to tag the commmit and read it"
                     },
+                    {
+                        "name": ["--alpha", "-a"],
+                        "help": "tag the version as alpha",
+                        "action": "store_true",
+                        "exclusive_group": "prerelease"
+                    },
+                    {
+                        "name": ["--beta", "-b"],
+                        "help": "tag the version as beta",
+                        "action": "store_true",
+                        "exclusive_group": "prerelease"
+                    },
+                    {
+                        "name": "--rc",
+                        "help": "tag the version as release candidate",
+                        "action": "store_true",
+                        "exclusive_group": "prerelease"
+                    }
                 ],
             },
         ],

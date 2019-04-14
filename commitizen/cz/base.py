@@ -1,9 +1,8 @@
-import os
 import sys
 import logging
-from commitizen import cmd, out
+
+from commitizen import out, git
 from abc import ABCMeta, abstractmethod
-from tempfile import NamedTemporaryFile
 from questionary import prompt
 
 logger = logging.getLogger(__name__)
@@ -34,14 +33,15 @@ class BaseCommitizen(metaclass=ABCMeta):
         """
 
     def commit(self, message: str):
-        f = NamedTemporaryFile("wb", delete=False)
-        f.write(message.encode("utf-8"))
-        f.close()
+        c = git.commit(message)
+        # f = NamedTemporaryFile("wb", delete=False)
+        # f.write(message.encode("utf-8"))
+        # f.close()
 
-        c = cmd.run(f"git commit -F {f.name}")
+        # c = cmd.run(f"git commit -F {f.name}")
         out.write(c.out or c.err)
 
-        os.unlink(f.name)
+        # os.unlink(f.name)
         return c
 
     def example(self):

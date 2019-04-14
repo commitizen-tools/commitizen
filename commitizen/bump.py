@@ -103,3 +103,23 @@ def generate_version(
     # TODO: post version
     # TODO: dev version
     return Version(f"{semver}{pre_version}")
+
+
+def update_version_in_files(old_version: str, new_version: str, files: list):
+    """Change old version to the new one in every file given.
+
+    Note that this version is not the tag formatted one.
+    So for example, your tag could look like `v1.0.0` while your version in
+    the package like `1.0.0`.
+    """
+    for filepath in files:
+        # Read in the file
+        with open(filepath, "r") as file:
+            filedata = file.read()
+
+        # Replace the target string
+        filedata = filedata.replace(old_version, new_version)
+
+        # Write the file out again
+        with open(filepath, "w") as file:
+            file.write(filedata)

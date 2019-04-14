@@ -1,1 +1,1 @@
-pytest -s --cov-report term-missing --cov=commitizen tests/
+pytest --cov-report term-missing --cov=commitizen tests/
