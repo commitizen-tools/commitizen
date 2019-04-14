@@ -61,34 +61,26 @@ data = {
                     {
                         "name": "--dry-run",
                         "action": "store_true",
-                        "help": "show output to stdout",
+                        "help": "show output to stdout, no commit, no modified files",
                     },
                     {
-                        "name": "--branch",
-                        "help": "brach used to compare latest tag"
+                        "name": "--tag-format",
+                        "help": (
+                            "format used to tag the commmit and read it, "
+                            "use it in existing projects, "
+                            "wrap around simple quotes."
+                        ),
                     },
                     {
-                        "name": "--tag_format",
-                        "help": "format used to tag the commmit and read it"
+                        "name": ["--prerelease", "-pr"],
+                        "help": "choose type of prerelease",
+                        "choices": ["alpha", "beta", "rc"],
                     },
                     {
-                        "name": ["--alpha", "-a"],
-                        "help": "tag the version as alpha",
-                        "action": "store_true",
-                        "exclusive_group": "prerelease"
+                        "name": ["--increment"],
+                        "help": "manually specify the desired increment",
+                        "choices": ["MAJOR", "MINOR", "PATCH"],
                     },
-                    {
-                        "name": ["--beta", "-b"],
-                        "help": "tag the version as beta",
-                        "action": "store_true",
-                        "exclusive_group": "prerelease"
-                    },
-                    {
-                        "name": "--rc",
-                        "help": "tag the version as release candidate",
-                        "action": "store_true",
-                        "exclusive_group": "prerelease"
-                    }
                 ],
             },
         ],
@@ -133,7 +125,7 @@ def main():
     # Show help if no arg provided
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
-        raise SystemExit(1)
+        raise SystemExit()
 
     args = parser.parse_args()
 
@@ -151,4 +143,4 @@ def main():
         out.line(__version__)
         raise SystemExit()
 
-    args.func(conf)(args)
+    args.func(conf, vars(args))()

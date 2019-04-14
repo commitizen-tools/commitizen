@@ -39,8 +39,6 @@ class BaseCommitizen(metaclass=ABCMeta):
         # f.close()
 
         # c = cmd.run(f"git commit -F {f.name}")
-        out.write(c.out or c.err)
-
         # os.unlink(f.name)
         return c
 
@@ -87,7 +85,12 @@ class BaseCommitizen(metaclass=ABCMeta):
             logger.warning(c.err)
             sys.exit(1)
 
-        if "nothing added" not in c.out:
-            logger.info("Commit successful!")
+        if "nothing added" in c.out or "no changes added to commit" in c.out:
+            out.error(c.out)
+        elif c.err:
+            out.error(c.err)
+        else:
+            out.write(c.out)
+            out.success("Commit successful!")
 
         sys.exit(0)

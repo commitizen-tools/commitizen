@@ -27,15 +27,25 @@ files = [
     ]
 """
 
-_config = {"name": "cz_jira", "version": "1.0.0", "files": [
-    "commitizen/__version__.py",
-    "pyproject.toml"
-]}
+_config = {
+    "name": "cz_jira",
+    "version": "1.0.0",
+    "tag_format": None,
+    "files": ["commitizen/__version__.py", "pyproject.toml"],
+}
 
-_new_config = {"name": "cz_jira", "version": "2.0.0", "files": [
-    "commitizen/__version__.py",
-    "pyproject.toml"
-]}
+_new_config = {
+    "name": "cz_jira",
+    "version": "2.0.0",
+    "tag_format": None,
+    "files": ["commitizen/__version__.py", "pyproject.toml"],
+}
+
+_read_conf = {
+    "name": "cz_jira",
+    "version": "1.0.0",
+    "files": ["commitizen/__version__.py", "pyproject.toml"],
+}
 
 
 @pytest.fixture
@@ -85,7 +95,7 @@ def test_has_pyproject(mocker):
 
 
 def test_read_pyproject_conf():
-    assert config.read_pyproject_conf(PYPROJECT) == _config
+    assert config.read_pyproject_conf(PYPROJECT) == _read_conf
 
 
 def test_read_pyproject_conf_empty():
@@ -93,7 +103,7 @@ def test_read_pyproject_conf_empty():
 
 
 def test_read_raw_parser_conf():
-    assert config.read_raw_parser_conf(RAW_CONFIG) == _config
+    assert config.read_raw_parser_conf(RAW_CONFIG) == _read_conf
 
 
 def test_read_raw_parser_conf_empty():

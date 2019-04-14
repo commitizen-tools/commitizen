@@ -1,3 +1,4 @@
+import sys
 from termcolor import colored
 
 
@@ -6,15 +7,14 @@ def write(value: str, *args):
     print(value, *args)
 
 
-def line(value: str, *args):
+def line(value: str, *args, **kwargs):
     """Wrapper in case I want to do something different later."""
-    print(value, *args)
+    print(value, *args, **kwargs)
 
 
 def error(value: str):
-    """TODO: This should go to stderr."""
     message = colored(value, "red")
-    line(message)
+    line(message, file=sys.stderr)
 
 
 def success(value: str):

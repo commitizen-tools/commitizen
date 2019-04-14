@@ -22,13 +22,6 @@ class Config:
         return self._config
 
     @property
-    def configparser_dict(self):
-        c = self._config.copy()
-        if "files" in c:
-            c.update({"files": json.dumps(c["files"])})
-        return c
-
-    @property
     def path(self):
         return self._path
 
