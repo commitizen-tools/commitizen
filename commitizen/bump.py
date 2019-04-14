@@ -1,6 +1,7 @@
 import re
 from collections import defaultdict
 from itertools import zip_longest
+from string import Template
 from packaging.version import Version
 from typing import List, Optional
 
@@ -123,3 +124,17 @@ def update_version_in_files(old_version: str, new_version: str, files: list):
         # Write the file out again
         with open(filepath, "w") as file:
             file.write(filedata)
+
+
+def create_tag(version: Version, tag_format: str):
+    if not tag_format:
+        return version.public
+
+    major, minor, patch = version.release
+    prerelease = ""
+    if version.is_prerelease:
+        prerelease = f"{version.pre[0]}{version.pre[1]}"
+    t = Template(tag_format)
+    return t.safe_substitute(
+        version=version, major=major, minor=minor, patch=patch, prerelease=prerelease
+    )
