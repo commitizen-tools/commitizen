@@ -35,14 +35,17 @@ Commitizen
 About
 ==========
 
-Interactive tool to commit based on established rules (like conventional commits).
+Commitizen is a tool designed for teams.
 
-It comes with some defaults commit styles,
-like conventional commits and jira and it's easily extendable.
+Its main purpose is to define a standard way of commiting rules
+and communicating it (using the cli provided by commitizen).
 
-It's useful for teams, because it is possible to standardize the commiting style.
+The reasoning behind it is that is easier to read, and enforces writing
+descriptive commits.
 
-Also includes an automatic version bump system based on semver.
+Besides that, having a convetion on your commits, makes it possible to
+parse them and use them for something else, like generating automatically
+the version or a changelog.
 
 
 Installation
@@ -66,11 +69,10 @@ Installation
 Features
 ========
 
-- Prompt your commit rules to the user
-- Display information about your commit rules (schema, example, info)
-- Auto **bump** version based on semver using your rules (currently there is only support for conventionalcommits)
-- Future: New documentation
-- Future: Autochangelog
+- Command line utility to create commits with your rules. Defaults: `Conventional commits <https://www.conventionalcommits.org>`_
+- Display information about your commit rules (commands: schema, example, info)
+- Bump version automatically using semantic verisoning based on the commits. `Read More <./docs/bump.md>`_
+- Generate a changelog using "Keep a changelog" (Planned feature)
 
 
 Commit rules
@@ -84,7 +86,6 @@ This is an example of how the git messages history would look like:
 
 ::
 
-    BREAKING CHANGE: command send has been removed
     fix: minor typos in code
     feat: new command update
     docs: improved commitizens tab in readme
@@ -94,6 +95,12 @@ This is an example of how the git messages history would look like:
     docs(README): added badges
     docs(README): added about, installation, creating, etc
     feat(config): new loads from ~/.cz and working project .cz .cz.cfg and setup.cfg
+
+And then using ``cz bump`` you can change the version of your project
+
+``feat`` to ``MINOR``
+``fix`` to ``PATCH``
+
 
 Commitizens
 ===========
@@ -155,142 +162,6 @@ Usage
         schema              show commit schema
         bump                bump semantic version based on the git log
 
-
-Configuration
-==============
-
-**New!**: Support for ``pyproject.toml``
-
-In your ``pyproject.toml`` you can add an entry like this:
-
-::
-
-    [tool.commitizen]
-    name = cz_conventional_commits
-    version = "0.1.0"
-    files = [
-        "src/__version__.py",
-        "pyproject.toml"
-    ]
-
-
-Also, you can create in your project folder a file called
-:code:`.cz`, :code:`.cz.cfg` or in your :code:`setup.cfg`
-or if you want to configure the global default in your user's home
-folder a :code:`.cz` file with the following information:
-
-::
-
-    [commitizen]
-    name = cz_conventional_commits
-    version = 0.1.0
-    files = [
-        "src/__version__.py",
-        "pyproject.toml"
-        ]
-
-The extra tab at the end (``]``) is required.
-
-Creating a commiter
-========================
-
-Create a file starting with :code:`cz_` for example :code:`cz_jira.py`.
-This prefix is used to detect the plugin. Same method `flask uses <http://flask.pocoo.org/docs/0.12/extensiondev/>`_
-
-Inherit from :code:`BaseCommitizen` and you must define :code:`questions`
-and :code:`message`. The others are optionals.
-
-
-.. code-block:: python
-
-    from commitizen import BaseCommitizen
-
-    class JiraCz(BaseCommitizen):
-
-        def questions(self):
-            """Questions regarding the commit message.
-
-            :rtype: list
-            """
-            questions = [
-                {
-                    'type': 'input',
-                    'name': 'title',
-                    'message': 'Commit title'
-                },
-                {
-                    'type': 'input',
-                    'name': 'issue',
-                    'message': 'Jira Issue number:'
-                },
-            ]
-            return questions
-
-        def message(self, answers):
-            """Generate the message with the given answers.
-
-            :type answers: dict
-            :rtype: string
-            """
-            return '{0} (#{1})'.format(answers['title'], answers['issue'])
-
-        def example(self):
-            """Provide an example to help understand the style (OPTIONAL)
-            Used by cz example.
-
-            :rtype: string
-            """
-            return 'Problem with user (#321)'
-
-        def schema(self):
-            """Show the schema used (OPTIONAL)
-
-            :rtype: string
-            """
-            return '<title> (<issue>)'
-
-        def info(self):
-            """Explanation of the commit rules. (OPTIONAL)
-            :rtype: string
-            """
-            return 'We use this because is useful'
-
-
-    discover_this = JiraCz  # used by the plugin system
-
-
-The next file required is :code:`setup.py` modified from flask version
-
-.. code-block:: python
-
-    from distutils.core import setup
-
-    setup(
-        name='JiraCommitizen',
-        version='0.1.0',
-        py_modules=['cz_jira'],
-        license='MIT',
-        long_description='this is a long description',
-        install_requires=['commitizen']
-    )
-
-So at the end we would have
-
-::
-
-    .
-    ├── cz_jira.py
-    └── setup.py
-
-And that's it, you can install it without uploading to pypi by simply doing
-:code:`pip install .` If you feel like it should be part of the repo, create a
-PR.
-
-Python 2 support
-=================
-
-There's no longer support for python 2. Nor planned suppport.
-
 Contributing
 ============
 
@@ -299,4 +170,4 @@ Feel free to create a PR.
 1. Clone the repo.
 2. Add your modifications
 3. Create a virtualenv
-4. Run :code:`pytest -s --cov-report term-missing --cov=commitizen tests/`
+4. Run :code:`./scripts/test`
