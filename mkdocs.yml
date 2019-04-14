@@ -1,0 +1,22 @@
+site_name: Commitizen
+site_description: commit rules, semantic version, conventional commits
+
+theme:
+    name: 'material'
+
+repo_name: Woile/commitizen
+repo_url: https://github.com/Woile/commitizen
+edit_uri: ""
+
+nav:
+    - Introduction: 'index.md'
+    - Configuration: 'config.md'
+    - Bump: 'bump.md'
+    - Customization: 'customization.md'
+
+markdown_extensions:
+  - markdown.extensions.codehilite:
+      guess_lang: false
+  - admonition
+  - codehilite
+  - extra

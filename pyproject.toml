@@ -61,6 +61,8 @@ pytest-cov = "^2.6"
 pytest-mock = "^1.10"
 codecov = "^2.0"
 mypy = "^0.700.0"
+mkdocs = "^1.0"
+mkdocs-material = "^4.1"
 
 [tool.poetry.scripts]
 cz = "commitizen.cli:main"

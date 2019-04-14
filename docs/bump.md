@@ -1,0 +1,124 @@
+## About
+
+The version is bumped **automatically** based on the commits.
+
+The commits should follow the rules of the commiter in order to be parsed properly.
+
+It is possible to specify a **prerelease** (alpha, beta, release candidate) version.
+
+The version can also be **manually** bumped.
+
+The version format follows [semantic versioning][semver].
+
+This means `MAJOR.MiNOR.PATCH`
+
+| Increment | Description | Conventional commit map |
+| ------- | ----- | ------ |
+| `MAJOR` | Breaking changes introduced | `BREAKING CHANGE` |
+| `MINOR` | New features | `feat` |
+| `PATCH` | Fixes | `fix` + everything else |
+
+
+Prereleases are supported following python's [PEP 0440][pep440]
+
+The scheme of this format is
+
+```
+[N!]N(.N)*[{a|b|rc}N][.postN][.devN]
+```
+
+Some examples:
+
+```
+0.9.0
+0.9.1
+0.9.2
+0.9.10
+0.9.11
+1.0.0a0  # alpha
+1.0.0a1
+1.0.0b0  # beta
+1.0.0rc0 # release candidate
+1.0.0rc1
+1.0.0
+1.0.1
+1.1.0
+2.0.0
+2.0.1a
+```
+
+`post` and `dev` releases are not supported yet.
+
+## Usage
+
+```bash
+$ cz bump --help
+usage: cz bump [-h] [--dry-run] [--tag-format TAG_FORMAT]
+               [--prerelease {alpha,beta,rc}]
+               [--increment {MAJOR,MINOR,PATCH}]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --dry-run             show output to stdout, no commit, no modified files
+  --tag-format TAG_FORMAT
+                        format used to tag the commmit and read it, use it in
+                        existing projects, wrap around simple quotes.
+  --prerelease {alpha,beta,rc}, -pr {alpha,beta,rc}
+                        choose type of prerelease
+  --increment {MAJOR,MINOR,PATCH}
+                        manually specify the desired increment
+```
+
+
+## Configuration
+
+`tag_format`
+
+Used to read the format from the git tags, and also to generate the tags.
+
+Supports 2 types of formats, a simple and a more complex.
+
+```bash
+cz bump --tag_format="v$version"
+```
+
+```bash
+cz bump --tag_format="v$minor.$major.$path$prerelease"
+```
+
+In your `pyproject.toml`
+
+```toml
+[commitizen]
+tag_format = "v$minor.$major.$path$prerelease"
+```
+
+The variables must be preceded by a `$` sign.
+
+Suppported variables:
+
+| Variable | Description |
+| --- | ----------- |
+| `$version` | full generated version |
+| `$major` | MAJOR increment |
+| `$minor` | MINOR increment |
+| `$patch` | PATCH increment |
+| `$prerelease` | Prerelase (alpha, beta, release candidate) |
+
+`files`
+
+Used to identify the files which should be updated with the new version.
+In your `pyproject.toml`
+
+Commitizen will update it's configuration (`pyproject.toml`, `.cz`) when bumping.
+
+```toml
+[commitizen]
+files = [
+    "src/__version__.py",
+    "setup.py"
+]
+```
+
+[pep440]: https://www.python.org/dev/peps/pep-0440/
+[semver]: https://semver.org/
