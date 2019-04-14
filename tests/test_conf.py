@@ -50,6 +50,7 @@ _read_conf = {
 
 @pytest.fixture
 def configure_supported_files():
+    config._conf = config.Config()
     original = defaults.config_files.copy()
 
     # patch the defaults to include tests
@@ -133,7 +134,7 @@ def test_conf_returns_default_when_no_files(configure_supported_files):
 @pytest.mark.parametrize(
     "config_files_manager", defaults.config_files.copy(), indirect=True
 )
-def test_set_key(config_files_manager, configure_supported_files):
+def test_set_key(configure_supported_files, config_files_manager):
     config.read_cfg()
     config.set_key("version", "2.0.0")
     cfg = config.read_cfg()

@@ -9,12 +9,9 @@ from tomlkit import parse, exceptions
 from commitizen import defaults
 
 
-_conf_path: Optional[str] = None
-
-
 class Config:
     def __init__(self):
-        self._config = defaults.settings
+        self._config = defaults.settings.copy()
         self._path: Optional[str] = None
 
     @property
@@ -112,12 +109,10 @@ def read_cfg() -> dict:
             continue
         with open(filename, "r") as f:
             data: str = f.read()
-
         if "toml" in filename:
             conf = read_pyproject_conf(data)
         else:
             conf = read_raw_parser_conf(data)
-
         if not conf:
             continue
 
