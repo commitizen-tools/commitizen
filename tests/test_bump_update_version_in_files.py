@@ -39,5 +39,4 @@ def test_update_version_in_files(create_files):
     for filepath in create_files:
         with open(filepath, "r") as f:
             data = f.read()
-            print(data)
         assert new_version in data
