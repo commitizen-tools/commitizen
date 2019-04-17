@@ -11,6 +11,7 @@ def test_commit(mocker):
         "prefix": "feat",
         "subject": "user created",
         "scope": "",
+        "is_breaking_change": False,
         "body": "",
         "footer": "",
     }

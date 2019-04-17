@@ -30,7 +30,7 @@ def parse_subject(text):
 
 
 class ConventionalCommitsCz(BaseCommitizen):
-    def questions(self):
+    def questions(self) -> list:
         questions = [
             {
                 "type": "list",
@@ -44,13 +44,6 @@ class ConventionalCommitsCz(BaseCommitizen):
                     {
                         "value": "feat",
                         "name": "feat: A new feature. Correlates with MINOR in SemVer",
-                    },
-                    {
-                        "value": "BREAKING CHANGE",
-                        "name": (
-                            "BREAKING CHANGE: introduces a breaking API change. "
-                            "Correlates with MAJOR in SemVer"
-                        ),
                     },
                     {"value": "docs", "name": "docs: Documentation only changes"},
                     {
@@ -113,6 +106,12 @@ class ConventionalCommitsCz(BaseCommitizen):
                 ),
             },
             {
+                "type": "confirm",
+                "message": "Is this a BREAKING CHANGE? Correlates with MAJOR in SemVer",
+                "name": "is_breaking_change",
+                "default": False,
+            },
+            {
                 "type": "input",
                 "name": "body",
                 "message": (
@@ -131,46 +130,46 @@ class ConventionalCommitsCz(BaseCommitizen):
         ]
         return questions
 
-    def message(self, answers):
+    def message(self, answers: dict) -> str:
         prefix = answers["prefix"]
         scope = answers["scope"]
         subject = answers["subject"]
         body = answers["body"]
         footer = answers["footer"]
-        message = ""
+        is_breaking_change = answers["is_breaking_change"]
 
-        if prefix:
-            message += "{0}".format(prefix)
-            if scope:
-                message += "({0})".format(scope)
-            message += ": "
-        if subject:
-            message += "{0}".format(subject)
+        if scope:
+            scope = f"({scope})"
+        if is_breaking_change:
+            body = f"BREAKING CHANGE: {body}"
         if body:
-            message += "\n\n{0}".format(body)
+            body = f"\n\n{body}"
         if footer:
-            message += "\n\n{0}".format(footer)
+            footer = f"\n\n{footer}"
+
+        message = f"{prefix}{scope}: {subject}{body}{footer}"
+
         return message
 
-    def example(self):
+    def example(self) -> str:
         return (
-            "feat($injector): ability to load new modules after bootstrapping\n"
-            "\nThe new method `$injector.loadNewModules(modules)` will add "
-            "each of the\ninjectables to the injector and execute all of the "
-            "config and run blocks\nfor each module passed to the method.\n"
-            "\nCloses #324"
+            "fix: correct minor typos in code\n"
+            "\n"
+            "see the issue for details on the typos fixed\n"
+            "\n"
+            "closes issue #12"
         )
 
-    def schema(self):
+    def schema(self) -> str:
         return (
             "<type>(<scope>): <subject>\n"
             "<BLANK LINE>\n"
-            "<body>\n"
+            "(BREAKING CHANGE: )<body>\n"
             "<BLANK LINE>\n"
             "<footer>"
         )
 
-    def info(self):
+    def info(self) -> str:
         dir_path = os.path.dirname(os.path.realpath(__file__))
         filepath = os.path.join(dir_path, "conventional_commits_info.txt")
         with open(filepath, "r") as f:

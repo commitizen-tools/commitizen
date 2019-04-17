@@ -36,7 +36,7 @@ the version or a changelog.
 
 Python 3.6+
 
-[Git][gitscm]
+[Git][gitscm] `1.8.5.2`+
 
 ## Installation
 

@@ -1,0 +1,187 @@
+# The configurations that used for the recording, feel free to edit them
+config:
+
+  # Specify a command to be executed
+  # like `/bin/bash -l`, `ls`, or any other commands
+  # the default is bash for Linux
+  # or powershell.exe for Windows
+  command: bash -l
+
+  # Specify the current working directory path
+  # the default is the current working directory path
+  cwd: ~/my-project
+
+  # Export additional ENV variables
+  env:
+    recording: true
+
+  # Explicitly set the number of columns
+  # or use `auto` to take the current
+  # number of columns of your shell
+  cols: 101
+
+  # Explicitly set the number of rows
+  # or use `auto` to take the current
+  # number of rows of your shell
+  rows: 22
+
+  # Amount of times to repeat GIF
+  # If value is -1, play once
+  # If value is 0, loop indefinitely
+  # If value is a positive number, loop n times
+  repeat: 0
+
+  # Quality
+  # 1 - 100
+  quality: 85
+
+  # Delay between frames in ms
+  # If the value is `auto` use the actual recording delays
+  frameDelay: auto
+
+  # Maximum delay between frames in ms
+  # Ignored if the `frameDelay` isn't set to `auto`
+  # Set to `auto` to prevent limiting the max idle time
+  maxIdleTime: 2000
+
+  # The surrounding frame box
+  # The `type` can be null, window, floating, or solid`
+  # To hide the title use the value null
+  # Don't forget to add a backgroundColor style with a null as type
+  frameBox:
+    type: floating
+    title: Commitizen
+    style:
+      border: 0px black solid
+      # boxShadow: none
+      # margin: 0px
+
+  # Add a watermark image to the rendered gif
+  # You need to specify an absolute path for
+  # the image on your machine or a URL, and you can also
+  # add your own CSS styles
+  watermark:
+    imagePath: null
+    style:
+      position: absolute
+      right: 15px
+      bottom: 15px
+      width: 100px
+      opacity: 0.9
+
+  # Cursor style can be one of
+  # `block`, `underline`, or `bar`
+  cursorStyle: block
+
+  # Font family
+  # You can use any font that is installed on your machine
+  # in CSS-like syntax
+  fontFamily: "Monaco, Lucida Console, Ubuntu Mono, Monospace"
+
+  # The size of the font
+  fontSize: 12
+
+  # The height of lines
+  lineHeight: 1
+
+  # The spacing between letters
+  letterSpacing: 0
+
+  # Theme
+  theme:
+    background: "transparent"
+    foreground: "#afafaf"
+    cursor: "#c7c7c7"
+    black: "#232628"
+    red: "#fc4384"
+    green: "#b3e33b"
+    yellow: "#ffa727"
+    blue: "#75dff2"
+    magenta: "#ae89fe"
+    cyan: "#708387"
+    white: "#d5d5d0"
+    brightBlack: "#626566"
+    brightRed: "#ff7fac"
+    brightGreen: "#c8ed71"
+    brightYellow: "#ebdf86"
+    brightBlue: "#75dff2"
+    brightMagenta: "#ae89fe"
+    brightCyan: "#b1c6ca"
+    brightWhite: "#f9f9f4"
+
+# Records, feel free to edit them
+records:
+  - delay: 987
+    content: "\e[1;33m\e[0;32m\e[1;34m\e[1;32msantiago\e[1;34m@\e[1;31mhome\e[1;37m in \e[1;34m~/my-project\e[0;36m |master #|\e[1;32m\r\r\n\e[1;32m$\e[00m "
+  - delay: 731
+    content: c
+  - delay: 345
+    content: z
+  - delay: 135
+    content: ' '
+  - delay: 118
+    content: c
+  - delay: 116
+    content: o
+  - delay: 200
+    content: m
+  - delay: 135
+    content: m
+  - delay: 199
+    content: i
+  - delay: 406
+    content: t
+  - delay: 144
+    content: "\r\n"
+  - delay: 209
+    content: "\e[?1l\e[6n"
+  - delay: 7
+    content: "\e[?2004h\e[?25l\e[0m\e[?7l\e[0m\e[J\e[0;38;5;67m?\e[0;1m Select the type of change you are committing \e[0m (Use arrow keys)                                    \r\e[100C \e[0m\r\r\n\e[0m » fix: A bug fix. Correlates with PATCH in SemVer\e[0m\r\r\n\e[0m   feat: A new feature. Correlates with MINOR in SemVer\e[0m\r\r\n\e[0m   docs: Documentation only changes\e[0m\r\r\n\e[0m   style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-\r\e[100Cc\e[0m\r\r\n\e[0m   refactor: A code change that neither fixes a bug nor adds a feature\e[0m\r\r\n\e[0m   perf: A code change that improves performance\e[0m\r\r\n\e[0m   test: Adding missing or correcting existing tests\e[0m\r\r\n\e[0m   build: Changes that affect the build system or external dependencies (example scopes: pip, docker\r\e[100C,\e[0m\r\r\n\e[0m   ci: Changes to our CI configuration files and scripts (example scopes: GitLabCI)                 \r\e[100C \r\e[9A\e[64C\e[?7h\e[0m\e[?12l\e[?25h"
+  - delay: 17
+    content: "\e[?25l\e[?7l\e[0m\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\e[0m   ci: Changes to our CI configuration files and scripts (example scopes: GitLabCI)\e[0m\e[K\e[0m\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\e[0m                                                                                                    \r\e[100C \r\e[19A\e[64C\e[?7h\e[0m\e[?12l\e[?25h"
+  - delay: 647
+    content: "\e[?25l\e[?7l\e[0m\r\r\n\e[0m   \e[0m\r\r\n\e[0m » \e[2A\e[61C\e[?7h\e[0m\e[?12l\e[?25h"
+  - delay: 574
+    content: "\e[?25l\e[?7l\e[64D\e[0m\e[J\e[0;38;5;67m?\e[0;1m Select the type of change you are committing \e[0;38;5;214;1m feat: A new feature. Correlates with MINOR in SemVer\r\e[100C\e[0m \r\e[0m\r\r\n\e[J\e[?7h\e[0m\e[?12l\e[?25h\e[?2004l"
+  - delay: 20
+    content: "\e[?1l\e[6n\e[?2004h\e[?25l\e[0m\e[?7l\e[0m\e[J\e[0;38;5;67m?\e[0;1m Scope. Could be anything specifying place of the commit change (users, db, poll):\e[0m                 \r\e[100C \e[0m\r\r\n\e[0;1m \e[0m                                                                                                   \r\e[100C \r\e[C\e[?7h\e[0m\e[?12l\e[?25h"
+  - delay: 11
+    content: "\e[?25l\e[?7l\b\e[0;1m \e[0m \e[0m\e[K\e[0m\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\e[0m                                                                                                    \r\e[100C \r\e[17A\e[C\e[?7h\e[0m\e[?12l\e[?25h"
+  - delay: 1388
+    content: "\e[?25l\e[?7l\e[A\b\e[0m\e[J\e[0;38;5;67m?\e[0;1m Scope. Could be anything specifying place of the commit change (users, db, poll):\e[0m                 \r\e[100C \e[0m\r\r\n\e[0;1m \e[0m                                                                                                   \r\e[100C \r\e[0m\r\r\n\e[J\e[?7h\e[0m\e[?12l\e[?25h\e[?2004l"
+  - delay: 12
+    content: "\e[?1l\e[6n"
+  - delay: 5
+    content: "\e[?2004h\e[?25l\e[0m\e[?7l\e[0m\e[J\e[0;38;5;67m?\e[0;1m Subject. Concise description of the changes. Imperative, lower case and no final dot:\e[0m             \r\e[100C \e[0m\r\r\n\e[0;1m \e[0m                                                                                                   \r\e[100C \r\e[C\e[?7h\e[0m\e[?12l\e[?25h"
+  - delay: 24
+    content: "\e[?25l\e[?7l\b\e[0;1m \e[0m \e[0m\e[K\e[0m\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\e[0m                                                                                                    \r\e[100C \r\e[15A\e[C\e[?7h\e[0m\e[?12l\e[?25h"
+  - delay: 925
+    content: "\e[?25l\e[?7l\e[0mallow provided config object to extend other configs \b\e[?7h\e[0m\e[?12l\e[?25h\e[?25l\e[?7l\e[?7h\e[0m\e[?12l\e[?25h"
+  - delay: 2880
+    content: "\e[?25l\e[?7l\e[A\e[53D\e[0m\e[J\e[0;38;5;67m?\e[0;1m Subject. Concise description of the changes. Imperative, lower case and no final dot:\e[0m             \r\e[100C \e[0m\r\r\n\e[0;1m \e[0mallow provided config object to extend other configs                                               \r\e[100C \r\e[0m\r\r\n\e[J\e[?7h\e[0m\e[?12l\e[?25h\e[?2004l"
+  - delay: 13
+    content: "\e[?1l\e[6n\e[?2004h\e[?25l\e[0m\e[?7l\e[0m\e[J\e[0;38;5;67m?\e[0;1m Is this a BREAKING CHANGE? Correlates with MAJOR in SemVer \e[0m (y/N)                                 \r\e[100C \r\e[67C\e[?7h\e[0m\e[?12l\e[?25h"
+  - delay: 19
+    content: "\e[?25l\e[?7l\e[67D\e[0;38;5;67m?\e[0;1m Is this a BREAKING CHANGE? Correlates with MAJOR in SemVer \e[0m (y/N) \e[0m\e[K\e[0m\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\e[0m                                                                                                    \r\e[100C \r\e[14A\e[67C\e[?7h\e[0m\e[?12l\e[?25h"
+  - delay: 1521
+    content: "\e[?25l\e[?7l\e[67D\e[0m\e[J\e[0;38;5;67m?\e[0;1m Is this a BREAKING CHANGE? Correlates with MAJOR in SemVer \e[0;38;5;214;1m Yes\e[0m                                   \r\e[100C \r\e[0m\r\r\n\e[J\e[?7h\e[0m\e[?12l\e[?25h\e[?2004l"
+  - delay: 15
+    content: "\e[?1l\e[6n\e[?2004h\e[?25l\e[0m\e[?7l\e[0m\e[J\e[0;38;5;67m?\e[0;1m Body. Motivation for the change and contrast this with previous behavior:\e[0m                         \r\e[100C \e[0m\r\r\n\e[0;1m \e[0m                                                                                                   \r\e[100C \r\e[C\e[?7h\e[0m\e[?12l\e[?25h"
+  - delay: 16
+    content: "\e[?25l\e[?7l\b\e[0;1m \e[0m \e[0m\e[K\e[0m\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\e[0m                                                                                                    \r\e[100C \r\e[12A\e[C\e[?7h\e[0m\e[?12l\e[?25h"
+  - delay: 5659
+    content: "\e[?25l\e[?7l\e[0mextends key in config file is now used for extending other config files \b\e[?7h\e[0m\e[?12l\e[?25h\e[?25l\e[?7l\e[?7h\e[0m\e[?12l\e[?25h"
+  - delay: 647
+    content: "\e[?25l\e[?7l\e[A\e[72D\e[0m\e[J\e[0;38;5;67m?\e[0;1m Body. Motivation for the change and contrast this with previous behavior:\e[0m                         \r\e[100C \e[0m\r\r\n\e[0;1m \e[0mextends key in config file is now used for extending other config files                            \r\e[100C \r\e[0m\r\r\n\e[J\e[?7h\e[0m\e[?12l\e[?25h\e[?2004l"
+  - delay: 10
+    content: "\e[?1l\e[6n"
+  - delay: 5
+    content: "\e[?2004h\e[?25l\e[0m\e[?7l\e[0m\e[J\e[0;38;5;67m?\e[0;1m Footer. Information about Breaking Changes and reference issues that this commit closes:\e[0m          \r\e[100C \e[0m\r\r\n\e[0;1m \e[0m                                                                                                   \r\e[100C \r\e[C\e[?7h\e[0m\e[?12l\e[?25h"
+  - delay: 22
+    content: "\e[?25l\e[?7l\b\e[0;1m \e[0m \e[0m\e[K\e[0m\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\r\r\n\e[0m                                                                                                    \r\e[100C \r\e[10A\e[C\e[?7h\e[0m\e[?12l\e[?25h"
+  - delay: 1583
+    content: "\e[?25l\e[?7l\e[A\b\e[0m\e[J\e[0;38;5;67m?\e[0;1m Footer. Information about Breaking Changes and reference issues that this commit closes:\e[0m          \r\e[100C \e[0m\r\r\n\e[0;1m \e[0m                                                                                                   \r\e[100C \r\e[0m\r\r\n\e[J\e[?7h\e[0m\e[?12l\e[?25h\e[?2004l"
+  - delay: 6
+    content: "[master (root-commit) 76d9660] feat: allow provided config object to extend other configs\r\n 1 file changed, 0 insertions(+), 0 deletions(-)\r\n create mode 100644 fil.py\r\n\r\n\e[32mCommit successful!\e[0m\r\n\e[0m"
+  - delay: 102
+    content: "\e[1;33m\e[0;32m\e[1;34m\e[1;32msantiago\e[1;34m@\e[1;31mhome\e[1;37m in \e[1;34m~/my-project\e[0;36m |master|\e[1;32m\r\r\n\e[1;32m$\e[00m "
