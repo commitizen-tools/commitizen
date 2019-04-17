@@ -62,16 +62,3 @@ def test_show_info():
     cz = DummyCz(config)
     with pytest.raises(NotImplementedError):
         cz.show_info()
-
-
-def test_commit(mocker):
-    process_mock = mocker.Mock()
-    attrs = {"communicate.return_value": (b"commit done", b"")}
-    process_mock.configure_mock(**attrs)
-
-    m = mocker.patch("subprocess.Popen")
-    m.return_value = process_mock
-
-    cz = DummyCz(config)
-    c = cz.commit("test: run test")
-    assert c.out == "commit done"
