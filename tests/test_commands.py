@@ -36,13 +36,9 @@ def test_info():
 
 
 def test_schema():
-    with mock.patch("commitizen.factory.commiter_factory") as mocked_factory:
-        mock_cz = mock.Mock()
-        mocked_factory.return_value = mock_cz
+    with mock.patch("commitizen.out.write") as write_mock:
         commands.Schema(config)()
-
-        mocked_factory.assert_called_once()
-        mock_cz.show_schema.assert_called_once()
+        write_mock.assert_called_once()
 
 
 def test_list_cz():
