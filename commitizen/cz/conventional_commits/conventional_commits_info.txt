@@ -1,20 +1,31 @@
-Commit Message Format
+The commit contains the following structural elements, to communicate
+intent to the consumers of your library:
 
-Each commit message consists of a header, a body and a footer. The header has a special format that
-includes a type, a scope and a subject:
+fix: a commit of the type fix patches a bug in your codebase
+(this correlates with PATCH in semantic versioning).
 
-<type>(<scope>): <subject>
-<BLANK LINE>
-<body>
-<BLANK LINE>
-<footer>
+feat: a commit of the type feat introduces a new feature to the codebase
+(this correlates with MINOR in semantic versioning).
 
-The header is mandatory and the scope of the header is optional.
+BREAKING CHANGE: a commit that has the text BREAKING CHANGE: at the beginning of
+its optional body or footer section introduces a breaking API change
+(correlating with MAJOR in semantic versioning).
+A BREAKING CHANGE can be part of commits of any type.
 
-Any line of the commit message cannot be longer 100 characters! This allows the message to be easier
-to read on GitHub as well as in various git tools.
+Others: commit types other than fix: and feat: are allowed,
+like chore:, docs:, style:, refactor:, perf:, test:, and others.
 
-Footer should contain a closing reference to an issue if any.
+We also recommend improvement for commits that improve a current
+implementation without adding a new feature or fixing a bug.
 
-This leads to more readable messages that are easy to follow when looking through the project history.
-But also, the git commit messages can be used to generate the changelog.
+Notice these types are not mandated by the conventional commits specification,
+and have no implicit effect in semantic versioning (unless they include a BREAKING CHANGE).
+
+A scope may be provided to a commit’s type, to provide additional contextual
+information and is contained within parenthesis, e.g., feat(parser): add ability to parse arrays.
+
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer]

@@ -61,6 +61,7 @@ def test_small_answer():
         "prefix": "fix",
         "scope": "users",
         "subject": "email pattern corrected",
+        "is_breaking_change": False,
         "body": "",
         "footer": "",
     }
@@ -74,13 +75,14 @@ def test_long_answer():
         "prefix": "fix",
         "scope": "users",
         "subject": "email pattern corrected",
+        "is_breaking_change": True,
         "body": "complete content",
         "footer": "closes #24",
     }
     message = conventional_commits.message(answers)
     assert (
         message
-        == "fix(users): email pattern corrected\n\ncomplete content\n\ncloses #24"
+        == "fix(users): email pattern corrected\n\nBREAKING CHANGE: complete content\n\ncloses #24"
     )
 
 

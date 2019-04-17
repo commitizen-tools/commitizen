@@ -19,14 +19,14 @@ def commit(message: str, args=""):
 
 def get_commits(start: str, end: str = "HEAD", from_beginning: bool = False) -> list:
 
-    c = cmd.run(f"git log --pretty=format:%s {start}...{end}")
+    c = cmd.run(f"git log --pretty=format:%s%n%b {start}...{end}")
 
     if from_beginning:
-        c = cmd.run(f"git log --pretty=format:%s {end}")
+        c = cmd.run(f"git log --pretty=format:%s%n%b {end}")
 
     if not c.out:
         return []
-
+    print(c.out)
     return c.out.split("\n")
 
 
