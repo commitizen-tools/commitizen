@@ -1,4 +1,4 @@
-from commitizen import factory
+from commitizen import factory, out
 
 
 class Schema:
@@ -9,4 +9,4 @@ class Schema:
         self.cz = factory.commiter_factory(self.config)
 
     def __call__(self):
-        self.cz.show_schema()
+        out.write(self.cz.schema())

@@ -1,4 +1,3 @@
-from commitizen import out
 from abc import ABCMeta, abstractmethod
 
 
@@ -7,14 +6,8 @@ class BaseCommitizen(metaclass=ABCMeta):
         self.config = config
 
     @abstractmethod
-    def questions(self):
-        """Questions regarding the commit message.
-
-        Must have 'whaaaaat' format.
-        More info: https://github.com/finklabs/whaaaaat/
-
-        :rtype: list
-        """
+    def questions(self) -> list:
+        """Questions regarding the commit message."""
 
     @abstractmethod
     def message(self, answers: dict) -> dict:
@@ -31,6 +24,3 @@ class BaseCommitizen(metaclass=ABCMeta):
     def info(self) -> str:
         """Information about the standardized commit message."""
         raise NotImplementedError("Not Implemented yet")
-
-    def show_schema(self, *args, **kwargs):
-        out.write(self.schema())
