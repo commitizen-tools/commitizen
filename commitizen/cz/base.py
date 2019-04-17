@@ -34,6 +34,3 @@ class BaseCommitizen(metaclass=ABCMeta):
 
     def show_schema(self, *args, **kwargs):
         out.write(self.schema())
-
-    def show_info(self, *args, **kwargs):
-        out.write(self.info())

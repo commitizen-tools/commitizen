@@ -1,4 +1,4 @@
-from commitizen import factory
+from commitizen import factory, out
 
 
 class Info:
@@ -9,4 +9,4 @@ class Info:
         self.cz = factory.commiter_factory(self.config)
 
     def __call__(self):
-        self.cz.show_info()
+        out.write(self.cz.info())

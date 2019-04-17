@@ -50,9 +50,3 @@ def test_show_schema():
     cz = DummyCz(config)
     with pytest.raises(NotImplementedError):
         cz.show_schema()
-
-
-def test_show_info():
-    cz = DummyCz(config)
-    with pytest.raises(NotImplementedError):
-        cz.show_info()
