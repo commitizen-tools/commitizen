@@ -28,6 +28,12 @@ Commitizen
 .. image:: docs/images/demo.gif
     :alt: Example running commitizen
 
+--------------
+
+**Documentation**: https://Woile.github.io/commitizen/
+
+--------------
+
 .. contents::
     :depth: 2
 
