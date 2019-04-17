@@ -24,13 +24,14 @@ def test_commit(mocker):
 
 
 def test_example():
-    with mock.patch("commitizen.factory.commiter_factory") as mocked_factory:
-        mock_cz = mock.Mock()
-        mocked_factory.return_value = mock_cz
+    with mock.patch("commitizen.out.write") as write_mock:
+        # mock_cz = mock.Mock()
+        # mocked_factory.return_value = mock_cz
         commands.Example(config)()
+        write_mock.assert_called_once()
 
-        mocked_factory.assert_called_once()
-        mock_cz.show_example.assert_called_once()
+        # mocked_factory.assert_called_once()
+        # mock_cz.show_example.assert_called_once()
 
 
 def test_info():

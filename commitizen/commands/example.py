@@ -1,4 +1,4 @@
-from commitizen import factory
+from commitizen import factory, out
 
 
 class Example:
@@ -9,4 +9,4 @@ class Example:
         self.cz = factory.commiter_factory(self.config)
 
     def __call__(self):
-        self.cz.show_example()
+        out.write(self.cz.example())

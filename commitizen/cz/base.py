@@ -32,9 +32,6 @@ class BaseCommitizen(metaclass=ABCMeta):
         """Information about the standardized commit message."""
         raise NotImplementedError("Not Implemented yet")
 
-    def show_example(self, *args, **kwargs):
-        out.write(self.example())
-
     def show_schema(self, *args, **kwargs):
         out.write(self.schema())
 
