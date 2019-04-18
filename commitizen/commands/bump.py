@@ -77,12 +77,12 @@ class Bump:
             current_version, increment, prerelease=prerelease
         )
         new_tag_version = bump.create_tag(new_version, tag_format=tag_format)
-        message = f"Bump version {current_version} → {new_version}"
+        message = f"bump: version {current_version} → {new_version}"
 
         # Report found information
         out.write(message)
-        out.write(f"Tag to create: {new_tag_version}")
-        out.write(f"Increment detected: {increment}")
+        out.write(f"tag to create: {new_tag_version}")
+        out.write(f"increment detected: {increment}")
 
         # Do not perform operations over files or git.
         if dry_run:
