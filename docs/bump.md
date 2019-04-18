@@ -1,3 +1,6 @@
+
+![Bump version](images/bump.gif)
+
 ## About
 
 The version is bumped **automatically** based on the commits.
@@ -10,7 +13,7 @@ The version can also be **manually** bumped.
 
 The version format follows [semantic versioning][semver].
 
-This means `MAJOR.MiNOR.PATCH`
+This means `MAJOR.MINOR.PATCH`
 
 | Increment | Description | Conventional commit map |
 | ------- | ----- | ------ |
@@ -18,18 +21,17 @@ This means `MAJOR.MiNOR.PATCH`
 | `MINOR` | New features | `feat` |
 | `PATCH` | Fixes | `fix` + everything else |
 
-
 Prereleases are supported following python's [PEP 0440][pep440]
 
 The scheme of this format is
 
-```
+```bash
 [N!]N(.N)*[{a|b|rc}N][.postN][.devN]
 ```
 
 Some examples:
 
-```
+```bash
 0.9.0
 0.9.1
 0.9.2
