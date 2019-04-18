@@ -1,0 +1,195 @@
+# The configurations that used for the recording, feel free to edit them
+config:
+
+  # Specify a command to be executed
+  # like `/bin/bash -l`, `ls`, or any other commands
+  # the default is bash for Linux
+  # or powershell.exe for Windows
+  command: bash -l
+
+  # Specify the current working directory path
+  # the default is the current working directory path
+  cwd: ~/my-project
+
+  # Export additional ENV variables
+  env:
+    recording: true
+
+  # Explicitly set the number of columns
+  # or use `auto` to take the current
+  # number of columns of your shell
+  cols: 80
+
+  # Explicitly set the number of rows
+  # or use `auto` to take the current
+  # number of rows of your shell
+  rows: 20
+
+  # Amount of times to repeat GIF
+  # If value is -1, play once
+  # If value is 0, loop indefinitely
+  # If value is a positive number, loop n times
+  repeat: 0
+
+  # Quality
+  # 1 - 100
+  quality: 85
+
+  # Delay between frames in ms
+  # If the value is `auto` use the actual recording delays
+  frameDelay: auto
+
+  # Maximum delay between frames in ms
+  # Ignored if the `frameDelay` isn't set to `auto`
+  # Set to `auto` to prevent limiting the max idle time
+  maxIdleTime: 2000
+
+  # The surrounding frame box
+  # The `type` can be null, window, floating, or solid`
+  # To hide the title use the value null
+  # Don't forget to add a backgroundColor style with a null as type
+  frameBox:
+    type: floating
+    title: "Commitizen: bump"
+    style:
+      border: 0px black solid
+      # boxShadow: none
+      # margin: 0px
+
+  # Add a watermark image to the rendered gif
+  # You need to specify an absolute path for
+  # the image on your machine or a URL, and you can also
+  # add your own CSS styles
+  watermark:
+    imagePath: null
+    style:
+      position: absolute
+      right: 15px
+      bottom: 15px
+      width: 100px
+      opacity: 0.9
+
+  # Cursor style can be one of
+  # `block`, `underline`, or `bar`
+  cursorStyle: block
+
+  # Font family
+  # You can use any font that is installed on your machine
+  # in CSS-like syntax
+  fontFamily: "Monaco, Lucida Console, Ubuntu Mono, Monospace"
+
+  # The size of the font
+  fontSize: 16
+
+  # The height of lines
+  lineHeight: 1
+
+  # The spacing between letters
+  letterSpacing: 0
+
+  # Theme
+  theme:
+    background: "transparent"
+    foreground: "#afafaf"
+    cursor: "#c7c7c7"
+    black: "#232628"
+    red: "#fc4384"
+    green: "#b3e33b"
+    yellow: "#ffa727"
+    blue: "#75dff2"
+    magenta: "#ae89fe"
+    cyan: "#708387"
+    white: "#d5d5d0"
+    brightBlack: "#626566"
+    brightRed: "#ff7fac"
+    brightGreen: "#c8ed71"
+    brightYellow: "#ebdf86"
+    brightBlue: "#75dff2"
+    brightMagenta: "#ae89fe"
+    brightCyan: "#b1c6ca"
+    brightWhite: "#f9f9f4"
+
+# Records, feel free to edit them
+records:
+  - delay: 2295
+    content: "\e[1;33m\e[0;32m\e[1;34m\e[1;32msantiago\e[1;34m@\e[1;31mhome\e[1;37m in \e[1;34m~/my-project\e[0;36m |master=|\e[1;32m $\r\r\n\e[1;32m$\e[00m "
+  - delay: 662
+    content: c
+  - delay: 70
+    content: z
+  - delay: 111
+    content: ' '
+  - delay: 253
+    content: '-'
+  - delay: 112
+    content: '-'
+  - delay: 112
+    content: v
+  - delay: 122
+    content: e
+  - delay: 280
+    content: r
+  - delay: 202
+    content: s
+  - delay: 106
+    content: i
+  - delay: 55
+    content: o
+  - delay: 298
+    content: 'n'
+  - delay: 273
+    content: "\r\n"
+  - delay: 1121
+    content: "1.1.0\r\n\e[0m"
+  - delay: 161
+    content: "\e[1;33m\e[0;32m\e[1;34m\e[1;32msantiago\e[1;34m@\e[1;31mhome\e[1;37m in \e[1;34m~/my-project\e[0;36m |master=|\e[1;32m $\r\r\n\e[1;32m$\e[00m "
+  - delay: 667
+    content: c
+  - delay: 95
+    content: z
+  - delay: 147
+    content: ' '
+  - delay: 150
+    content: b
+  - delay: 114
+    content: u
+  - delay: 180
+    content: m
+  - delay: 132
+    content: p
+  - delay: 239
+    content: "\r\n"
+  - delay: 1176
+    content: "bump: version 1.1.0 → 1.1.1\r\ntag to create: v1.1.1\r\nincrement detected: PATCH\r\n"
+  - delay: 75
+    content: "\e[32mDone!\e[0m\r\n\e[0m"
+  - delay: 183
+    content: "\e[1;33m\e[0;32m\e[1;34m\e[1;32msantiago\e[1;34m@\e[1;31mhome\e[1;37m in \e[1;34m~/my-project\e[0;36m |master>|\e[1;32m $\r\r\n\e[1;32m$\e[00m "
+  - delay: 1500
+    content: c
+  - delay: 70
+    content: z
+  - delay: 44
+    content: ' '
+  - delay: 161
+    content: '-'
+  - delay: 119
+    content: '-'
+  - delay: 87
+    content: v
+  - delay: 133
+    content: e
+  - delay: 92
+    content: r
+  - delay: 89
+    content: s
+  - delay: 87
+    content: i
+  - delay: 45
+    content: o
+  - delay: 200
+    content: 'n'
+  - delay: 199
+    content: "\r\n"
+  - delay: 1120
+    content: "1.1.1\r\n\e[0m"
