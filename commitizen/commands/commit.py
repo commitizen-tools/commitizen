@@ -20,7 +20,7 @@ class Commit:
         if not answers:
             raise SystemExit(NO_ANSWERS)
         m = cz.message(answers)
-
+        out.info(f"\n{m}\n")
         c = git.commit(m)
 
         if c.err:

@@ -26,7 +26,6 @@ def get_commits(start: str, end: str = "HEAD", from_beginning: bool = False) -> 
 
     if not c.out:
         return []
-    print(c.out)
     return c.out.split("\n")
 
 
