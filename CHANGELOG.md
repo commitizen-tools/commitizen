@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## v1.2.0
+
+### Feature
+- custom cz plugins now support bumping version
+
+## v1.1.1
+
+### Fix
+- breaking change is now part of the body, instead of being in the subject
 
 ## v1.1.0
 
