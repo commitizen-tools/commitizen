@@ -122,5 +122,9 @@ files = [
 ]
 ```
 
+## Custom bump
+
+Read the [customizing section](./customization.md).
+
 [pep440]: https://www.python.org/dev/peps/pep-0440/
 [semver]: https://semver.org/

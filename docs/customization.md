@@ -1,3 +1,15 @@
+Customizing commitizen is not hard at all.
+
+The basic steps are:
+
+1. Inheriting from `BaseCommitizen`
+2. Give a name to your rules.
+3. expose the class at the end of your file assigning it to `discover_this`
+4. Create a python package starting with `cz_` using `setup.py`, `poetry`, etc
+
+
+Check an [example](convcomms) on how to configure `BaseCommitizen`.
+
 ## Custom commit rules
 
 Create a file starting with `cz_` for example `cz_jira.py`. This prefix
@@ -83,3 +95,35 @@ doing `pip install .`
 If you feel like it should be part of this repo, create a PR.
 
 [flask uses]: http://flask.pocoo.org/docs/0.12/extensiondev/
+
+## Custom bump rules
+
+You need to define 2 parameters inside `BaseCommitizen`.
+
+| Parameter | Type | Default | Description |
+| --------- | ---- | ------- | ----------- |
+| `bump_pattern` | `str` | `None` | Regex to extract information from commit (subject and body) |
+| `bump_map` | `dict` | `None` | Dictionary mapping the extracted information to a `SemVer` increment type (`MAJOR`, `MINOR`, `PATCH`) |
+
+Let's see an exampple
+
+```python
+from commitizen.cz.base import BaseCommitizen
+
+
+class StrangeCommitizen(BaseCommitizen):
+    bump_pattern = r"^(break|new|fix|hotfix)"
+    bump_map = {"break": "MAJOR", "new": "MINOR"}
+```
+
+As you can see we have ommitted `fix` and `hotfix`, both are gonna be picked up
+by the regex, but because they are not present in `bump_map` they will be mapped
+by default to `PATCH`
+
+That's it, your commitizen now supports custom rules and you can run
+
+```bash
+cz -n cz_strange bump
+```
+
+[convcomms]: https://github.com/Woile/commitizen/blob/master/commitizen/cz/conventional_commits/conventional_commits.py
