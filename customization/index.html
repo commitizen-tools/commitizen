@@ -296,6 +296,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#custom-bump-rules" title="Custom bump rules" class="md-nav__link">
+    Custom bump rules
+  </a>
+  
+</li>
+      
       
       
       
@@ -332,6 +339,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#custom-bump-rules" title="Custom bump rules" class="md-nav__link">
+    Custom bump rules
+  </a>
+  
+</li>
+      
       
       
       
@@ -351,7 +365,16 @@
                 
                   <h1>Customization</h1>
                 
-                <h2 id="custom-commit-rules">Custom commit rules</h2>
+                <p>Customizing commitizen is not hard at all.</p>
+<p>The basic steps are:</p>
+<ol>
+<li>Inheriting from <code>BaseCommitizen</code></li>
+<li>Give a name to your rules.</li>
+<li>expose the class at the end of your file assigning it to <code>discover_this</code></li>
+<li>Create a python package starting with <code>cz_</code> using <code>setup.py</code>, <code>poetry</code>, etc</li>
+</ol>
+<p>Check an <a href="convcomms">example</a> on how to configure <code>BaseCommitizen</code>.</p>
+<h2 id="custom-commit-rules">Custom commit rules</h2>
 <p>Create a file starting with <code>cz_</code> for example <code>cz_jira.py</code>. This prefix
 is used to detect the plugin. Same method <a href="http://flask.pocoo.org/docs/0.12/extensiondev/">flask uses</a></p>
 <p>Inherit from <code>BaseCommitizen</code> and you must define <code>questions</code> and
@@ -430,6 +453,48 @@ is used to detect the plugin. Same method <a href="http://flask.pocoo.org/docs/0
 <p>And that's it, you can install it without uploading to pypi by simply
 doing <code>pip install .</code></p>
 <p>If you feel like it should be part of this repo, create a PR.</p>
+<h2 id="custom-bump-rules">Custom bump rules</h2>
+<p>You need to define 2 parameters inside <code>BaseCommitizen</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bump_pattern</code></td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td>Regex to extract information from commit (subject and body)</td>
+</tr>
+<tr>
+<td><code>bump_map</code></td>
+<td><code>dict</code></td>
+<td><code>None</code></td>
+<td>Dictionary mapping the extracted information to a <code>SemVer</code> increment type (<code>MAJOR</code>, <code>MINOR</code>, <code>PATCH</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Let's see an exampple</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">commitizen.cz.base</span> <span class="kn">import</span> <span class="n">BaseCommitizen</span>
+
+
+<span class="k">class</span> <span class="nc">StrangeCommitizen</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
+    <span class="n">bump_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^(break|new|fix|hotfix)&quot;</span>
+    <span class="n">bump_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;break&quot;</span><span class="p">:</span> <span class="s2">&quot;MAJOR&quot;</span><span class="p">,</span> <span class="s2">&quot;new&quot;</span><span class="p">:</span> <span class="s2">&quot;MINOR&quot;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>As you can see we have ommitted <code>fix</code> and <code>hotfix</code>, both are gonna be picked up
+by the regex, but because they are not present in <code>bump_map</code> they will be mapped
+by default to <code>PATCH</code></p>
+<p>That's it, your commitizen now supports custom rules and you can run</p>
+<div class="codehilite"><pre><span></span>cz -n cz_strange bump
+</pre></div>
                 
                   
                 
