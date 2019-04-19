@@ -1,7 +1,11 @@
+from typing import Optional
 from abc import ABCMeta, abstractmethod
 
 
 class BaseCommitizen(metaclass=ABCMeta):
+    bump_pattern: Optional[str] = None
+    bump_map: Optional[dict] = None
+
     def __init__(self, config: dict):
         self.config = config
 

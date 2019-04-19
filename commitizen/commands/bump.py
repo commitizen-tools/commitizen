@@ -2,10 +2,11 @@ from packaging.version import Version
 from typing import Optional
 
 import questionary
-from commitizen import bump, git, config, out
+from commitizen import bump, git, config, out, factory
 
 NO_COMMITS_FOUND = 3
 NO_VERSION_SPECIFIED = 4
+NO_PATTERN_MAP = 7
 
 
 class Bump:
@@ -22,6 +23,7 @@ class Bump:
                 if arguments[key] is not None
             },
         }
+        self.cz = factory.commiter_factory(self.config)
 
     def __call__(self):
         """Steps executed to bump."""
@@ -32,6 +34,7 @@ class Bump:
             out.error("Check if current version is specified in config file, like:")
             out.error("version = 0.4.3")
             raise SystemExit(NO_VERSION_SPECIFIED)
+
         current_version: str = self.config["version"]
         tag_format: str = self.parameters["tag_format"]
         current_tag_version: str = bump.create_tag(
@@ -66,7 +69,14 @@ class Bump:
             raise SystemExit(NO_COMMITS_FOUND)
 
         if increment is None:
-            increment = bump.find_increment(commits)
+            bump_pattern = self.cz.bump_pattern
+            bump_map = self.cz.bump_map
+            if not bump_map or not bump_pattern:
+                out.error(f"'{self.config['name']}' rule does not support bump")
+                raise SystemExit(NO_PATTERN_MAP)
+            increment = bump.find_increment(
+                commits, regex=bump_pattern, increments_map=bump_map
+            )
 
         # Increment is removed when current and next version
         # are expected to be prereleases.

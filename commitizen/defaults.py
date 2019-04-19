@@ -8,3 +8,10 @@ settings: dict = {
     "files": [],
     "tag_format": None,  # example v$version
 }
+
+MAJOR = "MAJOR"
+MINOR = "MINOR"
+PATCH = "PATCH"
+
+bump_pattern = r"^(BREAKING CHANGE|feat)"
+bump_map = {"BREAKING CHANGE": MAJOR, "feat": MINOR}

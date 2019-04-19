@@ -1,6 +1,6 @@
 import os
 from commitizen.cz.base import BaseCommitizen
-
+from commitizen import defaults
 __all__ = ["ConventionalCommitsCz"]
 
 
@@ -30,6 +30,9 @@ def parse_subject(text):
 
 
 class ConventionalCommitsCz(BaseCommitizen):
+    bump_pattern = defaults.bump_pattern
+    bump_map = defaults.bump_map
+
     def questions(self) -> list:
         questions = [
             {
