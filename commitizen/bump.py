@@ -4,18 +4,13 @@ from itertools import zip_longest
 from string import Template
 from packaging.version import Version
 from typing import List, Optional, Union
-
-MAJOR = "MAJOR"
-MINOR = "MINOR"
-PATCH = "PATCH"
-conventional_commits_pattern = r"^(BREAKING CHANGE|feat)"
-conventional_commits_map = {"BREAKING CHANGE": MAJOR, "feat": MINOR}
+from commitizen.defaults import MAJOR, MINOR, PATCH, bump_pattern, bump_map
 
 
 def find_increment(
     messages: List[str],
-    regex: str = conventional_commits_pattern,
-    increments_map: dict = conventional_commits_map,
+    regex: str = bump_pattern,
+    increments_map: dict = bump_map,
 ) -> str:
 
     # Most important cases are major and minor.
