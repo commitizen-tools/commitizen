@@ -113,12 +113,8 @@ from commitizen.cz.base import BaseCommitizen
 
 class StrangeCommitizen(BaseCommitizen):
     bump_pattern = r"^(break|new|fix|hotfix)"
-    bump_map = {"break": "MAJOR", "new": "MINOR"}
+    bump_map = {"break": "MAJOR", "new": "MINOR", "fix": "PATCH", "hotfix": "PATCH"}
 ```
-
-As you can see we have ommitted `fix` and `hotfix`, both are gonna be picked up
-by the regex, but because they are not present in `bump_map` they will be mapped
-by default to `PATCH`
 
 That's it, your commitizen now supports custom rules and you can run
 

@@ -4,6 +4,7 @@ SVE: Semantic version at the end
 """
 from commitizen import bump
 
+NONE_INCREMENT_CC = ["docs(README): motivation", "ci: added travis"]
 
 PATCH_INCREMENTS_CC = [
     "docs(README): motivation",
@@ -82,3 +83,11 @@ def test_find_increment_type_major_sve():
         messages, regex=semantic_version_pattern, increments_map=semantic_version_map
     )
     assert increment_type == "MAJOR"
+
+
+def test_find_increment_type_none():
+    messages = NONE_INCREMENT_CC
+    increment_type = bump.find_increment(
+        messages, regex=semantic_version_pattern, increments_map=semantic_version_map
+    )
+    assert increment_type is None
