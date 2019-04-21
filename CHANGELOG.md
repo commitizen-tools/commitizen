@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v1.2.1
+
+### Fix
+- prefixes like docs, build, etc no longer generate a PATCH
+
 ## v1.2.0
 
 ### Feature
