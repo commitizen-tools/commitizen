@@ -11,20 +11,26 @@ def find_increment(
     messages: List[str],
     regex: str = bump_pattern,
     increments_map: dict = bump_map,
-) -> str:
+) -> Optional[str]:
 
     # Most important cases are major and minor.
     # Everything else will be considered patch.
-    increments_map_default = defaultdict(lambda: PATCH, increments_map)
+    increments_map_default = defaultdict(lambda: None, increments_map)
     pattern = re.compile(regex)
-    increment = PATCH
+    increment = None
 
     for message in messages:
         result = pattern.search(message)
         if not result:
             continue
         found_keyword = result.group(0)
-        increment = increments_map_default[found_keyword]
+        new_increment = increments_map_default[found_keyword]
+        if new_increment == "MAJOR":
+            increment = new_increment
+            break
+        elif increment == "MINOR" and new_increment == "PATCH":
+            continue
+        increment = new_increment
 
     return increment
 

@@ -13,5 +13,11 @@ MAJOR = "MAJOR"
 MINOR = "MINOR"
 PATCH = "PATCH"
 
-bump_pattern = r"^(BREAKING CHANGE|feat)"
-bump_map = {"BREAKING CHANGE": MAJOR, "feat": MINOR}
+bump_pattern = r"^(BREAKING CHANGE|feat|fix|refactor|perf)"
+bump_map = {
+    "BREAKING CHANGE": MAJOR,
+    "feat": MINOR,
+    "fix": PATCH,
+    "refactor": PATCH,
+    "perf": PATCH,
+}
