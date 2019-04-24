@@ -68,7 +68,14 @@ data = {
                         "help": (
                             "format used to tag the commmit and read it, "
                             "use it in existing projects, "
-                            "wrap around simple quotes."
+                            "wrap around simple quotes"
+                        ),
+                    },
+                    {
+                        "name": "--bump-message",
+                        "help": (
+                            "template used to create the release commmit, "
+                            "useful when working with CI"
                         ),
                     },
                     {
