@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v1.3.0
+
+### Feature
+- bump: new commit message template, useful when having to skip ci.
+
 ## v1.2.1
 
 ### Fix
