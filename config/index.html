@@ -270,8 +270,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#settings" title="settings" class="md-nav__link">
-    settings
+  <a href="#settings" title="Settings" class="md-nav__link">
+    Settings
   </a>
   
 </li>
@@ -332,8 +332,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#settings" title="settings" class="md-nav__link">
-    settings
+  <a href="#settings" title="Settings" class="md-nav__link">
+    Settings
   </a>
   
 </li>
@@ -356,7 +356,7 @@
                 
                 
                 <h1 id="configuration">Configuration</h1>
-<p><strong>New!</strong>: Support for <code>pyproject.toml</code></p>
+<p><strong>New!</strong> Support for <code>pyproject.toml</code></p>
 <p>Add an entry to <code>pyproject.toml</code>.</p>
 <div class="codehilite"><pre><span></span><span class="k">[tool.commitizen]</span>
 <span class="na">name</span> <span class="o">=</span> <span class="s">&quot;cz_conventional_commits&quot;</span>
@@ -383,7 +383,7 @@ information:</p>
 
 
 <p>The extra tab at the end (<code>]</code>) is required.</p>
-<h2 id="settings">settings</h2>
+<h2 id="settings">Settings</h2>
 <table>
 <thead>
 <tr>
@@ -395,28 +395,34 @@ information:</p>
 </thead>
 <tbody>
 <tr>
-<td>name</td>
-<td>str</td>
+<td><code>name</code></td>
+<td><code>str</code></td>
 <td><code>"cz_conventional_commits"</code></td>
 <td>Name of the commiting rules to use</td>
 </tr>
 <tr>
-<td>version</td>
-<td>str</td>
+<td><code>version</code></td>
+<td><code>str</code></td>
 <td><code>None</code></td>
 <td>Current version. Example: "0.1.2"</td>
 </tr>
 <tr>
-<td>files</td>
-<td>list</td>
+<td><code>files</code></td>
+<td><code>list</code></td>
 <td><code>[ ]</code></td>
 <td>Files were the version needs to be updated</td>
 </tr>
 <tr>
-<td>tag_format</td>
-<td>str</td>
+<td><code>tag_format</code></td>
+<td><code>str</code></td>
 <td><code>None</code></td>
 <td>Format for the git tag, useful for old projects, that use a convention like <code>"v1.2.1"</code>. <a href="/bump#configuration">See more</a></td>
+</tr>
+<tr>
+<td><code>bump_message</code></td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td>Create custom commit message, useful to skip ci. <a href="/bump#configuration">See more</a></td>
 </tr>
 </tbody>
 </table>

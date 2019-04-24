@@ -485,13 +485,10 @@ doing <code>pip install .</code></p>
 
 <span class="k">class</span> <span class="nc">StrangeCommitizen</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
     <span class="n">bump_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^(break|new|fix|hotfix)&quot;</span>
-    <span class="n">bump_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;break&quot;</span><span class="p">:</span> <span class="s2">&quot;MAJOR&quot;</span><span class="p">,</span> <span class="s2">&quot;new&quot;</span><span class="p">:</span> <span class="s2">&quot;MINOR&quot;</span><span class="p">}</span>
+    <span class="n">bump_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;break&quot;</span><span class="p">:</span> <span class="s2">&quot;MAJOR&quot;</span><span class="p">,</span> <span class="s2">&quot;new&quot;</span><span class="p">:</span> <span class="s2">&quot;MINOR&quot;</span><span class="p">,</span> <span class="s2">&quot;fix&quot;</span><span class="p">:</span> <span class="s2">&quot;PATCH&quot;</span><span class="p">,</span> <span class="s2">&quot;hotfix&quot;</span><span class="p">:</span> <span class="s2">&quot;PATCH&quot;</span><span class="p">}</span>
 </pre></div>
 
 
-<p>As you can see we have ommitted <code>fix</code> and <code>hotfix</code>, both are gonna be picked up
-by the regex, but because they are not present in <code>bump_map</code> they will be mapped
-by default to <code>PATCH</code></p>
 <p>That's it, your commitizen now supports custom rules and you can run</p>
 <div class="codehilite"><pre><span></span>cz -n cz_strange bump
 </pre></div>

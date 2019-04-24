@@ -485,8 +485,14 @@ optional arguments:
 
 
 <p>In your <code>pyproject.toml</code></p>
-<div class="codehilite"><pre><span></span>[commitizen]
-tag_format = &quot;v$minor.$major.$path$prerelease&quot;
+<div class="codehilite"><pre><span></span><span class="k">[tool.commitizen]</span>
+<span class="na">tag_format</span> <span class="o">=</span> <span class="s">&quot;v$minor.$major.$path$prerelease&quot;</span>
+</pre></div>
+
+
+<p>Or in your <code>.cz</code></p>
+<div class="codehilite"><pre><span></span><span class="k">[commitizen]</span>
+<span class="na">tag_format</span> <span class="o">=</span> <span class="s">v$minor.$major.$path$prerelease</span>
 </pre></div>
 
 
@@ -526,11 +532,56 @@ tag_format = &quot;v$minor.$major.$path$prerelease&quot;
 <p>Used to identify the files which should be updated with the new version.
 In your <code>pyproject.toml</code></p>
 <p>Commitizen will update it's configuration (<code>pyproject.toml</code>, <code>.cz</code>) when bumping.</p>
-<div class="codehilite"><pre><span></span>[commitizen]
-files = [
-    &quot;src/__version__.py&quot;,
-    &quot;setup.py&quot;
-]
+<p>Some examples</p>
+<p><code>pyproject.toml</code></p>
+<div class="codehilite"><pre><span></span><span class="k">[tool.commitizen]</span>
+<span class="na">files</span> <span class="o">=</span> <span class="s">[</span>
+<span class="s">    &quot;src/__version__.py&quot;,</span>
+<span class="s">    &quot;setup.py&quot;</span>
+<span class="na">]</span>
+</pre></div>
+
+
+<p><code>.cz</code></p>
+<div class="codehilite"><pre><span></span><span class="k">[commitizen]</span>
+<span class="na">files</span> <span class="o">=</span> <span class="s">[</span>
+<span class="s">    &quot;src/__version__.py&quot;,</span>
+<span class="s">    &quot;setup.py&quot;</span>
+<span class="s">    ]</span>
+</pre></div>
+
+
+<p><code>bump_message</code></p>
+<p>Template used to specify the commit message generated when bumping</p>
+<p>defaults to: <code>bump: version $current_version → $new_version</code></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$current_version</code></td>
+<td>the version existing before bumping</td>
+</tr>
+<tr>
+<td><code>$new_version</code></td>
+<td>version generated after bumping</td>
+</tr>
+</tbody>
+</table>
+<p>Some examples</p>
+<p><code>pyproject.toml</code></p>
+<div class="codehilite"><pre><span></span><span class="k">[tool.commitizen]</span>
+<span class="na">bump_message</span> <span class="o">=</span> <span class="s">&quot;release $current_version → $new_version [skip-ci]&quot;</span>
+</pre></div>
+
+
+<p><code>.cz</code></p>
+<div class="codehilite"><pre><span></span><span class="k">[commitizen]</span>
+<span class="na">bump_message</span> <span class="o">=</span> <span class="s">release $current_version → $new_version [skip-ci]</span>
 </pre></div>
 
 
