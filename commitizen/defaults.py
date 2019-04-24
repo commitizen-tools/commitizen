@@ -7,6 +7,7 @@ settings: dict = {
     "version": None,
     "files": [],
     "tag_format": None,  # example v$version
+    "bump_message": None  # bumped v$current_version to $new_version
 }
 
 MAJOR = "MAJOR"
@@ -21,3 +22,4 @@ bump_map = {
     "refactor": PATCH,
     "perf": PATCH,
 }
+bump_message = "bump: version $current_version → $new_version"

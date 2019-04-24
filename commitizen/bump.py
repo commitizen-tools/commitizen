@@ -4,13 +4,18 @@ from itertools import zip_longest
 from string import Template
 from packaging.version import Version
 from typing import List, Optional, Union
-from commitizen.defaults import MAJOR, MINOR, PATCH, bump_pattern, bump_map
+from commitizen.defaults import (
+    MAJOR,
+    MINOR,
+    PATCH,
+    bump_pattern,
+    bump_map,
+    bump_message,
+)
 
 
 def find_increment(
-    messages: List[str],
-    regex: str = bump_pattern,
-    increments_map: dict = bump_map,
+    messages: List[str], regex: str = bump_pattern, increments_map: dict = bump_map
 ) -> Optional[str]:
 
     # Most important cases are major and minor.
@@ -156,3 +161,14 @@ def create_tag(version: Union[Version, str], tag_format: Optional[str] = None):
     return t.safe_substitute(
         version=version, major=major, minor=minor, patch=patch, prerelease=prerelease
     )
+
+
+def create_commit_message(
+    current_version: Union[Version, str],
+    new_version: Union[Version, str],
+    message_template: str = None,
+) -> str:
+    if message_template is None:
+        message_template = bump_message
+    t = Template(message_template)
+    return t.safe_substitute(current_version=current_version, new_version=new_version)

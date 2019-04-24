@@ -90,10 +90,14 @@ cz bump --tag_format="v$minor.$major.$path$prerelease"
 
 In your `pyproject.toml`
 
-```toml
-[commitizen]
-tag_format = "v$minor.$major.$path$prerelease"
-```
+
+    [tool.commitizen]
+    tag_format = "v$minor.$major.$path$prerelease"
+
+Or in your `.cz`
+
+    [commitizen]
+    tag_format = v$minor.$major.$path$prerelease
 
 The variables must be preceded by a `$` sign.
 
@@ -114,13 +118,50 @@ In your `pyproject.toml`
 
 Commitizen will update it's configuration (`pyproject.toml`, `.cz`) when bumping.
 
-```toml
-[commitizen]
-files = [
-    "src/__version__.py",
-    "setup.py"
-]
-```
+Some examples
+
+`pyproject.toml`
+
+    [tool.commitizen]
+    files = [
+        "src/__version__.py",
+        "setup.py"
+    ]
+
+
+`.cz`
+
+    [commitizen]
+    files = [
+        "src/__version__.py",
+        "setup.py"
+        ]
+
+`bump_message`
+
+Template used to specify the commit message generated when bumping
+
+defaults to: `bump: version $current_version → $new_version`
+
+
+
+| Variable | Description |
+| --- | ----------- |
+| `$current_version` | the version existing before bumping |
+| `$new_version` | version generated after bumping |
+
+Some examples
+
+`pyproject.toml`
+
+    [tool.commitizen]
+    bump_message = "release $current_version → $new_version [skip-ci]"
+
+`.cz`
+
+    [commitizen]
+    bump_message = release $current_version → $new_version [skip-ci]
+
 
 ## Custom bump
 

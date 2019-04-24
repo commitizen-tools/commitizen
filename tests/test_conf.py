@@ -31,6 +31,7 @@ _config = {
     "name": "cz_jira",
     "version": "1.0.0",
     "tag_format": None,
+    "bump_message": None,
     "files": ["commitizen/__version__.py", "pyproject.toml"],
 }
 
@@ -38,6 +39,7 @@ _new_config = {
     "name": "cz_jira",
     "version": "2.0.0",
     "tag_format": None,
+    "bump_message": None,
     "files": ["commitizen/__version__.py", "pyproject.toml"],
 }
 

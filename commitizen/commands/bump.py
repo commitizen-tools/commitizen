@@ -19,7 +19,13 @@ class Bump:
             **config,
             **{
                 key: arguments[key]
-                for key in ["dry_run", "tag_format", "prerelease", "increment"]
+                for key in [
+                    "dry_run",
+                    "tag_format",
+                    "prerelease",
+                    "increment",
+                    "bump_message",
+                ]
                 if arguments[key] is not None
             },
         }
@@ -35,8 +41,10 @@ class Bump:
             out.error("version = 0.4.3")
             raise SystemExit(NO_VERSION_SPECIFIED)
 
+        # Initialize values from sources (conf)
         current_version: str = self.config["version"]
         tag_format: str = self.parameters["tag_format"]
+        bump_commit_message: str = self.parameters["bump_message"]
         current_tag_version: str = bump.create_tag(
             current_version, tag_format=tag_format
         )
@@ -87,7 +95,9 @@ class Bump:
             current_version, increment, prerelease=prerelease
         )
         new_tag_version = bump.create_tag(new_version, tag_format=tag_format)
-        message = f"bump: version {current_version} → {new_version}"
+        message = bump.create_commit_message(
+            current_version, new_version, bump_commit_message
+        )
 
         # Report found information
         out.write(message)
