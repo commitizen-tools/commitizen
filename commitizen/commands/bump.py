@@ -51,21 +51,25 @@ class Bump:
         files: list = self.parameters["files"]
         dry_run: bool = self.parameters["dry_run"]
 
+        is_yes: bool = self.arguments["yes"]
         prerelease: str = self.arguments["prerelease"]
         increment: Optional[str] = self.arguments["increment"]
         is_initial: bool = False
 
         # Check if reading the whole git tree up to HEAD is needed.
         if not git.tag_exist(current_tag_version):
-            out.info(f"Tag {current_tag_version} could not be found. ")
-            out.info(
-                (
-                    "Possible causes:\n"
-                    "- version in configuration is not the current version\n"
-                    "- tag_format is missing, check them using 'git tag --list'\n"
+            if is_yes:
+                is_initial = True
+            else:
+                out.info(f"Tag {current_tag_version} could not be found. ")
+                out.info(
+                    (
+                        "Possible causes:\n"
+                        "- version in configuration is not the current version\n"
+                        "- tag_format is missing, check them using 'git tag --list'\n"
+                    )
                 )
-            )
-            is_initial = questionary.confirm("Is this the first tag created?").ask()
+                is_initial = questionary.confirm("Is this the first tag created?").ask()
 
         commits = git.get_commits(current_tag_version, from_beginning=is_initial)
 

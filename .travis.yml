@@ -9,7 +9,7 @@ install:
   - poetry install
 
 script:
-  - poetry run pytest -s --cov-report term-missing --cov=commitizen tests/
+  - ./scripts/test
 
 after_success:
   - codecov

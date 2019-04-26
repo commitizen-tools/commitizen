@@ -64,6 +64,11 @@ data = {
                         "help": "show output to stdout, no commit, no modified files",
                     },
                     {
+                        "name": "--yes",
+                        "action": "store_true",
+                        "help": "accept automatically questions done",
+                    },
+                    {
                         "name": "--tag-format",
                         "help": (
                             "format used to tag the commmit and read it, "
@@ -93,36 +98,6 @@ data = {
         ],
     },
 }
-
-
-def load_cfg():
-    settings = {"name": defaults.name}
-    config = RawConfigParser("")
-    home = str(Path.home())
-
-    config_file = ".cz"
-    global_cfg = os.path.join(home, config_file)
-
-    # load cfg from current project
-    configs = ["setup.cfg", ".cz.cfg", config_file, global_cfg]
-    for cfg in configs:
-        if not os.path.exists(config_file) and os.path.exists(cfg):
-            config_file = cfg
-
-        config_file_exists = os.path.exists(config_file)
-        if config_file_exists:
-            logger.debug('Reading file "%s"', config_file)
-            config.read_file(io.open(config_file, "rt", encoding="utf-8"))
-            log_config = io.StringIO()
-            config.write(log_config)
-            try:
-                settings.update(dict(config.items("commitizen")))
-                break
-            except NoSectionError:
-                # The file does not have commitizen section
-                continue
-
-    return settings
 
 
 def main():
