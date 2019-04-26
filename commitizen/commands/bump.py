@@ -7,6 +7,8 @@ from commitizen import bump, git, config, out, factory
 NO_COMMITS_FOUND = 3
 NO_VERSION_SPECIFIED = 4
 NO_PATTERN_MAP = 7
+COMMIT_FAILED = 8
+TAG_FAILED = 9
 
 
 class Bump:
@@ -114,6 +116,12 @@ class Bump:
 
         config.set_key("version", new_version.public)
         bump.update_version_in_files(current_version, new_version.public, files)
-        git.commit(message, args="-a")
-        git.tag(new_tag_version)
+        c = git.commit(message, args="-a")
+        if c.err:
+            out.error(c.err)
+            raise SystemExit(COMMIT_FAILED)
+        c = git.tag(new_tag_version)
+        if c.err:
+            out.error(c.err)
+            raise SystemExit(TAG_FAILED)
         out.success("Done!")
