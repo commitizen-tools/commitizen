@@ -33,6 +33,24 @@ class Bump:
         }
         self.cz = factory.commiter_factory(self.config)
 
+    def is_initial_tag(self, current_tag_version: str, is_yes: bool = False) -> bool:
+        """Check if reading the whole git tree up to HEAD is needed."""
+        is_initial = False
+        if not git.tag_exist(current_tag_version):
+            if is_yes:
+                is_initial = True
+            else:
+                out.info(f"Tag {current_tag_version} could not be found. ")
+                out.info(
+                    (
+                        "Possible causes:\n"
+                        "- version in configuration is not the current version\n"
+                        "- tag_format is missing, check them using 'git tag --list'\n"
+                    )
+                )
+                is_initial = questionary.confirm("Is this the first tag created?").ask()
+        return is_initial
+
     def __call__(self):
         """Steps executed to bump."""
         try:
@@ -56,23 +74,8 @@ class Bump:
         is_yes: bool = self.arguments["yes"]
         prerelease: str = self.arguments["prerelease"]
         increment: Optional[str] = self.arguments["increment"]
-        is_initial: bool = False
 
-        # Check if reading the whole git tree up to HEAD is needed.
-        if not git.tag_exist(current_tag_version):
-            if is_yes:
-                is_initial = True
-            else:
-                out.info(f"Tag {current_tag_version} could not be found. ")
-                out.info(
-                    (
-                        "Possible causes:\n"
-                        "- version in configuration is not the current version\n"
-                        "- tag_format is missing, check them using 'git tag --list'\n"
-                    )
-                )
-                is_initial = questionary.confirm("Is this the first tag created?").ask()
-
+        is_initial = self.is_initial_tag(current_tag_version, is_yes)
         commits = git.get_commits(current_tag_version, from_beginning=is_initial)
 
         # No commits, there is no need to create an empty tag.

@@ -119,17 +119,27 @@ def update_version_in_files(current_version: str, new_version: str, files: list)
     So for example, your tag could look like `v1.0.0` while your version in
     the package like `1.0.0`.
     """
-    for filepath in files:
-        # Read in the file
-        with open(filepath, "r") as file:
-            filedata = file.read()
+    for location in files:
+        filepath, *regex = location.split(":", maxsplit=1)
+        if len(regex) > 0:
+            regex = regex[0]
 
-        # Replace the target string
-        filedata = filedata.replace(current_version, new_version)
+        # Read in the file
+        filedata = []
+        with open(filepath, "r") as f:
+            for line in f:
+                if regex:
+                    is_match = re.search(regex, line)
+                    if not is_match:
+                        filedata.append(line)
+                        continue
+
+                # Replace the target string
+                filedata.append(line.replace(current_version, new_version))
 
         # Write the file out again
         with open(filepath, "w") as file:
-            file.write(filedata)
+            file.write("".join(filedata))
 
 
 def create_tag(version: Union[Version, str], tag_format: Optional[str] = None):
