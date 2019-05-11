@@ -296,6 +296,33 @@
     Configuration
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tag_format" title="tag_format" class="md-nav__link">
+    tag_format
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#files" title="files" class="md-nav__link">
+    files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bump_message" title="bump_message" class="md-nav__link">
+    bump_message
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -364,6 +391,33 @@
   <a href="#configuration" title="Configuration" class="md-nav__link">
     Configuration
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tag_format" title="tag_format" class="md-nav__link">
+    tag_format
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#files" title="files" class="md-nav__link">
+    files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bump_message" title="bump_message" class="md-nav__link">
+    bump_message
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -473,7 +527,7 @@ optional arguments:
 
 
 <h2 id="configuration">Configuration</h2>
-<p><code>tag_format</code></p>
+<h3 id="tag_format"><code>tag_format</code></h3>
 <p>Used to read the format from the git tags, and also to generate the tags.</p>
 <p>Supports 2 types of formats, a simple and a more complex.</p>
 <div class="codehilite"><pre><span></span>cz bump --tag_format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$version</span><span class="s2">&quot;</span>
@@ -528,16 +582,18 @@ optional arguments:
 </tr>
 </tbody>
 </table>
-<p><code>files</code></p>
+<hr />
+<h3 id="files"><code>files</code></h3>
 <p>Used to identify the files which should be updated with the new version.
-In your <code>pyproject.toml</code></p>
-<p>Commitizen will update it's configuration (<code>pyproject.toml</code>, <code>.cz</code>) when bumping.</p>
+It is also possible to provide a pattern for each file, separated by colons (<code>:</code>).</p>
+<p>Commitizen will update it's configuration file automatically (<code>pyproject.toml</code>, <code>.cz</code>) when bumping,
+regarding if the file is present or not in <code>files</code>.</p>
 <p>Some examples</p>
 <p><code>pyproject.toml</code></p>
 <div class="codehilite"><pre><span></span><span class="k">[tool.commitizen]</span>
 <span class="na">files</span> <span class="o">=</span> <span class="s">[</span>
 <span class="s">    &quot;src/__version__.py&quot;,</span>
-<span class="s">    &quot;setup.py&quot;</span>
+<span class="s">    &quot;setup.py:version&quot;</span>
 <span class="na">]</span>
 </pre></div>
 
@@ -546,12 +602,16 @@ In your <code>pyproject.toml</code></p>
 <div class="codehilite"><pre><span></span><span class="k">[commitizen]</span>
 <span class="na">files</span> <span class="o">=</span> <span class="s">[</span>
 <span class="s">    &quot;src/__version__.py&quot;,</span>
-<span class="s">    &quot;setup.py&quot;</span>
+<span class="s">    &quot;setup.py:version&quot;</span>
 <span class="s">    ]</span>
 </pre></div>
 
 
-<p><code>bump_message</code></p>
+<p>In the example above, we can see the reference <code>"setup.py:version"</code>.
+This means that it will find a file <code>setup.py</code> and will only make a change
+in a line containing the <code>version</code> substring.</p>
+<hr />
+<h3 id="bump_message"><code>bump_message</code></h3>
 <p>Template used to specify the commit message generated when bumping</p>
 <p>defaults to: <code>bump: version $current_version → $new_version</code></p>
 <table>

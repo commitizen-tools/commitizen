@@ -270,6 +270,20 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#pyprojecttoml" title="pyproject.toml" class="md-nav__link">
+    pyproject.toml
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ini-files" title="INI files" class="md-nav__link">
+    INI files
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#settings" title="Settings" class="md-nav__link">
     Settings
   </a>
@@ -332,6 +346,20 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#pyprojecttoml" title="pyproject.toml" class="md-nav__link">
+    pyproject.toml
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ini-files" title="INI files" class="md-nav__link">
+    INI files
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#settings" title="Settings" class="md-nav__link">
     Settings
   </a>
@@ -356,33 +384,34 @@
                 
                 
                 <h1 id="configuration">Configuration</h1>
-<p><strong>New!</strong> Support for <code>pyproject.toml</code></p>
-<p>Add an entry to <code>pyproject.toml</code>.</p>
+<p>Commitizen has support for <code>toml</code> and <code>ini</code> files.</p>
+<h2 id="pyprojecttoml">pyproject.toml</h2>
+<p>Add an entry to <code>pyproject.toml</code>. Recommended for <strong>python</strong> projects.</p>
 <div class="codehilite"><pre><span></span><span class="k">[tool.commitizen]</span>
 <span class="na">name</span> <span class="o">=</span> <span class="s">&quot;cz_conventional_commits&quot;</span>
 <span class="na">version</span> <span class="o">=</span> <span class="s">&quot;0.1.0&quot;</span>
 <span class="na">files</span> <span class="o">=</span> <span class="s">[</span>
 <span class="s">    &quot;src/__version__.py&quot;,</span>
-<span class="s">    &quot;pyproject.toml&quot;</span>
+<span class="s">    &quot;pyproject.toml:version&quot;</span>
 <span class="na">]</span>
 </pre></div>
 
 
-<p>Also, you can create in your project folder a file called <code>.cz</code>,
-<code>.cz.cfg</code> or in your <code>setup.cfg</code> or if you want to configure the global
-default in your user's home folder a <code>.cz</code> file with the following
-information:</p>
+<h2 id="ini-files">INI files</h2>
+<p>Supported files: <code>.cz</code>, <code>.cz.cfg</code>, <code>setup.py</code>, and <code>$HOME/.cz</code></p>
+<p>The format is slightly different to the <code>toml</code>, so pay attention.
+Recommended for <strong>other languages</strong> projects (js, go, etc).</p>
 <div class="codehilite"><pre><span></span><span class="k">[commitizen]</span>
 <span class="na">name</span> <span class="o">=</span> <span class="s">cz_conventional_commits</span>
 <span class="na">version</span> <span class="o">=</span> <span class="s">0.1.0</span>
 <span class="na">files</span> <span class="o">=</span> <span class="s">[</span>
 <span class="s">    &quot;src/__version__.py&quot;,</span>
-<span class="s">    &quot;pyproject.toml&quot;</span>
+<span class="s">    &quot;pyproject.toml:version&quot;</span>
 <span class="s">    ]</span>
 </pre></div>
 
 
-<p>The extra tab at the end (<code>]</code>) is required.</p>
+<p>The extra tab before the square brakets (<code>]</code>) at the end is required.</p>
 <h2 id="settings">Settings</h2>
 <table>
 <thead>
@@ -410,19 +439,19 @@ information:</p>
 <td><code>files</code></td>
 <td><code>list</code></td>
 <td><code>[ ]</code></td>
-<td>Files were the version needs to be updated</td>
+<td>Files were the version will be updated. A pattern to match a line, can also be specified, separated by <code>:</code> <a href="https://woile.github.io/commitizen/bump#files">See more</a></td>
 </tr>
 <tr>
 <td><code>tag_format</code></td>
 <td><code>str</code></td>
 <td><code>None</code></td>
-<td>Format for the git tag, useful for old projects, that use a convention like <code>"v1.2.1"</code>. <a href="bump#configuration">See more</a></td>
+<td>Format for the git tag, useful for old projects, that use a convention like <code>"v1.2.1"</code>. <a href="https://woile.github.io/commitizen/bump#tag_format">See more</a></td>
 </tr>
 <tr>
 <td><code>bump_message</code></td>
 <td><code>str</code></td>
 <td><code>None</code></td>
-<td>Create custom commit message, useful to skip ci. <a href="bump#configuration">See more</a></td>
+<td>Create custom commit message, useful to skip ci. <a href="https://woile.github.io/commitizen/bump#bump_message">See more</a></td>
 </tr>
 </tbody>
 </table>
