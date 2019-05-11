@@ -1,4 +1,3 @@
-
 ![Bump version](images/bump.gif)
 
 ## About
@@ -15,11 +14,11 @@ The version format follows [semantic versioning][semver].
 
 This means `MAJOR.MINOR.PATCH`
 
-| Increment | Description | Conventional commit map |
-| ------- | ----- | ------ |
-| `MAJOR` | Breaking changes introduced | `BREAKING CHANGE` |
-| `MINOR` | New features | `feat` |
-| `PATCH` | Fixes | `fix` + everything else |
+| Increment | Description                 | Conventional commit map |
+| --------- | --------------------------- | ----------------------- |
+| `MAJOR`   | Breaking changes introduced | `BREAKING CHANGE`       |
+| `MINOR`   | New features                | `feat`                  |
+| `PATCH`   | Fixes                       | `fix` + everything else |
 
 Prereleases are supported following python's [PEP 0440][pep440]
 
@@ -71,10 +70,9 @@ optional arguments:
                         manually specify the desired increment
 ```
 
-
 ## Configuration
 
-`tag_format`
+### `tag_format`
 
 Used to read the format from the git tags, and also to generate the tags.
 
@@ -90,7 +88,6 @@ cz bump --tag_format="v$minor.$major.$path$prerelease"
 
 In your `pyproject.toml`
 
-
     [tool.commitizen]
     tag_format = "v$minor.$major.$path$prerelease"
 
@@ -103,20 +100,23 @@ The variables must be preceded by a `$` sign.
 
 Suppported variables:
 
-| Variable | Description |
-| --- | ----------- |
-| `$version` | full generated version |
-| `$major` | MAJOR increment |
-| `$minor` | MINOR increment |
-| `$patch` | PATCH increment |
+| Variable      | Description                                |
+| ------------- | ------------------------------------------ |
+| `$version`    | full generated version                     |
+| `$major`      | MAJOR increment                            |
+| `$minor`      | MINOR increment                            |
+| `$patch`      | PATCH increment                            |
 | `$prerelease` | Prerelase (alpha, beta, release candidate) |
 
-`files`
+---
+
+### `files`
 
 Used to identify the files which should be updated with the new version.
-In your `pyproject.toml`
+It is also possible to provide a pattern for each file, separated by colons (`:`).
 
-Commitizen will update it's configuration (`pyproject.toml`, `.cz`) when bumping.
+Commitizen will update it's configuration file automatically (`pyproject.toml`, `.cz`) when bumping,
+regarding if the file is present or not in `files`.
 
 Some examples
 
@@ -125,30 +125,33 @@ Some examples
     [tool.commitizen]
     files = [
         "src/__version__.py",
-        "setup.py"
+        "setup.py:version"
     ]
-
 
 `.cz`
 
     [commitizen]
     files = [
         "src/__version__.py",
-        "setup.py"
+        "setup.py:version"
         ]
 
-`bump_message`
+In the example above, we can see the reference `"setup.py:version"`.
+This means that it will find a file `setup.py` and will only make a change
+in a line containing the `version` substring.
+
+---
+
+### `bump_message`
 
 Template used to specify the commit message generated when bumping
 
 defaults to: `bump: version $current_version → $new_version`
 
-
-
-| Variable | Description |
-| --- | ----------- |
+| Variable           | Description                         |
+| ------------------ | ----------------------------------- |
 | `$current_version` | the version existing before bumping |
-| `$new_version` | version generated after bumping |
+| `$new_version`     | version generated after bumping     |
 
 Some examples
 
@@ -161,7 +164,6 @@ Some examples
 
     [commitizen]
     bump_message = release $current_version → $new_version [skip-ci]
-
 
 ## Custom bump
 
