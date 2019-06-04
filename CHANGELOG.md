@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.5.1
+
+### Fix
+
+- issue in poetry add preventing the installation in py36
+
 ## v1.5.0
 
 ### Feature
