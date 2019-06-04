@@ -75,7 +75,7 @@ Installation
 Features
 ========
 
-- Command line utility to create commits with your rules. Defaults: `Conventional commits <https://www.conventionalcommits.org>`_
+- Command line utility to create commits with your rules. Defaults: `conventional commits`_
 - Display information about your commit rules (commands: schema, example, info)
 - Bump version automatically using semantic verisoning based on the commits. `Read More <./docs/bump.md>`_
 - Generate a changelog using "Keep a changelog" (Planned feature)
@@ -86,7 +86,7 @@ Commit rules
 
 This client tool prompts the user with information about the commit.
 
-Based on `conventional commits <https://conventionalcommits.org/>`_
+Based on `conventional commits`_
 
 This is an example of how the git messages history would look like:
 
@@ -113,7 +113,7 @@ Commitizens
 
 These are the available commiting styles by default:
 
-* cz_conventional_commits: `conventional commits <https://conventionalcommits.org/>`_
+* cz_conventional_commits: `conventional commits`_
 * cz_jira: `jira smart commits <https://confluence.atlassian.com/fisheye/using-smart-commits-298976812.html>`_
 
 
@@ -177,3 +177,6 @@ Feel free to create a PR.
 2. Add your modifications
 3. Create a virtualenv
 4. Run :code:`./scripts/test`
+
+
+.. _conventional commits: https://conventionalcommits.org/
