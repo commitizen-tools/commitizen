@@ -7,11 +7,15 @@ from .init import Init
 from .list_cz import ListCz
 from .schema import Schema
 from .version import Version
+from .init import Init
+from .changelog import Changelog
+
 
 __all__ = (
     "Bump",
     "Check",
     "Commit",
+    "Changelog"
     "Example",
     "Info",
     "ListCz",
