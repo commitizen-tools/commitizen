@@ -39,6 +39,11 @@ data = {
                 "func": commands.ListCz,
             },
             {
+                "name": ["changelog", "ch"],
+                "help": "create new changelog",
+                "func": commands.Changelog,
+            },
+            {
                 "name": ["commit", "c"],
                 "help": "create new commit",
                 "func": commands.Commit,
