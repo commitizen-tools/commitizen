@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+
+### Feature
+
+- new retry argument to execute previous commit again
+
 ## v1.5.1
 
 ### Fix

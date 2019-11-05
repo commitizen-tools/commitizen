@@ -10,7 +10,7 @@ def test_sysexit_no_argv():
 
 def test_ls(mocker, capsys):
     testargs = ["cz", "-n", "cz_jira", "ls"]
-    mocker.patch.object(sys, 'argv', testargs)
+    mocker.patch.object(sys, "argv", testargs)
     cli.main()
     out, err = capsys.readouterr()
 
@@ -21,5 +21,5 @@ def test_ls(mocker, capsys):
 def test_version(mocker):
     testargs = ["cz", "--version"]
     with pytest.raises(SystemExit):
-        mocker.patch.object(sys, 'argv', testargs)
+        mocker.patch.object(sys, "argv", testargs)
         cli.main()
