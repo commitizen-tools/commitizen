@@ -41,6 +41,13 @@ data = {
                 "name": ["commit", "c"],
                 "help": "create new commit",
                 "func": commands.Commit,
+                "arguments": [
+                    {
+                        "name": ["--retry"],
+                        "action": "store_true",
+                        "help": "retry last commit",
+                    },
+                ]
             },
             {
                 "name": "example",
