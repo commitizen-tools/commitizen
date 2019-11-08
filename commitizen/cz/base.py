@@ -7,7 +7,7 @@ from prompt_toolkit.styles import merge_styles, Style
 class BaseCommitizen(metaclass=ABCMeta):
     bump_pattern: Optional[str] = None
     bump_map: Optional[dict] = None
-    DEFAULT_STYLE_CONFIG: List[Tuple[str, str]] = [
+    default_style_config: List[Tuple[str, str]] = [
         ("qmark", "fg:#673ab7 bold"),
         ("question", "bold"),
         ("answer", "fg:#f44336 bold"),
@@ -23,7 +23,7 @@ class BaseCommitizen(metaclass=ABCMeta):
     def __init__(self, config: dict):
         self.config = config
         if not self.config.get("style"):
-            self.config["style"] = BaseCommitizen.DEFAULT_STYLE_CONFIG
+            self.config["style"] = BaseCommitizen.default_style_config
 
     @abstractmethod
     def questions(self) -> list:
@@ -35,7 +35,7 @@ class BaseCommitizen(metaclass=ABCMeta):
 
     @property
     def style(self):
-        return merge_styles(BaseCommitizen.DEFAULT_STYLE_CONFIG, Style(self.config["style"]))
+        return merge_styles(BaseCommitizen.default_style_config, Style(self.config["style"]))
 
     def example(self) -> str:
         """Example of the commit message."""
