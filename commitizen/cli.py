@@ -5,8 +5,8 @@ import warnings
 
 from decli import cli
 
-from commitizen import commands, config, out
-from commitizen.__version__ import __version__
+from commitizen import commands, config
+
 
 logger = logging.getLogger(__name__)
 data = {
@@ -20,11 +20,6 @@ data = {
     "arguments": [
         {"name": "--debug", "action": "store_true", "help": "use debug mode"},
         {"name": ["-n", "--name"], "help": "use the given commitizen"},
-        {
-            "name": ["--version"],
-            "action": "store_true",
-            "help": "get the version of the installed commitizen",
-        },
     ],
     "subcommands": {
         "title": "commands",
@@ -99,6 +94,11 @@ data = {
                     },
                 ],
             },
+            {
+                "name": ["version"],
+                "help": "get the version of the installed commitizen",
+                "func": commands.Version,
+            },
         ],
     },
 }
@@ -124,9 +124,5 @@ def main():
             "Please remove it from your scripts"
         )
         logging.getLogger("commitizen").setLevel(logging.DEBUG)
-
-    if args.version:
-        out.line(__version__)
-        raise SystemExit()
 
     args.func(conf, vars(args))()
