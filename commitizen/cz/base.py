@@ -1,7 +1,7 @@
-from typing import Optional, List, Tuple
 from abc import ABCMeta, abstractmethod
+from typing import List, Optional, Tuple
 
-from prompt_toolkit.styles import merge_styles, Style
+from prompt_toolkit.styles import Style, merge_styles
 
 
 class BaseCommitizen(metaclass=ABCMeta):
