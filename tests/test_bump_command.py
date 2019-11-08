@@ -1,11 +1,13 @@
 import os
 import shutil
-import pytest
 import sys
-from typing import Optional
-from pathlib import Path
-from commitizen import git, cmd, cli
 import uuid
+from pathlib import Path
+from typing import Optional
+
+import pytest
+
+from commitizen import cli, cmd, git
 
 
 @pytest.fixture

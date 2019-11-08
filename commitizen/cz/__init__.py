@@ -1,5 +1,6 @@
 import importlib
 import pkgutil
+
 from commitizen.cz.conventional_commits import ConventionalCommitsCz
 from commitizen.cz.jira import JiraSmartCz
 

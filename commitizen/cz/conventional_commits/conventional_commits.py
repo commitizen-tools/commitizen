@@ -1,6 +1,8 @@
 import os
-from commitizen.cz.base import BaseCommitizen
+
 from commitizen import defaults
+from commitizen.cz.base import BaseCommitizen
+
 __all__ = ["ConventionalCommitsCz"]
 
 

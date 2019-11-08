@@ -1,4 +1,5 @@
 import pytest
+
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
 

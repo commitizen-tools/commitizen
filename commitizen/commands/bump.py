@@ -1,8 +1,9 @@
-from packaging.version import Version
 from typing import Optional
 
 import questionary
-from commitizen import bump, git, config, out, factory
+from packaging.version import Version
+
+from commitizen import bump, config, factory, git, out
 
 NO_COMMITS_FOUND = 3
 NO_VERSION_SPECIFIED = 4

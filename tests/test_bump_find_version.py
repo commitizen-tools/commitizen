@@ -1,7 +1,9 @@
-import pytest
 import itertools
-from commitizen.bump import generate_version
+
+import pytest
 from packaging.version import Version
+
+from commitizen.bump import generate_version
 
 simple_flow = [
     (("0.1.0", "PATCH", None), "0.1.1"),

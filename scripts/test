@@ -1,1 +1,8 @@
-pytest --cov-report term-missing --cov=commitizen tests/
+export PREFIX=""
+if [ -d 'venv' ] ; then
+    export PREFIX="venv/bin/"
+fi
+
+${PREFIX}pytest --cov-report term-missing --cov=commitizen tests/
+${PREFIX}black commitizen tests --check
+${PREFIX}flake8 --max-line-length=88 commitizen/ tests/

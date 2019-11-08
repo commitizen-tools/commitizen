@@ -1,5 +1,6 @@
 import os
 from tempfile import NamedTemporaryFile
+
 from commitizen import cmd
 
 

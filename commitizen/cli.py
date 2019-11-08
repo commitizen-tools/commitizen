@@ -1,15 +1,12 @@
-import io
-import os
-import sys
-import logging
 import argparse
+import logging
+import sys
 import warnings
-from decli import cli
-from pathlib import Path
-from configparser import RawConfigParser, NoSectionError
-from commitizen import defaults, commands, out, config
-from commitizen.__version__ import __version__
 
+from decli import cli
+
+from commitizen import commands, config, out
+from commitizen.__version__ import __version__
 
 logger = logging.getLogger(__name__)
 data = {
@@ -46,8 +43,8 @@ data = {
                         "name": ["--retry"],
                         "action": "store_true",
                         "help": "retry last commit",
-                    },
-                ]
+                    }
+                ],
             },
             {
                 "name": "example",

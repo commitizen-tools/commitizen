@@ -63,6 +63,7 @@ codecov = "^2.0"
 mypy = "^0.740"
 mkdocs = "^1.0"
 mkdocs-material = "^4.1"
+isort = "^4.3.21"
 
 [tool.poetry.scripts]
 cz = "commitizen.cli:main"

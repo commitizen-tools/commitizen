@@ -1,8 +1,9 @@
 import os
-import pytest
 from unittest import mock
 
-from commitizen import defaults, commands, cmd
+import pytest
+
+from commitizen import cmd, commands, defaults
 
 config = {"name": defaults.name}
 

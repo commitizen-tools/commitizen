@@ -1,6 +1,5 @@
-from commitizen.cz.jira import JiraSmartCz
 from commitizen import defaults
-
+from commitizen.cz.jira import JiraSmartCz
 
 config = {"name": defaults.name}
 

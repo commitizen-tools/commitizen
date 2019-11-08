@@ -2,9 +2,10 @@ import configparser
 import json
 import os
 import warnings
-from typing import Optional
 from pathlib import Path
-from tomlkit import parse, exceptions
+from typing import Optional
+
+from tomlkit import exceptions, parse
 
 from commitizen import defaults
 
