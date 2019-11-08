@@ -61,6 +61,10 @@ def read_raw_parser_conf(data: str) -> dict:
         "commitizen/__version__.py",
         "pyproject.toml"
         ]  # this tab at the end is important
+    style = [
+        ["pointer", "reverse"],
+        ["question", "underline"]
+        ]  # this tab at the end is important
     ```
     """
     config = configparser.ConfigParser(allow_no_value=True)
@@ -71,6 +75,10 @@ def read_raw_parser_conf(data: str) -> dict:
             files = _data["files"]
             _f = json.loads(files)
             _data.update({"files": _f})
+        if "style" in _data:
+            style = _data["style"]
+            _s = json.loads(style)
+            _data.update({"style": _s})
 
         return _data
 
