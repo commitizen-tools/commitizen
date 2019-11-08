@@ -11,6 +11,10 @@ files = [
     "commitizen/__version__.py",
     "pyproject.toml"
 ]
+style = [
+    ["pointer", "reverse"],
+    ["question", "underline"]
+]
 
 [tool.black]
 line-length = 88
@@ -25,6 +29,10 @@ files = [
     "commitizen/__version__.py",
     "pyproject.toml"
     ]
+style = [
+    ["pointer", "reverse"],
+    ["question", "underline"]
+    ]
 """
 
 _config = {
@@ -33,6 +41,7 @@ _config = {
     "tag_format": None,
     "bump_message": None,
     "files": ["commitizen/__version__.py", "pyproject.toml"],
+    "style": [["pointer", "reverse"], ["question", "underline"]]
 }
 
 _new_config = {
@@ -41,12 +50,14 @@ _new_config = {
     "tag_format": None,
     "bump_message": None,
     "files": ["commitizen/__version__.py", "pyproject.toml"],
+    "style": [["pointer", "reverse"], ["question", "underline"]]
 }
 
 _read_conf = {
     "name": "cz_jira",
     "version": "1.0.0",
     "files": ["commitizen/__version__.py", "pyproject.toml"],
+    "style": [["pointer", "reverse"], ["question", "underline"]]
 }
 
 
