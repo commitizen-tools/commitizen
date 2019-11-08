@@ -9,4 +9,4 @@ class Version:
         self.config: dict = config
 
     def __call__(self):
-        out.line(__version__)
+        out.write(__version__)
