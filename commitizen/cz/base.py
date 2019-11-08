@@ -22,7 +22,6 @@ class BaseCommitizen(metaclass=ABCMeta):
 
     def __init__(self, config: dict):
         self.config = config
-        breakpoint()
         if not self.config.get("style"):
             self.config["style"] = BaseCommitizen.DEFAULT_STYLE_CONFIG
 
