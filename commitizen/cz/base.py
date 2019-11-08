@@ -36,7 +36,7 @@ class BaseCommitizen(metaclass=ABCMeta):
     @property
     def style(self):
         return merge_styles(
-            [BaseCommitizen.default_style_config, Style(self.config["style"])]
+            [Style(BaseCommitizen.default_style_config), Style(self.config["style"])]
         )
 
     def example(self) -> str:
