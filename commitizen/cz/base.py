@@ -1,7 +1,7 @@
 from typing import Optional, List, Tuple
 from abc import ABCMeta, abstractmethod
 
-from prompt_toolkit.styles import Style
+from prompt_toolkit.styles import merge_styles, Style
 
 
 class BaseCommitizen(metaclass=ABCMeta):
@@ -35,7 +35,7 @@ class BaseCommitizen(metaclass=ABCMeta):
 
     @property
     def style(self):
-        return Style(self.config["style"])
+        return merge_styles(BaseCommitizen.DEFAULT_STYLE_CONFIG, Style(self.config["style"]))
 
     def example(self) -> str:
         """Example of the commit message."""
