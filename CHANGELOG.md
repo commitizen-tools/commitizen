@@ -1,6 +1,13 @@
 # CHANGELOG
 
-## Unreleased
+## v1.7.0
+
+### Feature
+
+- new styles for the prompt
+- new configuration option for the prompt styles
+
+## v1.6.0
 
 ### Feature
 
