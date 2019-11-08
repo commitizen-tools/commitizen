@@ -23,6 +23,7 @@ data = {
     ],
     "subcommands": {
         "title": "commands",
+        "required": True,
         "commands": [
             {
                 "name": "ls",
