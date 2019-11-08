@@ -13,6 +13,18 @@ Add an entry to `pyproject.toml`. Recommended for **python** projects.
         "src/__version__.py",
         "pyproject.toml:version"
     ]
+    style = [
+        ["qmark", "fg:#673ab7 bold"],
+        ["question", "bold"],
+        ["answer", "fg:#f44336 bold"],
+        ["pointer", "fg:#673ab7 bold"],
+        ["highlighted", "fg:#673ab7 bold"],
+        ["selected", "fg:#cc5454"],
+        ["separator", "fg:#cc5454"],
+        ["instruction", ""],
+        ["text", ""],
+        ["disabled", "fg:#858585 italic"]
+    ]
 
 ## INI files
 
@@ -28,6 +40,18 @@ Recommended for **other languages** projects (js, go, etc).
         "src/__version__.py",
         "pyproject.toml:version"
         ]
+    style = [
+        ["qmark", "fg:#673ab7 bold"],
+        ["question", "bold"],
+        ["answer", "fg:#f44336 bold"],
+        ["pointer", "reverse"],
+        ["highlighted", "fg:#673ab7 bold"],
+        ["selected", "fg:#cc5454"],
+        ["separator", "fg:#cc5454"],
+        ["instruction", ""],
+        ["text", ""],
+        ["disabled", "fg:#858585 italic"]
+        ]
 
 The extra tab before the square brakets (`]`) at the end is required.
 
@@ -40,3 +64,4 @@ The extra tab before the square brakets (`]`) at the end is required.
 | `files` | `list` | `[ ]` | Files were the version will be updated. A pattern to match a line, can also be specified, separated by `:` [See more](https://woile.github.io/commitizen/bump#files) |
 | `tag_format` | `str` | `None` | Format for the git tag, useful for old projects, that use a convention like `"v1.2.1"`. [See more](https://woile.github.io/commitizen/bump#tag_format) |
 | `bump_message` | `str` | `None` | Create custom commit message, useful to skip ci. [See more](https://woile.github.io/commitizen/bump#bump_message) |
+| `style` | `list` | see above | Style for the prompts [See More (Styling your prompts with your favorite colors)](https://github.com/tmbo/questionary#additional-features) |
