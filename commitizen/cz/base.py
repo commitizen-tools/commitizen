@@ -35,7 +35,9 @@ class BaseCommitizen(metaclass=ABCMeta):
 
     @property
     def style(self):
-        return merge_styles(BaseCommitizen.default_style_config, Style(self.config["style"]))
+        return merge_styles(
+            [BaseCommitizen.default_style_config, Style(self.config["style"])]
+        )
 
     def example(self) -> str:
         """Example of the commit message."""
