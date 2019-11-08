@@ -14,11 +14,11 @@ Add an entry to `pyproject.toml`. Recommended for **python** projects.
         "pyproject.toml:version"
     ]
     style = [
-        ["qmark", "fg:#673ab7 bold"],
+        ["qmark", "fg:#ff9d00 bold"],
         ["question", "bold"],
-        ["answer", "fg:#f44336 bold"],
-        ["pointer", "fg:#673ab7 bold"],
-        ["highlighted", "fg:#673ab7 bold"],
+        ["answer", "fg:#ff9d00 bold"],
+        ["pointer", "fg:#ff9d00 bold"],
+        ["highlighted", "fg:#ff9d00 bold"],
         ["selected", "fg:#cc5454"],
         ["separator", "fg:#cc5454"],
         ["instruction", ""],
@@ -41,11 +41,11 @@ Recommended for **other languages** projects (js, go, etc).
         "pyproject.toml:version"
         ]
     style = [
-        ["qmark", "fg:#673ab7 bold"],
+        ["qmark", "fg:#ff9d00 bold"],
         ["question", "bold"],
-        ["answer", "fg:#f44336 bold"],
-        ["pointer", "reverse"],
-        ["highlighted", "fg:#673ab7 bold"],
+        ["answer", "fg:#ff9d00 bold"],
+        ["pointer", "fg:#ff9d00 bold"],
+        ["highlighted", "fg:#ff9d00 bold"],
         ["selected", "fg:#cc5454"],
         ["separator", "fg:#cc5454"],
         ["instruction", ""],
