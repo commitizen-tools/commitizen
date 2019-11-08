@@ -5,7 +5,7 @@ import warnings
 
 from decli import cli
 
-from commitizen import commands, config
+from commitizen import commands, config, out
 
 
 logger = logging.getLogger(__name__)
@@ -114,7 +114,11 @@ def main():
         parser.print_help(sys.stderr)
         raise SystemExit()
 
-    args = parser.parse_args()
+    try:
+        args = parser.parse_args()
+    except TypeError:
+        out.error("Command is required")
+        raise SystemExit()
 
     if args.name:
         conf.update({"name": args.name})
