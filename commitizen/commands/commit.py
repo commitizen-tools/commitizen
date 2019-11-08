@@ -36,7 +36,7 @@ class Commit:
             # Prompt user for the commit message
             cz = self.cz
             questions = cz.questions()
-            answers = questionary.prompt(questions)
+            answers = questionary.prompt(questions, style=cz.style)
             if not answers:
                 raise SystemExit(NO_ANSWERS)
             m = cz.message(answers)
