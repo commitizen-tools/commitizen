@@ -7,7 +7,7 @@ settings: dict = {
     "version": None,
     "files": [],
     "tag_format": None,  # example v$version
-    "bump_message": None  # bumped v$current_version to $new_version
+    "bump_message": None,  # bumped v$current_version to $new_version
 }
 
 MAJOR = "MAJOR"

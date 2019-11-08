@@ -1,7 +1,6 @@
 from commitizen import BaseCommitizen, out
 from commitizen.cz import registry
 
-
 NO_COMMITIZEN_FOUND = 2
 
 

@@ -1,5 +1,6 @@
 import pytest
-from commitizen import factory, defaults, BaseCommitizen
+
+from commitizen import BaseCommitizen, defaults, factory
 
 
 def test_factory():

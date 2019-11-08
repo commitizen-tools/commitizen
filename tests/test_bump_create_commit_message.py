@@ -1,5 +1,6 @@
 import pytest
 from packaging.version import Version
+
 from commitizen import bump
 
 conversion = [
@@ -7,14 +8,8 @@ conversion = [
         ("1.2.3", "1.3.0", "bump: $current_version -> $new_version [skip ci]"),
         "bump: 1.2.3 -> 1.3.0 [skip ci]",
     ),
-    (
-        ("1.2.3", "1.3.0", None),
-        "bump: version 1.2.3 → 1.3.0",
-    ),
-    (
-        ("1.2.3", "1.3.0", "release $new_version"),
-        "release 1.3.0",
-    ),
+    (("1.2.3", "1.3.0", None), "bump: version 1.2.3 → 1.3.0"),
+    (("1.2.3", "1.3.0", "release $new_version"), "release 1.3.0"),
 ]
 
 

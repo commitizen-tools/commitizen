@@ -1,5 +1,7 @@
 import sys
+
 import pytest
+
 from commitizen import cli
 
 

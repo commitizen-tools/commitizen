@@ -1,8 +1,9 @@
 import logging
 import logging.config
-from colorama import init
-from commitizen.cz.base import BaseCommitizen
 
+from colorama import init
+
+from commitizen.cz.base import BaseCommitizen
 
 init()
 

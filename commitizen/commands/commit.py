@@ -1,10 +1,10 @@
 import contextlib
 import os
-import questionary
 import tempfile
 
-from commitizen import factory, out, git
+import questionary
 
+from commitizen import factory, git, out
 
 NO_ANSWERS = 5
 COMMIT_ERROR = 6

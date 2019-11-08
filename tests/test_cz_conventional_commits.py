@@ -1,10 +1,11 @@
 import pytest
+
 from commitizen import defaults
 from commitizen.cz.conventional_commits.conventional_commits import (
+    ConventionalCommitsCz,
+    NoSubjectException,
     parse_scope,
     parse_subject,
-    NoSubjectException,
-    ConventionalCommitsCz,
 )
 
 config = {"name": defaults.name}
@@ -82,7 +83,7 @@ def test_long_answer():
     message = conventional_commits.message(answers)
     assert (
         message
-        == "fix(users): email pattern corrected\n\nBREAKING CHANGE: complete content\n\ncloses #24"
+        == "fix(users): email pattern corrected\n\nBREAKING CHANGE: complete content\n\ncloses #24"  # noqa
     )
 
 

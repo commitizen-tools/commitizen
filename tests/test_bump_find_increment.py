@@ -21,7 +21,7 @@ MAJOR_INCREMENTS_CC = [
     "feat(cli): added version",
     "docs(README): motivation",
     "fix(setup.py): future is now required for every python version",
-    "BREAKING CHANGE: `extends` key in config file is now used for extending other config files",
+    "BREAKING CHANGE: `extends` key in config file is now used for extending other config files",  # noqa
 ]
 
 PATCH_INCREMENTS_SVE = ["readme motivation PATCH", "fix setup.py PATCH"]

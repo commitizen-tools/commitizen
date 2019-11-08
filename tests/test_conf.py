@@ -1,7 +1,8 @@
 import os
-import pytest
-from commitizen import config, defaults
 
+import pytest
+
+from commitizen import config, defaults
 
 PYPROJECT = """
 [tool.commitizen]

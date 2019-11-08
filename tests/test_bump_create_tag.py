@@ -1,5 +1,6 @@
 import pytest
 from packaging.version import Version
+
 from commitizen import bump
 
 conversion = [

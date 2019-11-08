@@ -2,15 +2,17 @@ import re
 from collections import defaultdict
 from itertools import zip_longest
 from string import Template
-from packaging.version import Version
 from typing import List, Optional, Union
+
+from packaging.version import Version
+
 from commitizen.defaults import (
     MAJOR,
     MINOR,
     PATCH,
-    bump_pattern,
     bump_map,
     bump_message,
+    bump_pattern,
 )
 
 
