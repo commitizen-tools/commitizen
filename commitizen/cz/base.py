@@ -8,11 +8,11 @@ class BaseCommitizen(metaclass=ABCMeta):
     bump_pattern: Optional[str] = None
     bump_map: Optional[dict] = None
     default_style_config: List[Tuple[str, str]] = [
-        ("qmark", "fg:#673ab7 bold"),
+        ("qmark", "fg:#ff9d00 bold"),
         ("question", "bold"),
-        ("answer", "fg:#f44336 bold"),
-        ("pointer", "fg:#673ab7 bold"),
-        ("highlighted", "fg:#673ab7 bold"),
+        ("answer", "fg:#ff9d00 bold"),
+        ("pointer", "fg:#ff9d00 bold"),
+        ("highlighted", "fg:#ff9d00 bold"),
         ("selected", "fg:#cc5454"),
         ("separator", "fg:#cc5454"),
         ("instruction", ""),
