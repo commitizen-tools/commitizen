@@ -8,6 +8,13 @@ from commitizen import cmd, commands, defaults
 config = {"name": defaults.name}
 
 
+@pytest.fixture
+def staging_is_clean(mocker):
+    is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
+    is_staging_clean_mock.return_value = False
+
+
+@pytest.mark.usefixtures("staging_is_clean")
 def test_commit(mocker):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
@@ -27,6 +34,7 @@ def test_commit(mocker):
     success_mock.assert_called_once()
 
 
+@pytest.mark.usefixtures("staging_is_clean")
 def test_commit_retry_fails_no_backup(mocker):
     commit_mock = mocker.patch("commitizen.git.commit")
     commit_mock.return_value = cmd.Command("success", "", "", "")
@@ -35,6 +43,7 @@ def test_commit_retry_fails_no_backup(mocker):
         commands.Commit(config, {"retry": True})()
 
 
+@pytest.mark.usefixtures("staging_is_clean")
 def test_commit_retry_works(mocker):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
