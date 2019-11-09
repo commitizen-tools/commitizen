@@ -9,6 +9,7 @@ from commitizen import factory, git, out
 NO_ANSWERS = 5
 COMMIT_ERROR = 6
 NO_COMMIT_BACKUP = 7
+NOTHING_TO_COMMIT = 8
 
 
 class Commit:
@@ -21,6 +22,10 @@ class Commit:
         self.temp_file: str = os.path.join(tempfile.gettempdir(), "cz.commit.backup")
 
     def __call__(self):
+        if git.is_staging_clean():
+            out.write("No files added to staging!")
+            raise SystemExit(NOTHING_TO_COMMIT)
+
         retry: bool = self.arguments.get("retry")
 
         if retry:
