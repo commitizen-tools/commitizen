@@ -72,6 +72,17 @@ def test_commit_retry_works(mocker):
     assert not os.path.isfile(temp_file)
 
 
+def test_commit_when_nothing_to_commit(mocker):
+    is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
+    is_staging_clean_mock.return_value = True
+
+    with pytest.raises(SystemExit) as err:
+        commit_cmd = commands.Commit(config, {})
+        commit_cmd()
+
+    assert err.value.code == commands.commit.NOTHING_TO_COMMIT
+
+
 def test_example():
     with mock.patch("commitizen.out.write") as write_mock:
         commands.Example(config)()
