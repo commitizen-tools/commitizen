@@ -2,11 +2,12 @@ import os
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
+from commitizen.cz.exceptions import CzException
 
 __all__ = ["ConventionalCommitsCz"]
 
 
-class NoSubjectException(Exception):
+class NoSubjectException(CzException):
     ...
 
 
@@ -26,7 +27,7 @@ def parse_subject(text):
         text = text.strip(".").strip()
 
     if not text:
-        raise NoSubjectException
+        raise NoSubjectException("Subject is required.")
 
     return text
 
