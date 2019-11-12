@@ -7,7 +7,6 @@ The basic steps are:
 3. expose the class at the end of your file assigning it to `discover_this`
 4. Create a python package starting with `cz_` using `setup.py`, `poetry`, etc
 
-
 Check an [example](convcomms) on how to configure `BaseCommitizen`.
 
 ## Custom commit rules
@@ -123,3 +122,14 @@ cz -n cz_strange bump
 ```
 
 [convcomms]: https://github.com/Woile/commitizen/blob/master/commitizen/cz/conventional_commits/conventional_commits.py
+
+## Raise Customize Exception
+
+If you wannt `commitizen` to catch your exception and print the message, you'll have to inherit `CzException`.
+
+```python
+from commitizen.cz.exception import CzException
+
+class NoSubjectProvidedException(CzException):
+    ...
+```

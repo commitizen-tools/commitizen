@@ -5,11 +5,13 @@ import tempfile
 import questionary
 
 from commitizen import factory, git, out
+from commitizen.cz.exceptions import CzException
 
 NO_ANSWERS = 5
 COMMIT_ERROR = 6
 NO_COMMIT_BACKUP = 7
 NOTHING_TO_COMMIT = 8
+CUSTOM_ERROR = 9
 
 
 class Commit:
@@ -41,7 +43,15 @@ class Commit:
             # Prompt user for the commit message
             cz = self.cz
             questions = cz.questions()
-            answers = questionary.prompt(questions, style=cz.style)
+            try:
+                answers = questionary.prompt(questions, style=cz.style)
+            except ValueError as err:
+                root_err = err.__context__
+                if isinstance(root_err, CzException):
+                    out.error(root_err.__str__())
+                    raise SystemExit(CUSTOM_ERROR)
+                raise err
+
             if not answers:
                 raise SystemExit(NO_ANSWERS)
             m = cz.message(answers)

@@ -4,6 +4,7 @@ from unittest import mock
 import pytest
 
 from commitizen import cmd, commands, defaults
+from commitizen.cz.exceptions import CzException
 
 config = {"name": defaults.name}
 
@@ -90,6 +91,24 @@ def test_commit_when_nothing_to_commit(mocker):
         commit_cmd()
 
     assert err.value.code == commands.commit.NOTHING_TO_COMMIT
+
+
+def test_commit_when_customized_expected_raised(mocker, capsys):
+    _err = ValueError()
+    _err.__context__ = CzException("This is the root custom err")
+
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.side_effect = _err
+
+    with pytest.raises(SystemExit) as err:
+        commit_cmd = commands.Commit(config, {})
+        commit_cmd()
+
+    assert err.value.code == commands.commit.CUSTOM_ERROR
+
+    # Assert only the content in the formatted text
+    captured = capsys.readouterr()
+    assert "This is the root custom err" in captured.err
 
 
 def test_example():
