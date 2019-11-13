@@ -20,10 +20,16 @@ data = {
     "arguments": [
         {"name": "--debug", "action": "store_true", "help": "use debug mode"},
         {"name": ["-n", "--name"], "help": "use the given commitizen"},
+        {
+            "name": ["--version"],
+            "action": "store_true",
+            "help": "get the version of the installed commitizen",
+        },
     ],
     "subcommands": {
         "title": "commands",
-        "required": True,
+        # TODO: Add this constraint back in 2.0
+        # "required": True,
         "commands": [
             {
                 "name": "ls",
@@ -123,6 +129,13 @@ def main():
     if args.name:
         conf.update({"name": args.name})
 
+    if args.version:
+        warnings.warn(
+            "'cz --version' will be deprecated in next major version. "
+            "Please use 'cz version' command from your scripts"
+        )
+        logging.getLogger("commitizen").setLevel(logging.DEBUG)
+
     if args.debug:
         warnings.warn(
             "Debug will be deprecated in next major version. "
@@ -130,4 +143,8 @@ def main():
         )
         logging.getLogger("commitizen").setLevel(logging.DEBUG)
 
-    args.func(conf, vars(args))()
+    # TODO: This try block can be removed after command is required in 2.0
+    try:
+        args.func(conf, vars(args))()
+    except AttributeError:
+        out.error("Command is required")
