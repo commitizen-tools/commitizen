@@ -6,7 +6,7 @@ import warnings
 from decli import cli
 
 from commitizen import commands, config, out
-from commitizen.__version__ import __version__
+
 
 logger = logging.getLogger(__name__)
 data = {
@@ -28,6 +28,8 @@ data = {
     ],
     "subcommands": {
         "title": "commands",
+        # TODO: Add this constraint back in 2.0
+        # "required": True,
         "commands": [
             {
                 "name": "ls",
@@ -99,6 +101,11 @@ data = {
                     },
                 ],
             },
+            {
+                "name": ["version"],
+                "help": "get the version of the installed commitizen",
+                "func": commands.Version,
+            },
         ],
     },
 }
@@ -113,10 +120,21 @@ def main():
         parser.print_help(sys.stderr)
         raise SystemExit()
 
-    args = parser.parse_args()
+    try:
+        args = parser.parse_args()
+    except TypeError:
+        out.error("Command is required")
+        raise SystemExit()
 
     if args.name:
         conf.update({"name": args.name})
+
+    if args.version:
+        warnings.warn(
+            "'cz --version' will be deprecated in next major version. "
+            "Please use 'cz version' command from your scripts"
+        )
+        logging.getLogger("commitizen").setLevel(logging.DEBUG)
 
     if args.debug:
         warnings.warn(
@@ -125,8 +143,8 @@ def main():
         )
         logging.getLogger("commitizen").setLevel(logging.DEBUG)
 
-    if args.version:
-        out.line(__version__)
-        raise SystemExit()
-
-    args.func(conf, vars(args))()
+    # TODO: This try block can be removed after command is required in 2.0
+    try:
+        args.func(conf, vars(args))()
+    except AttributeError:
+        out.error("Command is required")
