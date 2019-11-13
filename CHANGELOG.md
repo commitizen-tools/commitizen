@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v1.8.0
+
+### Feature
+
+- new custom exception for commitizen
+- commit is aborted if nothing in staging
+
 ## v1.7.0
 
 ### Feature

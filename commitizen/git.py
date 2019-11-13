@@ -33,3 +33,10 @@ def get_commits(start: str, end: str = "HEAD", from_beginning: bool = False) -> 
 def tag_exist(tag: str) -> bool:
     c = cmd.run(f"git tag --list {tag}")
     return tag in c.out
+
+
+def is_staging_clean() -> bool:
+    """Check if staing is clean"""
+    c = cmd.run("git diff --no-ext-diff --name-only")
+    c_cached = cmd.run("git diff --no-ext-diff --cached --name-only")
+    return not (bool(c.out) or bool(c_cached.out))
