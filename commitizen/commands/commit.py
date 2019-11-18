@@ -23,6 +23,33 @@ class Commit:
         self.arguments = arguments
         self.temp_file: str = os.path.join(tempfile.gettempdir(), "cz.commit.backup")
 
+    def read_backup_message(self) -> str:
+        # Check the commit backup file exists
+        if not os.path.isfile(self.temp_file):
+            out.error("No commit backup found")
+            raise SystemExit(NO_COMMIT_BACKUP)
+
+        # Read commit message from backup
+        with open(self.temp_file, "r") as f:
+            return f.read().strip()
+
+    def prompt_commit_questions(self) -> str:
+        # Prompt user for the commit message
+        cz = self.cz
+        questions = cz.questions()
+        try:
+            answers = questionary.prompt(questions, style=cz.style)
+        except ValueError as err:
+            root_err = err.__context__
+            if isinstance(root_err, CzException):
+                out.error(root_err.__str__())
+                raise SystemExit(CUSTOM_ERROR)
+            raise err
+
+        if not answers:
+            raise SystemExit(NO_ANSWERS)
+        return cz.message(answers)
+
     def __call__(self):
         if git.is_staging_clean():
             out.write("No files added to staging!")
@@ -31,30 +58,9 @@ class Commit:
         retry: bool = self.arguments.get("retry")
 
         if retry:
-            # Check the commit backup file exists
-            if not os.path.isfile(self.temp_file):
-                out.error("No commit backup found")
-                raise SystemExit(NO_COMMIT_BACKUP)
-
-            # Read commit message from backup
-            with open(self.temp_file, "r") as f:
-                m = f.read().strip()
+            m = self.read_backup_message()
         else:
-            # Prompt user for the commit message
-            cz = self.cz
-            questions = cz.questions()
-            try:
-                answers = questionary.prompt(questions, style=cz.style)
-            except ValueError as err:
-                root_err = err.__context__
-                if isinstance(root_err, CzException):
-                    out.error(root_err.__str__())
-                    raise SystemExit(CUSTOM_ERROR)
-                raise err
-
-            if not answers:
-                raise SystemExit(NO_ANSWERS)
-            m = cz.message(answers)
+            m = self.prompt_commit_questions()
 
         out.info(f"\n{m}\n")
         c = git.commit(m)
