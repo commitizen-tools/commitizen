@@ -1,3 +1,4 @@
+export PREFIX="poetry run python -m "
 if [ -d 'venv' ] ; then
     export PREFIX="venv/bin/"
 fi
