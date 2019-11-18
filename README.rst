@@ -49,7 +49,7 @@ and communicating it (using the cli provided by commitizen).
 The reasoning behind it is that is easier to read, and enforces writing
 descriptive commits.
 
-Besides that, having a convetion on your commits, makes it possible to
+Besides that, having a convention on your commits, makes it possible to
 parse them and use them for something else, like generating automatically
 the version or a changelog.
 
