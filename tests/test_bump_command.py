@@ -1,6 +1,7 @@
 import os
 import shutil
-import stat, errno
+import stat
+import errno
 import sys
 import uuid
 from pathlib import Path
@@ -10,17 +11,20 @@ import pytest
 
 from commitizen import cli, cmd, git
 
+
 def ReadOnlyException(Exception):
     pass
+
 
 # https://stackoverflow.com/questions/1213706/what-user-do-python-scripts-run-as-in-windows
 def handleRemoveReadOnly(func, path, exc):
     excvalue = exc[1]
     if func in (os.rmdir, os.remove, shutil.rmtree) and excvalue.errno == errno.EACCESS:
-        os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.IRWXO) #744
+        os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.IRWXO)  # 744
         func(path)
     else:
         raise ReadOnlyException
+
 
 @pytest.fixture
 def create_project():
