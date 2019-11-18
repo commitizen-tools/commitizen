@@ -10,6 +10,9 @@ import pytest
 
 from commitizen import cli, cmd, git
 
+def ReadOnlyException(Exception):
+    pass
+
 # https://stackoverflow.com/questions/1213706/what-user-do-python-scripts-run-as-in-windows
 def handleRemoveReadOnly(func, path, exc):
     excvalue = exc[1]
@@ -17,7 +20,7 @@ def handleRemoveReadOnly(func, path, exc):
         os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.IRWXO) #744
         func(path)
     else:
-        raise
+        raise ReadOnlyException
 
 @pytest.fixture
 def create_project():
