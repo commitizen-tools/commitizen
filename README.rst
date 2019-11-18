@@ -5,9 +5,9 @@ Commitizen
     Python 3 command line utility to standardize commit messages and bump version
 
 
-.. image:: https://img.shields.io/travis/Woile/commitizen.svg?style=flat-square
-    :alt: Travis
-    :target: https://travis-ci.org/Woile/commitizen
+.. image:: https://github.com/Woile/commitizen/workflows/Python%20package/badge.svg
+    :alt: Github Actions
+    :target: https://github.com/Woile/commitizen/actions
 
 .. image:: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square
     :alt: Conventional Commits
