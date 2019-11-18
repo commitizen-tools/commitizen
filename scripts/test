@@ -3,6 +3,6 @@ if [ -d 'venv' ] ; then
     export PREFIX="venv/bin/"
 fi
 
-${PREFIX}pytest --cov-report term-missing --cov=commitizen tests/
+${PREFIX}pytest --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen tests/
 ${PREFIX}black commitizen tests --check
 ${PREFIX}flake8 --max-line-length=88 commitizen/ tests/
