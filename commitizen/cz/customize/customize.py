@@ -34,5 +34,12 @@ class CustomizeCommitsCz(BaseCommitizen):
         return self.custom_config.get("schema")
 
     def info(self) -> str:
-        # TODO
+        info_path = self.custom_config.get("info_path")
+        info = self.custom_config.get("info")
+        if info_path:
+            with open(info_path, "r") as f:
+                content = f.read()
+            return content
+        elif info:
+            return info
         raise NotImplementedError("Not Implemented yet")

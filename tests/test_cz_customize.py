@@ -16,6 +16,7 @@ def config():
     schema = "<type>: <body>"
     bump_pattern = "^(break|new|fix|hotfix)"
     bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
+    info = "This is a customized cz."
 
     [[tool.commitizen.customize.questions]]
     type = "list"
@@ -80,3 +81,8 @@ def test_example(config):
 def test_schema(config):
     cz = CustomizeCommitsCz(config)
     assert "<type>: <body>" in cz.schema()
+
+
+def test_info(config):
+    cz = CustomizeCommitsCz(config)
+    assert "This is a customized cz." in cz.info()
