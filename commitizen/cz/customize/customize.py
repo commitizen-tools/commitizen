@@ -12,6 +12,14 @@ class CustomizeCommitsCz(BaseCommitizen):
         super(CustomizeCommitsCz, self).__init__(config)
         self.custom_config = self.config.get("customize")
 
+        custom_bump_pattern = self.custom_config.get("bump_pattern")
+        if custom_bump_pattern:
+            self.bump_pattern = custom_bump_pattern
+
+        custom_bump_map = self.custom_config.get("bump_map")
+        if custom_bump_map:
+            self.bump_map = custom_bump_map
+
     def questions(self) -> list:
         return self.custom_config.get("questions")
 

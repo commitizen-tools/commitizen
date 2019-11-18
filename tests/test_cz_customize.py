@@ -14,6 +14,8 @@ def config():
     message_template = "{change_type}: {message}"
     example = "feature: this feature eanable customize through config file"
     schema = "<type>: <body>"
+    bump_pattern = "^(break|new|fix|hotfix)"
+    bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
 
     [[tool.commitizen.customize.questions]]
     type = "list"
@@ -28,6 +30,21 @@ def config():
     """
     _conf.update(parse(toml_str)["tool"]["commitizen"])
     return _conf.config
+
+
+def test_bump_pattern(config):
+    cz = CustomizeCommitsCz(config)
+    assert cz.bump_pattern == "^(break|new|fix|hotfix)"
+
+
+def test_bump_map(config):
+    cz = CustomizeCommitsCz(config)
+    assert cz.bump_map == {
+        "break": "MAJOR",
+        "new": "MINOR",
+        "fix": "PATCH",
+        "hotfix": "PATCH",
+    }
 
 
 def test_questions(config):
