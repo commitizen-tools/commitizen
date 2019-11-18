@@ -21,7 +21,10 @@ def config():
     [[tool.commitizen.customize.questions]]
     type = "list"
     name = "change_type"
-    choices = ["feature", "bug fix"]
+    choices = [
+        {value = "feature", name = "feature: A new feature."},
+        {value = "bug fix", name = "bug fix: A bug fix."}
+    ]
     message = "Select the type of change you are committing"
 
     [[tool.commitizen.customize.questions]]
@@ -55,7 +58,10 @@ def test_questions(config):
         {
             "type": "list",
             "name": "change_type",
-            "choices": ["feature", "bug fix"],
+            "choices": [
+                {"value": "feature", "name": "feature: A new feature."},
+                {"value": "bug fix", "name": "bug fix: A bug fix."},
+            ],
             "message": "Select the type of change you are committing",
         },
         {"type": "input", "name": "message", "message": "Body."},
