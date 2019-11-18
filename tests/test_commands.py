@@ -96,7 +96,8 @@ def test_commit_when_nothing_to_commit(mocker):
 def test_commit_when_customized_expected_raised(mocker, capsys):
     _err = ValueError()
     _err.__context__ = CzException("This is the root custom err")
-
+    git_mock = mocker.patch("commitizen.git.is_staging_clean")
+    git_mock.return_value = False
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.side_effect = _err
 
