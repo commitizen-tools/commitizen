@@ -22,6 +22,9 @@ def test_ls(mocker, capsys):
 
 def test_version(mocker):
     testargs = ["cz", "--version"]
-    with pytest.raises(SystemExit):
-        mocker.patch.object(sys, "argv", testargs)
-        cli.main()
+    mocker.patch.object(sys, "argv", testargs)
+    error_mock = mocker.patch("commitizen.out.error")
+
+    cli.main()
+
+    error_mock.assert_called_once()
