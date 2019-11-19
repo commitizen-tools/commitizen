@@ -10,7 +10,6 @@ def config():
     _conf = Config()
     toml_str = r"""
     [tool.commitizen.customize]
-    # message_template should follow the python string formatting spec
     message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
     example = "feature: this feature eanable customize through config file"
     schema = "<type>: <body>"
