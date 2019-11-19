@@ -1,4 +1,7 @@
+import contextlib
 import os
+import shutil
+import tempfile
 from unittest import mock
 
 import pytest
@@ -13,6 +16,15 @@ config = {"name": defaults.name}
 def staging_is_clean(mocker):
     is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
     is_staging_clean_mock.return_value = False
+
+
+@contextlib.contextmanager
+def get_temp_dir():
+    temp_dir = tempfile.mkdtemp()
+    try:
+        yield temp_dir
+    finally:
+        shutil.rmtree(temp_dir)
 
 
 @pytest.mark.usefixtures("staging_is_clean")
@@ -158,3 +170,46 @@ def test_version():
 
         commands.Version(config)()
         mocked_write.assert_called_once()
+
+
+def test_check_no_conventional_commit(mocker):
+    with pytest.raises(SystemExit):
+        error_mock = mocker.patch("commitizen.out.error")
+
+        with get_temp_dir() as dir:
+
+            tempfile = os.path.join(dir, "temp_commit_file")
+            with open(tempfile, 'w') as f:
+                f.write("no conventional commit")
+
+            check_cmd = commands.Check(
+                config=config,
+                arguments={"commit_msg_file": tempfile}
+            )
+            check_cmd()
+            error_mock.assert_called_once()
+
+
+def test_check_conventional_commit(mocker):
+    success_mock = mocker.patch("commitizen.out.success")
+    with get_temp_dir() as dir:
+
+        tempfile = os.path.join(dir, "temp_commit_file")
+        with open(tempfile, 'w') as f:
+            f.write("feat(lang): added polish language")
+
+        check_cmd = commands.Check(
+            config=config,
+            arguments={"commit_msg_file": tempfile}
+        )
+
+        check_cmd()
+        success_mock.assert_called_once()
+
+
+def test_check_command_when_commit_file_not_found():
+    with pytest.raises(FileNotFoundError):
+        commands.Check(
+            config=config,
+            arguments={"commit_msg_file": ""}
+        )()
