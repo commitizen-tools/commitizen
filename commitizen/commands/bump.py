@@ -122,7 +122,7 @@ class Bump:
         bump.update_version_in_files(current_version, new_version.public, files)
         c = git.commit(message, args="-a")
         if c.err:
-            out.error(c.err)
+            out.error("git.commit errror: \"{}\"".format(c.err.strip()))
             raise SystemExit(COMMIT_FAILED)
         c = git.tag(new_tag_version)
         if c.err:
