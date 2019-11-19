@@ -6,5 +6,7 @@ from .info import Info
 from .list_cz import ListCz
 from .schema import Schema
 from .version import Version
+from .init import Init
 
-__all__ = ("Bump", "Check", "Commit", "Example", "Info", "ListCz", "Schema", "Version")
+
+__all__ = ("Bump", "Check", "Commit", "Example", "Info", "ListCz", "Schema", "Version", "Init")
