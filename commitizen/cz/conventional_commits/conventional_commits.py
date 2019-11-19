@@ -2,7 +2,7 @@ import os
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
-from commitizen.cz.filters import multiple_line_breaker, required_validator
+from commitizen.cz.utils import multiple_line_breaker, required_validator
 
 __all__ = ["ConventionalCommitsCz"]
 
