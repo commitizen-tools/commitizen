@@ -12,12 +12,12 @@ import pytest
 from commitizen import cli, cmd, git
 
 
-def ReadOnlyException(Exception):
+class ReadOnlyException(Exception):
     pass
 
 
 # https://stackoverflow.com/questions/1213706/what-user-do-python-scripts-run-as-in-windows
-def handleRemoveReadOnly(func, path, exc):
+def handle_remove_read_only(func, path, exc):
     excvalue = exc[1]
     if func in (os.rmdir, os.remove, shutil.rmtree) and excvalue.errno == errno.EACCESS:
         os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.IRWXO)  # 744
@@ -37,7 +37,7 @@ def create_project():
     os.chdir(full_tmp_path)
     yield
     os.chdir(current_directory)
-    shutil.rmtree(full_tmp_path, handleRemoveReadOnly)
+    shutil.rmtree(full_tmp_path, handle_remove_read_only)
 
 
 def create_file_and_commit(message: str, filename: Optional[str] = None):
