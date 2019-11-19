@@ -121,6 +121,10 @@ def read_cfg() -> dict:
         if "toml" in filename:
             conf = read_pyproject_conf(data)
         else:
+            warnings.warn(
+                ".cz, setup.cfg, and .cz.cgf will be deprecated in next major version. \n"
+                'Please use "pyproject.toml", ".cz.toml" instead'
+            )
             conf = read_raw_parser_conf(data)
         if not conf:
             continue

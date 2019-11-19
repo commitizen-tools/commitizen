@@ -2,9 +2,9 @@
 
 Commitizen has support for `toml` and `ini` files.
 
-## pyproject.toml
+## pyproject.toml or .cz.toml
 
-Add an entry to `pyproject.toml`. Recommended for **python** projects.
+Add an entry to `pyproject.toml or .cz.toml`. Recommended for **python** projects.
 
     [tool.commitizen]
     name = "cz_conventional_commits"
@@ -27,6 +27,8 @@ Add an entry to `pyproject.toml`. Recommended for **python** projects.
     ]
 
 ## INI files
+
+**INI files will not be supported in next major version. Please use toml instead**
 
 Supported files: `.cz`, `.cz.cfg`, `setup.py`, and `$HOME/.cz`
 
