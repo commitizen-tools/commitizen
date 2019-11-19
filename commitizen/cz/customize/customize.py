@@ -1,3 +1,5 @@
+from jinja2 import Template
+
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
 
@@ -24,8 +26,8 @@ class CustomizeCommitsCz(BaseCommitizen):
         return self.custom_config.get("questions")
 
     def message(self, answers: dict) -> str:
-        message_template = self.custom_config.get("message_template")
-        return message_template.format(**answers)
+        message_template = Template(self.custom_config.get("message_template"))
+        return message_template.render(**answers)
 
     def example(self) -> str:
         return self.custom_config.get("example")

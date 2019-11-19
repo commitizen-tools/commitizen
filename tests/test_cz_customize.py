@@ -11,7 +11,7 @@ def config():
     toml_str = """
     [tool.commitizen.customize]
     # message_template should follow the python string formatting spec
-    message_template = "{change_type}: {message}"
+    message_template = "{{change_type}}: {{message}}"
     example = "feature: this feature eanable customize through config file"
     schema = "<type>: <body>"
     bump_pattern = "^(break|new|fix|hotfix)"
