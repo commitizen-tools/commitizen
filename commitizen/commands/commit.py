@@ -63,6 +63,12 @@ class Commit:
             m = self.prompt_commit_questions()
 
         out.info(f"\n{m}\n")
+
+        dry_run: bool = self.arguments.get("dry_run")
+
+        if dry_run:
+            raise SystemExit(NOTHING_TO_COMMIT)
+
         c = git.commit(m)
 
         if c.err:
