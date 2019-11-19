@@ -2,13 +2,9 @@ import os
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
-from commitizen.cz.exceptions import CzException
+from commitizen.cz.filters import multiple_line_breaker, required_validator
 
 __all__ = ["ConventionalCommitsCz"]
-
-
-class NoSubjectException(CzException):
-    ...
 
 
 def parse_scope(text):
@@ -26,10 +22,7 @@ def parse_subject(text):
     if isinstance(text, str):
         text = text.strip(".").strip()
 
-    if not text:
-        raise NoSubjectException("Subject is required.")
-
-    return text
+    return required_validator(text, msg="Subject is required.")
 
 
 class ConventionalCommitsCz(BaseCommitizen):
@@ -124,6 +117,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                     "Body. Motivation for the change and contrast this "
                     "with previous behavior:\n"
                 ),
+                "filter": multiple_line_breaker,
             },
             {
                 "type": "input",
