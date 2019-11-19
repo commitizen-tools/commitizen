@@ -51,7 +51,9 @@ class Commit:
         return cz.message(answers)
 
     def __call__(self):
-        if git.is_staging_clean():
+        dry_run: bool = self.arguments.get("dry_run")
+
+        if git.is_staging_clean() and not dry_run:
             out.write("No files added to staging!")
             raise SystemExit(NOTHING_TO_COMMIT)
 
@@ -63,6 +65,10 @@ class Commit:
             m = self.prompt_commit_questions()
 
         out.info(f"\n{m}\n")
+
+        if dry_run:
+            raise SystemExit(NOTHING_TO_COMMIT)
+
         c = git.commit(m)
 
         if c.err:

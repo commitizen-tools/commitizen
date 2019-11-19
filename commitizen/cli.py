@@ -45,7 +45,12 @@ data = {
                         "name": ["--retry"],
                         "action": "store_true",
                         "help": "retry last commit",
-                    }
+                    },
+                    {
+                        "name": "--dry-run",
+                        "action": "store_true",
+                        "help": "show output to stdout, no commit, no modified files",
+                    },
                 ],
             },
             {

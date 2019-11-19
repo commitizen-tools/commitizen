@@ -67,6 +67,7 @@ isort = "^4.3.21"
 
 [tool.poetry.scripts]
 cz = "commitizen.cli:main"
+git-cz = "commitizen.cli:main"
 
 [build-system]
 requires = ["poetry>=0.12"]

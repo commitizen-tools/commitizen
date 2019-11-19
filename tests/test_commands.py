@@ -82,6 +82,23 @@ def test_commit_retry_works(mocker):
     assert not os.path.isfile(temp_file)
 
 
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_with_dry_run_option(mocker):
+    prompt_mock = mocker = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "closes #57",
+        "footer": "",
+    }
+
+    with pytest.raises(SystemExit):
+        commit_cmd = commands.Commit(config, {"dry_run": True})
+        commit_cmd()
+
+
 def test_commit_when_nothing_to_commit(mocker):
     is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
     is_staging_clean_mock.return_value = True
@@ -93,11 +110,10 @@ def test_commit_when_nothing_to_commit(mocker):
     assert err.value.code == commands.commit.NOTHING_TO_COMMIT
 
 
+@pytest.mark.usefixtures("staging_is_clean")
 def test_commit_when_customized_expected_raised(mocker, capsys):
     _err = ValueError()
     _err.__context__ = CzException("This is the root custom err")
-    git_mock = mocker.patch("commitizen.git.is_staging_clean")
-    git_mock.return_value = False
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.side_effect = _err
 
