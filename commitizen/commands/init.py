@@ -27,7 +27,7 @@ class Init:
         else:
             tag = self.config["version"]
 
-        if "tag_format" not in self.config:
+        if not "tag_format" not in self.config:
             tag_format = self._ask_tag_format(tag)
             values_to_add["tag_format"] = tag_format
 
