@@ -1,5 +1,6 @@
 import os
 from tempfile import NamedTemporaryFile
+from typing import Optional, List
 
 from commitizen import cmd
 
@@ -40,3 +41,17 @@ def is_staging_clean() -> bool:
     c = cmd.run("git diff --no-ext-diff --name-only")
     c_cached = cmd.run("git diff --no-ext-diff --cached --name-only")
     return not (bool(c.out) or bool(c_cached.out))
+
+
+def get_latest_tag() -> Optional[str]:
+    c = cmd.run("git describe --abbrev=0 --tags")
+    if c.err:
+        return None
+    return c.out
+
+
+def get_all_tags() -> Optional[List[str]]:
+    c = cmd.run("git tag --list")
+    if c.err:
+        return []
+    return [tag.strip() for tag in c.out.split("\n") if tag.strip()]
