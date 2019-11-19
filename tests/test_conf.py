@@ -99,16 +99,6 @@ def empty_pyproject_ok_cz():
     os.remove(cz)
 
 
-def test_no_pyproject(mocker):
-    with mocker.patch("os.path.isfile", return_value=False):
-        assert config.has_pyproject() is False
-
-
-def test_has_pyproject(mocker):
-    with mocker.patch("os.path.isfile", return_value=True):
-        assert config.has_pyproject() is True
-
-
 def test_read_pyproject_conf():
     assert config.read_pyproject_conf(PYPROJECT) == _read_conf
 
