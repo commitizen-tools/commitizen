@@ -8,10 +8,10 @@ from commitizen.config import Config
 @pytest.fixture(scope="module")
 def config():
     _conf = Config()
-    toml_str = """
+    toml_str = r"""
     [tool.commitizen.customize]
     # message_template should follow the python string formatting spec
-    message_template = "{{change_type}}: {{message}}"
+    message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
     example = "feature: this feature eanable customize through config file"
     schema = "<type>: <body>"
     bump_pattern = "^(break|new|fix|hotfix)"
@@ -31,6 +31,11 @@ def config():
     type = "input"
     name = "message"
     message = "Body."
+
+    [[tool.commitizen.customize.questions]]
+    type = "confirm"
+    name = "show_message"
+    message = "Do you want to add body message in commit?"
     """
     _conf.update(parse(toml_str)["tool"]["commitizen"])
     return _conf.config
@@ -65,6 +70,11 @@ def test_questions(config):
             "message": "Select the type of change you are committing",
         },
         {"type": "input", "name": "message", "message": "Body."},
+        {
+            "type": "confirm",
+            "name": "show_message",
+            "message": "Do you want to add body message in commit?",
+        },
     ]
     assert list(questions) == expected_questions
 
@@ -74,9 +84,19 @@ def test_answer(config):
     answers = {
         "change_type": "feature",
         "message": "this feature eanable customize through config file",
+        "show_message": True,
     }
     message = cz.message(answers)
     assert message == "feature: this feature eanable customize through config file"
+
+    cz = CustomizeCommitsCz(config)
+    answers = {
+        "change_type": "feature",
+        "message": "this feature eanable customize through config file",
+        "show_message": False,
+    }
+    message = cz.message(answers)
+    assert message == "feature:"
 
 
 def test_example(config):
