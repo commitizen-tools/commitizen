@@ -1,4 +1,7 @@
-from jinja2 import Template
+try:
+    from jinja2 import Template
+except ImportError:
+    from string import Template
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
@@ -27,7 +30,10 @@ class CustomizeCommitsCz(BaseCommitizen):
 
     def message(self, answers: dict) -> str:
         message_template = Template(self.custom_config.get("message_template"))
-        return message_template.render(**answers)
+        if getattr(Template, "substitute", None):
+            return message_template.substitute(**answers)
+        else:
+            return message_template.render(**answers)
 
     def example(self) -> str:
         return self.custom_config.get("example")
