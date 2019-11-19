@@ -21,15 +21,18 @@ def commit(message: str, args=""):
 
 
 def get_commits(start: str, end: str = "HEAD", from_beginning: bool = False) -> list:
+    delimiter = '"----------commit-delimiter----------"'
+    log_format = "%s%n%b"
+    git_log_cmd = f"git log --pretty={log_format}{delimiter}"
 
-    c = cmd.run(f"git log --pretty=format:%s%n%b {start}...{end}")
+    c = cmd.run(f"{git_log_cmd} {start}...{end}")
 
     if from_beginning:
-        c = cmd.run(f"git log --pretty=format:%s%n%b {end}")
+        c = cmd.run(f"{git_log_cmd} {end}")
 
     if not c.out:
         return []
-    return c.out.split("\n")
+    return [commit.strip() for commit in c.out.split(delimiter) if commit]
 
 
 def tag_exist(tag: str) -> bool:
