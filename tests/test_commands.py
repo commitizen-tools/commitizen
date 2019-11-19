@@ -166,14 +166,12 @@ def test_schema(config):
 
 def test_list_cz(config):
     with mock.patch("commitizen.out.write") as mocked_write:
-
         commands.ListCz(config)()
         mocked_write.assert_called_once()
 
 
 def test_version(config):
     with mock.patch("commitizen.out.write") as mocked_write:
-
         commands.Version(config)()
         mocked_write.assert_called_once()
 
@@ -214,3 +212,16 @@ def test_check_conventional_commit(config, mocker):
 def test_check_command_when_commit_file_not_found(config):
     with pytest.raises(FileNotFoundError):
         commands.Check(config=config, arguments={"commit_msg_file": ""})()
+
+
+def test_init(capsys):
+    config = {
+        "name": defaults.name,
+        "version": "0.1.0",
+        "tag_format": r"$version",
+    }
+    with pytest.raises(SystemExit):
+        commands.Init(config)()
+
+        captured = capsys.readouterr()
+        assert "The configuration were all set. Nothing to add." == captured.out
