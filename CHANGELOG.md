@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## Unreleased
+
+### Feature
+
+- new `version` command. `--version` will be deprecated in `2.0.0`
+- new `git-cz` entrypoint. After installing `commitizen` you can run `git cz c` (#60)
+- new `--dry-run` argument in `commit` (#56)
+- new `cz check` command which checks if the message is valid with the rules (#59). Useful for git hooks.
+- create a commiting rule directly in the config file (#54)
+- support for multi-line body (#6)
+- support for jinja templates. Install doign `pip install -U commitizen[jinja2]`.
+- support for `.cz.toml`. The confs depending on `ConfigParser` will be deprecated in `2.0.0`.
+
+
+### Fix
+
+- tests were fixed
+- windows error when removing folders (#67)
+- typos in docs
+
 ## v1.8.0
 
 ### Feature
