@@ -3,10 +3,10 @@ import pytest
 from commitizen import defaults
 from commitizen.cz.conventional_commits.conventional_commits import (
     ConventionalCommitsCz,
-    NoSubjectException,
     parse_scope,
     parse_subject,
 )
+from commitizen.cz.exceptions import AnswerRequiredError
 
 config = {"name": defaults.name}
 
@@ -39,7 +39,7 @@ def test_parse_subject_valid_values():
 
 def test_parse_subject_invalid_values():
     for valid_subject in invalid_subjects:
-        with pytest.raises(NoSubjectException):
+        with pytest.raises(AnswerRequiredError):
             parse_subject(valid_subject)
 
 

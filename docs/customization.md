@@ -151,7 +151,7 @@ Example:
 name = "cz_customize"
 
 [tool.commitizen.customize]
-message_template = "{change_type}: {message}"
+message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
 example = "feature: this feature eanable customize through config file"
 schema = "<type>: <body>"
 bump_pattern = "^(break|new|fix|hotfix)"
@@ -171,6 +171,11 @@ message = "Select the type of change you are committing"
 type = "input"
 name = "message"
 message = "Body."
+
+[[tool.commitizen.customize.questions]]
+type = "confirm"
+name = "show_message"
+message = "Do you want to add body message in commit?"
 ```
 
 ### Customize configuration
@@ -178,7 +183,7 @@ message = "Body."
 | Parameter | Type | Default | Description |
 | --------- | ---- | ------- | ----------- |
 | `question` | `dict` | `None` | Questions regarding the commit message. Detatiled below. |
-| `message_template` | `str` | `None` | The template for generating message from the given answers. `message_template` should follow the python string formatting specification, and all the variables in this template should be defined in `name` in `questions`. |
+| `message_template` | `str` | `None` | The template for generating message from the given answers. `message_template` should either follow the [string.Template](https://docs.python.org/3/library/string.html#template-strings) or [Jinja2](https://jinja.palletsprojects.com/en/2.10.x/) formatting specification, and all the variables in this template should be defined in `name` in `questions`. Note that `Jinja2` is not installed by default. If not installed, commitizen will use `string.Template` formatting. |
 | `example` | `str` | `None` | (OPTIONAL) Provide an example to help understand the style. Used by `cz example`. |
 | `schema` | `str` | `None` | (OPTIONAL) Show the schema used. Used by `cz schema`. |
 | `info_path` | `str` | `None` | (OPTIONAL)  The path to the file that contains explanation of the commit rules. Used by `cz info`. If not provided `cz info`, will load `info` instead. |
