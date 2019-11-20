@@ -33,10 +33,6 @@ class Config:
 _conf = Config()
 
 
-def has_pyproject() -> bool:
-    return os.path.isfile("pyproject.toml")
-
-
 def read_pyproject_conf(data: str) -> dict:
     """We expect to have a section in pyproject looking like
 
@@ -121,6 +117,11 @@ def read_cfg() -> dict:
         if "toml" in filename:
             conf = read_pyproject_conf(data)
         else:
+            warnings.warn(
+                ".cz, setup.cfg, and .cz.cgf will be deprecated "
+                "in next major version. \n"
+                'Please use "pyproject.toml", ".cz.toml" instead'
+            )
             conf = read_raw_parser_conf(data)
         if not conf:
             continue
