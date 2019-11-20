@@ -160,13 +160,14 @@ Usage
     --version             get the version of the installed commitizen
 
     commands:
-    {ls,commit,c,example,info,schema,bump}
+    {ls,commit,c,example,info,schema,bump,check}
         ls                  show available commitizens
         commit (c)          create new commit
         example             show commit example
         info                show information about the cz
         schema              show commit schema
         bump                bump semantic version based on the git log
+        check               enforce the project to always use conventional commits
 
 Contributing
 ============

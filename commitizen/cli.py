@@ -111,6 +111,21 @@ data = {
                 "help": "get the version of the installed commitizen",
                 "func": commands.Version,
             },
+            {
+                "name": ["check"],
+                "help": "enforce the project to always use conventional commits",
+                "func": commands.Check,
+                "arguments": [
+                    {
+                        "name": "--commit-msg-file",
+                        "help": (
+                            "ask for the name of the temporal file that contains "
+                            "the commit message. "
+                            "Using it in a git hook script: MSG_FILE=$1"
+                        ),
+                    }
+                ],
+            },
         ],
     },
 }
