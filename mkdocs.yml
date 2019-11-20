@@ -13,6 +13,8 @@ nav:
     - Configuration: 'config.md'
     - Bump: 'bump.md'
     - Customization: 'customization.md'
+    - Tutorials:
+        - GitLab CI: 'tutorials/gitlab_ci.md'
 
 markdown_extensions:
   - markdown.extensions.codehilite:
