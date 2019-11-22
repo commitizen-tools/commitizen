@@ -15,6 +15,7 @@ nav:
     - Customization: 'customization.md'
     - Tutorials:
         - GitLab CI: 'tutorials/gitlab_ci.md'
+        - Github Actions: 'tutorials/github_actions.md'
 
 markdown_extensions:
   - markdown.extensions.codehilite:
