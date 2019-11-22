@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.9.0
 
 ### Feature
 
@@ -19,6 +19,10 @@
 - tests were fixed
 - windows error when removing folders (#67)
 - typos in docs
+
+### Docs
+- tutorial for gitlab ci
+- tutorial for github actions
 
 ## v1.8.0
 
