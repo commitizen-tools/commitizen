@@ -270,8 +270,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pyprojecttoml" title="pyproject.toml" class="md-nav__link">
-    pyproject.toml
+  <a href="#pyprojecttoml-or-cztoml" title="pyproject.toml or .cz.toml" class="md-nav__link">
+    pyproject.toml or .cz.toml
   </a>
   
 </li>
@@ -325,6 +325,54 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      Tutorials
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        Tutorials
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../tutorials/gitlab_ci/" title="GitLab CI" class="md-nav__link">
+      GitLab CI
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../tutorials/github_actions/" title="Github Actions" class="md-nav__link">
+      Github Actions
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -346,8 +394,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pyprojecttoml" title="pyproject.toml" class="md-nav__link">
-    pyproject.toml
+  <a href="#pyprojecttoml-or-cztoml" title="pyproject.toml or .cz.toml" class="md-nav__link">
+    pyproject.toml or .cz.toml
   </a>
   
 </li>
@@ -385,8 +433,8 @@
                 
                 <h1 id="configuration">Configuration</h1>
 <p>Commitizen has support for <code>toml</code> and <code>ini</code> files.</p>
-<h2 id="pyprojecttoml">pyproject.toml</h2>
-<p>Add an entry to <code>pyproject.toml</code>. Recommended for <strong>python</strong> projects.</p>
+<h2 id="pyprojecttoml-or-cztoml">pyproject.toml or .cz.toml</h2>
+<p>Add an entry to <code>pyproject.toml or .cz.toml</code>. Recommended for <strong>python</strong> projects.</p>
 <div class="codehilite"><pre><span></span><span class="k">[tool.commitizen]</span>
 <span class="na">name</span> <span class="o">=</span> <span class="s">&quot;cz_conventional_commits&quot;</span>
 <span class="na">version</span> <span class="o">=</span> <span class="s">&quot;0.1.0&quot;</span>
@@ -410,6 +458,7 @@
 
 
 <h2 id="ini-files">INI files</h2>
+<p><strong>INI files will not be supported in next major version. Please use toml instead</strong></p>
 <p>Supported files: <code>.cz</code>, <code>.cz.cfg</code>, <code>setup.py</code>, and <code>$HOME/.cz</code></p>
 <p>The format is slightly different to the <code>toml</code>, so pay attention.
 Recommended for <strong>other languages</strong> projects (js, go, etc).</p>
@@ -482,6 +531,12 @@ Recommended for <strong>other languages</strong> projects (js, go, etc).</p>
 <td><code>list</code></td>
 <td>see above</td>
 <td>Style for the prompts (It will merge this value with default style.) <a href="https://github.com/tmbo/questionary#additional-features">See More (Styling your prompts with your favorite colors)</a></td>
+</tr>
+<tr>
+<td><code>customize</code></td>
+<td><code>dict</code></td>
+<td><code>None</code></td>
+<td><strong>This is only supported when config through <code>toml</code>.</strong> Custom rules for committing and bumping. <a href="https://woile.github.io/commitizen/customization/">See more</a></td>
 </tr>
 </tbody>
 </table>

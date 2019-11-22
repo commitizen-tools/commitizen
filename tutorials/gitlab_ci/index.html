@@ -1,0 +1,645 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="commit rules, semantic version, conventional commits">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.1.2">
+    
+    
+      
+        <title>GitLab CI - Commitizen</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.3020aac5.css">
+      
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.01ccdecf.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+    
+    
+      
+    
+    
+  </head>
+  
+    <body dir="ltr">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#create-a-new-release-usign-gitlab-ci" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="Commitizen" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              Commitizen
+            </span>
+            <span class="md-header-nav__topic">
+              GitLab CI
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+<a href="https://github.com/Woile/commitizen" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Woile/commitizen
+  </div>
+</a>
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../.." title="Commitizen" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
+    Commitizen
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+<a href="https://github.com/Woile/commitizen" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    Woile/commitizen
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../config/" title="Configuration" class="md-nav__link">
+      Configuration
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../bump/" title="Bump" class="md-nav__link">
+      Bump
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../customization/" title="Customization" class="md-nav__link">
+      Customization
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
+    
+    <label class="md-nav__link" for="nav-5">
+      Tutorials
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        Tutorials
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        GitLab CI
+      </label>
+    
+    <a href="./" title="GitLab CI" class="md-nav__link md-nav__link--active">
+      GitLab CI
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-new-release-usign-gitlab-ci" title="Create a new release usign GitLab CI" class="md-nav__link">
+    Create a new release usign GitLab CI
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#development-workflow" title="Development Workflow:" class="md-nav__link">
+    Development Workflow:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gitlab-configuration" title="Gitlab Configuration:" class="md-nav__link">
+    Gitlab Configuration:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defining-gitlab-ci-pipeline" title="Defining GitLab CI Pipeline" class="md-nav__link">
+    Defining GitLab CI Pipeline
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stages-and-jobs" title="Stages and Jobs" class="md-nav__link">
+    Stages and Jobs
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../github_actions/" title="Github Actions" class="md-nav__link">
+      Github Actions
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-new-release-usign-gitlab-ci" title="Create a new release usign GitLab CI" class="md-nav__link">
+    Create a new release usign GitLab CI
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#development-workflow" title="Development Workflow:" class="md-nav__link">
+    Development Workflow:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gitlab-configuration" title="Gitlab Configuration:" class="md-nav__link">
+    Gitlab Configuration:
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defining-gitlab-ci-pipeline" title="Defining GitLab CI Pipeline" class="md-nav__link">
+    Defining GitLab CI Pipeline
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stages-and-jobs" title="Stages and Jobs" class="md-nav__link">
+    Stages and Jobs
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>GitLab CI</h1>
+                
+                <h3 id="create-a-new-release-usign-gitlab-ci">Create a new release usign GitLab CI</h3>
+<p>For this example, we have a <code>python/django</code> application and <code>Docker</code> as containerization tool.</p>
+<p><em>Goal</em>: Bump a new version every time that a change occurs on <code>master</code> branch. The bump should be executed automatically by the <code>CI</code> process.</p>
+<h4 id="development-workflow">Development Workflow:</h4>
+<ol>
+<li>A developer creates a new commit on any branch (except <code>master</code>)</li>
+<li>A developer creates a merge request (MR) against <code>master</code> branch</li>
+<li>When the <code>MR</code> is merged into master, the 2 stages of the CI are executed</li>
+<li>For simplification, we store the software version in a file called <code>VERSION</code>. You can use any file that you want as <code>commitizen</code> supports it.</li>
+<li>The commit message executed automatically by the <code>CI</code> must include <code>[skip-ci]</code> in the message, otherwise the process will generate a loop. You can define the message structure in <a href="https://woile.github.io/commitizen/bump/">commitizen</a> as well.</li>
+</ol>
+<h4 id="gitlab-configuration">Gitlab Configuration:</h4>
+<p>In order to be able to change files and push new changes with <code>Gitlab CI</code> runners, we need to have a <code>ssh</code> key and configure a git user.</p>
+<p>First, let's create a <code>ssh key</code>. The only requirement is to create it without a passphrase:</p>
+<div class="codehilite"><pre><span></span>ssh-keygen -f deploy_key -N &quot;&quot;
+</pre></div>
+
+
+<p>The previous command will create a private and public key under the files <code>deploy_key</code> and <code>deploy_key.pub</code>. We will use them later.</p>
+<p>For the git user, we need an email and username. You can choose whatever you want, in this example, we choose <code>ci-runner@myproject.com</code> and <code>admin</code> respectively.</p>
+<p>Now, we need to create three environment variables that will be visible for the runners. They should be created in the <code>variables</code> section under <code>settings/ci_cd</code>:</p>
+<p><img alt="gitlab variables" src="../../images/gitlab_ci/gitlab_variables.png" /></p>
+<p>Create <code>SSH_PRIVATE_KEY</code>, <code>CI_EMAIL</code>, <code>CI_USERNAME</code> variables and fill them with the <code>private_key</code>, <code>email</code> and <code>username</code> that we have created previously.</p>
+<p>The latest step is to create a <code>deploy key.</code> To do this, we should create it under the section <code>settings/repository</code> and fill it with the <code>public key</code> generated before. Check <code>Write access allowed</code>, otherwise, the runner won't be able to write the changes to the repository. </p>
+<p><img alt="gitlab deploy key" src="../../images/gitlab_ci/gitlab_deploy_key.png" /></p>
+<p>If you have more projects under the same organization, you can reuse the deploy key created before, but you will have to repeat the step where we have created the environment variables (ssh key, email, and username).</p>
+<p>tip: If the CI raise some errors, try to unprotect the private key.</p>
+<h4 id="defining-gitlab-ci-pipeline">Defining GitLab CI Pipeline</h4>
+<ol>
+<li>
+<p>Create a <code>.gitlab-ci.yaml</code> file that contains <code>stages</code> and <code>jobs</code> configurations. You can find more info <a href="https://docs.gitlab.com/ee/ci/quick_start/">here</a>.</p>
+</li>
+<li>
+<p>Define <code>stages</code> and <code>jobs</code>. For this example, we define two <code>stages</code> with one <code>job</code> each one.</p>
+</li>
+<li>Test the application.</li>
+<li>Auto bump the version. Means changing the file/s that reflects the version, creating a new commit and git tag.</li>
+</ol>
+<h4 id="stages-and-jobs">Stages and Jobs</h4>
+<div class="codehilite"><pre><span></span><span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker:latest</span>
+
+<span class="nt">services</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">docker:dind</span>
+
+<span class="nt">variables</span><span class="p">:</span>
+  <span class="nt">API_IMAGE_NAME</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME</span>
+
+<span class="nt">before_script</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">apk add --no-cache py-pip</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pip install docker-compose</span>
+
+<span class="nt">stages</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">test</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">auto-bump</span>
+
+<span class="nt">test</span><span class="p">:</span>
+  <span class="nt">stage</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test</span>
+  <span class="nt">script</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">docker-compose run -e DJANGO_ENVIRONMENT=dev your_project python manage.py test</span> <span class="c1"># run tests</span>
+
+<span class="nt">auto-bump</span><span class="p">:</span>
+  <span class="nt">stage</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">auto-bump</span>
+  <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">python:3.6</span>
+  <span class="nt">before_script</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="s">&#39;which</span><span class="nv"> </span><span class="s">ssh-agent</span><span class="nv"> </span><span class="s">||</span><span class="nv"> </span><span class="s">(</span><span class="nv"> </span><span class="s">apt-get</span><span class="nv"> </span><span class="s">update</span><span class="nv"> </span><span class="s">-qy</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">apt-get</span><span class="nv"> </span><span class="s">install</span><span class="nv"> </span><span class="s">openssh-client</span><span class="nv"> </span><span class="s">-qqy</span><span class="nv"> </span><span class="s">)&#39;</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">eval `ssh-agent -s`</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">echo &quot;${SSH_PRIVATE_KEY}&quot; | tr -d &#39;\r&#39; | ssh-add - &gt; /dev/null</span> <span class="c1"># add ssh key</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pip3 install -U Commitizen</span> <span class="c1"># install commitizen</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">mkdir -p ~/.ssh</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">chmod 700 ~/.ssh</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">echo &quot;$SSH_PUBLIC_KEY&quot; &gt;&gt; ~/.ssh/id_rsa.pub</span>
+    <span class="p p-Indicator">-</span> <span class="s">&#39;[[</span><span class="nv"> </span><span class="s">-f</span><span class="nv"> </span><span class="s">/.dockerenv</span><span class="nv"> </span><span class="s">]]</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">echo</span><span class="nv"> </span><span class="s">-e</span><span class="nv"> </span><span class="s">&quot;Host</span><span class="nv"> </span><span class="s">*\n\tStrictHostKeyChecking</span><span class="nv"> </span><span class="s">no\n\n&quot;</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">~/.ssh/config&#39;</span>
+  <span class="nt">dependencies</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">test</span>
+  <span class="nt">script</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">git remote set-url origin git@gitlab.com:discover/rentee-core.git</span> <span class="c1"># git configuration</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">git config --global user.email &quot;${CI_EMAIL}&quot; &amp;&amp; git config --global user.name &quot;${CI_USERNAME}&quot;</span>
+    <span class="p p-Indicator">-</span> <span class="s">&#39;exists=`git</span><span class="nv"> </span><span class="s">show-ref</span><span class="nv"> </span><span class="s">refs/heads/master`</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">[</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">&quot;$exists&quot;</span><span class="nv"> </span><span class="s">];</span><span class="nv"> </span><span class="s">then</span><span class="nv"> </span><span class="s">git</span><span class="nv"> </span><span class="s">branch</span><span class="nv"> </span><span class="s">-D</span><span class="nv"> </span><span class="s">master;</span><span class="nv"> </span><span class="s">fi&#39;</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">git checkout -b master</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">cz bump</span> <span class="c1"># execute auto bump and push to master</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">git push origin master:$CI_COMMIT_REF_NAME</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">TAG=$(head -n 1 VERSION)</span> <span class="c1"># get the new software version and save into artifacts</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">echo &quot;#!/bin/sh&quot; &gt;&gt; variables</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">echo &quot;export TAG=&#39;$TAG&#39;&quot; &gt;&gt; variables</span> 
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">git push origin $TAG</span>
+  <span class="nt">only</span><span class="p">:</span>
+    <span class="nt">refs</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">master</span>
+  <span class="nt">artifacts</span><span class="p">:</span>
+    <span class="nt">paths</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">variables</span>
+</pre></div>
+
+
+<p>So, every time that a developer push to any branch the <code>test</code> job is executed. If the branch is <code>master</code> and the test jobs success, the <code>auto-bump</code> takes place.
+To be able to push using the Gitlab runner we have to set the ssh key, configure git and finally execute the auto bump.</p>
+<p>After merging the new changed into master we have the final result:</p>
+<p><img alt="gitlab final ci result" src="../../images/gitlab_ci/gitlab_final_ci_result.png" /></p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../../customization/" title="Customization" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Customization
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../github_actions/" title="Github Actions" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Github Actions
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.267712eb.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
+      
+    
+  </body>
+</html>
