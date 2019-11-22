@@ -1,5 +1,0 @@
-# Publish to pypi
-poetry publish --build
-
-# Publish docs
-mkdocs gh-deploy
