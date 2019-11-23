@@ -1,8 +1,8 @@
 import pytest
 from tomlkit import parse
 
-from commitizen.cz.customize import CustomizeCommitsCz
 from commitizen.config import Config
+from commitizen.cz.customize import CustomizeCommitsCz
 
 
 @pytest.fixture(scope="module")
