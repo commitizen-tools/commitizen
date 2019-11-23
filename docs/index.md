@@ -1,5 +1,5 @@
 
-[![Travis](https://img.shields.io/travis/Woile/commitizen.svg?style=flat-square)](https://travis-ci.org/Woile/commitizen)
+[![Github Actions](https://github.com/Woile/commitizen/workflows/Python%20package/badge.svg?style=flat-square)](https://github.com/Woile/commitizen/actions)
 [![Conventional
 Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square)](https://conventionalcommits.org)
 [![PyPI Package latest
