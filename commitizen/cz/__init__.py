@@ -2,8 +2,8 @@ import importlib
 import pkgutil
 
 from commitizen.cz.conventional_commits import ConventionalCommitsCz
-from commitizen.cz.jira import JiraSmartCz
 from commitizen.cz.customize import CustomizeCommitsCz
+from commitizen.cz.jira import JiraSmartCz
 
 registry = {
     "cz_conventional_commits": ConventionalCommitsCz,

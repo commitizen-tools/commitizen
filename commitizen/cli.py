@@ -7,7 +7,6 @@ from decli import cli
 
 from commitizen import commands, config, out
 
-
 logger = logging.getLogger(__name__)
 data = {
     "prog": "cz",
