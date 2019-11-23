@@ -179,12 +179,11 @@ def test_check_no_conventional_commit(mocker):
         with get_temp_dir() as dir:
 
             tempfile = os.path.join(dir, "temp_commit_file")
-            with open(tempfile, 'w') as f:
+            with open(tempfile, "w") as f:
                 f.write("no conventional commit")
 
             check_cmd = commands.Check(
-                config=config,
-                arguments={"commit_msg_file": tempfile}
+                config=config, arguments={"commit_msg_file": tempfile}
             )
             check_cmd()
             error_mock.assert_called_once()
@@ -195,12 +194,11 @@ def test_check_conventional_commit(mocker):
     with get_temp_dir() as dir:
 
         tempfile = os.path.join(dir, "temp_commit_file")
-        with open(tempfile, 'w') as f:
+        with open(tempfile, "w") as f:
             f.write("feat(lang): added polish language")
 
         check_cmd = commands.Check(
-            config=config,
-            arguments={"commit_msg_file": tempfile}
+            config=config, arguments={"commit_msg_file": tempfile}
         )
 
         check_cmd()
@@ -209,7 +207,4 @@ def test_check_conventional_commit(mocker):
 
 def test_check_command_when_commit_file_not_found():
     with pytest.raises(FileNotFoundError):
-        commands.Check(
-            config=config,
-            arguments={"commit_msg_file": ""}
-        )()
+        commands.Check(config=config, arguments={"commit_msg_file": ""})()

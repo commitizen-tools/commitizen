@@ -3,8 +3,10 @@ import re
 
 from commitizen import out
 
-PATTERN = (r'(build|ci|docs|feat|fix|perf|refactor|style|test|chore|revert)'
-           r'(\([\w\-]+\))?:\s.*')
+PATTERN = (
+    r"(build|ci|docs|feat|fix|perf|refactor|style|test|chore|revert)"
+    r"(\([\w\-]+\))?:\s.*"
+)
 NO_COMMIT_MSG = 3
 INVALID_COMMIT_MSG = 5
 
@@ -46,7 +48,7 @@ class Check:
 
     def _get_commit_msg(self):
         temp_filename: str = self.arguments.get("commit_msg_file")
-        return open(temp_filename, 'r').read()
+        return open(temp_filename, "r").read()
 
     def _is_conventional(self, pattern, commit_msg):
         return re.match(PATTERN, commit_msg)

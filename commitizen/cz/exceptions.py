@@ -2,5 +2,5 @@ class CzException(Exception):
     ...
 
 
-class AnswerRequiredError(Exception):
+class AnswerRequiredError(CzException):
     ...
