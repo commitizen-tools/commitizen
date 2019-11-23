@@ -117,6 +117,7 @@ data = {
                 "arguments": [
                     {
                         "name": "--commit-msg-file",
+                        "required": True,
                         "help": (
                             "ask for the name of the temporal file that contains "
                             "the commit message. "
