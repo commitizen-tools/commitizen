@@ -3,17 +3,23 @@ import tomlkit
 from tomlkit.toml_file import TOMLFile
 
 from commitizen import factory, out
+from commitizen.cz import registry
 from commitizen.config import _conf
 from commitizen.git import get_latest_tag, get_all_tags
 
 
 class Init:
     def __init__(self, config: dict, *args):
+        # TODO: distinguish default and file config
         self.config: dict = config
         self.cz = factory.commiter_factory(self.config)
 
     def __call__(self):
         values_to_add = {}
+
+        if "name" not in self.config:
+            name = self._ask_name()
+            values_to_add["name"] = name
 
         if "version" not in self.config:
             tag = self._ask_tag()
@@ -27,6 +33,15 @@ class Init:
 
         self._update_config_file(values_to_add)
         out.write("The configuration are all set.")
+
+    def _ask_name(self) -> str:
+        name = questionary.select(
+            "Please choose the latest tag: ",
+            choices=list(registry.keys()),
+            default="cz_conventional_commits",
+            style=self.cz.style,
+        ).ask()
+        return name
 
     def _ask_tag(self) -> str:
         latest_tag = get_latest_tag()
