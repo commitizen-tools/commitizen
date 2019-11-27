@@ -74,6 +74,11 @@ data = {
                         "help": "show output to stdout, no commit, no modified files",
                     },
                     {
+                        "name": "--files-only",
+                        "action": "store_true",
+                        "help": "bump version in the files from the config",
+                    },
+                    {
                         "name": "--yes",
                         "action": "store_true",
                         "help": "accept automatically questions done",
