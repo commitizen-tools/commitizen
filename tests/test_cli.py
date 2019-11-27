@@ -35,7 +35,7 @@ def test_check_jira_fails(mocker, capsys):
     mocker.patch.object(sys, "argv", testargs)
     mocker.patch(
         "commitizen.commands.check.open",
-        mocker.mock_open(read_data="random message for JR-2 #fake_command blah"),
+        mocker.mock_open(read_data="random message for J-2 #fake_command blah"),
     )
     with pytest.raises(SystemExit):
         cli.main()
@@ -48,7 +48,7 @@ def test_check_jira_succeeds(mocker, capsys):
     mocker.patch.object(sys, "argv", testargs)
     mocker.patch(
         "commitizen.commands.check.open",
-        mocker.mock_open(read_data="JRA-23 correct commit with correct #command etc"),
+        mocker.mock_open(read_data="JR-23 #command some arguments etc"),
     )
     cli.main()
     out, _ = capsys.readouterr()
