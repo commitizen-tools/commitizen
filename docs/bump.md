@@ -92,15 +92,19 @@ cz bump --tag_format="v$version"
 cz bump --tag_format="v$minor.$major.$path$prerelease"
 ```
 
-In your `pyproject.toml`
+In your `pyproject.toml` or `.cz.toml`
 
-    [tool.commitizen]
-    tag_format = "v$minor.$major.$path$prerelease"
+```toml
+[tool.commitizen]
+tag_format = "v$minor.$major.$path$prerelease"
+```
 
-Or in your `.cz`
+Or in your `.cz` (TO BE DEPRECATED)
 
-    [commitizen]
-    tag_format = v$minor.$major.$path$prerelease
+```
+[commitizen]
+tag_format = v$minor.$major.$path$prerelease
+```
 
 The variables must be preceded by a `$` sign.
 
@@ -126,21 +130,25 @@ regarding if the file is present or not in `files`.
 
 Some examples
 
-`pyproject.toml`
+`pyproject.toml` or `.cz.toml`
 
-    [tool.commitizen]
-    files = [
-        "src/__version__.py",
-        "setup.py:version"
+```toml
+[tool.commitizen]
+files = [
+    "src/__version__.py",
+    "setup.py:version"
+]
+```
+
+`.cz` (TO BE DEPRECATED)
+
+```
+[commitizen]
+files = [
+    "src/__version__.py",
+    "setup.py:version"
     ]
-
-`.cz`
-
-    [commitizen]
-    files = [
-        "src/__version__.py",
-        "setup.py:version"
-        ]
+```
 
 In the example above, we can see the reference `"setup.py:version"`.
 This means that it will find a file `setup.py` and will only make a change
@@ -161,15 +169,19 @@ defaults to: `bump: version $current_version → $new_version`
 
 Some examples
 
-`pyproject.toml`
+`pyproject.toml` or `.cz.toml`
 
-    [tool.commitizen]
-    bump_message = "release $current_version → $new_version [skip-ci]"
+```toml
+[tool.commitizen]
+bump_message = "release $current_version → $new_version [skip-ci]"
+```
 
-`.cz`
+`.cz` (TO BE DEPRECATED)
 
-    [commitizen]
-    bump_message = release $current_version → $new_version [skip-ci]
+```
+[commitizen]
+bump_message = release $current_version → $new_version [skip-ci]
+```
 
 ## Custom bump
 
