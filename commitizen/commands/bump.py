@@ -52,6 +52,17 @@ class Bump:
                 is_initial = questionary.confirm("Is this the first tag created?").ask()
         return is_initial
 
+    def find_increment(self, commits: list) -> Optional[str]:
+        bump_pattern = self.cz.bump_pattern
+        bump_map = self.cz.bump_map
+        if not bump_map or not bump_pattern:
+            out.error(f"'{self.config['name']}' rule does not support bump")
+            raise SystemExit(NO_PATTERN_MAP)
+        increment = bump.find_increment(
+            commits, regex=bump_pattern, increments_map=bump_map
+        )
+        return increment
+
     def __call__(self):
         """Steps executed to bump."""
         try:
@@ -75,6 +86,7 @@ class Bump:
         is_yes: bool = self.arguments["yes"]
         prerelease: str = self.arguments["prerelease"]
         increment: Optional[str] = self.arguments["increment"]
+        is_files_only: Optional[bool] = self.arguments["files_only"]
 
         is_initial = self.is_initial_tag(current_tag_version, is_yes)
         commits = git.get_commits(current_tag_version, from_beginning=is_initial)
@@ -87,14 +99,7 @@ class Bump:
             raise SystemExit(NO_COMMITS_FOUND)
 
         if increment is None:
-            bump_pattern = self.cz.bump_pattern
-            bump_map = self.cz.bump_map
-            if not bump_map or not bump_pattern:
-                out.error(f"'{self.config['name']}' rule does not support bump")
-                raise SystemExit(NO_PATTERN_MAP)
-            increment = bump.find_increment(
-                commits, regex=bump_pattern, increments_map=bump_map
-            )
+            increment = self.find_increment(commits)
 
         # Increment is removed when current and next version
         # are expected to be prereleases.
@@ -118,8 +123,11 @@ class Bump:
         if dry_run:
             raise SystemExit()
 
-        config.set_key("version", new_version.public)
         bump.update_version_in_files(current_version, new_version.public, files)
+        if is_files_only:
+            raise SystemExit()
+
+        config.set_key("version", new_version.public)
         c = git.commit(message, args="-a")
         if c.err:
             out.error('git.commit errror: "{}"'.format(c.err.strip()))

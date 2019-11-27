@@ -54,16 +54,22 @@ Some examples:
 
 ```bash
 $ cz bump --help
-usage: cz bump [-h] [--dry-run] [--tag-format TAG_FORMAT]
+usage: cz bump [-h] [--dry-run] [--files-only] [--yes]
+               [--tag-format TAG_FORMAT] [--bump-message BUMP_MESSAGE]
                [--prerelease {alpha,beta,rc}]
                [--increment {MAJOR,MINOR,PATCH}]
 
 optional arguments:
   -h, --help            show this help message and exit
   --dry-run             show output to stdout, no commit, no modified files
+  --files-only          bump version in the files from the config
+  --yes                 accept automatically questions done
   --tag-format TAG_FORMAT
                         format used to tag the commmit and read it, use it in
-                        existing projects, wrap around simple quotes.
+                        existing projects, wrap around simple quotes
+  --bump-message BUMP_MESSAGE
+                        template used to create the release commmit, useful
+                        when working with CI
   --prerelease {alpha,beta,rc}, -pr {alpha,beta,rc}
                         choose type of prerelease
   --increment {MAJOR,MINOR,PATCH}

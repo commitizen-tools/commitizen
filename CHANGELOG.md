@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## v1.10.0
+
+### Feature
+
+- new argument `--files-only` in bump
+
+## v1.9.2
+
+### Fix
+
+- `--commit-msg-file` is now a required argument
+
+## v1.9.1
+
+### Fix
+
+- exception `AnswerRequiredException` not caught
+
 ## v1.9.0
 
 ### Feature
