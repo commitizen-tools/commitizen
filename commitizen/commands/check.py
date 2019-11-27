@@ -1,18 +1,15 @@
 import os
 import re
 
-from commitizen import out
+from commitizen import factory, out
 
-PATTERN = (
-    r"(build|ci|docs|feat|fix|perf|refactor|style|test|chore|revert)"
-    r"(\([\w\-]+\))?:\s.*"
-)
+
 NO_COMMIT_MSG = 3
 INVALID_COMMIT_MSG = 5
 
 
 class Check:
-    """Check if the current commit msg is a conventional commit."""
+    """Check if the current commit msg matches the commitizen format."""
 
     def __init__(self, config: dict, arguments: dict, cwd=os.getcwd()):
         """Init method.
@@ -27,6 +24,7 @@ class Check:
 
         """
         self.config: dict = config
+        self.cz = factory.commiter_factory(self.config)
         self.arguments: dict = arguments
 
     def __call__(self):
@@ -39,16 +37,17 @@ class Check:
 
         """
         commit_msg_content = self._get_commit_msg()
-        if self._is_conventional(PATTERN, commit_msg_content) is not None:
-            out.success("Conventional commit validation: successful!")
+        pattern = self.cz.schema_pattern()
+        if self._has_proper_format(pattern, commit_msg_content) is not None:
+            out.success("Commit validation: successful!")
         else:
-            out.error("conventional commit validation: failed!")
-            out.error("please enter a commit message in the conventional format.")
+            out.error("commit validation: failed!")
+            out.error("please enter a commit message in the commitizen format.")
             raise SystemExit(INVALID_COMMIT_MSG)
 
     def _get_commit_msg(self):
         temp_filename: str = self.arguments.get("commit_msg_file")
         return open(temp_filename, "r").read()
 
-    def _is_conventional(self, pattern, commit_msg):
-        return re.match(PATTERN, commit_msg)
+    def _has_proper_format(self, pattern, commit_msg):
+        return re.match(pattern, commit_msg)

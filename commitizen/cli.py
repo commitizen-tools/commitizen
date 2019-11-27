@@ -18,7 +18,11 @@ data = {
     "formatter_class": argparse.RawDescriptionHelpFormatter,
     "arguments": [
         {"name": "--debug", "action": "store_true", "help": "use debug mode"},
-        {"name": ["-n", "--name"], "help": "use the given commitizen"},
+        {
+            "name": ["-n", "--name"],
+            "default": "cz_conventional_commits",
+            "help": "use the given commitizen (default: cz_conventional_commits)",
+        },
         {
             "name": ["--version"],
             "action": "store_true",
@@ -112,7 +116,7 @@ data = {
             },
             {
                 "name": ["check"],
-                "help": "enforce the project to always use conventional commits",
+                "help": "validates that a commit message matches the commitizen schema",
                 "func": commands.Check,
                 "arguments": [
                     {

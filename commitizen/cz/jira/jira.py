@@ -69,6 +69,9 @@ class JiraSmartCz(BaseCommitizen):
     def schema(self):
         return "<ignored text> <ISSUE_KEY> <ignored text> #<COMMAND> <optional COMMAND_ARGUMENTS>"  # noqa
 
+    def schema_pattern(self) -> str:
+        return r".*[A-Z]{3}\-[0-9]+ .*( #.+)+"
+
     def info(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         filepath = os.path.join(dir_path, "jira_info.txt")
