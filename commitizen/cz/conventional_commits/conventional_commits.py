@@ -169,6 +169,13 @@ class ConventionalCommitsCz(BaseCommitizen):
             "<footer>"
         )
 
+    def schema_pattern(self) -> str:
+        PATTERN = (
+            r"(build|ci|docs|feat|fix|perf|refactor|style|test|chore|revert)"
+            r"(\([\w\-]+\))?:\s.*"
+        )
+        return PATTERN
+
     def info(self) -> str:
         dir_path = os.path.dirname(os.path.realpath(__file__))
         filepath = os.path.join(dir_path, "conventional_commits_info.txt")

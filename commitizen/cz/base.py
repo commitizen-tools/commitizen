@@ -47,6 +47,10 @@ class BaseCommitizen(metaclass=ABCMeta):
         """Schema definition of the commit message."""
         raise NotImplementedError("Not Implemented yet")
 
+    def schema_pattern(self) -> str:
+        """Regex matching the schema used for message validation"""
+        raise NotImplementedError("Not Implemented yet")
+
     def info(self) -> str:
         """Information about the standardized commit message."""
         raise NotImplementedError("Not Implemented yet")
