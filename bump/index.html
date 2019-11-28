@@ -557,16 +557,22 @@
 <p><code>post</code> and <code>dev</code> releases are not supported yet.</p>
 <h2 id="usage">Usage</h2>
 <div class="codehilite"><pre><span></span>$ cz bump --help
-usage: cz bump <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--dry-run<span class="o">]</span> <span class="o">[</span>--tag-format TAG_FORMAT<span class="o">]</span>
+usage: cz bump <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--dry-run<span class="o">]</span> <span class="o">[</span>--files-only<span class="o">]</span> <span class="o">[</span>--yes<span class="o">]</span>
+               <span class="o">[</span>--tag-format TAG_FORMAT<span class="o">]</span> <span class="o">[</span>--bump-message BUMP_MESSAGE<span class="o">]</span>
                <span class="o">[</span>--prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}]</span>
                <span class="o">[</span>--increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span>
 
 optional arguments:
   -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
   --dry-run             show output to stdout, no commit, no modified files
+  --files-only          bump version in the files from the config
+  --yes                 accept automatically questions <span class="k">done</span>
   --tag-format TAG_FORMAT
                         format used to tag the commmit and <span class="nb">read</span> it, use it in
-                        existing projects, wrap around simple quotes.
+                        existing projects, wrap around simple quotes
+  --bump-message BUMP_MESSAGE
+                        template used to create the release commmit, useful
+                        when working with CI
   --prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}</span>, -pr <span class="o">{</span>alpha,beta,rc<span class="o">}</span>
                         choose <span class="nb">type</span> of prerelease
   --increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}</span>
@@ -586,15 +592,15 @@ optional arguments:
 </pre></div>
 
 
-<p>In your <code>pyproject.toml</code></p>
-<div class="codehilite"><pre><span></span><span class="k">[tool.commitizen]</span>
-<span class="na">tag_format</span> <span class="o">=</span> <span class="s">&quot;v$minor.$major.$path$prerelease&quot;</span>
+<p>In your <code>pyproject.toml</code> or <code>.cz.toml</code></p>
+<div class="codehilite"><pre><span></span>[tool.commitizen]
+tag_format = &quot;v$minor.$major.$path$prerelease&quot;
 </pre></div>
 
 
-<p>Or in your <code>.cz</code></p>
-<div class="codehilite"><pre><span></span><span class="k">[commitizen]</span>
-<span class="na">tag_format</span> <span class="o">=</span> <span class="s">v$minor.$major.$path$prerelease</span>
+<p>Or in your <code>.cz</code> (TO BE DEPRECATED)</p>
+<div class="codehilite"><pre><span></span>[commitizen]
+tag_format = v$minor.$major.$path$prerelease
 </pre></div>
 
 
@@ -637,21 +643,21 @@ It is also possible to provide a pattern for each file, separated by colons (<co
 <p>Commitizen will update it's configuration file automatically (<code>pyproject.toml</code>, <code>.cz</code>) when bumping,
 regarding if the file is present or not in <code>files</code>.</p>
 <p>Some examples</p>
-<p><code>pyproject.toml</code></p>
-<div class="codehilite"><pre><span></span><span class="k">[tool.commitizen]</span>
-<span class="na">files</span> <span class="o">=</span> <span class="s">[</span>
-<span class="s">    &quot;src/__version__.py&quot;,</span>
-<span class="s">    &quot;setup.py:version&quot;</span>
-<span class="na">]</span>
+<p><code>pyproject.toml</code> or <code>.cz.toml</code></p>
+<div class="codehilite"><pre><span></span>[tool.commitizen]
+files = [
+    &quot;src/__version__.py&quot;,
+    &quot;setup.py:version&quot;
+]
 </pre></div>
 
 
-<p><code>.cz</code></p>
-<div class="codehilite"><pre><span></span><span class="k">[commitizen]</span>
-<span class="na">files</span> <span class="o">=</span> <span class="s">[</span>
-<span class="s">    &quot;src/__version__.py&quot;,</span>
-<span class="s">    &quot;setup.py:version&quot;</span>
-<span class="s">    ]</span>
+<p><code>.cz</code> (TO BE DEPRECATED)</p>
+<div class="codehilite"><pre><span></span>[commitizen]
+files = [
+    &quot;src/__version__.py&quot;,
+    &quot;setup.py:version&quot;
+    ]
 </pre></div>
 
 
@@ -681,15 +687,15 @@ in a line containing the <code>version</code> substring.</p>
 </tbody>
 </table>
 <p>Some examples</p>
-<p><code>pyproject.toml</code></p>
-<div class="codehilite"><pre><span></span><span class="k">[tool.commitizen]</span>
-<span class="na">bump_message</span> <span class="o">=</span> <span class="s">&quot;release $current_version → $new_version [skip-ci]&quot;</span>
+<p><code>pyproject.toml</code> or <code>.cz.toml</code></p>
+<div class="codehilite"><pre><span></span>[tool.commitizen]
+bump_message = &quot;release $current_version → $new_version [skip-ci]&quot;
 </pre></div>
 
 
-<p><code>.cz</code></p>
-<div class="codehilite"><pre><span></span><span class="k">[commitizen]</span>
-<span class="na">bump_message</span> <span class="o">=</span> <span class="s">release $current_version → $new_version [skip-ci]</span>
+<p><code>.cz</code> (TO BE DEPRECATED)</p>
+<div class="codehilite"><pre><span></span>[commitizen]
+bump_message = release $current_version → $new_version [skip-ci]
 </pre></div>
 
 
