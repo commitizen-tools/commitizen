@@ -12,6 +12,7 @@ nav:
     - Introduction: 'index.md'
     - Configuration: 'config.md'
     - Bump: 'bump.md'
+    - Check: 'check.md'
     - Customization: 'customization.md'
     - Tutorials:
         - GitLab CI: 'tutorials/gitlab_ci.md'
