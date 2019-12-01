@@ -94,6 +94,7 @@ commands:
     info                show information about the cz
     schema              show commit schema
     bump                bump semantic version based on the git log
+    check               validates that a commit message matches the commitizen schema
 ```
 
 ## Contributing
