@@ -89,21 +89,21 @@ cz bump --tag_format="v$version"
 ```
 
 ```bash
-cz bump --tag_format="v$minor.$major.$path$prerelease"
+cz bump --tag_format="v$minor.$major.$patch$prerelease"
 ```
 
 In your `pyproject.toml` or `.cz.toml`
 
 ```toml
 [tool.commitizen]
-tag_format = "v$minor.$major.$path$prerelease"
+tag_format = "v$minor.$major.$patch$prerelease"
 ```
 
 Or in your `.cz` (TO BE DEPRECATED)
 
 ```
 [commitizen]
-tag_format = v$minor.$major.$path$prerelease
+tag_format = v$minor.$major.$patch$prerelease
 ```
 
 The variables must be preceded by a `$` sign.
