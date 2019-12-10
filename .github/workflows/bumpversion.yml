@@ -23,11 +23,13 @@ jobs:
         python --version
         python --version
         python -m pip install -U commitizen
-    - name: Create bump
+    - name: Configure repo
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git config --local push.followTags true
+        git pull origin master --tags
+    - name: Create bump
+      run: |
         cz bump --yes
         git tag
     - name: Push changes
