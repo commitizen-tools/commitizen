@@ -155,7 +155,7 @@ def main():
         out.error("Command is required")
         raise SystemExit()
 
-    if args.name:
+    if args.name and not conf["name"]:
         conf.update({"name": args.name})
 
     if args.version:
