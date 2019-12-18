@@ -8,7 +8,7 @@ from commitizen.config import BaseConfig
 @pytest.fixture()
 def config():
     _config = BaseConfig()
-    _config._settings["name"] = defaults.name
+    _config.settings.update({"name": defaults.name})
     return _config
 
 

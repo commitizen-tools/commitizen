@@ -23,7 +23,7 @@ class BaseCommitizen(metaclass=ABCMeta):
     def __init__(self, config: dict):
         self.config = config
         if not self.config.settings.get("style"):
-            self.config._settings["style"] = BaseCommitizen.default_style_config
+            self.config.settings.update({"style": BaseCommitizen.default_style_config})
 
     @abstractmethod
     def questions(self) -> list:
@@ -38,7 +38,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         return merge_styles(
             [
                 Style(BaseCommitizen.default_style_config),
-                Style(self.config._settings["style"]),
+                Style(self.config.settings["style"]),
             ]
         )
 

@@ -34,6 +34,6 @@ class TomlConfig(BaseConfig):
         """
         doc = parse(data)
         try:
-            self._settings.update(doc["tool"]["commitizen"])
+            self.settings.update(doc["tool"]["commitizen"])
         except exceptions.NonExistentKey:
             self.is_empty_config = True
