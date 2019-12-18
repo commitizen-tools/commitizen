@@ -1,15 +1,11 @@
 from typing import Optional
 
+from commitizen.defaults import DEFAULT_SETTINGS
+
 
 class BaseConfig:
     def __init__(self):
-        self._settings: dict = {
-            "name": "cz_conventional_commits",
-            "version": None,
-            "files": [],
-            "tag_format": None,  # example v$version
-            "bump_message": None,  # bumped v$current_version to $new_version
-        }
+        self._settings: dict = DEFAULT_SETTINGS.copy()
         self._path: Optional[str] = None
 
     @property
