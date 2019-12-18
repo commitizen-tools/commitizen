@@ -18,6 +18,7 @@ class IniConfig(BaseConfig):
 
     def __init__(self, *, data: str, path: str):
         super(IniConfig, self).__init__()
+        self.is_empty_config = False
         self._parse_setting(data)
         self._path = path
 
@@ -65,4 +66,4 @@ class IniConfig(BaseConfig):
 
             self._settings.update(_data)
         except KeyError:
-            pass
+            self.is_empty_config = True

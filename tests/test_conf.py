@@ -106,9 +106,6 @@ def test_load_conf(config_files_manager, configure_supported_files):
     assert cfg.settings == _settings
 
 
-@pytest.mark.skip(
-    msg="Empty config is broken due to refactor. Will fix it in next commit"
-)
 def test_conf_is_loaded_with_empty_pyproject_but_ok_cz(
     empty_pyproject_ok_cz, configure_supported_files
 ):

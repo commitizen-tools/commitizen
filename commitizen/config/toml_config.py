@@ -6,6 +6,7 @@ from .base_config import BaseConfig
 class TomlConfig(BaseConfig):
     def __init__(self, *, data: str, path: str):
         super(TomlConfig, self).__init__()
+        self.is_empty_config = False
         self._parse_setting(data)
         self._path = path
 
@@ -35,4 +36,4 @@ class TomlConfig(BaseConfig):
         try:
             self._settings.update(doc["tool"]["commitizen"])
         except exceptions.NonExistentKey:
-            pass
+            self.is_empty_config = True

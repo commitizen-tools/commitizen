@@ -44,18 +44,19 @@ def read_cfg() -> dict:
             data: str = f.read()
 
         if "toml" in filename:
-            conf = TomlConfig(data=data, path=filename)
+            _conf = TomlConfig(data=data, path=filename)
         else:
             warnings.warn(
                 ".cz, setup.cfg, and .cz.cfg will be deprecated "
                 "in next major version. \n"
                 'Please use "pyproject.toml", ".cz.toml" instead'
             )
-            conf = IniConfig(data=data, path=filename)
+            _conf = IniConfig(data=data, path=filename)
 
-        if not conf:
+        if _conf.is_empty_config:
             continue
         else:
+            conf = _conf
             break
 
     if not conf.path:
