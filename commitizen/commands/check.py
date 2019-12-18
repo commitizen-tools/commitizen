@@ -2,6 +2,7 @@ import os
 import re
 
 from commitizen import factory, out
+from commitizen.config import BaseConfig
 
 
 NO_COMMIT_MSG = 3
@@ -11,19 +12,19 @@ INVALID_COMMIT_MSG = 5
 class Check:
     """Check if the current commit msg matches the commitizen format."""
 
-    def __init__(self, config: dict, arguments: dict, cwd=os.getcwd()):
+    def __init__(self, config: BaseConfig, arguments: dict, cwd=os.getcwd()):
         """Init method.
 
         Parameters
         ----------
-        config : dict
+        config : BaseConfig
             the config object required for the command to perform its action
         arguments : dict
             the arguments object that contains all
             the flags provided by the user
 
         """
-        self.config: dict = config
+        self.config: BaseConfig = config
         self.cz = factory.commiter_factory(self.config)
         self.arguments: dict = arguments
 
