@@ -51,4 +51,3 @@ class CustomizeCommitsCz(BaseCommitizen):
             return content
         elif info:
             return info
-        raise NotImplementedError("Not Implemented yet")
