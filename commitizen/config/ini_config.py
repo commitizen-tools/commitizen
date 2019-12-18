@@ -20,7 +20,7 @@ class IniConfig(BaseConfig):
         super(IniConfig, self).__init__()
         self.is_empty_config = False
         self._parse_setting(data)
-        self._path = path
+        self.add_path(path)
 
     def set_key(self, key, value):
         """Set or update a key in the conf.
