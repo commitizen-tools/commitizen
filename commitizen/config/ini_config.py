@@ -18,7 +18,7 @@ class IniConfig(BaseConfig):
 
     def __init__(self, *, data: str, path: str):
         super(IniConfig, self).__init__()
-        self._parse_ini_setting(data)
+        self._parse_setting(data)
         self._path = path
 
     def set_key(self, key, value):
