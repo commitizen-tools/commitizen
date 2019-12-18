@@ -59,6 +59,8 @@ def read_cfg() -> dict:
             break
 
     if not conf.path:
-        conf = load_global_conf()
+        global_conf = load_global_conf()
+        if global_conf:
+            conf = global_conf
 
     return conf
