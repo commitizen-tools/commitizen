@@ -214,14 +214,12 @@ def test_check_command_when_commit_file_not_found(config):
         commands.Check(config=config, arguments={"commit_msg_file": ""})()
 
 
-def test_init(capsys):
-    config = {
-        "name": defaults.name,
-        "version": "0.1.0",
-        "tag_format": r"$version",
-    }
+def test_init_when_config_already_exists(config, capsys):
+    # Set config path
+    path = "tests/pyproject.toml"
+    config.add_path(path)
+
     with pytest.raises(SystemExit):
         commands.Init(config)()
-
         captured = capsys.readouterr()
-        assert "The configuration were all set. Nothing to add." == captured.out
+        assert captured.out == f"Config file {path} already exists\n"

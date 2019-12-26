@@ -1,42 +1,35 @@
 import questionary
-import tomlkit
-from tomlkit.toml_file import TOMLFile
 
 from commitizen import factory, out
 from commitizen.cz import registry
-from commitizen.config import _conf
+from commitizen.config import BaseConfig
 from commitizen.git import get_latest_tag, get_all_tags
 
 
 class Init:
-    def __init__(self, config: dict, *args):
-        # TODO: distinguish default and file config
-        self.config: dict = config
+    def __init__(self, config: BaseConfig, *args):
+        self.config: BaseConfig = config
         self.cz = factory.commiter_factory(self.config)
 
     def __call__(self):
         values_to_add = {}
 
-        if "name" not in self.config:
-            name = self._ask_name()
-            values_to_add["name"] = name
-
-        if "version" not in self.config:
+        # No config file exist
+        if not self.config.path:
+            values_to_add["name"] = self._ask_name()
             tag = self._ask_tag()
             values_to_add["version"] = tag
+            values_to_add["tag_format"] = self._ask_tag_format(tag)
         else:
-            tag = self.config["version"]
-
-        if "tag_format" not in self.config:
-            tag_format = self._ask_tag_format(tag)
-            values_to_add["tag_format"] = tag_format
+            out.line(f"Config file {self.config.path} already exists")
+            raise SystemExit()
 
         self._update_config_file(values_to_add)
         out.write("The configuration are all set.")
 
     def _ask_name(self) -> str:
         name = questionary.select(
-            "Please choose the latest tag: ",
+            "Please choose a cz: ",
             choices=list(registry.keys()),
             default="cz_conventional_commits",
             style=self.cz.style,
@@ -50,10 +43,9 @@ class Init:
         ).ask()
         if not is_correct_tag:
             tags = get_all_tags()
-            # TODO: handle the case that no tag exists in the project
             if not tags:
-                out.error("No Existing Tag")
-                raise SystemExit()
+                out.line("No Existing Tag. Set tag to v0.0.1")
+                return "v0.0.1"
 
             latest_tag = questionary.select(
                 "Please choose the latest tag: ",
@@ -89,11 +81,5 @@ class Init:
             out.write("The configuration were all set. Nothing to add.")
             raise SystemExit()
 
-        with open(_conf._path, "r") as f:
-            toml_config = tomlkit.parse(f.read())
-
         for key, value in values.items():
-            toml_config["tool"]["commitizen"][key] = value
-
-        config_file = TOMLFile(_conf._path)
-        config_file.write(toml_config)
+            self.config.set_key(key, value)
