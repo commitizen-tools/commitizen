@@ -81,7 +81,7 @@ class Bump:
         current_tag_version: str = bump.create_tag(
             current_version, tag_format=tag_format
         )
-        files: list = self.parameters["files"]
+        version_files: list = self.parameters["version_files"]
         dry_run: bool = self.parameters["dry_run"]
 
         is_yes: bool = self.arguments["yes"]
@@ -124,7 +124,7 @@ class Bump:
         if dry_run:
             raise SystemExit()
 
-        bump.update_version_in_files(current_version, new_version.public, files)
+        bump.update_version_in_files(current_version, new_version.public, version_files)
         if is_files_only:
             raise SystemExit()
 

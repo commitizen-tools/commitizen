@@ -8,7 +8,7 @@ PYPROJECT = """
 [tool.commitizen]
 name = "cz_jira"
 version = "1.0.0"
-files = [
+version_files = [
     "commitizen/__version__.py",
     "pyproject.toml"
 ]
@@ -26,7 +26,7 @@ RAW_CONFIG = """
 [commitizen]
 name = cz_jira
 version = 1.0.0
-files = [
+version_files = [
     "commitizen/__version__.py",
     "pyproject.toml"
     ]
@@ -41,7 +41,7 @@ _settings = {
     "version": "1.0.0",
     "tag_format": None,
     "bump_message": None,
-    "files": ["commitizen/__version__.py", "pyproject.toml"],
+    "version_files": ["commitizen/__version__.py", "pyproject.toml"],
     "style": [["pointer", "reverse"], ["question", "underline"]],
 }
 
@@ -50,14 +50,14 @@ _new_settings = {
     "version": "2.0.0",
     "tag_format": None,
     "bump_message": None,
-    "files": ["commitizen/__version__.py", "pyproject.toml"],
+    "version_files": ["commitizen/__version__.py", "pyproject.toml"],
     "style": [["pointer", "reverse"], ["question", "underline"]],
 }
 
 _read_settings = {
     "name": "cz_jira",
     "version": "1.0.0",
-    "files": ["commitizen/__version__.py", "pyproject.toml"],
+    "version_files": ["commitizen/__version__.py", "pyproject.toml"],
     "style": [["pointer", "reverse"], ["question", "underline"]],
 }
 
