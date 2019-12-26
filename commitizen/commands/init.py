@@ -58,7 +58,7 @@ class Init:
         latest_tag = get_latest_tag()
         if not latest_tag:
             out.error("No Existing Tag. Set tag to v0.0.1")
-            return 'v0.0.1'
+            return "v0.0.1"
 
         is_correct_tag = questionary.confirm(
             f"Is {latest_tag} the latest tag?", style=self.cz.style, default=False
@@ -67,7 +67,7 @@ class Init:
             tags = get_all_tags()
             if not tags:
                 out.error("No Existing Tag. Set tag to v0.0.1")
-                return 'v0.0.1'
+                return "v0.0.1"
 
             latest_tag = questionary.select(
                 "Please choose the latest tag: ",
