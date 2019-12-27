@@ -24,6 +24,8 @@ jobs:
         poetry install
     - name: Run tests
       run: |
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
         poetry run pytest --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen tests/
     - name: Run black style check
       run: |
