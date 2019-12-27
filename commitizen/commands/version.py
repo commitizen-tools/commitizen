@@ -9,13 +9,12 @@ class Version:
     def __init__(self, config: BaseConfig, *args):
         self.config: BaseConfig = config
         self.parameter = args[0]
-        print(args)
 
     def __call__(self):
         if self.parameter.get("project"):
             version = self.config.settings["version"]
             if version:
-                out.write(f"Project Version: {__version__}")
+                out.write(f"Project Version: {version}")
             else:
                 out.error(f"No project information in this project.")
         else:
