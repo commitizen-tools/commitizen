@@ -172,7 +172,7 @@ def test_list_cz(config):
 
 def test_version(config):
     with mock.patch("commitizen.out.write") as mocked_write:
-        commands.Version(config)()
+        commands.Version(config, {})()
         mocked_write.assert_called_once()
 
 
