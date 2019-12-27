@@ -9,11 +9,11 @@ class BaseConfig:
         self._path: Optional[str] = None
 
     @property
-    def settings(self):
+    def settings(self) -> dict:
         return self._settings
 
     @property
-    def path(self):
+    def path(self) -> str:
         return self._path
 
     def set_key(self, key, value):
