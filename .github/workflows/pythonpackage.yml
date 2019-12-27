@@ -24,7 +24,13 @@ jobs:
         poetry install
     - name: Run tests
       run: |
-        ./scripts/test
+        poetry run pytest --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen tests/
+    - name: Run black style check
+      run: |
+        poetry run black commitizen tests --check
+    - name: Run flake8 style check
+      run: |
+        poetry run flake8 --max-line-length=88 commitizen/ tests/
     - name: Upload coverage to Codecov
       if: runner.os == 'Linux'
       uses: codecov/codecov-action@v1.0.3
