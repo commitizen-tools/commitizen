@@ -3,7 +3,8 @@ from typing import Optional
 import questionary
 from packaging.version import Version
 
-from commitizen import bump, config, factory, git, out
+from commitizen import bump, factory, git, out
+from commitizen.config import BaseConfig
 
 NO_COMMITS_FOUND = 3
 NO_VERSION_SPECIFIED = 4
@@ -15,11 +16,11 @@ TAG_FAILED = 9
 class Bump:
     """Show prompt for the user to create a guided commit."""
 
-    def __init__(self, config: dict, arguments: dict):
-        self.config: dict = config
+    def __init__(self, config: BaseConfig, arguments: dict):
+        self.config: BaseConfig = config
         self.arguments: dict = arguments
         self.parameters: dict = {
-            **config,
+            **config.settings,
             **{
                 key: arguments[key]
                 for key in [
@@ -56,7 +57,7 @@ class Bump:
         bump_pattern = self.cz.bump_pattern
         bump_map = self.cz.bump_map
         if not bump_map or not bump_pattern:
-            out.error(f"'{self.config['name']}' rule does not support bump")
+            out.error(f"'{self.config.settings['name']}' rule does not support bump")
             raise SystemExit(NO_PATTERN_MAP)
         increment = bump.find_increment(
             commits, regex=bump_pattern, increments_map=bump_map
@@ -74,7 +75,7 @@ class Bump:
             raise SystemExit(NO_VERSION_SPECIFIED)
 
         # Initialize values from sources (conf)
-        current_version: str = self.config["version"]
+        current_version: str = self.config.settings["version"]
         tag_format: str = self.parameters["tag_format"]
         bump_commit_message: str = self.parameters["bump_message"]
         current_tag_version: str = bump.create_tag(
@@ -127,7 +128,7 @@ class Bump:
         if is_files_only:
             raise SystemExit()
 
-        config.set_key("version", new_version.public)
+        self.config.set_key("version", new_version.public)
         c = git.commit(message, args="-a")
         if c.err:
             out.error('git.commit errror: "{}"'.format(c.err.strip()))

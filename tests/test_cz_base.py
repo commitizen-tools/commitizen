@@ -2,8 +2,14 @@ import pytest
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
+from commitizen.config import BaseConfig
 
-config = {"name": defaults.name}
+
+@pytest.fixture()
+def config():
+    _config = BaseConfig()
+    _config.settings.update({"name": defaults.name})
+    return _config
 
 
 class DummyCz(BaseCommitizen):
@@ -14,34 +20,34 @@ class DummyCz(BaseCommitizen):
         return answers["commit"]
 
 
-def test_base_raises_error():
+def test_base_raises_error(config):
     with pytest.raises(TypeError):
         BaseCommitizen(config)
 
 
-def test_questions():
+def test_questions(config):
     cz = DummyCz(config)
     assert isinstance(cz.questions(), list)
 
 
-def test_message():
+def test_message(config):
     cz = DummyCz(config)
     assert cz.message({"commit": "holis"}) == "holis"
 
 
-def test_example():
+def test_example(config):
     cz = DummyCz(config)
     with pytest.raises(NotImplementedError):
         cz.example()
 
 
-def test_schema():
+def test_schema(config):
     cz = DummyCz(config)
     with pytest.raises(NotImplementedError):
         cz.schema()
 
 
-def test_info():
+def test_info(config):
     cz = DummyCz(config)
     with pytest.raises(NotImplementedError):
         cz.info()

@@ -1,13 +1,11 @@
 import pytest
-from tomlkit import parse
 
-from commitizen.config import Config
+from commitizen.config import TomlConfig
 from commitizen.cz.customize import CustomizeCommitsCz
 
 
 @pytest.fixture(scope="module")
 def config():
-    _conf = Config()
     toml_str = r"""
     [tool.commitizen.customize]
     message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
@@ -36,8 +34,7 @@ def config():
     name = "show_message"
     message = "Do you want to add body message in commit?"
     """
-    _conf.update(parse(toml_str)["tool"]["commitizen"])
-    return _conf.config
+    return TomlConfig(data=toml_str, path="not_exist.toml")
 
 
 def test_bump_pattern(config):

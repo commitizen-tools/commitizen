@@ -1,17 +1,25 @@
+import pytest
+
 from commitizen import defaults
 from commitizen.cz.jira import JiraSmartCz
+from commitizen.config import BaseConfig
 
-config = {"name": defaults.name}
+
+@pytest.fixture()
+def config():
+    _config = BaseConfig()
+    _config.settings.update({"name": defaults.name})
+    return _config
 
 
-def test_questions():
+def test_questions(config):
     cz = JiraSmartCz(config)
     questions = cz.questions()
     assert isinstance(questions, list)
     assert isinstance(questions[0], dict)
 
 
-def test_answer():
+def test_answer(config):
     cz = JiraSmartCz(config)
     answers = {
         "message": "new test",
@@ -24,17 +32,17 @@ def test_answer():
     assert message == "new test JRA-34"
 
 
-def test_example():
+def test_example(config):
     cz = JiraSmartCz(config)
     assert "JRA-34 #comment corrected indent issue\n" in cz.example()
 
 
-def test_schema():
+def test_schema(config):
     cz = JiraSmartCz(config)
     assert "<ignored text>" in cz.schema()
 
 
-def test_info():
+def test_info(config):
     cz = JiraSmartCz(config)
     assert (
         "Smart Commits allow repository committers to perform "

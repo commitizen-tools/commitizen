@@ -6,6 +6,8 @@ import questionary
 
 from commitizen import factory, git, out
 from commitizen.cz.exceptions import CzException
+from commitizen.config import BaseConfig
+
 
 NO_ANSWERS = 5
 COMMIT_ERROR = 6
@@ -17,8 +19,8 @@ CUSTOM_ERROR = 9
 class Commit:
     """Show prompt for the user to create a guided commit."""
 
-    def __init__(self, config: dict, arguments: dict):
-        self.config: dict = config
+    def __init__(self, config: BaseConfig, arguments: dict):
+        self.config: BaseConfig = config
         self.cz = factory.commiter_factory(self.config)
         self.arguments = arguments
         self.temp_file: str = os.path.join(tempfile.gettempdir(), "cz.commit.backup")

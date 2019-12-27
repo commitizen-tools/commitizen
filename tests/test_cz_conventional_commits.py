@@ -7,8 +7,8 @@ from commitizen.cz.conventional_commits.conventional_commits import (
     parse_subject,
 )
 from commitizen.cz.exceptions import AnswerRequiredError
+from commitizen.config import BaseConfig
 
-config = {"name": defaults.name}
 
 valid_scopes = ["", "simple", "dash-separated", "camelCase" "UPPERCASE"]
 
@@ -19,6 +19,13 @@ valid_subjects = ["this is a normal text", "aword"]
 subjects_transformations = [["with dot.", "with dot"]]
 
 invalid_subjects = ["", "   ", ".", "   .", "", None]
+
+
+@pytest.fixture()
+def config():
+    _config = BaseConfig()
+    _config._settings["name"] = defaults.name
+    return _config
 
 
 def test_parse_scope_valid_values():
@@ -49,14 +56,14 @@ def test_subject_transformations():
         assert transformed_subject == parse_subject(invalid_subject)
 
 
-def test_questions():
+def test_questions(config):
     conventional_commits = ConventionalCommitsCz(config)
     questions = conventional_commits.questions()
     assert isinstance(questions, list)
     assert isinstance(questions[0], dict)
 
 
-def test_small_answer():
+def test_small_answer(config):
     conventional_commits = ConventionalCommitsCz(config)
     answers = {
         "prefix": "fix",
@@ -70,7 +77,7 @@ def test_small_answer():
     assert message == "fix(users): email pattern corrected"
 
 
-def test_long_answer():
+def test_long_answer(config):
     conventional_commits = ConventionalCommitsCz(config)
     answers = {
         "prefix": "fix",
@@ -87,21 +94,21 @@ def test_long_answer():
     )
 
 
-def test_example():
+def test_example(config):
     """just testing a string is returned. not the content"""
     conventional_commits = ConventionalCommitsCz(config)
     example = conventional_commits.example()
     assert isinstance(example, str)
 
 
-def test_schema():
+def test_schema(config):
     """just testing a string is returned. not the content"""
     conventional_commits = ConventionalCommitsCz(config)
     schema = conventional_commits.schema()
     assert isinstance(schema, str)
 
 
-def test_info():
+def test_info(config):
     """just testing a string is returned. not the content"""
     conventional_commits = ConventionalCommitsCz(config)
     info = conventional_commits.info()

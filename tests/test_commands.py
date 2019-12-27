@@ -8,8 +8,14 @@ import pytest
 
 from commitizen import cmd, commands, defaults
 from commitizen.cz.exceptions import CzException
+from commitizen.config import BaseConfig
 
-config = {"name": defaults.name}
+
+@pytest.fixture()
+def config():
+    _config = BaseConfig()
+    _config.settings.update({"name": defaults.name})
+    return _config
 
 
 @pytest.fixture
@@ -28,7 +34,7 @@ def get_temp_dir():
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit(mocker):
+def test_commit(config, mocker):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
         "prefix": "feat",
@@ -48,7 +54,7 @@ def test_commit(mocker):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_retry_fails_no_backup(mocker):
+def test_commit_retry_fails_no_backup(config, mocker):
     commit_mock = mocker.patch("commitizen.git.commit")
     commit_mock.return_value = cmd.Command("success", "", "", "")
 
@@ -57,7 +63,7 @@ def test_commit_retry_fails_no_backup(mocker):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_retry_works(mocker):
+def test_commit_retry_works(config, mocker):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
         "prefix": "feat",
@@ -95,7 +101,7 @@ def test_commit_retry_works(mocker):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_command_with_dry_run_option(mocker):
+def test_commit_command_with_dry_run_option(config, mocker):
     prompt_mock = mocker = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
         "prefix": "feat",
@@ -111,7 +117,7 @@ def test_commit_command_with_dry_run_option(mocker):
         commit_cmd()
 
 
-def test_commit_when_nothing_to_commit(mocker):
+def test_commit_when_nothing_to_commit(config, mocker):
     is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
     is_staging_clean_mock.return_value = True
 
@@ -123,7 +129,7 @@ def test_commit_when_nothing_to_commit(mocker):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_when_customized_expected_raised(mocker, capsys):
+def test_commit_when_customized_expected_raised(config, mocker, capsys):
     _err = ValueError()
     _err.__context__ = CzException("This is the root custom err")
     prompt_mock = mocker.patch("questionary.prompt")
@@ -140,39 +146,39 @@ def test_commit_when_customized_expected_raised(mocker, capsys):
     assert "This is the root custom err" in captured.err
 
 
-def test_example():
+def test_example(config):
     with mock.patch("commitizen.out.write") as write_mock:
         commands.Example(config)()
         write_mock.assert_called_once()
 
 
-def test_info():
+def test_info(config):
     with mock.patch("commitizen.out.write") as write_mock:
         commands.Info(config)()
         write_mock.assert_called_once()
 
 
-def test_schema():
+def test_schema(config):
     with mock.patch("commitizen.out.write") as write_mock:
         commands.Schema(config)()
         write_mock.assert_called_once()
 
 
-def test_list_cz():
+def test_list_cz(config):
     with mock.patch("commitizen.out.write") as mocked_write:
 
         commands.ListCz(config)()
         mocked_write.assert_called_once()
 
 
-def test_version():
+def test_version(config):
     with mock.patch("commitizen.out.write") as mocked_write:
 
         commands.Version(config)()
         mocked_write.assert_called_once()
 
 
-def test_check_no_conventional_commit(mocker):
+def test_check_no_conventional_commit(config, mocker):
     with pytest.raises(SystemExit):
         error_mock = mocker.patch("commitizen.out.error")
 
@@ -189,7 +195,7 @@ def test_check_no_conventional_commit(mocker):
             error_mock.assert_called_once()
 
 
-def test_check_conventional_commit(mocker):
+def test_check_conventional_commit(config, mocker):
     success_mock = mocker.patch("commitizen.out.success")
     with get_temp_dir() as dir:
 
@@ -205,6 +211,6 @@ def test_check_conventional_commit(mocker):
         success_mock.assert_called_once()
 
 
-def test_check_command_when_commit_file_not_found():
+def test_check_command_when_commit_file_not_found(config):
     with pytest.raises(FileNotFoundError):
         commands.Check(config=config, arguments={"commit_msg_file": ""})()

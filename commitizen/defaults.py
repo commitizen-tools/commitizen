@@ -2,9 +2,9 @@ name: str = "cz_conventional_commits"
 # TODO: .cz, setup.cfg, .cz.cfg should be removed in 2.0
 config_files: list = ["pyproject.toml", ".cz.toml", ".cz", "setup.cfg", ".cz.cfg"]
 
-# Available settings
-settings: dict = {
-    "name": name,
+
+DEFAULT_SETTINGS = {
+    "name": "cz_conventional_commits",
     "version": None,
     "files": [],
     "tag_format": None,  # example v$version

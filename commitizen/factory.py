@@ -1,12 +1,13 @@
 from commitizen import BaseCommitizen, out
 from commitizen.cz import registry
+from commitizen.config import BaseConfig
 
 NO_COMMITIZEN_FOUND = 2
 
 
-def commiter_factory(config: dict) -> BaseCommitizen:
+def commiter_factory(config: BaseConfig) -> BaseCommitizen:
     """Return the correct commitizen existing in the registry."""
-    name: str = config["name"]
+    name: str = config.settings["name"]
     try:
         _cz = registry[name](config)
     except KeyError:
