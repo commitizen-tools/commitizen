@@ -1,6 +1,7 @@
 import os
 import warnings
 from pathlib import Path
+from typing import Optional
 
 from commitizen import defaults
 from .base_config import BaseConfig
@@ -8,7 +9,7 @@ from .toml_config import TomlConfig
 from .ini_config import IniConfig
 
 
-def load_global_conf() -> dict:
+def load_global_conf() -> Optional[IniConfig]:
     home = str(Path.home())
     global_cfg = os.path.join(home, ".cz")
     if not os.path.exists(global_cfg):
@@ -31,7 +32,7 @@ def load_global_conf() -> dict:
     return conf
 
 
-def read_cfg() -> dict:
+def read_cfg() -> BaseConfig:
     conf = BaseConfig()
 
     allowed_cfg_files = defaults.config_files

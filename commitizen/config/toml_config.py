@@ -24,7 +24,7 @@ class TomlConfig(BaseConfig):
             f.write(parser.as_string())
         return self
 
-    def _parse_setting(self, data: str) -> dict:
+    def _parse_setting(self, data: str):
         """We expect to have a section in pyproject looking like
 
         ```

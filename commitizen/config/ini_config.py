@@ -35,7 +35,7 @@ class IniConfig(BaseConfig):
             parser.write(f)
         return self
 
-    def _parse_setting(self, data: str) -> dict:
+    def _parse_setting(self, data: str):
         """We expect to have a section like this
 
         ```
