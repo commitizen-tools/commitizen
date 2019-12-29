@@ -24,7 +24,6 @@ jobs:
     - name: Install dependencies
       run: |
         python --version
-        python --version
         python -m pip install -U commitizen
     - name: Configure repo
       run: |
