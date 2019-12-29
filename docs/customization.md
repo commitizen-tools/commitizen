@@ -11,13 +11,21 @@ The basic steps are:
 
 Check an [example](convcomms) on how to configure `BaseCommitizen`.
 
+You can also automate the steps above through [cookiecutter](https://cookiecutter.readthedocs.io/en/1.7.0/).
+
+```sh
+cookiecutter gh:Lee-W/commitizen_cz_template
+```
+
+See [Lee-W/commitizen_cz_template](https://github.com/Lee-W/commitizen_cz_template) for detail.
+
 ### Custom commit rules
 
 Create a file starting with `cz_` for example `cz_jira.py`. This prefix
 is used to detect the plugin. Same method [flask uses]
 
-Inherit from `BaseCommitizen` and you must define `questions` and
-`message`. The others are optionals.
+Inherit from `BaseCommitizen`, and you must define `questions` and
+`message`. The others are optional.
 
 ```python
 from commitizen.cz.base import BaseCommitizen
@@ -69,7 +77,7 @@ class JiraCz(BaseCommitizen):
 discover_this = JiraCz  # used by the plugin system
 ```
 
-The next file required is `setup.py` modified from flask version
+The next file required is `setup.py` modified from flask version.
 
 ```python
 from setuptools import setup
@@ -84,13 +92,13 @@ setup(
 )
 ```
 
-So at the end we would have
+So in the end, we would have
 
     .
     ├── cz_jira.py
     └── setup.py
 
-And that's it, you can install it without uploading to pypi by simply
+And that's it. You can install it without uploading to pypi by simply
 doing `pip install .`
 
 If you feel like it should be part of this repo, create a PR.
@@ -106,7 +114,7 @@ You need to define 2 parameters inside `BaseCommitizen`.
 | `bump_pattern` | `str` | `None` | Regex to extract information from commit (subject and body) |
 | `bump_map` | `dict` | `None` | Dictionary mapping the extracted information to a `SemVer` increment type (`MAJOR`, `MINOR`, `PATCH`) |
 
-Let's see an exampple
+Let's see an example
 
 ```python
 from commitizen.cz.base import BaseCommitizen
@@ -117,7 +125,7 @@ class StrangeCommitizen(BaseCommitizen):
     bump_map = {"break": "MAJOR", "new": "MINOR", "fix": "PATCH", "hotfix": "PATCH"}
 ```
 
-That's it, your commitizen now supports custom rules and you can run
+That's it, your commitizen now supports custom rules, and you can run
 
 ```bash
 cz -n cz_strange bump
@@ -127,7 +135,7 @@ cz -n cz_strange bump
 
 ### Raise Customize Exception
 
-If you wannt `commitizen` to catch your exception and print the message, you'll have to inherit `CzException`.
+If you want `commitizen` to catch your exception and print the message, you'll have to inherit `CzException`.
 
 ```python
 from commitizen.cz.exception import CzException
@@ -141,7 +149,7 @@ class NoSubjectProvidedException(CzException):
 **This is only supported when configuring through `toml` (e.g., `pyproject.toml`, `.cz`, and `.cz.toml`)**
 
 The basic steps are:
-1. Define your custom committing or bumpping rules in the configuration file.
+1. Define your custom committing or bumping rules in the configuration file.
 2. Declare `name = "cz_customize"` in your configuration file, or add `-n cz_customize` when running commitizen.
 
 Example:
