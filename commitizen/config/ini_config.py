@@ -56,13 +56,14 @@ class IniConfig(BaseConfig):
         try:
             _data: dict = dict(config["commitizen"])
             if "files" in _data:
-                files = _data["files"]
-                _f = json.loads(files)
-                _data.update({"files": _f})
+                IniConfig._show_files_column_deprecated_warning()
+                _data.update({"version_files": json.loads(_data["files"])})
+
+            if "version_files" in _data:
+                _data.update({"version_files": json.loads(_data["version_files"])})
+
             if "style" in _data:
-                style = _data["style"]
-                _s = json.loads(style)
-                _data.update({"style": _s})
+                _data.update({"style": json.loads(_data["style"])})
 
             self._settings.update(_data)
         except KeyError:
