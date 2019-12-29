@@ -47,7 +47,7 @@ def get_latest_tag() -> Optional[str]:
     c = cmd.run("git describe --abbrev=0 --tags")
     if c.err:
         return None
-    return c.out
+    return c.out.strip()
 
 
 def get_all_tags() -> Optional[List[str]]:
