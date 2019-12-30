@@ -14,9 +14,16 @@ class Version:
         if self.parameter.get("project"):
             version = self.config.settings["version"]
             if version:
+                out.write(f"{version}")
+            else:
+                out.error(f"No project information in this project.")
+        elif self.parameter.get("verbose"):
+            out.write(f"Installed Commitizen Version: {__version__}")
+            version = self.config.settings["version"]
+            if version:
                 out.write(f"Project Version: {version}")
             else:
                 out.error(f"No project information in this project.")
         else:
             # if no argument is given, show installed commitizen version
-            out.write(f"Installed Commitizen Version: {__version__}")
+            out.write(f"{__version__}")

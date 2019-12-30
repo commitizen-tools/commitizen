@@ -134,6 +134,15 @@ data = {
                         "action": "store_true",
                         "exclusive_group": "group1",
                     },
+                    {
+                        "name": ["-v", "--verbose"],
+                        "help": (
+                            "get the version of both the installed commitizen "
+                            "and the current project"
+                        ),
+                        "action": "store_true",
+                        "exclusive_group": "group1",
+                    },
                 ],
             },
             {
