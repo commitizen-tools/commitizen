@@ -1,7 +1,7 @@
 [tool.commitizen]
 version = "1.12.0"
 tag_format = "v$version"
-files = [
+version_files = [
   "pyproject.toml:version",
   "commitizen/__version__.py"
 ]
