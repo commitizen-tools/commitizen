@@ -1,5 +1,0 @@
-In order for this project to work well in your pipeline, a commit convention
-must be follow.
-
-By default commitizen uses the known "conventional commits", but you can create
-your own following the docs information.

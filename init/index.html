@@ -38,7 +38,7 @@
     
     
       
-        <title>Configuration - Commitizen</title>
+        <title>Init - Commitizen</title>
       
     
     
@@ -96,10 +96,6 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#configuration" tabindex="1" class="md-skip">
-        Skip to content
-      </a>
-    
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid">
@@ -121,7 +117,7 @@
               Commitizen
             </span>
             <span class="md-header-nav__topic">
-              Configuration
+              Init
             </span>
           
         </div>
@@ -241,63 +237,11 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Configuration
-      </label>
-    
-    <a href="./" title="Configuration" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../config/" title="Configuration" class="md-nav__link">
       Configuration
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pyprojecttoml-or-cztoml" title="pyproject.toml or .cz.toml" class="md-nav__link">
-    pyproject.toml or .cz.toml
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ini-files" title="INI files" class="md-nav__link">
-    INI files
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#settings" title="Settings" class="md-nav__link">
-    Settings
-  </a>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
     
@@ -305,10 +249,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
     
     <label class="md-nav__link" for="nav-3">
       Commands
@@ -348,11 +294,18 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../init/" title="Init" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+    <a href="./" title="Init" class="md-nav__link md-nav__link--active">
       Init
     </a>
+    
   </li>
 
         
@@ -440,166 +393,26 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-<nav class="md-nav md-nav--secondary">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pyprojecttoml-or-cztoml" title="pyproject.toml or .cz.toml" class="md-nav__link">
-    pyproject.toml or .cz.toml
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ini-files" title="INI files" class="md-nav__link">
-    INI files
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#settings" title="Settings" class="md-nav__link">
-    Settings
-  </a>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                <h1 id="configuration">Configuration</h1>
-<p>Commitizen has support for <code>toml</code> and <code>ini</code> files.</p>
-<h2 id="pyprojecttoml-or-cztoml">pyproject.toml or .cz.toml</h2>
-<p>Add an entry to <code>pyproject.toml or .cz.toml</code>. Recommended for <strong>python</strong> projects.</p>
-<div class="codehilite"><pre><span></span><span class="k">[tool.commitizen]</span>
-<span class="na">name</span> <span class="o">=</span> <span class="s">&quot;cz_conventional_commits&quot;</span>
-<span class="na">version</span> <span class="o">=</span> <span class="s">&quot;0.1.0&quot;</span>
-<span class="na">version_files</span> <span class="o">=</span> <span class="s">[</span>
-<span class="s">    &quot;src/__version__.py&quot;,</span>
-<span class="s">    &quot;pyproject.toml:version&quot;</span>
-<span class="na">]</span>
-<span class="na">style</span> <span class="o">=</span> <span class="s">[</span>
-<span class="s">    [&quot;qmark&quot;, &quot;fg:#ff9d00 bold&quot;],</span>
-<span class="s">    [&quot;question&quot;, &quot;bold&quot;],</span>
-<span class="s">    [&quot;answer&quot;, &quot;fg:#ff9d00 bold&quot;],</span>
-<span class="s">    [&quot;pointer&quot;, &quot;fg:#ff9d00 bold&quot;],</span>
-<span class="s">    [&quot;highlighted&quot;, &quot;fg:#ff9d00 bold&quot;],</span>
-<span class="s">    [&quot;selected&quot;, &quot;fg:#cc5454&quot;],</span>
-<span class="s">    [&quot;separator&quot;, &quot;fg:#cc5454&quot;],</span>
-<span class="s">    [&quot;instruction&quot;, &quot;&quot;],</span>
-<span class="s">    [&quot;text&quot;, &quot;&quot;],</span>
-<span class="s">    [&quot;disabled&quot;, &quot;fg:#858585 italic&quot;]</span>
-<span class="na">]</span>
-</pre></div>
-
-
-<h2 id="ini-files">INI files</h2>
-<p><strong>INI files will not be supported in next major version. Please use toml instead</strong></p>
-<p>Supported files: <code>.cz</code>, <code>.cz.cfg</code>, <code>setup.py</code>, and <code>$HOME/.cz</code></p>
-<p>The format is slightly different to the <code>toml</code>, so pay attention.
-Recommended for <strong>other languages</strong> projects (js, go, etc).</p>
-<div class="codehilite"><pre><span></span><span class="k">[commitizen]</span>
-<span class="na">name</span> <span class="o">=</span> <span class="s">cz_conventional_commits</span>
-<span class="na">version</span> <span class="o">=</span> <span class="s">0.1.0</span>
-<span class="na">version_files</span> <span class="o">=</span> <span class="s">[</span>
-<span class="s">    &quot;src/__version__.py&quot;,</span>
-<span class="s">    &quot;pyproject.toml:version&quot;</span>
-<span class="s">    ]</span>
-<span class="na">style</span> <span class="o">=</span> <span class="s">[</span>
-<span class="s">    [&quot;qmark&quot;, &quot;fg:#ff9d00 bold&quot;],</span>
-<span class="s">    [&quot;question&quot;, &quot;bold&quot;],</span>
-<span class="s">    [&quot;answer&quot;, &quot;fg:#ff9d00 bold&quot;],</span>
-<span class="s">    [&quot;pointer&quot;, &quot;fg:#ff9d00 bold&quot;],</span>
-<span class="s">    [&quot;highlighted&quot;, &quot;fg:#ff9d00 bold&quot;],</span>
-<span class="s">    [&quot;selected&quot;, &quot;fg:#cc5454&quot;],</span>
-<span class="s">    [&quot;separator&quot;, &quot;fg:#cc5454&quot;],</span>
-<span class="s">    [&quot;instruction&quot;, &quot;&quot;],</span>
-<span class="s">    [&quot;text&quot;, &quot;&quot;],</span>
-<span class="s">    [&quot;disabled&quot;, &quot;fg:#858585 italic&quot;]</span>
-<span class="s">    ]</span>
-</pre></div>
-
-
-<p>The extra tab before the square brakets (<code>]</code>) at the end is required.</p>
-<h2 id="settings">Settings</h2>
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>name</code></td>
-<td><code>str</code></td>
-<td><code>"cz_conventional_commits"</code></td>
-<td>Name of the commiting rules to use</td>
-</tr>
-<tr>
-<td><code>version</code></td>
-<td><code>str</code></td>
-<td><code>None</code></td>
-<td>Current version. Example: "0.1.2"</td>
-</tr>
-<tr>
-<td><code>version_files</code></td>
-<td><code>list</code></td>
-<td><code>[ ]</code></td>
-<td>Files were the version will be updated. A pattern to match a line, can also be specified, separated by <code>:</code> <a href="https://woile.github.io/commitizen/bump#files">See more</a></td>
-</tr>
-<tr>
-<td><code>tag_format</code></td>
-<td><code>str</code></td>
-<td><code>None</code></td>
-<td>Format for the git tag, useful for old projects, that use a convention like <code>"v1.2.1"</code>. <a href="https://woile.github.io/commitizen/bump#tag_format">See more</a></td>
-</tr>
-<tr>
-<td><code>bump_message</code></td>
-<td><code>str</code></td>
-<td><code>None</code></td>
-<td>Create custom commit message, useful to skip ci. <a href="https://woile.github.io/commitizen/bump#bump_message">See more</a></td>
-</tr>
-<tr>
-<td><code>style</code></td>
-<td><code>list</code></td>
-<td>see above</td>
-<td>Style for the prompts (It will merge this value with default style.) <a href="https://github.com/tmbo/questionary#additional-features">See More (Styling your prompts with your favorite colors)</a></td>
-</tr>
-<tr>
-<td><code>customize</code></td>
-<td><code>dict</code></td>
-<td><code>None</code></td>
-<td><strong>This is only supported when config through <code>toml</code>.</strong> Custom rules for committing and bumping. <a href="https://woile.github.io/commitizen/customization/">See more</a></td>
-</tr>
-</tbody>
-</table>
+                  <h1>Init</h1>
+                
+                <p>For new projects is possible to run <code>cz init</code>.</p>
+<p>This command will prompt the user for information about the project and will
+configure the selected file type (<code>pyproject.toml</code>, <code>.cz.toml</code>, etc).</p>
+<p>This will help you quickly set up your project with <code>commitizen</code>.</p>
+<p>Currently <code>init</code> is detecting</p>
+<ol>
+<li>Commit convetion rules (<code>name</code>).</li>
+<li>Version detection based on the existing tags (<code>version</code>).</li>
+<li>Tag format, if your tag convention uses for example <code>v*</code> in front of the version. (<code>tag_format</code>)</li>
+</ol>
+<p>We hope to eventually detect the files where the version is also repeated,
+like <code>package.json</code> or <code>__version__</code>.</p>
                 
                   
                 
@@ -620,7 +433,7 @@ Recommended for <strong>other languages</strong> projects (js, go, etc).</p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href=".." title="Introduction" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../check/" title="Check" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -629,19 +442,19 @@ Recommended for <strong>other languages</strong> projects (js, go, etc).</p>
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Introduction
+                Check
               </span>
             </div>
           </a>
         
         
-          <a href="../bump/" title="Bump" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../customization/" title="Customization" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Bump
+                Customization
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">

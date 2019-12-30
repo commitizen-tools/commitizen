@@ -256,6 +256,27 @@
   
 
 
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+    
+    <label class="md-nav__link" for="nav-3">
+      Commands
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Commands
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
   <li class="md-nav__item md-nav__item--active">
     
     <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
@@ -307,8 +328,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#files" title="files" class="md-nav__link">
-    files
+  <a href="#version_files" title="version_files *" class="md-nav__link">
+    version_files *
   </a>
   
 </li>
@@ -342,16 +363,33 @@
     
   </li>
 
-    
-      
-      
-      
+        
+          
+          
+          
 
 
   <li class="md-nav__item">
     <a href="../check/" title="Check" class="md-nav__link">
       Check
     </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../init/" title="Init" class="md-nav__link">
+      Init
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
     
@@ -374,17 +412,29 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
     
-    <label class="md-nav__link" for="nav-6">
+    <label class="md-nav__link" for="nav-5">
       Tutorials
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-6">
+      <label class="md-nav__title" for="nav-5">
         Tutorials
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../tutorials/writing_commits/" title="Writing commits" class="md-nav__link">
+      Writing commits
+    </a>
+  </li>
+
         
           
           
@@ -463,8 +513,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#files" title="files" class="md-nav__link">
-    files
+  <a href="#version_files" title="version_files *" class="md-nav__link">
+    version_files *
   </a>
   
 </li>
@@ -649,15 +699,16 @@ tag_format = v$minor.$major.$patch$prerelease
 </tbody>
 </table>
 <hr />
-<h3 id="files"><code>files</code></h3>
+<h3 id="version_files"><code>version_files</code> *</h3>
 <p>Used to identify the files which should be updated with the new version.
 It is also possible to provide a pattern for each file, separated by colons (<code>:</code>).</p>
 <p>Commitizen will update it's configuration file automatically (<code>pyproject.toml</code>, <code>.cz</code>) when bumping,
-regarding if the file is present or not in <code>files</code>.</p>
+regarding if the file is present or not in <code>version_files</code>.</p>
+<p>* Renamed from <code>files</code> to <code>version_files</code>.</p>
 <p>Some examples</p>
 <p><code>pyproject.toml</code> or <code>.cz.toml</code></p>
 <div class="codehilite"><pre><span></span>[tool.commitizen]
-files = [
+version_files = [
     &quot;src/__version__.py&quot;,
     &quot;setup.py:version&quot;
 ]
@@ -666,7 +717,7 @@ files = [
 
 <p><code>.cz</code> (TO BE DEPRECATED)</p>
 <div class="codehilite"><pre><span></span>[commitizen]
-files = [
+version_files = [
     &quot;src/__version__.py&quot;,
     &quot;setup.py:version&quot;
     ]

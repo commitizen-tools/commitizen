@@ -38,7 +38,7 @@
     
     
       
-        <title>Github Actions - Commitizen</title>
+        <title>Writing commits - Commitizen</title>
       
     
     
@@ -96,7 +96,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#create-new-release-with-github-actions" tabindex="1" class="md-skip">
+      <a href="#conventional-commits" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -121,7 +121,7 @@
               Commitizen
             </span>
             <span class="md-header-nav__topic">
-              Github Actions
+              Writing commits
             </span>
           
         </div>
@@ -346,11 +346,65 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../writing_commits/" title="Writing commits" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Writing commits
+      </label>
+    
+    <a href="./" title="Writing commits" class="md-nav__link md-nav__link--active">
       Writing commits
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#conventional-commits" title="Conventional commits" class="md-nav__link">
+    Conventional commits
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#writing-commits" title="Writing commits" class="md-nav__link">
+    Writing commits
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recomendations" title="Recomendations" class="md-nav__link">
+    Recomendations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -370,65 +424,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Github Actions
-      </label>
-    
-    <a href="./" title="Github Actions" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../github_actions/" title="Github Actions" class="md-nav__link">
       Github Actions
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
-  
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#create-new-release-with-github-actions" title="Create new release with Github Actions" class="md-nav__link">
-    Create new release with Github Actions
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#automatic-bumping-of-version" title="Automatic bumping of version" class="md-nav__link">
-    Automatic bumping of version
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#publishing-a-python-package" title="Publishing a python package" class="md-nav__link">
-    Publishing a python package
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -456,23 +456,23 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#create-new-release-with-github-actions" title="Create new release with Github Actions" class="md-nav__link">
-    Create new release with Github Actions
+  <a href="#conventional-commits" title="Conventional commits" class="md-nav__link">
+    Conventional commits
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#writing-commits" title="Writing commits" class="md-nav__link">
+    Writing commits
   </a>
   
     <nav class="md-nav">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#automatic-bumping-of-version" title="Automatic bumping of version" class="md-nav__link">
-    Automatic bumping of version
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#publishing-a-python-package" title="Publishing a python package" class="md-nav__link">
-    Publishing a python package
+  <a href="#recomendations" title="Recomendations" class="md-nav__link">
+    Recomendations
   </a>
   
 </li>
@@ -499,97 +499,55 @@
               
                 
                 
-                  <h1>Github Actions</h1>
+                  <h1>Writing commits</h1>
                 
-                <h2 id="create-new-release-with-github-actions">Create new release with Github Actions</h2>
-<h3 id="automatic-bumping-of-version">Automatic bumping of version</h3>
-<p>In order to execute <code>cz bump</code> in your CI, and push the new commit and
-the new tag, back to your master branch, we have to:
-1. Create a personal access token. <a href="https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token">Follow the instructions here</a>. And copy the generated key
-2. Create a secret called <code>PERSONAL_ACCESS_TOKEN</code>, with the copied key, by going to your
-project repository and then <code>Settings &gt; Secrets &gt; Add new secret</code>.
-3. In your repostiroy create a new file <code>.github/workflows/bumpversion.yml</code>
-with the following content.</p>
-<div class="codehilite"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Bump version</span>
-
-<span class="nt">on</span><span class="p">:</span>
-  <span class="nt">push</span><span class="p">:</span>
-    <span class="nt">branches</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">master</span>  <span class="c1"># another branch could be specified here</span>
-
-<span class="nt">jobs</span><span class="p">:</span>
-  <span class="nt">build</span><span class="p">:</span>
-    <span class="nt">if</span><span class="p">:</span> <span class="s">&quot;!contains(github.event.head_commit.message,</span><span class="nv"> </span><span class="s">&#39;bump&#39;)&quot;</span>
-    <span class="nt">runs-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
-    <span class="nt">strategy</span><span class="p">:</span>
-      <span class="nt">matrix</span><span class="p">:</span>
-        <span class="nt">python-version</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&#39;3.x&#39;</span><span class="p p-Indicator">]</span>
-    <span class="nt">steps</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/checkout@v2</span>
-      <span class="nt">with</span><span class="p">:</span>
-        <span class="nt">token</span><span class="p">:</span> <span class="s">&#39;${{</span><span class="nv"> </span><span class="s">secrets.PERSONAL_ACCESS_TOKEN</span><span class="nv"> </span><span class="s">}}&#39;</span>
-        <span class="nt">fetch-depth</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Set up Python ${{ matrix.python-version }}</span>
-      <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v1</span>
-      <span class="nt">with</span><span class="p">:</span>
-        <span class="nt">python-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ matrix.python-version }}</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
-      <span class="nt">run</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-        <span class="no">python --version</span>
-        <span class="no">python -m pip install -U commitizen</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Create bump</span>
-      <span class="nt">run</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-        <span class="no">git config --local user.email &quot;action@github.com&quot;</span>
-        <span class="no">git config --local user.name &quot;GitHub Action&quot;</span>
-        <span class="no">cz bump --yes</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Push changes</span>
-      <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Woile/github-push-action@master</span>
-      <span class="nt">with</span><span class="p">:</span>
-        <span class="nt">github_token</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ secrets.PERSONAL_ACCESS_TOKEN }}</span>
-        <span class="nt">tags</span><span class="p">:</span> <span class="s">&quot;true&quot;</span>
-</pre></div>
-
-
-<p>Push to master and that's it.</p>
-<h3 id="publishing-a-python-package">Publishing a python package</h3>
-<p>Once the new tag is created, triggering an automatic publish command would be desired.</p>
-<p>In order to do so, first 2 secrets need to be added with the information
-of our pypi account.</p>
-<p>Go to <code>Settings &gt; Secrets &gt; Add new secret</code> and add the secrets: <code>PYPI_USERNAME</code> and <code>PYPI_PASSWORD</code>.</p>
-<p>Create a file in <code>.github/workflows/pythonpublish.yaml</code> with the following content:</p>
-<div class="codehilite"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Upload Python Package</span>
-
-<span class="nt">on</span><span class="p">:</span>
-  <span class="nt">push</span><span class="p">:</span>
-    <span class="nt">tags</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="s">&#39;*&#39;</span> <span class="c1"># Will trigger for every tag, alternative: &#39;v*&#39;</span>
-
-<span class="nt">jobs</span><span class="p">:</span>
-  <span class="nt">deploy</span><span class="p">:</span>
-    <span class="nt">runs-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
-    <span class="nt">steps</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/checkout@v1</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Set up Python</span>
-      <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v1</span>
-      <span class="nt">with</span><span class="p">:</span>
-        <span class="nt">python-version</span><span class="p">:</span> <span class="s">&#39;3.x&#39;</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
-      <span class="nt">run</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-        <span class="no">python -m pip install --pre -U poetry</span>
-        <span class="no">poetry --version</span>
-        <span class="no">poetry install</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Build and publish</span>
-      <span class="nt">env</span><span class="p">:</span>
-        <span class="nt">PYPI_USERNAME</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ secrets.PYPI_USERNAME }}</span>
-        <span class="nt">PYPI_PASSWORD</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ secrets.PYPI_PASSWORD }}</span>
-      <span class="nt">run</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-        <span class="no">./scripts/publish</span>
-</pre></div>
-
-
-<p>Notice that we are calling a bash script in <code>./scripts/publish</code>, you should
-configure it with your tools (twine, poetry, etc). Check <a href="https://github.com/Woile/commitizen/blob/master/scripts/publish">commitizen example</a></p>
-<p>Push the changes and that's it.</p>
+                <p>In order for this project to work well in your pipeline, a commit convention
+must be follow.</p>
+<p>By default commitizen uses the known <a href="https://www.conventionalcommits.org">conventional commits</a>, but you can create
+your own following the docs information over <a href="https://woile.github.io/commitizen/customization/">customization</a>.</p>
+<h2 id="conventional-commits">Conventional commits</h2>
+<p>If you are using <a href="https://www.conventionalcommits.org">conventional commits</a>, the most important
+thing to know, is that you must begin your commits with at least one of this
+tags: <code>fix</code>, <code>feat</code>. And if you introduce a breaking change, then, you must
+add to your commit body the following <code>BREAKING CHANGE</code>.
+Using these 3 keywords will allow the proper identification of the semantic version.
+Of course there are other keywords, but I'll leave it to the reader to explore them.</p>
+<h2 id="writing-commits">Writing commits</h2>
+<p>Not to the important part, when writing commits it's important to think about:</p>
+<ul>
+<li>Your future self</li>
+<li>Your colleagues</li>
+</ul>
+<p>You may think this is trivial, but it's not. It's important for the reader to
+understand what happened.</p>
+<h3 id="recomendations">Recomendations</h3>
+<ul>
+<li><strong>Keep the message short</strong>: Makes the list of commits more readable (~50 chars).</li>
+<li><strong>Talk imperative</strong>: Follow this rule: <code>If applied, this commit will &lt;commit message&gt;</code></li>
+<li><strong>Think about the CHANGELOG</strong>: Your commits will probably end up in the changelog
+  so try writing for it, but also keep in mind that you can skip sending commits to
+  the CHANGELOG by using diffrent keywords (like <code>build</code>).</li>
+<li><strong>Use a commit per new feature</strong>: if you introduce multiple things related to
+  the same commit, squash them. This is useful for auto-generating CHANGELOG.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Do's</th>
+<th>Don'ts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fix(commands): bump error when no user provided</code></td>
+<td><code>fix: stuff</code></td>
+</tr>
+<tr>
+<td><code>feat: add new commit command</code></td>
+<td><code>feat: commit command introduced</code></td>
+</tr>
+</tbody>
+</table>
                 
                   
                 
@@ -610,7 +568,7 @@ configure it with your tools (twine, poetry, etc). Check <a href="https://github
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../gitlab_ci/" title="GitLab CI" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../../customization/" title="Customization" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -619,11 +577,25 @@ configure it with your tools (twine, poetry, etc). Check <a href="https://github
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                GitLab CI
+                Customization
               </span>
             </div>
           </a>
         
+        
+          <a href="../gitlab_ci/" title="GitLab CI" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                GitLab CI
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
         
       </nav>
     </div>
