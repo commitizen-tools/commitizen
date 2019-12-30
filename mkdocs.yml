@@ -15,6 +15,7 @@ nav:
     - Check: 'check.md'
     - Customization: 'customization.md'
     - Tutorials:
+        - Writing commits: 'tutorials/writing_commits.md'
         - GitLab CI: 'tutorials/gitlab_ci.md'
         - Github Actions: 'tutorials/github_actions.md'
 
