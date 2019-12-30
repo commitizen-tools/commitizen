@@ -1,4 +1,3 @@
-
 [![Github Actions](https://github.com/Woile/commitizen/workflows/Python%20package/badge.svg?style=flat-square)](https://github.com/Woile/commitizen/actions)
 [![Conventional
 Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square)](https://conventionalcommits.org)
@@ -7,7 +6,6 @@ release](https://img.shields.io/pypi/v/commitizen.svg?style=flat-square)](https:
 [![Supported
 versions](https://img.shields.io/pypi/pyversions/commitizen.svg?style=flat-square)](https://pypi.org/project/commitizen/)
 [![Codecov](https://img.shields.io/codecov/c/github/Woile/commitizen.svg?style=flat-square)](https://codecov.io/gh/Woile/commitizen)
-
 
 ![Using commitizen cli](images/demo.gif)
 
@@ -27,10 +25,10 @@ the version or a changelog.
 
 ### Commitizen features
 
-* Command line utility to create commits with your rules. Defaults: [Conventional commits][conventional_commits]
-* Display information about your commit rules (commands: schema, example, info)
-* Bump version automatically using [semantic verisoning][semver] based on the commits. [Read More](./bump.md)
-* Generate a changelog using [Keep a changelog][keepchangelog] (Planned feature)
+- Command line utility to create commits with your rules. Defaults: [Conventional commits][conventional_commits]
+- Display information about your commit rules (commands: schema, example, info)
+- Bump version automatically using [semantic verisoning][semver] based on the commits. [Read More](./bump.md)
+- Generate a changelog using [Keep a changelog][keepchangelog] (Planned feature)
 
 ## Requirements
 
@@ -49,6 +47,7 @@ sudo pip3 install -U Commitizen
 ### Python project
 
 You can add it to your local project using one of these:
+
 ```bash
 pip install -U commitizen
 ```
@@ -61,14 +60,17 @@ poetry add commitizen --dev
 
 ### Commiting
 
-
 Run in your terminal
 
-    cz commit
+```bash
+cz commit
+```
 
 or the shortcut
 
-    cz c
+```bash
+cz c
+```
 
 ### Help
 
@@ -111,4 +113,4 @@ Feel free to create a PR.
 [semver]: https://semver.org/
 [keepchangelog]: https://keepachangelog.com/
 [gitscm]: https://git-scm.com/downloads
-[Travis]: https://img.shields.io/travis/Woile/commitizen.svg?style=flat-square
+[travis]: https://img.shields.io/travis/Woile/commitizen.svg?style=flat-square

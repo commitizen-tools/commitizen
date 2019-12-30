@@ -10,10 +10,10 @@ This an example showing how to use the check command inside of commit-msg.
 
 At the root of the project:
 
-```sh
-$ cd .git/hooks
-$ touch commit-msg
-$ chmod +x commit-msg
+```bash
+cd .git/hooks
+touch commit-msg
+chmod +x commit-msg
 ```
 
 Open the file and edit it:

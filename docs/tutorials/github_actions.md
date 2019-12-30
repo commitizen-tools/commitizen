@@ -26,7 +26,10 @@ jobs:
       matrix:
         python-version: ['3.x']
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
+      with:
+        token: '${{ secrets.PERSONAL_ACCESS_TOKEN }}'
+        fetch-depth: 0
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -34,15 +37,12 @@ jobs:
     - name: Install dependencies
       run: |
         python --version
-        python --version
         python -m pip install -U commitizen
     - name: Create bump
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git config --local push.followTags true
         cz bump --yes
-        git tag
     - name: Push changes
       uses: Woile/github-push-action@master
       with:

@@ -120,13 +120,15 @@ Suppported variables:
 
 ---
 
-### `files`
+### `version_files` *
 
 Used to identify the files which should be updated with the new version.
 It is also possible to provide a pattern for each file, separated by colons (`:`).
 
 Commitizen will update it's configuration file automatically (`pyproject.toml`, `.cz`) when bumping,
-regarding if the file is present or not in `files`.
+regarding if the file is present or not in `version_files`.
+
+\* Renamed from `files` to `version_files`.
 
 Some examples
 
@@ -134,7 +136,7 @@ Some examples
 
 ```toml
 [tool.commitizen]
-files = [
+version_files = [
     "src/__version__.py",
     "setup.py:version"
 ]
@@ -144,7 +146,7 @@ files = [
 
 ```
 [commitizen]
-files = [
+version_files = [
     "src/__version__.py",
     "setup.py:version"
     ]

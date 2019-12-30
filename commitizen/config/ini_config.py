@@ -45,7 +45,7 @@ class IniConfig(BaseConfig):
         ```
         [commitizen]
         name = cz_jira
-        files = [
+        version_files = [
             "commitizen/__version__.py",
             "pyproject.toml"
             ]  # this tab at the end is important
