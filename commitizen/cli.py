@@ -116,8 +116,34 @@ data = {
             },
             {
                 "name": ["version"],
-                "help": "get the version of the installed commitizen",
+                "help": (
+                    "get the version of the installed commitizen or the current project"
+                    " (default: installed commitizen)"
+                ),
                 "func": commands.Version,
+                "arguments": [
+                    {
+                        "name": ["-p", "--project"],
+                        "help": "get the version of the current project",
+                        "action": "store_true",
+                        "exclusive_group": "group1",
+                    },
+                    {
+                        "name": ["-c", "--commitizen"],
+                        "help": "get the version of the installed commitizen",
+                        "action": "store_true",
+                        "exclusive_group": "group1",
+                    },
+                    {
+                        "name": ["-v", "--verbose"],
+                        "help": (
+                            "get the version of both the installed commitizen "
+                            "and the current project"
+                        ),
+                        "action": "store_true",
+                        "exclusive_group": "group1",
+                    },
+                ],
             },
             {
                 "name": ["check"],

@@ -4,10 +4,26 @@ from commitizen.__version__ import __version__
 
 
 class Version:
-    """Get the version of the installed commitizen."""
+    """Get the version of the installed commitizen or the current project."""
 
     def __init__(self, config: BaseConfig, *args):
         self.config: BaseConfig = config
+        self.parameter = args[0]
 
     def __call__(self):
-        out.write(__version__)
+        if self.parameter.get("project"):
+            version = self.config.settings["version"]
+            if version:
+                out.write(f"{version}")
+            else:
+                out.error(f"No project information in this project.")
+        elif self.parameter.get("verbose"):
+            out.write(f"Installed Commitizen Version: {__version__}")
+            version = self.config.settings["version"]
+            if version:
+                out.write(f"Project Version: {version}")
+            else:
+                out.error(f"No project information in this project.")
+        else:
+            # if no argument is given, show installed commitizen version
+            out.write(f"{__version__}")

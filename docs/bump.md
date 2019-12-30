@@ -101,7 +101,7 @@ tag_format = "v$minor.$major.$patch$prerelease"
 
 Or in your `.cz` (TO BE DEPRECATED)
 
-```
+```ini
 [commitizen]
 tag_format = v$minor.$major.$patch$prerelease
 ```
@@ -144,7 +144,7 @@ version_files = [
 
 `.cz` (TO BE DEPRECATED)
 
-```
+```ini
 [commitizen]
 version_files = [
     "src/__version__.py",
@@ -180,7 +180,7 @@ bump_message = "release $current_version → $new_version [skip-ci]"
 
 `.cz` (TO BE DEPRECATED)
 
-```
+```ini
 [commitizen]
 bump_message = release $current_version → $new_version [skip-ci]
 ```

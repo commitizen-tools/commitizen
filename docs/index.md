@@ -96,6 +96,8 @@ commands:
     info                show information about the cz
     schema              show commit schema
     bump                bump semantic version based on the git log
+    version             get the version of the installed commitizen or the
+                        current project (default: installed commitizen)
     check               validates that a commit message matches the commitizen schema
     init                init commitizen configuration
 ```

@@ -15,10 +15,10 @@ For this example, we have a `python/django` application and `Docker` as containe
 #### Gitlab Configuration:
 
 In order to be able to change files and push new changes with `Gitlab CI` runners, we need to have a `ssh` key and configure a git user.
- 
+
 First, let's create a `ssh key`. The only requirement is to create it without a passphrase:
 
-```
+```bash
 ssh-keygen -f deploy_key -N ""
 ```
 
@@ -32,7 +32,7 @@ Now, we need to create three environment variables that will be visible for the 
 
 Create `SSH_PRIVATE_KEY`, `CI_EMAIL`, `CI_USERNAME` variables and fill them with the `private_key`, `email` and `username` that we have created previously.
 
-The latest step is to create a `deploy key.` To do this, we should create it under the section `settings/repository` and fill it with the `public key` generated before. Check `Write access allowed`, otherwise, the runner won't be able to write the changes to the repository. 
+The latest step is to create a `deploy key.` To do this, we should create it under the section `settings/repository` and fill it with the `public key` generated before. Check `Write access allowed`, otherwise, the runner won't be able to write the changes to the repository.
 
 ![gitlab deploy key](../images/gitlab_ci/gitlab_deploy_key.png)
 
@@ -45,9 +45,8 @@ tip: If the CI raise some errors, try to unprotect the private key.
 1. Create a `.gitlab-ci.yaml` file that contains `stages` and `jobs` configurations. You can find more info [here](https://docs.gitlab.com/ee/ci/quick_start/).
 
 2. Define `stages` and `jobs`. For this example, we define two `stages` with one `job` each one.
-  * Test the application.
-  * Auto bump the version. Means changing the file/s that reflects the version, creating a new commit and git tag.
-
+    * Test the application.
+    * Auto bump the version. Means changing the file/s that reflects the version, creating a new commit and git tag.
 
 #### Stages and Jobs
 
@@ -96,7 +95,7 @@ auto-bump:
     - git push origin master:$CI_COMMIT_REF_NAME
     - TAG=$(head -n 1 VERSION) # get the new software version and save into artifacts
     - echo "#!/bin/sh" >> variables
-    - echo "export TAG='$TAG'" >> variables 
+    - echo "export TAG='$TAG'" >> variables
     - git push origin $TAG
   only:
     refs:
