@@ -265,6 +265,18 @@
       
       
 
+
+  <li class="md-nav__item">
+    <a href="../check/" title="Check" class="md-nav__link">
+      Check
+    </a>
+  </li>
+
+    
+      
+      
+      
+
   
 
 
@@ -374,13 +386,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
     
-    <label class="md-nav__link" for="nav-5">
+    <label class="md-nav__link" for="nav-6">
       Tutorials
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-5">
+      <label class="md-nav__title" for="nav-6">
         Tutorials
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -529,11 +541,17 @@
 <li>Create a python package starting with <code>cz_</code> using <code>setup.py</code>, <code>poetry</code>, etc</li>
 </ol>
 <p>Check an <a href="convcomms">example</a> on how to configure <code>BaseCommitizen</code>.</p>
+<p>You can also automate the steps above through <a href="https://cookiecutter.readthedocs.io/en/1.7.0/">cookiecutter</a>.</p>
+<div class="codehilite"><pre><span></span>cookiecutter gh:Lee-W/commitizen_cz_template
+</pre></div>
+
+
+<p>See <a href="https://github.com/Lee-W/commitizen_cz_template">Lee-W/commitizen_cz_template</a> for detail.</p>
 <h3 id="custom-commit-rules">Custom commit rules</h3>
 <p>Create a file starting with <code>cz_</code> for example <code>cz_jira.py</code>. This prefix
 is used to detect the plugin. Same method <a href="http://flask.pocoo.org/docs/0.12/extensiondev/">flask uses</a></p>
-<p>Inherit from <code>BaseCommitizen</code> and you must define <code>questions</code> and
-<code>message</code>. The others are optionals.</p>
+<p>Inherit from <code>BaseCommitizen</code>, and you must define <code>questions</code> and
+<code>message</code>. The others are optional.</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">commitizen.cz.base</span> <span class="kn">import</span> <span class="n">BaseCommitizen</span>
 
 <span class="k">class</span> <span class="nc">JiraCz</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
@@ -584,7 +602,7 @@ is used to detect the plugin. Same method <a href="http://flask.pocoo.org/docs/0
 </pre></div>
 
 
-<p>The next file required is <code>setup.py</code> modified from flask version</p>
+<p>The next file required is <code>setup.py</code> modified from flask version.</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span>
 
 <span class="n">setup</span><span class="p">(</span>
@@ -598,14 +616,14 @@ is used to detect the plugin. Same method <a href="http://flask.pocoo.org/docs/0
 </pre></div>
 
 
-<p>So at the end we would have</p>
+<p>So in the end, we would have</p>
 <div class="codehilite"><pre><span></span>.
 ├── cz_jira.py
 └── setup.py
 </pre></div>
 
 
-<p>And that's it, you can install it without uploading to pypi by simply
+<p>And that's it. You can install it without uploading to pypi by simply
 doing <code>pip install .</code></p>
 <p>If you feel like it should be part of this repo, create a PR.</p>
 <h3 id="custom-bump-rules">Custom bump rules</h3>
@@ -634,7 +652,7 @@ doing <code>pip install .</code></p>
 </tr>
 </tbody>
 </table>
-<p>Let's see an exampple</p>
+<p>Let's see an example</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">commitizen.cz.base</span> <span class="kn">import</span> <span class="n">BaseCommitizen</span>
 
 
@@ -644,13 +662,13 @@ doing <code>pip install .</code></p>
 </pre></div>
 
 
-<p>That's it, your commitizen now supports custom rules and you can run</p>
+<p>That's it, your commitizen now supports custom rules, and you can run</p>
 <div class="codehilite"><pre><span></span>cz -n cz_strange bump
 </pre></div>
 
 
 <h3 id="raise-customize-exception">Raise Customize Exception</h3>
-<p>If you wannt <code>commitizen</code> to catch your exception and print the message, you'll have to inherit <code>CzException</code>.</p>
+<p>If you want <code>commitizen</code> to catch your exception and print the message, you'll have to inherit <code>CzException</code>.</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">commitizen.cz.exception</span> <span class="kn">import</span> <span class="n">CzException</span>
 
 <span class="k">class</span> <span class="nc">NoSubjectProvidedException</span><span class="p">(</span><span class="n">CzException</span><span class="p">):</span>
@@ -661,7 +679,7 @@ doing <code>pip install .</code></p>
 <h2 id="customize-in-toml">Customize in toml</h2>
 <p><strong>This is only supported when configuring through <code>toml</code> (e.g., <code>pyproject.toml</code>, <code>.cz</code>, and <code>.cz.toml</code>)</strong></p>
 <p>The basic steps are:
-1. Define your custom committing or bumpping rules in the configuration file.
+1. Define your custom committing or bumping rules in the configuration file.
 2. Declare <code>name = "cz_customize"</code> in your configuration file, or add <code>-n cz_customize</code> when running commitizen.</p>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span>[tool.commitizen]
@@ -826,7 +844,7 @@ message = &quot;Do you want to add body message in commit?&quot;
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../bump/" title="Bump" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../check/" title="Check" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -835,7 +853,7 @@ message = &quot;Do you want to add body message in commit?&quot;
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Bump
+                Check
               </span>
             </div>
           </a>

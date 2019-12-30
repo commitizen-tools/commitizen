@@ -33,21 +33,21 @@
       
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
-      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.1.2">
     
     
       
-        <title>Writing commits - Commitizen</title>
+        <title>Check - Commitizen</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application.3020aac5.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.3020aac5.css">
       
       
     
     
-      <script src="../../assets/javascripts/modernizr.01ccdecf.js"></script>
+      <script src="../assets/javascripts/modernizr.01ccdecf.js"></script>
     
     
       
@@ -56,7 +56,7 @@
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
-    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    <link rel="stylesheet" href="../assets/fonts/material-icons.css">
     
     
     
@@ -96,12 +96,16 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
+      <a href="#about" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../.." title="Commitizen" class="md-header-nav__button md-logo">
+        <a href=".." title="Commitizen" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -117,7 +121,7 @@
               Commitizen
             </span>
             <span class="md-header-nav__topic">
-              Writing commits
+              Check
             </span>
           
         </div>
@@ -191,7 +195,7 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../.." title="Commitizen" class="md-nav__button md-logo">
+    <a href=".." title="Commitizen" class="md-nav__button md-logo">
       
         <i class="md-icon"></i>
       
@@ -227,7 +231,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../.." title="Introduction" class="md-nav__link">
+    <a href=".." title="Introduction" class="md-nav__link">
       Introduction
     </a>
   </li>
@@ -239,7 +243,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../config/" title="Configuration" class="md-nav__link">
+    <a href="../config/" title="Configuration" class="md-nav__link">
       Configuration
     </a>
   </li>
@@ -251,7 +255,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../bump/" title="Bump" class="md-nav__link">
+    <a href="../bump/" title="Bump" class="md-nav__link">
       Bump
     </a>
   </li>
@@ -261,9 +265,55 @@
       
       
 
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Check
+      </label>
+    
+    <a href="./" title="Check" class="md-nav__link md-nav__link--active">
+      Check
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#about" title="About" class="md-nav__link">
+    About
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+      
+      
+      
+
 
   <li class="md-nav__item">
-    <a href="../../customization/" title="Customization" class="md-nav__link">
+    <a href="../customization/" title="Customization" class="md-nav__link">
       Customization
     </a>
   </li>
@@ -276,13 +326,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
     
-    <label class="md-nav__link" for="nav-5">
+    <label class="md-nav__link" for="nav-6">
       Tutorials
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-5">
+      <label class="md-nav__title" for="nav-6">
         Tutorials
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -294,7 +344,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../gitlab_ci/" title="GitLab CI" class="md-nav__link">
+    <a href="../tutorials/gitlab_ci/" title="GitLab CI" class="md-nav__link">
       GitLab CI
     </a>
   </li>
@@ -306,7 +356,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../github_actions/" title="Github Actions" class="md-nav__link">
+    <a href="../tutorials/github_actions/" title="Github Actions" class="md-nav__link">
       Github Actions
     </a>
   </li>
@@ -324,15 +374,67 @@
               </div>
             
             
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#about" title="About" class="md-nav__link">
+    About
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                  <h1>Writing commits</h1>
+                  <h1>Check</h1>
                 
-                
+                <h2 id="about">About</h2>
+<p>This feature enforces the project to always use conventional-commits by doing this in a pre-commit hook.</p>
+<p>The command might be included inside of a Git hook (inside of <code>.git/hooks/</code> at the root of the project).</p>
+<p>The selected hook might be the file called commit-msg.</p>
+<p>This an example showing how to use the check command inside of commit-msg.</p>
+<p>At the root of the project:</p>
+<div class="codehilite"><pre><span></span>$ <span class="nb">cd</span> .git/hooks
+$ touch commit-msg
+$ chmod +x commit-msg
+</pre></div>
+
+
+<p>Open the file and edit it:</p>
+<div class="codehilite"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="nv">MSG_FILE</span><span class="o">=</span><span class="nv">$1</span>
+cz check --commit-msg-file <span class="nv">$MSG_FILE</span>
+</pre></div>
+
+
+<p>Where $1 is the name of the temporary file that contains the current commit message. To be more explicit, the previous variable is stored in another variable called $MSG_FILE, for didactic purposes.</p>
+<p>The --commit-msg-file flag is required, not optional.</p>
+<p>Each time you create a commit, automatically, this hook will analyze it.
+If the commit message is invalid, it'll be rejected.</p>
+<p>The commit should follows the conventional commit convention, otherwise it won't be accepted.</p>
                 
                   
                 
@@ -349,6 +451,41 @@
       
         
 <footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../bump/" title="Bump" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Bump
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../customization/" title="Customization" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Customization
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -367,9 +504,9 @@
       
     </div>
     
-      <script src="../../assets/javascripts/application.267712eb.js"></script>
+      <script src="../assets/javascripts/application.267712eb.js"></script>
       
-      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
+      <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       
     
   </body>
