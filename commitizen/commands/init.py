@@ -92,12 +92,12 @@ class Init:
 
         if not is_correct_format:
             tag_format = questionary.text(
-                "Please enter the correct version format: ", style=self.cz.style
+                'Please enter the correct version format: (default: "$version")',
+                style=self.cz.style,
             ).ask()
 
             if not tag_format:
-                out.error("Tag format is required!")
-                raise SystemExit()
+                tag_format = "$version"
         return tag_format
 
     def _update_config_file(self, values):
