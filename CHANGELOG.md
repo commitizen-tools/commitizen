@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v1.12.0
+
+### Feature
+
+- new init command
+
+## v1.11.0
+
+Ignore this version
+
 ## v1.10.0
 
 ### Feature
