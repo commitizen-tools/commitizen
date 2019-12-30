@@ -166,14 +166,12 @@ def test_schema(config):
 
 def test_list_cz(config):
     with mock.patch("commitizen.out.write") as mocked_write:
-
         commands.ListCz(config)()
         mocked_write.assert_called_once()
 
 
 def test_version(config):
     with mock.patch("commitizen.out.write") as mocked_write:
-
         commands.Version(config)()
         mocked_write.assert_called_once()
 
@@ -214,3 +212,13 @@ def test_check_conventional_commit(config, mocker):
 def test_check_command_when_commit_file_not_found(config):
     with pytest.raises(FileNotFoundError):
         commands.Check(config=config, arguments={"commit_msg_file": ""})()
+
+
+def test_init_when_config_already_exists(config, capsys):
+    # Set config path
+    path = "tests/pyproject.toml"
+    config.add_path(path)
+
+    commands.Init(config)()
+    captured = capsys.readouterr()
+    assert captured.out == f"Config file {path} already exists\n"

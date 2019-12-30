@@ -135,6 +135,11 @@ data = {
                     }
                 ],
             },
+            {
+                "name": ["init"],
+                "help": "init commitizen configuration",
+                "func": commands.Init,
+            },
         ],
     },
 }

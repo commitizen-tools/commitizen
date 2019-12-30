@@ -95,6 +95,7 @@ commands:
     schema              show commit schema
     bump                bump semantic version based on the git log
     check               validates that a commit message matches the commitizen schema
+    init                init commitizen configuration
 ```
 
 ## Contributing
