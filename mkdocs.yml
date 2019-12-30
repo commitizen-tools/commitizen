@@ -11,8 +11,10 @@ edit_uri: ""
 nav:
     - Introduction: 'index.md'
     - Configuration: 'config.md'
-    - Bump: 'bump.md'
-    - Check: 'check.md'
+    - Commands:
+        - Bump: 'bump.md'
+        - Check: 'check.md'
+        - Init: 'init.md'
     - Customization: 'customization.md'
     - Tutorials:
         - Writing commits: 'tutorials/writing_commits.md'
