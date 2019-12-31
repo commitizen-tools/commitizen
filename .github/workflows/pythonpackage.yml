@@ -24,6 +24,8 @@ jobs:
         poetry install
     - name: Run tests
       run: |
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
         ./scripts/test
     - name: Upload coverage to Codecov
       if: runner.os == 'Linux'
