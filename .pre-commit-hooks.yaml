@@ -1,0 +1,4 @@
+- id: commitizen
+  name: commitizen check
+  entry: cz check --commit-msg-file
+  language: python
