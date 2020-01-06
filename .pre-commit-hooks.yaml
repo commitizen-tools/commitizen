@@ -1,0 +1,8 @@
+- id: commitizen
+  name: commitizen check
+  description: "Check whether the commit message follows commiting rules"
+  entry: cz check --commit-msg-file
+  language: python
+  language_version: python3
+  require_serial: true
+  minimum_pre_commit_version: "0.15.4"

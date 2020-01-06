@@ -1,12 +1,37 @@
 ## About
 
-This feature enforces the project to always use conventional-commits by doing this in a pre-commit hook.
+This feature checks whether the commit message follows the given committing rules.
+You can use either of the following methods to enforce the check.
 
+### Method 1: Add git hook through [pre-commit](https://pre-commit.com/)
+
+* Step 1: Install [pre-commit](https://pre-commit.com/)
+
+```sh
+python -m pip install pre-commit
+```
+
+* Step 2: Create `.pre-commit-config.yaml` at your root directory with the following content
+
+```yaml
+- repo: https://github.com/Woile/commitizen
+  rev: 1.13.1
+  hooks:
+    - id: commitizen
+```
+
+* Step 3: Install the configuration into git hook through `pre-commit`
+
+```bash
+pre-commit install --hook-type commit-msg
+```
+
+### Method 2: Manually add git hook
 The command might be included inside of a Git hook (inside of `.git/hooks/` at the root of the project).
 
 The selected hook might be the file called commit-msg.
 
-This an example showing how to use the check command inside of commit-msg.
+This example shows how to use the check command inside of commit-msg.
 
 At the root of the project:
 
@@ -24,11 +49,11 @@ MSG_FILE=$1
 cz check --commit-msg-file $MSG_FILE
 ```
 
-Where $1 is the name of the temporary file that contains the current commit message. To be more explicit, the previous variable is stored in another variable called $MSG_FILE, for didactic purposes.
+Where `$1` is the name of the temporary file that contains the current commit message. To be more explicit, the previous variable is stored in another variable called `$MSG_FILE`, for didactic purposes.
 
-The --commit-msg-file flag is required, not optional.
+The `--commit-msg-file` flag is required, not optional.
 
 Each time you create a commit, automatically, this hook will analyze it.
 If the commit message is invalid, it'll be rejected.
 
-The commit should follows the conventional commit convention, otherwise it won't be accepted.
+The commit should follow the given commiting rules; otherwise, it won't be accepted.
