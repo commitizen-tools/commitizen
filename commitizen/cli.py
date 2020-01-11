@@ -20,7 +20,6 @@ data = {
         {"name": "--debug", "action": "store_true", "help": "use debug mode"},
         {
             "name": ["-n", "--name"],
-            "default": "cz_conventional_commits",
             "help": "use the given commitizen (default: cz_conventional_commits)",
         },
         {
@@ -188,6 +187,8 @@ def main():
 
     if args.name:
         conf.update({"name": args.name})
+    elif not args.name and not conf.path:
+        conf.update({"name": "cz_conventional_commits"})
 
     if args.version:
         warnings.warn(
