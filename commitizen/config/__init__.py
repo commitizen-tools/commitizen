@@ -3,10 +3,13 @@ import warnings
 from pathlib import Path
 from typing import Optional
 
-from commitizen import defaults
+from commitizen import defaults, git, out
 from .base_config import BaseConfig
 from .toml_config import TomlConfig
 from .ini_config import IniConfig
+
+
+NOT_A_GIT_PROJECT = 10
 
 
 def load_global_conf() -> Optional[IniConfig]:
@@ -35,8 +38,20 @@ def load_global_conf() -> Optional[IniConfig]:
 def read_cfg() -> BaseConfig:
     conf = BaseConfig()
 
+    git_project_root = git.find_git_project_root()
+    if not git_project_root:
+        out.error(
+            "fatal: not a git repository (or any of the parent directories): .git"
+        )
+        raise SystemExit(NOT_A_GIT_PROJECT)
+
     allowed_cfg_files = defaults.config_files
-    for filename in allowed_cfg_files:
+    cfg_paths = (
+        str(path / Path(filename))
+        for path in [Path("."), git_project_root]
+        for filename in allowed_cfg_files
+    )
+    for filename in cfg_paths:
         config_file_exists = os.path.exists(filename)
         if not config_file_exists:
             continue
