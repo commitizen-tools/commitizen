@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Optional, List
 
@@ -55,3 +56,8 @@ def get_all_tags() -> Optional[List[str]]:
     if c.err:
         return []
     return [tag.strip() for tag in c.out.split("\n") if tag.strip()]
+
+
+def find_git_project_root() -> Path:
+    c = cmd.run("git rev-parse --show-toplevel")
+    return Path(c.out)
