@@ -5,8 +5,3 @@ poetry publish --build -u $PYPI_USERNAME -p $PYPI_PASSWORD
     echo 'Missing input "github_token: ${{ secrets.GITHUB_TOKEN }}".';
     exit 1;
 };
-
-remote_repo="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/commitizen.git"
-
-# Publish docs
-mkdocs gh-deploy --remote-name "${remote_repo}"
