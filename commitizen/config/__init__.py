@@ -1,4 +1,3 @@
-import os
 import warnings
 from pathlib import Path
 from typing import Optional
@@ -13,9 +12,9 @@ NOT_A_GIT_PROJECT = 10
 
 
 def load_global_conf() -> Optional[IniConfig]:
-    home = str(Path.home())
-    global_cfg = os.path.join(home, ".cz")
-    if not os.path.exists(global_cfg):
+    home = Path.home()
+    global_cfg = home / Path(".cz")
+    if not global_cfg.exists():
         return None
 
     # global conf doesnt make sense with commitizen bump
@@ -47,19 +46,18 @@ def read_cfg() -> BaseConfig:
 
     allowed_cfg_files = defaults.config_files
     cfg_paths = (
-        str(path / Path(filename))
+        path / Path(filename)
         for path in [Path("."), git_project_root]
         for filename in allowed_cfg_files
     )
     for filename in cfg_paths:
-        config_file_exists = os.path.exists(filename)
-        if not config_file_exists:
+        if not filename.exists():
             continue
 
         with open(filename, "r") as f:
             data: str = f.read()
 
-        if "toml" in filename:
+        if "toml" in filename.suffix:
             _conf = TomlConfig(data=data, path=filename)
         else:
             warnings.warn(
