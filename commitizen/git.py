@@ -20,13 +20,24 @@ def commit(message: str, args=""):
     return c
 
 
+def get_first_commit() -> str:
+    c = cmd.run("git rev-list --max-parents=0 HEAD")
+    return c.out.strip()
+
+
 def get_commits(
-    start: str,
+    start: Optional[str] = None,
     end: str = "HEAD",
     *,
     from_beginning: bool = False,
     log_format: str = "%s%n%b",
 ) -> list:
+    """
+    Get the commits betweeen start and end (incldue end but not start)
+    """
+    if not start:
+        start = get_first_commit()
+
     delimiter = '"----------commit-delimiter----------"'
     git_log_cmd = f"git log --pretty={log_format}{delimiter}"
 
