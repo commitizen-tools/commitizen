@@ -27,7 +27,9 @@ class Changelog:
         pat = re.compile(changelog_pattern)
 
         changelog_entry_key = "Unreleased"
-        changelog_entry_values = OrderedDict({value: [] for value in changelog_map.values()})
+        changelog_entry_values = OrderedDict(
+            {value: [] for value in changelog_map.values()}
+        )
         commits = git.get_commits()
         tag_map = {tag.rev: tag.name for tag in git.get_tags()}
 
@@ -52,7 +54,9 @@ class Changelog:
                     continue
                 found_keyword = result.group(0)
                 processed_commit = self.cz.process_commit(commit.message)
-                changelog_entry_values[changelog_map[found_keyword]].append(processed_commit)
+                changelog_entry_values[changelog_map[found_keyword]].append(
+                    processed_commit
+                )
                 break
 
         changelog_str += f"\n## {changelog_entry_key}\n"
