@@ -132,3 +132,13 @@ def test_set_key(configure_supported_files, config_files_manager):
 
 def test_find_git_project_root():
     assert git.find_git_project_root() == Path(os.getcwd())
+
+
+class TestTomlConfig:
+    def test_init_empty_config_file(self, tmpdir):
+        path = tmpdir.mkdir("commitizen").join('.cz.toml')
+        toml_config = config.TomlConfig(data="", path=path)
+        toml_config.init_empty_config_file()
+
+        with open(path, "r") as toml_file:
+            assert toml_file.read() == "[tool.commitizen]"
