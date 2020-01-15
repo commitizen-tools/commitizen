@@ -57,3 +57,10 @@ class BaseCommitizen(metaclass=ABCMeta):
     def info(self) -> str:
         """Information about the standardized commit message."""
         raise NotImplementedError("Not Implemented yet")
+
+    def process_commit(self, commit: str) -> str:
+        """Process commit for changelog.
+
+        If not overwritten, it returns the first line of commit.
+        """
+        return commit.split("\n")[0]
