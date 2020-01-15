@@ -89,7 +89,7 @@ data = {
                     {
                         "name": "--tag-format",
                         "help": (
-                            "format used to tag the commmit and read it, "
+                            "the format used to tag the commit and read it, "
                             "use it in existing projects, "
                             "wrap around simple quotes"
                         ),

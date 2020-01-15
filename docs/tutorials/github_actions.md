@@ -1,13 +1,13 @@
-## Create new release with Github Actions
+## Create a new release with Github Actions
 
 ### Automatic bumping of version
 
-In order to execute `cz bump` in your CI, and push the new commit and
+To execute `cz bump` in your CI, and push the new commit and
 the new tag, back to your master branch, we have to:
 1. Create a personal access token. [Follow the instructions here](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token). And copy the generated key
 2. Create a secret called `PERSONAL_ACCESS_TOKEN`, with the copied key, by going to your
 project repository and then `Settings > Secrets > Add new secret`.
-3. In your repostiroy create a new file `.github/workflows/bumpversion.yml`
+3. In your repository create a new file `.github/workflows/bumpversion.yml`
 with the following content.
 
 ```yaml
@@ -56,7 +56,7 @@ Push to master and that's it.
 
 Once the new tag is created, triggering an automatic publish command would be desired.
 
-In order to do so, first 2 secrets need to be added with the information
+In order to do so, the first two secrets need to be added with the information
 of our pypi account.
 
 Go to `Settings > Secrets > Add new secret` and add the secrets: `PYPI_USERNAME` and `PYPI_PASSWORD`.
@@ -94,6 +94,6 @@ jobs:
 ```
 
 Notice that we are calling a bash script in `./scripts/publish`, you should
-configure it with your tools (twine, poetry, etc). Check [commitizen example](https://github.com/Woile/commitizen/blob/master/scripts/publish)
+configure it with your tools (twine, poetry, etc.). Check [commitizen example](https://github.com/Woile/commitizen/blob/master/scripts/publish)
 
 Push the changes and that's it.

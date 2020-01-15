@@ -4,7 +4,7 @@
 
 The version is bumped **automatically** based on the commits.
 
-The commits should follow the rules of the commiter in order to be parsed properly.
+The commits should follow the rules of the committer to be parsed correctly.
 
 It is possible to specify a **prerelease** (alpha, beta, release candidate) version.
 
@@ -65,7 +65,7 @@ optional arguments:
   --files-only          bump version in the files from the config
   --yes                 accept automatically questions done
   --tag-format TAG_FORMAT
-                        format used to tag the commmit and read it, use it in
+                        the format used to tag the commit and read it, use it in
                         existing projects, wrap around simple quotes
   --bump-message BUMP_MESSAGE
                         template used to create the release commmit, useful
@@ -80,9 +80,9 @@ optional arguments:
 
 ### `tag_format`
 
-Used to read the format from the git tags, and also to generate the tags.
+It is used to read the format from the git tags, and also to generate the tags.
 
-Supports 2 types of formats, a simple and a more complex.
+Commitizen supports 2 types of formats, a simple and a more complex.
 
 ```bash
 cz bump --tag_format="v$version"
@@ -122,7 +122,7 @@ Suppported variables:
 
 ### `version_files` *
 
-Used to identify the files which should be updated with the new version.
+It is used to identify the files which should be updated with the new version.
 It is also possible to provide a pattern for each file, separated by colons (`:`).
 
 Commitizen will update it's configuration file automatically (`pyproject.toml`, `.cz`) when bumping,
@@ -160,7 +160,7 @@ in a line containing the `version` substring.
 
 ### `bump_message`
 
-Template used to specify the commit message generated when bumping
+Template used to specify the commit message generated when bumping.
 
 defaults to: `bump: version $current_version → $new_version`
 
