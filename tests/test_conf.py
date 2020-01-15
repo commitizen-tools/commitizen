@@ -133,8 +133,14 @@ def test_set_key(configure_supported_files, config_files_manager):
 def test_find_git_project_root(tmpdir):
     assert git.find_git_project_root() == Path(os.getcwd())
 
-    with tmpdir.as_cwd() as tmp_cwd:
-        assert git.find_git_project_root() == None
+    with tmpdir.as_cwd() as _:
+        assert git.find_git_project_root() is None
+
+
+def test_read_cfg_when_not_in_a_git_project(tmpdir):
+    with tmpdir.as_cwd() as _:
+        with pytest.raises(SystemExit):
+            config.read_cfg()
 
 
 class TestTomlConfig:
