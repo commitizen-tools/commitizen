@@ -60,4 +60,4 @@ def get_all_tags() -> Optional[List[str]]:
 
 def find_git_project_root() -> Path:
     c = cmd.run("git rev-parse --show-toplevel")
-    return Path(c.out)
+    return Path(c.out.strip())

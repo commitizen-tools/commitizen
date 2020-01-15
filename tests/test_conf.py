@@ -1,8 +1,10 @@
 import os
+from pathlib import Path
 
 import pytest
 
-from commitizen import config, defaults
+from commitizen import config, defaults, git
+
 
 PYPROJECT = """
 [tool.commitizen]
@@ -126,3 +128,7 @@ def test_set_key(configure_supported_files, config_files_manager):
     _conf.set_key("version", "2.0.0")
     cfg = config.read_cfg()
     assert cfg.settings == _new_settings
+
+
+def test_find_git_project_root():
+    assert git.find_git_project_root() == Path(os.getcwd())
