@@ -7,13 +7,13 @@ import questionary
 from commitizen import factory, git, out
 from commitizen.cz.exceptions import CzException
 from commitizen.config import BaseConfig
-
-
-NO_ANSWERS = 5
-COMMIT_ERROR = 6
-NO_COMMIT_BACKUP = 7
-NOTHING_TO_COMMIT = 8
-CUSTOM_ERROR = 9
+from commitizen.error_codes import (
+    NO_ANSWERS,
+    COMMIT_ERROR,
+    NO_COMMIT_BACKUP,
+    NOTHING_TO_COMMIT,
+    CUSTOM_ERROR,
+)
 
 
 class Commit:

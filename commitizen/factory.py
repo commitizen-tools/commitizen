@@ -1,8 +1,7 @@
 from commitizen import BaseCommitizen, out
 from commitizen.cz import registry
 from commitizen.config import BaseConfig
-
-NO_COMMITIZEN_FOUND = 2
+from commitizen.error_codes import NO_COMMITIZEN_FOUND
 
 
 def commiter_factory(config: BaseConfig) -> BaseCommitizen:
