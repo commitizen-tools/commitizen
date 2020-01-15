@@ -15,7 +15,7 @@ __all__ = (
     "Bump",
     "Check",
     "Commit",
-    "Changelog"
+    "Changelog",
     "Example",
     "Info",
     "ListCz",
