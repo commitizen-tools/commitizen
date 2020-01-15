@@ -58,6 +58,8 @@ def get_all_tags() -> Optional[List[str]]:
     return [tag.strip() for tag in c.out.split("\n") if tag.strip()]
 
 
-def find_git_project_root() -> Path:
+def find_git_project_root() -> Optional[Path]:
     c = cmd.run("git rev-parse --show-toplevel")
-    return Path(c.out.strip())
+    if not c.err:
+        return Path(c.out.strip())
+    return None
