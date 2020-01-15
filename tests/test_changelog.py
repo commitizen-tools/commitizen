@@ -18,13 +18,19 @@ COMMIT_LOG = [
     "Merge pull request #27 from Woile/dependabot/pip/mypy-tw-0.701",
     "chore(deps-dev): update mypy requirement from ^0.700.0 to ^0.701",
     "chore(deps-dev): update mypy requirement from ^0.700.0 to ^0.701",
-    "Updates the requirements on [mypy](https://github.com/python/mypy) to permit the latest version.",
+    (
+        "Updates the requirements on "
+        "[mypy](https://github.com/python/mypy) to permit the latest version."
+    ),
     "- [Release notes](https://github.com/python/mypy/releases)",
     "- [Commits](https://github.com/python/mypy/compare/v0.700...v0.701)",
     "",
     "Signed-off-by: dependabot[bot] <support@dependabot.com>",
     "chore(deps-dev): update black requirement from ^18.3-alpha.0 to ^19.3b0",
-    "Updates the requirements on [black](https://github.com/ambv/black) to permit the latest version.",
+    (
+        "Updates the requirements on [black](https://github.com/ambv/black)"
+        " to permit the latest version."
+    ),
     "- [Release notes](https://github.com/ambv/black/releases)",
     "- [Commits](https://github.com/ambv/black/commits)",
     "",
@@ -33,7 +39,10 @@ COMMIT_LOG = [
     "",
     "docs: add info about extra pattern in the files when bumping",
     "",
-    "feat(bump): it is now possible to specify a pattern in the files attr to replace the version",
+    (
+        "feat(bump): it is now possible to specify a pattern "
+        "in the files attr to replace the version"
+    ),
     "",
 ]
 
@@ -160,7 +169,10 @@ def test_generate_block_tree(existing_changelog_file):
             {"scope": "users", "message": "lorem ipsum apap", "category": "fix"},
             {
                 "scope": None,
-                "message": "it is possible to specify a pattern to be matched in configuration files bump.",
+                "message": (
+                    "it is possible to specify a pattern to be matched "
+                    "in configuration files bump."
+                ),
                 "category": "feat",
             },
         ],
@@ -178,13 +190,18 @@ def test_generate_full_tree(existing_changelog_file):
             "commits": [
                 {
                     "scope": None,
-                    "message": "issue in poetry add preventing the installation in py36",
+                    "message": (
+                        "issue in poetry add preventing the installation in py36"
+                    ),
                     "category": "fix",
                 },
                 {"scope": "users", "message": "lorem ipsum apap", "category": "fix"},
                 {
                     "scope": None,
-                    "message": "it is possible to specify a pattern to be matched in configuration files bump.",
+                    "message": (
+                        "it is possible to specify a pattern to be matched "
+                        "in configuration files bump."
+                    ),
                     "category": "feat",
                 },
             ],
