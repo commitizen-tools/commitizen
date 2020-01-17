@@ -10,9 +10,12 @@ class Command(NamedTuple):
 
 
 def run(cmd: str) -> Command:
-    cmd.split()
     process = subprocess.Popen(
-        cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        cmd,
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        stdin=subprocess.PIPE,
     )
     stdout, stderr = process.communicate()
     return Command(stdout.decode(), stderr.decode(), stdout, stderr)
