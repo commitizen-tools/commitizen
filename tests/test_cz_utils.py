@@ -1,0 +1,19 @@
+import pytest
+
+from commitizen.cz import utils, exceptions
+
+
+def test_required_validator():
+    assert utils.required_validator("test") == "test"
+
+    with pytest.raises(exceptions.AnswerRequiredError):
+        utils.required_validator("")
+
+
+def test_multiple_line_breaker():
+    message = "this is the first line    | and this is the second line   "
+    result = utils.multiple_line_breaker(message)
+    assert result == "this is the first line\nand this is the second line"
+
+    result = utils.multiple_line_breaker(message, "is")
+    assert result == "th\n\nthe first line    | and th\n\nthe second line"
