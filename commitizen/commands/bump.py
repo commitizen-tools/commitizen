@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 import questionary
 from packaging.version import Version
@@ -54,7 +54,7 @@ class Bump:
                 is_initial = questionary.confirm("Is this the first tag created?").ask()
         return is_initial
 
-    def find_increment(self, commits: list) -> Optional[str]:
+    def find_increment(self, commits: List[git.GitCommit]) -> Optional[str]:
         bump_pattern = self.cz.bump_pattern
         bump_map = self.cz.bump_map
         if not bump_map or not bump_pattern:
@@ -93,7 +93,10 @@ class Bump:
         is_files_only: Optional[bool] = self.arguments["files_only"]
 
         is_initial = self.is_initial_tag(current_tag_version, is_yes)
-        commits = git.get_commits(current_tag_version, from_beginning=is_initial)
+        if is_initial:
+            commits = git.get_commits()
+        else:
+            commits = git.get_commits(current_tag_version)
 
         # No commits, there is no need to create an empty tag.
         # Unless we previously had a prerelease.

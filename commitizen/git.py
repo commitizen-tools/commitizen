@@ -6,6 +6,36 @@ from typing import Optional, List
 from commitizen import cmd
 
 
+class GitObject:
+    def __eq__(self, other):
+        if not isinstance(other, GitObject):
+            return False
+        return self.rev == other.rev
+
+
+class GitCommit(GitObject):
+    def __init__(self, rev, title, body=""):
+        self.rev = rev
+        self.title = title
+        self.body = body
+
+    @property
+    def message(self):
+        return f"{self.title}\n\n{self.body}"
+
+    def __repr__(self):
+        return f"{self.title} ({self.rev})"
+
+
+class GitTag(GitObject):
+    def __init__(self, name, rev):
+        self.name = name
+        self.rev = rev
+
+    def __repr__(self):
+        return f"{self.name} ({self.rev})"
+
+
 def tag(tag: str):
     c = cmd.run(f"git tag {tag}")
     return c
@@ -20,47 +50,44 @@ def commit(message: str, args=""):
     return c
 
 
-def get_first_commit() -> str:
-    c = cmd.run("git rev-list --max-parents=0 HEAD")
-    return c.out.strip()
-
-
 def get_commits(
     start: Optional[str] = None,
     end: str = "HEAD",
     *,
-    from_beginning: bool = False,
-    log_format: str = "%s%n%b",
-) -> list:
+    log_format: str = "%H%n%s%n%b",
+    delimiter: str = "----------commit-delimiter----------",
+) -> List[GitCommit]:
     """
-    Get the commits betweeen start and end (incldue end but not start)
+    Get the commits betweeen start and end
     """
-    if not start:
-        start = get_first_commit()
-
-    delimiter = '"----------commit-delimiter----------"'
     git_log_cmd = f"git log --pretty={log_format}{delimiter}"
 
-    c = cmd.run(f"{git_log_cmd} {start}...{end}")
-
-    if from_beginning:
+    if start:
+        c = cmd.run(f"{git_log_cmd} {start}...{end}")
+    else:
         c = cmd.run(f"{git_log_cmd} {end}")
 
     if not c.out:
         return []
-    return [commit.strip() for commit in c.out.split(delimiter) if commit.strip()]
+
+    git_commits = []
+    for rev_and_commit in c.out.split(delimiter):
+        rev_and_commit = rev_and_commit.strip()
+        if not rev_and_commit:
+            continue
+        rev, title, *body_list = rev_and_commit.split("\n")
+
+        if rev_and_commit:
+            git_commit = GitCommit(
+                rev=rev.strip(), title=title.strip(), body="\n".join(body_list).strip()
+            )
+            git_commits.append(git_commit)
+    return git_commits
 
 
 def tag_exist(tag: str) -> bool:
     c = cmd.run(f"git tag --list {tag}")
     return tag in c.out
-
-
-def is_staging_clean() -> bool:
-    """Check if staing is clean"""
-    c = cmd.run("git diff --no-ext-diff --name-only")
-    c_cached = cmd.run("git diff --no-ext-diff --cached --name-only")
-    return not (bool(c.out) or bool(c_cached.out))
 
 
 def get_latest_tag() -> Optional[str]:
@@ -82,3 +109,28 @@ def find_git_project_root() -> Optional[Path]:
     if not c.err:
         return Path(c.out.strip())
     return None
+
+
+def get_tags_with_rev() -> List[GitTag]:
+    tag_delimiter = "---tag-delimiter---"
+    c = cmd.run(
+        (
+            f"git tag --format='%(refname:lstrip=2){tag_delimiter}%(objectname)'"
+            " --sort=-committerdate"
+        )
+    )
+    if c.err or not c.out:
+        return []
+
+    git_tags = []
+    for line in c.out.split("\n")[:-1]:
+        name, rev = line.split(tag_delimiter)
+        git_tags.append(GitTag(name.strip(), rev.strip()))
+    return git_tags
+
+
+def is_staging_clean() -> bool:
+    """Check if staing is clean"""
+    c = cmd.run("git diff --no-ext-diff --name-only")
+    c_cached = cmd.run("git diff --no-ext-diff --cached --name-only")
+    return not (bool(c.out) or bool(c_cached.out))
