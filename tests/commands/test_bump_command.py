@@ -1,7 +1,3 @@
-import errno
-import os
-import shutil
-import stat
 import sys
 import uuid
 from pathlib import Path
@@ -12,32 +8,15 @@ import pytest
 from commitizen import cli, cmd, git
 
 
-class ReadOnlyException(Exception):
-    pass
+@pytest.fixture(scope="function")
+def tmp_git_project(tmpdir):
+    with tmpdir.as_cwd():
+        with open("pyproject.toml", "w") as f:
+            f.write("[tool.commitizen]\n" 'version="0.1.0"')
 
+        cmd.run("git init")
 
-# https://stackoverflow.com/questions/1213706/what-user-do-python-scripts-run-as-in-windows
-def handle_remove_read_only(func, path, exc):
-    excvalue = exc[1]
-    if func in (os.rmdir, os.remove, shutil.rmtree) and excvalue.errno == errno.EACCESS:
-        os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.IRWXO)  # 744
-        func(path)
-    else:
-        raise ReadOnlyException
-
-
-@pytest.fixture
-def create_project():
-    current_directory = os.getcwd()
-    tmp_proj_path = "tests/tmp-proj"
-    full_tmp_path = os.path.join(current_directory, tmp_proj_path)
-    if not os.path.exists(full_tmp_path):
-        os.makedirs(full_tmp_path)
-
-    os.chdir(full_tmp_path)
-    yield
-    os.chdir(current_directory)
-    shutil.rmtree(full_tmp_path, handle_remove_read_only)
+        yield
 
 
 def create_file_and_commit(message: str, filename: Optional[str] = None):
@@ -49,12 +28,8 @@ def create_file_and_commit(message: str, filename: Optional[str] = None):
     git.commit(message)
 
 
-def test_bump_command(mocker, create_project):
-    with open("./pyproject.toml", "w") as f:
-        f.write("[tool.commitizen]\n" 'version="0.1.0"')
-
-    cmd.run("git init")
-
+@pytest.mark.usefixtures("tmp_git_project")
+def test_bump_command(mocker):
     # MINOR
     create_file_and_commit("feat: new file")
 
@@ -143,17 +118,13 @@ def test_bump_is_not_specify(mocker, capsys, tmpdir):
     assert expected_error_message in err
 
 
-def test_bump_when_not_new_commit(mocker, capsys, tmpdir):
-    with tmpdir.as_cwd():
-        with open("./pyproject.toml", "w") as f:
-            f.write("[tool.commitizen]\n" 'version="0.1.0"')
-        cmd.run("git init")
+def test_bump_when_not_new_commit(mocker, capsys, tmp_git_project):
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
 
-        testargs = ["cz", "bump", "--yes"]
-        mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(SystemExit):
+        cli.main()
 
-        with pytest.raises(SystemExit):
-            cli.main()
     expected_error_message = "[NO_COMMITS_FOUND]\n" "No new commits found."
     _, err = capsys.readouterr()
     assert expected_error_message in err
