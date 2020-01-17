@@ -12,8 +12,9 @@ class Changelog:
         self.config: BaseConfig = config
         self.cz = factory.commiter_factory(self.config)
 
-        # TODO: make these argument
+        # TODO: make these attribute arguments
         self.skip_merge = True
+        self.file_name = "CHANGELOG.md"
 
     def __call__(self):
         changelog_map = self.cz.changelog_map
@@ -25,21 +26,42 @@ class Changelog:
 
         pat = re.compile(changelog_pattern)
 
-        changelog_tree = OrderedDict({value: [] for value in changelog_map.values()})
+        changelog_entry_key = "Unreleased"
+        changelog_entry_values = OrderedDict({value: [] for value in changelog_map.values()})
         commits = git.get_commits()
+        tag_map = {tag.rev: tag.name for tag in git.get_tags()}
+
+        changelog_str = "# Changelog\n"
         for commit in commits:
-            if self.skip_merge and commit.startswith("Merge"):
+            if self.skip_merge and commit.message.startswith("Merge"):
                 continue
 
-            for message in commit.split("\n"):
+            if commit.rev in tag_map:
+                changelog_str += f"\n## {changelog_entry_key}\n"
+                for key, values in changelog_entry_values.items():
+                    if not values:
+                        continue
+                    changelog_str += f"* {key}\n"
+                    for value in values:
+                        changelog_str += f"    * {value}\n"
+                changelog_entry_key = tag_map[commit.rev]
+
+            for message in commit.message.split("\n"):
                 result = pat.search(message)
                 if not result:
                     continue
                 found_keyword = result.group(0)
-                processed_commit = self.cz.process_commit(commit)
-                changelog_tree[changelog_map[found_keyword]].append(processed_commit)
+                processed_commit = self.cz.process_commit(commit.message)
+                changelog_entry_values[changelog_map[found_keyword]].append(processed_commit)
                 break
 
-        # TODO: handle rev
-        # an entry of changelog contains 'rev -> change_type -> message'
-        # the code above handles `change_type -> message` part
+        changelog_str += f"\n## {changelog_entry_key}\n"
+        for key, values in changelog_entry_values.items():
+            if not values:
+                continue
+            changelog_str += f"* {key}\n"
+            for value in values:
+                changelog_str += f"    * {value}\n"
+
+        with open(self.file_name, "w") as changelog_file:
+            changelog_file.write(changelog_str)
