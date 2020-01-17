@@ -1,22 +1,9 @@
 import sys
-import contextlib
-import os
-import shutil
-import tempfile
 
 import pytest
 
 from commitizen import cli
 from commitizen import commands
-
-
-@contextlib.contextmanager
-def get_temp_dir():
-    temp_dir = tempfile.mkdtemp()
-    try:
-        yield temp_dir
-    finally:
-        shutil.rmtree(temp_dir)
 
 
 def test_check_jira_fails(mocker, capsys):
@@ -96,33 +83,26 @@ def test_check_no_conventional_commit(config, mocker, tmpdir):
     with pytest.raises(SystemExit):
         error_mock = mocker.patch("commitizen.out.error")
 
-        with get_temp_dir() as dir:
-
-            tempfile = os.path.join(dir, "temp_commit_file")
-            with open(tempfile, "w") as f:
-                f.write("no conventional commit")
-
-            check_cmd = commands.Check(
-                config=config, arguments={"commit_msg_file": tempfile}
-            )
-            check_cmd()
-            error_mock.assert_called_once()
-
-
-def test_check_conventional_commit(config, mocker):
-    success_mock = mocker.patch("commitizen.out.success")
-    with get_temp_dir() as dir:
-
-        tempfile = os.path.join(dir, "temp_commit_file")
-        with open(tempfile, "w") as f:
-            f.write("feat(lang): added polish language")
+        tempfile = tmpdir.join("temp_commit_file")
+        tempfile.write("no conventional commit")
 
         check_cmd = commands.Check(
             config=config, arguments={"commit_msg_file": tempfile}
         )
-
         check_cmd()
-        success_mock.assert_called_once()
+        error_mock.assert_called_once()
+
+
+def test_check_conventional_commit(config, mocker, tmpdir):
+    success_mock = mocker.patch("commitizen.out.success")
+
+    tempfile = tmpdir.join("temp_commit_file")
+    tempfile.write("feat(lang): added polish language")
+
+    check_cmd = commands.Check(config=config, arguments={"commit_msg_file": tempfile})
+
+    check_cmd()
+    success_mock.assert_called_once()
 
 
 def test_check_command_when_commit_file_not_found(config):
