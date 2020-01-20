@@ -1,7 +1,2 @@
 # Publish to pypi
 poetry publish --build -u $PYPI_USERNAME -p $PYPI_PASSWORD
-
-[ -z "${GITHUB_TOKEN}" ] && {
-    echo 'Missing input "github_token: ${{ secrets.GITHUB_TOKEN }}".';
-    exit 1;
-};
