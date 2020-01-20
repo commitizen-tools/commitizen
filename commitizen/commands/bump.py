@@ -70,9 +70,11 @@ class Bump:
         try:
             current_version_instance: Version = Version(self.parameters["version"])
         except TypeError:
-            out.error("[NO_VERSION_SPECIFIED]")
-            out.error("Check if current version is specified in config file, like:")
-            out.error("version = 0.4.3")
+            out.error(
+                "[NO_VERSION_SPECIFIED]\n"
+                "Check if current version is specified in config file, like:\n"
+                "version = 0.4.3\n"
+            )
             raise SystemExit(NO_VERSION_SPECIFIED)
 
         # Initialize values from sources (conf)
@@ -96,8 +98,7 @@ class Bump:
         # No commits, there is no need to create an empty tag.
         # Unless we previously had a prerelease.
         if not commits and not current_version_instance.is_prerelease:
-            out.error("[NO_COMMITS_FOUND]")
-            out.error("No new commits found.")
+            out.error("[NO_COMMITS_FOUND]\n" "No new commits found.")
             raise SystemExit(NO_COMMITS_FOUND)
 
         if increment is None:

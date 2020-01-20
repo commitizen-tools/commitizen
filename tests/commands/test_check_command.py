@@ -3,6 +3,7 @@ import sys
 import pytest
 
 from commitizen import cli
+from commitizen import commands
 
 
 def test_check_jira_fails(mocker, capsys):
@@ -76,3 +77,34 @@ def test_check_conventional_commit_succeeds(mocker, capsys):
     cli.main()
     out, _ = capsys.readouterr()
     assert "Commit validation: successful!" in out
+
+
+def test_check_no_conventional_commit(config, mocker, tmpdir):
+    with pytest.raises(SystemExit):
+        error_mock = mocker.patch("commitizen.out.error")
+
+        tempfile = tmpdir.join("temp_commit_file")
+        tempfile.write("no conventional commit")
+
+        check_cmd = commands.Check(
+            config=config, arguments={"commit_msg_file": tempfile}
+        )
+        check_cmd()
+        error_mock.assert_called_once()
+
+
+def test_check_conventional_commit(config, mocker, tmpdir):
+    success_mock = mocker.patch("commitizen.out.success")
+
+    tempfile = tmpdir.join("temp_commit_file")
+    tempfile.write("feat(lang): added polish language")
+
+    check_cmd = commands.Check(config=config, arguments={"commit_msg_file": tempfile})
+
+    check_cmd()
+    success_mock.assert_called_once()
+
+
+def test_check_command_when_commit_file_not_found(config):
+    with pytest.raises(FileNotFoundError):
+        commands.Check(config=config, arguments={"commit_msg_file": ""})()

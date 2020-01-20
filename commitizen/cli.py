@@ -179,6 +179,7 @@ def main():
         parser.print_help(sys.stderr)
         raise SystemExit()
 
+    # This is for the command required constraint in 2.0
     try:
         args = parser.parse_args()
     except TypeError:
@@ -195,7 +196,7 @@ def main():
             "'cz --version' will be deprecated in next major version. "
             "Please use 'cz version' command from your scripts"
         )
-        logging.getLogger("commitizen").setLevel(logging.DEBUG)
+        args.func = commands.Version
 
     if args.debug:
         warnings.warn(
@@ -205,7 +206,9 @@ def main():
         logging.getLogger("commitizen").setLevel(logging.DEBUG)
 
     # TODO: This try block can be removed after command is required in 2.0
+    # Handle the case that argument is given, but no command is provided
     try:
         args.func(conf, vars(args))()
     except AttributeError:
         out.error("Command is required")
+        raise SystemExit()
