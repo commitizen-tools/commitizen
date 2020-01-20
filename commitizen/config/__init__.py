@@ -1,18 +1,18 @@
-import os
 import warnings
 from pathlib import Path
 from typing import Optional
 
-from commitizen import defaults
+from commitizen import defaults, git, out
+from commitizen.error_codes import NOT_A_GIT_PROJECT
 from .base_config import BaseConfig
 from .toml_config import TomlConfig
 from .ini_config import IniConfig
 
 
 def load_global_conf() -> Optional[IniConfig]:
-    home = str(Path.home())
-    global_cfg = os.path.join(home, ".cz")
-    if not os.path.exists(global_cfg):
+    home = Path.home()
+    global_cfg = home / Path(".cz")
+    if not global_cfg.exists():
         return None
 
     # global conf doesnt make sense with commitizen bump
@@ -35,16 +35,27 @@ def load_global_conf() -> Optional[IniConfig]:
 def read_cfg() -> BaseConfig:
     conf = BaseConfig()
 
+    git_project_root = git.find_git_project_root()
+    if not git_project_root:
+        out.error(
+            "fatal: not a git repository (or any of the parent directories): .git"
+        )
+        raise SystemExit(NOT_A_GIT_PROJECT)
+
     allowed_cfg_files = defaults.config_files
-    for filename in allowed_cfg_files:
-        config_file_exists = os.path.exists(filename)
-        if not config_file_exists:
+    cfg_paths = (
+        path / Path(filename)
+        for path in [Path("."), git_project_root]
+        for filename in allowed_cfg_files
+    )
+    for filename in cfg_paths:
+        if not filename.exists():
             continue
 
         with open(filename, "r") as f:
             data: str = f.read()
 
-        if "toml" in filename:
+        if "toml" in filename.suffix:
             _conf = TomlConfig(data=data, path=filename)
         else:
             warnings.warn(

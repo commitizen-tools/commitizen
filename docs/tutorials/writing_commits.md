@@ -1,5 +1,5 @@
-In order for this project to work well in your pipeline, a commit convention
-must be follow.
+For this project to work well in your pipeline, a commit convention
+must be followed.
 
 By default commitizen uses the known [conventional commits][conventional_commits], but you can create
 your own following the docs information over [customization][customization].
@@ -7,15 +7,14 @@ your own following the docs information over [customization][customization].
 ## Conventional commits
 
 If you are using [conventional commits][conventional_commits], the most important
-thing to know, is that you must begin your commits with at least one of this
-tags: `fix`, `feat`. And if you introduce a breaking change, then, you must
+thing to know is that you must begin your commits with at least one of these tags: `fix`, `feat`. And if you introduce a breaking change, then, you must
 add to your commit body the following `BREAKING CHANGE`.
 Using these 3 keywords will allow the proper identification of the semantic version.
-Of course there are other keywords, but I'll leave it to the reader to explore them.
+Of course, there are other keywords, but I'll leave it to the reader to explore them.
 
 ## Writing commits
 
-Not to the important part, when writing commits it's important to think about:
+Not to the important part, when writing commits, it's important to think about:
 
 - Your future self
 - Your colleagues
@@ -28,10 +27,8 @@ understand what happened.
 - **Keep the message short**: Makes the list of commits more readable (~50 chars).
 - **Talk imperative**: Follow this rule: `If applied, this commit will <commit message>`
 - **Think about the CHANGELOG**: Your commits will probably end up in the changelog
-  so try writing for it, but also keep in mind that you can skip sending commits to
-  the CHANGELOG by using diffrent keywords (like `build`).
-- **Use a commit per new feature**: if you introduce multiple things related to
-  the same commit, squash them. This is useful for auto-generating CHANGELOG.
+  so try writing for it, but also keep in mind that you can skip sending commits to the CHANGELOG by using different keywords (like `build`).
+- **Use a commit per new feature**: if you introduce multiple things related to the same commit, squash them. This is useful for auto-generating CHANGELOG.
 
 | Do's | Don'ts |
 | ---- | ------ |

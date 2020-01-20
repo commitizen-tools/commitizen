@@ -1,8 +1,10 @@
 import os
+from pathlib import Path
 
 import pytest
 
-from commitizen import config, defaults
+from commitizen import config, defaults, git
+
 
 PYPROJECT = """
 [tool.commitizen]
@@ -126,3 +128,26 @@ def test_set_key(configure_supported_files, config_files_manager):
     _conf.set_key("version", "2.0.0")
     cfg = config.read_cfg()
     assert cfg.settings == _new_settings
+
+
+def test_find_git_project_root(tmpdir):
+    assert git.find_git_project_root() == Path(os.getcwd())
+
+    with tmpdir.as_cwd() as _:
+        assert git.find_git_project_root() is None
+
+
+def test_read_cfg_when_not_in_a_git_project(tmpdir):
+    with tmpdir.as_cwd() as _:
+        with pytest.raises(SystemExit):
+            config.read_cfg()
+
+
+class TestTomlConfig:
+    def test_init_empty_config_file(self, tmpdir):
+        path = tmpdir.mkdir("commitizen").join(".cz.toml")
+        toml_config = config.TomlConfig(data="", path=path)
+        toml_config.init_empty_config_file()
+
+        with open(path, "r") as toml_file:
+            assert toml_file.read() == "[tool.commitizen]"

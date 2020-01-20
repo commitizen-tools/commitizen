@@ -13,19 +13,19 @@ versions](https://img.shields.io/pypi/pyversions/commitizen.svg?style=flat-squar
 
 Commitizen is a tool designed for teams.
 
-Its main purpose is to define a standard way of commiting rules
+Its main purpose is to define a standard way of committing rules
 and communicating it (using the cli provided by commitizen).
 
-The reasoning behind it is that is easier to read, and enforces writing
+The reasoning behind it is that it is easier to read, and enforces writing
 descriptive commits.
 
-Besides that, having a convetion on your commits, makes it possible to
+Besides that, having a convention on your commits makes it possible to
 parse them and use them for something else, like generating automatically
 the version or a changelog.
 
 ### Commitizen features
 
-- Command line utility to create commits with your rules. Defaults: [Conventional commits][conventional_commits]
+- Command-line utility to create commits with your rules. Defaults: [Conventional commits][conventional_commits]
 - Display information about your commit rules (commands: schema, example, info)
 - Bump version automatically using [semantic verisoning][semver] based on the commits. [Read More](./bump.md)
 - Generate a changelog using [Keep a changelog][keepchangelog] (Planned feature)

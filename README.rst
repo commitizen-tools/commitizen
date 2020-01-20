@@ -2,7 +2,7 @@
 Commitizen
 =============
 
-    Python 3 command line utility to standardize commit messages and bump version
+    Python 3 command-line utility to standardize commit messages and bump version
 
 
 .. image:: https://github.com/Woile/commitizen/workflows/Python%20package/badge.svg
@@ -43,13 +43,13 @@ About
 
 Commitizen is a tool designed for teams.
 
-Its main purpose is to define a standard way of commiting rules
+Its main purpose is to define a standard way of committing rules
 and communicating it (using the cli provided by commitizen).
 
-The reasoning behind it is that is easier to read, and enforces writing
+The reasoning behind it is that it is easier to read, and enforces writing
 descriptive commits.
 
-Besides that, having a convention on your commits, makes it possible to
+Besides that, having a convention on your commits makes it possible to
 parse them and use them for something else, like generating automatically
 the version or a changelog.
 
@@ -75,7 +75,7 @@ Installation
 Features
 ========
 
-- Command line utility to create commits with your rules. Defaults: `conventional commits`_
+- Command-line utility to create commits with your rules. Defaults: `conventional commits`_
 - Display information about your commit rules (commands: schema, example, info)
 - Bump version automatically using semantic verisoning based on the commits. `Read More <./docs/bump.md>`_
 - Generate a changelog using "Keep a changelog" (Planned feature)
@@ -102,7 +102,7 @@ This is an example of how the git messages history would look like:
     docs(README): added about, installation, creating, etc
     feat(config): new loads from ~/.cz and working project .cz .cz.cfg and setup.cfg
 
-And then using ``cz bump`` you can change the version of your project
+And then, by using ``cz bump`` , you can change the version of your project.
 
 ``feat`` to ``MINOR``
 ``fix`` to ``PATCH``
@@ -111,7 +111,7 @@ And then using ``cz bump`` you can change the version of your project
 Commitizens
 ===========
 
-These are the available commiting styles by default:
+These are the available committing styles by default:
 
 * cz_conventional_commits: `conventional commits`_
 * cz_jira: `jira smart commits <https://confluence.atlassian.com/fisheye/using-smart-commits-298976812.html>`_
@@ -156,18 +156,23 @@ Usage
     optional arguments:
     -h, --help            show this help message and exit
     --debug               use debug mode
-    -n NAME, --name NAME  use the given commitizen
+    -n NAME, --name NAME  use the given commitizen (default:
+                            cz_conventional_commits)
     --version             get the version of the installed commitizen
 
     commands:
-    {ls,commit,c,example,info,schema,bump,check}
+    {ls,commit,c,example,info,schema,bump,version,check,init}
         ls                  show available commitizens
         commit (c)          create new commit
         example             show commit example
         info                show information about the cz
         schema              show commit schema
         bump                bump semantic version based on the git log
-        check               enforce the project to always use conventional commits
+        version             get the version of the installed commitizen or the
+                            current project (default: installed commitizen)
+        check               validates that a commit message matches the commitizen
+                            schema
+        init                init commitizen configuration
 
 Contributing
 ============

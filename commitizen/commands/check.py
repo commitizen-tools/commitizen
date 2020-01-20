@@ -3,10 +3,7 @@ import re
 
 from commitizen import factory, out
 from commitizen.config import BaseConfig
-
-
-NO_COMMIT_MSG = 3
-INVALID_COMMIT_MSG = 5
+from commitizen.error_codes import INVALID_COMMIT_MSG
 
 
 class Check:

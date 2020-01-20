@@ -1,8 +1,8 @@
-### Create a new release usign GitLab CI
+### Create a new release using GitLab CI
 
-For this example, we have a `python/django` application and `Docker` as containerization tool.
+For this example, we have a `python/django` application and `Docker` as a containerization tool.
 
-*Goal*: Bump a new version every time that a change occurs on `master` branch. The bump should be executed automatically by the `CI` process.
+*Goal*: Bump a new version every time that a change occurs on the `master` branch. The bump should be executed automatically by the `CI` process.
 
 #### Development Workflow:
 
@@ -10,11 +10,11 @@ For this example, we have a `python/django` application and `Docker` as containe
 2. A developer creates a merge request (MR) against `master` branch
 3. When the `MR` is merged into master, the 2 stages of the CI are executed
 4. For simplification, we store the software version in a file called `VERSION`. You can use any file that you want as `commitizen` supports it.
-5. The commit message executed automatically by the `CI` must include `[skip-ci]` in the message, otherwise the process will generate a loop. You can define the message structure in [commitizen](https://woile.github.io/commitizen/bump/) as well.
+5. The commit message executed automatically by the `CI` must include `[skip-ci]` in the message; otherwise, the process will generate a loop. You can define the message structure in [commitizen](https://woile.github.io/commitizen/bump/) as well.
 
 #### Gitlab Configuration:
 
-In order to be able to change files and push new changes with `Gitlab CI` runners, we need to have a `ssh` key and configure a git user.
+To be able to change files and push new changes with `Gitlab CI` runners, we need to have a `ssh` key and configure a git user.
 
 First, let's create a `ssh key`. The only requirement is to create it without a passphrase:
 
@@ -24,15 +24,15 @@ ssh-keygen -f deploy_key -N ""
 
 The previous command will create a private and public key under the files `deploy_key` and `deploy_key.pub`. We will use them later.
 
-For the git user, we need an email and username. You can choose whatever you want, in this example, we choose `ci-runner@myproject.com` and `admin` respectively.
+For the git user, we need an email and username. You can choose whatever you want; in this example, we choose `ci-runner@myproject.com` and `admin`, respectively.
 
 Now, we need to create three environment variables that will be visible for the runners. They should be created in the `variables` section under `settings/ci_cd`:
 
 ![gitlab variables](../images/gitlab_ci/gitlab_variables.png)
 
-Create `SSH_PRIVATE_KEY`, `CI_EMAIL`, `CI_USERNAME` variables and fill them with the `private_key`, `email` and `username` that we have created previously.
+Create `SSH_PRIVATE_KEY`, `CI_EMAIL`, `CI_USERNAME` variables, and fill them with the `private_key`, `email` and `username` that we have created previously.
 
-The latest step is to create a `deploy key.` To do this, we should create it under the section `settings/repository` and fill it with the `public key` generated before. Check `Write access allowed`, otherwise, the runner won't be able to write the changes to the repository.
+The latest step is to create a `deploy key.` To do this, we should create it under the section `settings/repository` and fill it with the `public key` generated before. Check `Write access allowed`; otherwise, the runner won't be able to write the changes to the repository.
 
 ![gitlab deploy key](../images/gitlab_ci/gitlab_deploy_key.png)
 
@@ -46,7 +46,7 @@ tip: If the CI raise some errors, try to unprotect the private key.
 
 2. Define `stages` and `jobs`. For this example, we define two `stages` with one `job` each one.
     * Test the application.
-    * Auto bump the version. Means changing the file/s that reflects the version, creating a new commit and git tag.
+    * Auto bump the version. This means changing the file/s that reflects the version, creating a new commit and git tag.
 
 #### Stages and Jobs
 
@@ -105,9 +105,9 @@ auto-bump:
     - variables
 ```
 
-So, every time that a developer push to any branch the `test` job is executed. If the branch is `master` and the test jobs success, the `auto-bump` takes place.
-To be able to push using the Gitlab runner we have to set the ssh key, configure git and finally execute the auto bump.
+So, every time that a developer push to any branch, the `test` job is executed. If the branch is `master` and the test jobs success, the `auto-bump` takes place.
+To be able to push using the Gitlab runner, we have to set the ssh key, configure git, and finally execute the auto bump.
 
-After merging the new changed into master we have the final result:
+After merging the new changed into master, we have the final result:
 
 ![gitlab final ci result](../images/gitlab_ci/gitlab_final_ci_result.png)

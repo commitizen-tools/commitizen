@@ -5,12 +5,13 @@ from packaging.version import Version
 
 from commitizen import bump, factory, git, out
 from commitizen.config import BaseConfig
-
-NO_COMMITS_FOUND = 3
-NO_VERSION_SPECIFIED = 4
-NO_PATTERN_MAP = 7
-COMMIT_FAILED = 8
-TAG_FAILED = 9
+from commitizen.error_codes import (
+    NO_COMMITS_FOUND,
+    NO_VERSION_SPECIFIED,
+    NO_PATTERN_MAP,
+    COMMIT_FAILED,
+    TAG_FAILED,
+)
 
 
 class Bump:

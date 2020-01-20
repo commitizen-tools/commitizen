@@ -1,6 +1,6 @@
 Customizing commitizen is not hard at all.
 
-## Customize through customize class
+## Customize through customizing a class
 
 The basic steps are:
 
@@ -21,8 +21,7 @@ See [Lee-W/commitizen_cz_template](https://github.com/Lee-W/commitizen_cz_templa
 
 ### Custom commit rules
 
-Create a file starting with `cz_` for example `cz_jira.py`. This prefix
-is used to detect the plugin. Same method [flask uses]
+Create a file starting with `cz_`, for example `cz_jira.py`. This prefix is used to detect the plugin. Same method [flask uses]
 
 Inherit from `BaseCommitizen`, and you must define `questions` and
 `message`. The others are optional.
@@ -114,7 +113,7 @@ You need to define 2 parameters inside `BaseCommitizen`.
 | `bump_pattern` | `str` | `None` | Regex to extract information from commit (subject and body) |
 | `bump_map` | `dict` | `None` | Dictionary mapping the extracted information to a `SemVer` increment type (`MAJOR`, `MINOR`, `PATCH`) |
 
-Let's see an example
+Let's see an example.
 
 ```python
 from commitizen.cz.base import BaseCommitizen
@@ -125,7 +124,7 @@ class StrangeCommitizen(BaseCommitizen):
     bump_map = {"break": "MAJOR", "new": "MINOR", "fix": "PATCH", "hotfix": "PATCH"}
 ```
 
-That's it, your commitizen now supports custom rules, and you can run
+That's it, your commitizen now supports custom rules, and you can run.
 
 ```bash
 cz -n cz_strange bump

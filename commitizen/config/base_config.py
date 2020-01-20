@@ -23,7 +23,7 @@ class BaseConfig:
         For now only strings are supported.
         We use to update the version number.
         """
-        return self
+        raise NotImplementedError()
 
     def update(self, data: dict):
         self._settings.update(data)
