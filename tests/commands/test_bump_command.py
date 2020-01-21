@@ -106,6 +106,7 @@ def test_bump_is_not_specify(mocker, capsys, tmpdir):
 
     with pytest.raises(SystemExit):
         with tmpdir.as_cwd():
+            cmd.run("git init")
             cli.main()
 
     expected_error_message = (
