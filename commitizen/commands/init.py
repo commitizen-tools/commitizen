@@ -5,7 +5,7 @@ import questionary
 from commitizen import factory, out
 from commitizen.cz import registry
 from commitizen.config import BaseConfig, TomlConfig, IniConfig
-from commitizen.git import get_latest_tag, get_all_tags
+from commitizen.git import get_latest_tag_name, get_tag_names
 from commitizen.defaults import config_files
 
 
@@ -57,7 +57,7 @@ class Init:
         return name
 
     def _ask_tag(self) -> str:
-        latest_tag = get_latest_tag()
+        latest_tag = get_latest_tag_name()
         if not latest_tag:
             out.error("No Existing Tag. Set tag to v0.0.1")
             return "0.0.1"
@@ -66,14 +66,14 @@ class Init:
             f"Is {latest_tag} the latest tag?", style=self.cz.style, default=False
         ).ask()
         if not is_correct_tag:
-            tags = get_all_tags()
+            tags = get_tag_names()
             if not tags:
                 out.error("No Existing Tag. Set tag to v0.0.1")
                 return "0.0.1"
 
             latest_tag = questionary.select(
                 "Please choose the latest tag: ",
-                choices=get_all_tags(),
+                choices=get_tag_names(),
                 style=self.cz.style,
             ).ask()
 

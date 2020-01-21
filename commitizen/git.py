@@ -15,9 +15,9 @@ class GitObject:
 
 class GitCommit(GitObject):
     def __init__(self, rev, title, body=""):
-        self.rev = rev
-        self.title = title
-        self.body = body
+        self.rev = rev.strip()
+        self.title = title.strip()
+        self.body = body.strip()
 
     @property
     def message(self):
@@ -28,9 +28,10 @@ class GitCommit(GitObject):
 
 
 class GitTag(GitObject):
-    def __init__(self, name, rev):
-        self.name = name
-        self.rev = rev
+    def __init__(self, name, rev, date):
+        self.rev = rev.strip()
+        self.name = name.strip()
+        self.date = date.strip()
 
     def __repr__(self):
         return f"{self.name} ({self.rev})"
@@ -85,19 +86,34 @@ def get_commits(
     return git_commits
 
 
+def get_tags(dateformat: str = "%Y-%m-%d") -> List[GitTag]:
+    inner_delimiter = "---inner_delimiter---"
+    formatter = (
+        f"'%(refname:lstrip=2){inner_delimiter}"
+        f"%(objectname){inner_delimiter}"
+        f"%(committerdate:format:{dateformat})'"
+    )
+    c = cmd.run(f"git tag --format={formatter} --sort=-committerdate")
+    if c.err or not c.out:
+        return []
+
+    git_tags = [GitTag(*line.split(inner_delimiter)) for line in c.out.split("\n")[:-1]]
+    return git_tags
+
+
 def tag_exist(tag: str) -> bool:
     c = cmd.run(f"git tag --list {tag}")
     return tag in c.out
 
 
-def get_latest_tag() -> Optional[str]:
+def get_latest_tag_name() -> Optional[str]:
     c = cmd.run("git describe --abbrev=0 --tags")
     if c.err:
         return None
     return c.out.strip()
 
 
-def get_all_tags() -> Optional[List[str]]:
+def get_tag_names() -> Optional[List[str]]:
     c = cmd.run("git tag --list")
     if c.err:
         return []
@@ -109,24 +125,6 @@ def find_git_project_root() -> Optional[Path]:
     if not c.err:
         return Path(c.out.strip())
     return None
-
-
-def get_tags_with_rev() -> List[GitTag]:
-    tag_delimiter = "---tag-delimiter---"
-    c = cmd.run(
-        (
-            f"git tag --format='%(refname:lstrip=2){tag_delimiter}%(objectname)'"
-            " --sort=-committerdate"
-        )
-    )
-    if c.err or not c.out:
-        return []
-
-    git_tags = []
-    for line in c.out.split("\n")[:-1]:
-        name, rev = line.split(tag_delimiter)
-        git_tags.append(GitTag(name.strip(), rev.strip()))
-    return git_tags
 
 
 def is_staging_clean() -> bool:
