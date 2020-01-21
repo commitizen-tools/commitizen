@@ -6,6 +6,7 @@ from typing import List, Optional, Union
 
 from packaging.version import Version
 
+from commitizen.git import GitCommit
 from commitizen.defaults import (
     MAJOR,
     MINOR,
@@ -17,7 +18,7 @@ from commitizen.defaults import (
 
 
 def find_increment(
-    messages: List[str], regex: str = bump_pattern, increments_map: dict = bump_map
+    commits: List[GitCommit], regex: str = bump_pattern, increments_map: dict = bump_map
 ) -> Optional[str]:
 
     # Most important cases are major and minor.
@@ -26,18 +27,19 @@ def find_increment(
     pattern = re.compile(regex)
     increment = None
 
-    for message in messages:
-        result = pattern.search(message)
-        if not result:
-            continue
-        found_keyword = result.group(0)
-        new_increment = increments_map_default[found_keyword]
-        if new_increment == "MAJOR":
+    for commit in commits:
+        for message in commit.message.split("\n"):
+            result = pattern.search(message)
+            if not result:
+                continue
+            found_keyword = result.group(0)
+            new_increment = increments_map_default[found_keyword]
+            if new_increment == "MAJOR":
+                increment = new_increment
+                break
+            elif increment == "MINOR" and new_increment == "PATCH":
+                continue
             increment = new_increment
-            break
-        elif increment == "MINOR" and new_increment == "PATCH":
-            continue
-        increment = new_increment
 
     return increment
 

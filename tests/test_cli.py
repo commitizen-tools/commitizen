@@ -35,14 +35,14 @@ def test_name(mocker, capsys):
     assert out.startswith("JRA")
 
 
-def test_name_default_value(tmpdir, mocker, capsys):
-    with tmpdir.as_cwd() as _:
-        testargs = ["cz", "example"]
-        mocker.patch.object(sys, "argv", testargs)
+@pytest.mark.usefixtures("tmp_git_project")
+def test_name_default_value(mocker, capsys):
+    testargs = ["cz", "example"]
+    mocker.patch.object(sys, "argv", testargs)
 
-        cli.main()
-        out, _ = capsys.readouterr()
-        assert out.startswith("fix: correct minor typos in code")
+    cli.main()
+    out, _ = capsys.readouterr()
+    assert out.startswith("fix: correct minor typos in code")
 
 
 def test_ls(mocker, capsys):
