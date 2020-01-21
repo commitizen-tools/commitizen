@@ -2,19 +2,8 @@ import sys
 
 import pytest
 
-from commitizen import cli, cmd
+from commitizen import cli
 from commitizen.__version__ import __version__
-
-
-@pytest.fixture(scope="function")
-def tmp_git_project(tmpdir):
-    with tmpdir.as_cwd():
-        with open("pyproject.toml", "w") as f:
-            f.write("[tool.commitizen]\n" 'version="0.1.0"')
-
-        cmd.run("git init")
-
-        yield
 
 
 def test_sysexit_no_argv(mocker, capsys):

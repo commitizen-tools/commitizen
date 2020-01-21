@@ -8,17 +8,6 @@ import pytest
 from commitizen import cli, cmd, git
 
 
-@pytest.fixture(scope="function")
-def tmp_git_project(tmpdir):
-    with tmpdir.as_cwd():
-        with open("pyproject.toml", "w") as f:
-            f.write("[tool.commitizen]\n" 'version="0.1.0"')
-
-        cmd.run("git init")
-
-        yield
-
-
 def create_file_and_commit(message: str, filename: Optional[str] = None):
     if not filename:
         filename = str(uuid.uuid4())
@@ -28,7 +17,7 @@ def create_file_and_commit(message: str, filename: Optional[str] = None):
     git.commit(message)
 
 
-@pytest.mark.usefixtures("tmp_git_project")
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_command(mocker):
     # MINOR
     create_file_and_commit("feat: new file")
@@ -101,13 +90,12 @@ def test_bump_when_bumpping_is_not_support(mocker, capsys, tmpdir):
         assert "'cz_jira' rule does not support bump" in err
 
 
-def test_bump_is_not_specify(mocker, capsys, tmpdir):
+@pytest.mark.usefixtures("tmp_git_project")
+def test_bump_is_not_specify(mocker, capsys):
     mocker.patch.object(sys, "argv", ["cz", "bump"])
 
     with pytest.raises(SystemExit):
-        with tmpdir.as_cwd():
-            cmd.run("git init")
-            cli.main()
+        cli.main()
 
     expected_error_message = (
         "[NO_VERSION_SPECIFIED]\n"
@@ -119,7 +107,8 @@ def test_bump_is_not_specify(mocker, capsys, tmpdir):
     assert expected_error_message in err
 
 
-def test_bump_when_not_new_commit(mocker, capsys, tmp_git_project):
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_when_not_new_commit(mocker, capsys):
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
 
