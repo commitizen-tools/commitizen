@@ -20,17 +20,11 @@ class Bump:
     def __init__(self, config: BaseConfig, arguments: dict):
         self.config: BaseConfig = config
         self.arguments: dict = arguments
-        self.parameters: dict = {
+        self.bump_settings: dict = {
             **config.settings,
             **{
                 key: arguments[key]
-                for key in [
-                    "dry_run",
-                    "tag_format",
-                    "prerelease",
-                    "increment",
-                    "bump_message",
-                ]
+                for key in ["tag_format", "prerelease", "increment", "bump_message"]
                 if arguments[key] is not None
             },
         }
@@ -65,10 +59,10 @@ class Bump:
         )
         return increment
 
-    def __call__(self):
+    def __call__(self):  # noqa: C901
         """Steps executed to bump."""
         try:
-            current_version_instance: Version = Version(self.parameters["version"])
+            current_version_instance: Version = Version(self.bump_settings["version"])
         except TypeError:
             out.error(
                 "[NO_VERSION_SPECIFIED]\n"
@@ -79,18 +73,20 @@ class Bump:
 
         # Initialize values from sources (conf)
         current_version: str = self.config.settings["version"]
-        tag_format: str = self.parameters["tag_format"]
-        bump_commit_message: str = self.parameters["bump_message"]
+
+        tag_format: str = self.bump_settings["tag_format"]
+        bump_commit_message: str = self.bump_settings["bump_message"]
+        version_files: list = self.bump_settings["version_files"]
+
+        dry_run: bool = self.arguments["dry_run"]
+        is_yes: bool = self.arguments["yes"]
+        increment: Optional[str] = self.arguments["increment"]
+        prerelease: str = self.arguments["prerelease"]
+        is_files_only: Optional[bool] = self.arguments["files_only"]
+
         current_tag_version: str = bump.create_tag(
             current_version, tag_format=tag_format
         )
-        version_files: list = self.parameters["version_files"]
-        dry_run: bool = self.parameters["dry_run"]
-
-        is_yes: bool = self.arguments["yes"]
-        prerelease: str = self.arguments["prerelease"]
-        increment: Optional[str] = self.arguments["increment"]
-        is_files_only: Optional[bool] = self.arguments["files_only"]
 
         is_initial = self.is_initial_tag(current_tag_version, is_yes)
         if is_initial:
@@ -121,9 +117,11 @@ class Bump:
         )
 
         # Report found information
-        out.write(message)
-        out.write(f"tag to create: {new_tag_version}")
-        out.write(f"increment detected: {increment}")
+        out.write(
+            f"message\n"
+            f"tag to create: {new_tag_version}\n"
+            f"increment detected: {increment}\n"
+        )
 
         # Do not perform operations over files or git.
         if dry_run:
