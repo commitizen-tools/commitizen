@@ -52,12 +52,6 @@ data = {
                         "help": "show changelog to stdout",
                     },
                     {
-                        "name": "--skip-merge",
-                        "action": "store_true",
-                        "default": False,
-                        "help": "whether to skip merge commit",
-                    },
-                    {
                         "name": "--file-name",
                         "default": "CHANGELOG.md",
                         "help": "file name of changelog",

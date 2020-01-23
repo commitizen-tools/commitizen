@@ -1,13 +1,13 @@
 # CHANGELOG
 
-{% for entry_key, entry_value in entries.items()-%}
+{% for entry_key, entry_value in entries.items() -%}
 ## {{entry_key}}
-{% for type, commits in entry_value.items()-%}
-{%-if commits-%}
+{% for type, commits in entry_value.items() -%}
+{%- if commits -%}
 ### {{type}}
 {% for commit in commits-%}
 - {{commit}}
-{%-endfor %}
+{%- endfor %}
 {% endif %}
-{%-endfor %}
-{% endfor %}
+{%- endfor %}
+{%- endfor %}
