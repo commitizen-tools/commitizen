@@ -5,7 +5,7 @@ from jinja2 import Template
 
 from commitizen import factory, out, git, cz
 from commitizen.config import BaseConfig
-from commitizen.error_codes import NO_COMMITS_FOUND
+from commitizen.error_codes import NO_COMMITS_FOUND, NO_PATTERN_MAP
 
 try:
     import importlib.resources as pkg_resources
@@ -32,11 +32,13 @@ class Changelog:
             out.error(
                 f"'{self.config.settings['name']}' rule does not support changelog"
             )
+            raise SystemExit(NO_PATTERN_MAP)
 
         pat = re.compile(changelog_pattern)
 
         commits = git.get_commits(start=self.start_rev)
         if not commits:
+            out.error("No commits found")
             raise SystemExit(NO_COMMITS_FOUND)
 
         tag_map = {tag.rev: tag.name for tag in git.get_tags()}

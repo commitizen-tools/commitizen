@@ -7,6 +7,8 @@ from prompt_toolkit.styles import Style, merge_styles
 class BaseCommitizen(metaclass=ABCMeta):
     bump_pattern: Optional[str] = None
     bump_map: Optional[dict] = None
+    changelog_pattern: Optional[str] = None
+    changelog_map: Optional[dict] = None
     default_style_config: List[Tuple[str, str]] = [
         ("qmark", "fg:#ff9d00 bold"),
         ("question", "bold"),
