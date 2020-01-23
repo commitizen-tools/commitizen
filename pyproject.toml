@@ -51,7 +51,7 @@ colorama = "^0.4.1"
 termcolor = "^1.1"
 packaging = ">=19,<21"
 tomlkit = "^0.5.3"
-jinja2 = {version = "^2.10.3", optional = true}
+jinja2 = "^2.10.3"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.2"
