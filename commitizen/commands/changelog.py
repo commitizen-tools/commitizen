@@ -35,14 +35,10 @@ class Changelog:
 
         pat = re.compile(changelog_pattern)
 
-        entries = OrderedDict()
-
-        if self.start_rev:
-            commits = git.get_commits(start=self.start_rev)
-        else:
-            commits = git.get_commits()
+        commits = git.get_commits(start=self.start_rev)
         tag_map = {tag.rev: tag.name for tag in git.get_tags()}
 
+        entries = OrderedDict()
         # The latest commit is not tagged
         latest_commit = commits[0]
         if latest_commit.rev not in tag_map:
