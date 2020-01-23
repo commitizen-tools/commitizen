@@ -1,71 +1,81 @@
 import re
 from collections import OrderedDict
 
-from commitizen import factory, out, git
+from jinja2 import Template
+
+from commitizen import factory, out, git, cz
 from commitizen.config import BaseConfig
+
+try:
+    import importlib.resources as pkg_resources
+except ImportError:
+    # Try backported to PY<37 `importlib_resources`.
+    import importlib_resources as pkg_resources
 
 
 class Changelog:
     """Generate a changelog based on the commit history."""
 
-    def __init__(self, config: BaseConfig, *args):
+    def __init__(self, config: BaseConfig, args):
         self.config: BaseConfig = config
         self.cz = factory.commiter_factory(self.config)
 
         # TODO: make these attribute arguments
-        self.skip_merge = True
-        self.file_name = "CHANGELOG.md"
+        self.skip_merge = args["skip_merge"]
+        self.file_name = args["file_name"]
+        self.dry_run = args["dry_run"]
 
     def __call__(self):
         changelog_map = self.cz.changelog_map
         changelog_pattern = self.cz.changelog_pattern
-        if not changelog_map:
+        if not changelog_map or not changelog_pattern:
             out.error(
                 f"'{self.config.settings['name']}' rule does not support changelog"
             )
 
         pat = re.compile(changelog_pattern)
 
-        changelog_entry_key = "Unreleased"
-        changelog_entry_values = OrderedDict(
-            {value: [] for value in changelog_map.values()}
-        )
+        entries = OrderedDict()
+
         commits = git.get_commits()
         tag_map = {tag.rev: tag.name for tag in git.get_tags()}
 
-        changelog_str = "# Changelog\n"
+        # The latest commit is not tagged
+        latest_commit = commits[0]
+        if latest_commit.rev not in tag_map:
+            current_key = "Unreleased"
+            entries[current_key] = OrderedDict(
+                {value: [] for value in changelog_map.values()}
+            )
+        else:
+            current_key = tag_map[latest_commit.rev]
+
         for commit in commits:
             if self.skip_merge and commit.message.startswith("Merge"):
                 continue
 
             if commit.rev in tag_map:
-                changelog_str += f"\n## {changelog_entry_key}\n"
-                for key, values in changelog_entry_values.items():
-                    if not values:
-                        continue
-                    changelog_str += f"* {key}\n"
-                    for value in values:
-                        changelog_str += f"    * {value}\n"
-                changelog_entry_key = tag_map[commit.rev]
-
-            for message in commit.message.split("\n"):
-                result = pat.search(message)
-                if not result:
-                    continue
-                found_keyword = result.group(0)
-                processed_commit = self.cz.process_commit(commit.message)
-                changelog_entry_values[changelog_map[found_keyword]].append(
-                    processed_commit
+                current_key = tag_map[commit.rev]
+                entries[current_key] = OrderedDict(
+                    {value: [] for value in changelog_map.values()}
                 )
-                break
 
-        changelog_str += f"\n## {changelog_entry_key}\n"
-        for key, values in changelog_entry_values.items():
-            if not values:
+            matches = pat.match(commit.message)
+            if not matches:
                 continue
-            changelog_str += f"* {key}\n"
-            for value in values:
-                changelog_str += f"    * {value}\n"
+
+            processed_commit = self.cz.process_commit(commit.message)
+            for group_name, commit_type in changelog_map.items():
+                if matches.group(group_name):
+                    entries[current_key][commit_type].append(processed_commit)
+                    break
+
+        template_file = pkg_resources.read_text(cz, "changelog_template.j2")
+        jinja_template = Template(template_file)
+        changelog_str = jinja_template.render(entries=entries)
+        if self.dry_run:
+            out.write(changelog_str)
+            raise SystemExit(0)
 
         with open(self.file_name, "w") as changelog_file:
             changelog_file.write(changelog_str)
