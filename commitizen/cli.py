@@ -60,6 +60,14 @@ data = {
                         "default": "CHANGELOG.md",
                         "help": "file name of changelog",
                     },
+                    {
+                        "name": "--start-rev",
+                        "default": None,
+                        "help": (
+                            "start rev of the changelog."
+                            "If not set, it will generate changelog from the start"
+                        ),
+                    },
                 ],
             },
             {

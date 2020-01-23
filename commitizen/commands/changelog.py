@@ -20,10 +20,10 @@ class Changelog:
         self.config: BaseConfig = config
         self.cz = factory.commiter_factory(self.config)
 
-        # TODO: make these attribute arguments
         self.skip_merge = args["skip_merge"]
         self.file_name = args["file_name"]
         self.dry_run = args["dry_run"]
+        self.start_rev = args["start_rev"]
 
     def __call__(self):
         changelog_map = self.cz.changelog_map
@@ -37,7 +37,10 @@ class Changelog:
 
         entries = OrderedDict()
 
-        commits = git.get_commits()
+        if self.start_rev:
+            commits = git.get_commits(start=self.start_rev)
+        else:
+            commits = git.get_commits()
         tag_map = {tag.rev: tag.name for tag in git.get_tags()}
 
         # The latest commit is not tagged
