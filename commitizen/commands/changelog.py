@@ -5,6 +5,7 @@ from jinja2 import Template
 
 from commitizen import factory, out, git, cz
 from commitizen.config import BaseConfig
+from commitizen.error_codes import NO_COMMITS_FOUND
 
 try:
     import importlib.resources as pkg_resources
@@ -36,6 +37,9 @@ class Changelog:
         pat = re.compile(changelog_pattern)
 
         commits = git.get_commits(start=self.start_rev)
+        if not commits:
+            raise SystemExit(NO_COMMITS_FOUND)
+
         tag_map = {tag.rev: tag.name for tag in git.get_tags()}
 
         entries = OrderedDict()
