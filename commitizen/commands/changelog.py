@@ -21,7 +21,6 @@ class Changelog:
         self.config: BaseConfig = config
         self.cz = factory.commiter_factory(self.config)
 
-        self.skip_merge = args["skip_merge"]
         self.file_name = args["file_name"]
         self.dry_run = args["dry_run"]
         self.start_rev = args["start_rev"]
@@ -54,9 +53,6 @@ class Changelog:
             current_key = tag_map[latest_commit.rev]
 
         for commit in commits:
-            if self.skip_merge and commit.message.startswith("Merge"):
-                continue
-
             if commit.rev in tag_map:
                 current_key = tag_map[commit.rev]
                 entries[current_key] = OrderedDict(
