@@ -1,17 +1,12 @@
 import re
+import pkg_resources
 from collections import OrderedDict
 
 from jinja2 import Template
 
-from commitizen import factory, out, git, cz
+from commitizen import factory, out, git
 from commitizen.config import BaseConfig
 from commitizen.error_codes import NO_COMMITS_FOUND, NO_PATTERN_MAP
-
-try:
-    import importlib.resources as pkg_resources
-except ImportError:
-    # Try backported to PY<37 `importlib_resources`.
-    import importlib_resources as pkg_resources
 
 
 class Changelog:
@@ -71,7 +66,9 @@ class Changelog:
                     entries[current_key][commit_type].append(processed_commit)
                     break
 
-        template_file = pkg_resources.read_text(cz, "changelog_template.j2")
+        template_file = pkg_resources.resource_string(
+            __name__, "../templates/changelog_template.j2"
+        ).decode("utf-8")
         jinja_template = Template(template_file)
         changelog_str = jinja_template.render(entries=entries)
         if self.dry_run:
