@@ -40,7 +40,9 @@ data = {
             },
             {
                 "name": ["changelog", "ch"],
-                "help": "generate changelog (note that it will overwrite existing file)",
+                "help": (
+                    "generate changelog (note that it will overwrite existing file)"
+                ),
                 "func": commands.Changelog,
                 "arguments": [
                     {
