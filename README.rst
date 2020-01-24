@@ -148,7 +148,8 @@ Usage
 
     $ cz --help
     usage: cz [-h] [--debug] [-n NAME] [--version]
-            {ls,commit,c,example,info,schema,bump} ...
+            {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version}
+            ...
 
     Commitizen is a cli tool to generate conventional commits.
     For more information about the topic go to https://conventionalcommits.org/
@@ -161,18 +162,20 @@ Usage
     --version             get the version of the installed commitizen
 
     commands:
-    {ls,commit,c,example,info,schema,bump,version,check,init}
-        ls                  show available commitizens
+    {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version}
+        init                init commitizen configuration
         commit (c)          create new commit
+        ls                  show available commitizens
         example             show commit example
         info                show information about the cz
         schema              show commit schema
         bump                bump semantic version based on the git log
-        version             get the version of the installed commitizen or the
-                            current project (default: installed commitizen)
+        changelog (ch)      generate changelog (note that it will overwrite
+                            existing file)
         check               validates that a commit message matches the commitizen
                             schema
-        init                init commitizen configuration
+        version             get the version of the installed commitizen or the
+                            current project (default: installed commitizen)
 
 Contributing
 ============
