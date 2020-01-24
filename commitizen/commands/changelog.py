@@ -67,7 +67,7 @@ class Changelog:
                     break
 
         template_file = pkg_resources.resource_string(
-            __name__, "../templates/changelog_template.j2"
+            __name__, "../templates/keep_a_changelog_template.j2"
         ).decode("utf-8")
         jinja_template = Template(template_file)
         changelog_str = jinja_template.render(entries=entries)
