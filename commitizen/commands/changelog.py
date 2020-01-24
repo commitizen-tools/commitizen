@@ -16,7 +16,7 @@ class Changelog:
         self.config: BaseConfig = config
         self.cz = factory.commiter_factory(self.config)
 
-        self.file_name = args["file_name"]
+        self.file_name = args["file_name"] or self.config.settings.get("changelog_file")
         self.dry_run = args["dry_run"]
         self.start_rev = args["start_rev"]
 

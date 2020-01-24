@@ -133,8 +133,7 @@ data = {
                     },
                     {
                         "name": "--file-name",
-                        "default": "CHANGELOG.md",
-                        "help": "file name of changelog",
+                        "help": "file name of changelog (default: 'CHANGELOG.md')",
                     },
                     {
                         "name": "--start-rev",
