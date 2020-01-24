@@ -70,5 +70,6 @@ The extra tab before the square brackets (`]`) at the end is required.
 | `version_files` | `list` | `[ ]` | Files were the version will be updated. A pattern to match a line, can also be specified, separated by `:` [See more](https://woile.github.io/commitizen/bump#files) |
 | `tag_format` | `str` | `None` | Format for the git tag, useful for old projects, that use a convention like `"v1.2.1"`. [See more](https://woile.github.io/commitizen/bump#tag_format) |
 | `bump_message` | `str` | `None` | Create custom commit message, useful to skip ci. [See more](https://woile.github.io/commitizen/bump#bump_message) |
+| `changelog_file` | `str` | `CHANGELOG.md` | filename of exported changelog |
 | `style` | `list` | see above | Style for the prompts (It will merge this value with default style.) [See More (Styling your prompts with your favorite colors)](https://github.com/tmbo/questionary#additional-features) |
 | `customize` | `dict` | `None` | **This is only supported when config through `toml`.** Custom rules for committing and bumping. [See more](https://woile.github.io/commitizen/customization/) |
