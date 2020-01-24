@@ -51,7 +51,10 @@ def test_changlog_from_version_zero_point_two(mocker, capsys):
         cli.main()
 
     out, _ = capsys.readouterr()
-    assert out == "# CHANGELOG\n\n## Unreleased\n### feat\n- after 0.2\n- after 0.2.0\n\n\n"
+    assert (
+        out
+        == "# CHANGELOG\n\n## Unreleased\n### feat\n- after 0.2\n- after 0.2.0\n\n\n"
+    )
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
