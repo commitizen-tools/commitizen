@@ -8,6 +8,7 @@ DEFAULT_SETTINGS = {
     "version_files": [],
     "tag_format": None,  # example v$version
     "bump_message": None,  # bumped v$current_version to $new_version
+    "changelog_file": "CHANGELOG.md",
 }
 
 MAJOR = "MAJOR"

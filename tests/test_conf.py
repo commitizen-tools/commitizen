@@ -45,6 +45,7 @@ _settings = {
     "bump_message": None,
     "version_files": ["commitizen/__version__.py", "pyproject.toml"],
     "style": [["pointer", "reverse"], ["question", "underline"]],
+    "changelog_file": "CHANGELOG.md",
 }
 
 _new_settings = {
@@ -54,6 +55,7 @@ _new_settings = {
     "bump_message": None,
     "version_files": ["commitizen/__version__.py", "pyproject.toml"],
     "style": [["pointer", "reverse"], ["question", "underline"]],
+    "changelog_file": "CHANGELOG.md",
 }
 
 _read_settings = {
@@ -61,6 +63,7 @@ _read_settings = {
     "version": "1.0.0",
     "version_files": ["commitizen/__version__.py", "pyproject.toml"],
     "style": [["pointer", "reverse"], ["question", "underline"]],
+    "changelog_file": "CHANGELOG.md",
 }
 
 
