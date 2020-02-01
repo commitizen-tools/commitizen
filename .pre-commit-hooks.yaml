@@ -4,5 +4,6 @@
   entry: cz check --commit-msg-file
   language: python
   language_version: python3
+  stages: [commit-msg]
   require_serial: true
   minimum_pre_commit_version: "0.15.4"
