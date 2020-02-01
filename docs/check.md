@@ -15,7 +15,7 @@ python -m pip install pre-commit
 
 ```yaml
 - repo: https://github.com/Woile/commitizen
-  rev: 1.13.1
+  rev: master
   hooks:
     - id: commitizen
 ```
