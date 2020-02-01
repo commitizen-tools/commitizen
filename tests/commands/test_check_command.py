@@ -93,11 +93,19 @@ def test_check_no_conventional_commit(config, mocker, tmpdir):
         error_mock.assert_called_once()
 
 
-def test_check_conventional_commit(config, mocker, tmpdir):
+@pytest.mark.parametrize(
+    "commit_msg",
+    (
+        "feat(lang): added polish language",
+        "feat: add polish language",
+        "bump: 0.0.1 -> 1.0.0",
+    ),
+)
+def test_check_conventional_commit(commit_msg, config, mocker, tmpdir):
     success_mock = mocker.patch("commitizen.out.success")
 
     tempfile = tmpdir.join("temp_commit_file")
-    tempfile.write("feat(lang): added polish language")
+    tempfile.write(commit_msg)
 
     check_cmd = commands.Check(config=config, arguments={"commit_msg_file": tempfile})
 
