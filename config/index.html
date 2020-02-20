@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.0">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.3">
     
     
       
@@ -42,12 +42,12 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application.1b62728e.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.adb8469c.css">
       
       
     
     
-      <script src="../assets/javascripts/modernizr.268332fc.js"></script>
+      <script src="../assets/javascripts/modernizr.86422ebf.js"></script>
     
     
       
@@ -79,7 +79,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#configuration" tabindex="1" class="md-skip">
+      <a href="#configuration" tabindex="0" class="md-skip">
         Skip to content
       </a>
     
@@ -88,7 +88,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href=".." title="Commitizen" class="md-header-nav__button md-logo">
+        <a href=".." title="Commitizen" aria-label="Commitizen" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -119,7 +119,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <input type="text" class="md-search__input" aria-label="search" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
       <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
         &#xE5CD;
@@ -480,7 +480,7 @@
 <p>Commitizen has support for <code>toml</code> and <code>ini</code> files. It first looks up the configuration file in the current working directory and then the root directory of the git project.</p>
 <h2 id="pyprojecttoml-or-cztoml">pyproject.toml or .cz.toml</h2>
 <p>Add an entry to <code>pyproject.toml</code> or <code>.cz.toml</code>. Recommended for <strong>python</strong> projects.</p>
-<div class="codehilite"><pre><span></span><span class="k">[tool.commitizen]</span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;cz_conventional_commits&quot;</span>
 <span class="n">version</span> <span class="o">=</span> <span class="s">&quot;0.1.0&quot;</span>
 <span class="n">version_files</span> <span class="o">=</span> <span class="p">[</span>
@@ -499,7 +499,7 @@
     <span class="p">[</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">],</span>
     <span class="k">[&quot;disabled&quot;, &quot;fg:#858585 italic&quot;]</span>
 <span class="p">]</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2 id="ini-files">INI files</h2>
@@ -507,7 +507,7 @@
 <p>Supported files: <code>.cz</code>, <code>.cz.cfg</code>, <code>setup.cfg</code>, and <code>$HOME/.cz</code></p>
 <p>The format is slightly different to the <code>toml</code>, so pay attention.
 Recommended for <strong>other languages</strong> projects (js, go, etc).</p>
-<div class="codehilite"><pre><span></span><span class="k">[commitizen]</span>
+<div class="codehilite"><pre><span></span><code><span class="k">[commitizen]</span>
 <span class="na">name</span> <span class="o">=</span> <span class="s">cz_conventional_commits</span>
 <span class="na">version</span> <span class="o">=</span> <span class="s">0.1.0</span>
 <span class="na">version_files</span> <span class="o">=</span> <span class="s">[</span>
@@ -526,7 +526,7 @@ Recommended for <strong>other languages</strong> projects (js, go, etc).</p>
 <span class="s">    [&quot;text&quot;, &quot;&quot;],</span>
 <span class="s">    [&quot;disabled&quot;, &quot;fg:#858585 italic&quot;]</span>
 <span class="s">    ]</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>The extra tab before the square brackets (<code>]</code>) at the end is required.</p>
@@ -643,9 +643,9 @@ Recommended for <strong>other languages</strong> projects (js, go, etc).</p>
       <div class="md-footer-copyright">
         
         powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
+        <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
         and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
           Material for MkDocs</a>
       </div>
       
@@ -655,7 +655,7 @@ Recommended for <strong>other languages</strong> projects (js, go, etc).</p>
       
     </div>
     
-      <script src="../assets/javascripts/application.808e90bb.js"></script>
+      <script src="../assets/javascripts/application.c33a9706.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       

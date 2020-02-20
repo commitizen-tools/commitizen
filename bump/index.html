@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.0">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.3">
     
     
       
@@ -42,12 +42,12 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application.1b62728e.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.adb8469c.css">
       
       
     
     
-      <script src="../assets/javascripts/modernizr.268332fc.js"></script>
+      <script src="../assets/javascripts/modernizr.86422ebf.js"></script>
     
     
       
@@ -79,7 +79,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#about" tabindex="1" class="md-skip">
+      <a href="#about" tabindex="0" class="md-skip">
         Skip to content
       </a>
     
@@ -88,7 +88,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href=".." title="Commitizen" class="md-header-nav__button md-logo">
+        <a href=".." title="Commitizen" aria-label="Commitizen" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -119,7 +119,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <input type="text" class="md-search__input" aria-label="search" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
       <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
         &#xE5CD;
@@ -578,12 +578,12 @@
 </table>
 <p>Prereleases are supported following python's <a href="https://www.python.org/dev/peps/pep-0440/">PEP 0440</a></p>
 <p>The scheme of this format is</p>
-<div class="codehilite"><pre><span></span><span class="o">[</span>N!<span class="o">]</span>N<span class="o">(</span>.N<span class="o">)</span>*<span class="o">[{</span>a<span class="p">|</span>b<span class="p">|</span>rc<span class="o">}</span>N<span class="o">][</span>.postN<span class="o">][</span>.devN<span class="o">]</span>
-</pre></div>
+<div class="codehilite"><pre><span></span><code><span class="o">[</span>N!<span class="o">]</span>N<span class="o">(</span>.N<span class="o">)</span>*<span class="o">[{</span>a<span class="p">|</span>b<span class="p">|</span>rc<span class="o">}</span>N<span class="o">][</span>.postN<span class="o">][</span>.devN<span class="o">]</span>
+</code></pre></div>
 
 
 <p>Some examples:</p>
-<div class="codehilite"><pre><span></span><span class="m">0</span>.9.0
+<div class="codehilite"><pre><span></span><code><span class="m">0</span>.9.0
 <span class="m">0</span>.9.1
 <span class="m">0</span>.9.2
 <span class="m">0</span>.9.10
@@ -598,12 +598,12 @@
 <span class="m">1</span>.1.0
 <span class="m">2</span>.0.0
 <span class="m">2</span>.0.1a
-</pre></div>
+</code></pre></div>
 
 
 <p><code>post</code> and <code>dev</code> releases are not supported yet.</p>
 <h2 id="usage">Usage</h2>
-<div class="codehilite"><pre><span></span>$ cz bump --help
+<div class="codehilite"><pre><span></span><code>$ cz bump --help
 usage: cz bump <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--dry-run<span class="o">]</span> <span class="o">[</span>--files-only<span class="o">]</span> <span class="o">[</span>--yes<span class="o">]</span>
                <span class="o">[</span>--tag-format TAG_FORMAT<span class="o">]</span> <span class="o">[</span>--bump-message BUMP_MESSAGE<span class="o">]</span>
                <span class="o">[</span>--prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}]</span>
@@ -624,31 +624,31 @@ optional arguments:
                         choose <span class="nb">type</span> of prerelease
   --increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}</span>
                         manually specify the desired increment
-</pre></div>
+</code></pre></div>
 
 
 <h2 id="configuration">Configuration</h2>
 <h3 id="tag_format"><code>tag_format</code></h3>
 <p>It is used to read the format from the git tags, and also to generate the tags.</p>
 <p>Commitizen supports 2 types of formats, a simple and a more complex.</p>
-<div class="codehilite"><pre><span></span>cz bump --tag_format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$version</span><span class="s2">&quot;</span>
-</pre></div>
+<div class="codehilite"><pre><span></span><code>cz bump --tag_format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$version</span><span class="s2">&quot;</span>
+</code></pre></div>
 
 
-<div class="codehilite"><pre><span></span>cz bump --tag_format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$minor</span><span class="s2">.</span><span class="nv">$major</span><span class="s2">.</span><span class="nv">$patch$prerelease</span><span class="s2">&quot;</span>
-</pre></div>
+<div class="codehilite"><pre><span></span><code>cz bump --tag_format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$minor</span><span class="s2">.</span><span class="nv">$major</span><span class="s2">.</span><span class="nv">$patch$prerelease</span><span class="s2">&quot;</span>
+</code></pre></div>
 
 
 <p>In your <code>pyproject.toml</code> or <code>.cz.toml</code></p>
-<div class="codehilite"><pre><span></span><span class="k">[tool.commitizen]</span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">tag_format</span> <span class="o">=</span> <span class="s">&quot;v$minor.$major.$patch$prerelease&quot;</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>Or in your <code>.cz</code> (TO BE DEPRECATED)</p>
-<div class="codehilite"><pre><span></span><span class="k">[commitizen]</span>
+<div class="codehilite"><pre><span></span><code><span class="k">[commitizen]</span>
 <span class="na">tag_format</span> <span class="o">=</span> <span class="s">v$minor.$major.$patch$prerelease</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>The variables must be preceded by a <code>$</code> sign.</p>
@@ -692,21 +692,21 @@ regarding if the file is present or not in <code>version_files</code>.</p>
 <p>* Renamed from <code>files</code> to <code>version_files</code>.</p>
 <p>Some examples</p>
 <p><code>pyproject.toml</code> or <code>.cz.toml</code></p>
-<div class="codehilite"><pre><span></span><span class="k">[tool.commitizen]</span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_files</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s">&quot;src/__version__.py&quot;</span><span class="p">,</span>
     <span class="s">&quot;setup.py:version&quot;</span>
 <span class="p">]</span>
-</pre></div>
+</code></pre></div>
 
 
 <p><code>.cz</code> (TO BE DEPRECATED)</p>
-<div class="codehilite"><pre><span></span><span class="k">[commitizen]</span>
+<div class="codehilite"><pre><span></span><code><span class="k">[commitizen]</span>
 <span class="na">version_files</span> <span class="o">=</span> <span class="s">[</span>
 <span class="s">    &quot;src/__version__.py&quot;,</span>
 <span class="s">    &quot;setup.py:version&quot;</span>
 <span class="s">    ]</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>In the example above, we can see the reference <code>"setup.py:version"</code>.
@@ -736,15 +736,15 @@ in a line containing the <code>version</code> substring.</p>
 </table>
 <p>Some examples</p>
 <p><code>pyproject.toml</code> or <code>.cz.toml</code></p>
-<div class="codehilite"><pre><span></span><span class="k">[tool.commitizen]</span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">bump_message</span> <span class="o">=</span> <span class="s">&quot;release $current_version → $new_version [skip-ci]&quot;</span>
-</pre></div>
+</code></pre></div>
 
 
 <p><code>.cz</code> (TO BE DEPRECATED)</p>
-<div class="codehilite"><pre><span></span><span class="k">[commitizen]</span>
+<div class="codehilite"><pre><span></span><code><span class="k">[commitizen]</span>
 <span class="na">bump_message</span> <span class="o">=</span> <span class="s">release $current_version → $new_version [skip-ci]</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2 id="custom-bump">Custom bump</h2>
@@ -807,9 +807,9 @@ in a line containing the <code>version</code> substring.</p>
       <div class="md-footer-copyright">
         
         powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
+        <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
         and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
           Material for MkDocs</a>
       </div>
       
@@ -819,7 +819,7 @@ in a line containing the <code>version</code> substring.</p>
       
     </div>
     
-      <script src="../assets/javascripts/application.808e90bb.js"></script>
+      <script src="../assets/javascripts/application.c33a9706.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       

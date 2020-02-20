@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.0">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.3">
     
     
       
@@ -42,12 +42,12 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application.1b62728e.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/application.adb8469c.css">
       
       
     
     
-      <script src="../../assets/javascripts/modernizr.268332fc.js"></script>
+      <script src="../../assets/javascripts/modernizr.86422ebf.js"></script>
     
     
       
@@ -79,7 +79,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#create-a-new-release-using-gitlab-ci" tabindex="1" class="md-skip">
+      <a href="#create-a-new-release-using-gitlab-ci" tabindex="0" class="md-skip">
         Skip to content
       </a>
     
@@ -88,7 +88,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../.." title="Commitizen" class="md-header-nav__button md-logo">
+        <a href="../.." title="Commitizen" aria-label="Commitizen" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -119,7 +119,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <input type="text" class="md-search__input" aria-label="search" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
       <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
         &#xE5CD;
@@ -528,8 +528,8 @@
 <h4 id="gitlab-configuration">Gitlab Configuration:</h4>
 <p>To be able to change files and push new changes with <code>Gitlab CI</code> runners, we need to have a <code>ssh</code> key and configure a git user.</p>
 <p>First, let's create a <code>ssh key</code>. The only requirement is to create it without a passphrase:</p>
-<div class="codehilite"><pre><span></span>ssh-keygen -f deploy_key -N <span class="s2">&quot;&quot;</span>
-</pre></div>
+<div class="codehilite"><pre><span></span><code>ssh-keygen -f deploy_key -N <span class="s2">&quot;&quot;</span>
+</code></pre></div>
 
 
 <p>The previous command will create a private and public key under the files <code>deploy_key</code> and <code>deploy_key.pub</code>. We will use them later.</p>
@@ -555,7 +555,7 @@
 </li>
 </ol>
 <h4 id="stages-and-jobs">Stages and Jobs</h4>
-<div class="codehilite"><pre><span></span><span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker:latest</span>
+<div class="codehilite"><pre><span></span><code><span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker:latest</span>
 
 <span class="nt">services</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">docker:dind</span>
@@ -607,7 +607,7 @@
   <span class="nt">artifacts</span><span class="p">:</span>
     <span class="nt">paths</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">variables</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>So, every time that a developer push to any branch, the <code>test</code> job is executed. If the branch is <code>master</code> and the test jobs success, the <code>auto-bump</code> takes place.
@@ -672,9 +672,9 @@ To be able to push using the Gitlab runner, we have to set the ssh key, configur
       <div class="md-footer-copyright">
         
         powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
+        <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
         and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
           Material for MkDocs</a>
       </div>
       
@@ -684,7 +684,7 @@ To be able to push using the Gitlab runner, we have to set the ssh key, configur
       
     </div>
     
-      <script src="../../assets/javascripts/application.808e90bb.js"></script>
+      <script src="../../assets/javascripts/application.c33a9706.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
       
