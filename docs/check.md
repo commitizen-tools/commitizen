@@ -17,7 +17,7 @@ python -m pip install pre-commit
 ---
 repos:
   - repo: https://github.com/Woile/commitizen
-    rev: master
+    rev: v1.16.2
     hooks:
       - id: commitizen
         stages: [commit-msg]
