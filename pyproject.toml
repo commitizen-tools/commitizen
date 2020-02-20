@@ -34,7 +34,7 @@ description = "Python commitizen client tool"
 authors = ["Santiago Fraire <santiwilly@gmail.com>"]
 license = "MIT"
 keywords = ["commitizen", "conventional", "commits", "git"]
-readme = "README.rst"
+readme = "docs/README.md"
 homepage = "https://github.com/woile/commitizen"
 classifiers = [
     "License :: OSI Approved :: MIT License",

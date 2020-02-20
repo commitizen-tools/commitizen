@@ -9,7 +9,7 @@ repo_url: https://github.com/Woile/commitizen
 edit_uri: ""
 
 nav:
-    - Introduction: 'index.md'
+    - Introduction: 'README.md'
     - Configuration: 'config.md'
     - Commands:
         - Bump: 'bump.md'

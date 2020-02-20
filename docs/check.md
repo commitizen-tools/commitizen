@@ -14,11 +14,13 @@ python -m pip install pre-commit
 * Step 2: Create `.pre-commit-config.yaml` at your root directory with the following content
 
 ```yaml
-- repo: https://github.com/Woile/commitizen
-  rev: master
-  stages: [commit-msg]
-  hooks:
-    - id: commitizen
+---
+repos:
+  - repo: https://github.com/Woile/commitizen
+    rev: v1.16.2
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
 ```
 
 * Step 3: Install the configuration into git hook through `pre-commit`
