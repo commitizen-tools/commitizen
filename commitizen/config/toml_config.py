@@ -10,8 +10,8 @@ class TomlConfig(BaseConfig):
         self._parse_setting(data)
         self.add_path(path)
 
-    def init_empty_config_file(self):
-        with open(self.path, "w") as toml_file:
+    def init_empty_config_content(self):
+        with open(self.path, "a") as toml_file:
             toml_file.write("[tool.commitizen]")
 
     def set_key(self, key, value):
