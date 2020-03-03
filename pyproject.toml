@@ -1,5 +1,5 @@
 [tool.commitizen]
-version = "1.16.3"
+version = "1.16.4"
 tag_format = "v$version"
 version_files = [
   "pyproject.toml:version",
@@ -29,7 +29,7 @@ exclude = '''
 
 [tool.poetry]
 name = "commitizen"
-version = "1.16.3"
+version = "1.16.4"
 description = "Python commitizen client tool"
 authors = ["Santiago Fraire <santiwilly@gmail.com>"]
 license = "MIT"
@@ -70,10 +70,6 @@ isort = "^4.3.21"
 cz = "commitizen.cli:main"
 git-cz = "commitizen.cli:main"
 
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
-
 [tool.coverage]
     [tool.coverage.report]
     show_missing = true
@@ -93,4 +89,8 @@ build-backend = "poetry.masonry.api"
         'if 0:',
         'if __name__ == .__main__.:'
     ]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
 
