@@ -144,10 +144,21 @@ def test_read_cfg_when_not_in_a_git_project(tmpdir):
 
 
 class TestTomlConfig:
-    def test_init_empty_config_file(self, tmpdir):
+    def test_init_empty_config_content(self, tmpdir):
         path = tmpdir.mkdir("commitizen").join(".cz.toml")
         toml_config = config.TomlConfig(data="", path=path)
-        toml_config.init_empty_config_file()
+        toml_config.init_empty_config_content()
 
         with open(path, "r") as toml_file:
             assert toml_file.read() == "[tool.commitizen]"
+
+    def test_init_empty_config_content_with_existing_content(self, tmpdir):
+        existing_content = "[tool.black]\n" "line-length = 88\n"
+
+        path = tmpdir.mkdir("commitizen").join(".cz.toml")
+        path.write(existing_content)
+        toml_config = config.TomlConfig(data="", path=path)
+        toml_config.init_empty_config_content()
+
+        with open(path, "r") as toml_file:
+            assert toml_file.read() == existing_content + "[tool.commitizen]"

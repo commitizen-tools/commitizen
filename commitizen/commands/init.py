@@ -6,7 +6,7 @@ from commitizen import factory, out
 from commitizen.cz import registry
 from commitizen.config import BaseConfig, TomlConfig, IniConfig
 from commitizen.git import get_latest_tag_name, get_tag_names
-from commitizen.defaults import config_files
+from commitizen.defaults import long_term_support_config_files
 
 
 class Init:
@@ -17,7 +17,7 @@ class Init:
     def __call__(self):
         values_to_add = {}
 
-        # No config file exist
+        # No config for commitizen exist
         if not self.config.path:
             config_path = self._ask_config_path()
 
@@ -26,7 +26,7 @@ class Init:
             else:
                 self.config = IniConfig(data="", path=config_path)
 
-            self.config.init_empty_config_file()
+            self.config.init_empty_config_content()
 
             values_to_add["name"] = self._ask_name()
             tag = self._ask_tag()
@@ -41,7 +41,7 @@ class Init:
     def _ask_config_path(self) -> str:
         name = questionary.select(
             "Please choose a supported config file: (default: pyproject.tml)",
-            choices=config_files,
+            choices=long_term_support_config_files,
             default="pyproject.toml",
             style=self.cz.style,
         ).ask()
