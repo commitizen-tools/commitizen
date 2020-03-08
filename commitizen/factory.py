@@ -1,6 +1,6 @@
 from commitizen import BaseCommitizen, out
-from commitizen.cz import registry
 from commitizen.config import BaseConfig
+from commitizen.cz import registry
 from commitizen.error_codes import NO_COMMITIZEN_FOUND
 
 

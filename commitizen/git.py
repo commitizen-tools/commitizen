@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Optional, List
+from typing import List, Optional
 
 from commitizen import cmd
 

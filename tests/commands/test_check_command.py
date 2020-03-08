@@ -3,8 +3,7 @@ from typing import List
 
 import pytest
 
-from commitizen import cli, git, commands
-
+from commitizen import cli, commands, git
 
 COMMIT_LOG = [
     "refactor: A code change that neither fixes a bug nor adds a feature",

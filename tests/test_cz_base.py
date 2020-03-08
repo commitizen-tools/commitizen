@@ -1,8 +1,8 @@
 import pytest
 
 from commitizen import defaults
-from commitizen.cz.base import BaseCommitizen
 from commitizen.config import BaseConfig
+from commitizen.cz.base import BaseCommitizen
 
 
 @pytest.fixture()

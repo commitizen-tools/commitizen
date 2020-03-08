@@ -5,7 +5,6 @@ import pytest
 
 from commitizen import config, defaults, git
 
-
 PYPROJECT = """
 [tool.commitizen]
 name = "cz_jira"

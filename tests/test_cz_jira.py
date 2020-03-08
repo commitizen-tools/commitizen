@@ -1,8 +1,8 @@
 import pytest
 
 from commitizen import defaults
-from commitizen.cz.jira import JiraSmartCz
 from commitizen.config import BaseConfig
+from commitizen.cz.jira import JiraSmartCz
 
 
 @pytest.fixture()

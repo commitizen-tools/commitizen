@@ -4,8 +4,8 @@ except ImportError:
     from string import Template
 
 from commitizen import defaults
-from commitizen.cz.base import BaseCommitizen
 from commitizen.config import BaseConfig
+from commitizen.cz.base import BaseCommitizen
 
 __all__ = ["CustomizeCommitsCz"]
 

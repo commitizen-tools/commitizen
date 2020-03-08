@@ -5,14 +5,14 @@ import tempfile
 import questionary
 
 from commitizen import factory, git, out
-from commitizen.cz.exceptions import CzException
 from commitizen.config import BaseConfig
+from commitizen.cz.exceptions import CzException
 from commitizen.error_codes import (
-    NO_ANSWERS,
     COMMIT_ERROR,
+    CUSTOM_ERROR,
+    NO_ANSWERS,
     NO_COMMIT_BACKUP,
     NOTHING_TO_COMMIT,
-    CUSTOM_ERROR,
 )
 
 
