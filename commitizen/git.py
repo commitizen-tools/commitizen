@@ -64,7 +64,7 @@ def get_commits(
     git_log_cmd = f"git log --pretty={log_format}{delimiter}"
 
     if start:
-        c = cmd.run(f"{git_log_cmd} {start}...{end}")
+        c = cmd.run(f"{git_log_cmd} {start}..{end}")
     else:
         c = cmd.run(f"{git_log_cmd} {end}")
 
