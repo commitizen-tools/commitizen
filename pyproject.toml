@@ -70,6 +70,13 @@ isort = "^4.3.21"
 cz = "commitizen.cli:main"
 git-cz = "commitizen.cli:main"
 
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+combine_as_imports = true
+line_length = 88
+
 [tool.coverage]
     [tool.coverage.report]
     show_missing = true
