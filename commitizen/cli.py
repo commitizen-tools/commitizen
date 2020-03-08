@@ -151,13 +151,18 @@ data = {
                 "arguments": [
                     {
                         "name": "--commit-msg-file",
-                        "required": True,
                         "help": (
                             "ask for the name of the temporal file that contains "
                             "the commit message. "
                             "Using it in a git hook script: MSG_FILE=$1"
                         ),
-                    }
+                        "exclusive_group": "group1",
+                    },
+                    {
+                        "name": "--rev-range",
+                        "help": ("a reange of git rev to check. e.g, master..HEAD"),
+                        "exclusive_group": "group1",
+                    },
                 ],
             },
             {
