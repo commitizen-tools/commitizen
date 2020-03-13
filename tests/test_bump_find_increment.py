@@ -10,8 +10,8 @@ from commitizen.git import GitCommit
 NONE_INCREMENT_CC = ["docs(README): motivation", "ci: added travis"]
 
 PATCH_INCREMENTS_CC = [
-    "docs(README): motivation",
     "fix(setup.py): future is now required for every python version",
+    "docs(README): motivation",
 ]
 
 MINOR_INCREMENTS_CC = [
@@ -23,8 +23,8 @@ MINOR_INCREMENTS_CC = [
 MAJOR_INCREMENTS_CC = [
     "feat(cli): added version",
     "docs(README): motivation",
-    "fix(setup.py): future is now required for every python version",
     "BREAKING CHANGE: `extends` key in config file is now used for extending other config files",  # noqa
+    "fix(setup.py): future is now required for every python version",
 ]
 
 PATCH_INCREMENTS_SVE = ["readme motivation PATCH", "fix setup.py PATCH"]
