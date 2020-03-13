@@ -34,12 +34,12 @@ def find_increment(
                 continue
             found_keyword = result.group(0)
             new_increment = increments_map_default[found_keyword]
-            if new_increment == "MAJOR":
-                increment = new_increment
-                break
-            elif increment == "MINOR" and new_increment == "PATCH":
+            if increment == "MAJOR":
                 continue
-            increment = new_increment
+            elif increment == "MINOR" and new_increment == "MAJOR":
+                increment = new_increment
+            elif increment == "PATCH" or increment is None:
+                increment = new_increment
 
     return increment
 
