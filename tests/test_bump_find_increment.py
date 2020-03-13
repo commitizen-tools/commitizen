@@ -2,6 +2,8 @@
 CC: Conventional commits
 SVE: Semantic version at the end
 """
+import pytest
+
 from commitizen import bump
 from commitizen.git import GitCommit
 
@@ -44,58 +46,32 @@ semantic_version_pattern = r"(MAJOR|MINOR|PATCH)"
 semantic_version_map = {"MAJOR": "MAJOR", "MINOR": "MINOR", "PATCH": "PATCH"}
 
 
-def test_find_increment_type_patch():
-    messages = PATCH_INCREMENTS_CC
+@pytest.mark.parametrize(
+    "messages, expected_type",
+    (
+        (PATCH_INCREMENTS_CC, "PATCH"),
+        (MINOR_INCREMENTS_CC, "MINOR"),
+        (MAJOR_INCREMENTS_CC, "MAJOR"),
+        (NONE_INCREMENT_CC, None),
+    ),
+)
+def test_find_increment(messages, expected_type):
     commits = [GitCommit(rev="test", title=message) for message in messages]
     increment_type = bump.find_increment(commits)
-    assert increment_type == "PATCH"
+    assert increment_type == expected_type
 
 
-def test_find_increment_type_minor():
-    messages = MINOR_INCREMENTS_CC
-    commits = [GitCommit(rev="test", title=message) for message in messages]
-    increment_type = bump.find_increment(commits)
-    assert increment_type == "MINOR"
-
-
-def test_find_increment_type_major():
-    messages = MAJOR_INCREMENTS_CC
-    commits = [GitCommit(rev="test", title=message) for message in messages]
-    increment_type = bump.find_increment(commits)
-    assert increment_type == "MAJOR"
-
-
-def test_find_increment_type_patch_sve():
-    messages = PATCH_INCREMENTS_SVE
+@pytest.mark.parametrize(
+    "messages, expected_type",
+    (
+        (PATCH_INCREMENTS_SVE, "PATCH"),
+        (MINOR_INCREMENTS_SVE, "MINOR"),
+        (MAJOR_INCREMENTS_SVE, "MAJOR"),
+    ),
+)
+def test_find_increment_sve(messages, expected_type):
     commits = [GitCommit(rev="test", title=message) for message in messages]
     increment_type = bump.find_increment(
         commits, regex=semantic_version_pattern, increments_map=semantic_version_map
     )
-    assert increment_type == "PATCH"
-
-
-def test_find_increment_type_minor_sve():
-    messages = MINOR_INCREMENTS_SVE
-    commits = [GitCommit(rev="test", title=message) for message in messages]
-    increment_type = bump.find_increment(
-        commits, regex=semantic_version_pattern, increments_map=semantic_version_map
-    )
-    assert increment_type == "MINOR"
-
-
-def test_find_increment_type_major_sve():
-    messages = MAJOR_INCREMENTS_SVE
-    commits = [GitCommit(rev="test", title=message) for message in messages]
-    increment_type = bump.find_increment(
-        commits, regex=semantic_version_pattern, increments_map=semantic_version_map
-    )
-    assert increment_type == "MAJOR"
-
-
-def test_find_increment_type_none():
-    messages = NONE_INCREMENT_CC
-    commits = [GitCommit(rev="test", title=message) for message in messages]
-    increment_type = bump.find_increment(
-        commits, regex=semantic_version_pattern, increments_map=semantic_version_map
-    )
-    assert increment_type is None
+    assert increment_type == expected_type
