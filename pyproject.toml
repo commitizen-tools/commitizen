@@ -89,6 +89,13 @@ git-cz = "commitizen.cli:main"
         'if 0:',
         'if __name__ == .__main__.:'
     ]
+    omit = [
+        'env/*',
+        'venv/*',
+        '*/virtualenv/*',
+        '*/virtualenvs/*',
+        '*/tests/*'
+    ]
 
 [build-system]
 requires = ["poetry>=0.12"]
