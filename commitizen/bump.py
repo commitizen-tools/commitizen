@@ -6,7 +6,6 @@ from typing import List, Optional, Union
 
 from packaging.version import Version
 
-from commitizen.git import GitCommit
 from commitizen.defaults import (
     MAJOR,
     MINOR,
@@ -15,6 +14,7 @@ from commitizen.defaults import (
     bump_message,
     bump_pattern,
 )
+from commitizen.git import GitCommit
 
 
 def find_increment(

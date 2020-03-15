@@ -1,6 +1,6 @@
 from commitizen import out
-from commitizen.config import BaseConfig
 from commitizen.__version__ import __version__
+from commitizen.config import BaseConfig
 
 
 class Version:

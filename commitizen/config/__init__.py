@@ -4,9 +4,10 @@ from typing import Optional
 
 from commitizen import defaults, git, out
 from commitizen.error_codes import NOT_A_GIT_PROJECT
+
 from .base_config import BaseConfig
-from .toml_config import TomlConfig
 from .ini_config import IniConfig
+from .toml_config import TomlConfig
 
 
 def load_global_conf() -> Optional[IniConfig]:

@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import List, Optional
 
 import questionary
 from packaging.version import Version
@@ -6,10 +6,10 @@ from packaging.version import Version
 from commitizen import bump, factory, git, out
 from commitizen.config import BaseConfig
 from commitizen.error_codes import (
-    NO_COMMITS_FOUND,
-    NO_VERSION_SPECIFIED,
-    NO_PATTERN_MAP,
     COMMIT_FAILED,
+    NO_COMMITS_FOUND,
+    NO_PATTERN_MAP,
+    NO_VERSION_SPECIFIED,
     TAG_FAILED,
 )
 

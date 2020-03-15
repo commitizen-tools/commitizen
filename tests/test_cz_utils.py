@@ -1,6 +1,6 @@
 import pytest
 
-from commitizen.cz import utils, exceptions
+from commitizen.cz import exceptions, utils
 
 
 def test_required_validator():

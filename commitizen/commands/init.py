@@ -1,12 +1,11 @@
+import questionary
 from packaging.version import Version
 
-import questionary
-
 from commitizen import factory, out
+from commitizen.config import BaseConfig, IniConfig, TomlConfig
 from commitizen.cz import registry
-from commitizen.config import BaseConfig, TomlConfig, IniConfig
-from commitizen.git import get_latest_tag_name, get_tag_names
 from commitizen.defaults import long_term_support_config_files
+from commitizen.git import get_latest_tag_name, get_tag_names
 
 
 class Init:

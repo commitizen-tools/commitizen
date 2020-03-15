@@ -1,14 +1,13 @@
 import pytest
 
 from commitizen import defaults
+from commitizen.config import BaseConfig
 from commitizen.cz.conventional_commits.conventional_commits import (
     ConventionalCommitsCz,
     parse_scope,
     parse_subject,
 )
 from commitizen.cz.exceptions import AnswerRequiredError
-from commitizen.config import BaseConfig
-
 
 valid_scopes = ["", "simple", "dash-separated", "camelCase" "UPPERCASE"]
 
