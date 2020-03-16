@@ -1,10 +1,10 @@
 import re
-import pkg_resources
 from collections import OrderedDict
 
+import pkg_resources
 from jinja2 import Template
 
-from commitizen import factory, out, git
+from commitizen import factory, git, out
 from commitizen.config import BaseConfig
 from commitizen.error_codes import NO_COMMITS_FOUND, NO_PATTERN_MAP
 

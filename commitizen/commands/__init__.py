@@ -1,4 +1,5 @@
 from .bump import Bump
+from .changelog import Changelog
 from .check import Check
 from .commit import Commit
 from .example import Example
@@ -7,9 +8,6 @@ from .init import Init
 from .list_cz import ListCz
 from .schema import Schema
 from .version import Version
-from .init import Init
-from .changelog import Changelog
-
 
 __all__ = (
     "Bump",

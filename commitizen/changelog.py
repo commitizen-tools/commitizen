@@ -18,8 +18,8 @@
 Options:
 - Generate full or partial changelog
 """
-from typing import Generator, List, Dict, Iterable
 import re
+from typing import Dict, Generator, Iterable, List
 
 MD_VERSION_RE = r"^##\s(?P<version>[a-zA-Z0-9.+]+)\s?\(?(?P<date>[0-9-]+)?\)?"
 MD_CATEGORY_RE = r"^###\s(?P<category>[a-zA-Z0-9.+\s]+)"

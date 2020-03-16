@@ -1,10 +1,8 @@
 import os
 
-
 import pytest
 
 from commitizen import changelog
-
 
 COMMIT_LOG = [
     "bump: version 1.5.0 → 1.5.1",
