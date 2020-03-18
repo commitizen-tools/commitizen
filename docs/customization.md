@@ -14,10 +14,10 @@ Check an [example](convcomms) on how to configure `BaseCommitizen`.
 You can also automate the steps above through [cookiecutter](https://cookiecutter.readthedocs.io/en/1.7.0/).
 
 ```sh
-cookiecutter gh:Lee-W/commitizen_cz_template
+cookiecutter gh:commitizen-tools/commitizen_cz_template
 ```
 
-See [Lee-W/commitizen_cz_template](https://github.com/Lee-W/commitizen_cz_template) for detail.
+See [commitizen_cz_template](https://github.com/commitizen-tools/commitizen_cz_template) for detail.
 
 ### Custom commit rules
 
