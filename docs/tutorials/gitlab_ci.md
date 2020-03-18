@@ -10,7 +10,7 @@ For this example, we have a `python/django` application and `Docker` as a contai
 2. A developer creates a merge request (MR) against `master` branch
 3. When the `MR` is merged into master, the 2 stages of the CI are executed
 4. For simplification, we store the software version in a file called `VERSION`. You can use any file that you want as `commitizen` supports it.
-5. The commit message executed automatically by the `CI` must include `[skip-ci]` in the message; otherwise, the process will generate a loop. You can define the message structure in [commitizen](https://woile.github.io/commitizen/bump/) as well.
+5. The commit message executed automatically by the `CI` must include `[skip-ci]` in the message; otherwise, the process will generate a loop. You can define the message structure in [commitizen](https://commitizen-tools.github.io/commitizen/bump/) as well.
 
 #### Gitlab Configuration:
 

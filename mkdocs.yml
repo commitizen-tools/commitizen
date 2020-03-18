@@ -4,8 +4,8 @@ site_description: commit rules, semantic version, conventional commits
 theme:
     name: 'material'
 
-repo_name: Woile/commitizen
-repo_url: https://github.com/Woile/commitizen
+repo_name: commitizen-tools/commitizen
+repo_url: https://github.com/commitizen-tools/commitizen
 edit_uri: ""
 
 nav:

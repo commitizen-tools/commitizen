@@ -1,11 +1,11 @@
-[![Github Actions](https://github.com/Woile/commitizen/workflows/Python%20package/badge.svg?style=flat-square)](https://github.com/Woile/commitizen/actions)
+[![Github Actions](https://github.com/commitizen-tools/commitizen/workflows/Python%20package/badge.svg?style=flat-square)](https://github.com/commitizen-tools/commitizen/actions)
 [![Conventional
 Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square)](https://conventionalcommits.org)
 [![PyPI Package latest
 release](https://img.shields.io/pypi/v/commitizen.svg?style=flat-square)](https://pypi.org/project/commitizen/)
 [![Supported
 versions](https://img.shields.io/pypi/pyversions/commitizen.svg?style=flat-square)](https://pypi.org/project/commitizen/)
-[![Codecov](https://img.shields.io/codecov/c/github/Woile/commitizen.svg?style=flat-square)](https://codecov.io/gh/Woile/commitizen)
+[![Codecov](https://img.shields.io/codecov/c/github/commitizen-tools/commitizen.svg?style=flat-square)](https://codecov.io/gh/commitizen-tools/commitizen)
 
 ![Using commitizen cli](images/demo.gif)
 
@@ -115,4 +115,4 @@ Feel free to create a PR.
 [semver]: https://semver.org/
 [keepchangelog]: https://keepachangelog.com/
 [gitscm]: https://git-scm.com/downloads
-[travis]: https://img.shields.io/travis/Woile/commitizen.svg?style=flat-square
+[travis]: https://img.shields.io/travis/commitizen-tools/commitizen.svg?style=flat-square

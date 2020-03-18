@@ -130,7 +130,7 @@ That's it, your commitizen now supports custom rules, and you can run.
 cz -n cz_strange bump
 ```
 
-[convcomms]: https://github.com/Woile/commitizen/blob/master/commitizen/cz/conventional_commits/conventional_commits.py
+[convcomms]: https://github.com/commitizen-tools/commitizen/blob/master/commitizen/cz/conventional_commits/conventional_commits.py
 
 ### Raise Customize Exception
 
