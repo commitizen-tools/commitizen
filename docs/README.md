@@ -115,4 +115,3 @@ Feel free to create a PR.
 [semver]: https://semver.org/
 [keepchangelog]: https://keepachangelog.com/
 [gitscm]: https://git-scm.com/downloads
-[travis]: https://img.shields.io/travis/commitizen-tools/commitizen.svg?style=flat-square
