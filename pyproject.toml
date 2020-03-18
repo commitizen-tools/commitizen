@@ -35,7 +35,7 @@ authors = ["Santiago Fraire <santiwilly@gmail.com>"]
 license = "MIT"
 keywords = ["commitizen", "conventional", "commits", "git"]
 readme = "docs/README.md"
-homepage = "https://github.com/woile/commitizen"
+homepage = "https://github.com/commitizen-tools/commitizen"
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.6",

@@ -35,5 +35,5 @@ understand what happened.
 | `fix(commands): bump error when no user provided` | `fix: stuff` |
 | `feat: add new commit command` | `feat: commit command introduced` |
 
-[customization]: https://woile.github.io/commitizen/customization/
+[customization]: https://commitizen-tools.github.io/commitizen/customization/
 [conventional_commits]: https://www.conventionalcommits.org
