@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.18.0
+
+### Feature
+
+- added a derivative of conventional commits enforcing JIRA issues as scope.
+
 ## v1.12.0
 
 ### Feature
