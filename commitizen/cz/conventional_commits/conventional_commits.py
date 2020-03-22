@@ -193,4 +193,6 @@ class ConventionalCommitsCz(BaseCommitizen):
     def process_commit(self, commit: str) -> str:
         pat = re.compile(self.schema_pattern())
         m = re.match(pat, commit)
+        if m is None:
+            return ''
         return m.group(3).strip()

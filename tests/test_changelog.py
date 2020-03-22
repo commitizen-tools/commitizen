@@ -102,8 +102,8 @@ VERSION_CASES: list = [
 CATEGORIES_CASES: list = [
     ("## 1.0.0 (2019-07-12)", {}),
     ("## 2.3.0a0", {}),
-    ("### Bug fixes", {"category": "Bug fixes"}),
-    ("### Features", {"category": "Features"}),
+    ("### Bug fixes", {"change_type": "Bug fixes"}),
+    ("### Features", {"change_type": "Features"}),
     ("- issue in poetry add preventing the installation in py36", {}),
 ]
 CATEGORIES_TRANSFORMATIONS: list = [
@@ -133,13 +133,13 @@ def test_parse_md_version(test_input, expected):
 
 
 @pytest.mark.parametrize("test_input,expected", CATEGORIES_CASES)
-def test_parse_md_category(test_input, expected):
-    assert changelog.parse_md_category(test_input) == expected
+def test_parse_md_change_type(test_input, expected):
+    assert changelog.parse_md_change_type(test_input) == expected
 
 
 @pytest.mark.parametrize("test_input,expected", CATEGORIES_TRANSFORMATIONS)
-def test_transform_category(test_input, expected):
-    assert changelog.transform_category(test_input) == expected
+def test_transform_change_type(test_input, expected):
+    assert changelog.transform_change_type(test_input) == expected
 
 
 @pytest.mark.parametrize("test_input,expected", MESSAGES_CASES)
@@ -147,10 +147,10 @@ def test_parse_md_message(test_input, expected):
     assert changelog.parse_md_message(test_input) == expected
 
 
-def test_transform_category_fail():
+def test_transform_change_type_fail():
     with pytest.raises(ValueError) as excinfo:
-        changelog.transform_category("Bugs")
-    assert "Could not match a category" in str(excinfo.value)
+        changelog.transform_change_type("Bugs")
+    assert "Could not match a change_type" in str(excinfo.value)
 
 
 def test_generate_block_tree(existing_changelog_file):
@@ -162,16 +162,16 @@ def test_generate_block_tree(existing_changelog_file):
             {
                 "scope": None,
                 "message": "issue in poetry add preventing the installation in py36",
-                "category": "fix",
+                "change_type": "fix",
             },
-            {"scope": "users", "message": "lorem ipsum apap", "category": "fix"},
+            {"scope": "users", "message": "lorem ipsum apap", "change_type": "fix"},
             {
                 "scope": None,
                 "message": (
                     "it is possible to specify a pattern to be matched "
                     "in configuration files bump."
                 ),
-                "category": "feat",
+                "change_type": "feat",
             },
         ],
         "version": "1.0.0",
@@ -191,23 +191,23 @@ def test_generate_full_tree(existing_changelog_file):
                     "message": (
                         "issue in poetry add preventing the installation in py36"
                     ),
-                    "category": "fix",
+                    "change_type": "fix",
                 },
-                {"scope": "users", "message": "lorem ipsum apap", "category": "fix"},
+                {"scope": "users", "message": "lorem ipsum apap", "change_type": "fix"},
                 {
                     "scope": None,
                     "message": (
                         "it is possible to specify a pattern to be matched "
                         "in configuration files bump."
                     ),
-                    "category": "feat",
+                    "change_type": "feat",
                 },
             ],
             "version": "1.0.0",
             "date": "2019-07-12",
         },
         {
-            "commits": [{"scope": None, "message": "holis", "category": "fix"}],
+            "commits": [{"scope": None, "message": "holis", "change_type": "fix"}],
             "version": "0.9",
             "date": "2019-07-11",
         },

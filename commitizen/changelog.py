@@ -22,10 +22,10 @@ import re
 from typing import Dict, Generator, Iterable, List
 
 MD_VERSION_RE = r"^##\s(?P<version>[a-zA-Z0-9.+]+)\s?\(?(?P<date>[0-9-]+)?\)?"
-MD_CATEGORY_RE = r"^###\s(?P<category>[a-zA-Z0-9.+\s]+)"
+MD_CHANGE_TYPE_RE = r"^###\s(?P<change_type>[a-zA-Z0-9.+\s]+)"
 MD_MESSAGE_RE = r"^-\s(\*{2}(?P<scope>[a-zA-Z0-9]+)\*{2}:\s)?(?P<message>.+)"
 md_version_c = re.compile(MD_VERSION_RE)
-md_category_c = re.compile(MD_CATEGORY_RE)
+md_change_type_c = re.compile(MD_CHANGE_TYPE_RE)
 md_message_c = re.compile(MD_MESSAGE_RE)
 
 
@@ -83,8 +83,8 @@ def parse_md_version(md_version: str) -> Dict:
     return m.groupdict()
 
 
-def parse_md_category(md_category: str) -> Dict:
-    m = md_category_c.match(md_category)
+def parse_md_change_type(md_change_type: str) -> Dict:
+    m = md_change_type_c.match(md_change_type)
     if not m:
         return {}
     return m.groupdict()
@@ -97,31 +97,31 @@ def parse_md_message(md_message: str) -> Dict:
     return m.groupdict()
 
 
-def transform_category(category: str) -> str:
-    _category_lower = category.lower()
+def transform_change_type(change_type: str) -> str:
+    _change_type_lower = change_type.lower()
     for match_value, output in CATEGORIES:
-        if re.search(match_value, _category_lower):
+        if re.search(match_value, _change_type_lower):
             return output
     else:
-        raise ValueError(f"Could not match a category with {category}")
+        raise ValueError(f"Could not match a change_type with {change_type}")
 
 
 def generate_block_tree(block: List[str]) -> Dict:
     tree: Dict = {"commits": []}
-    category = None
+    change_type = None
     for line in block:
         if line.startswith("## "):
-            category = None
+            change_type = None
             tree = {**tree, **parse_md_version(line)}
         elif line.startswith("### "):
-            result = parse_md_category(line)
+            result = parse_md_change_type(line)
             if not result:
                 continue
-            category = transform_category(result.get("category", ""))
+            change_type = transform_change_type(result.get("change_type", ""))
 
         elif line.startswith("- "):
             commit = parse_md_message(line)
-            commit["category"] = category
+            commit["change_type"] = change_type
             tree["commits"].append(commit)
         else:
             print("it's something else: ", line)
