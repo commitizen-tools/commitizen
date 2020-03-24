@@ -160,7 +160,7 @@ data = {
                     },
                     {
                         "name": "--rev-range",
-                        "help": ("a reange of git rev to check. e.g, master..HEAD"),
+                        "help": "a range of git rev to check. e.g, master..HEAD",
                         "exclusive_group": "group1",
                     },
                 ],

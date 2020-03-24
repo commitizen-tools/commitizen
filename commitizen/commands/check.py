@@ -32,7 +32,12 @@ class Check:
 
     def _valid_command_argument(self):
         if bool(self.commit_msg_file) is bool(self.rev_range):
-            out.error("One and only one argument is required for check command!")
+            out.error(
+                (
+                    "One and only one argument is required for check command! "
+                    "See 'cz check -h' for more information"
+                )
+            )
             raise SystemExit()
 
     def __call__(self):
