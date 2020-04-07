@@ -6,7 +6,7 @@ The basic steps are:
 
 1. Inheriting from `BaseCommitizen`
 2. Give a name to your rules.
-3. expose the class at the end of your file assigning it to `discover_this`
+3. Expose the class at the end of your file assigning it to `discover_this`
 4. Create a python package starting with `cz_` using `setup.py`, `poetry`, etc
 
 Check an [example](convcomms) on how to configure `BaseCommitizen`.
@@ -21,7 +21,7 @@ See [commitizen_cz_template](https://github.com/commitizen-tools/commitizen_cz_t
 
 ### Custom commit rules
 
-Create a file starting with `cz_`, for example `cz_jira.py`. This prefix is used to detect the plugin. Same method [flask uses]
+Create a file starting with `cz_`, for example `cz_jira.py`. This prefix is used to detect the plug-in. Same method [flask uses]
 
 Inherit from `BaseCommitizen`, and you must define `questions` and
 `message`. The others are optional.
@@ -73,7 +73,7 @@ class JiraCz(BaseCommitizen):
         return 'We use this because is useful'
 
 
-discover_this = JiraCz  # used by the plugin system
+discover_this = JiraCz  # used by the plug-in system
 ```
 
 The next file required is `setup.py` modified from flask version.
@@ -189,7 +189,7 @@ message = "Do you want to add body message in commit?"
 
 | Parameter | Type | Default | Description |
 | --------- | ---- | ------- | ----------- |
-| `question` | `dict` | `None` | Questions regarding the commit message. Detatiled below. |
+| `question` | `dict` | `None` | Questions regarding the commit message. Detailed below. |
 | `message_template` | `str` | `None` | The template for generating message from the given answers. `message_template` should either follow the [string.Template](https://docs.python.org/3/library/string.html#template-strings) or [Jinja2](https://jinja.palletsprojects.com/en/2.10.x/) formatting specification, and all the variables in this template should be defined in `name` in `questions`. Note that `Jinja2` is not installed by default. If not installed, commitizen will use `string.Template` formatting. |
 | `example` | `str` | `None` | (OPTIONAL) Provide an example to help understand the style. Used by `cz example`. |
 | `schema` | `str` | `None` | (OPTIONAL) Show the schema used. Used by `cz schema`. |

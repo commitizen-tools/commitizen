@@ -65,7 +65,7 @@ The extra tab before the square brackets (`]`) at the end is required.
 
 | Variable | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
-| `name` | `str` | `"cz_conventional_commits"` | Name of the commiting rules to use |
+| `name` | `str` | `"cz_conventional_commits"` | Name of the committing rules to use |
 | `version` | `str` | `None` | Current version. Example: "0.1.2" |
 | `version_files` | `list` | `[ ]` | Files were the version will be updated. A pattern to match a line, can also be specified, separated by `:` [See more](https://commitizen-tools.github.io/commitizen/bump#files) |
 | `tag_format` | `str` | `None` | Format for the git tag, useful for old projects, that use a convention like `"v1.2.1"`. [See more](https://commitizen-tools.github.io/commitizen/bump#tag_format) |

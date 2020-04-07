@@ -59,4 +59,4 @@ The `--commit-msg-file` flag is required, not optional.
 Each time you create a commit, automatically, this hook will analyze it.
 If the commit message is invalid, it'll be rejected.
 
-The commit should follow the given commiting rules; otherwise, it won't be accepted.
+The commit should follow the given committing rules; otherwise, it won't be accepted.
