@@ -38,7 +38,7 @@ The latest step is to create a `deploy key.` To do this, we should create it und
 
 If you have more projects under the same organization, you can reuse the deploy key created before, but you will have to repeat the step where we have created the environment variables (ssh key, email, and username).
 
-tip: If the CI raise some errors, try to unprotect the private key.
+tip: If the CI raise some errors, try to unprotected the private key.
 
 #### Defining GitLab CI Pipeline
 

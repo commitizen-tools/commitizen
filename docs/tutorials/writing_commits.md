@@ -22,7 +22,7 @@ Not to the important part, when writing commits, it's important to think about:
 You may think this is trivial, but it's not. It's important for the reader to
 understand what happened.
 
-### Recomendations
+### Recommendations
 
 - **Keep the message short**: Makes the list of commits more readable (~50 chars).
 - **Talk imperative**: Follow this rule: `If applied, this commit will <commit message>`

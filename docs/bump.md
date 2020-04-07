@@ -108,7 +108,7 @@ tag_format = v$minor.$major.$patch$prerelease
 
 The variables must be preceded by a `$` sign.
 
-Suppported variables:
+Supported variables:
 
 | Variable      | Description                                |
 | ------------- | ------------------------------------------ |

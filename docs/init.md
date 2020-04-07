@@ -1,7 +1,7 @@
 For new projects, it is possible to run `cz init`.
 
 This command will prompt the user for information about the project and will
-configure the selected file type (`pyproject.toml`, `.cz.toml`, etc).
+configure the selected file type (`pyproject.toml`, `.cz.toml`, etc.).
 
 This will help you quickly set up your project with `commitizen`.
 
