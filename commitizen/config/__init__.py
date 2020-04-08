@@ -1,6 +1,6 @@
 import warnings
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 from commitizen import defaults, git, out
 from commitizen.error_codes import NOT_A_GIT_PROJECT
@@ -56,6 +56,7 @@ def read_cfg() -> BaseConfig:
         with open(filename, "r") as f:
             data: str = f.read()
 
+        _conf: Union[TomlConfig, IniConfig]
         if "toml" in filename.suffix:
             _conf = TomlConfig(data=data, path=filename)
         else:

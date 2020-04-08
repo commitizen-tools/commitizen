@@ -1,6 +1,6 @@
 import warnings
-from typing import Optional, Union
 from pathlib import Path
+from typing import Optional, Union
 
 from commitizen.defaults import DEFAULT_SETTINGS
 
