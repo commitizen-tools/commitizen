@@ -1,12 +1,14 @@
 import os
 
+from typing import List, Dict, Any
+
 from commitizen.cz.base import BaseCommitizen
 
 __all__ = ["JiraSmartCz"]
 
 
 class JiraSmartCz(BaseCommitizen):
-    def questions(self):
+    def questions(self) -> List[Dict[str, Any]]:
         questions = [
             {
                 "type": "input",
@@ -43,7 +45,7 @@ class JiraSmartCz(BaseCommitizen):
         ]
         return questions
 
-    def message(self, answers):
+    def message(self, answers) -> str:
         return " ".join(
             filter(
                 bool,
@@ -57,7 +59,7 @@ class JiraSmartCz(BaseCommitizen):
             )
         )
 
-    def example(self):
+    def example(self) -> str:
         return (
             "JRA-34 #comment corrected indent issue\n"
             "JRA-35 #time 1w 2d 4h 30m Total work logged\n"
@@ -66,13 +68,13 @@ class JiraSmartCz(BaseCommitizen):
             "ahead of schedule"
         )
 
-    def schema(self):
+    def schema(self) -> str:
         return "<ignored text> <ISSUE_KEY> <ignored text> #<COMMAND> <optional COMMAND_ARGUMENTS>"  # noqa
 
     def schema_pattern(self) -> str:
         return r".*[A-Z]{2,}\-[0-9]+( #| .* #).+( #.+)*"
 
-    def info(self):
+    def info(self) -> str:
         dir_path = os.path.dirname(os.path.realpath(__file__))
         filepath = os.path.join(dir_path, "jira_info.txt")
         with open(filepath, "r") as f:

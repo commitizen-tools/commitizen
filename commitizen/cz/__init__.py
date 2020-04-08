@@ -11,7 +11,7 @@ registry = {
     "cz_customize": CustomizeCommitsCz,
 }
 plugins = {
-    name: importlib.import_module(name).discover_this
+    name: importlib.import_module(name).discover_this  # type: ignore
     for finder, name, ispkg in pkgutil.iter_modules()
     if name.startswith("cz_")
 }
