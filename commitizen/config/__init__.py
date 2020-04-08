@@ -29,7 +29,7 @@ def load_global_conf() -> Optional[IniConfig]:
     with open(global_cfg, "r") as f:
         data = f.read()
 
-    conf = IniConfig(data)
+    conf = IniConfig(data=data, path=global_cfg)
     return conf
 
 
