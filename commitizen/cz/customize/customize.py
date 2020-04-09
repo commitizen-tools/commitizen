@@ -1,5 +1,5 @@
 try:
-    from jinja2 import Template  # type: ignore
+    from jinja2 import Template
 except ImportError:
     from string import Template  # type: ignore
 
