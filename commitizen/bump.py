@@ -66,10 +66,12 @@ def prerelease_generator(current_version: str, prerelease: Optional[str] = None)
         return ""
 
     version = Version(current_version)
-    new_prerelease_number: int = 0
-    if version.is_prerelease and prerelease.startswith(version.pre[0]):
-        prev_prerelease: int = list(version.pre)[1]
+    # version.pre is needed for mypy check
+    if version.is_prerelease and version.pre and prerelease.startswith(version.pre[0]):
+        prev_prerelease: int = version.pre[1]
         new_prerelease_number = prev_prerelease + 1
+    else:
+        new_prerelease_number = 0
     pre_version = f"{prerelease}{new_prerelease_number}"
     return pre_version
 
@@ -176,7 +178,8 @@ def create_tag(version: Union[Version, str], tag_format: Optional[str] = None):
 
     major, minor, patch = version.release
     prerelease = ""
-    if version.is_prerelease:
+    # version.pre is needed for mypy check
+    if version.is_prerelease and version.pre:
         prerelease = f"{version.pre[0]}{version.pre[1]}"
 
     t = Template(tag_format)
