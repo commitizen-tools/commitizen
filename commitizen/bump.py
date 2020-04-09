@@ -40,6 +40,7 @@ def find_increment(
                 for match_pattern in increments_map.keys():
                     if re.match(match_pattern, found_keyword):
                         new_increment = increments_map[match_pattern]
+                        break
 
                 if increment == "MAJOR":
                     continue
