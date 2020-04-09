@@ -1,6 +1,6 @@
 import os
 import re
-from typing import Dict
+from typing import Dict, Optional
 
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
@@ -22,8 +22,8 @@ class Check:
             the flags provided by the user
 
         """
-        self.commit_msg_file: str = arguments.get("commit_msg_file")
-        self.rev_range: str = arguments.get("rev_range")
+        self.commit_msg_file: Optional[str] = arguments.get("commit_msg_file")
+        self.rev_range: Optional[str] = arguments.get("rev_range")
 
         self._valid_command_argument()
 
@@ -76,4 +76,4 @@ class Check:
     def validate_commit_message(commit_msg: str, pattern: str) -> bool:
         if commit_msg.startswith("Merge") or commit_msg.startswith("Revert"):
             return True
-        return re.match(pattern, commit_msg)
+        return bool(re.match(pattern, commit_msg))
