@@ -2,7 +2,7 @@ import configparser
 import json
 import warnings
 from pathlib import Path
-from typing import Optional, Union
+from typing import Union
 
 from .base_config import BaseConfig
 
