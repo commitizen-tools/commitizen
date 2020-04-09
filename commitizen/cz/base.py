@@ -3,6 +3,8 @@ from typing import List, Optional, Tuple
 
 from prompt_toolkit.styles import Style, merge_styles
 
+from commitizen.config.base_config import BaseConfig
+
 
 class BaseCommitizen(metaclass=ABCMeta):
     bump_pattern: Optional[str] = None
@@ -20,7 +22,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         ("disabled", "fg:#858585 italic"),
     ]
 
-    def __init__(self, config: dict):
+    def __init__(self, config: BaseConfig):
         self.config = config
         if not self.config.settings.get("style"):
             self.config.settings.update({"style": BaseCommitizen.default_style_config})
