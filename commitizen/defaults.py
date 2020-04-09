@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Dict, Any
+from typing import Any, Dict
 
 name: str = "cz_conventional_commits"
 # TODO: .cz, setup.cfg, .cz.cfg should be removed in 2.0

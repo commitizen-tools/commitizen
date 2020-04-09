@@ -1,6 +1,6 @@
 import warnings
 from pathlib import Path
-from typing import Optional, Union, Dict, Any
+from typing import Any, Dict, Optional, Union
 
 from commitizen.defaults import DEFAULT_SETTINGS
 

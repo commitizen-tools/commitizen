@@ -3,11 +3,10 @@ try:
 except ImportError:
     from string import Template  # type: ignore
 
-from typing import Optional, List, Any, Dict
+from typing import Any, Dict, List, Optional
 
-from commitizen import defaults
+from commitizen import defaults, out
 from commitizen.config import BaseConfig
-from commitizen import out
 from commitizen.cz.base import BaseCommitizen
 from commitizen.error_codes import MISSING_CONFIG
 
@@ -22,9 +21,7 @@ class CustomizeCommitsCz(BaseCommitizen):
         super(CustomizeCommitsCz, self).__init__(config)
 
         if "customize" not in self.config.settings:
-            out.error(
-                "fatal: customize is not set in configuration file."
-            )
+            out.error("fatal: customize is not set in configuration file.")
             raise SystemExit(MISSING_CONFIG)
         self.custom_settings = self.config.settings["customize"]
 
