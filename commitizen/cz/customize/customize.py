@@ -7,7 +7,9 @@ from typing import Optional, List, Any, Dict
 
 from commitizen import defaults
 from commitizen.config import BaseConfig
+from commitizen import out
 from commitizen.cz.base import BaseCommitizen
+from commitizen.error_codes import MISSING_CONFIG
 
 __all__ = ["CustomizeCommitsCz"]
 
@@ -18,7 +20,13 @@ class CustomizeCommitsCz(BaseCommitizen):
 
     def __init__(self, config: BaseConfig):
         super(CustomizeCommitsCz, self).__init__(config)
-        self.custom_settings = self.config.settings.get("customize")
+
+        if "customize" not in self.config.settings:
+            out.error(
+                "fatal: customize is not set in configuration file."
+            )
+            raise SystemExit(MISSING_CONFIG)
+        self.custom_settings = self.config.settings["customize"]
 
         custom_bump_pattern = self.custom_settings.get("bump_pattern")
         if custom_bump_pattern:
