@@ -9,3 +9,4 @@ ${PREFIX}pytest --cov-report term-missing --cov-report=xml:coverage.xml --cov=co
 ${PREFIX}black commitizen tests --check
 ${PREFIX}isort --recursive --check-only commitizen tests
 ${PREFIX}flake8 commitizen/ tests/
+${PREFIX}mypy commitizen/ tests/
