@@ -1,17 +1,17 @@
 import warnings
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional, Union, Dict, Any
 
 from commitizen.defaults import DEFAULT_SETTINGS
 
 
 class BaseConfig:
     def __init__(self):
-        self._settings: dict = DEFAULT_SETTINGS.copy()
+        self._settings: Dict[str, Any] = DEFAULT_SETTINGS.copy()
         self._path: Optional[Path] = None
 
     @property
-    def settings(self) -> dict:
+    def settings(self) -> Dict[str, Any]:
         return self._settings
 
     @property
