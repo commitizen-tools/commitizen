@@ -6,6 +6,6 @@ if [ -d 'venv' ] ; then
 fi
 
 ${PREFIX}pytest --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen tests/
-${PREFIX}black commitizen tests
-${PREFIX}isort --recursive commitizen tests
+${PREFIX}black commitizen tests --check
+${PREFIX}isort --recursive --check-only commitizen tests
 ${PREFIX}flake8 --max-line-length=88 commitizen/ tests/
