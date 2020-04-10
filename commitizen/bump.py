@@ -1,5 +1,5 @@
 import re
-from collections import defaultdict
+from collections import OrderedDict
 from itertools import zip_longest
 from string import Template
 from typing import List, Optional, Union
@@ -18,28 +18,36 @@ from commitizen.git import GitCommit
 
 
 def find_increment(
-    commits: List[GitCommit], regex: str = bump_pattern, increments_map: dict = bump_map
+    commits: List[GitCommit],
+    regex: str = bump_pattern,
+    increments_map: Union[dict, OrderedDict] = bump_map,
 ) -> Optional[str]:
+
+    if isinstance(increments_map, dict):
+        increments_map = OrderedDict(increments_map)
 
     # Most important cases are major and minor.
     # Everything else will be considered patch.
-    increments_map_default = defaultdict(lambda: None, increments_map)
-    pattern = re.compile(regex)
+    select_pattern = re.compile(regex)
     increment = None
 
     for commit in commits:
         for message in commit.message.split("\n"):
-            result = pattern.search(message)
-            if not result:
-                continue
-            found_keyword = result.group(0)
-            new_increment = increments_map_default[found_keyword]
-            if increment == "MAJOR":
-                continue
-            elif increment == "MINOR" and new_increment == "MAJOR":
-                increment = new_increment
-            elif increment == "PATCH" or increment is None:
-                increment = new_increment
+            result = select_pattern.search(message)
+            if result:
+                found_keyword = result.group(0)
+                new_increment = None
+                for match_pattern in increments_map.keys():
+                    if re.match(match_pattern, found_keyword):
+                        new_increment = increments_map[match_pattern]
+                        break
+
+                if increment == "MAJOR":
+                    continue
+                elif increment == "MINOR" and new_increment == "MAJOR":
+                    increment = new_increment
+                elif increment == "PATCH" or increment is None:
+                    increment = new_increment
 
     return increment
 

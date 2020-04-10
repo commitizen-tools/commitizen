@@ -20,10 +20,23 @@ MINOR_INCREMENTS_CC = [
     "fix(setup.py): future is now required for every python version",
 ]
 
-MAJOR_INCREMENTS_CC = [
+MAJOR_INCREMENTS_BREAKING_CHANGE_CC = [
     "feat(cli): added version",
     "docs(README): motivation",
     "BREAKING CHANGE: `extends` key in config file is now used for extending other config files",  # noqa
+    "fix(setup.py): future is now required for every python version",
+]
+
+MAJOR_INCREMENTS_BREAKING_CHANGE_ALT_CC = [
+    "feat(cli): added version",
+    "docs(README): motivation",
+    "BREAKING-CHANGE: `extends` key in config file is now used for extending other config files",  # noqa
+    "fix(setup.py): future is now required for every python version",
+]
+
+MAJOR_INCREMENTS_EXCLAMATION_CC = [
+    "feat(cli)!: added version",
+    "docs(README): motivation",
     "fix(setup.py): future is now required for every python version",
 ]
 
@@ -51,7 +64,9 @@ semantic_version_map = {"MAJOR": "MAJOR", "MINOR": "MINOR", "PATCH": "PATCH"}
     (
         (PATCH_INCREMENTS_CC, "PATCH"),
         (MINOR_INCREMENTS_CC, "MINOR"),
-        (MAJOR_INCREMENTS_CC, "MAJOR"),
+        (MAJOR_INCREMENTS_BREAKING_CHANGE_CC, "MAJOR"),
+        (MAJOR_INCREMENTS_BREAKING_CHANGE_ALT_CC, "MAJOR"),
+        (MAJOR_INCREMENTS_EXCLAMATION_CC, "MAJOR"),
         (NONE_INCREMENT_CC, None),
     ),
 )
