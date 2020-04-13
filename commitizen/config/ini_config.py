@@ -1,12 +1,14 @@
 import configparser
 import json
 import warnings
+from pathlib import Path
+from typing import Union
 
 from .base_config import BaseConfig
 
 
 class IniConfig(BaseConfig):
-    def __init__(self, *, data: str, path: str):
+    def __init__(self, *, data: str, path: Union[Path, str]):
         warnings.simplefilter("always", DeprecationWarning)
         warnings.warn(
             (

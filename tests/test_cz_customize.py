@@ -1,7 +1,8 @@
 import pytest
 
-from commitizen.config import TomlConfig
+from commitizen.config import BaseConfig, TomlConfig
 from commitizen.cz.customize import CustomizeCommitsCz
+from commitizen.error_codes import MISSING_CONFIG
 
 
 @pytest.fixture(scope="module")
@@ -35,6 +36,14 @@ def config():
     message = "Do you want to add body message in commit?"
     """
     return TomlConfig(data=toml_str, path="not_exist.toml")
+
+
+def test_initialize_cz_customize_failed():
+    with pytest.raises(SystemExit) as excinfo:
+        config = BaseConfig()
+        _ = CustomizeCommitsCz(config)
+
+    assert excinfo.value.code == MISSING_CONFIG
 
 
 def test_bump_pattern(config):

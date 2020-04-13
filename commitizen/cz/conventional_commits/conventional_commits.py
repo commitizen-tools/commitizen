@@ -1,4 +1,5 @@
 import os
+from typing import Any, Dict, List
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
@@ -29,8 +30,8 @@ class ConventionalCommitsCz(BaseCommitizen):
     bump_pattern = defaults.bump_pattern
     bump_map = defaults.bump_map
 
-    def questions(self) -> list:
-        questions = [
+    def questions(self) -> List[Dict[str, Any]]:
+        questions: List[Dict[str, Any]] = [
             {
                 "type": "list",
                 "name": "prefix",

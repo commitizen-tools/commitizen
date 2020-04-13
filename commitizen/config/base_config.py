@@ -1,20 +1,21 @@
 import warnings
-from typing import Optional
+from pathlib import Path
+from typing import Any, Dict, Optional, Union
 
 from commitizen.defaults import DEFAULT_SETTINGS
 
 
 class BaseConfig:
     def __init__(self):
-        self._settings: dict = DEFAULT_SETTINGS.copy()
-        self._path: Optional[str] = None
+        self._settings: Dict[str, Any] = DEFAULT_SETTINGS.copy()
+        self._path: Optional[Path] = None
 
     @property
-    def settings(self) -> dict:
+    def settings(self) -> Dict[str, Any]:
         return self._settings
 
     @property
-    def path(self) -> str:
+    def path(self) -> Optional[Path]:
         return self._path
 
     def set_key(self, key, value):
@@ -28,8 +29,8 @@ class BaseConfig:
     def update(self, data: dict):
         self._settings.update(data)
 
-    def add_path(self, path: str):
-        self._path = path
+    def add_path(self, path: Union[str, Path]):
+        self._path = Path(path)
 
     def _parse_setting(self, data: str) -> dict:
         raise NotImplementedError()

@@ -3,6 +3,8 @@ from typing import List, Optional, Tuple
 
 from prompt_toolkit.styles import Style, merge_styles
 
+from commitizen.config.base_config import BaseConfig
+
 
 class BaseCommitizen(metaclass=ABCMeta):
     bump_pattern: Optional[str] = None
@@ -20,7 +22,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         ("disabled", "fg:#858585 italic"),
     ]
 
-    def __init__(self, config: dict):
+    def __init__(self, config: BaseConfig):
         self.config = config
         if not self.config.settings.get("style"):
             self.config.settings.update({"style": BaseCommitizen.default_style_config})
@@ -42,18 +44,18 @@ class BaseCommitizen(metaclass=ABCMeta):
             ]
         )
 
-    def example(self) -> str:
+    def example(self) -> Optional[str]:
         """Example of the commit message."""
         raise NotImplementedError("Not Implemented yet")
 
-    def schema(self) -> str:
+    def schema(self) -> Optional[str]:
         """Schema definition of the commit message."""
         raise NotImplementedError("Not Implemented yet")
 
-    def schema_pattern(self) -> str:
+    def schema_pattern(self) -> Optional[str]:
         """Regex matching the schema used for message validation"""
         raise NotImplementedError("Not Implemented yet")
 
-    def info(self) -> str:
+    def info(self) -> Optional[str]:
         """Information about the standardized commit message."""
         raise NotImplementedError("Not Implemented yet")

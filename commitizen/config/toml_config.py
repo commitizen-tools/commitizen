@@ -1,10 +1,13 @@
+from pathlib import Path
+from typing import Union
+
 from tomlkit import exceptions, parse
 
 from .base_config import BaseConfig
 
 
 class TomlConfig(BaseConfig):
-    def __init__(self, *, data: str, path: str):
+    def __init__(self, *, data: str, path: Union[Path, str]):
         super(TomlConfig, self).__init__()
         self.is_empty_config = False
         self._parse_setting(data)
