@@ -540,7 +540,7 @@
 <p>The latest step is to create a <code>deploy key.</code> To do this, we should create it under the section <code>settings/repository</code> and fill it with the <code>public key</code> generated before. Check <code>Write access allowed</code>; otherwise, the runner won't be able to write the changes to the repository.</p>
 <p><img alt="gitlab deploy key" src="../../images/gitlab_ci/gitlab_deploy_key.png" /></p>
 <p>If you have more projects under the same organization, you can reuse the deploy key created before, but you will have to repeat the step where we have created the environment variables (ssh key, email, and username).</p>
-<p>tip: If the CI raise some errors, try to unprotect the private key.</p>
+<p>tip: If the CI raise some errors, try to unprotected the private key.</p>
 <h4 id="defining-gitlab-ci-pipeline">Defining GitLab CI Pipeline</h4>
 <ol>
 <li>

@@ -570,7 +570,7 @@
 <ol>
 <li>Inheriting from <code>BaseCommitizen</code></li>
 <li>Give a name to your rules.</li>
-<li>expose the class at the end of your file assigning it to <code>discover_this</code></li>
+<li>Expose the class at the end of your file assigning it to <code>discover_this</code></li>
 <li>Create a python package starting with <code>cz_</code> using <code>setup.py</code>, <code>poetry</code>, etc</li>
 </ol>
 <p>Check an <a href="convcomms">example</a> on how to configure <code>BaseCommitizen</code>.</p>
@@ -581,7 +581,7 @@
 
 <p>See <a href="https://github.com/commitizen-tools/commitizen_cz_template">commitizen_cz_template</a> for detail.</p>
 <h3 id="custom-commit-rules">Custom commit rules</h3>
-<p>Create a file starting with <code>cz_</code>, for example <code>cz_jira.py</code>. This prefix is used to detect the plugin. Same method <a href="http://flask.pocoo.org/docs/0.12/extensiondev/">flask uses</a></p>
+<p>Create a file starting with <code>cz_</code>, for example <code>cz_jira.py</code>. This prefix is used to detect the plug-in. Same method <a href="http://flask.pocoo.org/docs/0.12/extensiondev/">flask uses</a></p>
 <p>Inherit from <code>BaseCommitizen</code>, and you must define <code>questions</code> and
 <code>message</code>. The others are optional.</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">commitizen.cz.base</span> <span class="kn">import</span> <span class="n">BaseCommitizen</span>
@@ -630,7 +630,7 @@
         <span class="k">return</span> <span class="s1">&#39;We use this because is useful&#39;</span>
 
 
-<span class="n">discover_this</span> <span class="o">=</span> <span class="n">JiraCz</span>  <span class="c1"># used by the plugin system</span>
+<span class="n">discover_this</span> <span class="o">=</span> <span class="n">JiraCz</span>  <span class="c1"># used by the plug-in system</span>
 </code></pre></div>
 
 
@@ -761,7 +761,7 @@ doing <code>pip install .</code></p>
 <td><code>question</code></td>
 <td><code>dict</code></td>
 <td><code>None</code></td>
-<td>Questions regarding the commit message. Detatiled below.</td>
+<td>Questions regarding the commit message. Detailed below.</td>
 </tr>
 <tr>
 <td><code>message_template</code></td>
