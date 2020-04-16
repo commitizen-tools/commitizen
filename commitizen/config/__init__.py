@@ -43,11 +43,10 @@ def read_cfg() -> BaseConfig:
         )
         raise SystemExit(NOT_A_GIT_PROJECT)
 
-    allowed_cfg_files = defaults.config_files
     cfg_paths = (
         path / Path(filename)
         for path in [Path("."), git_project_root]
-        for filename in allowed_cfg_files
+        for filename in defaults.config_files
     )
     for filename in cfg_paths:
         if not filename.exists():
@@ -60,11 +59,6 @@ def read_cfg() -> BaseConfig:
         if "toml" in filename.suffix:
             _conf = TomlConfig(data=data, path=filename)
         else:
-            warnings.warn(
-                ".cz, setup.cfg, and .cz.cfg will be deprecated "
-                "in next major version. \n"
-                'Please use "pyproject.toml", ".cz.toml" instead'
-            )
             _conf = IniConfig(data=data, path=filename)
 
         if _conf.is_empty_config:
