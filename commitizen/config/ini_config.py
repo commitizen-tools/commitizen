@@ -9,16 +9,6 @@ from .base_config import BaseConfig
 
 class IniConfig(BaseConfig):
     def __init__(self, *, data: str, path: Union[Path, str]):
-        warnings.simplefilter("always", DeprecationWarning)
-        warnings.warn(
-            (
-                ".cz, setup.cfg, and .cz.cfg will be deprecated "
-                "in next major version. \n"
-                'Please use "pyproject.toml", ".cz.toml" instead'
-            ),
-            category=DeprecationWarning,
-        )
-
         super(IniConfig, self).__init__()
         self.is_empty_config = False
         self._parse_setting(data)
@@ -74,3 +64,13 @@ class IniConfig(BaseConfig):
             self._settings.update(_data)
         except KeyError:
             self.is_empty_config = True
+        else:
+            warnings.simplefilter("always", DeprecationWarning)
+            warnings.warn(
+                (
+                    ".cz, setup.cfg, and .cz.cfg will be deprecated "
+                    "in next major version. \n"
+                    'Please use "pyproject.toml", ".cz.toml" instead'
+                ),
+                category=DeprecationWarning,
+            )

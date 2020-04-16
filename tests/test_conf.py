@@ -142,6 +142,13 @@ def test_read_cfg_when_not_in_a_git_project(tmpdir):
             config.read_cfg()
 
 
+class TestInilConfig:
+    def test_read_setup_cfg_without_commitizen_config(self, tmpdir):
+        path = tmpdir.mkdir("commitizen").join("setup.cfg")
+        ini_config = config.IniConfig(data="", path=path)
+        assert ini_config.is_empty_config
+
+
 class TestTomlConfig:
     def test_init_empty_config_content(self, tmpdir):
         path = tmpdir.mkdir("commitizen").join(".cz.toml")
