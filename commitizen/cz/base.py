@@ -23,6 +23,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         ("text", ""),
         ("disabled", "fg:#858585 italic"),
     ]
+    commit_parser: Optional[str] = None
 
     def __init__(self, config: BaseConfig):
         self.config = config

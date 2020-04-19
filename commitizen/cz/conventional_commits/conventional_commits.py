@@ -1,6 +1,5 @@
 import os
 import re
-from collections import OrderedDict
 from typing import Any, Dict, List
 
 from commitizen import defaults
@@ -31,10 +30,8 @@ def parse_subject(text):
 class ConventionalCommitsCz(BaseCommitizen):
     bump_pattern = defaults.bump_pattern
     bump_map = defaults.bump_map
-    changelog_pattern = (
-        r"(?P<break>.*\n\nBREAKING CHANGE)|(?P<feat>^feat)|(?P<fix>^fix)"
-    )
-    changelog_map = OrderedDict({"break": "breaking", "feat": "feat", "fix": "fix"})
+    commit_parser = defaults.commit_parser
+    changelog_pattern = defaults.bump_pattern
 
     def questions(self) -> List[Dict[str, Any]]:
         questions: List[Dict[str, Any]] = [
@@ -194,5 +191,5 @@ class ConventionalCommitsCz(BaseCommitizen):
         pat = re.compile(self.schema_pattern())
         m = re.match(pat, commit)
         if m is None:
-            return ''
+            return ""
         return m.group(3).strip()

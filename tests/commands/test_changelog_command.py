@@ -28,7 +28,11 @@ def test_changlog_from_start(mocker, capsys):
         cli.main()
 
     out, _ = capsys.readouterr()
-    assert out == "# CHANGELOG\n\n## Unreleased\n### feat\n- new file\n\n\n"
+
+    assert (
+        out
+        == "\n## Unreleased \n\n### Refactor\n\n- not in changelog\n\n### Feat\n\n- new file\n\n"
+    )
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -51,10 +55,7 @@ def test_changlog_from_version_zero_point_two(mocker, capsys):
         cli.main()
 
     out, _ = capsys.readouterr()
-    assert (
-        out
-        == "# CHANGELOG\n\n## Unreleased\n### feat\n- after 0.2\n- after 0.2.0\n\n\n"
-    )
+    assert out == "\n## Unreleased \n\n### Feat\n\n- after 0.2\n- after 0.2.0\n\n"
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")

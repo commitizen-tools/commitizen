@@ -32,3 +32,5 @@ bump_map = OrderedDict(
     )
 )
 bump_message = "bump: version $current_version → $new_version"
+
+commit_parser = r"^(?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?:\s(?P<message>.*)?"  # noqa

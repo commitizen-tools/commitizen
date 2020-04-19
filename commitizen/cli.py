@@ -132,6 +132,15 @@ data = {
                         "help": "show changelog to stdout",
                     },
                     {
+                        "name": "--incremental",
+                        "action": "store_true",
+                        "default": False,
+                        "help": (
+                            "generates changelog from last created version, "
+                            "useful if the changelog has been manually modified"
+                        ),
+                    },
+                    {
                         "name": "--file-name",
                         "help": "file name of changelog (default: 'CHANGELOG.md')",
                     },

@@ -52,6 +52,7 @@ termcolor = "^1.1"
 packaging = ">=19,<21"
 tomlkit = "^0.5.3"
 jinja2 = "^2.10.3"
+typing = "^3.7.4"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.2"
