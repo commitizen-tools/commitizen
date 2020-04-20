@@ -56,10 +56,13 @@ Push to master and that's it.
 
 Once the new tag is created, triggering an automatic publish command would be desired.
 
-In order to do so, the first two secrets need to be added with the information
-of our pypi account.
+In order to do so, the crendetial needs to be added with the information of our PyPI account.
 
-Go to `Settings > Secrets > Add new secret` and add the secrets: `PYPI_USERNAME` and `PYPI_PASSWORD`.
+Instead of using username and password, we suggest using [api token](https://pypi.org/help/#apitoken) generated from PyPI.
+
+After generate api token, use the token as the PyPI password and `__token__` as the username.
+
+Go to `Settings > Secrets > Add new secret` and add the secret: `PYPI_PASSWORD`.
 
 Create a file in `.github/workflows/pythonpublish.yaml` with the following content:
 
@@ -87,13 +90,12 @@ jobs:
         poetry install
     - name: Build and publish
       env:
-        PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        PYPI_USERNAME: __token__
         PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         ./scripts/publish
 ```
 
-Notice that we are calling a bash script in `./scripts/publish`, you should
-configure it with your tools (twine, poetry, etc.). Check [commitizen example](https://github.com/commitizen-tools/commitizen/blob/master/scripts/publish)
+Notice that we are calling a bash script in `./scripts/publish`, you should configure it with your tools (twine, poetry, etc.). Check [commitizen example](https://github.com/commitizen-tools/commitizen/blob/master/scripts/publish)
 
 Push the changes and that's it.
