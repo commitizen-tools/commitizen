@@ -47,3 +47,10 @@ def test_get_tag_names(mocker):
         "commitizen.cmd.run", return_value=FakeCommand(out="", err="No tag available")
     )
     assert git.get_tag_names() == []
+
+
+def test_git_message_with_empty_body():
+    commit_title = "Some Title"
+    commit = git.GitCommit("test_rev", "Some Title", body="")
+
+    assert commit.message == commit_title

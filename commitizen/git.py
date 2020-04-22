@@ -21,7 +21,7 @@ class GitCommit(GitObject):
 
     @property
     def message(self):
-        return f"{self.title}\n\n{self.body}"
+        return f"{self.title}\n\n{self.body}".strip()
 
     def __repr__(self):
         return f"{self.title} ({self.rev})"
