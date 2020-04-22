@@ -7,6 +7,7 @@ class Command(NamedTuple):
     err: str
     stdout: bytes
     stderr: bytes
+    rc: int
 
 
 def run(cmd: str) -> Command:
@@ -18,4 +19,5 @@ def run(cmd: str) -> Command:
         stdin=subprocess.PIPE,
     )
     stdout, stderr = process.communicate()
-    return Command(stdout.decode(), stderr.decode(), stdout, stderr)
+    rc = process.returncode
+    return Command(stdout.decode(), stderr.decode(), stdout, stderr, rc)
