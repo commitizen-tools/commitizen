@@ -31,6 +31,7 @@ COMMIT_LOG = [
     ),
     "docs(check): pin pre-commit to v1.16.2",
     "docs(check): fix pre-commit setup",
+    "improvement(defaults): better parsing logic",
     "bump: version 1.16.1 → 1.16.2",
     "Merge pull request #135 from Lee-W/fix-pre-commit-hook\nFix pre commit hook",
     "docs(check): enforce cz check only whem committing",
