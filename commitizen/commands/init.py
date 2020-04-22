@@ -39,7 +39,7 @@ class Init:
 
     def _ask_config_path(self) -> str:
         name = questionary.select(
-            "Please choose a supported config file: (default: pyproject.tml)",
+            "Please choose a supported config file: (default: pyproject.toml)",
             choices=long_term_support_config_files,
             default="pyproject.toml",
             style=self.cz.style,
@@ -48,7 +48,7 @@ class Init:
 
     def _ask_name(self) -> str:
         name = questionary.select(
-            "Please choose a cz: (default: cz_conventional_commits)",
+            "Please choose a cz (commit rule): (default: cz_conventional_commits)",
             choices=list(registry.keys()),
             default="cz_conventional_commits",
             style=self.cz.style,
