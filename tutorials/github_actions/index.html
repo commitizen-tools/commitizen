@@ -538,9 +538,10 @@ with the following content.</p>
 <p>Push to master and that's it.</p>
 <h3 id="publishing-a-python-package">Publishing a python package</h3>
 <p>Once the new tag is created, triggering an automatic publish command would be desired.</p>
-<p>In order to do so, the first two secrets need to be added with the information
-of our pypi account.</p>
-<p>Go to <code>Settings &gt; Secrets &gt; Add new secret</code> and add the secrets: <code>PYPI_USERNAME</code> and <code>PYPI_PASSWORD</code>.</p>
+<p>In order to do so, the crendetial needs to be added with the information of our PyPI account.</p>
+<p>Instead of using username and password, we suggest using <a href="https://pypi.org/help/#apitoken">api token</a> generated from PyPI.</p>
+<p>After generate api token, use the token as the PyPI password and <code>__token__</code> as the username.</p>
+<p>Go to <code>Settings &gt; Secrets &gt; Add new secret</code> and add the secret: <code>PYPI_PASSWORD</code>.</p>
 <p>Create a file in <code>.github/workflows/pythonpublish.yaml</code> with the following content:</p>
 <div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Upload Python Package</span>
 
@@ -565,15 +566,14 @@ of our pypi account.</p>
         <span class="no">poetry install</span>
     <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Build and publish</span>
       <span class="nt">env</span><span class="p">:</span>
-        <span class="nt">PYPI_USERNAME</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ secrets.PYPI_USERNAME }}</span>
+        <span class="nt">PYPI_USERNAME</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">__token__</span>
         <span class="nt">PYPI_PASSWORD</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ secrets.PYPI_PASSWORD }}</span>
       <span class="nt">run</span><span class="p">:</span> <span class="p p-Indicator">|</span>
         <span class="no">./scripts/publish</span>
 </code></pre></div>
 
 
-<p>Notice that we are calling a bash script in <code>./scripts/publish</code>, you should
-configure it with your tools (twine, poetry, etc.). Check <a href="https://github.com/commitizen-tools/commitizen/blob/master/scripts/publish">commitizen example</a></p>
+<p>Notice that we are calling a bash script in <code>./scripts/publish</code>, you should configure it with your tools (twine, poetry, etc.). Check <a href="https://github.com/commitizen-tools/commitizen/blob/master/scripts/publish">commitizen example</a></p>
 <p>Push the changes and that's it.</p>
                 
                   
