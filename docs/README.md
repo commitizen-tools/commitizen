@@ -104,7 +104,7 @@ commands:
 
 ## Third-Party Commitizen Templates
 
-See [docs/third-party-commitizen.md](third-party-commitizen.md).
+See [Third-Party Commitizen Templates](third-party-commitizen.md).
 
 ## FAQ
 
