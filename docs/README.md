@@ -102,6 +102,10 @@ commands:
     init                init commitizen configuration
 ```
 
+## Third-Party Commitizen Templates
+
+See [docs/third-party-commitizen.md](third-party-commitizen.md).
+
 ## FAQ
 
 ### Why are `revert` and `chore` valid types in the check pattern of cz conventional_commits but not types we can select?
