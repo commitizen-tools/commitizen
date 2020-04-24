@@ -10,16 +10,17 @@ edit_uri: ""
 
 nav:
     - Introduction: 'README.md'
-    - Configuration: 'config.md'
     - Commands:
+        - Init: 'init.md'
         - Bump: 'bump.md'
         - Check: 'check.md'
-        - Init: 'init.md'
+    - Configuration: 'config.md'
     - Customization: 'customization.md'
     - Tutorials:
         - Writing commits: 'tutorials/writing_commits.md'
         - GitLab CI: 'tutorials/gitlab_ci.md'
         - Github Actions: 'tutorials/github_actions.md'
+    - Third-Party Commitizen Templates: 'third-party-commitizen.md'
 
 markdown_extensions:
   - markdown.extensions.codehilite:
