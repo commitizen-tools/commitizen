@@ -124,12 +124,7 @@ git commit -m "revert: foo bar"
 
 ## Contributing
 
-Feel free to create a PR.
-
-1. Clone the repo.
-2. Add your modifications
-3. Create a virtualenv
-4. Run `./scripts/test`
+See [Contributing](contributing.md)
 
 [conventional_commits]: https://www.conventionalcommits.org
 [semver]: https://semver.org/

@@ -21,6 +21,7 @@ nav:
         - GitLab CI: 'tutorials/gitlab_ci.md'
         - Github Actions: 'tutorials/github_actions.md'
     - Third-Party Commitizen Templates: 'third-party-commitizen.md'
+    - Contributing: 'contributing.md'
 
 markdown_extensions:
   - markdown.extensions.codehilite:
