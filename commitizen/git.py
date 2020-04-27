@@ -15,6 +15,8 @@ class GitProtocol(Protocol):
 
 class GitObject:
     rev: str
+    name: str
+    date: str
 
     def __eq__(self, other) -> bool:
         if not hasattr(other, "rev"):

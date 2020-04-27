@@ -4,6 +4,7 @@ import questionary
 from packaging.version import Version
 
 from commitizen import bump, factory, git, out
+from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
 from commitizen.error_codes import (
     COMMIT_FAILED,
@@ -29,6 +30,7 @@ class Bump:
             },
         }
         self.cz = factory.commiter_factory(self.config)
+        self.changelog = arguments["changelog"]
 
     def is_initial_tag(self, current_tag_version: str, is_yes: bool = False) -> bool:
         """Check if reading the whole git tree up to HEAD is needed."""
@@ -130,6 +132,17 @@ class Bump:
         bump.update_version_in_files(current_version, new_version.public, version_files)
         if is_files_only:
             raise SystemExit()
+
+        if self.changelog:
+            changelog = Changelog(
+                self.config,
+                {
+                    "unreleased_version": new_tag_version,
+                    "incremental": True,
+                    "dry_run": dry_run,
+                },
+            )
+            changelog()
 
         self.config.set_key("version", new_version.public)
         c = git.commit(message, args="-a")

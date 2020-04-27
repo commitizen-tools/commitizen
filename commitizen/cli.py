@@ -87,6 +87,12 @@ data = {
                         "help": "bump version in the files from the config",
                     },
                     {
+                        "name": ["--changelog", "-ch"],
+                        "action": "store_true",
+                        "default": False,
+                        "help": "generate the changelog for the newest version",
+                    },
+                    {
                         "name": "--yes",
                         "action": "store_true",
                         "help": "accept automatically questions done",
@@ -132,6 +138,17 @@ data = {
                         "help": "show changelog to stdout",
                     },
                     {
+                        "name": "--file-name",
+                        "help": "file name of changelog (default: 'CHANGELOG.md')",
+                    },
+                    {
+                        "name": "--unreleased-version",
+                        "help": (
+                            "set the value for the new version (use the tag value), "
+                            "instead of using unreleased"
+                        ),
+                    },
+                    {
                         "name": "--incremental",
                         "action": "store_true",
                         "default": False,
@@ -139,10 +156,6 @@ data = {
                             "generates changelog from last created version, "
                             "useful if the changelog has been manually modified"
                         ),
-                    },
-                    {
-                        "name": "--file-name",
-                        "help": "file name of changelog (default: 'CHANGELOG.md')",
                     },
                     {
                         "name": "--start-rev",

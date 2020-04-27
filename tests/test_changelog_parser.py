@@ -33,7 +33,7 @@ def changelog_content() -> str:
 
 
 @pytest.fixture
-def existing_changelog_file(request):
+def existing_changelog_file():
     changelog_path = "tests/CHANGELOG.md"
 
     with open(changelog_path, "w") as f:

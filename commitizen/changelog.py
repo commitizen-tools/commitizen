@@ -18,8 +18,12 @@
 7. generate changelog
 
 Extra:
-- Generate full or partial changelog
-- Include in tree from file all the extra comments added manually
+- [x] Generate full or partial changelog
+- [x] Include in tree from file all the extra comments added manually
+- [ ] Add unreleased value
+- [ ] hook after message is parsed (add extra information like hyperlinks)
+- [ ] hook after changelog is generated (api calls)
+- [ ] add support for change_type maps
 """
 import re
 from collections import defaultdict
@@ -29,7 +33,7 @@ import pkg_resources
 from jinja2 import Template
 
 from commitizen import defaults
-from commitizen.git import GitCommit, GitProtocol, GitTag
+from commitizen.git import GitCommit, GitTag
 
 CATEGORIES = [
     ("fix", "fix"),
@@ -55,15 +59,9 @@ def transform_change_type(change_type: str) -> str:
         raise ValueError(f"Could not match a change_type with {change_type}")
 
 
-def get_commit_tag(commit: GitProtocol, tags: List[GitProtocol]) -> Optional[GitTag]:
+def get_commit_tag(commit: GitCommit, tags: List[GitTag]) -> Optional[GitTag]:
     """"""
-    try:
-        tag_index = tags.index(commit)
-    except ValueError:
-        return None
-    else:
-        tag = tags[tag_index]
-        return tag
+    return next((tag for tag in tags if tag.rev == commit.rev), None)
 
 
 def generate_tree_from_commits(
@@ -71,6 +69,7 @@ def generate_tree_from_commits(
     tags: List[GitTag],
     commit_parser: str,
     changelog_pattern: str = defaults.bump_pattern,
+    unreleased_version: Optional[str] = None,
 ) -> Iterable[Dict]:
     pat = re.compile(changelog_pattern)
     map_pat = re.compile(commit_parser)
@@ -78,7 +77,7 @@ def generate_tree_from_commits(
     latest_commit = commits[0]
     current_tag: Optional[GitTag] = get_commit_tag(latest_commit, tags)
 
-    current_tag_name: str = "Unreleased"
+    current_tag_name: str = unreleased_version or "Unreleased"
     current_tag_date: str = ""
     if current_tag is not None and current_tag.name:
         current_tag_name = current_tag.name
@@ -109,6 +108,7 @@ def generate_tree_from_commits(
         message = map_pat.match(commit.message)
         message_body = map_pat.match(commit.body)
         if message:
+            # TODO: add a post hook coming from a rule (CzBase)
             parsed_message: Dict = message.groupdict()
             # change_type becomes optional by providing None
             change_type = parsed_message.pop("change_type", None)
@@ -132,3 +132,109 @@ def render_changelog(tree: Iterable) -> str:
     jinja_template = Template(template_file, trim_blocks=True)
     changelog: str = jinja_template.render(tree=tree)
     return changelog
+
+
+def parse_version_from_markdown(value: str) -> Optional[str]:
+    if not value.startswith("#"):
+        return None
+    m = re.search(defaults.version_parser, value)
+    if not m:
+        return None
+    return m.groupdict().get("version")
+
+
+def parse_title_type_of_line(value: str) -> Optional[str]:
+    md_title_parser = r"^(?P<title>#+)"
+    m = re.search(md_title_parser, value)
+    if not m:
+        return None
+    return m.groupdict().get("title")
+
+
+def get_metadata(filepath: str) -> Dict:
+    unreleased_start: Optional[int] = None
+    unreleased_end: Optional[int] = None
+    unreleased_title: Optional[str] = None
+    latest_version: Optional[str] = None
+    latest_version_position: Optional[int] = None
+    with open(filepath, "r") as changelog_file:
+        for index, line in enumerate(changelog_file):
+            line = line.strip().lower()
+
+            unreleased: Optional[str] = None
+            if "unreleased" in line:
+                unreleased = parse_title_type_of_line(line)
+            # Try to find beginning and end lines of the unreleased block
+            if unreleased:
+                unreleased_start = index
+                unreleased_title = unreleased
+                continue
+            elif (
+                isinstance(unreleased_title, str)
+                and parse_title_type_of_line(line) == unreleased_title
+            ):
+                unreleased_end = index
+
+            # Try to find the latest release done
+            version = parse_version_from_markdown(line)
+            if version:
+                latest_version = version
+                latest_version_position = index
+                break  # there's no need for more info
+        if unreleased_start is not None and unreleased_end is None:
+            unreleased_end = index
+    return {
+        "unreleased_start": unreleased_start,
+        "unreleased_end": unreleased_end,
+        "latest_version": latest_version,
+        "latest_version_position": latest_version_position,
+    }
+
+
+def incremental_build(new_content: str, lines: List, metadata: Dict) -> List:
+    """Takes the original lines and updates with new_content.
+
+    The metadata holds information enough to remove the old unreleased and
+    where to place the new content
+
+    Arguments:
+        lines -- the lines from the changelog
+        new_content -- this should be placed somewhere in the lines
+        metadata -- information about the changelog
+
+    Returns:
+        List -- updated lines
+    """
+    unreleased_start = metadata.get("unreleased_start")
+    unreleased_end = metadata.get("unreleased_end")
+    latest_version_position = metadata.get("latest_version_position")
+    skip = False
+    output_lines: List = []
+    for index, line in enumerate(lines):
+        if index == unreleased_start:
+            skip = True
+        elif index == unreleased_end:
+            skip = False
+            if (
+                latest_version_position is None
+                or isinstance(latest_version_position, int)
+                and isinstance(unreleased_end, int)
+                and latest_version_position > unreleased_end
+            ):
+                continue
+
+        if skip:
+            continue
+
+        if (
+            isinstance(latest_version_position, int)
+            and index == latest_version_position
+        ):
+
+            output_lines.append(new_content)
+            output_lines.append("\n")
+
+        output_lines.append(line)
+    if not isinstance(latest_version_position, int):
+        output_lines.append(new_content)
+    return output_lines
