@@ -24,15 +24,16 @@ jobs:
     - name: Install dependencies
       run: |
         python --version
-        python -m pip install -U commitizen
+        python -m pip install -U poetry
     - name: Configure repo
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git pull origin master --tags
+        poetry install --no-dev
     - name: Create bump
       run: |
-        cz bump --yes --changelog
+        poetry run cz bump --yes --changelog
         git tag
     - name: Push changes
       uses: Woile/github-push-action@master
