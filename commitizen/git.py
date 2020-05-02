@@ -3,12 +3,23 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import List, Optional
 
+from typing_extensions import Protocol
+
 from commitizen import cmd
 
 
+class GitProtocol(Protocol):
+    rev: str
+    name: str
+
+
 class GitObject:
-    def __eq__(self, other):
-        if not isinstance(other, GitObject):
+    rev: str
+    name: str
+    date: str
+
+    def __eq__(self, other) -> bool:
+        if not hasattr(other, "rev"):
             return False
         return self.rev == other.rev
 
@@ -34,7 +45,7 @@ class GitTag(GitObject):
         self.date = date.strip()
 
     def __repr__(self):
-        return f"{self.name} ({self.rev})"
+        return f"GitTag('{self.name}', '{self.rev}', '{self.date}')"
 
 
 def tag(tag: str):

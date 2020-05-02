@@ -34,9 +34,9 @@ data = {
         # "required": True,
         "commands": [
             {
-                "name": "ls",
-                "help": "show available commitizens",
-                "func": commands.ListCz,
+                "name": ["init"],
+                "help": "init commitizen configuration",
+                "func": commands.Init,
             },
             {
                 "name": ["commit", "c"],
@@ -54,6 +54,11 @@ data = {
                         "help": "show output to stdout, no commit, no modified files",
                     },
                 ],
+            },
+            {
+                "name": "ls",
+                "help": "show available commitizens",
+                "func": commands.ListCz,
             },
             {
                 "name": "example",
@@ -80,6 +85,12 @@ data = {
                         "name": "--files-only",
                         "action": "store_true",
                         "help": "bump version in the files from the config",
+                    },
+                    {
+                        "name": ["--changelog", "-ch"],
+                        "action": "store_true",
+                        "default": False,
+                        "help": "generate the changelog for the newest version",
                     },
                     {
                         "name": "--yes",
@@ -114,6 +125,70 @@ data = {
                 ],
             },
             {
+                "name": ["changelog", "ch"],
+                "help": (
+                    "generate changelog (note that it will overwrite existing file)"
+                ),
+                "func": commands.Changelog,
+                "arguments": [
+                    {
+                        "name": "--dry-run",
+                        "action": "store_true",
+                        "default": False,
+                        "help": "show changelog to stdout",
+                    },
+                    {
+                        "name": "--file-name",
+                        "help": "file name of changelog (default: 'CHANGELOG.md')",
+                    },
+                    {
+                        "name": "--unreleased-version",
+                        "help": (
+                            "set the value for the new version (use the tag value), "
+                            "instead of using unreleased"
+                        ),
+                    },
+                    {
+                        "name": "--incremental",
+                        "action": "store_true",
+                        "default": False,
+                        "help": (
+                            "generates changelog from last created version, "
+                            "useful if the changelog has been manually modified"
+                        ),
+                    },
+                    {
+                        "name": "--start-rev",
+                        "default": None,
+                        "help": (
+                            "start rev of the changelog."
+                            "If not set, it will generate changelog from the start"
+                        ),
+                    },
+                ],
+            },
+            {
+                "name": ["check"],
+                "help": "validates that a commit message matches the commitizen schema",
+                "func": commands.Check,
+                "arguments": [
+                    {
+                        "name": "--commit-msg-file",
+                        "help": (
+                            "ask for the name of the temporal file that contains "
+                            "the commit message. "
+                            "Using it in a git hook script: MSG_FILE=$1"
+                        ),
+                        "exclusive_group": "group1",
+                    },
+                    {
+                        "name": "--rev-range",
+                        "help": "a range of git rev to check. e.g, master..HEAD",
+                        "exclusive_group": "group1",
+                    },
+                ],
+            },
+            {
                 "name": ["version"],
                 "help": (
                     "get the version of the installed commitizen or the current project"
@@ -143,32 +218,6 @@ data = {
                         "exclusive_group": "group1",
                     },
                 ],
-            },
-            {
-                "name": ["check"],
-                "help": "validates that a commit message matches the commitizen schema",
-                "func": commands.Check,
-                "arguments": [
-                    {
-                        "name": "--commit-msg-file",
-                        "help": (
-                            "ask for the name of the temporal file that contains "
-                            "the commit message. "
-                            "Using it in a git hook script: MSG_FILE=$1"
-                        ),
-                        "exclusive_group": "group1",
-                    },
-                    {
-                        "name": "--rev-range",
-                        "help": "a range of git rev to check. e.g, master..HEAD",
-                        "exclusive_group": "group1",
-                    },
-                ],
-            },
-            {
-                "name": ["init"],
-                "help": "init commitizen configuration",
-                "func": commands.Init,
             },
         ],
     },

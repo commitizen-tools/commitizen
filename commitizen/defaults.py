@@ -13,6 +13,7 @@ DEFAULT_SETTINGS: Dict[str, Any] = {
     "version_files": [],
     "tag_format": None,  # example v$version
     "bump_message": None,  # bumped v$current_version to $new_version
+    "changelog_file": "CHANGELOG.md",
 }
 
 MAJOR = "MAJOR"
@@ -31,3 +32,6 @@ bump_map = OrderedDict(
     )
 )
 bump_message = "bump: version $current_version → $new_version"
+
+commit_parser = r"^(?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?:\s(?P<message>.*)?"  # noqa
+version_parser = r"(?P<version>([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?)"

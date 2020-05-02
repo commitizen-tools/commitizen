@@ -32,7 +32,7 @@ jobs:
         git pull origin master --tags
     - name: Create bump
       run: |
-        cz bump --yes
+        cz bump --yes --changelog
         git tag
     - name: Push changes
       uses: Woile/github-push-action@master

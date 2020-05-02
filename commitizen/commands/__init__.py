@@ -1,4 +1,5 @@
 from .bump import Bump
+from .changelog import Changelog
 from .check import Check
 from .commit import Commit
 from .example import Example
@@ -12,6 +13,7 @@ __all__ = (
     "Bump",
     "Check",
     "Commit",
+    "Changelog",
     "Example",
     "Info",
     "ListCz",

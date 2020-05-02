@@ -22,6 +22,13 @@ class BaseCommitizen(metaclass=ABCMeta):
         ("disabled", "fg:#858585 italic"),
     ]
 
+    # The whole subject will be parsed as message by default
+    # This allows supporting changelog for any rule system.
+    # It can be modified per rule
+    commit_parser: Optional[str] = r"(?P<message>.*)"
+    changelog_pattern: Optional[str] = r".*"
+    changelog_map: Optional[dict] = None  # TODO: Use it
+
     def __init__(self, config: BaseConfig):
         self.config = config
         if not self.config.settings.get("style"):
@@ -59,3 +66,10 @@ class BaseCommitizen(metaclass=ABCMeta):
     def info(self) -> Optional[str]:
         """Information about the standardized commit message."""
         raise NotImplementedError("Not Implemented yet")
+
+    def process_commit(self, commit: str) -> str:
+        """Process commit for changelog.
+
+        If not overwritten, it returns the first line of commit.
+        """
+        return commit.split("\n")[0]
