@@ -1,10 +1,34 @@
 
 
-## Unreleased 
+
+## v1.19.0 
+
+### Fix
+
+- **git**: missing dependency removed
+- **changelog**: check get_metadata for existing changelog file
+
+### Feat
+
+- **changelog**: add support for any commit rule system
+- **changelog**: add incremental flag
 
 ### Refactor
 
+- **changelog**: use functions from changelog.py
 - **changelog**: rename category to change_type to fit 'keep a changelog'
+
+## v1.18.3 (2020-04-22)
+
+### Refactor
+
+- **commands/init**: fix typo
+
+## v1.18.2 (2020-04-22)
+
+### Refactor
+
+- **git**: replace GitCommit.message code with one-liner
 - **templates**: rename as "keep_a_changelog_template.j2"
 - **templates**: remove unneeded __init__ file
 - **cli**: reorder commands
@@ -15,6 +39,7 @@
 
 ### Fix
 
+- **git**: fix returned value for GitCommit.message when body is empty
 - **cz/conventional_commits**: fix schema_pattern break due to rebase
 - **changelog_template**: fix list format
 - **commitizen/cz**: set changelog_map, changelog_pattern to none as default
@@ -31,6 +56,43 @@
 - **cz/conventinal_commits**: add changelog_map, changelog_pattern and implement process_commit
 - **cz/base**: add default process_commit for processing commit message
 - **changelog**: changelog tree generation from markdown
+
+## v1.18.1 (2020-04-16)
+
+### Fix
+
+- **config**: display ini config deprecation warning only when commitizen config is inside
+
+## v1.18.0 (2020-04-13)
+
+### Refactor
+
+- **cz/customize**: remove unused mypy ignore
+- **mypy**: fix mypy check by checking version.pre exists
+- **cz**: add type annotation to registry
+- **commands/check**: fix type annotation
+- **config/base**: use Dict to replace dict in base_config
+- **cz/base**: fix config type used in base cz
+- **cz**: add type annotation for each function in cz
+- **config**: fix mypy warning for _conf
+
+### Fix
+
+- **cz/customize**: add error handling when customize detail is not set
+
+### Feat
+
+- **bump**: support for ! as BREAKING change in commit message
+
+## v1.17.1 (2020-03-24)
+
+### Fix
+
+- **commands/check**: add help text for check command without argument
+
+### Refactor
+
+- **cli**: fix typo
 
 ## v1.17.0 (2020-03-15)
 
