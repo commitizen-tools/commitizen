@@ -25,6 +25,7 @@ Extra:
 - [ ] hook after changelog is generated (api calls)
 - [ ] add support for change_type maps
 """
+import os
 import re
 from collections import defaultdict
 from typing import Dict, Iterable, List, Optional
@@ -157,6 +158,14 @@ def get_metadata(filepath: str) -> Dict:
     unreleased_title: Optional[str] = None
     latest_version: Optional[str] = None
     latest_version_position: Optional[int] = None
+    if not os.path.isfile(filepath):
+        return {
+            "unreleased_start": None,
+            "unreleased_end": None,
+            "latest_version": None,
+            "latest_version_position": None,
+        }
+
     with open(filepath, "r") as changelog_file:
         for index, line in enumerate(changelog_file):
             line = line.strip().lower()
