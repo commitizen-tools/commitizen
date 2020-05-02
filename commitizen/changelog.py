@@ -1,33 +1,40 @@
 """
 # DESIGN
 
-## Parse CHANGELOG.md
+## Metadata CHANGELOG.md
 
-1. Get LATEST VERSION from CONFIG
-1. Parse the file version to version
-2. Build a dict (tree) of that particular version
-3. Transform tree into markdown again
+1. Identify irrelevant information (possible: changelog title, first paragraph)
+2. Identify Unreleased area
+3. Identify latest version (to be able to write on top of it)
 
 ## Parse git log
 
 1. get commits between versions
 2. filter commits with the current cz rules
 3. parse commit information
-4. generate tree
+4. yield tree nodes
+5. format tree nodes
+6. produce full tree
+7. generate changelog
 
-Options:
-- Generate full or partial changelog
+Extra:
+- [x] Generate full or partial changelog
+- [x] Include in tree from file all the extra comments added manually
+- [ ] Add unreleased value
+- [ ] hook after message is parsed (add extra information like hyperlinks)
+- [ ] hook after changelog is generated (api calls)
+- [ ] add support for change_type maps
 """
+import os
 import re
-from typing import Dict, Generator, Iterable, List
+from collections import defaultdict
+from typing import Dict, Iterable, List, Optional
 
-MD_VERSION_RE = r"^##\s(?P<version>[a-zA-Z0-9.+]+)\s?\(?(?P<date>[0-9-]+)?\)?"
-MD_CATEGORY_RE = r"^###\s(?P<category>[a-zA-Z0-9.+\s]+)"
-MD_MESSAGE_RE = r"^-\s(\*{2}(?P<scope>[a-zA-Z0-9]+)\*{2}:\s)?(?P<message>.+)"
-md_version_c = re.compile(MD_VERSION_RE)
-md_category_c = re.compile(MD_CATEGORY_RE)
-md_message_c = re.compile(MD_MESSAGE_RE)
+import pkg_resources
+from jinja2 import Template
 
+from commitizen import defaults
+from commitizen.git import GitCommit, GitTag
 
 CATEGORIES = [
     ("fix", "fix"),
@@ -42,92 +49,201 @@ CATEGORIES = [
 ]
 
 
-def find_version_blocks(filepath: str) -> Generator:
-    """
-    version block: contains all the information about a version.
-
-    E.g:
-    ```
-    ## 1.2.1 (2019-07-20)
-
-    ## Bug fixes
-
-    - username validation not working
-
-    ## Features
-
-    - new login system
-
-    ```
-    """
-    with open(filepath, "r") as f:
-        block: list = []
-        for line in f:
-            line = line.strip("\n")
-            if not line:
-                continue
-
-            if line.startswith("## "):
-                if len(block) > 0:
-                    yield block
-                block = [line]
-            else:
-                block.append(line)
-        yield block
-
-
-def parse_md_version(md_version: str) -> Dict:
-    m = md_version_c.match(md_version)
-    if not m:
-        return {}
-    return m.groupdict()
-
-
-def parse_md_category(md_category: str) -> Dict:
-    m = md_category_c.match(md_category)
-    if not m:
-        return {}
-    return m.groupdict()
-
-
-def parse_md_message(md_message: str) -> Dict:
-    m = md_message_c.match(md_message)
-    if not m:
-        return {}
-    return m.groupdict()
-
-
-def transform_category(category: str) -> str:
-    _category_lower = category.lower()
+def transform_change_type(change_type: str) -> str:
+    # TODO: Use again to parse, for this we have to wait until the maps get
+    # defined again.
+    _change_type_lower = change_type.lower()
     for match_value, output in CATEGORIES:
-        if re.search(match_value, _category_lower):
+        if re.search(match_value, _change_type_lower):
             return output
     else:
-        raise ValueError(f"Could not match a category with {category}")
+        raise ValueError(f"Could not match a change_type with {change_type}")
 
 
-def generate_block_tree(block: List[str]) -> Dict:
-    tree: Dict = {"commits": []}
-    category = None
-    for line in block:
-        if line.startswith("## "):
-            category = None
-            tree = {**tree, **parse_md_version(line)}
-        elif line.startswith("### "):
-            result = parse_md_category(line)
-            if not result:
+def get_commit_tag(commit: GitCommit, tags: List[GitTag]) -> Optional[GitTag]:
+    """"""
+    return next((tag for tag in tags if tag.rev == commit.rev), None)
+
+
+def generate_tree_from_commits(
+    commits: List[GitCommit],
+    tags: List[GitTag],
+    commit_parser: str,
+    changelog_pattern: str = defaults.bump_pattern,
+    unreleased_version: Optional[str] = None,
+) -> Iterable[Dict]:
+    pat = re.compile(changelog_pattern)
+    map_pat = re.compile(commit_parser)
+    # Check if the latest commit is not tagged
+    latest_commit = commits[0]
+    current_tag: Optional[GitTag] = get_commit_tag(latest_commit, tags)
+
+    current_tag_name: str = unreleased_version or "Unreleased"
+    current_tag_date: str = ""
+    if current_tag is not None and current_tag.name:
+        current_tag_name = current_tag.name
+        current_tag_date = current_tag.date
+
+    changes: Dict = defaultdict(list)
+    used_tags: List = [current_tag]
+    for commit in commits:
+        commit_tag = get_commit_tag(commit, tags)
+
+        if commit_tag is not None and commit_tag not in used_tags:
+            used_tags.append(commit_tag)
+            yield {
+                "version": current_tag_name,
+                "date": current_tag_date,
+                "changes": changes,
+            }
+            # TODO: Check if tag matches the version pattern, otherwie skip it.
+            # This in order to prevent tags that are not versions.
+            current_tag_name = commit_tag.name
+            current_tag_date = commit_tag.date
+            changes = defaultdict(list)
+
+        matches = pat.match(commit.message)
+        if not matches:
+            continue
+
+        message = map_pat.match(commit.message)
+        message_body = map_pat.match(commit.body)
+        if message:
+            # TODO: add a post hook coming from a rule (CzBase)
+            parsed_message: Dict = message.groupdict()
+            # change_type becomes optional by providing None
+            change_type = parsed_message.pop("change_type", None)
+            changes[change_type].append(parsed_message)
+        if message_body:
+            parsed_message_body: Dict = message_body.groupdict()
+            change_type = parsed_message_body.pop("change_type", None)
+            changes[change_type].append(parsed_message_body)
+
+    yield {
+        "version": current_tag_name,
+        "date": current_tag_date,
+        "changes": changes,
+    }
+
+
+def render_changelog(tree: Iterable) -> str:
+    template_file = pkg_resources.resource_string(
+        __name__, "templates/keep_a_changelog_template.j2"
+    ).decode("utf-8")
+    jinja_template = Template(template_file, trim_blocks=True)
+    changelog: str = jinja_template.render(tree=tree)
+    return changelog
+
+
+def parse_version_from_markdown(value: str) -> Optional[str]:
+    if not value.startswith("#"):
+        return None
+    m = re.search(defaults.version_parser, value)
+    if not m:
+        return None
+    return m.groupdict().get("version")
+
+
+def parse_title_type_of_line(value: str) -> Optional[str]:
+    md_title_parser = r"^(?P<title>#+)"
+    m = re.search(md_title_parser, value)
+    if not m:
+        return None
+    return m.groupdict().get("title")
+
+
+def get_metadata(filepath: str) -> Dict:
+    unreleased_start: Optional[int] = None
+    unreleased_end: Optional[int] = None
+    unreleased_title: Optional[str] = None
+    latest_version: Optional[str] = None
+    latest_version_position: Optional[int] = None
+    if not os.path.isfile(filepath):
+        return {
+            "unreleased_start": None,
+            "unreleased_end": None,
+            "latest_version": None,
+            "latest_version_position": None,
+        }
+
+    with open(filepath, "r") as changelog_file:
+        for index, line in enumerate(changelog_file):
+            line = line.strip().lower()
+
+            unreleased: Optional[str] = None
+            if "unreleased" in line:
+                unreleased = parse_title_type_of_line(line)
+            # Try to find beginning and end lines of the unreleased block
+            if unreleased:
+                unreleased_start = index
+                unreleased_title = unreleased
                 continue
-            category = transform_category(result.get("category", ""))
+            elif (
+                isinstance(unreleased_title, str)
+                and parse_title_type_of_line(line) == unreleased_title
+            ):
+                unreleased_end = index
 
-        elif line.startswith("- "):
-            commit = parse_md_message(line)
-            commit["category"] = category
-            tree["commits"].append(commit)
-        else:
-            print("it's something else: ", line)
-    return tree
+            # Try to find the latest release done
+            version = parse_version_from_markdown(line)
+            if version:
+                latest_version = version
+                latest_version_position = index
+                break  # there's no need for more info
+        if unreleased_start is not None and unreleased_end is None:
+            unreleased_end = index
+    return {
+        "unreleased_start": unreleased_start,
+        "unreleased_end": unreleased_end,
+        "latest_version": latest_version,
+        "latest_version_position": latest_version_position,
+    }
 
 
-def generate_full_tree(blocks: Iterable) -> Iterable[Dict]:
-    for block in blocks:
-        yield generate_block_tree(block)
+def incremental_build(new_content: str, lines: List, metadata: Dict) -> List:
+    """Takes the original lines and updates with new_content.
+
+    The metadata holds information enough to remove the old unreleased and
+    where to place the new content
+
+    Arguments:
+        lines -- the lines from the changelog
+        new_content -- this should be placed somewhere in the lines
+        metadata -- information about the changelog
+
+    Returns:
+        List -- updated lines
+    """
+    unreleased_start = metadata.get("unreleased_start")
+    unreleased_end = metadata.get("unreleased_end")
+    latest_version_position = metadata.get("latest_version_position")
+    skip = False
+    output_lines: List = []
+    for index, line in enumerate(lines):
+        if index == unreleased_start:
+            skip = True
+        elif index == unreleased_end:
+            skip = False
+            if (
+                latest_version_position is None
+                or isinstance(latest_version_position, int)
+                and isinstance(unreleased_end, int)
+                and latest_version_position > unreleased_end
+            ):
+                continue
+
+        if skip:
+            continue
+
+        if (
+            isinstance(latest_version_position, int)
+            and index == latest_version_position
+        ):
+
+            output_lines.append(new_content)
+            output_lines.append("\n")
+
+        output_lines.append(line)
+    if not isinstance(latest_version_position, int):
+        output_lines.append(new_content)
+    return output_lines
