@@ -22,17 +22,10 @@ jobs:
         python -m pip install --pre -U poetry mkdocs mkdocs-material
         poetry --version
         poetry install
-    - name: Build and publish
+    - name: Publish
       env:
         PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
         PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         ./scripts/publish
-        poetry run mkdocs build
-    - name: Push doc to Github Page
-      uses: peaceiris/actions-gh-pages@v2
-      env:
-        PERSONAL_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        PUBLISH_BRANCH: gh-pages
-        PUBLISH_DIR: ./site
+
