@@ -3,14 +3,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import List, Optional
 
-from typing_extensions import Protocol
-
 from commitizen import cmd
-
-
-class GitProtocol(Protocol):
-    rev: str
-    name: str
 
 
 class GitObject:
