@@ -14,6 +14,7 @@ nav:
         - Init: 'init.md'
         - Bump: 'bump.md'
         - Check: 'check.md'
+        - Changelog: 'changelog.md'
     - Configuration: 'config.md'
     - Customization: 'customization.md'
     - Tutorials:

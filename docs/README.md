@@ -28,7 +28,7 @@ the version or a changelog.
 - Command-line utility to create commits with your rules. Defaults: [Conventional commits][conventional_commits]
 - Display information about your commit rules (commands: schema, example, info)
 - Bump version automatically using [semantic versioning][semver] based on the commits. [Read More](./bump.md)
-- Generate a changelog using [Keep a changelog][keepchangelog] (Planned feature)
+- Generate a changelog using [Keep a changelog][keepchangelog]
 
 ## Requirements
 
