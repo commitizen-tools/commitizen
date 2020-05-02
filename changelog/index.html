@@ -17,7 +17,7 @@
     
     
       
-        <title>Bump - Commitizen</title>
+        <title>Changelog - Commitizen</title>
       
     
     
@@ -78,7 +78,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              Bump
+              Changelog
             
           </span>
         </div>
@@ -188,12 +188,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
     
     <label class="md-nav__link" for="nav-2">
       Commands
@@ -227,104 +225,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Bump
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
-        </span>
-      </label>
-    
-    <a href="./" title="Bump" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../bump/" title="Bump" class="md-nav__link">
       Bump
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-      </span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#about" class="md-nav__link">
-    About
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    Usage
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    Configuration
-  </a>
-  
-    <nav class="md-nav" aria-label="Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#changelog" class="md-nav__link">
-    changelog
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tag_format" class="md-nav__link">
-    tag_format
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#version_files" class="md-nav__link">
-    version_files *
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bump_message" class="md-nav__link">
-    bump_message
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-bump" class="md-nav__link">
-    Custom bump
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -494,6 +399,33 @@
     Usage
   </a>
   
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    Examples
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constrains" class="md-nav__link">
+    Constrains
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    Description
+  </a>
+  
 </li>
       
         <li class="md-nav__item">
@@ -505,29 +437,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#changelog" class="md-nav__link">
-    changelog
+  <a href="#unreleased_version" class="md-nav__link">
+    unreleased_version
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#tag_format" class="md-nav__link">
-    tag_format
+  <a href="#file-name" class="md-nav__link">
+    file-name
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#version_files" class="md-nav__link">
-    version_files *
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bump_message" class="md-nav__link">
-    bump_message
+  <a href="#incremental" class="md-nav__link">
+    incremental
   </a>
   
 </li>
@@ -538,8 +463,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#custom-bump" class="md-nav__link">
-    Custom bump
+  <a href="#todo" class="md-nav__link">
+    TODO
   </a>
   
 </li>
@@ -560,222 +485,149 @@
                   
                 
                 
-                  <h1>Bump</h1>
+                  <h1>Changelog</h1>
                 
-                <p><img alt="Bump version" src="../images/bump.gif" /></p>
-<h2 id="about">About</h2>
-<p>The version is bumped <strong>automatically</strong> based on the commits.</p>
-<p>The commits should follow the rules of the committer to be parsed correctly.</p>
-<p>It is possible to specify a <strong>prerelease</strong> (alpha, beta, release candidate) version.</p>
-<p>The version can also be <strong>manually</strong> bumped.</p>
-<p>The version format follows <a href="https://semver.org/">semantic versioning</a>.</p>
-<p>This means <code>MAJOR.MINOR.PATCH</code></p>
+                <h2 id="about">About</h2>
+<p>This command will generate a changelog following the commiting rules established.</p>
+<h2 id="usage">Usage</h2>
+<div class="codehilite"><pre><span></span><code>$ cz changelog --help
+usage: cz changelog <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--dry-run<span class="o">]</span> <span class="o">[</span>--file-name FILE_NAME<span class="o">]</span>
+                    <span class="o">[</span>--unreleased-version UNRELEASED_VERSION<span class="o">]</span> <span class="o">[</span>--incremental<span class="o">]</span>
+                    <span class="o">[</span>--start-rev START_REV<span class="o">]</span>
+
+optional arguments:
+  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  --dry-run             show changelog to stdout
+  --file-name FILE_NAME
+                        file name of changelog <span class="o">(</span>default: <span class="s1">&#39;CHANGELOG.md&#39;</span><span class="o">)</span>
+  --unreleased-version UNRELEASED_VERSION
+                        <span class="nb">set</span> the value <span class="k">for</span> the new version <span class="o">(</span>use the tag value<span class="o">)</span>,
+                        instead of using unreleased
+  --incremental         generates changelog from last created version, useful
+                        <span class="k">if</span> the changelog has been manually modified
+  --start-rev START_REV
+                        start rev of the changelog.If not set, it will
+                        generate changelog from the start
+</code></pre></div>
+
+
+<h3 id="examples">Examples</h3>
+<div class="codehilite"><pre><span></span><code>cz changelog
+</code></pre></div>
+
+
+<div class="codehilite"><pre><span></span><code>cz ch
+</code></pre></div>
+
+
+<h2 id="constrains">Constrains</h2>
+<p>changelog generation is constrained only to <strong>markdown</strong> files.</p>
+<h2 id="description">Description</h2>
+<p>These are the variables used by the changelog generator.</p>
+<div class="codehilite"><pre><span></span><code><span class="gh">#</span> &lt;version&gt; (&lt;date&gt;)
+
+<span class="gu">##</span> &lt;change_type&gt;
+
+<span class="k">-</span> **&lt;scope&gt;**: &lt;message&gt;
+</code></pre></div>
+
+
+<p>It will create a full block like above per version found in the tags.
+And it will create a list of the commits found.
+The <code>change_type</code> and the <code>scope</code> are optional, they don't need to be provided,
+but if your regex does they will be rendered.</p>
+<p>The format followed by the changelog is the one from <a href="https://keepachangelog.com/">keep a changelog</a>
+and the following variables are expected:</p>
 <table>
 <thead>
 <tr>
-<th>Increment</th>
+<th>Variable</th>
 <th>Description</th>
-<th>Conventional commit map</th>
+<th>Source</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>MAJOR</code></td>
-<td>Breaking changes introduced</td>
-<td><code>BREAKING CHANGE</code></td>
+<td><code>version</code></td>
+<td>Version number which should follow <a href="https://semver.org/">semver</a></td>
+<td><code>tags</code></td>
 </tr>
 <tr>
-<td><code>MINOR</code></td>
-<td>New features</td>
-<td><code>feat</code></td>
+<td><code>date</code></td>
+<td>Date in which the tag was created</td>
+<td><code>tags</code></td>
 </tr>
 <tr>
-<td><code>PATCH</code></td>
-<td>Fixes</td>
-<td><code>fix</code> + everything else</td>
+<td><code>change_type</code></td>
+<td>The group where the commit belongs to, this is optional. Example: fix</td>
+<td><code>commit regex</code></td>
+</tr>
+<tr>
+<td><code>message</code>*</td>
+<td>Information extracted from the commit message</td>
+<td><code>commit regex</code></td>
+</tr>
+<tr>
+<td><code>scope</code></td>
+<td>Contextual information. Should be parsed using the regex from the message, it will be <strong>bold</strong></td>
+<td><code>commit regex</code></td>
+</tr>
+<tr>
+<td><code>breaking</code></td>
+<td>Wether is a breaking change or not</td>
+<td><code>commit regex</code></td>
 </tr>
 </tbody>
 </table>
-<p>Prereleases are supported following python's <a href="https://www.python.org/dev/peps/pep-0440/">PEP 0440</a></p>
-<p>The scheme of this format is</p>
-<div class="codehilite"><pre><span></span><code><span class="o">[</span>N!<span class="o">]</span>N<span class="o">(</span>.N<span class="o">)</span>*<span class="o">[{</span>a<span class="p">|</span>b<span class="p">|</span>rc<span class="o">}</span>N<span class="o">][</span>.postN<span class="o">][</span>.devN<span class="o">]</span>
-</code></pre></div>
-
-
-<p>Some examples:</p>
-<div class="codehilite"><pre><span></span><code><span class="m">0</span>.9.0
-<span class="m">0</span>.9.1
-<span class="m">0</span>.9.2
-<span class="m">0</span>.9.10
-<span class="m">0</span>.9.11
-<span class="m">1</span>.0.0a0  <span class="c1"># alpha</span>
-<span class="m">1</span>.0.0a1
-<span class="m">1</span>.0.0b0  <span class="c1"># beta</span>
-<span class="m">1</span>.0.0rc0 <span class="c1"># release candidate</span>
-<span class="m">1</span>.0.0rc1
-<span class="m">1</span>.0.0
-<span class="m">1</span>.0.1
-<span class="m">1</span>.1.0
-<span class="m">2</span>.0.0
-<span class="m">2</span>.0.1a
-</code></pre></div>
-
-
-<p><code>post</code> and <code>dev</code> releases are not supported yet.</p>
-<h2 id="usage">Usage</h2>
-<div class="codehilite"><pre><span></span><code>$ cz bump --help
-usage: cz bump <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--dry-run<span class="o">]</span> <span class="o">[</span>--files-only<span class="o">]</span> <span class="o">[</span>--changelog<span class="o">]</span> <span class="o">[</span>--yes<span class="o">]</span>
-               <span class="o">[</span>--tag-format TAG_FORMAT<span class="o">]</span> <span class="o">[</span>--bump-message BUMP_MESSAGE<span class="o">]</span>
-               <span class="o">[</span>--prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}]</span>
-               <span class="o">[</span>--increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span>
-
-optional arguments:
-  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
-  --dry-run             show output to stdout, no commit, no modified files
-  --files-only          bump version in the files from the config
-  --changelog, -ch      generate the changelog <span class="k">for</span> the newest version
-  --yes                 accept automatically questions <span class="k">done</span>
-  --tag-format TAG_FORMAT
-                        the format used to tag the commit and <span class="nb">read</span> it, use it
-                        in existing projects, wrap around simple quotes
-  --bump-message BUMP_MESSAGE
-                        template used to create the release commmit, useful
-                        when working with CI
-  --prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}</span>, -pr <span class="o">{</span>alpha,beta,rc<span class="o">}</span>
-                        choose <span class="nb">type</span> of prerelease
-  --increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}</span>
-                        manually specify the desired increment
-</code></pre></div>
-
-
+<ul>
+<li><strong>required</strong>: is the only one required to be parsed by the regex</li>
+</ul>
 <h2 id="configuration">Configuration</h2>
-<h3 id="changelog"><code>changelog</code></h3>
-<p>Generate a <strong>changelog</strong> along with the new version and tag when bumping.</p>
+<h3 id="unreleased_version"><code>unreleased_version</code></h3>
+<p>There is usually an egg and chicken situation when automatically
+bumping the version and creating the changelog.
+If you bump the version first, you have no changelog, you have to
+create it later, and it won't be included in
+the release of the created version.</p>
+<p>If you create the changelog before bumping the version, then you
+usually don't have the latest tag, and the <em>Unreleased</em> title appears.</p>
+<p>By introducing <code>unreleased_version</code> you can prevent this situation.</p>
+<p>Before bumping you can run:</p>
+<div class="codehilite"><pre><span></span><code>cz changelog --unreleased_version<span class="o">=</span><span class="s2">&quot;v1.0.0&quot;</span>
+</code></pre></div>
+
+
+<p>Remember to use the tag instead of the raw version number</p>
+<p>For example if the format of your tag includes a <code>v</code> (<code>v1.0.0</code>), then you should use that,
+if your tag is the same as the raw version, then ignore this.</p>
+<p>Alternatively you can directly bump the version and create the changelog by doing</p>
 <div class="codehilite"><pre><span></span><code>cz bump --changelog
 </code></pre></div>
 
 
-<h3 id="tag_format"><code>tag_format</code></h3>
-<p>It is used to read the format from the git tags, and also to generate the tags.</p>
-<p>Commitizen supports 2 types of formats, a simple and a more complex.</p>
-<div class="codehilite"><pre><span></span><code>cz bump --tag_format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$version</span><span class="s2">&quot;</span>
+<h3 id="file-name"><code>file-name</code></h3>
+<p>This value can be updated in the <code>toml</code> file with the key <code>changelog_file</code> under <code>tools.commitizen</code></p>
+<p>Specify the name of the output file, remember that changelog only works with markdown.</p>
+<div class="codehilite"><pre><span></span><code>cz changelog --file-name<span class="o">=</span><span class="s2">&quot;CHANGES.md&quot;</span>
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code>cz bump --tag_format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$minor</span><span class="s2">.</span><span class="nv">$major</span><span class="s2">.</span><span class="nv">$patch$prerelease</span><span class="s2">&quot;</span>
+<h3 id="incremental"><code>incremental</code></h3>
+<p>Benefits:</p>
+<ul>
+<li>Build from latest version found in changelog, this is useful if you have a different changelog and want to use commitizen</li>
+<li>Update unreleased area</li>
+<li>Allows users to manually touch the changelog without being rewritten.</li>
+</ul>
+<div class="codehilite"><pre><span></span><code>cz changelog --incremental
 </code></pre></div>
 
 
-<p>In your <code>pyproject.toml</code> or <code>.cz.toml</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
-<span class="n">tag_format</span> <span class="o">=</span> <span class="s">&quot;v$minor.$major.$patch$prerelease&quot;</span>
-</code></pre></div>
-
-
-<p>Or in your <code>.cz</code> (TO BE DEPRECATED)</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[commitizen]</span>
-<span class="na">tag_format</span> <span class="o">=</span> <span class="s">v$minor.$major.$patch$prerelease</span>
-</code></pre></div>
-
-
-<p>The variables must be preceded by a <code>$</code> sign.</p>
-<p>Supported variables:</p>
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>$version</code></td>
-<td>full generated version</td>
-</tr>
-<tr>
-<td><code>$major</code></td>
-<td>MAJOR increment</td>
-</tr>
-<tr>
-<td><code>$minor</code></td>
-<td>MINOR increment</td>
-</tr>
-<tr>
-<td><code>$patch</code></td>
-<td>PATCH increment</td>
-</tr>
-<tr>
-<td><code>$prerelease</code></td>
-<td>Prerelase (alpha, beta, release candidate)</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h3 id="version_files"><code>version_files</code> *</h3>
-<p>It is used to identify the files which should be updated with the new version.
-It is also possible to provide a pattern for each file, separated by colons (<code>:</code>).</p>
-<p>Commitizen will update it's configuration file automatically (<code>pyproject.toml</code>, <code>.cz</code>) when bumping,
-regarding if the file is present or not in <code>version_files</code>.</p>
-<p>* Renamed from <code>files</code> to <code>version_files</code>.</p>
-<p>Some examples</p>
-<p><code>pyproject.toml</code> or <code>.cz.toml</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
-<span class="n">version_files</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s">&quot;src/__version__.py&quot;</span><span class="p">,</span>
-    <span class="s">&quot;setup.py:version&quot;</span>
-<span class="p">]</span>
-</code></pre></div>
-
-
-<p><code>.cz</code> (TO BE DEPRECATED)</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[commitizen]</span>
-<span class="na">version_files</span> <span class="o">=</span> <span class="s">[</span>
-<span class="s">    &quot;src/__version__.py&quot;,</span>
-<span class="s">    &quot;setup.py:version&quot;</span>
-<span class="s">    ]</span>
-</code></pre></div>
-
-
-<p>In the example above, we can see the reference <code>"setup.py:version"</code>.
-This means that it will find a file <code>setup.py</code> and will only make a change
-in a line containing the <code>version</code> substring.</p>
-<hr />
-<h3 id="bump_message"><code>bump_message</code></h3>
-<p>Template used to specify the commit message generated when bumping.</p>
-<p>defaults to: <code>bump: version $current_version → $new_version</code></p>
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>$current_version</code></td>
-<td>the version existing before bumping</td>
-</tr>
-<tr>
-<td><code>$new_version</code></td>
-<td>version generated after bumping</td>
-</tr>
-</tbody>
-</table>
-<p>Some examples</p>
-<p><code>pyproject.toml</code> or <code>.cz.toml</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
-<span class="n">bump_message</span> <span class="o">=</span> <span class="s">&quot;release $current_version → $new_version [skip-ci]&quot;</span>
-</code></pre></div>
-
-
-<p><code>.cz</code> (TO BE DEPRECATED)</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[commitizen]</span>
-<span class="na">bump_message</span> <span class="o">=</span> <span class="s">release $current_version → $new_version [skip-ci]</span>
-</code></pre></div>
-
-
-<h2 id="custom-bump">Custom bump</h2>
-<p>Read the <a href="../customization/">customizing section</a>.</p>
+<h2 id="todo">TODO</h2>
+<ul>
+<li>[ ] support for hooks: this would allow introduction of custom information in the commiter, like a github or jira url. Eventually we could build a <code>CzConventionalGithub</code>, which would add links to commits</li>
+<li>[ ] support for map: allow the usage of a <code>change_type</code> mapper, to convert from feat to feature for example.</li>
+</ul>
                 
               
               
@@ -790,41 +642,6 @@ in a line containing the <code>version</code> substring.</p>
       
         
 <footer class="md-footer">
-  
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
-        
-          <a href="../init/" title="Init" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-            </div>
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  Previous
-                </span>
-                Init
-              </div>
-            </div>
-          </a>
-        
-        
-          <a href="../check/" title="Check" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  Next
-                </span>
-                Check
-              </div>
-            </div>
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
-    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
