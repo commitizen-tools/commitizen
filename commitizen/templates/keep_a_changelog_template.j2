@@ -11,7 +11,7 @@
 {% for change in changes %}
 {% if change.scope %}
 - **{{ change.scope }}**: {{ change.message }}
-{% else %}
+{% elif change.message %}
 - {{ change.message }}
 {% endif %}
 {% endfor %}

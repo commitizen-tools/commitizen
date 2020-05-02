@@ -9,8 +9,6 @@ from commitizen.config.base_config import BaseConfig
 class BaseCommitizen(metaclass=ABCMeta):
     bump_pattern: Optional[str] = None
     bump_map: Optional[dict] = None
-    changelog_pattern: Optional[str] = None
-    changelog_map: Optional[dict] = None
     default_style_config: List[Tuple[str, str]] = [
         ("qmark", "fg:#ff9d00 bold"),
         ("question", "bold"),
@@ -23,7 +21,13 @@ class BaseCommitizen(metaclass=ABCMeta):
         ("text", ""),
         ("disabled", "fg:#858585 italic"),
     ]
-    commit_parser: Optional[str] = None
+
+    # The whole subject will be parsed as message by default
+    # This allows supporting changelog for any rule system.
+    # It can be modified per rule
+    commit_parser: Optional[str] = r"(?P<message>.*)"
+    changelog_pattern: Optional[str] = r".*"
+    changelog_map: Optional[dict] = None  # TODO: Use it
 
     def __init__(self, config: BaseConfig):
         self.config = config

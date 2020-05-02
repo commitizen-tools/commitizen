@@ -41,14 +41,20 @@ def test_changlog_from_version_zero_point_two(mocker, capsys):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changlog_with_unsupported_cz(mocker, capsys):
+def test_changlog_with_different_cz(mocker, capsys):
+    create_file_and_commit("JRA-34 #comment corrected indent issue")
+    create_file_and_commit("JRA-35 #time 1w 2d 4h 30m Total work logged")
+
     testargs = ["cz", "-n", "cz_jira", "changelog", "--dry-run"]
     mocker.patch.object(sys, "argv", testargs)
 
     with pytest.raises(SystemExit):
         cli.main()
-    out, err = capsys.readouterr()
-    assert "'cz_jira' rule does not support changelog" in err
+    out, _ = capsys.readouterr()
+    assert (
+        out
+        == "\n## Unreleased \n\n\n- JRA-35 #time 1w 2d 4h 30m Total work logged\n- JRA-34 #comment corrected indent issue\n\n"
+    )
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
