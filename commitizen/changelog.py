@@ -28,6 +28,7 @@ Extra:
 import os
 import re
 from collections import defaultdict
+from datetime import date
 from typing import Dict, Iterable, List, Optional
 
 import pkg_resources
@@ -80,6 +81,8 @@ def generate_tree_from_commits(
 
     current_tag_name: str = unreleased_version or "Unreleased"
     current_tag_date: str = ""
+    if unreleased_version is not None:
+        current_tag_date = date.today().isoformat()
     if current_tag is not None and current_tag.name:
         current_tag_name = current_tag.name
         current_tag_date = current_tag.date
