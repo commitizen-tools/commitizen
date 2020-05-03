@@ -46,7 +46,7 @@ def tag(tag: str):
     return c
 
 
-def commit(message: str, args=""):
+def commit(message: str, args: str = ""):
     f = NamedTemporaryFile("wb", delete=False)
     f.write(message.encode("utf-8"))
     f.close()
@@ -61,11 +61,12 @@ def get_commits(
     *,
     log_format: str = "%H%n%s%n%b",
     delimiter: str = "----------commit-delimiter----------",
+    args: str = "",
 ) -> List[GitCommit]:
     """
     Get the commits betweeen start and end
     """
-    git_log_cmd = f"git log --pretty={log_format}{delimiter}"
+    git_log_cmd = f"git log --pretty={log_format}{delimiter} {args}"
 
     if start:
         c = cmd.run(f"{git_log_cmd} {start}..{end}")

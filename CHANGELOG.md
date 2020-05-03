@@ -1,8 +1,11 @@
 
+## Unreleased 
 
+### Fix
 
+- **changelog**: sort the commits properly to their version
 
-## v1.19.1 
+## v1.19.1 (2020-05-03)
 
 ### Fix
 
@@ -12,7 +15,7 @@
 
 - **cli**: add explicit category for deprecation warnings
 
-## v1.19.0 
+## v1.19.0 (2020-05-02)
 
 ### Fix
 
@@ -23,11 +26,6 @@
 
 - **changelog**: add support for any commit rule system
 - **changelog**: add incremental flag
-
-### Refactor
-
-- **changelog**: use functions from changelog.py
-- **changelog**: rename category to change_type to fit 'keep a changelog'
 
 ## v1.18.3 (2020-04-22)
 
@@ -40,6 +38,8 @@
 ### Refactor
 
 - **git**: replace GitCommit.message code with one-liner
+- **changelog**: use functions from changelog.py
+- **changelog**: rename category to change_type to fit 'keep a changelog'
 - **templates**: rename as "keep_a_changelog_template.j2"
 - **templates**: remove unneeded __init__ file
 - **cli**: reorder commands
@@ -175,20 +175,20 @@
 ### Refactor
 
 - **tests/commands/bump**: use tmp_dir to replace self implemented tmp dir behavior
+- **git**: make find_git_project_root return None if it's not a git project
+- **config/base_config**: make set_key not implemented
+- **error_codes**: move all the error_codes to a module
+- **config**: replace string type path with pathlib.Path
 - **test_bump_command**: rename camel case variables
 - **tests/commands/check**: use pytest fixture tmpdir replace self implemented contextmanager
 - **test/commands/other**: replace unit test style mock with mocker fixture
 - **tests/commands**: separate command unit tests into modules
 - **tests/commands**: make commands related tests a module
-- **git**: make find_git_project_root return None if it's not a git project
-- **config/base_config**: make set_key not implemented
-- **error_codes**: move all the error_codes to a module
-- **config**: replace string type path with pathlib.Path
 
 ### Fix
 
-- **cli**: fix --version not functional
 - **git**: remove breakline in the return value of find_git_project_root
+- **cli**: fix --version not functional
 
 ### Feat
 
@@ -298,10 +298,10 @@
 - **config**: add deprecation warning for loading config from ini files
 - **cz/customize**: add jinja support to enhance template flexibility
 - **cz/filters**: add required_validator and multiple_line_breaker
-- **Commands/commit**: add ´--dry-run´ flag to the Commit command
 - **cz/cz_customize**: implement info to support info and info_path
 - **cz/cz_customize**: enable bump_pattern bump_map customization
 - **cz/cz_customize**: implement customizable cz
+- **Commands/commit**: add ´--dry-run´ flag to the Commit command
 - new 'git-cz' entrypoint
 
 ### Refactor
@@ -511,10 +511,6 @@
 - **commiter**: conventional commit is a bit more intelligent now
 
 ## v0.9.2 (2017-11-11)
-
-### Refactor
-
-- **renamed conventional_changelog to conventional_commits, not backward compatible**: 
 
 ## v0.9.1 (2017-11-11)
 
