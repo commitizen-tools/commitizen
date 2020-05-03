@@ -1,6 +1,17 @@
 
 
 
+
+## v1.19.1 
+
+### Fix
+
+- **commands/check**: Show warning if no commit to check when running `cz check --rev-range`
+
+### Refactor
+
+- **cli**: add explicit category for deprecation warnings
+
 ## v1.19.0 
 
 ### Fix
