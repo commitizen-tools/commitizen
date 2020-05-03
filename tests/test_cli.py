@@ -55,10 +55,29 @@ def test_ls(mocker, capsys):
     assert isinstance(out, str)
 
 
-def test_version(mocker, capsys):
+def test_arg_version(mocker, capsys):
     testargs = ["cz", "--version"]
     mocker.patch.object(sys, "argv", testargs)
 
-    cli.main()
-    out, _ = capsys.readouterr()
-    assert out.strip() == __version__
+    with pytest.warns(DeprecationWarning) as record:
+        cli.main()
+        out, _ = capsys.readouterr()
+        assert out.strip() == __version__
+
+    assert record[0].message.args[0] == (
+        "'cz --version' will be deprecated in next major version. "
+        "Please use 'cz version' command from your scripts"
+    )
+
+
+def test_arg_debug(mocker):
+    testargs = ["cz", "--debug", "info"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.warns(DeprecationWarning) as record:
+        cli.main()
+
+    assert record[0].message.args[0] == (
+        "Debug will be deprecated in next major version. "
+        "Please remove it from your scripts"
+    )
