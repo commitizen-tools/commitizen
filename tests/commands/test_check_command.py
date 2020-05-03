@@ -194,3 +194,11 @@ def test_check_command_with_invalid_argment(args, config, capsys):
         commands.Check(config=config, arguments=args)
     _, err = capsys.readouterr()
     assert "One and only one argument is required for check command!" in err
+
+
+def test_check_command_with_empty_range(config, mocker, capsys):
+    check_cmd = commands.Check(config=config, arguments={"rev_range": "master..master"})
+    with pytest.raises(SystemExit), pytest.warns(UserWarning) as record:
+        check_cmd()
+
+    assert record[0].message.args[0] == "No commit found with range: 'master..master'"

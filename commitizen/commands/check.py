@@ -1,10 +1,11 @@
 import os
 import re
+import warnings
 from typing import Dict, Optional
 
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
-from commitizen.error_codes import INVALID_COMMIT_MSG
+from commitizen.error_codes import INVALID_COMMIT_MSG, NO_COMMITS_FOUND
 
 
 class Check:
@@ -50,6 +51,10 @@ class Check:
 
         """
         commit_msgs = self._get_commit_messages()
+        if not commit_msgs:
+            warnings.warn(f"No commit found with range: '{self.rev_range}'")
+            raise SystemExit(NO_COMMITS_FOUND)
+
         pattern = self.cz.schema_pattern()
         for commit_msg in commit_msgs:
             if not Check.validate_commit_message(commit_msg, pattern):
