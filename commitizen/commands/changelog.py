@@ -77,7 +77,7 @@ class Changelog:
             if latest_version:
                 start_rev = self._find_incremental_rev(latest_version, tags)
 
-        commits = git.get_commits(start=start_rev)
+        commits = git.get_commits(start=start_rev, args="--author-date-order")
         if not commits:
             out.error("No commits found")
             raise SystemExit(NO_COMMITS_FOUND)
