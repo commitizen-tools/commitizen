@@ -247,15 +247,21 @@ def main():
 
     if args.version:
         warnings.warn(
-            "'cz --version' will be deprecated in next major version. "
-            "Please use 'cz version' command from your scripts"
+            (
+                "'cz --version' will be deprecated in next major version. "
+                "Please use 'cz version' command from your scripts"
+            ),
+            category=DeprecationWarning,
         )
         args.func = commands.Version
 
     if args.debug:
         warnings.warn(
-            "Debug will be deprecated in next major version. "
-            "Please remove it from your scripts"
+            (
+                "Debug will be deprecated in next major version. "
+                "Please remove it from your scripts"
+            ),
+            category=DeprecationWarning,
         )
         logging.getLogger("commitizen").setLevel(logging.DEBUG)
 
