@@ -31,6 +31,7 @@ class Bump:
         }
         self.cz = factory.commiter_factory(self.config)
         self.changelog = arguments["changelog"]
+        self.no_verify = arguments["no_verify"]
 
     def is_initial_tag(self, current_tag_version: str, is_yes: bool = False) -> bool:
         """Check if reading the whole git tree up to HEAD is needed."""
@@ -145,7 +146,7 @@ class Bump:
             changelog()
 
         self.config.set_key("version", new_version.public)
-        c = git.commit(message, args="-a")
+        c = git.commit(message, args=self._get_commit_args())
         if c.err:
             out.error('git.commit errror: "{}"'.format(c.err.strip()))
             raise SystemExit(COMMIT_FAILED)
@@ -154,3 +155,9 @@ class Bump:
             out.error(c.err)
             raise SystemExit(TAG_FAILED)
         out.success("Done!")
+
+    def _get_commit_args(self):
+        commit_args = ["-a"]
+        if self.no_verify:
+            commit_args.append("--no-verify")
+        return " ".join(commit_args)
