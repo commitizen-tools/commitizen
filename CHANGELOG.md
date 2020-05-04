@@ -1,4 +1,12 @@
 
+
+## v1.19.3 (2020-05-04)
+
+### Fix
+
+- **docs**: change old url woile.github.io to commitizen-tools.github.io
+- **changelog**: generate today's date when using an unreleased_version
+
 ## v1.19.2 (2020-05-03)
 
 ### Fix
