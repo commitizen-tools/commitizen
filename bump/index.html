@@ -636,7 +636,7 @@
 <p><code>post</code> and <code>dev</code> releases are not supported yet.</p>
 <h2 id="usage">Usage</h2>
 <div class="codehilite"><pre><span></span><code>$ cz bump --help
-usage: cz bump <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--dry-run<span class="o">]</span> <span class="o">[</span>--files-only<span class="o">]</span> <span class="o">[</span>--changelog<span class="o">]</span> <span class="o">[</span>--yes<span class="o">]</span>
+usage: cz bump <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--dry-run<span class="o">]</span> <span class="o">[</span>--files-only<span class="o">]</span> <span class="o">[</span>--changelog<span class="o">]</span> <span class="o">[</span>--no-verify<span class="o">]</span> <span class="o">[</span>--yes<span class="o">]</span>
                <span class="o">[</span>--tag-format TAG_FORMAT<span class="o">]</span> <span class="o">[</span>--bump-message BUMP_MESSAGE<span class="o">]</span>
                <span class="o">[</span>--prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}]</span>
                <span class="o">[</span>--increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span>
@@ -646,6 +646,7 @@ optional arguments:
   --dry-run             show output to stdout, no commit, no modified files
   --files-only          bump version in the files from the config
   --changelog, -ch      generate the changelog <span class="k">for</span> the newest version
+  --no-verify           this option bypasses the pre-commit and commit-msg hooks
   --yes                 accept automatically questions <span class="k">done</span>
   --tag-format TAG_FORMAT
                         the format used to tag the commit and <span class="nb">read</span> it, use it
