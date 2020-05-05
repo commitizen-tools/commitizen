@@ -93,6 +93,12 @@ data = {
                         "help": "generate the changelog for the newest version",
                     },
                     {
+                        "name": ["--no-verify"],
+                        "action": "store_true",
+                        "default": False,
+                        "help": "this option bypasses the pre-commit and commit-msg hooks",
+                    },
+                    {
                         "name": "--yes",
                         "action": "store_true",
                         "help": "accept automatically questions done",

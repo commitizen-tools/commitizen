@@ -54,7 +54,7 @@ Some examples:
 
 ```bash
 $ cz bump --help
-usage: cz bump [-h] [--dry-run] [--files-only] [--changelog] [--yes]
+usage: cz bump [-h] [--dry-run] [--files-only] [--changelog] [--no-verify] [--yes]
                [--tag-format TAG_FORMAT] [--bump-message BUMP_MESSAGE]
                [--prerelease {alpha,beta,rc}]
                [--increment {MAJOR,MINOR,PATCH}]
@@ -64,6 +64,7 @@ optional arguments:
   --dry-run             show output to stdout, no commit, no modified files
   --files-only          bump version in the files from the config
   --changelog, -ch      generate the changelog for the newest version
+  --no-verify           this option bypasses the pre-commit and commit-msg hooks
   --yes                 accept automatically questions done
   --tag-format TAG_FORMAT
                         the format used to tag the commit and read it, use it
