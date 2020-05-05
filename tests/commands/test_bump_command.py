@@ -59,6 +59,44 @@ def test_bump_command(mocker):
     assert tag_exists is True
 
 
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_on_git_with_hooks_no_verify_disabled(mocker, capsys):
+    cmd.run("mkdir .git/hooks")
+    with open(".git/hooks/pre-commit", "w") as f:
+        f.write("#!/usr/bin/env bash\n" 'echo "0.1.0"')
+    cmd.run("chmod +x .git/hooks/pre-commit")
+
+    # MINOR
+    create_file_and_commit("feat: new file")
+
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.raises(SystemExit):
+        cli.main()
+
+    _, err = capsys.readouterr()
+    assert 'git.commit errror: "0.1.0"' in err
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_on_git_with_hooks_no_verify_enabled(mocker):
+    cmd.run("mkdir .git/hooks")
+    with open(".git/hooks/pre-commit", "w") as f:
+        f.write("#!/usr/bin/env bash\n" 'echo "0.1.0"')
+    cmd.run("chmod +x .git/hooks/pre-commit")
+
+    # MINOR
+    create_file_and_commit("feat: new file")
+
+    testargs = ["cz", "bump", "--yes", "--no-verify"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    tag_exists = git.tag_exist("0.2.0")
+    assert tag_exists is True
+
+
 def test_bump_when_bumpping_is_not_support(mocker, capsys, tmpdir):
     with tmpdir.as_cwd():
         with open("./pyproject.toml", "w") as f:
