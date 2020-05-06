@@ -522,7 +522,7 @@ with the following content.</p>
 
 <span class="nt">jobs</span><span class="p">:</span>
   <span class="nt">build</span><span class="p">:</span>
-    <span class="nt">if</span><span class="p">:</span> <span class="s">&quot;!contains(github.event.head_commit.message,</span><span class="nv"> </span><span class="s">&#39;bump&#39;)&quot;</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="s">&quot;!startsWith(github.event.head_commit.message,</span><span class="nv"> </span><span class="s">&#39;bump:&#39;)&quot;</span>
     <span class="nt">runs-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
     <span class="nt">strategy</span><span class="p">:</span>
       <span class="nt">matrix</span><span class="p">:</span>
