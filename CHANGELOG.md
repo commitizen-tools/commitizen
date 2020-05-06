@@ -1,5 +1,12 @@
 
 
+
+## v1.20.0 (2020-05-06)
+
+### Feat
+
+- **bump**: add optional --no-verify argument for bump command
+
 ## v1.19.3 (2020-05-04)
 
 ### Fix
