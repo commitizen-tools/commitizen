@@ -20,7 +20,7 @@ on:
 
 jobs:
   build:
-    if: "!contains(github.event.head_commit.message, 'bump')"
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
     runs-on: ubuntu-latest
     strategy:
       matrix:
