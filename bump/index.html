@@ -271,6 +271,26 @@
     Usage
   </a>
   
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-changelog" class="md-nav__link">
+    --changelog
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-check-consistency" class="md-nav__link">
+    --check-consistency
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -280,13 +300,6 @@
   
     <nav class="md-nav" aria-label="Configuration">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#changelog" class="md-nav__link">
-    changelog
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#tag_format" class="md-nav__link">
@@ -506,6 +519,26 @@
     Usage
   </a>
   
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-changelog" class="md-nav__link">
+    --changelog
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-check-consistency" class="md-nav__link">
+    --check-consistency
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -515,13 +548,6 @@
   
     <nav class="md-nav" aria-label="Configuration">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#changelog" class="md-nav__link">
-    changelog
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#tag_format" class="md-nav__link">
@@ -636,17 +662,18 @@
 <p><code>post</code> and <code>dev</code> releases are not supported yet.</p>
 <h2 id="usage">Usage</h2>
 <div class="codehilite"><pre><span></span><code>$ cz bump --help
-usage: cz bump <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--dry-run<span class="o">]</span> <span class="o">[</span>--files-only<span class="o">]</span> <span class="o">[</span>--changelog<span class="o">]</span> <span class="o">[</span>--no-verify<span class="o">]</span> <span class="o">[</span>--yes<span class="o">]</span>
-               <span class="o">[</span>--tag-format TAG_FORMAT<span class="o">]</span> <span class="o">[</span>--bump-message BUMP_MESSAGE<span class="o">]</span>
+usage: cz bump <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--dry-run<span class="o">]</span> <span class="o">[</span>--files-only<span class="o">]</span> <span class="o">[</span>--changelog<span class="o">]</span> <span class="o">[</span>--no-verify<span class="o">]</span>
+               <span class="o">[</span>--yes<span class="o">]</span> <span class="o">[</span>--tag-format TAG_FORMAT<span class="o">]</span> <span class="o">[</span>--bump-message BUMP_MESSAGE<span class="o">]</span>
                <span class="o">[</span>--prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}]</span>
-               <span class="o">[</span>--increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span>
+               <span class="o">[</span>--increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span> <span class="o">[</span>--check-consistency<span class="o">]</span>
 
 optional arguments:
   -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
   --dry-run             show output to stdout, no commit, no modified files
   --files-only          bump version in the files from the config
   --changelog, -ch      generate the changelog <span class="k">for</span> the newest version
-  --no-verify           this option bypasses the pre-commit and commit-msg hooks
+  --no-verify           this option bypasses the pre-commit and commit-msg
+                        hooks
   --yes                 accept automatically questions <span class="k">done</span>
   --tag-format TAG_FORMAT
                         the format used to tag the commit and <span class="nb">read</span> it, use it
@@ -658,16 +685,53 @@ optional arguments:
                         choose <span class="nb">type</span> of prerelease
   --increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}</span>
                         manually specify the desired increment
+  --check-consistency, -cc
+                        check consistency among versions defined in commitizen
+                        configuration and version_files
 </code></pre></div>
 
 
-<h2 id="configuration">Configuration</h2>
-<h3 id="changelog"><code>changelog</code></h3>
+<h3 id="-changelog"><code>--changelog</code></h3>
 <p>Generate a <strong>changelog</strong> along with the new version and tag when bumping.</p>
 <div class="codehilite"><pre><span></span><code>cz bump --changelog
 </code></pre></div>
 
 
+<h3 id="-check-consistency"><code>--check-consistency</code></h3>
+<p>Check whether the versions defined in <code>version_files</code> and the version in commitizen
+configuration are consistent before bumping version.</p>
+<div class="codehilite"><pre><span></span><code>cz bump --check-consistency
+</code></pre></div>
+
+
+<p>For example, if we have <code>pyproject.toml</code></p>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version</span> <span class="o">=</span> <span class="s">&quot;1.21.0&quot;</span>
+<span class="n">version_files</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">&quot;src/__version__.py&quot;</span><span class="p">,</span>
+    <span class="s">&quot;setup.py&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
+
+
+<p><code>src/__version__.py</code>,</p>
+<div class="codehilite"><pre><span></span><code><span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.21.0&quot;</span>
+</code></pre></div>
+
+
+<p>and <code>setup.py</code>.</p>
+<div class="codehilite"><pre><span></span><code><span class="o">...</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;1.0.5&quot;</span>
+<span class="o">...</span>
+</code></pre></div>
+
+
+<p>If <code>--check-consistency</code> is used, commitizen will check whether the current version in <code>pyproject.toml</code>
+exists in all version_files and find out it does not exist in <code>setup.py</code> and fails.
+However, it will still update <code>pyproject.toml</code> and <code>src/__version__.py</code>.</p>
+<p>To fix it, you'll first <code>git checkout .</code> to reset to the status before trying to bump and update
+the version in <code>setup.py</code> to <code>1.21.0</code></p>
+<h2 id="configuration">Configuration</h2>
 <h3 id="tag_format"><code>tag_format</code></h3>
 <p>It is used to read the format from the git tags, and also to generate the tags.</p>
 <p>Commitizen supports 2 types of formats, a simple and a more complex.</p>
