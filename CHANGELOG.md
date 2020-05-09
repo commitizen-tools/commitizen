@@ -1,6 +1,13 @@
 
 
 
+
+## v1.21.0 (2020-05-09)
+
+### Feat
+
+- **commands/bump**: add "--check-consistency" optional
+
 ## v1.20.0 (2020-05-06)
 
 ### Feat
