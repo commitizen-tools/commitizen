@@ -54,17 +54,18 @@ Some examples:
 
 ```bash
 $ cz bump --help
-usage: cz bump [-h] [--dry-run] [--files-only] [--changelog] [--no-verify] [--yes]
-               [--tag-format TAG_FORMAT] [--bump-message BUMP_MESSAGE]
+usage: cz bump [-h] [--dry-run] [--files-only] [--changelog] [--no-verify]
+               [--yes] [--tag-format TAG_FORMAT] [--bump-message BUMP_MESSAGE]
                [--prerelease {alpha,beta,rc}]
-               [--increment {MAJOR,MINOR,PATCH}]
+               [--increment {MAJOR,MINOR,PATCH}] [--check-consistency]
 
 optional arguments:
   -h, --help            show this help message and exit
   --dry-run             show output to stdout, no commit, no modified files
   --files-only          bump version in the files from the config
   --changelog, -ch      generate the changelog for the newest version
-  --no-verify           this option bypasses the pre-commit and commit-msg hooks
+  --no-verify           this option bypasses the pre-commit and commit-msg
+                        hooks
   --yes                 accept automatically questions done
   --tag-format TAG_FORMAT
                         the format used to tag the commit and read it, use it
@@ -76,17 +77,29 @@ optional arguments:
                         choose type of prerelease
   --increment {MAJOR,MINOR,PATCH}
                         manually specify the desired increment
+  --check-consistency, -cc
+                        check consistency among versions defined in commitizen
+                        configuration and version_files
 ```
 
-## Configuration
-
-### `changelog`
+### `--changelog`
 
 Generate a **changelog** along with the new version and tag when bumping.
 
 ```bash
 cz bump --changelog
 ```
+
+### `--check-consistency`
+
+Check whether the versions defined in `version_files` and the version in commitizen
+configuration are consistent before bumping version.
+
+```bash
+cz bump --check-consistency
+```
+
+## Configuration
 
 ### `tag_format`
 
