@@ -128,6 +128,14 @@ data = {
                         "help": "manually specify the desired increment",
                         "choices": ["MAJOR", "MINOR", "PATCH"],
                     },
+                    {
+                        "name": ["--check-consistency", "-cc"],
+                        "help": (
+                            "check consistency among versions defined in "
+                            "commitizen configuration and version_files"
+                        ),
+                        "action": "store_true",
+                    },
                 ],
             },
             {

@@ -6,6 +6,7 @@ from typing import List, Optional, Union
 
 from packaging.version import Version
 
+from commitizen import out
 from commitizen.defaults import (
     MAJOR,
     MINOR,
@@ -14,6 +15,7 @@ from commitizen.defaults import (
     bump_message,
     bump_pattern,
 )
+from commitizen.error_codes import CURRENT_VERSION_NOT_FOUND
 from commitizen.git import GitCommit
 
 
@@ -126,34 +128,49 @@ def generate_version(
     return Version(f"{semver}{pre_version}")
 
 
-def update_version_in_files(current_version: str, new_version: str, files: list):
+def update_version_in_files(
+    current_version: str, new_version: str, files: List[str], *, check_consistency=False
+):
     """Change old version to the new one in every file given.
 
     Note that this version is not the tag formatted one.
     So for example, your tag could look like `v1.0.0` while your version in
     the package like `1.0.0`.
     """
+    # TODO: sepearte check step and write step
     for location in files:
-        filepath, *regex = location.split(":", maxsplit=1)
-        if len(regex) > 0:
-            regex = regex[0]
+        filepath, *regexes = location.split(":", maxsplit=1)
+        regex = regexes[0] if regexes else None
 
         # Read in the file
-        filedata = []
-        with open(filepath, "r") as f:
-            for line in f:
+        file_content = []
+        current_version_found = False
+        with open(filepath, "r") as version_file:
+            for line in version_file:
                 if regex:
-                    is_match = re.search(regex, line)
-                    if not is_match:
-                        filedata.append(line)
+                    match = re.search(regex, line)
+                    if not match:
+                        file_content.append(line)
                         continue
 
                 # Replace the target string
-                filedata.append(line.replace(current_version, new_version))
+                if current_version in line:
+                    current_version_found = True
+                    file_content.append(line.replace(current_version, new_version))
+                else:
+                    file_content.append(line)
+
+        if check_consistency and not current_version_found:
+            out.error(
+                f"Current version {current_version} is not found in {location}.\n"
+                "The version defined in commitizen configuration and the ones in "
+                "version_files are possibly inconsistent."
+            )
+            raise SystemExit(CURRENT_VERSION_NOT_FOUND)
 
         # Write the file out again
         with open(filepath, "w") as file:
-            file.write("".join(filedata))
+            file.write("".join(file_content))
 
 
 def create_tag(version: Union[Version, str], tag_format: Optional[str] = None):
