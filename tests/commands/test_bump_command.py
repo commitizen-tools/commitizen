@@ -3,6 +3,7 @@ import sys
 import pytest
 
 from commitizen import cli, cmd, git
+from commitizen.error_codes import CURRENT_VERSION_NOT_FOUND
 from tests.utils import create_file_and_commit
 
 
@@ -135,7 +136,7 @@ def test_bump_is_not_specify(mocker, capsys):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_when_not_new_commit(mocker, capsys):
+def test_bump_when_no_new_commit(mocker, capsys):
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
 
@@ -145,3 +146,28 @@ def test_bump_when_not_new_commit(mocker, capsys):
     expected_error_message = "[NO_COMMITS_FOUND]\n" "No new commits found."
     _, err = capsys.readouterr()
     assert expected_error_message in err
+
+
+def test_bump_when_version_inconsistent_in_version_files(
+    tmp_commitizen_project, mocker, capsys
+):
+    tmp_version_file = tmp_commitizen_project.join("__version__.py")
+    tmp_version_file.write("100.999.10000")
+    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_commitizen_cfg_file.write(
+        f"{tmp_commitizen_cfg_file.read()}\n"
+        f'version_files = ["{str(tmp_version_file)}"]'
+    )
+
+    create_file_and_commit("feat: new file")
+
+    testargs = ["cz", "bump", "--yes", "--check-consistency"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.raises(SystemExit) as excinfo:
+        cli.main()
+
+    partial_expected_error_message = "Current version 0.1.0 is not found in"
+    _, err = capsys.readouterr()
+    assert excinfo.value.code == CURRENT_VERSION_NOT_FOUND
+    assert partial_expected_error_message in err

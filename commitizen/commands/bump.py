@@ -32,6 +32,7 @@ class Bump:
         self.cz = factory.commiter_factory(self.config)
         self.changelog = arguments["changelog"]
         self.no_verify = arguments["no_verify"]
+        self.check_consistency = arguments["check_consistency"]
 
     def is_initial_tag(self, current_tag_version: str, is_yes: bool = False) -> bool:
         """Check if reading the whole git tree up to HEAD is needed."""
@@ -79,7 +80,7 @@ class Bump:
 
         tag_format: str = self.bump_settings["tag_format"]
         bump_commit_message: str = self.bump_settings["bump_message"]
-        version_files: list = self.bump_settings["version_files"]
+        version_files: List[str] = self.bump_settings["version_files"]
 
         dry_run: bool = self.arguments["dry_run"]
         is_yes: bool = self.arguments["yes"]
@@ -130,7 +131,12 @@ class Bump:
         if dry_run:
             raise SystemExit()
 
-        bump.update_version_in_files(current_version, new_version.public, version_files)
+        bump.update_version_in_files(
+            current_version,
+            new_version.public,
+            version_files,
+            check_consistency=self.check_consistency,
+        )
         if is_files_only:
             raise SystemExit()
 

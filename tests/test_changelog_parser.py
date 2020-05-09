@@ -167,27 +167,21 @@ def test_generate_full_tree(existing_changelog_file):
                         "message": "issue in poetry add preventing the installation in py36",
                         "breaking": None,
                     },
-                    {
-                        "scope": "users",
-                        "message": "lorem ipsum apap",
-                        "breaking": None,
-                    },
+                    {"scope": "users", "message": "lorem ipsum apap", "breaking": None},
                 ],
                 "feat": [
                     {
                         "scope": None,
                         "message": "it is possible to specify a pattern to be matched in configuration files bump.",
                         "breaking": None,
-                    },
+                    }
                 ],
             },
             "version": "1.0.0",
             "date": "2019-07-12",
         },
         {
-            "changes": {
-                "fix": [{"scope": None, "message": "holis", "breaking": None}],
-            },
+            "changes": {"fix": [{"scope": None, "message": "holis", "breaking": None}]},
             "version": "0.9",
             "date": "2019-07-11",
         },

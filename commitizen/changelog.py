@@ -122,11 +122,7 @@ def generate_tree_from_commits(
             change_type = parsed_message_body.pop("change_type", None)
             changes[change_type].append(parsed_message_body)
 
-    yield {
-        "version": current_tag_name,
-        "date": current_tag_date,
-        "changes": changes,
-    }
+    yield {"version": current_tag_name, "date": current_tag_date, "changes": changes}
 
 
 def render_changelog(tree: Iterable) -> str:
