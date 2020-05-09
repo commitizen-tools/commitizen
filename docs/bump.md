@@ -99,6 +99,39 @@ configuration are consistent before bumping version.
 cz bump --check-consistency
 ```
 
+For example, if we have `pyproject.toml`
+
+```toml
+[tool.commitizen]
+version = "1.21.0"
+version_files = [
+    "src/__version__.py",
+    "setup.py",
+]
+```
+
+`src/__version__.py`,
+
+```python
+__version__ = "1.21.0"
+```
+
+and `setup.py`.
+
+```python
+...
+    version="1.0.5"
+...
+```
+
+If `--check-consistency` is used, commitizen will check whether the current version in `pyproject.toml`
+exists in all version_files and find out it does not exist in `setup.py` and fails.
+However, it will still update `pyproject.toml` and `src/__version__.py`.
+
+To fix it, you'll first `git checkout .` to reset to the status before trying to bump and update
+the version in `setup.py` to `1.21.0`
+
+
 ## Configuration
 
 ### `tag_format`
