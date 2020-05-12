@@ -137,12 +137,52 @@ cz -n cz_strange bump
 The changelog generator should just work in a very basic manner without touching anything.
 You can customize it of course, and this are the variables you need to add to your custom `BaseCommitizen`.
 
-| Parameter           | Type                                    | Required | Description                                                                                                                                         |
-| ------------------- | --------------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `commit_parser`     | `str`                                   | NO       | Regex which should provide the variables explained in the [changelog description][changelog-des]                                                    |
-| `changelog_pattern` | `str`                                   | NO       | Regex to validate the commits, this is useful to skip commits that don't meet your rulling standards like a Merge. Usually the same as bump_pattern |
-| `change_type_map`   | `dict`                                  | NO       | Convert the title of the change type that will appear in the changelog, if a value is not found, the original will be provided                      |
-| `message_hook`      | `method: (dict, git.GitCommit) -> dict` | NO       | Customize with extra information your message output, like adding links, this function is executed per parsed commit.                               |
+| Parameter           | Type                                                                     | Required | Description                                                                                                                                                     |
+| ------------------- | ------------------------------------------------------------------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `commit_parser`     | `str`                                                                    | NO       | Regex which should provide the variables explained in the [changelog description][changelog-des]                                                                |
+| `changelog_pattern` | `str`                                                                    | NO       | Regex to validate the commits, this is useful to skip commits that don't meet your rulling standards like a Merge. Usually the same as bump_pattern             |
+| `change_type_map`   | `dict`                                                                   | NO       | Convert the title of the change type that will appear in the changelog, if a value is not found, the original will be provided                                  |
+| `message_hook`      | `method: (dict, git.GitCommit) -> dict`                                  | NO       | Customize with extra information your message output, like adding links, this function is executed per parsed commit.                                           |
+| `changelog_hook`    | `method: (full_changelog: str, partial_changelog: Optional[str]) -> str` | NO       | Receives the whole and partial (if used incremental) changelog. Useful to send slack messages or notify a compliance department. Must return the full_changelog |
+
+```python
+from commitizen.cz.base import BaseCommitizen
+import chat
+import compliance
+
+class StrangeCommitizen(BaseCommitizen):
+    changelog_pattern = r"^(break|new|fix|hotfix)"
+    commit_parser = r"^(?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?:\s(?P<message>.*)?"
+    change_type_map = {
+        "feat": "Features",
+        "fix": "Bug Fixes",
+        "refactor": "Code Refactor",
+        "perf": "Performance improvements"
+    }
+
+    def message_hook(self, parsed_message: dict, commit: git.GitCommit) -> dict:
+        rev = commit.rev
+        m = parsed_message["message"]
+        parsed_message["message"] = f"{m} {rev}"
+        return parsed_message
+
+    def changelog_hook(self, full_changelog: str, partial_changelog: Optional[str]) -> str:
+        """Executed at the end of the changelog generation
+
+        full_changelog: it's the output about to being written into the file
+        partial_changelog: it's the new stuff, this is useful to send slack messages or
+                           similar
+
+        Return:
+            the new updated full_changelog
+        """
+        if partial_changelog:
+            chat.room("#commiters").notify(partial_changelog)
+        if full_changelog:
+            compliance.send(full_changelog)
+        full_changelog.replace(' fix ', ' **fix** ')
+        return full_changelog
+```
 
 [changelog-des]: ./changelog.md#description
 

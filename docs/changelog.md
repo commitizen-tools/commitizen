@@ -124,10 +124,15 @@ Benefits:
 cz changelog --incremental
 ```
 
-## TODO
+## Hooks
 
-- [ ] support for hooks: this would allow introduction of custom information in the commiter, like a github or jira url. Eventually we could build a `CzConventionalGithub`, which would add links to commits
-- [x] support for map: allow the usage of a `change_type` mapper, to convert from feat to feature for example.
+Supported hook methods:
+
+- per parsed message: useful to add links
+- end of changelog generation: useful to send slack or chat message, or notify another department
+
+Read more about hooks in the [customization page][customization]
 
 [keepachangelog]: https://keepachangelog.com/
 [semver]: https://semver.org/
+[customization]: ./customization.md

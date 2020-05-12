@@ -247,7 +247,7 @@ def test_changlog_hook(mocker, config):
     create_file_and_commit("Merge into master")
 
     changelog = Changelog(
-        config, {"unreleased_version": None, "incremental": True, "dry_run": False,},
+        config, {"unreleased_version": None, "incremental": True, "dry_run": False},
     )
     mocker.patch.object(changelog.cz, "changelog_hook", changelog_hook_mock)
     changelog()
