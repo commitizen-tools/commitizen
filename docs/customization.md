@@ -137,12 +137,12 @@ cz -n cz_strange bump
 The changelog generator should just work in a very basic manner without touching anything.
 You can customize it of course, and this are the variables you need to add to your custom `BaseCommitizen`.
 
-| Parameter           | Type   | Required | Description                                                                                                                                         |
-| ------------------- | ------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `commit_parser`     | `str`  | NO       | Regex which should provide the variables explained in the [changelog description][changelog-des]                                                    |
-| `changelog_pattern` | `str`  | NO       | Regex to validate the commits, this is useful to skip commits that don't meet your rulling standards like a Merge. Usually the same as bump_pattern |
-| `change_type_map`   | `dict` | NO       | Convert the title of the change type that will appear in the changelog, if a value is not found, the original will be provided                      |
-
+| Parameter           | Type                                    | Required | Description                                                                                                                                         |
+| ------------------- | --------------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `commit_parser`     | `str`                                   | NO       | Regex which should provide the variables explained in the [changelog description][changelog-des]                                                    |
+| `changelog_pattern` | `str`                                   | NO       | Regex to validate the commits, this is useful to skip commits that don't meet your rulling standards like a Merge. Usually the same as bump_pattern |
+| `change_type_map`   | `dict`                                  | NO       | Convert the title of the change type that will appear in the changelog, if a value is not found, the original will be provided                      |
+| `message_hook`      | `method: (dict, git.GitCommit) -> dict` | NO       | Customize with extra information your message output, like adding links, this function is executed per parsed commit.                               |
 
 [changelog-des]: ./changelog.md#description
 
