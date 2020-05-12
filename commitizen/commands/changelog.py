@@ -65,6 +65,7 @@ class Changelog:
         changelog_meta: Dict = {}
         change_type_map: Optional[Dict] = self.change_type_map
         message_hook: Optional[Callable] = self.cz.message_hook
+        changelog_hook: Optional[Callable] = self.cz.changelog_hook
 
         if not changelog_pattern or not commit_parser:
             out.error(
@@ -108,10 +109,14 @@ class Changelog:
                 lines = changelog_file.readlines()
 
         with open(self.file_name, "w") as changelog_file:
+            partial_changelog: Optional[str] = None
             if self.incremental:
                 new_lines = changelog.incremental_build(
                     changelog_out, lines, changelog_meta
                 )
-                changelog_file.writelines(new_lines)
-            else:
-                changelog_file.write(changelog_out)
+                changelog_out = "".join(new_lines)
+                partial_changelog = changelog_out
+
+            if changelog_hook:
+                changelog_out = changelog_hook(changelog_out, partial_changelog)
+            changelog_file.write(changelog_out)

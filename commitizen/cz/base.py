@@ -1,8 +1,9 @@
 from abc import ABCMeta, abstractmethod
-from typing import Callable, List, Optional, Tuple
+from typing import Callable, Dict, List, Optional, Tuple
 
 from prompt_toolkit.styles import Style, merge_styles
 
+from commitizen import git
 from commitizen.config.base_config import BaseConfig
 
 
@@ -27,8 +28,13 @@ class BaseCommitizen(metaclass=ABCMeta):
     # It can be modified per rule
     commit_parser: Optional[str] = r"(?P<message>.*)"
     changelog_pattern: Optional[str] = r".*"
-    change_type_map: Optional[dict] = None
-    message_hook: Optional[Callable] = None  # (dict, GitCommit) -> dict
+    change_type_map: Optional[Dict[str, str]] = None
+
+    # Executed per message parsed by the commitizen
+    message_hook: Optional[Callable[[Dict, git.GitCommit], Dict]] = None
+
+    # Executed only at the end of the changelog generation
+    changelog_hook: Optional[Callable[[str, Optional[str]], str]] = None
 
     def __init__(self, config: BaseConfig):
         self.config = config
