@@ -27,7 +27,7 @@ class BaseCommitizen(metaclass=ABCMeta):
     # It can be modified per rule
     commit_parser: Optional[str] = r"(?P<message>.*)"
     changelog_pattern: Optional[str] = r".*"
-    changelog_map: Optional[dict] = None  # TODO: Use it
+    change_type_map: Optional[dict] = None
 
     def __init__(self, config: BaseConfig):
         self.config = config

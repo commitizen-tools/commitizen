@@ -32,6 +32,12 @@ class ConventionalCommitsCz(BaseCommitizen):
     bump_map = defaults.bump_map
     commit_parser = defaults.commit_parser
     changelog_pattern = defaults.bump_pattern
+    change_type_map = {
+        "feat": "Feat",
+        "fix": "Fix",
+        "refactor": "Refactor",
+        "perf": "Perf",
+    }
 
     def questions(self) -> List[Dict[str, Any]]:
         questions: List[Dict[str, Any]] = [
