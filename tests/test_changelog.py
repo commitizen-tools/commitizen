@@ -703,7 +703,7 @@ def test_render_changelog_tag_and_unreleased(gitcommits, tags):
     assert "## v1.1.1" in result
 
 
-def test_render_changelog_with_change_type(gitcommits, tags, changelog_content):
+def test_render_changelog_with_change_type(gitcommits, tags):
     new_title = ":some-emoji: feature"
     change_type_map = {"feat": new_title}
     parser = defaults.commit_parser
@@ -713,3 +713,17 @@ def test_render_changelog_with_change_type(gitcommits, tags, changelog_content):
     )
     result = changelog.render_changelog(tree)
     assert new_title in result
+
+
+def test_render_changelog_with_message_hook(gitcommits, tags):
+    def message_hook(message: dict, _) -> dict:
+        message["message"] = f"{message['message']} [link](github.com/232323232)"
+        return message
+
+    parser = defaults.commit_parser
+    changelog_pattern = defaults.bump_pattern
+    tree = changelog.generate_tree_from_commits(
+        gitcommits, tags, parser, changelog_pattern, message_hook=message_hook
+    )
+    result = changelog.render_changelog(tree)
+    assert "[link](github.com/232323232)" in result

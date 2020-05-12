@@ -1,7 +1,7 @@
 import os.path
 from difflib import SequenceMatcher
 from operator import itemgetter
-from typing import Dict, List, Optional
+from typing import Callable, Dict, List, Optional
 
 from commitizen import changelog, factory, git, out
 from commitizen.config import BaseConfig
@@ -64,6 +64,7 @@ class Changelog:
         unreleased_version = self.unreleased_version
         changelog_meta: Dict = {}
         change_type_map: Optional[Dict] = self.change_type_map
+        message_hook: Optional[Callable] = self.cz.message_hook
 
         if not changelog_pattern or not commit_parser:
             out.error(
@@ -92,7 +93,8 @@ class Changelog:
             commit_parser,
             changelog_pattern,
             unreleased_version,
-            change_type_map,
+            change_type_map=change_type_map,
+            message_hook=message_hook,
         )
         changelog_out = changelog.render_changelog(tree)
 
