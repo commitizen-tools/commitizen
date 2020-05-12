@@ -127,7 +127,7 @@ cz changelog --incremental
 ## TODO
 
 - [ ] support for hooks: this would allow introduction of custom information in the commiter, like a github or jira url. Eventually we could build a `CzConventionalGithub`, which would add links to commits
-- [ ] support for map: allow the usage of a `change_type` mapper, to convert from feat to feature for example.
+- [x] support for map: allow the usage of a `change_type` mapper, to convert from feat to feature for example.
 
 [keepachangelog]: https://keepachangelog.com/
 [semver]: https://semver.org/
