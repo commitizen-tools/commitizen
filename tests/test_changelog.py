@@ -715,15 +715,19 @@ def test_render_changelog_with_change_type(gitcommits, tags):
     assert new_title in result
 
 
-def test_render_changelog_with_message_hook(gitcommits, tags):
-    def message_hook(message: dict, _) -> dict:
+def test_render_changelog_with_changelog_message_builder_hook(gitcommits, tags):
+    def changelog_message_builder_hook(message: dict, _) -> dict:
         message["message"] = f"{message['message']} [link](github.com/232323232)"
         return message
 
     parser = defaults.commit_parser
     changelog_pattern = defaults.bump_pattern
     tree = changelog.generate_tree_from_commits(
-        gitcommits, tags, parser, changelog_pattern, message_hook=message_hook
+        gitcommits,
+        tags,
+        parser,
+        changelog_pattern,
+        changelog_message_builder_hook=changelog_message_builder_hook,
     )
     result = changelog.render_changelog(tree)
     assert "[link](github.com/232323232)" in result

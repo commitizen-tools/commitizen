@@ -64,7 +64,9 @@ class Changelog:
         unreleased_version = self.unreleased_version
         changelog_meta: Dict = {}
         change_type_map: Optional[Dict] = self.change_type_map
-        message_hook: Optional[Callable] = self.cz.message_hook
+        changelog_message_builder_hook: Optional[
+            Callable
+        ] = self.cz.changelog_message_builder_hook
         changelog_hook: Optional[Callable] = self.cz.changelog_hook
 
         if not changelog_pattern or not commit_parser:
@@ -95,7 +97,7 @@ class Changelog:
             changelog_pattern,
             unreleased_version,
             change_type_map=change_type_map,
-            message_hook=message_hook,
+            changelog_message_builder_hook=changelog_message_builder_hook,
         )
         changelog_out = changelog.render_changelog(tree)
 

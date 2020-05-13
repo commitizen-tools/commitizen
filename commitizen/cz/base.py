@@ -31,7 +31,9 @@ class BaseCommitizen(metaclass=ABCMeta):
     change_type_map: Optional[Dict[str, str]] = None
 
     # Executed per message parsed by the commitizen
-    message_hook: Optional[Callable[[Dict, git.GitCommit], Dict]] = None
+    changelog_message_builder_hook: Optional[
+        Callable[[Dict, git.GitCommit], Dict]
+    ] = None
 
     # Executed only at the end of the changelog generation
     changelog_hook: Optional[Callable[[str, Optional[str]], str]] = None
