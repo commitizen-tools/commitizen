@@ -5,6 +5,7 @@ from datetime import date
 import pytest
 
 from commitizen import cli, git
+from commitizen.commands.changelog import Changelog
 from tests.utils import create_file_and_commit
 
 
@@ -234,3 +235,22 @@ def test_changlog_incremental_keep_a_changelog_sample(mocker, capsys):
         out
         == """# Changelog\nAll notable changes to this project will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\n\n## Unreleased \n\n### Feat\n\n- add more stuff\n- add new output\n\n### Fix\n\n- mama gotta work\n- output glitch\n\n## [1.0.0] - 2017-06-20\n### Added\n- New visual identity by [@tylerfortune8](https://github.com/tylerfortune8).\n- Version navigation.\n\n### Changed\n- Start using "changelog" over "change log" since it\'s the common usage.\n\n### Removed\n- Section about "changelog" vs "CHANGELOG".\n\n## [0.3.0] - 2015-12-03\n### Added\n- RU translation from [@aishek](https://github.com/aishek).\n"""
     )
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changlog_hook(mocker, config):
+    changelog_hook_mock = mocker.Mock()
+    changelog_hook_mock.return_value = "cool changelog hook"
+
+    create_file_and_commit("feat: new file")
+    create_file_and_commit("refactor: is in changelog")
+    create_file_and_commit("Merge into master")
+
+    changelog = Changelog(
+        config, {"unreleased_version": None, "incremental": True, "dry_run": False},
+    )
+    mocker.patch.object(changelog.cz, "changelog_hook", changelog_hook_mock)
+    changelog()
+    full_changelog = "\n## Unreleased \n\n### Refactor\n\n- is in changelog\n\n### Feat\n\n- new file\n"
+
+    changelog_hook_mock.assert_called_with(full_changelog, full_changelog)

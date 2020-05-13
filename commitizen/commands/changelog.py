@@ -1,7 +1,7 @@
 import os.path
 from difflib import SequenceMatcher
 from operator import itemgetter
-from typing import Dict, List
+from typing import Callable, Dict, List, Optional
 
 from commitizen import changelog, factory, git, out
 from commitizen.config import BaseConfig
@@ -27,6 +27,9 @@ class Changelog:
         self.incremental = args["incremental"]
         self.dry_run = args["dry_run"]
         self.unreleased_version = args["unreleased_version"]
+        self.change_type_map = (
+            self.config.settings.get("change_type_map") or self.cz.change_type_map
+        )
 
     def _find_incremental_rev(self, latest_version: str, tags: List[GitTag]) -> str:
         """Try to find the 'start_rev'.
@@ -60,6 +63,11 @@ class Changelog:
         start_rev = self.start_rev
         unreleased_version = self.unreleased_version
         changelog_meta: Dict = {}
+        change_type_map: Optional[Dict] = self.change_type_map
+        changelog_message_builder_hook: Optional[
+            Callable
+        ] = self.cz.changelog_message_builder_hook
+        changelog_hook: Optional[Callable] = self.cz.changelog_hook
 
         if not changelog_pattern or not commit_parser:
             out.error(
@@ -83,7 +91,13 @@ class Changelog:
             raise SystemExit(NO_COMMITS_FOUND)
 
         tree = changelog.generate_tree_from_commits(
-            commits, tags, commit_parser, changelog_pattern, unreleased_version
+            commits,
+            tags,
+            commit_parser,
+            changelog_pattern,
+            unreleased_version,
+            change_type_map=change_type_map,
+            changelog_message_builder_hook=changelog_message_builder_hook,
         )
         changelog_out = changelog.render_changelog(tree)
 
@@ -97,10 +111,14 @@ class Changelog:
                 lines = changelog_file.readlines()
 
         with open(self.file_name, "w") as changelog_file:
+            partial_changelog: Optional[str] = None
             if self.incremental:
                 new_lines = changelog.incremental_build(
                     changelog_out, lines, changelog_meta
                 )
-                changelog_file.writelines(new_lines)
-            else:
-                changelog_file.write(changelog_out)
+                changelog_out = "".join(new_lines)
+                partial_changelog = changelog_out
+
+            if changelog_hook:
+                changelog_out = changelog_hook(changelog_out, partial_changelog)
+            changelog_file.write(changelog_out)

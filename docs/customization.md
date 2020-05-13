@@ -106,12 +106,12 @@ If you feel like it should be part of this repo, create a PR.
 
 ### Custom bump rules
 
-You need to define 2 parameters inside `BaseCommitizen`.
+You need to define 2 parameters inside your custom `BaseCommitizen`.
 
-| Parameter | Type | Default | Description |
-| --------- | ---- | ------- | ----------- |
-| `bump_pattern` | `str` | `None` | Regex to extract information from commit (subject and body) |
-| `bump_map` | `dict` | `None` | Dictionary mapping the extracted information to a `SemVer` increment type (`MAJOR`, `MINOR`, `PATCH`) |
+| Parameter      | Type   | Default | Description                                                                                           |
+| -------------- | ------ | ------- | ----------------------------------------------------------------------------------------------------- |
+| `bump_pattern` | `str`  | `None`  | Regex to extract information from commit (subject and body)                                           |
+| `bump_map`     | `dict` | `None`  | Dictionary mapping the extracted information to a `SemVer` increment type (`MAJOR`, `MINOR`, `PATCH`) |
 
 Let's see an example.
 
@@ -132,6 +132,60 @@ cz -n cz_strange bump
 
 [convcomms]: https://github.com/commitizen-tools/commitizen/blob/master/commitizen/cz/conventional_commits/conventional_commits.py
 
+## Custom changelog generator
+
+The changelog generator should just work in a very basic manner without touching anything.
+You can customize it of course, and this are the variables you need to add to your custom `BaseCommitizen`.
+
+| Parameter           | Type                                                                     | Required | Description                                                                                                                                                     |
+| ------------------- | ------------------------------------------------------------------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `commit_parser`     | `str`                                                                    | NO       | Regex which should provide the variables explained in the [changelog description][changelog-des]                                                                |
+| `changelog_pattern` | `str`                                                                    | NO       | Regex to validate the commits, this is useful to skip commits that don't meet your rulling standards like a Merge. Usually the same as bump_pattern             |
+| `change_type_map`   | `dict`                                                                   | NO       | Convert the title of the change type that will appear in the changelog, if a value is not found, the original will be provided                                  |
+| `changelog_message_builder_hook`      | `method: (dict, git.GitCommit) -> dict`                                  | NO       | Customize with extra information your message output, like adding links, this function is executed per parsed commit.                                           |
+| `changelog_hook`    | `method: (full_changelog: str, partial_changelog: Optional[str]) -> str` | NO       | Receives the whole and partial (if used incremental) changelog. Useful to send slack messages or notify a compliance department. Must return the full_changelog |
+
+```python
+from commitizen.cz.base import BaseCommitizen
+import chat
+import compliance
+
+class StrangeCommitizen(BaseCommitizen):
+    changelog_pattern = r"^(break|new|fix|hotfix)"
+    commit_parser = r"^(?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?:\s(?P<message>.*)?"
+    change_type_map = {
+        "feat": "Features",
+        "fix": "Bug Fixes",
+        "refactor": "Code Refactor",
+        "perf": "Performance improvements"
+    }
+
+    def changelog_message_builder_hook(self, parsed_message: dict, commit: git.GitCommit) -> dict:
+        rev = commit.rev
+        m = parsed_message["message"]
+        parsed_message["message"] = f"{m} {rev}"
+        return parsed_message
+
+    def changelog_hook(self, full_changelog: str, partial_changelog: Optional[str]) -> str:
+        """Executed at the end of the changelog generation
+
+        full_changelog: it's the output about to being written into the file
+        partial_changelog: it's the new stuff, this is useful to send slack messages or
+                           similar
+
+        Return:
+            the new updated full_changelog
+        """
+        if partial_changelog:
+            chat.room("#commiters").notify(partial_changelog)
+        if full_changelog:
+            compliance.send(full_changelog)
+        full_changelog.replace(' fix ', ' **fix** ')
+        return full_changelog
+```
+
+[changelog-des]: ./changelog.md#description
+
 ### Raise Customize Exception
 
 If you want `commitizen` to catch your exception and print the message, you'll have to inherit `CzException`.
@@ -148,6 +202,7 @@ class NoSubjectProvidedException(CzException):
 **This is only supported when configuring through `toml` (e.g., `pyproject.toml`, `.cz`, and `.cz.toml`)**
 
 The basic steps are:
+
 1. Define your custom committing or bumping rules in the configuration file.
 2. Declare `name = "cz_customize"` in your configuration file, or add `-n cz_customize` when running commitizen.
 
@@ -187,24 +242,24 @@ message = "Do you want to add body message in commit?"
 
 ### Customize configuration
 
-| Parameter | Type | Default | Description |
-| --------- | ---- | ------- | ----------- |
-| `question` | `dict` | `None` | Questions regarding the commit message. Detailed below. |
-| `message_template` | `str` | `None` | The template for generating message from the given answers. `message_template` should either follow the [string.Template](https://docs.python.org/3/library/string.html#template-strings) or [Jinja2](https://jinja.palletsprojects.com/en/2.10.x/) formatting specification, and all the variables in this template should be defined in `name` in `questions`. Note that `Jinja2` is not installed by default. If not installed, commitizen will use `string.Template` formatting. |
-| `example` | `str` | `None` | (OPTIONAL) Provide an example to help understand the style. Used by `cz example`. |
-| `schema` | `str` | `None` | (OPTIONAL) Show the schema used. Used by `cz schema`. |
-| `info_path` | `str` | `None` | (OPTIONAL)  The path to the file that contains explanation of the commit rules. Used by `cz info`. If not provided `cz info`, will load `info` instead. |
-| `info` | `str` | `None` | (OPTIONAL) Explanation of the commit rules. Used by `cz info`. |
-| `bump_map` | `dict` | `None` | (OPTIONAL) Dictionary mapping the extracted information to a `SemVer` increment type (`MAJOR`, `MINOR`, `PATCH`) |
-| `bump_pattern` | `str` | `None` | (OPTIONAL) Regex to extract information from commit (subject and body) |
+| Parameter          | Type   | Default | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------------ | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `question`         | `dict` | `None`  | Questions regarding the commit message. Detailed below.                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `message_template` | `str`  | `None`  | The template for generating message from the given answers. `message_template` should either follow the [string.Template](https://docs.python.org/3/library/string.html#template-strings) or [Jinja2](https://jinja.palletsprojects.com/en/2.10.x/) formatting specification, and all the variables in this template should be defined in `name` in `questions`. Note that `Jinja2` is not installed by default. If not installed, commitizen will use `string.Template` formatting. |
+| `example`          | `str`  | `None`  | (OPTIONAL) Provide an example to help understand the style. Used by `cz example`.                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `schema`           | `str`  | `None`  | (OPTIONAL) Show the schema used. Used by `cz schema`.                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `info_path`        | `str`  | `None`  | (OPTIONAL) The path to the file that contains explanation of the commit rules. Used by `cz info`. If not provided `cz info`, will load `info` instead.                                                                                                                                                                                                                                                                                                                               |
+| `info`             | `str`  | `None`  | (OPTIONAL) Explanation of the commit rules. Used by `cz info`.                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `bump_map`         | `dict` | `None`  | (OPTIONAL) Dictionary mapping the extracted information to a `SemVer` increment type (`MAJOR`, `MINOR`, `PATCH`)                                                                                                                                                                                                                                                                                                                                                                     |
+| `bump_pattern`     | `str`  | `None`  | (OPTIONAL) Regex to extract information from commit (subject and body)                                                                                                                                                                                                                                                                                                                                                                                                               |
 
 #### Detailed `question` content
 
-| Parameter | Type | Default | Description |
-| --------- | ---- | ------- | ----------- |
-| `type` | `str` | `None` | The type of questions. Valid type: `list`, `input` and etc. [See More](https://github.com/tmbo/questionary#different-question-types) |
-| `name` | `str` | `None` | The key for the value answered by user. It's used in `message_template` |
-| `message` | `str` | `None` | Detail description for the question. |
-| `choices` | `list` | `None` | (OPTIONAL) The choices when `type = choice`. It should be list of dictionaries with `name` and `value`. (e.g., `[{value = "feature", name = "feature: A new feature."},  {value = "bug fix", name = "bug fix: A bug fix."}]`) |
-| `default` | `Any` | `None` | (OPTIONAL) The default value for this question. |
-| `filter` | `str` | `None` | (Optional) Validator for user's answer. **(Work in Progress)** |
+| Parameter | Type   | Default | Description                                                                                                                                                                                                                  |
+| --------- | ------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`    | `str`  | `None`  | The type of questions. Valid type: `list`, `input` and etc. [See More](https://github.com/tmbo/questionary#different-question-types)                                                                                         |
+| `name`    | `str`  | `None`  | The key for the value answered by user. It's used in `message_template`                                                                                                                                                      |
+| `message` | `str`  | `None`  | Detail description for the question.                                                                                                                                                                                         |
+| `choices` | `list` | `None`  | (OPTIONAL) The choices when `type = choice`. It should be list of dictionaries with `name` and `value`. (e.g., `[{value = "feature", name = "feature: A new feature."}, {value = "bug fix", name = "bug fix: A bug fix."}]`) |
+| `default` | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                                                                                              |
+| `filter`  | `str`  | `None`  | (Optional) Validator for user's answer. **(Work in Progress)**                                                                                                                                                               |

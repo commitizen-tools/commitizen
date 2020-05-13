@@ -29,7 +29,7 @@ import os
 import re
 from collections import defaultdict
 from datetime import date
-from typing import Dict, Iterable, List, Optional
+from typing import Callable, Dict, Iterable, List, Optional
 
 import pkg_resources
 from jinja2 import Template
@@ -72,6 +72,8 @@ def generate_tree_from_commits(
     commit_parser: str,
     changelog_pattern: str = defaults.bump_pattern,
     unreleased_version: Optional[str] = None,
+    change_type_map: Optional[Dict[str, str]] = None,
+    changelog_message_builder_hook: Optional[Callable] = None,
 ) -> Iterable[Dict]:
     pat = re.compile(changelog_pattern)
     map_pat = re.compile(commit_parser)
@@ -112,10 +114,14 @@ def generate_tree_from_commits(
         message = map_pat.match(commit.message)
         message_body = map_pat.match(commit.body)
         if message:
-            # TODO: add a post hook coming from a rule (CzBase)
             parsed_message: Dict = message.groupdict()
             # change_type becomes optional by providing None
             change_type = parsed_message.pop("change_type", None)
+
+            if change_type_map:
+                change_type = change_type_map.get(change_type, change_type)
+            if changelog_message_builder_hook:
+                parsed_message = changelog_message_builder_hook(parsed_message, commit)
             changes[change_type].append(parsed_message)
         if message_body:
             parsed_message_body: Dict = message_body.groupdict()
