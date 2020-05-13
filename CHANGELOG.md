@@ -2,6 +2,19 @@
 
 
 
+
+## v1.22.0 (2020-05-13)
+
+### Fix
+
+- **changelog**: rename `message_hook` -> `changelog_message_builder_hook`
+
+### Feat
+
+- **changelog**: add support for `changelog_hook` when changelog finishes the generation
+- **changelog**: add support for `message_hook` method
+- **changelog**: add support for modifying the change_type in the title of the changelog
+
 ## v1.21.0 (2020-05-09)
 
 ### Feat
