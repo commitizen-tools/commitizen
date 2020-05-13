@@ -13,7 +13,7 @@
       
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1, mkdocs-material-5.1.5">
+      <meta name="generator" content="mkdocs-1.1.1, mkdocs-material-5.1.6">
     
     
       
@@ -21,7 +21,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.df84b5fe.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.4b9ffd7b.min.css">
       
       
     
@@ -332,6 +332,19 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-changelog-generator" class="md-nav__link">
+    Custom changelog generator
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom changelog generator">
+      <ul class="md-nav__list">
+        
           <li class="md-nav__item">
   <a href="#raise-customize-exception" class="md-nav__link">
     Raise Customize Exception
@@ -519,6 +532,19 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-changelog-generator" class="md-nav__link">
+    Custom changelog generator
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom changelog generator">
+      <ul class="md-nav__list">
+        
           <li class="md-nav__item">
   <a href="#raise-customize-exception" class="md-nav__link">
     Raise Customize Exception
@@ -677,7 +703,7 @@
 doing <code>pip install .</code></p>
 <p>If you feel like it should be part of this repo, create a PR.</p>
 <h3 id="custom-bump-rules">Custom bump rules</h3>
-<p>You need to define 2 parameters inside <code>BaseCommitizen</code>.</p>
+<p>You need to define 2 parameters inside your custom <code>BaseCommitizen</code>.</p>
 <table>
 <thead>
 <tr>
@@ -717,6 +743,90 @@ doing <code>pip install .</code></p>
 </code></pre></div>
 
 
+<h2 id="custom-changelog-generator">Custom changelog generator</h2>
+<p>The changelog generator should just work in a very basic manner without touching anything.
+You can customize it of course, and this are the variables you need to add to your custom <code>BaseCommitizen</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>commit_parser</code></td>
+<td><code>str</code></td>
+<td>NO</td>
+<td>Regex which should provide the variables explained in the <a href="../changelog/#description">changelog description</a></td>
+</tr>
+<tr>
+<td><code>changelog_pattern</code></td>
+<td><code>str</code></td>
+<td>NO</td>
+<td>Regex to validate the commits, this is useful to skip commits that don't meet your rulling standards like a Merge. Usually the same as bump_pattern</td>
+</tr>
+<tr>
+<td><code>change_type_map</code></td>
+<td><code>dict</code></td>
+<td>NO</td>
+<td>Convert the title of the change type that will appear in the changelog, if a value is not found, the original will be provided</td>
+</tr>
+<tr>
+<td><code>changelog_message_builder_hook</code></td>
+<td><code>method: (dict, git.GitCommit) -&gt; dict</code></td>
+<td>NO</td>
+<td>Customize with extra information your message output, like adding links, this function is executed per parsed commit.</td>
+</tr>
+<tr>
+<td><code>changelog_hook</code></td>
+<td><code>method: (full_changelog: str, partial_changelog: Optional[str]) -&gt; str</code></td>
+<td>NO</td>
+<td>Receives the whole and partial (if used incremental) changelog. Useful to send slack messages or notify a compliance department. Must return the full_changelog</td>
+</tr>
+</tbody>
+</table>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">commitizen.cz.base</span> <span class="kn">import</span> <span class="n">BaseCommitizen</span>
+<span class="kn">import</span> <span class="nn">chat</span>
+<span class="kn">import</span> <span class="nn">compliance</span>
+
+<span class="k">class</span> <span class="nc">StrangeCommitizen</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
+    <span class="n">changelog_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^(break|new|fix|hotfix)&quot;</span>
+    <span class="n">commit_parser</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^(?P&lt;change_type&gt;feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P&lt;scope&gt;[^()\r\n]*)\)|\()?(?P&lt;breaking&gt;!)?:\s(?P&lt;message&gt;.*)?&quot;</span>
+    <span class="n">change_type_map</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;feat&quot;</span><span class="p">:</span> <span class="s2">&quot;Features&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fix&quot;</span><span class="p">:</span> <span class="s2">&quot;Bug Fixes&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;refactor&quot;</span><span class="p">:</span> <span class="s2">&quot;Code Refactor&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;perf&quot;</span><span class="p">:</span> <span class="s2">&quot;Performance improvements&quot;</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">changelog_message_builder_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed_message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">commit</span><span class="p">:</span> <span class="n">git</span><span class="o">.</span><span class="n">GitCommit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">rev</span> <span class="o">=</span> <span class="n">commit</span><span class="o">.</span><span class="n">rev</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">parsed_message</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span>
+        <span class="n">parsed_message</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">rev</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">parsed_message</span>
+
+    <span class="k">def</span> <span class="nf">changelog_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full_changelog</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">partial_changelog</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Executed at the end of the changelog generation</span>
+
+<span class="sd">        full_changelog: it&#39;s the output about to being written into the file</span>
+<span class="sd">        partial_changelog: it&#39;s the new stuff, this is useful to send slack messages or</span>
+<span class="sd">                           similar</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            the new updated full_changelog</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">partial_changelog</span><span class="p">:</span>
+            <span class="n">chat</span><span class="o">.</span><span class="n">room</span><span class="p">(</span><span class="s2">&quot;#commiters&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">partial_changelog</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">full_changelog</span><span class="p">:</span>
+            <span class="n">compliance</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">full_changelog</span><span class="p">)</span>
+        <span class="n">full_changelog</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; fix &#39;</span><span class="p">,</span> <span class="s1">&#39; **fix** &#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">full_changelog</span>
+</code></pre></div>
+
+
 <h3 id="raise-customize-exception">Raise Customize Exception</h3>
 <p>If you want <code>commitizen</code> to catch your exception and print the message, you'll have to inherit <code>CzException</code>.</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">commitizen.cz.exception</span> <span class="kn">import</span> <span class="n">CzException</span>
@@ -728,9 +838,11 @@ doing <code>pip install .</code></p>
 
 <h2 id="customize-in-toml">Customize in toml</h2>
 <p><strong>This is only supported when configuring through <code>toml</code> (e.g., <code>pyproject.toml</code>, <code>.cz</code>, and <code>.cz.toml</code>)</strong></p>
-<p>The basic steps are:
-1. Define your custom committing or bumping rules in the configuration file.
-2. Declare <code>name = "cz_customize"</code> in your configuration file, or add <code>-n cz_customize</code> when running commitizen.</p>
+<p>The basic steps are:</p>
+<ol>
+<li>Define your custom committing or bumping rules in the configuration file.</li>
+<li>Declare <code>name = "cz_customize"</code> in your configuration file, or add <code>-n cz_customize</code> when running commitizen.</li>
+</ol>
 <p>Example:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;cz_customize&quot;</span>
@@ -803,7 +915,7 @@ doing <code>pip install .</code></p>
 <td><code>info_path</code></td>
 <td><code>str</code></td>
 <td><code>None</code></td>
-<td>(OPTIONAL)  The path to the file that contains explanation of the commit rules. Used by <code>cz info</code>. If not provided <code>cz info</code>, will load <code>info</code> instead.</td>
+<td>(OPTIONAL) The path to the file that contains explanation of the commit rules. Used by <code>cz info</code>. If not provided <code>cz info</code>, will load <code>info</code> instead.</td>
 </tr>
 <tr>
 <td><code>info</code></td>
@@ -858,7 +970,7 @@ doing <code>pip install .</code></p>
 <td><code>choices</code></td>
 <td><code>list</code></td>
 <td><code>None</code></td>
-<td>(OPTIONAL) The choices when <code>type = choice</code>. It should be list of dictionaries with <code>name</code> and <code>value</code>. (e.g., <code>[{value = "feature", name = "feature: A new feature."},  {value = "bug fix", name = "bug fix: A bug fix."}]</code>)</td>
+<td>(OPTIONAL) The choices when <code>type = choice</code>. It should be list of dictionaries with <code>name</code> and <code>value</code>. (e.g., <code>[{value = "feature", name = "feature: A new feature."}, {value = "bug fix", name = "bug fix: A bug fix."}]</code>)</td>
 </tr>
 <tr>
 <td><code>default</code></td>
@@ -940,8 +1052,8 @@ doing <code>pip install .</code></p>
       
     </div>
     
-      <script src="../assets/javascripts/vendor.83fe6e3c.min.js"></script>
-      <script src="../assets/javascripts/bundle.7e1cb91c.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="../assets/javascripts/vendor.a0c4167b.min.js"></script>
+      <script src="../assets/javascripts/bundle.fb26dd1d.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
       
       <script>
         app = initialize({
