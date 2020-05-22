@@ -55,7 +55,8 @@ def find_increment(
 
 
 def prerelease_generator(current_version: str, prerelease: Optional[str] = None) -> str:
-    """
+    """Generate prerelease
+
     X.YaN   # Alpha release
     X.YbN   # Beta release
     X.YrcN  # Release Candidate
@@ -179,13 +180,11 @@ def create_tag(version: Union[Version, str], tag_format: Optional[str] = None):
     That's why this function exists.
 
     Example:
-
     | tag | version (PEP 0440) |
     | --- | ------- |
     | v0.9.0 | 0.9.0 |
     | ver1.0.0 | 1.0.0 |
     | ver1.0.0.a0 | 1.0.0a0 |
-
     """
     if isinstance(version, str):
         version = Version(version)

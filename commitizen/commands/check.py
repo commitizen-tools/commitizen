@@ -12,16 +12,12 @@ class Check:
     """Check if the current commit msg matches the commitizen format."""
 
     def __init__(self, config: BaseConfig, arguments: Dict[str, str], cwd=os.getcwd()):
-        """Init method.
+        """Initial check command.
 
-        Parameters
-        ----------
-        config : BaseConfig
-            the config object required for the command to perform its action
-        arguments : dict
-            the arguments object that contains all
-            the flags provided by the user
-
+        Args:
+            config: The config object required for the command to perform its action
+            arguments: All the flags provided by the user
+            cwd: Current work directory
         """
         self.commit_msg_file: Optional[str] = arguments.get("commit_msg_file")
         self.rev_range: Optional[str] = arguments.get("rev_range")
@@ -44,11 +40,8 @@ class Check:
     def __call__(self):
         """Validate if commit messages follows the conventional pattern.
 
-        Raises
-        ------
-        SystemExit
-            if the commit provided not follows the conventional pattern
-
+        Raises:
+            SystemExit: if the commit provided not follows the conventional pattern
         """
         commit_msgs = self._get_commit_messages()
         if not commit_msgs:

@@ -1,5 +1,4 @@
-"""
-# DESIGN
+"""CHNAGLOG PARSER DESIGN
 
 ## Parse CHANGELOG.md
 
@@ -36,8 +35,7 @@ CATEGORIES = [
 
 
 def find_version_blocks(filepath: str) -> Generator:
-    """
-    version block: contains all the information about a version.
+    """Find version block (version block: contains all the information about a version.)
 
     E.g:
     ```

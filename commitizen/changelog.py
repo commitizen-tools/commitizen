@@ -1,5 +1,4 @@
-"""
-# DESIGN
+"""Design
 
 ## Metadata CHANGELOG.md
 
@@ -62,7 +61,6 @@ def transform_change_type(change_type: str) -> str:
 
 
 def get_commit_tag(commit: GitCommit, tags: List[GitTag]) -> Optional[GitTag]:
-    """"""
     return next((tag for tag in tags if tag.rev == commit.rev), None)
 
 
@@ -211,13 +209,13 @@ def incremental_build(new_content: str, lines: List, metadata: Dict) -> List:
     The metadata holds information enough to remove the old unreleased and
     where to place the new content
 
-    Arguments:
-        lines -- the lines from the changelog
-        new_content -- this should be placed somewhere in the lines
-        metadata -- information about the changelog
+    Args:
+        lines: The lines from the changelog
+        new_content: This should be placed somewhere in the lines
+        metadata: Information about the changelog
 
     Returns:
-        List -- updated lines
+        Updated lines
     """
     unreleased_start = metadata.get("unreleased_start")
     unreleased_end = metadata.get("unreleased_end")
