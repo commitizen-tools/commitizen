@@ -16,7 +16,7 @@ def load_global_conf() -> Optional[IniConfig]:
     if not global_cfg.exists():
         return None
 
-    # global conf doesnt make sense with commitizen bump
+    # global conf doesn't make sense with commitizen bump
     # so I'm deprecating it and won't test it
     message = (
         "Global conf will be deprecated in next major version. "

@@ -63,7 +63,7 @@ def get_commits(
     delimiter: str = "----------commit-delimiter----------",
     args: str = "",
 ) -> List[GitCommit]:
-    """Get the commits betweeen start and end."""
+    """Get the commits between start and end."""
     git_log_cmd = f"git log --pretty={log_format}{delimiter} {args}"
 
     if start:

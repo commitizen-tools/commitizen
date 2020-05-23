@@ -114,7 +114,7 @@ data = {
                     {
                         "name": "--bump-message",
                         "help": (
-                            "template used to create the release commmit, "
+                            "template used to create the release commit, "
                             "useful when working with CI"
                         ),
                     },

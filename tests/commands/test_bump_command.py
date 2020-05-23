@@ -77,7 +77,7 @@ def test_bump_on_git_with_hooks_no_verify_disabled(mocker, capsys):
         cli.main()
 
     _, err = capsys.readouterr()
-    assert 'git.commit errror: "0.1.0"' in err
+    assert 'git.commit error: "0.1.0"' in err
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")

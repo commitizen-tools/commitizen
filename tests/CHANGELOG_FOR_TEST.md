@@ -29,7 +29,7 @@
 - update given files with new version
 - **config**: new set key, used to set version to cfg
 - support for pyproject.toml
-- first semantic version bump implementaiton
+- first semantic version bump implementation
 
 ### fix
 
@@ -92,11 +92,11 @@
 
 ### refactor
 
-- **conventionalCommit**: moved fitlers to questions instead of message
+- **conventionalCommit**: moved filters to questions instead of message
 
 ### fix
 
-- **manifest**: inluded missing files
+- **manifest**: included missing files
 
 ## v0.9.5 (2018-08-24)
 
@@ -114,7 +114,7 @@
 
 ### feat
 
-- **commiter**: conventional commit is a bit more intelligent now
+- **committer**: conventional commit is a bit more intelligent now
 
 ## v0.9.2 (2017-11-11)
 

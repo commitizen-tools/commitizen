@@ -138,7 +138,7 @@ def update_version_in_files(
     So for example, your tag could look like `v1.0.0` while your version in
     the package like `1.0.0`.
     """
-    # TODO: sepearte check step and write step
+    # TODO: separate check step and write step
     for location in files:
         filepath, *regexes = location.split(":", maxsplit=1)
         regex = regexes[0] if regexes else None

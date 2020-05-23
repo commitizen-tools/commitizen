@@ -11,7 +11,7 @@ def commiter_factory(config: BaseConfig) -> BaseCommitizen:
         _cz = registry[name](config)
     except KeyError:
         msg_error = (
-            "The commiter has not been found in the system.\n\n"
+            "The committer has not been found in the system.\n\n"
             f"Try running 'pip install {name}'\n"
         )
         out.error(msg_error)
