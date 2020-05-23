@@ -12,7 +12,9 @@ jobs:
         python-version: [3.6, 3.7, 3.8]
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -27,6 +29,14 @@ jobs:
         git config --global user.email "action@github.com"
         git config --global user.name "GitHub Action"
         ./scripts/test
+    - name: Check commit
+      run: |
+        poetry run python -m commitizen check --rev-range ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} || \
+        if [ $$? == 3 ] ; then
+          exit 0;
+        else
+          exit 1;
+        fi
     - name: Upload coverage to Codecov
       if: runner.os == 'Linux'
       uses: codecov/codecov-action@v1.0.3
