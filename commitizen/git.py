@@ -63,9 +63,7 @@ def get_commits(
     delimiter: str = "----------commit-delimiter----------",
     args: str = "",
 ) -> List[GitCommit]:
-    """
-    Get the commits betweeen start and end
-    """
+    """Get the commits between start and end."""
     git_log_cmd = f"git log --pretty={log_format}{delimiter} {args}"
 
     if start:
@@ -133,7 +131,7 @@ def find_git_project_root() -> Optional[Path]:
 
 
 def is_staging_clean() -> bool:
-    """Check if staing is clean"""
+    """Check if staing is clean."""
     c = cmd.run("git diff --no-ext-diff --name-only")
     c_cached = cmd.run("git diff --no-ext-diff --cached --name-only")
     return not (bool(c.out) or bool(c_cached.out))

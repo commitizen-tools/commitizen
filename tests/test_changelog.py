@@ -125,7 +125,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "3127e05077288a5e2b62893345590bf1096141b7",
-        "title": "feat: first semantic version bump implementaiton",
+        "title": "feat: first semantic version bump implementation",
         "body": "",
     },
     {
@@ -255,12 +255,12 @@ COMMITS_DATA = [
     },
     {
         "rev": "72472efb80f08ee3fd844660afa012c8cb256e4b",
-        "title": "refactor(conventionalCommit): moved fitlers to questions instead of message",
+        "title": "refactor(conventionalCommit): moved filters to questions instead of message",
         "body": "",
     },
     {
         "rev": "b5561ce0ab3b56bb87712c8f90bcf37cf2474f1b",
-        "title": "fix(manifest): inluded missing files",
+        "title": "fix(manifest): included missing files",
         "body": "",
     },
     {
@@ -290,7 +290,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "4368f3c3cbfd4a1ced339212230d854bc5bab496",
-        "title": "feat(commiter): conventional commit is a bit more intelligent now",
+        "title": "feat(committer): conventional commit is a bit more intelligent now",
         "body": "",
     },
     {
@@ -472,7 +472,7 @@ def test_generate_tree_from_commits(gitcommits, tags):
                     {
                         "scope": None,
                         "breaking": None,
-                        "message": "first semantic version bump implementaiton",
+                        "message": "first semantic version bump implementation",
                     },
                 ],
                 "fix": [
@@ -591,14 +591,14 @@ def test_generate_tree_from_commits(gitcommits, tags):
                     {
                         "scope": "conventionalCommit",
                         "breaking": None,
-                        "message": "moved fitlers to questions instead of message",
+                        "message": "moved filters to questions instead of message",
                     }
                 ],
                 "fix": [
                     {
                         "scope": "manifest",
                         "breaking": None,
-                        "message": "inluded missing files",
+                        "message": "included missing files",
                     }
                 ],
             },
@@ -629,7 +629,7 @@ def test_generate_tree_from_commits(gitcommits, tags):
             "changes": {
                 "feat": [
                     {
-                        "scope": "commiter",
+                        "scope": "committer",
                         "breaking": None,
                         "message": "conventional commit is a bit more intelligent now",
                     }

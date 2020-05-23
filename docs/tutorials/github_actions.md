@@ -97,5 +97,6 @@ jobs:
 ```
 
 Notice that we are calling a bash script in `./scripts/publish`, you should configure it with your tools (twine, poetry, etc.). Check [commitizen example](https://github.com/commitizen-tools/commitizen/blob/master/scripts/publish)
+You can also use [pypa/gh-action-pypi-publish](https://github.com/pypa/gh-action-pypi-publish) to publish your package.
 
 Push the changes and that's it.

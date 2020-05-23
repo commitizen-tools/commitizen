@@ -69,7 +69,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         raise NotImplementedError("Not Implemented yet")
 
     def schema_pattern(self) -> Optional[str]:
-        """Regex matching the schema used for message validation"""
+        """Regex matching the schema used for message validation."""
         raise NotImplementedError("Not Implemented yet")
 
     def info(self) -> Optional[str]:

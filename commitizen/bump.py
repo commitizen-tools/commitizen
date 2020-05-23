@@ -55,7 +55,8 @@ def find_increment(
 
 
 def prerelease_generator(current_version: str, prerelease: Optional[str] = None) -> str:
-    """
+    """Generate prerelease
+
     X.YaN   # Alpha release
     X.YbN   # Beta release
     X.YrcN  # Release Candidate
@@ -137,7 +138,7 @@ def update_version_in_files(
     So for example, your tag could look like `v1.0.0` while your version in
     the package like `1.0.0`.
     """
-    # TODO: sepearte check step and write step
+    # TODO: separate check step and write step
     for location in files:
         filepath, *regexes = location.split(":", maxsplit=1)
         regex = regexes[0] if regexes else None
@@ -179,13 +180,11 @@ def create_tag(version: Union[Version, str], tag_format: Optional[str] = None):
     That's why this function exists.
 
     Example:
-
     | tag | version (PEP 0440) |
     | --- | ------- |
     | v0.9.0 | 0.9.0 |
     | ver1.0.0 | 1.0.0 |
     | ver1.0.0.a0 | 1.0.0a0 |
-
     """
     if isinstance(version, str):
         version = Version(version)

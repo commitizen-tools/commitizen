@@ -10,7 +10,7 @@ def config():
     toml_str = r"""
     [tool.commitizen.customize]
     message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
-    example = "feature: this feature eanable customize through config file"
+    example = "feature: this feature enable customize through config file"
     schema = "<type>: <body>"
     bump_pattern = "^(break|new|fix|hotfix)"
     bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
@@ -88,16 +88,16 @@ def test_answer(config):
     cz = CustomizeCommitsCz(config)
     answers = {
         "change_type": "feature",
-        "message": "this feature eanable customize through config file",
+        "message": "this feature enaable customize through config file",
         "show_message": True,
     }
     message = cz.message(answers)
-    assert message == "feature: this feature eanable customize through config file"
+    assert message == "feature: this feature enaable customize through config file"
 
     cz = CustomizeCommitsCz(config)
     answers = {
         "change_type": "feature",
-        "message": "this feature eanable customize through config file",
+        "message": "this feature enaable customize through config file",
         "show_message": False,
     }
     message = cz.message(answers)
@@ -106,7 +106,7 @@ def test_answer(config):
 
 def test_example(config):
     cz = CustomizeCommitsCz(config)
-    assert "feature: this feature eanable customize through config file" in cz.example()
+    assert "feature: this feature enable customize through config file" in cz.example()
 
 
 def test_schema(config):
