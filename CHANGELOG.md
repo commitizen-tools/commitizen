@@ -3,6 +3,13 @@
 
 
 
+
+## v1.22.1 (2020-05-23)
+
+### Fix
+
+- **templates**: remove trailing space in keep_a_changelog
+
 ## v1.22.0 (2020-05-13)
 
 ### Fix
