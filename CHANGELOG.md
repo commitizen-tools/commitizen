@@ -1,3 +1,9 @@
+## v1.22.2 (2020-05-29)
+
+### Fix
+
+- **changelog**: empty lines at the beginning of the CHANGELOG
+
 ## v1.22.1 (2020-05-23)
 
 ### Fix
