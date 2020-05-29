@@ -9,6 +9,11 @@ from commitizen.commands.changelog import Changelog
 from tests.utils import create_file_and_commit
 
 
+@pytest.fixture()
+def changelog_path() -> str:
+    return os.path.join(os.getcwd(), "CHANGELOG.md")
+
+
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changlog_on_empty_project(mocker):
     testargs = ["cz", "changelog", "--dry-run"]
@@ -38,7 +43,7 @@ def test_changlog_from_version_zero_point_two(mocker, capsys):
         cli.main()
 
     out, _ = capsys.readouterr()
-    assert out == "\n## Unreleased\n\n### Feat\n\n- after 0.2\n- after 0.2.0\n\n"
+    assert out == "## Unreleased\n\n### Feat\n\n- after 0.2\n- after 0.2.0\n\n"
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -54,13 +59,12 @@ def test_changlog_with_different_cz(mocker, capsys):
     out, _ = capsys.readouterr()
     assert (
         out
-        == "\n## Unreleased\n\n\n- JRA-35 #time 1w 2d 4h 30m Total work logged\n- JRA-34 #comment corrected indent issue\n\n"
+        == "## Unreleased\n\n\n- JRA-35 #time 1w 2d 4h 30m Total work logged\n- JRA-34 #comment corrected indent issue\n\n"
     )
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changlog_from_start(mocker, capsys):
-    changelog_path = os.path.join(os.getcwd(), "CHANGELOG.md")
+def test_changlog_from_start(mocker, capsys, changelog_path):
     create_file_and_commit("feat: new file")
     create_file_and_commit("refactor: is in changelog")
     create_file_and_commit("Merge into master")
@@ -74,14 +78,14 @@ def test_changlog_from_start(mocker, capsys):
 
     assert (
         out
-        == "\n## Unreleased\n\n### Refactor\n\n- is in changelog\n\n### Feat\n\n- new file\n"
+        == "## Unreleased\n\n### Refactor\n\n- is in changelog\n\n### Feat\n\n- new file\n"
     )
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changlog_replacing_unreleased_using_incremental(mocker, capsys):
-    changelog_path = os.path.join(os.getcwd(), "CHANGELOG.md")
-
+def test_changlog_replacing_unreleased_using_incremental(
+    mocker, capsys, changelog_path
+):
     create_file_and_commit("feat: add new output")
     create_file_and_commit("fix: output glitch")
     create_file_and_commit("Merge into master")
@@ -108,13 +112,12 @@ def test_changlog_replacing_unreleased_using_incremental(mocker, capsys):
     today = date.today().isoformat()
     assert (
         out
-        == f"\n\n## Unreleased\n\n### Feat\n\n- add more stuff\n\n### Fix\n\n- mama gotta work\n\n## 0.2.0 ({today})\n\n### Fix\n\n- output glitch\n\n### Feat\n\n- add new output\n"
+        == f"## Unreleased\n\n### Feat\n\n- add more stuff\n\n### Fix\n\n- mama gotta work\n\n## 0.2.0 ({today})\n\n### Fix\n\n- output glitch\n\n### Feat\n\n- add new output\n"
     )
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changlog_is_persisted_using_incremental(mocker, capsys):
-    changelog_path = os.path.join(os.getcwd(), "CHANGELOG.md")
+def test_changlog_is_persisted_using_incremental(mocker, capsys, changelog_path):
 
     create_file_and_commit("feat: add new output")
     create_file_and_commit("fix: output glitch")
@@ -146,13 +149,12 @@ def test_changlog_is_persisted_using_incremental(mocker, capsys):
     today = date.today().isoformat()
     assert (
         out
-        == f"\n\n## Unreleased\n\n### Feat\n\n- add more stuff\n\n### Fix\n\n- mama gotta work\n\n## 0.2.0 ({today})\n\n### Fix\n\n- output glitch\n\n### Feat\n\n- add new output\n\nnote: this should be persisted using increment\n"
+        == f"## Unreleased\n\n### Feat\n\n- add more stuff\n\n### Fix\n\n- mama gotta work\n\n## 0.2.0 ({today})\n\n### Fix\n\n- output glitch\n\n### Feat\n\n- add new output\n\nnote: this should be persisted using increment\n"
     )
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changlog_incremental_angular_sample(mocker, capsys):
-    changelog_path = os.path.join(os.getcwd(), "CHANGELOG.md")
+def test_changlog_incremental_angular_sample(mocker, capsys, changelog_path):
     with open(changelog_path, "w") as f:
         f.write(
             "# [10.0.0-next.3](https://github.com/angular/angular/compare/10.0.0-next.2...10.0.0-next.3) (2020-04-22)\n"
@@ -180,7 +182,7 @@ def test_changlog_incremental_angular_sample(mocker, capsys):
 
     assert (
         out
-        == "\n## Unreleased\n\n### Feat\n\n- add more stuff\n- add new output\n\n### Fix\n\n- mama gotta work\n- output glitch\n\n# [10.0.0-next.3](https://github.com/angular/angular/compare/10.0.0-next.2...10.0.0-next.3) (2020-04-22)\n\n### Bug Fixes\n* **common:** format day-periods that cross midnight ([#36611](https://github.com/angular/angular/issues/36611)) ([c6e5fc4](https://github.com/angular/angular/commit/c6e5fc4)), closes [#36566](https://github.com/angular/angular/issues/36566)\n"
+        == "## Unreleased\n\n### Feat\n\n- add more stuff\n- add new output\n\n### Fix\n\n- mama gotta work\n- output glitch\n\n# [10.0.0-next.3](https://github.com/angular/angular/compare/10.0.0-next.2...10.0.0-next.3) (2020-04-22)\n\n### Bug Fixes\n* **common:** format day-periods that cross midnight ([#36611](https://github.com/angular/angular/issues/36611)) ([c6e5fc4](https://github.com/angular/angular/commit/c6e5fc4)), closes [#36566](https://github.com/angular/angular/issues/36566)\n"
     )
 
 
@@ -210,8 +212,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changlog_incremental_keep_a_changelog_sample(mocker, capsys):
-    changelog_path = os.path.join(os.getcwd(), "CHANGELOG.md")
+def test_changlog_incremental_keep_a_changelog_sample(mocker, capsys, changelog_path):
     with open(changelog_path, "w") as f:
         f.write(KEEP_A_CHANGELOG)
     create_file_and_commit("irrelevant commit")
@@ -233,7 +234,7 @@ def test_changlog_incremental_keep_a_changelog_sample(mocker, capsys):
 
     assert (
         out
-        == """# Changelog\nAll notable changes to this project will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\n\n## Unreleased\n\n### Feat\n\n- add more stuff\n- add new output\n\n### Fix\n\n- mama gotta work\n- output glitch\n\n## [1.0.0] - 2017-06-20\n### Added\n- New visual identity by [@tylerfortune8](https://github.com/tylerfortune8).\n- Version navigation.\n\n### Changed\n- Start using "changelog" over "change log" since it\'s the common usage.\n\n### Removed\n- Section about "changelog" vs "CHANGELOG".\n\n## [0.3.0] - 2015-12-03\n### Added\n- RU translation from [@aishek](https://github.com/aishek).\n"""
+        == """# Changelog\nAll notable changes to this project will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\n## Unreleased\n\n### Feat\n\n- add more stuff\n- add new output\n\n### Fix\n\n- mama gotta work\n- output glitch\n\n## [1.0.0] - 2017-06-20\n### Added\n- New visual identity by [@tylerfortune8](https://github.com/tylerfortune8).\n- Version navigation.\n\n### Changed\n- Start using "changelog" over "change log" since it\'s the common usage.\n\n### Removed\n- Section about "changelog" vs "CHANGELOG".\n\n## [0.3.0] - 2015-12-03\n### Added\n- RU translation from [@aishek](https://github.com/aishek).\n"""
     )
 
 
@@ -251,6 +252,43 @@ def test_changlog_hook(mocker, config):
     )
     mocker.patch.object(changelog.cz, "changelog_hook", changelog_hook_mock)
     changelog()
-    full_changelog = "\n## Unreleased\n\n### Refactor\n\n- is in changelog\n\n### Feat\n\n- new file\n"
+    full_changelog = (
+        "## Unreleased\n\n### Refactor\n\n- is in changelog\n\n### Feat\n\n- new file\n"
+    )
 
     changelog_hook_mock.assert_called_with(full_changelog, full_changelog)
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changlog_multiple_incremental_do_not_add_new_lines(
+    mocker, capsys, changelog_path
+):
+    """Test for bug https://github.com/commitizen-tools/commitizen/issues/192"""
+    create_file_and_commit("feat: add new output")
+
+    testargs = ["cz", "changelog", "--incremental"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("fix: output glitch")
+
+    testargs = ["cz", "changelog", "--incremental"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("fix: mama gotta work")
+
+    testargs = ["cz", "changelog", "--incremental"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("feat: add more stuff")
+
+    testargs = ["cz", "changelog", "--incremental"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    assert out.startswith("#")

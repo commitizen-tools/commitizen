@@ -100,6 +100,7 @@ class Changelog:
             changelog_message_builder_hook=changelog_message_builder_hook,
         )
         changelog_out = changelog.render_changelog(tree)
+        changelog_out = changelog_out.lstrip("\n")
 
         if self.dry_run:
             out.write(changelog_out)
