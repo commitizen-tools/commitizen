@@ -32,7 +32,7 @@ class Init:
             values_to_add["version"] = Version(tag).public
             values_to_add["tag_format"] = self._ask_tag_format(tag)
             self._update_config_file(values_to_add)
-            out.write("You can bump the version and create cangelog running:\n")
+            out.write("You can bump the version and create changelog running:\n")
             out.info("cz bump --changelog")
             out.success("The configuration are all set.")
         else:
