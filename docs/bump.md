@@ -71,7 +71,7 @@ optional arguments:
                         the format used to tag the commit and read it, use it
                         in existing projects, wrap around simple quotes
   --bump-message BUMP_MESSAGE
-                        template used to create the release commmit, useful
+                        template used to create the release commit, useful
                         when working with CI
   --prerelease {alpha,beta,rc}, -pr {alpha,beta,rc}
                         choose type of prerelease

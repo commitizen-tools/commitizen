@@ -177,7 +177,7 @@ class StrangeCommitizen(BaseCommitizen):
             the new updated full_changelog
         """
         if partial_changelog:
-            chat.room("#commiters").notify(partial_changelog)
+            chat.room("#committers").notify(partial_changelog)
         if full_changelog:
             compliance.send(full_changelog)
         full_changelog.replace(' fix ', ' **fix** ')
@@ -214,7 +214,7 @@ name = "cz_customize"
 
 [tool.commitizen.customize]
 message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
-example = "feature: this feature eanable customize through config file"
+example = "feature: this feature enable customize through config file"
 schema = "<type>: <body>"
 bump_pattern = "^(break|new|fix|hotfix)"
 bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}

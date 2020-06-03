@@ -1,6 +1,6 @@
 ## About
 
-This command will generate a changelog following the commiting rules established.
+This command will generate a changelog following the committing rules established.
 
 ## Usage
 
@@ -66,7 +66,7 @@ and the following variables are expected:
 | `change_type` | The group where the commit belongs to, this is optional. Example: fix                          | `commit regex` |
 | `message`\*   | Information extracted from the commit message                                                  | `commit regex` |
 | `scope`       | Contextual information. Should be parsed using the regex from the message, it will be **bold** | `commit regex` |
-| `breaking`    | Wether is a breaking change or not                                                             | `commit regex` |
+| `breaking`    | Whether is a breaking change or not                                                             | `commit regex` |
 
 - **required**: is the only one required to be parsed by the regex
 
