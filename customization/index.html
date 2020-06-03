@@ -819,7 +819,7 @@ You can customize it of course, and this are the variables you need to add to yo
 <span class="sd">            the new updated full_changelog</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">partial_changelog</span><span class="p">:</span>
-            <span class="n">chat</span><span class="o">.</span><span class="n">room</span><span class="p">(</span><span class="s2">&quot;#commiters&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">partial_changelog</span><span class="p">)</span>
+            <span class="n">chat</span><span class="o">.</span><span class="n">room</span><span class="p">(</span><span class="s2">&quot;#committers&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">partial_changelog</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">full_changelog</span><span class="p">:</span>
             <span class="n">compliance</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">full_changelog</span><span class="p">)</span>
         <span class="n">full_changelog</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; fix &#39;</span><span class="p">,</span> <span class="s1">&#39; **fix** &#39;</span><span class="p">)</span>
@@ -849,7 +849,7 @@ You can customize it of course, and this are the variables you need to add to yo
 
 <span class="k">[tool.commitizen.customize]</span>
 <span class="n">message_template</span> <span class="o">=</span> <span class="s">&quot;{{change_type}}:{% if show_message %} {{message}}{% endif %}&quot;</span>
-<span class="n">example</span> <span class="o">=</span> <span class="s">&quot;feature: this feature eanable customize through config file&quot;</span>
+<span class="n">example</span> <span class="o">=</span> <span class="s">&quot;feature: this feature enable customize through config file&quot;</span>
 <span class="n">schema</span> <span class="o">=</span> <span class="s">&quot;&lt;type&gt;: &lt;body&gt;&quot;</span>
 <span class="n">bump_pattern</span> <span class="o">=</span> <span class="s">&quot;^(break|new|fix|hotfix)&quot;</span>
 <span class="n">bump_map</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;break&quot;</span> <span class="o">=</span> <span class="s">&quot;MAJOR&quot;</span><span class="p">,</span> <span class="s">&quot;new&quot;</span> <span class="o">=</span> <span class="s">&quot;MINOR&quot;</span><span class="p">,</span> <span class="s">&quot;fix&quot;</span> <span class="o">=</span> <span class="s">&quot;PATCH&quot;</span><span class="p">,</span> <span class="s">&quot;hotfix&quot;</span> <span class="o">=</span> <span class="s">&quot;PATCH&quot;</span><span class="p">}</span>
