@@ -4,6 +4,12 @@ import pytest
 
 from commitizen import cmd, commands
 from commitizen.cz.exceptions import CzException
+from commitizen.exceptions import (
+    CommitError,
+    CustomError,
+    NoCommitBackupError,
+    NothingToCommitError,
+)
 
 
 @pytest.fixture
@@ -37,7 +43,7 @@ def test_commit_retry_fails_no_backup(config, mocker):
     commit_mock = mocker.patch("commitizen.git.commit")
     commit_mock.return_value = cmd.Command("success", "", "", "")
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(NoCommitBackupError):
         commands.Commit(config, {"retry": True})()
 
 
@@ -57,7 +63,7 @@ def test_commit_retry_works(config, mocker):
     commit_mock.return_value = cmd.Command("", "error", "", "")
     error_mock = mocker.patch("commitizen.out.error")
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(CommitError):
         commit_cmd = commands.Commit(config, {})
         temp_file = commit_cmd.temp_file
         commit_cmd()
@@ -91,7 +97,7 @@ def test_commit_command_with_dry_run_option(config, mocker):
         "footer": "",
     }
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(NothingToCommitError):
         commit_cmd = commands.Commit(config, {"dry_run": True})
         commit_cmd()
 
@@ -100,11 +106,9 @@ def test_commit_when_nothing_to_commit(config, mocker):
     is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
     is_staging_clean_mock.return_value = True
 
-    with pytest.raises(SystemExit) as err:
+    with pytest.raises(NothingToCommitError):
         commit_cmd = commands.Commit(config, {})
         commit_cmd()
-
-    assert err.value.code == commands.commit.NOTHING_TO_COMMIT
 
 
 @pytest.mark.usefixtures("staging_is_clean")
@@ -114,11 +118,9 @@ def test_commit_when_customized_expected_raised(config, mocker, capsys):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.side_effect = _err
 
-    with pytest.raises(SystemExit) as err:
+    with pytest.raises(CustomError):
         commit_cmd = commands.Commit(config, {})
         commit_cmd()
-
-    assert err.value.code == commands.commit.CUSTOM_ERROR
 
     # Assert only the content in the formatted text
     captured = capsys.readouterr()

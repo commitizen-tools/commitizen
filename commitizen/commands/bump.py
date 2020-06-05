@@ -6,12 +6,12 @@ from packaging.version import Version
 from commitizen import bump, factory, git, out
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
-from commitizen.error_codes import (
-    COMMIT_FAILED,
-    NO_COMMITS_FOUND,
-    NO_PATTERN_MAP,
-    NO_VERSION_SPECIFIED,
-    TAG_FAILED,
+from commitizen.exceptions import (
+    CommitFailedError,
+    NoCommitsFoundError,
+    NoPatternMapError,
+    NoVersionSpecifiedError,
+    TagFailedError,
 )
 
 
@@ -57,7 +57,7 @@ class Bump:
         bump_map = self.cz.bump_map
         if not bump_map or not bump_pattern:
             out.error(f"'{self.config.settings['name']}' rule does not support bump")
-            raise SystemExit(NO_PATTERN_MAP)
+            raise NoPatternMapError()
         increment = bump.find_increment(
             commits, regex=bump_pattern, increments_map=bump_map
         )
@@ -73,7 +73,7 @@ class Bump:
                 "Check if current version is specified in config file, like:\n"
                 "version = 0.4.3\n"
             )
-            raise SystemExit(NO_VERSION_SPECIFIED)
+            raise NoVersionSpecifiedError()
 
         # Initialize values from sources (conf)
         current_version: str = self.config.settings["version"]
@@ -102,7 +102,7 @@ class Bump:
         # Unless we previously had a prerelease.
         if not commits and not current_version_instance.is_prerelease:
             out.error("[NO_COMMITS_FOUND]\n" "No new commits found.")
-            raise SystemExit(NO_COMMITS_FOUND)
+            raise NoCommitsFoundError()
 
         if increment is None:
             increment = self.find_increment(commits)
@@ -155,11 +155,11 @@ class Bump:
         c = git.commit(message, args=self._get_commit_args())
         if c.err:
             out.error('git.commit error: "{}"'.format(c.err.strip()))
-            raise SystemExit(COMMIT_FAILED)
+            raise CommitFailedError()
         c = git.tag(new_tag_version)
         if c.err:
             out.error(c.err)
-            raise SystemExit(TAG_FAILED)
+            raise TagFailedError()
         out.success("Done!")
 
     def _get_commit_args(self):

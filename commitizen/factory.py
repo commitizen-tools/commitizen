@@ -1,7 +1,7 @@
 from commitizen import BaseCommitizen, out
 from commitizen.config import BaseConfig
 from commitizen.cz import registry
-from commitizen.error_codes import NO_COMMITIZEN_FOUND
+from commitizen.exceptions import NoCommitizenFoundException
 
 
 def commiter_factory(config: BaseConfig) -> BaseCommitizen:
@@ -15,6 +15,6 @@ def commiter_factory(config: BaseConfig) -> BaseCommitizen:
             f"Try running 'pip install {name}'\n"
         )
         out.error(msg_error)
-        raise SystemExit(NO_COMMITIZEN_FOUND)
+        raise NoCommitizenFoundException(name)
     else:
         return _cz

@@ -5,7 +5,11 @@ from typing import Callable, Dict, List, Optional
 
 from commitizen import changelog, factory, git, out
 from commitizen.config import BaseConfig
-from commitizen.error_codes import NO_COMMITS_FOUND, NO_PATTERN_MAP, NO_REVISION
+from commitizen.exceptions import (
+    NoCommitsFoundError,
+    NoPatternMapError,
+    NoRevisionError,
+)
 from commitizen.git import GitTag
 
 
@@ -51,9 +55,9 @@ class Changelog:
         try:
             score, tag = max(tag_ratio, key=itemgetter(0))
         except ValueError:
-            raise SystemExit(NO_REVISION)
+            raise NoRevisionError()
         if score < SIMILARITY_THRESHOLD:
-            raise SystemExit(NO_REVISION)
+            raise NoRevisionError()
         start_rev = tag.name
         return start_rev
 
@@ -73,7 +77,7 @@ class Changelog:
             out.error(
                 f"'{self.config.settings['name']}' rule does not support changelog"
             )
-            raise SystemExit(NO_PATTERN_MAP)
+            raise NoPatternMapError()
 
         tags = git.get_tags()
         if not tags:
@@ -88,7 +92,7 @@ class Changelog:
         commits = git.get_commits(start=start_rev, args="--author-date-order")
         if not commits:
             out.error("No commits found")
-            raise SystemExit(NO_COMMITS_FOUND)
+            raise NoCommitsFoundError()
 
         tree = changelog.generate_tree_from_commits(
             commits,

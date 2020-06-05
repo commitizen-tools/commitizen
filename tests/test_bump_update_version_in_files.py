@@ -1,7 +1,7 @@
 import pytest
 
 from commitizen import bump
-from commitizen.error_codes import CURRENT_VERSION_NOT_FOUND
+from commitizen.exceptions import CurrentVersionNotFoundError
 
 PYPROJECT = """
 [tool.poetry]
@@ -100,8 +100,7 @@ def test_file_version_inconsistent_error(
     ]
     old_version = "1.2.3"
     new_version = "2.0.0"
-    with pytest.raises(SystemExit) as excinfo:
+    with pytest.raises(CurrentVersionNotFoundError):
         bump.update_version_in_files(
             old_version, new_version, version_files, check_consistency=True
         )
-    assert excinfo.value.code == CURRENT_VERSION_NOT_FOUND

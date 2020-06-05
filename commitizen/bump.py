@@ -15,7 +15,7 @@ from commitizen.defaults import (
     bump_message,
     bump_pattern,
 )
-from commitizen.error_codes import CURRENT_VERSION_NOT_FOUND
+from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import GitCommit
 
 
@@ -167,7 +167,7 @@ def update_version_in_files(
                 "The version defined in commitizen configuration and the ones in "
                 "version_files are possibly inconsistent."
             )
-            raise SystemExit(CURRENT_VERSION_NOT_FOUND)
+            raise CurrentVersionNotFoundError()
 
         # Write the file out again
         with open(filepath, "w") as file:

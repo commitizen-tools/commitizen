@@ -3,7 +3,13 @@ import sys
 import pytest
 
 from commitizen import cli, cmd, git
-from commitizen.error_codes import CURRENT_VERSION_NOT_FOUND
+from commitizen.exceptions import (
+    CommitFailedError,
+    CurrentVersionNotFoundError,
+    NoCommitsFoundError,
+    NoPatternMapError,
+    NoVersionSpecifiedError,
+)
 from tests.utils import create_file_and_commit
 
 
@@ -73,7 +79,7 @@ def test_bump_on_git_with_hooks_no_verify_disabled(mocker, capsys):
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(CommitFailedError):
         cli.main()
 
     _, err = capsys.readouterr()
@@ -111,7 +117,7 @@ def test_bump_when_bumpping_is_not_support(mocker, capsys, tmpdir):
         testargs = ["cz", "-n", "cz_jira", "bump", "--yes"]
         mocker.patch.object(sys, "argv", testargs)
 
-        with pytest.raises(SystemExit):
+        with pytest.raises(NoPatternMapError):
             cli.main()
 
         _, err = capsys.readouterr()
@@ -122,7 +128,7 @@ def test_bump_when_bumpping_is_not_support(mocker, capsys, tmpdir):
 def test_bump_is_not_specify(mocker, capsys):
     mocker.patch.object(sys, "argv", ["cz", "bump"])
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(NoVersionSpecifiedError):
         cli.main()
 
     expected_error_message = (
@@ -140,7 +146,7 @@ def test_bump_when_no_new_commit(mocker, capsys):
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(NoCommitsFoundError):
         cli.main()
 
     expected_error_message = "[NO_COMMITS_FOUND]\n" "No new commits found."
@@ -164,10 +170,9 @@ def test_bump_when_version_inconsistent_in_version_files(
     testargs = ["cz", "bump", "--yes", "--check-consistency"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(SystemExit) as excinfo:
+    with pytest.raises(CurrentVersionNotFoundError):
         cli.main()
 
     partial_expected_error_message = "Current version 0.1.0 is not found in"
     _, err = capsys.readouterr()
-    assert excinfo.value.code == CURRENT_VERSION_NOT_FOUND
     assert partial_expected_error_message in err

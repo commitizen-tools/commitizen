@@ -4,6 +4,7 @@ from typing import List
 import pytest
 
 from commitizen import cli, commands, git
+from commitizen.exceptions import InvalidCommitMessageError, NoCommitsFoundError
 
 COMMIT_LOG = [
     "refactor: A code change that neither fixes a bug nor adds a feature",
@@ -52,7 +53,7 @@ def test_check_jira_fails(mocker, capsys):
         "commitizen.commands.check.open",
         mocker.mock_open(read_data="random message for J-2 #fake_command blah"),
     )
-    with pytest.raises(SystemExit):
+    with pytest.raises(InvalidCommitMessageError):
         cli.main()
     _, err = capsys.readouterr()
     assert "commit validation: failed!" in err
@@ -119,7 +120,7 @@ def test_check_conventional_commit_succeeds(mocker, capsys):
 
 
 def test_check_no_conventional_commit(config, mocker, tmpdir):
-    with pytest.raises(SystemExit):
+    with pytest.raises(InvalidCommitMessageError):
         error_mock = mocker.patch("commitizen.out.error")
 
         tempfile = tmpdir.join("temp_commit_file")
@@ -181,7 +182,7 @@ def test_check_a_range_of_git_commits_and_failed(config, mocker):
         config=config, arguments={"rev_range": "HEAD~10..master"}
     )
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(InvalidCommitMessageError):
         check_cmd()
         error_mock.assert_called_once()
 
@@ -198,7 +199,7 @@ def test_check_command_with_invalid_argment(args, config, capsys):
 
 def test_check_command_with_empty_range(config, mocker, capsys):
     check_cmd = commands.Check(config=config, arguments={"rev_range": "master..master"})
-    with pytest.raises(SystemExit), pytest.warns(UserWarning) as record:
+    with pytest.raises(NoCommitsFoundError), pytest.warns(UserWarning) as record:
         check_cmd()
 
     assert record[0].message.args[0] == "No commit found with range: 'master..master'"

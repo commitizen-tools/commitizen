@@ -5,10 +5,10 @@ except ImportError:
 
 from typing import Any, Dict, List, Optional
 
-from commitizen import defaults, out
+from commitizen import defaults
 from commitizen.config import BaseConfig
 from commitizen.cz.base import BaseCommitizen
-from commitizen.error_codes import MISSING_CONFIG
+from commitizen.exceptions import MissingConfigError
 
 __all__ = ["CustomizeCommitsCz"]
 
@@ -21,8 +21,7 @@ class CustomizeCommitsCz(BaseCommitizen):
         super(CustomizeCommitsCz, self).__init__(config)
 
         if "customize" not in self.config.settings:
-            out.error("fatal: customize is not set in configuration file.")
-            raise SystemExit(MISSING_CONFIG)
+            raise MissingConfigError()
         self.custom_settings = self.config.settings["customize"]
 
         custom_bump_pattern = self.custom_settings.get("bump_pattern")

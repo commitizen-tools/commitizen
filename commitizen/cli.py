@@ -6,6 +6,7 @@ import warnings
 from decli import cli
 
 from commitizen import commands, config, out
+from commitizen.exceptions import CommitizenException
 
 logger = logging.getLogger(__name__)
 data = {
@@ -236,6 +237,17 @@ data = {
         ],
     },
 }
+
+original_excepthook = sys.excepthook
+
+
+def commitizen_excepthook(type, value, tracekback):
+    original_excepthook(type, value, tracekback)
+    if isinstance(value, CommitizenException):
+        sys.exit(value.exit_code)
+
+
+sys.excepthook = commitizen_excepthook
 
 
 def main():

@@ -2,6 +2,7 @@ import pytest
 
 from commitizen import BaseCommitizen, defaults, factory
 from commitizen.config import BaseConfig
+from commitizen.exceptions import NoCommitizenFoundException
 
 
 def test_factory():
@@ -14,5 +15,5 @@ def test_factory():
 def test_factory_fails():
     config = BaseConfig()
     config.settings.update({"name": "Nothing"})
-    with pytest.raises(SystemExit):
+    with pytest.raises(NoCommitizenFoundException):
         factory.commiter_factory(config)

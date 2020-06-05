@@ -6,6 +6,7 @@ import pytest
 
 from commitizen import cli, git
 from commitizen.commands.changelog import Changelog
+from commitizen.exceptions import NoCommitsFoundError
 from tests.utils import create_file_and_commit
 
 
@@ -19,7 +20,7 @@ def test_changlog_on_empty_project(mocker):
     testargs = ["cz", "changelog", "--dry-run"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(NoCommitsFoundError):
         cli.main()
 
 
