@@ -6,7 +6,7 @@ import warnings
 from decli import cli
 
 from commitizen import commands, config, out
-from commitizen.exceptions import CommitizenException
+from commitizen.exceptions import CommitizenException, ExpectedExit, NoCommandFoundError
 
 logger = logging.getLogger(__name__)
 data = {
@@ -242,9 +242,10 @@ original_excepthook = sys.excepthook
 
 
 def commitizen_excepthook(type, value, tracekback):
-    original_excepthook(type, value, tracekback)
     if isinstance(value, CommitizenException):
         sys.exit(value.exit_code)
+    else:
+        original_excepthook(type, value, tracekback)
 
 
 sys.excepthook = commitizen_excepthook
@@ -257,14 +258,14 @@ def main():
     # Show help if no arg provided
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
-        raise SystemExit()
+        raise ExpectedExit()
 
     # This is for the command required constraint in 2.0
     try:
         args = parser.parse_args()
     except TypeError:
         out.error("Command is required")
-        raise SystemExit()
+        raise NoCommandFoundError()
 
     if args.name:
         conf.update({"name": args.name})
@@ -297,4 +298,8 @@ def main():
         args.func(conf, vars(args))()
     except AttributeError:
         out.error("Command is required")
-        raise SystemExit()
+        raise NoCommandFoundError()
+
+
+if __name__ == "__main__":
+    main()
