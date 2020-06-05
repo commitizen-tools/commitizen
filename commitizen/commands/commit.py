@@ -10,6 +10,7 @@ from commitizen.cz.exceptions import CzException
 from commitizen.exceptions import (
     CommitError,
     CustomError,
+    DryRunExit,
     NoAnswersError,
     NoCommitBackupError,
     NothingToCommitError,
@@ -69,7 +70,7 @@ class Commit:
         out.info(f"\n{m}\n")
 
         if dry_run:
-            raise NothingToCommitError()
+            raise DryRunExit()
 
         c = git.commit(m)
 

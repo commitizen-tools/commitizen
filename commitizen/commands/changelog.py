@@ -6,6 +6,7 @@ from typing import Callable, Dict, List, Optional
 from commitizen import changelog, factory, git, out
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
+    DryRunExit,
     NoCommitsFoundError,
     NoPatternMapError,
     NoRevisionError,
@@ -108,7 +109,7 @@ class Changelog:
 
         if self.dry_run:
             out.write(changelog_out)
-            raise SystemExit(0)
+            raise DryRunExit()
 
         lines = []
         if self.incremental and os.path.isfile(self.file_name):

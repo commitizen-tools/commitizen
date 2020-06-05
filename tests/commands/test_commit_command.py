@@ -7,6 +7,7 @@ from commitizen.cz.exceptions import CzException
 from commitizen.exceptions import (
     CommitError,
     CustomError,
+    DryRunExit,
     NoCommitBackupError,
     NothingToCommitError,
 )
@@ -97,7 +98,7 @@ def test_commit_command_with_dry_run_option(config, mocker):
         "footer": "",
     }
 
-    with pytest.raises(NothingToCommitError):
+    with pytest.raises(DryRunExit):
         commit_cmd = commands.Commit(config, {"dry_run": True})
         commit_cmd()
 

@@ -5,7 +5,11 @@ from typing import Dict, Optional
 
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
-from commitizen.exceptions import InvalidCommitMessageError, NoCommitsFoundError
+from commitizen.exceptions import (
+    InvalidCommandArgumentError,
+    InvalidCommitMessageError,
+    NoCommitsFoundError,
+)
 
 
 class Check:
@@ -35,13 +39,13 @@ class Check:
                     "See 'cz check -h' for more information"
                 )
             )
-            raise SystemExit()
+            raise InvalidCommandArgumentError()
 
     def __call__(self):
         """Validate if commit messages follows the conventional pattern.
 
         Raises:
-            SystemExit: if the commit provided not follows the conventional pattern
+            InvalidCommitMessageError: if the commit provided not follows the conventional pattern
         """
         commit_msgs = self._get_commit_messages()
         if not commit_msgs:

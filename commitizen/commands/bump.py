@@ -8,6 +8,8 @@ from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
     CommitFailedError,
+    DryRunExit,
+    ExpectedExit,
     NoCommitsFoundError,
     NoPatternMapError,
     NoVersionSpecifiedError,
@@ -129,7 +131,7 @@ class Bump:
 
         # Do not perform operations over files or git.
         if dry_run:
-            raise SystemExit()
+            raise DryRunExit()
 
         bump.update_version_in_files(
             current_version,
@@ -138,7 +140,7 @@ class Bump:
             check_consistency=self.check_consistency,
         )
         if is_files_only:
-            raise SystemExit()
+            raise ExpectedExit()
 
         if self.changelog:
             changelog = Changelog(

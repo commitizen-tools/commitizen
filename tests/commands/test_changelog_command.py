@@ -6,7 +6,7 @@ import pytest
 
 from commitizen import cli, git
 from commitizen.commands.changelog import Changelog
-from commitizen.exceptions import NoCommitsFoundError
+from commitizen.exceptions import DryRunExit, NoCommitsFoundError
 from tests.utils import create_file_and_commit
 
 
@@ -40,7 +40,7 @@ def test_changlog_from_version_zero_point_two(mocker, capsys):
 
     testargs = ["cz", "changelog", "--start-rev", "0.2.0", "--dry-run"]
     mocker.patch.object(sys, "argv", testargs)
-    with pytest.raises(SystemExit):
+    with pytest.raises(DryRunExit):
         cli.main()
 
     out, _ = capsys.readouterr()
@@ -55,7 +55,7 @@ def test_changlog_with_different_cz(mocker, capsys):
     testargs = ["cz", "-n", "cz_jira", "changelog", "--dry-run"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(DryRunExit):
         cli.main()
     out, _ = capsys.readouterr()
     assert (

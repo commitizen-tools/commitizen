@@ -4,13 +4,14 @@ import pytest
 
 from commitizen import cli
 from commitizen.__version__ import __version__
+from commitizen.exceptions import ExpectedExit, NoCommandFoundError
 
 
 def test_sysexit_no_argv(mocker, capsys):
     testargs = ["cz"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(ExpectedExit):
         cli.main()
         out, _ = capsys.readouterr()
         assert out.startswith("usage")
@@ -20,7 +21,7 @@ def test_cz_with_arg_but_without_command(mocker, capsys):
     testargs = ["cz", "--name", "cz_jira"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(NoCommandFoundError):
         cli.main()
         _, err = capsys.readouterr()
         assert "Command is required" in err

@@ -4,7 +4,11 @@ from typing import List
 import pytest
 
 from commitizen import cli, commands, git
-from commitizen.exceptions import InvalidCommitMessageError, NoCommitsFoundError
+from commitizen.exceptions import (
+    InvalidCommandArgumentError,
+    InvalidCommitMessageError,
+    NoCommitsFoundError,
+)
 
 COMMIT_LOG = [
     "refactor: A code change that neither fixes a bug nor adds a feature",
@@ -191,7 +195,7 @@ def test_check_a_range_of_git_commits_and_failed(config, mocker):
     "args", [{"rev_range": "HEAD~10..master", "commit_msg_file": "some_file"}, {}]
 )
 def test_check_command_with_invalid_argment(args, config, capsys):
-    with pytest.raises(SystemExit):
+    with pytest.raises(InvalidCommandArgumentError):
         commands.Check(config=config, arguments=args)
     _, err = capsys.readouterr()
     assert "One and only one argument is required for check command!" in err
