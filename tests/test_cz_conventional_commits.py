@@ -23,7 +23,7 @@ invalid_subjects = ["", "   ", ".", "   .", "", None]
 @pytest.fixture()
 def config():
     _config = BaseConfig()
-    _config._settings["name"] = defaults.name
+    _config._settings["name"] = defaults.DEFAULT_SETTINGS["name"]
     return _config
 
 
