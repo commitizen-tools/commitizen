@@ -227,7 +227,7 @@ This is customized info
 type = "list"
 name = "change_type"
 choices = [{value = "feature", name = "feature: A new feature."}, {value = "bug fix", name = "bug fix: A bug fix."}]
-# choices: ["feature", "fix"]  # short version
+# choices = ["feature", "fix"]  # short version
 message = "Select the type of change you are committing"
 
 [[tool.commitizen.customize.questions]]
