@@ -13,7 +13,7 @@
       
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.2.2">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.2.3">
     
     
       
@@ -21,7 +21,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.a2408e81.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.6e35a1a6.min.css">
       
       
     
@@ -374,8 +374,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#detailed-question-content" class="md-nav__link">
-    Detailed question content
+  <a href="#detailed-questions-content" class="md-nav__link">
+    Detailed questions content
   </a>
   
 </li>
@@ -574,8 +574,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#detailed-question-content" class="md-nav__link">
-    Detailed question content
+  <a href="#detailed-questions-content" class="md-nav__link">
+    Detailed questions content
   </a>
   
 </li>
@@ -861,7 +861,8 @@ You can customize it of course, and this are the variables you need to add to yo
 <span class="k">[[tool.commitizen.customize.questions]]</span>
 <span class="n">type</span> <span class="o">=</span> <span class="s">&quot;list&quot;</span>
 <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;change_type&quot;</span>
-<span class="n">choices</span> <span class="o">=</span> <span class="k">[&quot;feature&quot;, &quot;bug fix&quot;]</span>
+<span class="n">choices</span> <span class="o">=</span> <span class="k">[{value = &quot;feature&quot;, name = &quot;feature: A new feature.&quot;}, {value = &quot;bug fix&quot;, name = &quot;bug fix: A bug fix.&quot;}]</span>
+<span class="c1"># choices = [&quot;feature&quot;, &quot;fix&quot;]  # short version</span>
 <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Select the type of change you are committing&quot;</span>
 
 <span class="k">[[tool.commitizen.customize.questions]]</span>
@@ -888,7 +889,7 @@ You can customize it of course, and this are the variables you need to add to yo
 </thead>
 <tbody>
 <tr>
-<td><code>question</code></td>
+<td><code>questions</code></td>
 <td><code>dict</code></td>
 <td><code>None</code></td>
 <td>Questions regarding the commit message. Detailed below.</td>
@@ -937,7 +938,7 @@ You can customize it of course, and this are the variables you need to add to yo
 </tr>
 </tbody>
 </table>
-<h4 id="detailed-question-content">Detailed <code>question</code> content</h4>
+<h4 id="detailed-questions-content">Detailed <code>questions</code> content</h4>
 <table>
 <thead>
 <tr>
@@ -970,7 +971,7 @@ You can customize it of course, and this are the variables you need to add to yo
 <td><code>choices</code></td>
 <td><code>list</code></td>
 <td><code>None</code></td>
-<td>(OPTIONAL) The choices when <code>type = choice</code>. It should be list of dictionaries with <code>name</code> and <code>value</code>. (e.g., <code>[{value = "feature", name = "feature: A new feature."}, {value = "bug fix", name = "bug fix: A bug fix."}]</code>)</td>
+<td>(OPTIONAL) The choices when <code>type = list</code>. Either use a list of values or a list of dicitionaries with <code>name</code> and <code>value</code> keys. See examples above.</td>
 </tr>
 <tr>
 <td><code>default</code></td>
@@ -1053,14 +1054,14 @@ You can customize it of course, and this are the variables you need to add to yo
     </div>
     
       <script src="../assets/javascripts/vendor.d710d30a.min.js"></script>
-      <script src="../assets/javascripts/bundle.5f27aba8.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="../assets/javascripts/bundle.a45f732b.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
       
       <script>
         app = initialize({
           base: "..",
           features: [],
           search: Object.assign({
-            worker: "../assets/javascripts/worker/search.27c6a5e6.min.js"
+            worker: "../assets/javascripts/worker/search.c03f0417.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>
