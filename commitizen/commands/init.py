@@ -2,6 +2,7 @@ import questionary
 from packaging.version import Version
 
 from commitizen import factory, out
+from commitizen.exceptions import ExpectedExit, NoAnswersError
 from commitizen.config import BaseConfig, IniConfig, TomlConfig
 from commitizen.cz import registry
 from commitizen.defaults import long_term_support_config_files
@@ -79,8 +80,7 @@ class Init:
             ).ask()
 
             if not latest_tag:
-                out.error("Tag is required!")
-                raise SystemExit()
+                raise NoAnswersError("Tag is required!")
         return latest_tag
 
     def _ask_tag_format(self, latest_tag) -> str:
@@ -103,8 +103,7 @@ class Init:
 
     def _update_config_file(self, values):
         if not values:
-            out.write("The configuration were all set. Nothing to add.")
-            raise SystemExit()
+            raise ExpectedExit("The configuration were all set. Nothing to add.")
 
         for key, value in values.items():
             self.config.set_key(key, value)

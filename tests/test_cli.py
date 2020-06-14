@@ -17,14 +17,13 @@ def test_sysexit_no_argv(mocker, capsys):
         assert out.startswith("usage")
 
 
-def test_cz_with_arg_but_without_command(mocker, capsys):
+def test_cz_with_arg_but_without_command(mocker):
     testargs = ["cz", "--name", "cz_jira"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(NoCommandFoundError):
+    with pytest.raises(NoCommandFoundError) as excinfo:
         cli.main()
-        _, err = capsys.readouterr()
-        assert "Command is required" in err
+    assert "Command is required" in str(excinfo.value)
 
 
 def test_name(mocker, capsys):

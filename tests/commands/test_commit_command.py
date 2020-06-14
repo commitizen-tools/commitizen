@@ -44,8 +44,10 @@ def test_commit_retry_fails_no_backup(config, mocker):
     commit_mock = mocker.patch("commitizen.git.commit")
     commit_mock.return_value = cmd.Command("success", "", "", "")
 
-    with pytest.raises(NoCommitBackupError):
+    with pytest.raises(NoCommitBackupError) as excinfo:
         commands.Commit(config, {"retry": True})()
+
+    assert NoCommitBackupError.message in str(excinfo.value)
 
 
 @pytest.mark.usefixtures("staging_is_clean")
@@ -107,9 +109,11 @@ def test_commit_when_nothing_to_commit(config, mocker):
     is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
     is_staging_clean_mock.return_value = True
 
-    with pytest.raises(NothingToCommitError):
+    with pytest.raises(NothingToCommitError) as excinfo:
         commit_cmd = commands.Commit(config, {})
         commit_cmd()
+
+    assert "No files added to staging!" in str(excinfo.value)
 
 
 @pytest.mark.usefixtures("staging_is_clean")
@@ -119,10 +123,9 @@ def test_commit_when_customized_expected_raised(config, mocker, capsys):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.side_effect = _err
 
-    with pytest.raises(CustomError):
+    with pytest.raises(CustomError) as excinfo:
         commit_cmd = commands.Commit(config, {})
         commit_cmd()
 
     # Assert only the content in the formatted text
-    captured = capsys.readouterr()
-    assert "This is the root custom err" in captured.err
+    assert "This is the root custom err" in str(excinfo.value)

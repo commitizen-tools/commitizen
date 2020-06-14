@@ -15,5 +15,7 @@ def test_factory():
 def test_factory_fails():
     config = BaseConfig()
     config.settings.update({"name": "Nothing"})
-    with pytest.raises(NoCommitizenFoundException):
+    with pytest.raises(NoCommitizenFoundException) as excinfo:
         factory.commiter_factory(config)
+
+    assert "The committer has not been found in the system." in str(excinfo)

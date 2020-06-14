@@ -29,7 +29,6 @@ class Commit:
     def read_backup_message(self) -> str:
         # Check the commit backup file exists
         if not os.path.isfile(self.temp_file):
-            out.error("No commit backup found")
             raise NoCommitBackupError()
 
         # Read commit message from backup
@@ -45,8 +44,7 @@ class Commit:
         except ValueError as err:
             root_err = err.__context__
             if isinstance(root_err, CzException):
-                out.error(root_err.__str__())
-                raise CustomError()
+                raise CustomError(root_err.__str__())
             raise err
 
         if not answers:
@@ -57,8 +55,7 @@ class Commit:
         dry_run: bool = self.arguments.get("dry_run")
 
         if git.is_staging_clean() and not dry_run:
-            out.write("No files added to staging!")
-            raise NothingToCommitError()
+            raise NothingToCommitError("No files added to staging!")
 
         retry: bool = self.arguments.get("retry")
 

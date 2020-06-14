@@ -142,8 +142,10 @@ def test_find_git_project_root(tmpdir):
 
 def test_read_cfg_when_not_in_a_git_project(tmpdir):
     with tmpdir.as_cwd() as _:
-        with pytest.raises(NotAGitProjectError):
+        with pytest.raises(NotAGitProjectError) as excinfo:
             config.read_cfg()
+
+        assert NotAGitProjectError.message in str(excinfo.value)
 
 
 class TestInilConfig:

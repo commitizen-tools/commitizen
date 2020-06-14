@@ -20,8 +20,10 @@ def test_changelog_on_empty_project(mocker):
     testargs = ["cz", "changelog", "--dry-run"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(NoCommitsFoundError):
+    with pytest.raises(NoCommitsFoundError) as excinfo:
         cli.main()
+
+    assert "No commits found" in str(excinfo)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")

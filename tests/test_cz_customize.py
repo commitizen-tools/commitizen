@@ -39,9 +39,11 @@ def config():
 
 
 def test_initialize_cz_customize_failed():
-    with pytest.raises(MissingConfigError):
+    with pytest.raises(MissingConfigError) as excinfo:
         config = BaseConfig()
         _ = CustomizeCommitsCz(config)
+
+    assert MissingConfigError.message in str(excinfo.value)
 
 
 def test_bump_pattern(config):

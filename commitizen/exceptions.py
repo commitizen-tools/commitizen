@@ -43,6 +43,11 @@ class CommitizenException(Exception):
 class ExpectedExit(CommitizenException):
     exit_code = ExitCode.EXPECTED_EXIT
 
+    def __init__(self, *args, **kwargs):
+        output_method = kwargs.get("output_method") or out.write
+        kwargs["output_method"] = output_method
+        super().__init__(*args, **kwargs)
+
 
 class DryRunExit(ExpectedExit):
     pass
@@ -68,6 +73,11 @@ class NoCommitsFoundError(CommitizenException):
 
 class NoVersionSpecifiedError(CommitizenException):
     exit_code = ExitCode.NO_VERSION_SPECIFIED
+    message = (
+        "[NO_VERSION_SPECIFIED]\n"
+        "Check if current version is specified in config file, like:\n"
+        "version = 0.4.3\n"
+    )
 
 
 class NoPatternMapError(CommitizenException):
@@ -96,6 +106,7 @@ class CommitError(CommitizenException):
 
 class NoCommitBackupError(CommitizenException):
     exit_code = ExitCode.NO_COMMIT_BACKUP
+    message = "No commit backup found"
 
 
 class NothingToCommitError(CommitizenException):
@@ -116,6 +127,7 @@ class NoRevisionError(CommitizenException):
 
 class NoCommandFoundError(CommitizenException):
     exit_code = ExitCode.NO_COMMAND_FOUND
+    message = "Command is required"
 
 
 class InvalidCommandArgumentError(CommitizenException):

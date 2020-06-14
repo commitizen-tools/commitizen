@@ -69,7 +69,7 @@ def test_bump_command(mocker):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_on_git_with_hooks_no_verify_disabled(mocker, capsys):
+def test_bump_on_git_with_hooks_no_verify_disabled(mocker):
     cmd.run("mkdir .git/hooks")
     with open(".git/hooks/pre-commit", "w") as f:
         f.write("#!/usr/bin/env bash\n" 'echo "0.1.0"')
@@ -81,11 +81,10 @@ def test_bump_on_git_with_hooks_no_verify_disabled(mocker, capsys):
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(CommitFailedError):
+    with pytest.raises(CommitFailedError) as excinfo:
         cli.main()
 
-    _, err = capsys.readouterr()
-    assert 'git.commit error: "0.1.0"' in err
+    assert 'git.commit error: "0.1.0"' in str(excinfo.value)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -106,7 +105,7 @@ def test_bump_on_git_with_hooks_no_verify_enabled(mocker):
     assert tag_exists is True
 
 
-def test_bump_when_bumpping_is_not_support(mocker, capsys, tmp_commitizen_project):
+def test_bump_when_bumpping_is_not_support(mocker, tmp_commitizen_project):
     create_file_and_commit(
         "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported"
     )
@@ -114,45 +113,36 @@ def test_bump_when_bumpping_is_not_support(mocker, capsys, tmp_commitizen_projec
     testargs = ["cz", "-n", "cz_jira", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(NoPatternMapError):
+    with pytest.raises(NoPatternMapError) as excinfo:
         cli.main()
 
-    _, err = capsys.readouterr()
-    assert "'cz_jira' rule does not support bump" in err
+    assert "'cz_jira' rule does not support bump" in str(excinfo.value)
 
 
 @pytest.mark.usefixtures("tmp_git_project")
-def test_bump_is_not_specify(mocker, capsys):
+def test_bump_when_version_is_not_specify(mocker):
     mocker.patch.object(sys, "argv", ["cz", "bump"])
 
-    with pytest.raises(NoVersionSpecifiedError):
+    with pytest.raises(NoVersionSpecifiedError) as excinfo:
         cli.main()
 
-    expected_error_message = (
-        "[NO_VERSION_SPECIFIED]\n"
-        "Check if current version is specified in config file, like:\n"
-        "version = 0.4.3\n"
-    )
-
-    _, err = capsys.readouterr()
-    assert expected_error_message in err
+    assert NoVersionSpecifiedError.message in str(excinfo.value)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_when_no_new_commit(mocker, capsys):
+def test_bump_when_no_new_commit(mocker):
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(NoCommitsFoundError):
+    with pytest.raises(NoCommitsFoundError) as excinfo:
         cli.main()
 
     expected_error_message = "[NO_COMMITS_FOUND]\n" "No new commits found."
-    _, err = capsys.readouterr()
-    assert expected_error_message in err
+    assert expected_error_message in str(excinfo.value)
 
 
 def test_bump_when_version_inconsistent_in_version_files(
-    tmp_commitizen_project, mocker, capsys
+    tmp_commitizen_project, mocker
 ):
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_version_file.write("100.999.10000")
@@ -167,12 +157,11 @@ def test_bump_when_version_inconsistent_in_version_files(
     testargs = ["cz", "bump", "--yes", "--check-consistency"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(CurrentVersionNotFoundError):
+    with pytest.raises(CurrentVersionNotFoundError) as excinfo:
         cli.main()
 
     partial_expected_error_message = "Current version 0.1.0 is not found in"
-    _, err = capsys.readouterr()
-    assert partial_expected_error_message in err
+    assert partial_expected_error_message in str(excinfo.value)
 
 
 def test_bump_files_only(mocker, tmp_commitizen_project):

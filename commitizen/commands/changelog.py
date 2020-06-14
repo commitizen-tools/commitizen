@@ -73,12 +73,10 @@ class Changelog:
             Callable
         ] = self.cz.changelog_message_builder_hook
         changelog_hook: Optional[Callable] = self.cz.changelog_hook
-
         if not changelog_pattern or not commit_parser:
-            out.error(
+            raise NoPatternMapError(
                 f"'{self.config.settings['name']}' rule does not support changelog"
             )
-            raise NoPatternMapError()
 
         tags = git.get_tags()
         if not tags:
@@ -92,8 +90,7 @@ class Changelog:
 
         commits = git.get_commits(start=start_rev, args="--author-date-order")
         if not commits:
-            out.error("No commits found")
-            raise NoCommitsFoundError()
+            raise NoCommitsFoundError("No commits found")
 
         tree = changelog.generate_tree_from_commits(
             commits,

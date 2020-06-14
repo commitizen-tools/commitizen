@@ -6,7 +6,6 @@ from typing import List, Optional, Union
 
 from packaging.version import Version
 
-from commitizen import out
 from commitizen.defaults import (
     MAJOR,
     MINOR,
@@ -162,12 +161,11 @@ def update_version_in_files(
                     file_content.append(line)
 
         if check_consistency and not current_version_found:
-            out.error(
+            raise CurrentVersionNotFoundError(
                 f"Current version {current_version} is not found in {location}.\n"
                 "The version defined in commitizen configuration and the ones in "
                 "version_files are possibly inconsistent."
             )
-            raise CurrentVersionNotFoundError()
 
         # Write the file out again
         with open(filepath, "w") as file:

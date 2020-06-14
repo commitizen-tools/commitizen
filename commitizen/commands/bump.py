@@ -58,8 +58,9 @@ class Bump:
         bump_pattern = self.cz.bump_pattern
         bump_map = self.cz.bump_map
         if not bump_map or not bump_pattern:
-            out.error(f"'{self.config.settings['name']}' rule does not support bump")
-            raise NoPatternMapError()
+            raise NoPatternMapError(
+                f"'{self.config.settings['name']}' rule does not support bump"
+            )
         increment = bump.find_increment(
             commits, regex=bump_pattern, increments_map=bump_map
         )
@@ -70,11 +71,6 @@ class Bump:
         try:
             current_version_instance: Version = Version(self.bump_settings["version"])
         except TypeError:
-            out.error(
-                "[NO_VERSION_SPECIFIED]\n"
-                "Check if current version is specified in config file, like:\n"
-                "version = 0.4.3\n"
-            )
             raise NoVersionSpecifiedError()
 
         # Initialize values from sources (conf)
@@ -103,8 +99,7 @@ class Bump:
         # No commits, there is no need to create an empty tag.
         # Unless we previously had a prerelease.
         if not commits and not current_version_instance.is_prerelease:
-            out.error("[NO_COMMITS_FOUND]\n" "No new commits found.")
-            raise NoCommitsFoundError()
+            raise NoCommitsFoundError("[NO_COMMITS_FOUND]\n" "No new commits found.")
 
         if increment is None:
             increment = self.find_increment(commits)
@@ -156,12 +151,10 @@ class Bump:
         self.config.set_key("version", new_version.public)
         c = git.commit(message, args=self._get_commit_args())
         if c.err:
-            out.error('git.commit error: "{}"'.format(c.err.strip()))
-            raise CommitFailedError()
+            raise CommitFailedError(f'git.commit error: "{c.err.strip()}"')
         c = git.tag(new_tag_version)
         if c.err:
-            out.error(c.err)
-            raise TagFailedError()
+            raise TagFailedError(c.err)
         out.success("Done!")
 
     def _get_commit_args(self):

@@ -5,7 +5,7 @@ import warnings
 
 from decli import cli
 
-from commitizen import commands, config, out
+from commitizen import commands, config
 from commitizen.exceptions import CommitizenException, ExpectedExit, NoCommandFoundError
 
 logger = logging.getLogger(__name__)
@@ -266,7 +266,6 @@ def main():
     try:
         args = parser.parse_args()
     except TypeError:
-        out.error("Command is required")
         raise NoCommandFoundError()
 
     if args.name:
@@ -299,7 +298,6 @@ def main():
     try:
         args.func(conf, vars(args))()
     except AttributeError:
-        out.error("Command is required")
         raise NoCommandFoundError()
 
 
