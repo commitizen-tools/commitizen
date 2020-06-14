@@ -5,7 +5,7 @@ from commitizen import factory, out
 from commitizen.config import BaseConfig, IniConfig, TomlConfig
 from commitizen.cz import registry
 from commitizen.defaults import long_term_support_config_files
-from commitizen.exceptions import ExpectedExit, NoAnswersError
+from commitizen.exceptions import NoAnswersError
 from commitizen.git import get_latest_tag_name, get_tag_names
 
 
@@ -102,8 +102,5 @@ class Init:
         return tag_format
 
     def _update_config_file(self, values):
-        if not values:
-            raise ExpectedExit("The configuration were all set. Nothing to add.")
-
         for key, value in values.items():
             self.config.set_key(key, value)
