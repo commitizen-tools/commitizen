@@ -6,7 +6,7 @@ import pytest
 
 from commitizen import cli, git
 from commitizen.commands.changelog import Changelog
-from commitizen.exceptions import DryRunExit, NoCommitsFoundError
+from commitizen.exceptions import DryRunExit, NoCommitsFoundError, NoRevisionError
 from tests.utils import create_file_and_commit
 
 
@@ -295,3 +295,21 @@ def test_changelog_multiple_incremental_do_not_add_new_lines(
         out = f.read()
 
     assert out.startswith("#")
+
+
+def test_changelog_without_revision(mocker, tmp_commitizen_project):
+    changelog_file = tmp_commitizen_project.join("CHANGELOG.md")
+    changelog_file.write(
+        """
+        # Unreleased
+
+        ## v1.0.0
+        """
+    )
+
+    # create_file_and_commit("feat: new file")
+    testargs = ["cz", "changelog", "--incremental"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.raises(NoRevisionError):
+        cli.main()
