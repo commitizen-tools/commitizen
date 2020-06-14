@@ -10,8 +10,8 @@ class ExitCode(enum.IntEnum):
     NO_COMMITS_FOUND = 3
     NO_VERSION_SPECIFIED = 4
     NO_PATTERN_MAP = 5
-    COMMIT_FAILED = 6
-    TAG_FAILED = 7
+    BUMP_COMMIT_FAILED = 6
+    BUMP_TAG_FAILED = 7
     NO_ANSWERS = 8
     COMMIT_ERROR = 9
     NO_COMMIT_BACKUP = 10
@@ -84,12 +84,12 @@ class NoPatternMapError(CommitizenException):
     exit_code = ExitCode.NO_PATTERN_MAP
 
 
-class CommitFailedError(CommitizenException):
-    exit_code = ExitCode.COMMIT_FAILED
+class BumpCommitFailedError(CommitizenException):
+    exit_code = ExitCode.BUMP_COMMIT_FAILED
 
 
-class TagFailedError(CommitizenException):
-    exit_code = ExitCode.TAG_FAILED
+class BumpTagFailedError(CommitizenException):
+    exit_code = ExitCode.BUMP_TAG_FAILED
 
 
 class CurrentVersionNotFoundError(CommitizenException):

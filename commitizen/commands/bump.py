@@ -7,13 +7,13 @@ from commitizen import bump, factory, git, out
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
-    CommitFailedError,
+    BumpCommitFailedError,
+    BumpTagFailedError,
     DryRunExit,
     ExpectedExit,
     NoCommitsFoundError,
     NoPatternMapError,
     NoVersionSpecifiedError,
-    TagFailedError,
 )
 
 
@@ -151,10 +151,10 @@ class Bump:
         self.config.set_key("version", new_version.public)
         c = git.commit(message, args=self._get_commit_args())
         if c.err:
-            raise CommitFailedError(f'git.commit error: "{c.err.strip()}"')
+            raise BumpCommitFailedError(f'git.commit error: "{c.err.strip()}"')
         c = git.tag(new_tag_version)
         if c.err:
-            raise TagFailedError(c.err)
+            raise BumpTagFailedError(c.err)
         out.success("Done!")
 
     def _get_commit_args(self):

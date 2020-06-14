@@ -4,7 +4,7 @@ import pytest
 
 from commitizen import cli, cmd, git
 from commitizen.exceptions import (
-    CommitFailedError,
+    BumpCommitFailedError,
     CurrentVersionNotFoundError,
     DryRunExit,
     ExpectedExit,
@@ -81,7 +81,7 @@ def test_bump_on_git_with_hooks_no_verify_disabled(mocker):
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(CommitFailedError) as excinfo:
+    with pytest.raises(BumpCommitFailedError) as excinfo:
         cli.main()
 
     assert 'git.commit error: "0.1.0"' in str(excinfo.value)
