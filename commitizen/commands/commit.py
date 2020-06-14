@@ -7,12 +7,13 @@ import questionary
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
 from commitizen.cz.exceptions import CzException
-from commitizen.error_codes import (
-    COMMIT_ERROR,
-    CUSTOM_ERROR,
-    NO_ANSWERS,
-    NO_COMMIT_BACKUP,
-    NOTHING_TO_COMMIT,
+from commitizen.exceptions import (
+    CommitError,
+    CustomError,
+    DryRunExit,
+    NoAnswersError,
+    NoCommitBackupError,
+    NothingToCommitError,
 )
 
 
@@ -28,8 +29,7 @@ class Commit:
     def read_backup_message(self) -> str:
         # Check the commit backup file exists
         if not os.path.isfile(self.temp_file):
-            out.error("No commit backup found")
-            raise SystemExit(NO_COMMIT_BACKUP)
+            raise NoCommitBackupError()
 
         # Read commit message from backup
         with open(self.temp_file, "r") as f:
@@ -44,20 +44,18 @@ class Commit:
         except ValueError as err:
             root_err = err.__context__
             if isinstance(root_err, CzException):
-                out.error(root_err.__str__())
-                raise SystemExit(CUSTOM_ERROR)
+                raise CustomError(root_err.__str__())
             raise err
 
         if not answers:
-            raise SystemExit(NO_ANSWERS)
+            raise NoAnswersError()
         return cz.message(answers)
 
     def __call__(self):
         dry_run: bool = self.arguments.get("dry_run")
 
         if git.is_staging_clean() and not dry_run:
-            out.write("No files added to staging!")
-            raise SystemExit(NOTHING_TO_COMMIT)
+            raise NothingToCommitError("No files added to staging!")
 
         retry: bool = self.arguments.get("retry")
 
@@ -69,7 +67,7 @@ class Commit:
         out.info(f"\n{m}\n")
 
         if dry_run:
-            raise SystemExit(NOTHING_TO_COMMIT)
+            raise DryRunExit()
 
         c = git.commit(m)
 
@@ -80,7 +78,7 @@ class Commit:
             with open(self.temp_file, "w") as f:
                 f.write(m)
 
-            raise SystemExit(COMMIT_ERROR)
+            raise CommitError()
 
         if "nothing added" in c.out or "no changes added to commit" in c.out:
             out.error(c.out)

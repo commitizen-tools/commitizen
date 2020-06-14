@@ -4,6 +4,11 @@ from typing import List
 import pytest
 
 from commitizen import cli, commands, git
+from commitizen.exceptions import (
+    InvalidCommandArgumentError,
+    InvalidCommitMessageError,
+    NoCommitsFoundError,
+)
 
 COMMIT_LOG = [
     "refactor: A code change that neither fixes a bug nor adds a feature",
@@ -45,17 +50,16 @@ def _build_fake_git_commits(commit_msgs: List[str]) -> List[git.GitCommit]:
     return [git.GitCommit("test_rev", commit_msg) for commit_msg in commit_msgs]
 
 
-def test_check_jira_fails(mocker, capsys):
+def test_check_jira_fails(mocker):
     testargs = ["cz", "-n", "cz_jira", "check", "--commit-msg-file", "some_file"]
     mocker.patch.object(sys, "argv", testargs)
     mocker.patch(
         "commitizen.commands.check.open",
         mocker.mock_open(read_data="random message for J-2 #fake_command blah"),
     )
-    with pytest.raises(SystemExit):
+    with pytest.raises(InvalidCommitMessageError) as excinfo:
         cli.main()
-    _, err = capsys.readouterr()
-    assert "commit validation: failed!" in err
+    assert "commit validation: failed!" in str(excinfo.value)
 
 
 def test_check_jira_command_after_issue_one_space(mocker, capsys):
@@ -119,7 +123,7 @@ def test_check_conventional_commit_succeeds(mocker, capsys):
 
 
 def test_check_no_conventional_commit(config, mocker, tmpdir):
-    with pytest.raises(SystemExit):
+    with pytest.raises(InvalidCommitMessageError):
         error_mock = mocker.patch("commitizen.out.error")
 
         tempfile = tmpdir.join("temp_commit_file")
@@ -181,7 +185,7 @@ def test_check_a_range_of_git_commits_and_failed(config, mocker):
         config=config, arguments={"rev_range": "HEAD~10..master"}
     )
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(InvalidCommitMessageError):
         check_cmd()
         error_mock.assert_called_once()
 
@@ -189,16 +193,17 @@ def test_check_a_range_of_git_commits_and_failed(config, mocker):
 @pytest.mark.parametrize(
     "args", [{"rev_range": "HEAD~10..master", "commit_msg_file": "some_file"}, {}]
 )
-def test_check_command_with_invalid_argment(args, config, capsys):
-    with pytest.raises(SystemExit):
+def test_check_command_with_invalid_argment(args, config):
+    with pytest.raises(InvalidCommandArgumentError) as excinfo:
         commands.Check(config=config, arguments=args)
-    _, err = capsys.readouterr()
-    assert "One and only one argument is required for check command!" in err
+    assert "One and only one argument is required for check command!" in str(
+        excinfo.value
+    )
 
 
-def test_check_command_with_empty_range(config, mocker, capsys):
+def test_check_command_with_empty_range(config, mocker):
     check_cmd = commands.Check(config=config, arguments={"rev_range": "master..master"})
-    with pytest.raises(SystemExit), pytest.warns(UserWarning) as record:
+    with pytest.raises(NoCommitsFoundError) as excinfo:
         check_cmd()
 
-    assert record[0].message.args[0] == "No commit found with range: 'master..master'"
+    assert "No commit found with range: 'master..master'" in str(excinfo)

@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 
 from commitizen import config, defaults, git
+from commitizen.exceptions import NotAGitProjectError
 
 PYPROJECT = """
 [tool.commitizen]
@@ -102,6 +103,16 @@ def empty_pyproject_ok_cz():
     os.remove(cz)
 
 
+def test_load_global_conf(mocker, tmpdir):
+    with tmpdir.as_cwd():
+        config_file = tmpdir.join(".cz")
+        config_file.write(RAW_CONFIG)
+
+        mocked_path = mocker.patch("commitizen.config.Path", return_value=Path(".cz"))
+        mocked_path.home.return_value = Path(tmpdir)
+        print(config.load_global_conf())
+
+
 @pytest.mark.parametrize(
     "config_files_manager", defaults.config_files.copy(), indirect=True
 )
@@ -141,8 +152,10 @@ def test_find_git_project_root(tmpdir):
 
 def test_read_cfg_when_not_in_a_git_project(tmpdir):
     with tmpdir.as_cwd() as _:
-        with pytest.raises(SystemExit):
+        with pytest.raises(NotAGitProjectError) as excinfo:
             config.read_cfg()
+
+        assert NotAGitProjectError.message in str(excinfo.value)
 
 
 class TestInilConfig:

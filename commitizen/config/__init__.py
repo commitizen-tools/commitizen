@@ -2,8 +2,8 @@ import warnings
 from pathlib import Path
 from typing import Optional, Union
 
-from commitizen import defaults, git, out
-from commitizen.error_codes import NOT_A_GIT_PROJECT
+from commitizen import defaults, git
+from commitizen.exceptions import NotAGitProjectError
 
 from .base_config import BaseConfig
 from .ini_config import IniConfig
@@ -38,10 +38,7 @@ def read_cfg() -> BaseConfig:
 
     git_project_root = git.find_git_project_root()
     if not git_project_root:
-        out.error(
-            "fatal: not a git repository (or any of the parent directories): .git"
-        )
-        raise SystemExit(NOT_A_GIT_PROJECT)
+        raise NotAGitProjectError()
 
     cfg_paths = (
         path / Path(filename)

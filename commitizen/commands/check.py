@@ -1,11 +1,14 @@
 import os
 import re
-import warnings
 from typing import Dict, Optional
 
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
-from commitizen.error_codes import INVALID_COMMIT_MSG, NO_COMMITS_FOUND
+from commitizen.exceptions import (
+    InvalidCommandArgumentError,
+    InvalidCommitMessageError,
+    NoCommitsFoundError,
+)
 
 
 class Check:
@@ -29,35 +32,32 @@ class Check:
 
     def _valid_command_argument(self):
         if bool(self.commit_msg_file) is bool(self.rev_range):
-            out.error(
+            raise InvalidCommandArgumentError(
                 (
                     "One and only one argument is required for check command! "
                     "See 'cz check -h' for more information"
                 )
             )
-            raise SystemExit()
 
     def __call__(self):
         """Validate if commit messages follows the conventional pattern.
 
         Raises:
-            SystemExit: if the commit provided not follows the conventional pattern
+            InvalidCommitMessageError: if the commit provided not follows the conventional pattern
         """
         commit_msgs = self._get_commit_messages()
         if not commit_msgs:
-            warnings.warn(f"No commit found with range: '{self.rev_range}'")
-            raise SystemExit(NO_COMMITS_FOUND)
+            raise NoCommitsFoundError(f"No commit found with range: '{self.rev_range}'")
 
         pattern = self.cz.schema_pattern()
         for commit_msg in commit_msgs:
             if not Check.validate_commit_message(commit_msg, pattern):
-                out.error(
+                raise InvalidCommitMessageError(
                     "commit validation: failed!\n"
                     "please enter a commit message in the commitizen format.\n"
                     f"commit: {commit_msg}\n"
                     f"pattern: {pattern}"
                 )
-                raise SystemExit(INVALID_COMMIT_MSG)
         out.success("Commit validation: successful!")
 
     def _get_commit_messages(self):

@@ -6,6 +6,7 @@ import pytest
 
 from commitizen import cli, git
 from commitizen.commands.changelog import Changelog
+from commitizen.exceptions import DryRunExit, NoCommitsFoundError, NoRevisionError
 from tests.utils import create_file_and_commit
 
 
@@ -15,16 +16,18 @@ def changelog_path() -> str:
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changlog_on_empty_project(mocker):
+def test_changelog_on_empty_project(mocker):
     testargs = ["cz", "changelog", "--dry-run"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(NoCommitsFoundError) as excinfo:
         cli.main()
+
+    assert "No commits found" in str(excinfo)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changlog_from_version_zero_point_two(mocker, capsys):
+def test_changelog_from_version_zero_point_two(mocker, capsys):
     create_file_and_commit("feat: new file")
     create_file_and_commit("refactor: not in changelog")
 
@@ -39,7 +42,7 @@ def test_changlog_from_version_zero_point_two(mocker, capsys):
 
     testargs = ["cz", "changelog", "--start-rev", "0.2.0", "--dry-run"]
     mocker.patch.object(sys, "argv", testargs)
-    with pytest.raises(SystemExit):
+    with pytest.raises(DryRunExit):
         cli.main()
 
     out, _ = capsys.readouterr()
@@ -47,14 +50,14 @@ def test_changlog_from_version_zero_point_two(mocker, capsys):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changlog_with_different_cz(mocker, capsys):
+def test_changelog_with_different_cz(mocker, capsys):
     create_file_and_commit("JRA-34 #comment corrected indent issue")
     create_file_and_commit("JRA-35 #time 1w 2d 4h 30m Total work logged")
 
     testargs = ["cz", "-n", "cz_jira", "changelog", "--dry-run"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(DryRunExit):
         cli.main()
     out, _ = capsys.readouterr()
     assert (
@@ -64,7 +67,7 @@ def test_changlog_with_different_cz(mocker, capsys):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changlog_from_start(mocker, capsys, changelog_path):
+def test_changelog_from_start(mocker, capsys, changelog_path):
     create_file_and_commit("feat: new file")
     create_file_and_commit("refactor: is in changelog")
     create_file_and_commit("Merge into master")
@@ -83,7 +86,7 @@ def test_changlog_from_start(mocker, capsys, changelog_path):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changlog_replacing_unreleased_using_incremental(
+def test_changelog_replacing_unreleased_using_incremental(
     mocker, capsys, changelog_path
 ):
     create_file_and_commit("feat: add new output")
@@ -117,7 +120,7 @@ def test_changlog_replacing_unreleased_using_incremental(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changlog_is_persisted_using_incremental(mocker, capsys, changelog_path):
+def test_changelog_is_persisted_using_incremental(mocker, capsys, changelog_path):
 
     create_file_and_commit("feat: add new output")
     create_file_and_commit("fix: output glitch")
@@ -154,7 +157,7 @@ def test_changlog_is_persisted_using_incremental(mocker, capsys, changelog_path)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changlog_incremental_angular_sample(mocker, capsys, changelog_path):
+def test_changelog_incremental_angular_sample(mocker, capsys, changelog_path):
     with open(changelog_path, "w") as f:
         f.write(
             "# [10.0.0-next.3](https://github.com/angular/angular/compare/10.0.0-next.2...10.0.0-next.3) (2020-04-22)\n"
@@ -212,7 +215,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changlog_incremental_keep_a_changelog_sample(mocker, capsys, changelog_path):
+def test_changelog_incremental_keep_a_changelog_sample(mocker, capsys, changelog_path):
     with open(changelog_path, "w") as f:
         f.write(KEEP_A_CHANGELOG)
     create_file_and_commit("irrelevant commit")
@@ -239,7 +242,7 @@ def test_changlog_incremental_keep_a_changelog_sample(mocker, capsys, changelog_
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changlog_hook(mocker, config):
+def test_changelog_hook(mocker, config):
     changelog_hook_mock = mocker.Mock()
     changelog_hook_mock.return_value = "cool changelog hook"
 
@@ -248,7 +251,7 @@ def test_changlog_hook(mocker, config):
     create_file_and_commit("Merge into master")
 
     changelog = Changelog(
-        config, {"unreleased_version": None, "incremental": True, "dry_run": False},
+        config, {"unreleased_version": None, "incremental": True, "dry_run": False}
     )
     mocker.patch.object(changelog.cz, "changelog_hook", changelog_hook_mock)
     changelog()
@@ -260,7 +263,7 @@ def test_changlog_hook(mocker, config):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changlog_multiple_incremental_do_not_add_new_lines(
+def test_changelog_multiple_incremental_do_not_add_new_lines(
     mocker, capsys, changelog_path
 ):
     """Test for bug https://github.com/commitizen-tools/commitizen/issues/192"""
@@ -292,3 +295,43 @@ def test_changlog_multiple_incremental_do_not_add_new_lines(
         out = f.read()
 
     assert out.startswith("#")
+
+
+def test_changelog_without_revision(mocker, tmp_commitizen_project):
+    changelog_file = tmp_commitizen_project.join("CHANGELOG.md")
+    changelog_file.write(
+        """
+        # Unreleased
+
+        ## v1.0.0
+        """
+    )
+
+    # create_file_and_commit("feat: new file")
+    testargs = ["cz", "changelog", "--incremental"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.raises(NoRevisionError):
+        cli.main()
+
+
+def test_changelog_with_different_tag_name_and_changelog_content(
+    mocker, tmp_commitizen_project
+):
+    changelog_file = tmp_commitizen_project.join("CHANGELOG.md")
+    changelog_file.write(
+        """
+        # Unreleased
+
+        ## v1.0.0
+        """
+    )
+    create_file_and_commit("feat: new file")
+    git.tag("2.0.0")
+
+    # create_file_and_commit("feat: new file")
+    testargs = ["cz", "changelog", "--incremental"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.raises(NoRevisionError):
+        cli.main()

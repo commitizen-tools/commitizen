@@ -5,6 +5,7 @@ from commitizen import factory, out
 from commitizen.config import BaseConfig, IniConfig, TomlConfig
 from commitizen.cz import registry
 from commitizen.defaults import long_term_support_config_files
+from commitizen.exceptions import NoAnswersError
 from commitizen.git import get_latest_tag_name, get_tag_names
 
 
@@ -79,8 +80,7 @@ class Init:
             ).ask()
 
             if not latest_tag:
-                out.error("Tag is required!")
-                raise SystemExit()
+                raise NoAnswersError("Tag is required!")
         return latest_tag
 
     def _ask_tag_format(self, latest_tag) -> str:
@@ -102,9 +102,5 @@ class Init:
         return tag_format
 
     def _update_config_file(self, values):
-        if not values:
-            out.write("The configuration were all set. Nothing to add.")
-            raise SystemExit()
-
         for key, value in values.items():
             self.config.set_key(key, value)
