@@ -26,7 +26,18 @@ class ExitCode(enum.IntEnum):
 
 
 class CommitizenException(Exception):
-    pass
+    def __init__(self, *args, **kwargs):
+        self.output_method = kwargs.get("output_method") or out.error
+        self.exit_code = self.__class__.exit_code
+        if args:
+            self.message = args[0]
+        elif hasattr(self.__class__, "message"):
+            self.message = self.__class__.message
+        else:
+            self.message = ""
+
+    def __str__(self):
+        return self.message
 
 
 class ExpectedExit(CommitizenException):
@@ -43,18 +54,12 @@ class NoCommitizenFoundException(CommitizenException):
 
 class NotAGitProjectError(CommitizenException):
     exit_code = ExitCode.NOT_A_GIT_PROJECT
-
-    def __init__(self, *args, **kwargs):
-        out.error(
-            "fatal: not a git repository (or any of the parent directories): .git"
-        )
+    message = "fatal: not a git repository (or any of the parent directories): .git"
 
 
 class MissingConfigError(CommitizenException):
     exit_code = ExitCode.MISSING_CONFIG
-
-    def __init__(self, *args, **kwargs):
-        out.error("fatal: customize is not set in configuration file.")
+    message = "fatal: customize is not set in configuration file."
 
 
 class NoCommitsFoundError(CommitizenException):

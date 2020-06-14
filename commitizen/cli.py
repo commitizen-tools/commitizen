@@ -243,6 +243,8 @@ original_excepthook = sys.excepthook
 
 def commitizen_excepthook(type, value, tracekback):
     if isinstance(value, CommitizenException):
+        if value.message:
+            value.output_method(value.message)
         sys.exit(value.exit_code)
     else:
         original_excepthook(type, value, tracekback)
