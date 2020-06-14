@@ -4,6 +4,7 @@ import pytest
 
 from commitizen import cli, cmd, git
 from commitizen.exceptions import (
+    ExpectedExit,
     CommitFailedError,
     CurrentVersionNotFoundError,
     NoCommitsFoundError,
@@ -104,12 +105,8 @@ def test_bump_on_git_with_hooks_no_verify_enabled(mocker):
     assert tag_exists is True
 
 
-def test_bump_when_bumpping_is_not_support(mocker, capsys, tmpdir):
-    with tmpdir.as_cwd():
-        with open("./pyproject.toml", "w") as f:
-            f.write("[tool.commitizen]\n" 'version="0.1.0"')
-
-        cmd.run("git init")
+def test_bump_when_bumpping_is_not_support(mocker, capsys, tmp_commitizen_project):
+    with tmp_commitizen_project.as_cwd():
         create_file_and_commit(
             "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported"
         )
@@ -176,3 +173,33 @@ def test_bump_when_version_inconsistent_in_version_files(
     partial_expected_error_message = "Current version 0.1.0 is not found in"
     _, err = capsys.readouterr()
     assert partial_expected_error_message in err
+
+
+def test_bump_files_only(mocker, tmp_commitizen_project):
+    with tmp_commitizen_project.as_cwd():
+        tmp_version_file = tmp_commitizen_project.join("__version__.py")
+        tmp_version_file.write("0.1.0")
+        tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+        tmp_commitizen_cfg_file.write(
+            f"{tmp_commitizen_cfg_file.read()}\n"
+            f'version_files = ["{str(tmp_version_file)}"]'
+        )
+
+        create_file_and_commit("feat: new user interface")
+        testargs = ["cz", "bump", "--yes"]
+        mocker.patch.object(sys, "argv", testargs)
+        cli.main()
+        tag_exists = git.tag_exist("0.2.0")
+        assert tag_exists is True
+
+        create_file_and_commit("feat: another new feature")
+        testargs = ["cz", "bump", "--yes", "--files-only"]
+        mocker.patch.object(sys, "argv", testargs)
+        with pytest.raises(ExpectedExit):
+            cli.main()
+
+        tag_exists = git.tag_exist("0.3.0")
+        assert tag_exists is False
+
+        with open(tmp_version_file, "r") as f:
+            assert "0.3.0" in f.read()
