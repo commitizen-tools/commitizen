@@ -313,3 +313,25 @@ def test_changelog_without_revision(mocker, tmp_commitizen_project):
 
     with pytest.raises(NoRevisionError):
         cli.main()
+
+
+def test_changelog_with_different_tag_name_and_changelog_content(
+    mocker, tmp_commitizen_project
+):
+    changelog_file = tmp_commitizen_project.join("CHANGELOG.md")
+    changelog_file.write(
+        """
+        # Unreleased
+
+        ## v1.0.0
+        """
+    )
+    create_file_and_commit("feat: new file")
+    git.tag("2.0.0")
+
+    # create_file_and_commit("feat: new file")
+    testargs = ["cz", "changelog", "--incremental"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.raises(NoRevisionError):
+        cli.main()
