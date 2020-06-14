@@ -2,7 +2,7 @@ import pytest
 
 from commitizen.config import BaseConfig, TomlConfig
 from commitizen.cz.customize import CustomizeCommitsCz
-from commitizen.exceptions import MissingConfigError
+from commitizen.exceptions import MissingCzCustomizeConfigError
 
 
 @pytest.fixture(scope="module")
@@ -39,11 +39,11 @@ def config():
 
 
 def test_initialize_cz_customize_failed():
-    with pytest.raises(MissingConfigError) as excinfo:
+    with pytest.raises(MissingCzCustomizeConfigError) as excinfo:
         config = BaseConfig()
         _ = CustomizeCommitsCz(config)
 
-    assert MissingConfigError.message in str(excinfo.value)
+    assert MissingCzCustomizeConfigError.message in str(excinfo.value)
 
 
 def test_bump_pattern(config):

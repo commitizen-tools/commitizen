@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional
 from commitizen import defaults
 from commitizen.config import BaseConfig
 from commitizen.cz.base import BaseCommitizen
-from commitizen.exceptions import MissingConfigError
+from commitizen.exceptions import MissingCzCustomizeConfigError
 
 __all__ = ["CustomizeCommitsCz"]
 
@@ -21,7 +21,7 @@ class CustomizeCommitsCz(BaseCommitizen):
         super(CustomizeCommitsCz, self).__init__(config)
 
         if "customize" not in self.config.settings:
-            raise MissingConfigError()
+            raise MissingCzCustomizeConfigError()
         self.custom_settings = self.config.settings["customize"]
 
         custom_bump_pattern = self.custom_settings.get("bump_pattern")

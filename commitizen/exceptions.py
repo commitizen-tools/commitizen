@@ -19,7 +19,7 @@ class ExitCode(enum.IntEnum):
     CUSTOM_ERROR = 12
     NO_COMMAND_FOUND = 13
     INVALID_COMMIT_MSG = 14
-    MISSING_CONFIG = 15
+    MISSING_CZ_CUSTOMIZE_CONFIG = 15
     NO_REVISION = 16
     CURRENT_VERSION_NOT_FOUND = 17
     INVALID_COMMAND_ARGUMENT = 18
@@ -62,8 +62,8 @@ class NotAGitProjectError(CommitizenException):
     message = "fatal: not a git repository (or any of the parent directories): .git"
 
 
-class MissingConfigError(CommitizenException):
-    exit_code = ExitCode.MISSING_CONFIG
+class MissingCzCustomizeConfigError(CommitizenException):
+    exit_code = ExitCode.MISSING_CZ_CUSTOMIZE_CONFIG
     message = "fatal: customize is not set in configuration file."
 
 
