@@ -4,9 +4,10 @@ import pytest
 
 from commitizen import cli, cmd, git
 from commitizen.exceptions import (
-    ExpectedExit,
     CommitFailedError,
     CurrentVersionNotFoundError,
+    DryRunExit,
+    ExpectedExit,
     NoCommitsFoundError,
     NoPatternMapError,
     NoVersionSpecifiedError,
@@ -106,19 +107,18 @@ def test_bump_on_git_with_hooks_no_verify_enabled(mocker):
 
 
 def test_bump_when_bumpping_is_not_support(mocker, capsys, tmp_commitizen_project):
-    with tmp_commitizen_project.as_cwd():
-        create_file_and_commit(
-            "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported"
-        )
+    create_file_and_commit(
+        "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported"
+    )
 
-        testargs = ["cz", "-n", "cz_jira", "bump", "--yes"]
-        mocker.patch.object(sys, "argv", testargs)
+    testargs = ["cz", "-n", "cz_jira", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
 
-        with pytest.raises(NoPatternMapError):
-            cli.main()
+    with pytest.raises(NoPatternMapError):
+        cli.main()
 
-        _, err = capsys.readouterr()
-        assert "'cz_jira' rule does not support bump" in err
+    _, err = capsys.readouterr()
+    assert "'cz_jira' rule does not support bump" in err
 
 
 @pytest.mark.usefixtures("tmp_git_project")
@@ -176,30 +176,44 @@ def test_bump_when_version_inconsistent_in_version_files(
 
 
 def test_bump_files_only(mocker, tmp_commitizen_project):
-    with tmp_commitizen_project.as_cwd():
-        tmp_version_file = tmp_commitizen_project.join("__version__.py")
-        tmp_version_file.write("0.1.0")
-        tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
-        tmp_commitizen_cfg_file.write(
-            f"{tmp_commitizen_cfg_file.read()}\n"
-            f'version_files = ["{str(tmp_version_file)}"]'
-        )
+    tmp_version_file = tmp_commitizen_project.join("__version__.py")
+    tmp_version_file.write("0.1.0")
+    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_commitizen_cfg_file.write(
+        f"{tmp_commitizen_cfg_file.read()}\n"
+        f'version_files = ["{str(tmp_version_file)}"]'
+    )
 
-        create_file_and_commit("feat: new user interface")
-        testargs = ["cz", "bump", "--yes"]
-        mocker.patch.object(sys, "argv", testargs)
+    create_file_and_commit("feat: new user interface")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    tag_exists = git.tag_exist("0.2.0")
+    assert tag_exists is True
+
+    create_file_and_commit("feat: another new feature")
+    testargs = ["cz", "bump", "--yes", "--files-only"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(ExpectedExit):
         cli.main()
-        tag_exists = git.tag_exist("0.2.0")
-        assert tag_exists is True
 
-        create_file_and_commit("feat: another new feature")
-        testargs = ["cz", "bump", "--yes", "--files-only"]
-        mocker.patch.object(sys, "argv", testargs)
-        with pytest.raises(ExpectedExit):
-            cli.main()
+    tag_exists = git.tag_exist("0.3.0")
+    assert tag_exists is False
 
-        tag_exists = git.tag_exist("0.3.0")
-        assert tag_exists is False
+    with open(tmp_version_file, "r") as f:
+        assert "0.3.0" in f.read()
 
-        with open(tmp_version_file, "r") as f:
-            assert "0.3.0" in f.read()
+
+def test_bump_dry_run(mocker, capsys, tmp_commitizen_project):
+    create_file_and_commit("feat: new file")
+
+    testargs = ["cz", "bump", "--yes", "--dry-run"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(DryRunExit):
+        cli.main()
+
+    out, _ = capsys.readouterr()
+    assert "0.2.0" in out
+
+    tag_exists = git.tag_exist("0.2.0")
+    assert tag_exists is False
