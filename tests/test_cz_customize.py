@@ -136,3 +136,17 @@ def test_info_with_info_path(tmpdir):
         config = TomlConfig(data=toml_str, path="not_exist.toml")
         cz = CustomizeCommitsCz(config)
         assert "Test info" in cz.info()
+
+
+def test_info_without_info():
+    toml_str = """
+    [tool.commitizen.customize]
+    message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
+    example = "feature: this feature enable customize through config file"
+    schema = "<type>: <body>"
+    bump_pattern = "^(break|new|fix|hotfix)"
+    bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
+    """
+    config = TomlConfig(data=toml_str, path="not_exist.toml")
+    cz = CustomizeCommitsCz(config)
+    assert cz.info() is None

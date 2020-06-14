@@ -8,6 +8,7 @@ from commitizen.exceptions import (
     CommitError,
     CustomError,
     DryRunExit,
+    NoAnswersError,
     NoCommitBackupError,
     NothingToCommitError,
 )
@@ -138,5 +139,15 @@ def test_commit_when_non_customized_expected_raised(config, mocker, capsys):
     prompt_mock.side_effect = _err
 
     with pytest.raises(ValueError):
+        commit_cmd = commands.Commit(config, {})
+        commit_cmd()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_when_no_user_answer(config, mocker, capsys):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = None
+
+    with pytest.raises(NoAnswersError):
         commit_cmd = commands.Commit(config, {})
         commit_cmd()
