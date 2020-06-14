@@ -103,6 +103,16 @@ def empty_pyproject_ok_cz():
     os.remove(cz)
 
 
+def test_load_global_conf(mocker, tmpdir):
+    with tmpdir.as_cwd():
+        config_file = tmpdir.join(".cz")
+        config_file.write(RAW_CONFIG)
+
+        mocked_path = mocker.patch("commitizen.config.Path", return_value=Path(".cz"))
+        mocked_path.home.return_value = Path(tmpdir)
+        print(config.load_global_conf())
+
+
 @pytest.mark.parametrize(
     "config_files_manager", defaults.config_files.copy(), indirect=True
 )
