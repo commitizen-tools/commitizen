@@ -2,6 +2,7 @@ import argparse
 import logging
 import sys
 import warnings
+from functools import partial
 
 from decli import cli
 
@@ -241,14 +242,18 @@ data = {
 original_excepthook = sys.excepthook
 
 
-def commitizen_excepthook(type, value, tracekback):
+def commitizen_excepthook(type, value, tracekback, debug=False):
     if isinstance(value, CommitizenException):
         if value.message:
             value.output_method(value.message)
+        if debug:
+            original_excepthook(type, value, tracekback)
         sys.exit(value.exit_code)
     else:
         original_excepthook(type, value, tracekback)
 
+
+commitizen_debug_excepthook = partial(commitizen_excepthook, debug=True)
 
 sys.excepthook = commitizen_excepthook
 
@@ -284,14 +289,8 @@ def main():
         args.func = commands.Version
 
     if args.debug:
-        warnings.warn(
-            (
-                "Debug will be deprecated in next major version. "
-                "Please remove it from your scripts"
-            ),
-            category=DeprecationWarning,
-        )
         logging.getLogger("commitizen").setLevel(logging.DEBUG)
+        sys.excepthook = commitizen_debug_excepthook
 
     # TODO: This try block can be removed after command is required in 2.0
     # Handle the case that argument is given, but no command is provided
