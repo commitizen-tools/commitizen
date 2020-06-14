@@ -1,3 +1,21 @@
+## v1.23.0 (2020-06-14)
+
+### Refactor
+
+- **exception**: rename MissingConfigError as MissingCzCustomizeConfigError
+- **exception**: Rename CommitFailedError and TagFailedError with Bump prefix
+- **commands/init**: add test case and remove unaccessible code
+- **exception**: move output message related to exception into exception
+- **exception**: implement message handling mechanism for CommitizenException
+- **cli**: do not show traceback if the raised exception is CommitizenException
+- introduce DryRunExit, ExpectedExit, NoCommandFoundError, InvalidCommandArgumentError
+- use custom exception for error handling
+- **error_codes**: remove unused NO_COMMIT_MSG error code
+
+### Feat
+
+- **cli**: enable displaying all traceback for CommitizenException when --debug flag is used
+
 ## v1.22.3 (2020-06-10)
 
 ## v1.22.2 (2020-05-29)
