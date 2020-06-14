@@ -4,7 +4,7 @@ import pytest
 
 from commitizen import cli
 from commitizen.__version__ import __version__
-from commitizen.exceptions import ExpectedExit, NoCommandFoundError
+from commitizen.exceptions import ExpectedExit, NoCommandFoundError, NotAGitProjectError
 
 
 def test_sysexit_no_argv(mocker, capsys):
@@ -75,3 +75,22 @@ def test_arg_debug(mocker):
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
     assert sys.excepthook.keywords.get("debug") is True
+
+
+def test_commitizen_excepthook(capsys):
+    with pytest.raises(SystemExit) as excinfo:
+        cli.commitizen_excepthook(NotAGitProjectError, NotAGitProjectError(), "")
+
+    assert excinfo.type == SystemExit
+    assert excinfo.value.code == NotAGitProjectError.exit_code
+
+
+def test_commitizen_debug_excepthook(capsys):
+    with pytest.raises(SystemExit) as excinfo:
+        cli.commitizen_excepthook(
+            NotAGitProjectError, NotAGitProjectError(), "", debug=True,
+        )
+
+    assert excinfo.type == SystemExit
+    assert excinfo.value.code == NotAGitProjectError.exit_code
+    assert "NotAGitProjectError" in str(excinfo.traceback[0])
