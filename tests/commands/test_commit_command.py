@@ -129,3 +129,14 @@ def test_commit_when_customized_expected_raised(config, mocker, capsys):
 
     # Assert only the content in the formatted text
     assert "This is the root custom err" in str(excinfo.value)
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_when_non_customized_expected_raised(config, mocker, capsys):
+    _err = ValueError()
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.side_effect = _err
+
+    with pytest.raises(ValueError):
+        commit_cmd = commands.Commit(config, {})
+        commit_cmd()
