@@ -2,10 +2,10 @@ import questionary
 from packaging.version import Version
 
 from commitizen import factory, out
-from commitizen.exceptions import ExpectedExit, NoAnswersError
 from commitizen.config import BaseConfig, IniConfig, TomlConfig
 from commitizen.cz import registry
 from commitizen.defaults import long_term_support_config_files
+from commitizen.exceptions import ExpectedExit, NoAnswersError
 from commitizen.git import get_latest_tag_name, get_tag_names
 
 

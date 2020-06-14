@@ -113,6 +113,7 @@ def test_info(config):
     info = conventional_commits.info()
     assert isinstance(info, str)
 
+
 def test_process_commit(config):
     conventional_commits = ConventionalCommitsCz(config)
     message = conventional_commits.process_commit("test(test_scope): this is test msg")
