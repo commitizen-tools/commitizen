@@ -1,6 +1,75 @@
 Customizing commitizen is not hard at all.
+We have two different ways to do so.
 
-## Customize through customizing a class
+## 1. Customize in configuration file
+
+**This is only supported when configuring through `toml` (e.g., `pyproject.toml`, `.cz`, and `.cz.toml`)**
+
+The basic steps are:
+
+1. Define your custom committing or bumping rules in the configuration file.
+2. Declare `name = "cz_customize"` in your configuration file, or add `-n cz_customize` when running commitizen.
+
+Example:
+
+```toml
+[tool.commitizen]
+name = "cz_customize"
+
+[tool.commitizen.customize]
+message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
+example = "feature: this feature enable customize through config file"
+schema = "<type>: <body>"
+bump_pattern = "^(break|new|fix|hotfix)"
+bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
+info_path = "cz_customize_info.txt"
+info = """
+This is customized info
+"""
+
+[[tool.commitizen.customize.questions]]
+type = "list"
+name = "change_type"
+choices = [{value = "feature", name = "feature: A new feature."}, {value = "bug fix", name = "bug fix: A bug fix."}]
+# choices = ["feature", "fix"]  # short version
+message = "Select the type of change you are committing"
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "message"
+message = "Body."
+
+[[tool.commitizen.customize.questions]]
+type = "confirm"
+name = "show_message"
+message = "Do you want to add body message in commit?"
+```
+
+### Customize configuration
+
+| Parameter          | Type   | Default | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------------ | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `questions`        | `dict` | `None`  | Questions regarding the commit message. Detailed below.                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `message_template` | `str`  | `None`  | The template for generating message from the given answers. `message_template` should either follow the [string.Template](https://docs.python.org/3/library/string.html#template-strings) or [Jinja2](https://jinja.palletsprojects.com/en/2.10.x/) formatting specification, and all the variables in this template should be defined in `name` in `questions`. Note that `Jinja2` is not installed by default. If not installed, commitizen will use `string.Template` formatting. |
+| `example`          | `str`  | `None`  | (OPTIONAL) Provide an example to help understand the style. Used by `cz example`.                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `schema`           | `str`  | `None`  | (OPTIONAL) Show the schema used. Used by `cz schema`.                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `info_path`        | `str`  | `None`  | (OPTIONAL) The path to the file that contains explanation of the commit rules. Used by `cz info`. If not provided `cz info`, will load `info` instead.                                                                                                                                                                                                                                                                                                                               |
+| `info`             | `str`  | `None`  | (OPTIONAL) Explanation of the commit rules. Used by `cz info`.                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `bump_map`         | `dict` | `None`  | (OPTIONAL) Dictionary mapping the extracted information to a `SemVer` increment type (`MAJOR`, `MINOR`, `PATCH`)                                                                                                                                                                                                                                                                                                                                                                     |
+| `bump_pattern`     | `str`  | `None`  | (OPTIONAL) Regex to extract information from commit (subject and body)                                                                                                                                                                                                                                                                                                                                                                                                               |
+
+#### Detailed `questions` content
+
+| Parameter | Type   | Default | Description                                                                                                                                                                                                                  |
+| --------- | ------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`    | `str`  | `None`  | The type of questions. Valid type: `list`, `input` and etc. [See More](https://github.com/tmbo/questionary#different-question-types)                                                                                         |
+| `name`    | `str`  | `None`  | The key for the value answered by user. It's used in `message_template`                                                                                                                                                      |
+| `message` | `str`  | `None`  | Detail description for the question.                                                                                                                                                                                         |
+| `choices` | `list` | `None`  | (OPTIONAL) The choices when `type = list`. Either use a list of values or a list of dicitionaries with `name` and `value` keys. See examples above. |
+| `default` | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                                                                                              |
+| `filter`  | `str`  | `None`  | (Optional) Validator for user's answer. **(Work in Progress)**                                                                                                                                                               |
+
+## 2. Customize through customizing a class
 
 The basic steps are:
 
@@ -132,7 +201,7 @@ cz -n cz_strange bump
 
 [convcomms]: https://github.com/commitizen-tools/commitizen/blob/master/commitizen/cz/conventional_commits/conventional_commits.py
 
-## Custom changelog generator
+### Custom changelog generator
 
 The changelog generator should just work in a very basic manner without touching anything.
 You can customize it of course, and this are the variables you need to add to your custom `BaseCommitizen`.
@@ -196,71 +265,3 @@ from commitizen.cz.exception import CzException
 class NoSubjectProvidedException(CzException):
     ...
 ```
-
-## Customize in toml
-
-**This is only supported when configuring through `toml` (e.g., `pyproject.toml`, `.cz`, and `.cz.toml`)**
-
-The basic steps are:
-
-1. Define your custom committing or bumping rules in the configuration file.
-2. Declare `name = "cz_customize"` in your configuration file, or add `-n cz_customize` when running commitizen.
-
-Example:
-
-```toml
-[tool.commitizen]
-name = "cz_customize"
-
-[tool.commitizen.customize]
-message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
-example = "feature: this feature enable customize through config file"
-schema = "<type>: <body>"
-bump_pattern = "^(break|new|fix|hotfix)"
-bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
-info_path = "cz_customize_info.txt"
-info = """
-This is customized info
-"""
-
-[[tool.commitizen.customize.questions]]
-type = "list"
-name = "change_type"
-choices = [{value = "feature", name = "feature: A new feature."}, {value = "bug fix", name = "bug fix: A bug fix."}]
-# choices = ["feature", "fix"]  # short version
-message = "Select the type of change you are committing"
-
-[[tool.commitizen.customize.questions]]
-type = "input"
-name = "message"
-message = "Body."
-
-[[tool.commitizen.customize.questions]]
-type = "confirm"
-name = "show_message"
-message = "Do you want to add body message in commit?"
-```
-
-### Customize configuration
-
-| Parameter          | Type   | Default | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------ | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `questions`        | `dict` | `None`  | Questions regarding the commit message. Detailed below.                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `message_template` | `str`  | `None`  | The template for generating message from the given answers. `message_template` should either follow the [string.Template](https://docs.python.org/3/library/string.html#template-strings) or [Jinja2](https://jinja.palletsprojects.com/en/2.10.x/) formatting specification, and all the variables in this template should be defined in `name` in `questions`. Note that `Jinja2` is not installed by default. If not installed, commitizen will use `string.Template` formatting. |
-| `example`          | `str`  | `None`  | (OPTIONAL) Provide an example to help understand the style. Used by `cz example`.                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `schema`           | `str`  | `None`  | (OPTIONAL) Show the schema used. Used by `cz schema`.                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `info_path`        | `str`  | `None`  | (OPTIONAL) The path to the file that contains explanation of the commit rules. Used by `cz info`. If not provided `cz info`, will load `info` instead.                                                                                                                                                                                                                                                                                                                               |
-| `info`             | `str`  | `None`  | (OPTIONAL) Explanation of the commit rules. Used by `cz info`.                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `bump_map`         | `dict` | `None`  | (OPTIONAL) Dictionary mapping the extracted information to a `SemVer` increment type (`MAJOR`, `MINOR`, `PATCH`)                                                                                                                                                                                                                                                                                                                                                                     |
-| `bump_pattern`     | `str`  | `None`  | (OPTIONAL) Regex to extract information from commit (subject and body)                                                                                                                                                                                                                                                                                                                                                                                                               |
-
-#### Detailed `questions` content
-
-| Parameter | Type   | Default | Description                                                                                                                                                                                                                  |
-| --------- | ------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `type`    | `str`  | `None`  | The type of questions. Valid type: `list`, `input` and etc. [See More](https://github.com/tmbo/questionary#different-question-types)                                                                                         |
-| `name`    | `str`  | `None`  | The key for the value answered by user. It's used in `message_template`                                                                                                                                                      |
-| `message` | `str`  | `None`  | Detail description for the question.                                                                                                                                                                                         |
-| `choices` | `list` | `None`  | (OPTIONAL) The choices when `type = list`. Either use a list of values or a list of dicitionaries with `name` and `value` keys. See examples above. |
-| `default` | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                                                                                              |
-| `filter`  | `str`  | `None`  | (Optional) Validator for user's answer. **(Work in Progress)**                                                                                                                                                               |
