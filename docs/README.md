@@ -81,7 +81,7 @@ You can integrate this in your [pre-commit](https://pre-commit.com/) config with
 ---
 repos:
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v1.17.0
+    rev: master
     hooks:
       - id: commitizen
         stages: [commit-msg]
