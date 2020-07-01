@@ -15,6 +15,6 @@ If you're a first-time contributor, you can check the issues with [good first is
 5. Add test cases for all your changes.
    (We use [CodeCov](https://codecov.io/) to ensure our test coverage does not drop.)
 6. Use [commitizen](https://github.com/commitizen-tools/commitizen) to do git commit.
-7. Run `./scripts/lint` and `./scripts/test` to ensure you follow the coding style and the tests pass.
+7. Run `./scripts/reformat` and `./scripts/test` to ensure you follow the coding style and the tests pass.
 8. Update `READMD.md` and `CHANGELOG.md` for your changes.
 9. Send a [pull request](https://github.com/commitizen-tools/commitizen/pulls) 🙏
