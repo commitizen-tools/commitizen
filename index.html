@@ -13,7 +13,7 @@
       
       
       <link rel="shortcut icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.3.3">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.4.0">
     
     
       
@@ -267,6 +267,13 @@
           <li class="md-nav__item">
   <a href="#committing" class="md-nav__link">
     Committing
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integrating-with-pre-commit" class="md-nav__link">
+    Integrating with Pre-commit
   </a>
   
 </li>
@@ -633,6 +640,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#integrating-with-pre-commit" class="md-nav__link">
+    Integrating with Pre-commit
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#help" class="md-nav__link">
     Help
   </a>
@@ -760,6 +774,20 @@ the version or a changelog.</p>
 </code></pre></div>
 
 
+<h3 id="integrating-with-pre-commit">Integrating with Pre-commit</h3>
+<p>Commitizen can lint your commit message for you with <code>cz check</code>.
+You can integrate this in your <a href="https://pre-commit.com/">pre-commit</a> config with:</p>
+<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<span class="nt">repos</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">repo</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/commitizen-tools/commitizen</span>
+    <span class="nt">rev</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">master</span>
+    <span class="nt">hooks</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">commitizen</span>
+        <span class="nt">stages</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">commit-msg</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+
+
+<p>Read more about the <code>check</code> command <a href="https://commitizen-tools.github.io/commitizen/check/">here</a>.</p>
 <h3 id="help">Help</h3>
 <div class="codehilite"><pre><span></span><code>$ cz --help
 usage: cz <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--debug<span class="o">]</span> <span class="o">[</span>-n NAME<span class="o">]</span> <span class="o">[</span>--version<span class="o">]</span>
@@ -862,14 +890,14 @@ git commit -m <span class="s2">&quot;revert: foo bar&quot;</span>
     </div>
     
       <script src="assets/javascripts/vendor.d710d30a.min.js"></script>
-      <script src="assets/javascripts/bundle.4a5ba8d6.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="assets/javascripts/bundle.b39636ac.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
       
       <script>
         app = initialize({
           base: ".",
           features: [],
           search: Object.assign({
-            worker: "assets/javascripts/worker/search.9b3611bd.min.js"
+            worker: "assets/javascripts/worker/search.a68abb33.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>
