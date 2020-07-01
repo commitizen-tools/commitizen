@@ -9,6 +9,13 @@ repos:
         args: [--markdown-linebreak-ext=md]
       - id: debug-statements
       - id: no-commit-to-branch
+
+  - repo: https://github.com/Woile/commitizen
+    rev: v1.23.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
   - repo: local
     hooks:
       - id: reformat

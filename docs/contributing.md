@@ -11,7 +11,7 @@ If you're a first-time contributor, you can check the issues with [good first is
 1. Fork [the repository](https://github.com/commitizen-tools/commitizen).
 2. Clone the repository from your GitHub.
 3. Setup development environment through [poetry](https://python-poetry.org/) (`poetry install`).
-4. Setup [pre-commit](https://pre-commit.com/) hook (`pre-commit install -t pre-commit -t pre-push`)
+4. Setup [pre-commit](https://pre-commit.com/) hook (`pre-commit install -t pre-commit -t pre-push -t commit-msg`)
 5. Check out a new branch and add your modification.
 6. Add test cases for all your changes.
    (We use [CodeCov](https://codecov.io/) to ensure our test coverage does not drop.)
