@@ -77,6 +77,7 @@ cz c
 ### Integrating with Pre-commit
 Commitizen can lint your commit message for you with `cz check`.
 You can integrate this in your [pre-commit](https://pre-commit.com/) config with:
+
 ```yaml
 ---
 repos:
@@ -86,6 +87,7 @@ repos:
       - id: commitizen
         stages: [commit-msg]
 ```
+
 Read more about the `check` command [here](https://commitizen-tools.github.io/commitizen/check/).
 
 ### Help

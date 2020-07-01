@@ -28,4 +28,3 @@ jobs:
         PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         ./scripts/publish
-
