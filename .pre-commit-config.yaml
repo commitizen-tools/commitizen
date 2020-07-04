@@ -18,11 +18,11 @@ repos:
 
   - repo: local
     hooks:
-      - id: reformat
-        name: reformat
+      - id: format
+        name: format
         language: system
         pass_filenames: false
-        entry: ./scripts/reformat
+        entry: ./scripts/format
         types: [python]
 
       - id: linter and test
