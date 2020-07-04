@@ -1,0 +1,33 @@
+default_stages: [push]
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.1.0
+    hooks:
+      - id: check-vcs-permalinks
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: debug-statements
+      - id: no-commit-to-branch
+
+  - repo: https://github.com/Woile/commitizen
+    rev: v1.23.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
+  - repo: local
+    hooks:
+      - id: reformat
+        name: reformat
+        language: system
+        pass_filenames: false
+        entry: ./scripts/reformat
+        types: [python]
+
+      - id: linter and test
+        name: linter and test
+        language: system
+        pass_filenames: false
+        entry: ./scripts/test
+        types: [python]
