@@ -24,7 +24,7 @@ jobs:
     - name: Install dependencies
       run: |
         python --version
-        python -m pip install -U poetry
+        python -m pip install -U pip poetry
     - name: Configure repo
       run: |
         git config --local user.email "action@github.com"
