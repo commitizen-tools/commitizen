@@ -3,8 +3,7 @@ name: Python package
 on: [pull_request]
 
 jobs:
-  build:
-
+  python-check:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
