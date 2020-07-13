@@ -15,7 +15,7 @@ Please put an `x` in the box that applies
 
 ## Checklist:
 - [ ] Add test cases to all the changes you introduce
-- [ ] Run `./script/reformat` and `./script/test` locally to ensure this change passes linter check and test
+- [ ] Run `./script/format` and `./script/test` locally to ensure this change passes linter check and test
 - [ ] Test the changes on the local machine manually
 - [ ] Update the documentation for the changes
 

@@ -88,6 +88,12 @@ repos:
         stages: [commit-msg]
 ```
 
+After the configuration is added, you'll need to run
+
+```sh
+pre-commit install --hook-type commit-msg
+```
+
 Read more about the `check` command [here](https://commitizen-tools.github.io/commitizen/check/).
 
 ### Help
