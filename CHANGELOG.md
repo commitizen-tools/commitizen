@@ -1,3 +1,9 @@
+## v1.23.1 (2020-07-14)
+
+### Fix
+
+- Raise NotAGitProjectError only in git related command
+
 ## v1.23.0 (2020-06-14)
 
 ### Refactor
