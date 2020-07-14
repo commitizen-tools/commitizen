@@ -4,7 +4,6 @@ from pathlib import Path
 import pytest
 
 from commitizen import config, defaults, git
-from commitizen.exceptions import NotAGitProjectError
 
 PYPROJECT = """
 [tool.commitizen]
@@ -148,14 +147,6 @@ def test_find_git_project_root(tmpdir):
 
     with tmpdir.as_cwd() as _:
         assert git.find_git_project_root() is None
-
-
-def test_read_cfg_when_not_in_a_git_project(tmpdir):
-    with tmpdir.as_cwd() as _:
-        with pytest.raises(NotAGitProjectError) as excinfo:
-            config.read_cfg()
-
-        assert NotAGitProjectError.message in str(excinfo.value)
 
 
 class TestInilConfig:

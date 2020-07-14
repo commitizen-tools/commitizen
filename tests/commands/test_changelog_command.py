@@ -6,7 +6,12 @@ import pytest
 
 from commitizen import cli, git
 from commitizen.commands.changelog import Changelog
-from commitizen.exceptions import DryRunExit, NoCommitsFoundError, NoRevisionError
+from commitizen.exceptions import (
+    DryRunExit,
+    NoCommitsFoundError,
+    NoRevisionError,
+    NotAGitProjectError,
+)
 from tests.utils import create_file_and_commit
 
 
@@ -335,3 +340,12 @@ def test_changelog_with_different_tag_name_and_changelog_content(
 
     with pytest.raises(NoRevisionError):
         cli.main()
+
+
+def test_changelog_in_non_git_project(tmpdir, config, mocker):
+    testargs = ["cz", "changelog", "--incremental"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with tmpdir.as_cwd():
+        with pytest.raises(NotAGitProjectError):
+            cli.main()

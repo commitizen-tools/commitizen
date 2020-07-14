@@ -3,7 +3,6 @@ from pathlib import Path
 from typing import Optional, Union
 
 from commitizen import defaults, git
-from commitizen.exceptions import NotAGitProjectError
 
 from .base_config import BaseConfig
 from .ini_config import IniConfig
@@ -37,12 +36,13 @@ def read_cfg() -> BaseConfig:
     conf = BaseConfig()
 
     git_project_root = git.find_git_project_root()
-    if not git_project_root:
-        raise NotAGitProjectError()
+    cfg_search_paths = [Path(".")]
+    if git_project_root:
+        cfg_search_paths.append(git_project_root)
 
     cfg_paths = (
         path / Path(filename)
-        for path in [Path("."), git_project_root]
+        for path in cfg_search_paths
         for filename in defaults.config_files
     )
     for filename in cfg_paths:
