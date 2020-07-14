@@ -13,6 +13,7 @@ from commitizen.exceptions import (
     DryRunExit,
     NoAnswersError,
     NoCommitBackupError,
+    NotAGitProjectError,
     NothingToCommitError,
 )
 
@@ -21,6 +22,9 @@ class Commit:
     """Show prompt for the user to create a guided commit."""
 
     def __init__(self, config: BaseConfig, arguments: dict):
+        if not git.is_git_project():
+            raise NotAGitProjectError()
+
         self.config: BaseConfig = config
         self.cz = factory.commiter_factory(self.config)
         self.arguments = arguments

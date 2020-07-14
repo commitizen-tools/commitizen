@@ -10,6 +10,7 @@ from commitizen.exceptions import (
     NoCommitsFoundError,
     NoPatternMapError,
     NoRevisionError,
+    NotAGitProjectError,
 )
 from commitizen.git import GitTag
 
@@ -22,6 +23,9 @@ class Changelog:
     """Generate a changelog based on the commit history."""
 
     def __init__(self, config: BaseConfig, args):
+        if not git.is_git_project():
+            raise NotAGitProjectError()
+
         self.config: BaseConfig = config
         self.cz = factory.commiter_factory(self.config)
 

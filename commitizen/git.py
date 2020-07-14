@@ -135,3 +135,10 @@ def is_staging_clean() -> bool:
     c = cmd.run("git diff --no-ext-diff --name-only")
     c_cached = cmd.run("git diff --no-ext-diff --cached --name-only")
     return not (bool(c.out) or bool(c_cached.out))
+
+
+def is_git_project() -> bool:
+    c = cmd.run("git rev-parse --is-inside-work-tree")
+    if c.out.strip() == "true":
+        return True
+    return False

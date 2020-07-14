@@ -10,6 +10,7 @@ from commitizen.exceptions import (
     DryRunExit,
     NoAnswersError,
     NoCommitBackupError,
+    NotAGitProjectError,
     NothingToCommitError,
 )
 
@@ -151,3 +152,9 @@ def test_commit_when_no_user_answer(config, mocker, capsys):
     with pytest.raises(NoAnswersError):
         commit_cmd = commands.Commit(config, {})
         commit_cmd()
+
+
+def test_commit_in_non_git_project(tmpdir, config):
+    with tmpdir.as_cwd():
+        with pytest.raises(NotAGitProjectError):
+            commands.Commit(config, {})

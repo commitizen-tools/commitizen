@@ -10,6 +10,7 @@ from commitizen.exceptions import (
     ExpectedExit,
     NoCommitsFoundError,
     NoPatternMapError,
+    NotAGitProjectError,
     NoVersionSpecifiedError,
 )
 from tests.utils import create_file_and_commit
@@ -206,3 +207,13 @@ def test_bump_dry_run(mocker, capsys, tmp_commitizen_project):
 
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is False
+
+
+def test_bump_in_non_git_project(tmpdir, config, mocker):
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with tmpdir.as_cwd():
+        with pytest.raises(NotAGitProjectError):
+            with pytest.raises(ExpectedExit):
+                cli.main()
