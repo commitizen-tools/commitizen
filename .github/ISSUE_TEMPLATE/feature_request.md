@@ -2,7 +2,7 @@
 name: 🚀 Feature request
 about: Suggest an idea for this project
 title: "<One feature request per issue>"
-labels: "enhancement"
+labels: "feature"
 assignees: ""
 ---
 
