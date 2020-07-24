@@ -9,7 +9,11 @@ versions](https://img.shields.io/pypi/pyversions/commitizen.svg?style=flat-squar
 
 ![Using commitizen cli](images/demo.gif)
 
-View full [documentation](https://commitizen-tools.github.io/commitizen/).
+---
+
+**Documentation**: https://commitizen-tools.github.io/
+
+---
 
 ## About
 
