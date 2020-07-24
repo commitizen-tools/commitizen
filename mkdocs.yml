@@ -25,7 +25,7 @@ nav:
     - Exit Codes: 'exit_codes.md'
     - Third-Party Commitizen Templates: 'third-party-commitizen.md'
     - Contributing: 'contributing.md'
-    - External Links: 'external_links.md'
+    - Resources: 'external_links.md'
 
 markdown_extensions:
   - markdown.extensions.codehilite:
