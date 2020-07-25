@@ -1,4 +1,3 @@
-import warnings
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
@@ -34,16 +33,3 @@ class BaseConfig:
 
     def _parse_setting(self, data: str) -> dict:
         raise NotImplementedError()
-
-    # TODO: remove "files" supported in 2.0
-    @classmethod
-    def _show_files_column_deprecated_warning(cls):
-        warnings.simplefilter("always", DeprecationWarning)
-        warnings.warn(
-            (
-                '"files" is renamed as "version_files" '
-                "and will be deprecated in next major version\n"
-                'Please repalce "files" with "version_files"'
-            ),
-            category=DeprecationWarning,
-        )
