@@ -32,8 +32,7 @@ data = {
     ],
     "subcommands": {
         "title": "commands",
-        # TODO: Add this constraint back in 2.0
-        # "required": True,
+        "required": True,
         "commands": [
             {
                 "name": ["init"],
@@ -292,12 +291,7 @@ def main():
         logging.getLogger("commitizen").setLevel(logging.DEBUG)
         sys.excepthook = commitizen_debug_excepthook
 
-    # TODO: This try block can be removed after command is required in 2.0
-    # Handle the case that argument is given, but no command is provided
-    try:
-        args.func(conf, vars(args))()
-    except AttributeError:
-        raise NoCommandFoundError()
+    args.func(conf, vars(args))()
 
 
 if __name__ == "__main__":
