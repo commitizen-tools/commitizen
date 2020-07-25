@@ -1,3 +1,14 @@
+## v1.23.3 (2020-07-25)
+
+### Fix
+
+- **commands/bump**: use `return_code` in commands used by bump
+- **commands/commit**: use return_code to raise commit error, not stderr
+
+### Refactor
+
+- **cmd**: add return code to Command
+
 ## v1.23.2 (2020-07-25)
 
 ### Fix
