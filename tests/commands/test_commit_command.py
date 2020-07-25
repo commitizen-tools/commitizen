@@ -34,7 +34,7 @@ def test_commit(config, mocker):
     }
 
     commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", "", "")
+    commit_mock.return_value = cmd.Command("success", "", "", "", 0)
     success_mock = mocker.patch("commitizen.out.success")
 
     commands.Commit(config, {})()
@@ -44,7 +44,7 @@ def test_commit(config, mocker):
 @pytest.mark.usefixtures("staging_is_clean")
 def test_commit_retry_fails_no_backup(config, mocker):
     commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", "", "")
+    commit_mock.return_value = cmd.Command("success", "", "", "", 0)
 
     with pytest.raises(NoCommitBackupError) as excinfo:
         commands.Commit(config, {"retry": True})()
@@ -65,7 +65,7 @@ def test_commit_retry_works(config, mocker):
     }
 
     commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("", "error", "", "")
+    commit_mock.return_value = cmd.Command("", "error", "", "", 0)
     error_mock = mocker.patch("commitizen.out.error")
 
     with pytest.raises(CommitError):
@@ -79,7 +79,7 @@ def test_commit_retry_works(config, mocker):
 
     # Previous commit failed, so retry should pick up the backup commit
     # commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", "", "")
+    commit_mock.return_value = cmd.Command("success", "", "", "", 0)
     success_mock = mocker.patch("commitizen.out.success")
 
     commands.Commit(config, {"retry": True})()
