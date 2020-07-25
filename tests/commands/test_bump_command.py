@@ -4,7 +4,7 @@ import pytest
 
 from commitizen import cli, cmd, git
 from commitizen.exceptions import (
-    BumpCommitFailedError,
+    BumpTagFailedError,
     CurrentVersionNotFoundError,
     DryRunExit,
     ExpectedExit,
@@ -71,6 +71,7 @@ def test_bump_command(mocker):
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_on_git_with_hooks_no_verify_disabled(mocker):
+    """Bump commit without --no-verify"""
     cmd.run("mkdir .git/hooks")
     with open(".git/hooks/pre-commit", "w") as f:
         f.write("#!/usr/bin/env bash\n" 'echo "0.1.0"')
@@ -82,10 +83,29 @@ def test_bump_on_git_with_hooks_no_verify_disabled(mocker):
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
 
-    with pytest.raises(BumpCommitFailedError) as excinfo:
-        cli.main()
+    cli.main()
 
-    assert 'git.commit error: "0.1.0"' in str(excinfo.value)
+    tag_exists = git.tag_exist("0.2.0")
+    assert tag_exists is True
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_tag_exists_raises_exception(mocker):
+    cmd.run("mkdir .git/hooks")
+    with open(".git/hooks/post-commit", "w") as f:
+        f.write("#!/usr/bin/env bash\n" "exit 9")
+    cmd.run("chmod +x .git/hooks/post-commit")
+
+    # MINOR
+    create_file_and_commit("feat: new file")
+    git.tag("0.2.0")
+
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.raises(BumpTagFailedError) as excinfo:
+        cli.main()
+    assert "fatal: tag '0.2.0' already exists" in str(excinfo.value)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
