@@ -3,7 +3,7 @@ from typing import List, Optional
 import questionary
 from packaging.version import Version
 
-from commitizen import bump, factory, git, out
+from commitizen import bump, cmd, factory, git, out
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
@@ -142,7 +142,7 @@ class Bump:
             raise ExpectedExit()
 
         if self.changelog:
-            changelog = Changelog(
+            changelog_cmd = Changelog(
                 self.config,
                 {
                     "unreleased_version": new_tag_version,
@@ -150,7 +150,8 @@ class Bump:
                     "dry_run": dry_run,
                 },
             )
-            changelog()
+            changelog_cmd()
+            c = cmd.run(f"git add {changelog_cmd.file_name}")
 
         self.config.set_key("version", new_version.public)
         c = git.commit(message, args=self._get_commit_args())
