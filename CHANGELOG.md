@@ -1,3 +1,9 @@
+## v1.23.2 (2020-07-25)
+
+### Fix
+
+- **bump**: add changelog file into stage when running `cz bump --changelog`
+
 ## v1.23.1 (2020-07-14)
 
 ### Fix
