@@ -65,7 +65,7 @@ def test_commit_retry_works(config, mocker):
     }
 
     commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("", "error", "", "", 0)
+    commit_mock.return_value = cmd.Command("", "error", "", "", 9)
     error_mock = mocker.patch("commitizen.out.error")
 
     with pytest.raises(CommitError):

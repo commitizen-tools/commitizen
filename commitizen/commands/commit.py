@@ -75,7 +75,7 @@ class Commit:
 
         c = git.commit(m)
 
-        if c.err:
+        if c.return_code != 0:
             out.error(c.err)
 
             # Create commit backup
@@ -86,10 +86,9 @@ class Commit:
 
         if "nothing added" in c.out or "no changes added to commit" in c.out:
             out.error(c.out)
-        elif c.err:
-            out.error(c.err)
         else:
             with contextlib.suppress(FileNotFoundError):
                 os.remove(self.temp_file)
+            out.write(c.err)
             out.write(c.out)
             out.success("Commit successful!")
