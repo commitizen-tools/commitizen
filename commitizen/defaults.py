@@ -1,11 +1,8 @@
 from collections import OrderedDict
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 name: str = "cz_conventional_commits"
-# TODO: .cz, setup.cfg, .cz.cfg should be removed in 2.0
-long_term_support_config_files: list = ["pyproject.toml", ".cz.toml"]
-deprcated_config_files: list = [".cz", "setup.cfg", ".cz.cfg"]
-config_files: list = long_term_support_config_files + deprcated_config_files
+config_files: List[str] = ["pyproject.toml", ".cz.toml"]
 
 DEFAULT_SETTINGS: Dict[str, Any] = {
     "name": "cz_conventional_commits",

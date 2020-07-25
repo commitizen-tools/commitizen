@@ -2,9 +2,9 @@ import questionary
 from packaging.version import Version
 
 from commitizen import factory, out
-from commitizen.config import BaseConfig, IniConfig, TomlConfig
+from commitizen.config import BaseConfig, TomlConfig
 from commitizen.cz import registry
-from commitizen.defaults import long_term_support_config_files
+from commitizen.defaults import config_files
 from commitizen.exceptions import NoAnswersError
 from commitizen.git import get_latest_tag_name, get_tag_names
 
@@ -23,8 +23,6 @@ class Init:
 
             if "toml" in config_path:
                 self.config = TomlConfig(data="", path=config_path)
-            else:
-                self.config = IniConfig(data="", path=config_path)
 
             self.config.init_empty_config_content()
 
@@ -43,7 +41,7 @@ class Init:
     def _ask_config_path(self) -> str:
         name = questionary.select(
             "Please choose a supported config file: (default: pyproject.toml)",
-            choices=long_term_support_config_files,
+            choices=config_files,
             default="pyproject.toml",
             style=self.cz.style,
         ).ask()

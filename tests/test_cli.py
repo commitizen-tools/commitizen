@@ -3,7 +3,6 @@ import sys
 import pytest
 
 from commitizen import cli
-from commitizen.__version__ import __version__
 from commitizen.exceptions import ExpectedExit, NoCommandFoundError, NotAGitProjectError
 
 
