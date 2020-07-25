@@ -155,10 +155,10 @@ class Bump:
 
         self.config.set_key("version", new_version.public)
         c = git.commit(message, args=self._get_commit_args())
-        if c.err:
+        if c.return_code != 0:
             raise BumpCommitFailedError(f'git.commit error: "{c.err.strip()}"')
         c = git.tag(new_tag_version)
-        if c.err:
+        if c.return_code != 0:
             raise BumpTagFailedError(c.err)
         out.success("Done!")
 
