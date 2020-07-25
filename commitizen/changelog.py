@@ -19,10 +19,10 @@
 Extra:
 - [x] Generate full or partial changelog
 - [x] Include in tree from file all the extra comments added manually
-- [ ] Add unreleased value
-- [ ] hook after message is parsed (add extra information like hyperlinks)
-- [ ] hook after changelog is generated (api calls)
-- [ ] add support for change_type maps
+- [x] Add unreleased value
+- [x] hook after message is parsed (add extra information like hyperlinks)
+- [x] hook after changelog is generated (api calls)
+- [x] add support for change_type maps
 """
 import os
 import re
@@ -30,8 +30,7 @@ from collections import defaultdict
 from datetime import date
 from typing import Callable, Dict, Iterable, List, Optional
 
-import pkg_resources
-from jinja2 import Template
+from jinja2 import Environment, PackageLoader
 
 from commitizen import defaults
 from commitizen.git import GitCommit, GitTag
@@ -130,10 +129,9 @@ def generate_tree_from_commits(
 
 
 def render_changelog(tree: Iterable) -> str:
-    template_file = pkg_resources.resource_string(
-        __name__, "templates/keep_a_changelog_template.j2"
-    ).decode("utf-8")
-    jinja_template = Template(template_file, trim_blocks=True)
+    loader = PackageLoader("commitizen", "templates")
+    env = Environment(loader=loader, trim_blocks=True)
+    jinja_template = env.get_template("keep_a_changelog_template.j2")
     changelog: str = jinja_template.render(tree=tree)
     return changelog
 
