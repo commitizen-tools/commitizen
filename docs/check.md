@@ -1,7 +1,9 @@
 ## About
 
 This feature checks whether the commit message follows the given committing rules.
-You can use either of the following methods to enforce the check.
+
+## Checking before the commit
+To automatically check a commit message prior to committing, you can use a [git hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks). There are two common methods for installing the hook:
 
 ### Method 1: Add git hook through [pre-commit](https://pre-commit.com/)
 
@@ -60,3 +62,10 @@ Each time you create a commit, automatically, this hook will analyze it.
 If the commit message is invalid, it'll be rejected.
 
 The commit should follow the given committing rules; otherwise, it won't be accepted.
+
+## Checking after the commit
+If you'd like to check a commit's message after it has already been created, then you can specify the range of commits to check with `--rev-range REV_RANGE`
+
+For example, if you'd like to check all commits on a branch, you can use `--rev-range master..HEAD`. Or, if you'd like to check all commits starting from when you first implemented commit message linting, you can use `--rev-range <first_commit_sha>..HEAD`.
+
+For more info on how git commit ranges work, you can check the [git documentation](https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection#_commit_ranges).
