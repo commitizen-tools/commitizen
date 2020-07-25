@@ -1,7 +1,6 @@
 import argparse
 import logging
 import sys
-import warnings
 from functools import partial
 
 from decli import cli
@@ -23,11 +22,6 @@ data = {
         {
             "name": ["-n", "--name"],
             "help": "use the given commitizen (default: cz_conventional_commits)",
-        },
-        {
-            "name": ["--version"],
-            "action": "store_true",
-            "help": "get the version of the installed commitizen",
         },
     ],
     "subcommands": {
@@ -276,16 +270,6 @@ def main():
         conf.update({"name": args.name})
     elif not args.name and not conf.path:
         conf.update({"name": "cz_conventional_commits"})
-
-    if args.version:
-        warnings.warn(
-            (
-                "'cz --version' will be deprecated in next major version. "
-                "Please use 'cz version' command from your scripts"
-            ),
-            category=DeprecationWarning,
-        )
-        args.func = commands.Version
 
     if args.debug:
         logging.getLogger("commitizen").setLevel(logging.DEBUG)
