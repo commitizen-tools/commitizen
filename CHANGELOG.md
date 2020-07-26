@@ -1,3 +1,9 @@
+## v1.25.0 (2020-07-26)
+
+### Feat
+
+- **conventional_commits**: use and proper support for conventional commits v1.0.0
+
 ## v1.24.0 (2020-07-26)
 
 ### Feat
