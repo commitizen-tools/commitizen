@@ -1,4 +1,7 @@
+import pytest
+
 from commitizen import git
+from tests.utils import create_file_and_commit
 
 
 class FakeCommand:
@@ -54,3 +57,20 @@ def test_git_message_with_empty_body():
     commit = git.GitCommit("test_rev", "Some Title", body="")
 
     assert commit.message == commit_title
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_get_commits():
+    create_file_and_commit("feat(users): add username")
+    create_file_and_commit("fix: username exception")
+    commits = git.get_commits()
+    assert len(commits) == 2
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_get_commits_author_and_email():
+    create_file_and_commit("fix: username exception")
+    commit = git.get_commits()[0]
+
+    assert commit.author is not ""
+    assert "@" in commit.author_email
