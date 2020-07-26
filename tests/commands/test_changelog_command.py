@@ -349,3 +349,43 @@ def test_changelog_in_non_git_project(tmpdir, config, mocker):
     with tmpdir.as_cwd():
         with pytest.raises(NotAGitProjectError):
             cli.main()
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_breaking_change_content_v1_beta(mocker, capsys):
+    commit_message = (
+        "feat(users): email pattern corrected\n\n"
+        "BREAKING CHANGE: migrate by renaming user to users\n\n"
+        "footer content"
+    )
+    create_file_and_commit(commit_message)
+    testargs = ["cz", "changelog", "--dry-run"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(DryRunExit):
+        cli.main()
+    out, _ = capsys.readouterr()
+
+    assert out == (
+        "## Unreleased\n\n### Feat\n\n- **users**: email pattern corrected\n\n"
+        "### BREAKING CHANGE\n\n- migrate by renaming user to users\n\n"
+    )
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_breaking_change_content_v1(mocker, capsys):
+    commit_message = (
+        "feat(users): email pattern corrected\n\n"
+        "body content\n\n"
+        "BREAKING CHANGE: migrate by renaming user to users"
+    )
+    create_file_and_commit(commit_message)
+    testargs = ["cz", "changelog", "--dry-run"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(DryRunExit):
+        cli.main()
+    out, _ = capsys.readouterr()
+
+    assert out == (
+        "## Unreleased\n\n### Feat\n\n- **users**: email pattern corrected\n\n"
+        "### BREAKING CHANGE\n\n- migrate by renaming user to users\n\n"
+    )
