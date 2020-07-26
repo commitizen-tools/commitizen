@@ -35,7 +35,6 @@ class Init:
             out.info("cz bump --changelog")
             out.success("The configuration are all set.")
         else:
-            # TODO: handle the case that config file exist but no value
             out.line(f"Config file {self.config.path} already exists")
 
     def _ask_config_path(self) -> str:
