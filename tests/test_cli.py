@@ -3,7 +3,6 @@ import sys
 import pytest
 
 from commitizen import cli
-from commitizen.__version__ import __version__
 from commitizen.exceptions import ExpectedExit, NoCommandFoundError, NotAGitProjectError
 
 
@@ -53,21 +52,6 @@ def test_ls(mocker, capsys):
 
     assert "cz_conventional_commits" in out
     assert isinstance(out, str)
-
-
-def test_arg_version(mocker, capsys):
-    testargs = ["cz", "--version"]
-    mocker.patch.object(sys, "argv", testargs)
-
-    with pytest.warns(DeprecationWarning) as record:
-        cli.main()
-        out, _ = capsys.readouterr()
-        assert out.strip() == __version__
-
-    assert record[0].message.args[0] == (
-        "'cz --version' will be deprecated in next major version. "
-        "Please use 'cz version' command from your scripts"
-    )
 
 
 def test_arg_debug(mocker):

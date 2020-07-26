@@ -23,19 +23,6 @@ line-length = 88
 target-version = ['py36', 'py37', 'py38']
 """
 
-RAW_CONFIG = """
-[commitizen]
-name = cz_jira
-version = 1.0.0
-version_files = [
-    "commitizen/__version__.py",
-    "pyproject.toml"
-    ]
-style = [
-    ["pointer", "reverse"],
-    ["question", "underline"]
-    ]
-"""
 
 _settings = {
     "name": "cz_jira",
@@ -67,79 +54,13 @@ _read_settings = {
 
 
 @pytest.fixture
-def configure_supported_files():
-    original = defaults.config_files.copy()
-
-    # patch the defaults to include tests
-    defaults.config_files = [os.path.join("tests", f) for f in defaults.config_files]
-    yield
-    defaults.config_files = original
-
-
-@pytest.fixture
-def config_files_manager(request):
-    filename = request.param
-    filepath = os.path.join("tests", filename)
-    with open(filepath, "w") as f:
-        if "toml" in filename:
-            f.write(PYPROJECT)
-        else:
-            f.write(RAW_CONFIG)
-    yield
-    os.remove(filepath)
-
-
-@pytest.fixture
-def empty_pyproject_ok_cz():
-    pyproject = "tests/pyproject.toml"
-    cz = "tests/.cz"
-    with open(pyproject, "w") as f:
-        f.write("")
-    with open(cz, "w") as f:
-        f.write(RAW_CONFIG)
-    yield
-    os.remove(pyproject)
-    os.remove(cz)
-
-
-def test_load_global_conf(mocker, tmpdir):
+def config_files_manager(request, tmpdir):
     with tmpdir.as_cwd():
-        config_file = tmpdir.join(".cz")
-        config_file.write(RAW_CONFIG)
-
-        mocked_path = mocker.patch("commitizen.config.Path", return_value=Path(".cz"))
-        mocked_path.home.return_value = Path(tmpdir)
-        print(config.load_global_conf())
-
-
-@pytest.mark.parametrize(
-    "config_files_manager", defaults.config_files.copy(), indirect=True
-)
-def test_load_conf(config_files_manager, configure_supported_files):
-    cfg = config.read_cfg()
-    assert cfg.settings == _settings
-
-
-def test_conf_is_loaded_with_empty_pyproject_but_ok_cz(
-    empty_pyproject_ok_cz, configure_supported_files
-):
-    cfg = config.read_cfg()
-    assert cfg.settings == _settings
-
-
-def test_conf_returns_default_when_no_files(configure_supported_files):
-    cfg = config.read_cfg()
-    assert cfg.settings == defaults.DEFAULT_SETTINGS
-
-
-@pytest.mark.parametrize(
-    "config_files_manager", defaults.config_files.copy(), indirect=True
-)
-def test_set_key(configure_supported_files, config_files_manager):
-    _conf = config.read_cfg()
-    _conf.set_key("version", "2.0.0")
-    cfg = config.read_cfg()
-    assert cfg.settings == _new_settings
+        filename = request.param
+        with open(filename, "w") as f:
+            if "toml" in filename:
+                f.write(PYPROJECT)
+        yield
 
 
 def test_find_git_project_root(tmpdir):
@@ -149,11 +70,38 @@ def test_find_git_project_root(tmpdir):
         assert git.find_git_project_root() is None
 
 
-class TestInilConfig:
-    def test_read_setup_cfg_without_commitizen_config(self, tmpdir):
-        path = tmpdir.mkdir("commitizen").join("setup.cfg")
-        ini_config = config.IniConfig(data="", path=path)
-        assert ini_config.is_empty_config
+@pytest.mark.parametrize(
+    "config_files_manager", defaults.config_files.copy(), indirect=True
+)
+def test_set_key(config_files_manager):
+    _conf = config.read_cfg()
+    _conf.set_key("version", "2.0.0")
+    cfg = config.read_cfg()
+    assert cfg.settings == _new_settings
+
+
+class TestReadCfg:
+    @pytest.mark.parametrize(
+        "config_files_manager", defaults.config_files.copy(), indirect=True
+    )
+    def test_load_conf(_, config_files_manager):
+        cfg = config.read_cfg()
+        assert cfg.settings == _settings
+
+    def test_conf_returns_default_when_no_files(_, tmpdir):
+        with tmpdir.as_cwd():
+            cfg = config.read_cfg()
+            assert cfg.settings == defaults.DEFAULT_SETTINGS
+
+    def test_load_empty_pyproject_toml_and_cz_toml_with_config(_, tmpdir):
+        with tmpdir.as_cwd():
+            p = tmpdir.join("pyproject.toml")
+            p.write("")
+            p = tmpdir.join(".cz.toml")
+            p.write(PYPROJECT)
+
+            cfg = config.read_cfg()
+            assert cfg.settings == _settings
 
 
 class TestTomlConfig:

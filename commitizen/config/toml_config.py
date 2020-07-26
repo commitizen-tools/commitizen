@@ -44,7 +44,3 @@ class TomlConfig(BaseConfig):
             self.settings.update(doc["tool"]["commitizen"])
         except exceptions.NonExistentKey:
             self.is_empty_config = True
-
-        if "files" in self.settings:
-            self.settings["version_files"] = self.settings["files"]
-            TomlConfig._show_files_column_deprecated_warning

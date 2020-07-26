@@ -131,7 +131,6 @@ However, it will still update `pyproject.toml` and `src/__version__.py`.
 To fix it, you'll first `git checkout .` to reset to the status before trying to bump and update
 the version in `setup.py` to `1.21.0`
 
-
 ## Configuration
 
 ### `tag_format`
@@ -153,13 +152,6 @@ In your `pyproject.toml` or `.cz.toml`
 ```toml
 [tool.commitizen]
 tag_format = "v$minor.$major.$patch$prerelease"
-```
-
-Or in your `.cz` (TO BE DEPRECATED)
-
-```ini
-[commitizen]
-tag_format = v$minor.$major.$patch$prerelease
 ```
 
 The variables must be preceded by a `$` sign.
@@ -198,16 +190,6 @@ version_files = [
 ]
 ```
 
-`.cz` (TO BE DEPRECATED)
-
-```ini
-[commitizen]
-version_files = [
-    "src/__version__.py",
-    "setup.py:version"
-    ]
-```
-
 In the example above, we can see the reference `"setup.py:version"`.
 This means that it will find a file `setup.py` and will only make a change
 in a line containing the `version` substring.
@@ -232,13 +214,6 @@ Some examples
 ```toml
 [tool.commitizen]
 bump_message = "release $current_version → $new_version [skip-ci]"
-```
-
-`.cz` (TO BE DEPRECATED)
-
-```ini
-[commitizen]
-bump_message = release $current_version → $new_version [skip-ci]
 ```
 
 ## Custom bump

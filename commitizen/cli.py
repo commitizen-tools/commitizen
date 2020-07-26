@@ -1,7 +1,6 @@
 import argparse
 import logging
 import sys
-import warnings
 from functools import partial
 
 from decli import cli
@@ -24,16 +23,10 @@ data = {
             "name": ["-n", "--name"],
             "help": "use the given commitizen (default: cz_conventional_commits)",
         },
-        {
-            "name": ["--version"],
-            "action": "store_true",
-            "help": "get the version of the installed commitizen",
-        },
     ],
     "subcommands": {
         "title": "commands",
-        # TODO: Add this constraint back in 2.0
-        # "required": True,
+        "required": True,
         "commands": [
             {
                 "name": ["init"],
@@ -278,26 +271,11 @@ def main():
     elif not args.name and not conf.path:
         conf.update({"name": "cz_conventional_commits"})
 
-    if args.version:
-        warnings.warn(
-            (
-                "'cz --version' will be deprecated in next major version. "
-                "Please use 'cz version' command from your scripts"
-            ),
-            category=DeprecationWarning,
-        )
-        args.func = commands.Version
-
     if args.debug:
         logging.getLogger("commitizen").setLevel(logging.DEBUG)
         sys.excepthook = commitizen_debug_excepthook
 
-    # TODO: This try block can be removed after command is required in 2.0
-    # Handle the case that argument is given, but no command is provided
-    try:
-        args.func(conf, vars(args))()
-    except AttributeError:
-        raise NoCommandFoundError()
+    args.func(conf, vars(args))()
 
 
 if __name__ == "__main__":
