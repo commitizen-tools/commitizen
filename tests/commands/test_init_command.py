@@ -1,6 +1,10 @@
+import os
+
 import pytest
+import yaml
 
 from commitizen import commands
+from commitizen.__version__ import __version__
 from commitizen.exceptions import NoAnswersError
 
 
@@ -12,7 +16,22 @@ class FakeQuestion:
         return self.expected_return
 
 
-def test_init(tmpdir, mocker, config):
+pre_commit_config_filename = ".pre-commit-config.yaml"
+cz_hook_config = {
+    "repo": "https://github.com/commitizen-tools/commitizen",
+    "rev": f"v{__version__}",
+    "hooks": [{"id": "commitizen", "stages": ["commit-msg"]}],
+}
+
+expected_config = (
+    "[tool.commitizen]\n"
+    'name = "cz_conventional_commits"\n'
+    'version = "0.0.1"\n'
+    'tag_format = "$version"\n'
+)
+
+
+def test_init_without_setup_pre_commit_hook(tmpdir, mocker, config):
     mocker.patch(
         "questionary.select",
         side_effect=[
@@ -20,22 +39,18 @@ def test_init(tmpdir, mocker, config):
             FakeQuestion("cz_conventional_commits"),
         ],
     )
-    mocker.patch("questionary.confirm", return_value=FakeQuestion("y"))
-    mocker.patch("questionary.text", return_value=FakeQuestion("y"))
-    expected_config = (
-        "[tool.commitizen]\n"
-        'name = "cz_conventional_commits"\n'
-        'version = "0.0.1"\n'
-        'tag_format = "y"\n'
-    )
+    mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+    mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+    mocker.patch("questionary.confirm", return_value=FakeQuestion(False))
 
     with tmpdir.as_cwd():
         commands.Init(config)()
 
         with open("pyproject.toml", "r") as toml_file:
             config_data = toml_file.read()
-
         assert config_data == expected_config
+
+        assert not os.path.isfile(pre_commit_config_filename)
 
 
 def test_init_when_config_already_exists(config, capsys):
@@ -67,3 +82,85 @@ def test_init_without_choosing_tag(config, mocker, tmpdir):
     with tmpdir.as_cwd():
         with pytest.raises(NoAnswersError):
             commands.Init(config)()
+
+
+class TestPreCommitCases:
+    @pytest.fixture(scope="function", autouse=True)
+    def default_choices(_, mocker):
+        mocker.patch(
+            "questionary.select",
+            side_effect=[
+                FakeQuestion("pyproject.toml"),
+                FakeQuestion("cz_conventional_commits"),
+            ],
+        )
+        mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+        mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+        mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+
+    def test_no_existing_pre_commit_conifg(_, tmpdir, config):
+        with tmpdir.as_cwd():
+            commands.Init(config)()
+
+            with open("pyproject.toml", "r") as toml_file:
+                config_data = toml_file.read()
+            assert config_data == expected_config
+
+            with open(pre_commit_config_filename, "r") as pre_commit_file:
+                pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
+            assert pre_commit_config_data == {"repos": [cz_hook_config]}
+
+    def test_empty_pre_commit_config(_, tmpdir, config):
+        with tmpdir.as_cwd():
+            p = tmpdir.join(pre_commit_config_filename)
+            p.write("")
+
+            commands.Init(config)()
+
+            with open("pyproject.toml", "r") as toml_file:
+                config_data = toml_file.read()
+            assert config_data == expected_config
+
+            with open(pre_commit_config_filename, "r") as pre_commit_file:
+                pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
+            assert pre_commit_config_data == {"repos": [cz_hook_config]}
+
+    def test_pre_commit_config_without_cz_hook(_, tmpdir, config):
+        existing_hook_config = {
+            "repo": "https://github.com/pre-commit/pre-commit-hooks",
+            "rev": "v1.2.3",
+            "hooks": [{"id", "trailing-whitespace"}],
+        }
+
+        with tmpdir.as_cwd():
+            p = tmpdir.join(pre_commit_config_filename)
+            p.write(yaml.safe_dump({"repos": [existing_hook_config]}))
+
+            commands.Init(config)()
+
+            with open("pyproject.toml", "r") as toml_file:
+                config_data = toml_file.read()
+            assert config_data == expected_config
+
+            with open(pre_commit_config_filename, "r") as pre_commit_file:
+                pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
+            assert pre_commit_config_data == {
+                "repos": [existing_hook_config, cz_hook_config]
+            }
+
+    def test_cz_hook_exists_in_pre_commit_config(_, tmpdir, config):
+        with tmpdir.as_cwd():
+            p = tmpdir.join(pre_commit_config_filename)
+            p.write(yaml.safe_dump({"repos": [cz_hook_config]}))
+
+            commands.Init(config)()
+
+            with open("pyproject.toml", "r") as toml_file:
+                config_data = toml_file.read()
+            assert config_data == expected_config
+
+            with open(pre_commit_config_filename, "r") as pre_commit_file:
+                pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
+
+            # check that config is not duplicated
+            assert pre_commit_config_data == {"repos": [cz_hook_config]}

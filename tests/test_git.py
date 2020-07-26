@@ -1,13 +1,7 @@
 import pytest
 
 from commitizen import git
-from tests.utils import create_file_and_commit
-
-
-class FakeCommand:
-    def __init__(self, out=None, err=None):
-        self.out = out
-        self.err = err
+from tests.utils import FakeCommand, create_file_and_commit
 
 
 def test_git_object_eq():
