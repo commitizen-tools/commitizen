@@ -60,14 +60,14 @@ message = "Do you want to add body message in commit?"
 
 #### Detailed `questions` content
 
-| Parameter | Type   | Default | Description                                                                                                                                                                                                                  |
-| --------- | ------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `type`    | `str`  | `None`  | The type of questions. Valid type: `list`, `input` and etc. [See More](https://github.com/tmbo/questionary#different-question-types)                                                                                         |
-| `name`    | `str`  | `None`  | The key for the value answered by user. It's used in `message_template`                                                                                                                                                      |
-| `message` | `str`  | `None`  | Detail description for the question.                                                                                                                                                                                         |
+| Parameter | Type   | Default | Description                                                                                                                                         |
+| --------- | ------ | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`    | `str`  | `None`  | The type of questions. Valid type: `list`, `input` and etc. [See More](https://github.com/tmbo/questionary#different-question-types)                |
+| `name`    | `str`  | `None`  | The key for the value answered by user. It's used in `message_template`                                                                             |
+| `message` | `str`  | `None`  | Detail description for the question.                                                                                                                |
 | `choices` | `list` | `None`  | (OPTIONAL) The choices when `type = list`. Either use a list of values or a list of dicitionaries with `name` and `value` keys. See examples above. |
-| `default` | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                                                                                              |
-| `filter`  | `str`  | `None`  | (Optional) Validator for user's answer. **(Work in Progress)**                                                                                                                                                               |
+| `default` | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                     |
+| `filter`  | `str`  | `None`  | (Optional) Validator for user's answer. **(Work in Progress)**                                                                                      |
 
 ## 2. Customize through customizing a class
 
@@ -206,13 +206,13 @@ cz -n cz_strange bump
 The changelog generator should just work in a very basic manner without touching anything.
 You can customize it of course, and this are the variables you need to add to your custom `BaseCommitizen`.
 
-| Parameter           | Type                                                                     | Required | Description                                                                                                                                                     |
-| ------------------- | ------------------------------------------------------------------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `commit_parser`     | `str`                                                                    | NO       | Regex which should provide the variables explained in the [changelog description][changelog-des]                                                                |
-| `changelog_pattern` | `str`                                                                    | NO       | Regex to validate the commits, this is useful to skip commits that don't meet your rulling standards like a Merge. Usually the same as bump_pattern             |
-| `change_type_map`   | `dict`                                                                   | NO       | Convert the title of the change type that will appear in the changelog, if a value is not found, the original will be provided                                  |
-| `changelog_message_builder_hook`      | `method: (dict, git.GitCommit) -> dict`                                  | NO       | Customize with extra information your message output, like adding links, this function is executed per parsed commit.                                           |
-| `changelog_hook`    | `method: (full_changelog: str, partial_changelog: Optional[str]) -> str` | NO       | Receives the whole and partial (if used incremental) changelog. Useful to send slack messages or notify a compliance department. Must return the full_changelog |
+| Parameter                        | Type                                                                     | Required | Description                                                                                                                                                                                                         |
+| -------------------------------- | ------------------------------------------------------------------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `commit_parser`                  | `str`                                                                    | NO       | Regex which should provide the variables explained in the [changelog description][changelog-des]                                                                                                                    |
+| `changelog_pattern`              | `str`                                                                    | NO       | Regex to validate the commits, this is useful to skip commits that don't meet your rulling standards like a Merge. Usually the same as bump_pattern                                                                 |
+| `change_type_map`                | `dict`                                                                   | NO       | Convert the title of the change type that will appear in the changelog, if a value is not found, the original will be provided                                                                                      |
+| `changelog_message_builder_hook` | `method: (dict, git.GitCommit) -> dict`                                  | NO       | Customize with extra information your message output, like adding links, this function is executed per parsed commit. Each GitCommit contains the following attrs: `rev`, `title`, `body`, `author`, `author_email` |
+| `changelog_hook`                 | `method: (full_changelog: str, partial_changelog: Optional[str]) -> str` | NO       | Receives the whole and partial (if used incremental) changelog. Useful to send slack messages or notify a compliance department. Must return the full_changelog                                                     |
 
 ```python
 from commitizen.cz.base import BaseCommitizen
@@ -232,7 +232,7 @@ class StrangeCommitizen(BaseCommitizen):
     def changelog_message_builder_hook(self, parsed_message: dict, commit: git.GitCommit) -> dict:
         rev = commit.rev
         m = parsed_message["message"]
-        parsed_message["message"] = f"{m} {rev}"
+        parsed_message["message"] = f"{m} {rev} [{commit.author}]({commit.author_email})"
         return parsed_message
 
     def changelog_hook(self, full_changelog: str, partial_changelog: Optional[str]) -> str:
