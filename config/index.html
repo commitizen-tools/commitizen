@@ -311,13 +311,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ini-files" class="md-nav__link">
-    INI files
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#settings" class="md-nav__link">
     Settings
   </a>
@@ -502,13 +495,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ini-files" class="md-nav__link">
-    INI files
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#settings" class="md-nav__link">
     Settings
   </a>
@@ -532,7 +518,6 @@
                 
                 
                 <h1 id="configuration">Configuration</h1>
-<p>Commitizen has support for <code>toml</code> and <code>ini</code> files. It first looks up the configuration file in the current working directory and then the root directory of the git project.</p>
 <h2 id="pyprojecttoml-or-cztoml">pyproject.toml or .cz.toml</h2>
 <p>Add an entry to <code>pyproject.toml</code> or <code>.cz.toml</code>. Recommended for <strong>python</strong> projects.</p>
 <div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
@@ -557,34 +542,7 @@
 </code></pre></div>
 
 
-<h2 id="ini-files">INI files</h2>
-<p><strong>INI files will not be supported in the next major version. Please use toml instead</strong></p>
-<p>Supported files: <code>.cz</code>, <code>.cz.cfg</code>, <code>setup.cfg</code>, and <code>$HOME/.cz</code></p>
-<p>The format is slightly different to the <code>toml</code>, so pay attention.
-Recommended for <strong>other languages</strong> projects (js, go, etc).</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[commitizen]</span>
-<span class="na">name</span> <span class="o">=</span> <span class="s">cz_conventional_commits</span>
-<span class="na">version</span> <span class="o">=</span> <span class="s">0.1.0</span>
-<span class="na">version_files</span> <span class="o">=</span> <span class="s">[</span>
-<span class="s">    &quot;src/__version__.py&quot;,</span>
-<span class="s">    &quot;pyproject.toml:version&quot;</span>
-<span class="s">    ]</span>
-<span class="na">style</span> <span class="o">=</span> <span class="s">[</span>
-<span class="s">    [&quot;qmark&quot;, &quot;fg:#ff9d00 bold&quot;],</span>
-<span class="s">    [&quot;question&quot;, &quot;bold&quot;],</span>
-<span class="s">    [&quot;answer&quot;, &quot;fg:#ff9d00 bold&quot;],</span>
-<span class="s">    [&quot;pointer&quot;, &quot;fg:#ff9d00 bold&quot;],</span>
-<span class="s">    [&quot;highlighted&quot;, &quot;fg:#ff9d00 bold&quot;],</span>
-<span class="s">    [&quot;selected&quot;, &quot;fg:#cc5454&quot;],</span>
-<span class="s">    [&quot;separator&quot;, &quot;fg:#cc5454&quot;],</span>
-<span class="s">    [&quot;instruction&quot;, &quot;&quot;],</span>
-<span class="s">    [&quot;text&quot;, &quot;&quot;],</span>
-<span class="s">    [&quot;disabled&quot;, &quot;fg:#858585 italic&quot;]</span>
-<span class="s">    ]</span>
-</code></pre></div>
-
-
-<p>The extra tab before the square brackets (<code>]</code>) at the end is required.</p>
+<p><code>.cz.toml</code> is recommended for <strong>other languages</strong> projects (js, go, etc).</p>
 <h2 id="settings">Settings</h2>
 <table>
 <thead>

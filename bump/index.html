@@ -786,12 +786,6 @@ the version in <code>setup.py</code> to <code>1.21.0</code></p>
 </code></pre></div>
 
 
-<p>Or in your <code>.cz</code> (TO BE DEPRECATED)</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[commitizen]</span>
-<span class="na">tag_format</span> <span class="o">=</span> <span class="s">v$minor.$major.$patch$prerelease</span>
-</code></pre></div>
-
-
 <p>The variables must be preceded by a <code>$</code> sign.</p>
 <p>Supported variables:</p>
 <table>
@@ -841,15 +835,6 @@ regarding if the file is present or not in <code>version_files</code>.</p>
 </code></pre></div>
 
 
-<p><code>.cz</code> (TO BE DEPRECATED)</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[commitizen]</span>
-<span class="na">version_files</span> <span class="o">=</span> <span class="s">[</span>
-<span class="s">    &quot;src/__version__.py&quot;,</span>
-<span class="s">    &quot;setup.py:version&quot;</span>
-<span class="s">    ]</span>
-</code></pre></div>
-
-
 <p>In the example above, we can see the reference <code>"setup.py:version"</code>.
 This means that it will find a file <code>setup.py</code> and will only make a change
 in a line containing the <code>version</code> substring.</p>
@@ -879,12 +864,6 @@ in a line containing the <code>version</code> substring.</p>
 <p><code>pyproject.toml</code> or <code>.cz.toml</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">bump_message</span> <span class="o">=</span> <span class="s">&quot;release $current_version → $new_version [skip-ci]&quot;</span>
-</code></pre></div>
-
-
-<p><code>.cz</code> (TO BE DEPRECATED)</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[commitizen]</span>
-<span class="na">bump_message</span> <span class="o">=</span> <span class="s">release $current_version → $new_version [skip-ci]</span>
 </code></pre></div>
 
 
