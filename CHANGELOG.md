@@ -1,3 +1,9 @@
+## v1.24.0 (2020-07-26)
+
+### Feat
+
+- add author and author_email to git commit
+
 ## v1.23.4 (2020-07-26)
 
 ### Refactor
