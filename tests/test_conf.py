@@ -54,56 +54,13 @@ _read_settings = {
 
 
 @pytest.fixture
-def configure_supported_files():
-    original = defaults.config_files.copy()
-
-    # patch the defaults to include tests
-    defaults.config_files = [os.path.join("tests", f) for f in defaults.config_files]
-    yield
-    defaults.config_files = original
-
-
-@pytest.fixture
-def config_files_manager(request):
-    filename = request.param
-    filepath = os.path.join("tests", filename)
-    with open(filepath, "w") as f:
-        if "toml" in filename:
-            f.write(PYPROJECT)
-    yield
-    os.remove(filepath)
-
-
-@pytest.fixture
-def empty_pyproject_ok_cz():
-    pyproject = "tests/pyproject.toml"
-    with open(pyproject, "w") as f:
-        f.write("")
-    yield
-    os.remove(pyproject)
-
-
-@pytest.mark.parametrize(
-    "config_files_manager", defaults.config_files.copy(), indirect=True
-)
-def test_load_conf(config_files_manager, configure_supported_files):
-    cfg = config.read_cfg()
-    assert cfg.settings == _settings
-
-
-def test_conf_returns_default_when_no_files(configure_supported_files):
-    cfg = config.read_cfg()
-    assert cfg.settings == defaults.DEFAULT_SETTINGS
-
-
-@pytest.mark.parametrize(
-    "config_files_manager", defaults.config_files.copy(), indirect=True
-)
-def test_set_key(configure_supported_files, config_files_manager):
-    _conf = config.read_cfg()
-    _conf.set_key("version", "2.0.0")
-    cfg = config.read_cfg()
-    assert cfg.settings == _new_settings
+def config_files_manager(request, tmpdir):
+    with tmpdir.as_cwd():
+        filename = request.param
+        with open(filename, "w") as f:
+            if "toml" in filename:
+                f.write(PYPROJECT)
+        yield
 
 
 def test_find_git_project_root(tmpdir):
@@ -111,6 +68,40 @@ def test_find_git_project_root(tmpdir):
 
     with tmpdir.as_cwd() as _:
         assert git.find_git_project_root() is None
+
+
+@pytest.mark.parametrize(
+    "config_files_manager", defaults.config_files.copy(), indirect=True
+)
+def test_set_key(config_files_manager):
+    _conf = config.read_cfg()
+    _conf.set_key("version", "2.0.0")
+    cfg = config.read_cfg()
+    assert cfg.settings == _new_settings
+
+
+class TestReadCfg:
+    @pytest.mark.parametrize(
+        "config_files_manager", defaults.config_files.copy(), indirect=True
+    )
+    def test_load_conf(_, config_files_manager):
+        cfg = config.read_cfg()
+        assert cfg.settings == _settings
+
+    def test_conf_returns_default_when_no_files(_, tmpdir):
+        with tmpdir.as_cwd():
+            cfg = config.read_cfg()
+            assert cfg.settings == defaults.DEFAULT_SETTINGS
+
+    def test_load_empty_pyproject_toml_and_cz_toml_with_config(_, tmpdir):
+        with tmpdir.as_cwd():
+            p = tmpdir.join("pyproject.toml")
+            p.write("")
+            p = tmpdir.join(".cz.toml")
+            p.write(PYPROJECT)
+
+            cfg = config.read_cfg()
+            assert cfg.settings == _settings
 
 
 class TestTomlConfig:

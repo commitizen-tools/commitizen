@@ -1,7 +1,11 @@
+import os
+
 import questionary
+import yaml
 from packaging.version import Version
 
-from commitizen import factory, out
+from commitizen import cmd, factory, out
+from commitizen.__version__ import __version__
 from commitizen.config import BaseConfig, TomlConfig
 from commitizen.cz import registry
 from commitizen.defaults import config_files
@@ -20,7 +24,6 @@ class Init:
         # No config for commitizen exist
         if not self.config.path:
             config_path = self._ask_config_path()
-
             if "toml" in config_path:
                 self.config = TomlConfig(data="", path=config_path)
 
@@ -31,11 +34,14 @@ class Init:
             values_to_add["version"] = Version(tag).public
             values_to_add["tag_format"] = self._ask_tag_format(tag)
             self._update_config_file(values_to_add)
+
+            if questionary.confirm("Do you want to install pre-commit hook?").ask():
+                self._install_pre_commit_hook()
+
             out.write("You can bump the version and create changelog running:\n")
             out.info("cz bump --changelog")
             out.success("The configuration are all set.")
         else:
-            # TODO: handle the case that config file exist but no value
             out.line(f"Config file {self.config.path} already exists")
 
     def _ask_config_path(self) -> str:
@@ -98,6 +104,50 @@ class Init:
             if not tag_format:
                 tag_format = "$version"
         return tag_format
+
+    def _install_pre_commit_hook(self):
+        pre_commit_config_filename = ".pre-commit-config.yaml"
+        cz_hook_config = {
+            "repo": "https://github.com/commitizen-tools/commitizen",
+            "rev": f"v{__version__}",
+            "hooks": [{"id": "commitizen", "stages": ["commit-msg"]}],
+        }
+
+        config_data = {}
+        if not os.path.isfile(pre_commit_config_filename):
+            # .pre-commit-config does not exist
+            config_data["repos"] = [cz_hook_config]
+        else:
+            # breakpoint()
+            with open(pre_commit_config_filename) as config_file:
+                yaml_data = yaml.safe_load(config_file)
+                if yaml_data:
+                    config_data = yaml_data
+
+            if "repos" in config_data:
+                for pre_commit_hook in config_data["repos"]:
+                    if "commitizen" in pre_commit_hook["repo"]:
+                        out.write("commitizen already in pre-commit config")
+                        break
+                else:
+                    config_data["repos"].append(cz_hook_config)
+            else:
+                # .pre-commit-config exists but there's no "repos" key
+                config_data["repos"] = [cz_hook_config]
+
+        with open(pre_commit_config_filename, "w") as config_file:
+            yaml.safe_dump(config_data, stream=config_file)
+
+        c = cmd.run("pre-commit install --hook-type commit-msg")
+        if c.return_code == 127:
+            out.error(
+                "pre-commit is not installed in current environement.\n"
+                "Run 'pre-commit install --hook-type commit-msg' again after it's installed"
+            )
+        elif c.return_code != 0:
+            out.error(c.err)
+        else:
+            out.write("commitizen pre-commit hook is now installed in your '.git'\n")
 
     def _update_config_file(self, values):
         for key, value in values.items():
