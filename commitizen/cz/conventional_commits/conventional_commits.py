@@ -115,12 +115,6 @@ class ConventionalCommitsCz(BaseCommitizen):
                 ),
             },
             {
-                "type": "confirm",
-                "message": "Is this a BREAKING CHANGE? Correlates with MAJOR in SemVer",
-                "name": "is_breaking_change",
-                "default": False,
-            },
-            {
                 "type": "input",
                 "name": "body",
                 "message": (
@@ -128,6 +122,12 @@ class ConventionalCommitsCz(BaseCommitizen):
                     "with previous behavior:\n"
                 ),
                 "filter": multiple_line_breaker,
+            },
+            {
+                "type": "confirm",
+                "message": "Is this a BREAKING CHANGE? Correlates with MAJOR in SemVer",
+                "name": "is_breaking_change",
+                "default": False,
             },
             {
                 "type": "input",
@@ -150,10 +150,10 @@ class ConventionalCommitsCz(BaseCommitizen):
 
         if scope:
             scope = f"({scope})"
-        if is_breaking_change:
-            body = f"BREAKING CHANGE: {body}"
         if body:
             body = f"\n\n{body}"
+        if is_breaking_change:
+            footer = f"BREAKING CHANGE: {footer}"
         if footer:
             footer = f"\n\n{footer}"
 

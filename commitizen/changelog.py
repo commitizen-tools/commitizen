@@ -73,7 +73,7 @@ def generate_tree_from_commits(
     changelog_message_builder_hook: Optional[Callable] = None,
 ) -> Iterable[Dict]:
     pat = re.compile(changelog_pattern)
-    map_pat = re.compile(commit_parser)
+    map_pat = re.compile(commit_parser, re.MULTILINE)
     # Check if the latest commit is not tagged
     latest_commit = commits[0]
     current_tag: Optional[GitTag] = get_commit_tag(latest_commit, tags)
@@ -109,7 +109,7 @@ def generate_tree_from_commits(
             continue
 
         message = map_pat.match(commit.message)
-        message_body = map_pat.match(commit.body)
+        message_body = map_pat.search(commit.body)
         if message:
             parsed_message: Dict = message.groupdict()
             # change_type becomes optional by providing None
