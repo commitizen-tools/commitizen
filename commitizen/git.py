@@ -18,10 +18,14 @@ class GitObject:
 
 
 class GitCommit(GitObject):
-    def __init__(self, rev, title, body=""):
+    def __init__(
+        self, rev, title, body: str = "", author: str = "", author_email: str = ""
+    ):
         self.rev = rev.strip()
         self.title = title.strip()
         self.body = body.strip()
+        self.author = author.strip()
+        self.author_email = author_email.strip()
 
     @property
     def message(self):
@@ -59,7 +63,7 @@ def get_commits(
     start: Optional[str] = None,
     end: str = "HEAD",
     *,
-    log_format: str = "%H%n%s%n%b",
+    log_format: str = "%H%n%s%n%an%n%ae%n%b",
     delimiter: str = "----------commit-delimiter----------",
     args: str = "",
 ) -> List[GitCommit]:
@@ -79,11 +83,14 @@ def get_commits(
         rev_and_commit = rev_and_commit.strip()
         if not rev_and_commit:
             continue
-        rev, title, *body_list = rev_and_commit.split("\n")
-
+        rev, title, author, author_email, *body_list = rev_and_commit.split("\n")
         if rev_and_commit:
             git_commit = GitCommit(
-                rev=rev.strip(), title=title.strip(), body="\n".join(body_list).strip()
+                rev=rev.strip(),
+                title=title.strip(),
+                body="\n".join(body_list).strip(),
+                author=author,
+                author_email=author_email,
             )
             git_commits.append(git_commit)
     return git_commits
