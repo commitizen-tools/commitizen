@@ -105,7 +105,7 @@ def test_bump_tag_exists_raises_exception(mocker):
 
     with pytest.raises(BumpTagFailedError) as excinfo:
         cli.main()
-    assert "fatal: tag '0.2.0' already exists" in str(excinfo.value)
+    assert "0.2.0" in str(excinfo.value)  # This should be a fatal error
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
