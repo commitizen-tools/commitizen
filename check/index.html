@@ -277,7 +277,14 @@
     About
   </a>
   
-    <nav class="md-nav" aria-label="About">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checking-before-the-commit" class="md-nav__link">
+    Checking before the commit
+  </a>
+  
+    <nav class="md-nav" aria-label="Checking before the commit">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -296,6 +303,13 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checking-after-the-commit" class="md-nav__link">
+    Checking after the commit
+  </a>
   
 </li>
       
@@ -501,7 +515,14 @@
     About
   </a>
   
-    <nav class="md-nav" aria-label="About">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checking-before-the-commit" class="md-nav__link">
+    Checking before the commit
+  </a>
+  
+    <nav class="md-nav" aria-label="Checking before the commit">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -520,6 +541,13 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checking-after-the-commit" class="md-nav__link">
+    Checking after the commit
+  </a>
   
 </li>
       
@@ -542,8 +570,9 @@
                   <h1>Check</h1>
                 
                 <h2 id="about">About</h2>
-<p>This feature checks whether the commit message follows the given committing rules.
-You can use either of the following methods to enforce the check.</p>
+<p>This feature checks whether the commit message follows the given committing rules.</p>
+<h2 id="checking-before-the-commit">Checking before the commit</h2>
+<p>To automatically check a commit message prior to committing, you can use a <a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks">git hook</a>. There are two common methods for installing the hook:</p>
 <h3 id="method-1-add-git-hook-through-pre-commit">Method 1: Add git hook through <a href="https://pre-commit.com/">pre-commit</a></h3>
 <ul>
 <li>Step 1: Install <a href="https://pre-commit.com/">pre-commit</a></li>
@@ -595,6 +624,10 @@ cz check --commit-msg-file <span class="nv">$MSG_FILE</span>
 <p>Each time you create a commit, automatically, this hook will analyze it.
 If the commit message is invalid, it'll be rejected.</p>
 <p>The commit should follow the given committing rules; otherwise, it won't be accepted.</p>
+<h2 id="checking-after-the-commit">Checking after the commit</h2>
+<p>If you'd like to check a commit's message after it has already been created, then you can specify the range of commits to check with <code>--rev-range REV_RANGE</code></p>
+<p>For example, if you'd like to check all commits on a branch, you can use <code>--rev-range master..HEAD</code>. Or, if you'd like to check all commits starting from when you first implemented commit message linting, you can use <code>--rev-range &lt;first_commit_sha&gt;..HEAD</code>.</p>
+<p>For more info on how git commit ranges work, you can check the <a href="https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection#_commit_ranges">git documentation</a>.</p>
                 
               
               
