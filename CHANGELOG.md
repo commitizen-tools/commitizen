@@ -1,3 +1,26 @@
+## v2.0.0 (2020-07-26)
+
+### Fix
+
+- add missing `pyyaml` dependency
+- **cli**: make command required for commitizen
+
+### Feat
+
+- **init**: enable setting up pre-commit hook through "cz init"
+
+### Refactor
+
+- **config**: drop "files" configure support. Please use "version_files" instead
+- **config**: remove ini configuration support
+- **cli**: remove "--version" argument
+
+### BREAKING CHANGE
+
+- setup.cfg, .cz and .cz.cfg are no longer supported
+- Use "cz verion" instead
+- "cz --debug" will no longer work
+
 ## v1.25.0 (2020-07-26)
 
 ### Feat
