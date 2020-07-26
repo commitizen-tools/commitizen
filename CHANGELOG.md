@@ -1,3 +1,9 @@
+## v1.23.4 (2020-07-26)
+
+### Refactor
+
+- **changelog**: remove pkg_resources dependency
+
 ## v1.23.3 (2020-07-25)
 
 ### Fix
