@@ -123,7 +123,7 @@ class Bump:
 
         # Report found information
         out.write(
-            f"message\n"
+            f"{message}\n"
             f"tag to create: {new_tag_version}\n"
             f"increment detected: {increment}\n"
         )
