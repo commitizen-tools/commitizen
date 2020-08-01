@@ -123,6 +123,7 @@ class InvalidCommitMessageError(CommitizenException):
 
 class NoRevisionError(CommitizenException):
     exit_code = ExitCode.NO_REVISION
+    message = "No tag found to do an incremental changelog"
 
 
 class NoCommandFoundError(CommitizenException):
