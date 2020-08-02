@@ -1,3 +1,10 @@
+## v2.0.1 (2020-08-02)
+
+### Fix
+
+- **commands/changelog**: add exception message when failing to find an incremental revision
+- **commands/bump**: display message variable properly
+
 ## v2.0.0 (2020-07-26)
 
 ### Fix
