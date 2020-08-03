@@ -99,9 +99,9 @@ def get_commits(
 def get_tags(dateformat: str = "%Y-%m-%d") -> List[GitTag]:
     inner_delimiter = "---inner_delimiter---"
     formatter = (
-        f"'%(refname:lstrip=2){inner_delimiter}"
+        f'"%(refname:lstrip=2){inner_delimiter}'
         f"%(objectname){inner_delimiter}"
-        f"%(committerdate:format:{dateformat})'"
+        f'%(committerdate:format:{dateformat})"'
     )
     c = cmd.run(f"git tag --format={formatter} --sort=-committerdate")
     if c.err or not c.out:
