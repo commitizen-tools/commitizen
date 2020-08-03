@@ -1,3 +1,9 @@
+## v2.0.2 (2020-08-03)
+
+### Fix
+
+- **git**: use double quotation mark in get_tags
+
 ## v2.0.1 (2020-08-02)
 
 ### Fix
