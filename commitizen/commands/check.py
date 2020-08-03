@@ -50,14 +50,17 @@ class Check:
             raise NoCommitsFoundError(f"No commit found with range: '{self.rev_range}'")
 
         pattern = self.cz.schema_pattern()
+        ill_formated_commits = []
         for commit_msg in commit_msgs:
             if not Check.validate_commit_message(commit_msg, pattern):
-                raise InvalidCommitMessageError(
-                    "commit validation: failed!\n"
-                    "please enter a commit message in the commitizen format.\n"
-                    f"commit: {commit_msg}\n"
-                    f"pattern: {pattern}"
-                )
+                ill_formated_commits.append(f"commit: {commit_msg}\n")
+        if ill_formated_commits != []:
+            raise InvalidCommitMessageError(
+                "commit validation: failed!\n"
+                "please enter a commit message in the commitizen format.\n"
+                f"{''.join(ill_formated_commits)}\n"
+                f"pattern: {pattern}"
+            )
         out.success("Commit validation: successful!")
 
     def _get_commit_messages(self):
