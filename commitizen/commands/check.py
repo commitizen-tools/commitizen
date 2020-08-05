@@ -45,33 +45,43 @@ class Check:
         Raises:
             InvalidCommitMessageError: if the commit provided not follows the conventional pattern
         """
-        commit_msgs = self._get_commit_messages()
-        if not commit_msgs:
+        commits = self._get_commits()
+        if not commits:
             raise NoCommitsFoundError(f"No commit found with range: '{self.rev_range}'")
 
         pattern = self.cz.schema_pattern()
-        ill_formated_commits = []
-        for commit_msg in commit_msgs:
-            if not Check.validate_commit_message(commit_msg, pattern):
-                ill_formated_commits.append(f"commit: {commit_msg}\n")
-        if ill_formated_commits != []:
+        ill_formated_commits = [
+            commit
+            for commit in commits
+            if not Check.validate_commit_message(commit["msg"], pattern)
+        ]
+        displayed_msgs_content = "".join(
+            [
+                f"commit {commit['rev'] or ''}: {commit['msg']}\n"
+                for commit in ill_formated_commits
+            ]
+        )
+        if displayed_msgs_content:
             raise InvalidCommitMessageError(
                 "commit validation: failed!\n"
                 "please enter a commit message in the commitizen format.\n"
-                f"{''.join(ill_formated_commits)}\n"
+                f"{displayed_msgs_content}\n"
                 f"pattern: {pattern}"
             )
         out.success("Commit validation: successful!")
 
-    def _get_commit_messages(self):
+    def _get_commits(self):
         # Get commit message from file (--commit-msg-file)
         if self.commit_msg_file:
             with open(self.commit_msg_file, "r") as commit_file:
                 commit_msg = commit_file.read()
-            return [commit_msg]
+            return [{"rev": None, "msg": commit_msg}]
 
         # Get commit messages from git log (--rev-range)
-        return [commit.message for commit in git.get_commits(end=self.rev_range)]
+        return [
+            {"rev": commit.rev[:8], "msg": commit.message}
+            for commit in git.get_commits(end=self.rev_range)
+        ]
 
     @staticmethod
     def validate_commit_message(commit_msg: str, pattern: str) -> bool:
