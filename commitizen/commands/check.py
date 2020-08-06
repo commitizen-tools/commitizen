@@ -57,7 +57,7 @@ class Check:
         ]
         displayed_msgs_content = "\n".join(
             [
-                f"commit {commit.rev}: {commit.message}"
+                f'commit "{commit.rev}": "{commit.message}"'
                 for commit in ill_formated_commits
             ]
         )
