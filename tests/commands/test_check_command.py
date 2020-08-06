@@ -207,3 +207,25 @@ def test_check_command_with_empty_range(config, mocker):
         check_cmd()
 
     assert "No commit found with range: 'master..master'" in str(excinfo)
+
+
+def test_check_a_range_of_failed_git_commits(config, mocker):
+    ill_formated_commits_msgs = [
+            "First commit does not follow rule",
+            "Second commit does not follow rule",
+            (
+                "Third commit does not follow rule\n"
+                "Ill-formatted commit with body"
+            )
+        ]
+    mocker.patch(
+        "commitizen.git.get_commits",
+        return_value=_build_fake_git_commits(ill_formated_commits_msgs),
+    )
+    check_cmd = commands.Check(
+        config=config, arguments={"rev_range": "HEAD~10..master"}
+    )
+
+    with pytest.raises(InvalidCommitMessageError) as excinfo:
+        check_cmd()
+    assert all([msg in str(excinfo.value) for msg in ill_formated_commits_msgs])
