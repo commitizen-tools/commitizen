@@ -1,3 +1,14 @@
+## v2.1.0 (2020-08-06)
+
+### Refactor
+
+- **cz_check**: Refactor _get_commits to return GitCommit instead of dict
+
+### Feat
+
+- **cz_check**: Add rev to all displayed ill-formatted commits
+- **cz_check**: Update to show all ill-formatted commits
+
 ## v2.0.2 (2020-08-03)
 
 ### Fix
