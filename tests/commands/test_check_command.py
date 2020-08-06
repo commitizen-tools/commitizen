@@ -211,13 +211,10 @@ def test_check_command_with_empty_range(config, mocker):
 
 def test_check_a_range_of_failed_git_commits(config, mocker):
     ill_formated_commits_msgs = [
-            "First commit does not follow rule",
-            "Second commit does not follow rule",
-            (
-                "Third commit does not follow rule\n"
-                "Ill-formatted commit with body"
-            )
-        ]
+        "First commit does not follow rule",
+        "Second commit does not follow rule",
+        ("Third commit does not follow rule\n" "Ill-formatted commit with body"),
+    ]
     mocker.patch(
         "commitizen.git.get_commits",
         return_value=_build_fake_git_commits(ill_formated_commits_msgs),
