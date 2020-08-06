@@ -53,11 +53,11 @@ class Check:
         ill_formated_commits = [
             commit
             for commit in commits
-            if not Check.validate_commit_message(commit["msg"], pattern)
+            if not Check.validate_commit_message(commit.message, pattern)
         ]
-        displayed_msgs_content = "".join(
+        displayed_msgs_content = "\n".join(
             [
-                f"commit {commit['rev'] or ''}: {commit['msg']}\n"
+                f"commit {commit.rev}: {commit.message}"
                 for commit in ill_formated_commits
             ]
         )
@@ -74,14 +74,18 @@ class Check:
         # Get commit message from file (--commit-msg-file)
         if self.commit_msg_file:
             with open(self.commit_msg_file, "r") as commit_file:
-                commit_msg = commit_file.read()
-            return [{"rev": None, "msg": commit_msg}]
+                commit_title = commit_file.readline()
+                commit_body = commit_file.read()
+            return [
+                git.GitCommit(
+                    rev="",
+                    title=commit_title,
+                    body=commit_body,
+                )
+            ]
 
         # Get commit messages from git log (--rev-range)
-        return [
-            {"rev": commit.rev[:8], "msg": commit.message}
-            for commit in git.get_commits(end=self.rev_range)
-        ]
+        return git.get_commits(end=self.rev_range)
 
     @staticmethod
     def validate_commit_message(commit_msg: str, pattern: str) -> bool:
