@@ -525,3 +525,41 @@ def test_commit_command_shows_description_when_use_help_option(
 
     out, _ = capsys.readouterr()
     file_regression.check(out, extension=".txt")
+
+
+def test_commit_from_pre_commit_msg_hook(config, mocker, capsys):
+    testargs = ["cz", "commit", "--commit-msg-file", "some_file"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "",
+        "footer": "",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    mocker.patch("commitizen.commands.commit.WrapStdin")
+    mocker.patch("os.open")
+    reader_mock = mocker.mock_open(read_data="\n\n#test\n")
+    mocker.patch("builtins.open", reader_mock, create=True)
+
+    cli.main()
+
+    out, _ = capsys.readouterr()
+    assert "Commit message is successful!" in out
+    commit_mock.assert_not_called()
+
+
+def test_WrapStdin(mocker):
+    mocker.patch("os.open")
+    reader_mock = mocker.mock_open(read_data="data")
+    mocker.patch("builtins.open", reader_mock, create=True)
+
+    wrap_stdin = commands.commit.WrapStdin()
+
+    assert wrap_stdin.encoding == "UTF-8"
+    assert wrap_stdin.read() == "data"

@@ -4,6 +4,7 @@ import contextlib
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 
 import questionary
@@ -24,6 +25,21 @@ from commitizen.exceptions import (
     NothingToCommitError,
 )
 from commitizen.git import smart_open
+
+
+class WrapStdin:
+    def __init__(self):
+        fd = os.open("/dev/tty", os.O_RDWR | os.O_NOCTTY)
+        tty = open(fd, "wb+", buffering=0)
+        self.tty = tty
+
+    def __getattr__(self, key):
+        if key == "encoding":
+            return "UTF-8"
+        return getattr(self.tty, key)
+
+    def __del__(self):
+        self.tty.close()
 
 
 class Commit:
@@ -105,6 +121,15 @@ class Commit:
         if is_all:
             c = git.add("-u")
 
+        commit_msg_file: str = self.arguments.get("commit_msg_file")
+        if commit_msg_file:
+            old_stdin = sys.stdin
+            old_stdout = sys.stdout
+            old_stderr = sys.stderr
+            sys.stdin = WrapStdin()
+            sys.stdout = open("/dev/tty", "w")
+            sys.stderr = open("/dev/tty", "w")
+
         if git.is_staging_clean() and not (dry_run or allow_empty):
             raise NothingToCommitError("No files added to staging!")
 
@@ -138,9 +163,24 @@ class Commit:
         if dry_run:
             raise DryRunExit()
 
+        if commit_msg_file:
+            sys.stdin.close()
+            sys.stdout.close()
+            sys.stderr.close()
+            sys.stdin = old_stdin
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
+            defaultmesaage = ""
+            with open(commit_msg_file) as f:
+                defaultmesaage = f.read()
+            with open(commit_msg_file, "w") as f:
+                f.write(m)
+                f.write(defaultmesaage)
+                out.success("Commit message is successful!")
+                return
+
         always_signoff: bool = self.config.settings["always_signoff"]
         signoff: bool = self.arguments.get("signoff")
-
         if signoff:
             out.warn(
                 "signoff mechanic is deprecated, please use `cz commit -- -s` instead."

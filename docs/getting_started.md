@@ -95,12 +95,14 @@ repos:
       - id: commitizen
       - id: commitizen-branch
         stages: [push]
+      - id: commitizen-prepare-commit-msg
+        stages: [prepare-commit-msg]
 ```
 
 After the configuration is added, you'll need to run:
 
 ```sh
-pre-commit install --hook-type commit-msg --hook-type pre-push
+pre-commit install --hook-type commit-msg --hook-type pre-push --hook-type prepare-commit-msg
 ```
 
 If you aren't using both hooks, you needn't install both stages.
@@ -109,6 +111,7 @@ If you aren't using both hooks, you needn't install both stages.
 | ----------------- | ----------------- |
 | commitizen        | commit-msg        |
 | commitizen-branch | pre-push          |
+| commitizen-prepare-commit-msg | prepare-commit-msg |
 
 Note that pre-commit discourages using `master` as a revision, and the above command will print a warning. You should replace the `master` revision with the [latest tag](https://github.com/commitizen-tools/commitizen/tags). This can be done automatically with:
 

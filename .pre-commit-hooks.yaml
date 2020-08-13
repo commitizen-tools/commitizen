@@ -25,3 +25,12 @@
   language: python
   language_version: python3
   minimum_pre_commit_version: "1.4.3"
+
+- id: commitizen-prepare-commit-msg
+  name: commitizen prepare commit msg
+  description: "prepare commit message"
+  entry: cz commit --commit-msg-file
+  language: python
+  language_version: python3
+  require_serial: true
+  minimum_pre_commit_version: "1.4.3"
