@@ -54,6 +54,14 @@ data = {
                         "action": "store_true",
                         "help": "Sign off the commit",
                     },
+                    {
+                        "name": "--commit-msg-file",
+                        "help": (
+                            "ask for the name of the temporal file that contains "
+                            "the commit message. "
+                            "Using it in a git hook script: MSG_FILE=$1"
+                        ),
+                    },
                 ],
             },
             {
