@@ -195,6 +195,11 @@ data = {
                         "help": "a range of git rev to check. e.g, master..HEAD",
                         "exclusive_group": "group1",
                     },
+                    {
+                        "name": ["-m", "--message"],
+                        "help": "commit message that needs to be checked",
+                        "exclusive_group": "group1",
+                    },
                 ],
             },
             {

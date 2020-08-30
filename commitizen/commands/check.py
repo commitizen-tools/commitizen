@@ -23,6 +23,7 @@ class Check:
             cwd: Current work directory
         """
         self.commit_msg_file: Optional[str] = arguments.get("commit_msg_file")
+        self.commit_msg: Optional[str] = arguments.get("message")
         self.rev_range: Optional[str] = arguments.get("rev_range")
 
         self._valid_command_argument()
@@ -31,7 +32,9 @@ class Check:
         self.cz = factory.commiter_factory(self.config)
 
     def _valid_command_argument(self):
-        if bool(self.commit_msg_file) is bool(self.rev_range):
+        if not (
+            bool(self.commit_msg_file) ^ bool(self.commit_msg) ^ bool(self.rev_range)
+        ):
             raise InvalidCommandArgumentError(
                 (
                     "One and only one argument is required for check command! "
@@ -77,6 +80,8 @@ class Check:
                 commit_title = commit_file.readline()
                 commit_body = commit_file.read()
             return [git.GitCommit(rev="", title=commit_title, body=commit_body)]
+        elif self.commit_msg:
+            return [git.GitCommit(rev="", title="", body=self.commit_msg)]
 
         # Get commit messages from git log (--rev-range)
         return git.get_commits(end=self.rev_range)

@@ -226,3 +226,22 @@ def test_check_a_range_of_failed_git_commits(config, mocker):
     with pytest.raises(InvalidCommitMessageError) as excinfo:
         check_cmd()
     assert all([msg in str(excinfo.value) for msg in ill_formated_commits_msgs])
+
+
+def test_check_command_with_valid_message(config, mocker):
+    success_mock = mocker.patch("commitizen.out.success")
+    check_cmd = commands.Check(
+        config=config, arguments={"message": "fix(scope): some commit message"}
+    )
+
+    check_cmd()
+    success_mock.assert_called_once()
+
+
+def test_check_command_with_invalid_message(config, mocker):
+    error_mock = mocker.patch("commitizen.out.error")
+    check_cmd = commands.Check(config=config, arguments={"message": "bad commit"})
+
+    with pytest.raises(InvalidCommitMessageError):
+        check_cmd()
+        error_mock.assert_called_once()
