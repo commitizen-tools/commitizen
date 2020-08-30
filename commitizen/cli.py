@@ -134,6 +134,23 @@ data = {
                 ],
             },
             {
+                "name": "undo",
+                "help": "revert bump or commit",
+                "func": commands.Undo,
+                "arguments": [
+                    {
+                        "name": ["--bump"],
+                        "action": "store_true",
+                        "help": "revert bump",
+                    },
+                    {
+                        "name": "--commit",
+                        "action": "store_true",
+                        "help": "revert latest commit, equal to git reset HEAD~",
+                    },
+                ],
+            },
+            {
                 "name": ["changelog", "ch"],
                 "help": (
                     "generate changelog (note that it will overwrite existing file)"

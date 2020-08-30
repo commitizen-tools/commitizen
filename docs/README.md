@@ -11,7 +11,7 @@ versions](https://img.shields.io/pypi/pyversions/commitizen.svg?style=flat-squar
 
 ---
 
-**Documentation**: https://commitizen-tools.github.io/
+**Documentation**: https://commitizen-tools.github.io/commitizen/
 
 ---
 
@@ -105,7 +105,7 @@ Read more about the `check` command [here](https://commitizen-tools.github.io/co
 ```bash
 $ cz --help
 usage: cz [-h] [--debug] [-n NAME] [--version]
-          {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version}
+          {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version,undo}
           ...
 
 Commitizen is a cli tool to generate conventional commits.
@@ -119,7 +119,7 @@ optional arguments:
   --version             get the version of the installed commitizen
 
 commands:
-  {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version}
+  {init,commit,c,ls,example,info,schema,bump,undo,changelog,ch,check,version}
     init                init commitizen configuration
     commit (c)          create new commit
     ls                  show available commitizens
@@ -127,6 +127,7 @@ commands:
     info                show information about the cz
     schema              show commit schema
     bump                bump semantic version based on the git log
+    undo                revert the latest bump or commit
     changelog (ch)      generate changelog (note that it will overwrite
                         existing file)
     check               validates that a commit message matches the commitizen
