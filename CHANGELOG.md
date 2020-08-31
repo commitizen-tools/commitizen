@@ -1,3 +1,9 @@
+## v2.2.0 (2020-08-31)
+
+### Feat
+
+- **cz_check**: cz check can read from a string input
+
 ## v2.1.0 (2020-08-06)
 
 ### Refactor
