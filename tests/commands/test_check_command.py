@@ -1,4 +1,5 @@
 import sys
+from io import StringIO
 from typing import List
 
 import pytest
@@ -190,12 +191,12 @@ def test_check_a_range_of_git_commits_and_failed(config, mocker):
         error_mock.assert_called_once()
 
 
-@pytest.mark.parametrize(
-    "args", [{"rev_range": "HEAD~10..master", "commit_msg_file": "some_file"}, {}]
-)
-def test_check_command_with_invalid_argment(args, config):
+def test_check_command_with_invalid_argment(config):
     with pytest.raises(InvalidCommandArgumentError) as excinfo:
-        commands.Check(config=config, arguments=args)
+        commands.Check(
+            config=config,
+            arguments={"commit_msg_file": "some_file", "rev_range": "HEAD~10..master"},
+        )
     assert "One and only one argument is required for check command!" in str(
         excinfo.value
     )
@@ -245,3 +246,23 @@ def test_check_command_with_invalid_message(config, mocker):
     with pytest.raises(InvalidCommitMessageError):
         check_cmd()
         error_mock.assert_called_once()
+
+
+def test_check_command_with_pipe_message(mocker, capsys):
+    testargs = ["cz", "check"]
+    mocker.patch.object(sys, "argv", testargs)
+    mocker.patch("sys.stdin", StringIO("fix(scope): some commit message"))
+
+    cli.main()
+    out, _ = capsys.readouterr()
+    assert "Commit validation: successful!" in out
+
+
+def test_check_command_with_pipe_message_and_failed(mocker):
+    testargs = ["cz", "check"]
+    mocker.patch.object(sys, "argv", testargs)
+    mocker.patch("sys.stdin", StringIO("bad commit message"))
+
+    with pytest.raises(InvalidCommitMessageError) as excinfo:
+        cli.main()
+    assert "commit validation: failed!" in str(excinfo.value)

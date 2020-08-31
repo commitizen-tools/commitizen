@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 from typing import Dict, Optional
 
 from commitizen import factory, git, out
@@ -32,9 +33,12 @@ class Check:
         self.cz = factory.commiter_factory(self.config)
 
     def _valid_command_argument(self):
-        if not (
-            bool(self.commit_msg_file) ^ bool(self.commit_msg) ^ bool(self.rev_range)
-        ):
+        sources = (
+            bool(self.commit_msg_file) + bool(self.commit_msg) + bool(self.rev_range)
+        )
+        if sources == 0 and not os.isatty(0):
+            self.commit_msg: Optional[str] = sys.stdin.read()
+        elif sources != 1:
             raise InvalidCommandArgumentError(
                 (
                     "One and only one argument is required for check command! "
