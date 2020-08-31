@@ -6,8 +6,8 @@ from .example import Example
 from .info import Info
 from .init import Init
 from .list_cz import ListCz
-from .undo import Undo
 from .schema import Schema
+from .undo import Undo
 from .version import Version
 
 __all__ = (
@@ -18,8 +18,8 @@ __all__ = (
     "Example",
     "Info",
     "ListCz",
-    "Undo",
     "Schema",
+    "Undo",
     "Version",
     "Init",
 )

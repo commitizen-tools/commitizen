@@ -1,8 +1,6 @@
-from commitizen import factory, out, cmd, git
+from commitizen import cmd, factory, git, out
 from commitizen.config import BaseConfig
-from commitizen.exceptions import (
-    InvalidCommandArgumentError
-)
+from commitizen.exceptions import InvalidCommandArgumentError
 
 
 class Undo:
@@ -14,17 +12,16 @@ class Undo:
         self.arguments = arguments
 
     def _get_bump_command(self):
-        latest_tag = git.get_tags()[0]
-        latest_commit = git.get_commits()[0]
+        created_tag = git.get_tags()[0]
+        created_commit = git.get_commits()[0]
 
-        if latest_tag.rev != latest_commit.rev:
+        if created_tag.rev != created_commit.rev:
             raise InvalidCommandArgumentError(
                 "The revision of the latest tag is not equal to the latest commit, use git undo --commit instead\n\n"
-                f"Latest Tag: {latest_tag.name}, {latest_tag.rev}, {latest_tag.date}\n"
-                f"Latest Commit: {latest_commit.title}, {latest_commit.rev}"
+                f"Latest Tag: {created_tag.name}, {created_tag.rev}, {created_tag.date}\n"
+                f"Latest Commit: {created_commit.title}, {created_commit.rev}"
             )
 
-        created_tag = git.get_latest_tag_name()
         command = f"git tag --delete {created_tag} && git reset HEAD~ && git reset --hard HEAD"
 
         return command
