@@ -30,7 +30,6 @@ from tests.utils import create_file_and_commit
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_patch_increment(commit_msg, mocker):
     create_file_and_commit(commit_msg)
-    # testargs = ["cz", "bump"]
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
@@ -54,7 +53,11 @@ def test_bump_minor_increment(commit_msg, mocker):
     "commit_msg",
     (
         "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported",
+        "feat!: new user interface\n\nBREAKING CHANGE: age is no longer supported",
+        "feat!: new user interface",
         "feat(user): new user interface\n\nBREAKING CHANGE: age is no longer supported",
+        "feat(user)!: new user interface\n\nBREAKING CHANGE: age is no longer supported",
+        "feat(user)!: new user interface",
         "BREAKING CHANGE: age is no longer supported",
         "BREAKING-CHANGE: age is no longer supported",
     ),
