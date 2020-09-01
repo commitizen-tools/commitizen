@@ -57,7 +57,6 @@ def test_bump_minor_increment(commit_msg, mocker):
         "feat(user): new user interface\n\nBREAKING CHANGE: age is no longer supported",
         "BREAKING CHANGE: age is no longer supported",
         "BREAKING-CHANGE: age is no longer supported",
-        "age is not longer supported!",
     ),
 )
 def test_bump_major_increment(commit_msg, mocker):
