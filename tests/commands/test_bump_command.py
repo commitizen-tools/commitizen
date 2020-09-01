@@ -16,36 +16,71 @@ from commitizen.exceptions import (
 from tests.utils import create_file_and_commit
 
 
+@pytest.mark.parametrize(
+    "commit_msg",
+    (
+        "fix: username exception",
+        "fix(user): username exception",
+        "refactor: remove ini configuration support",
+        "refactor(config): remove ini configuration support",
+        "perf: update to use multiproess",
+        "perf(worker): update to use multiproess",
+    ),
+)
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_command(mocker):
-    # MINOR
-    create_file_and_commit("feat: new file")
+def test_bump_patch_increment(commit_msg, mocker):
+    create_file_and_commit(commit_msg)
+    # testargs = ["cz", "bump"]
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    tag_exists = git.tag_exist("0.1.1")
+    assert tag_exists is True
+
+
+@pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_minor_increment(commit_msg, mocker):
+    create_file_and_commit(commit_msg)
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    tag_exists = git.tag_exist("0.2.0")
+    assert tag_exists is True
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.parametrize(
+    "commit_msg",
+    (
+        "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported",
+        "feat(user): new user interface\n\nBREAKING CHANGE: age is no longer supported",
+        "BREAKING CHANGE: age is no longer supported",
+        "BREAKING-CHANGE: age is no longer supported",
+        "age is not longer supported!",
+    ),
+)
+def test_bump_major_increment(commit_msg, mocker):
+    create_file_and_commit(commit_msg)
 
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    tag_exists = git.tag_exist("0.2.0")
+    tag_exists = git.tag_exist("1.0.0")
     assert tag_exists is True
 
-    # PATCH
-    create_file_and_commit("fix: username exception")
 
-    testargs = ["cz", "bump"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-
-    tag_exists = git.tag_exist("0.2.1")
-    assert tag_exists is True
-
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_command_prelease(mocker):
     # PRERELEASE
     create_file_and_commit("feat: location")
 
-    testargs = ["cz", "bump", "--prerelease", "alpha"]
+    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    tag_exists = git.tag_exist("0.3.0a0")
+    tag_exists = git.tag_exist("0.2.0a0")
     assert tag_exists is True
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
@@ -53,19 +88,7 @@ def test_bump_command(mocker):
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    tag_exists = git.tag_exist("0.3.0")
-    assert tag_exists is True
-
-    # MAJOR
-    create_file_and_commit(
-        "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported"
-    )
-
-    testargs = ["cz", "bump"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-
-    tag_exists = git.tag_exist("1.0.0")
+    tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
 
