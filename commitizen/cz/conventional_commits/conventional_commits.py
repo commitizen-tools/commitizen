@@ -100,7 +100,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                 "type": "input",
                 "name": "scope",
                 "message": (
-                    "What is the scope of this change? (class or file name): (press enter to skip)\n"
+                    "What is the scope of this change? (class or file name): (press [enter] to skip)\n"
                 ),
                 "filter": parse_scope,
             },
@@ -116,7 +116,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                 "type": "input",
                 "name": "body",
                 "message": (
-                    "Provide additional contextual information about the code changes: (press enter to skip)\n"
+                    "Provide additional contextual information about the code changes: (press [enter] to skip)\n"
                 ),
                 "filter": multiple_line_breaker,
             },
@@ -131,7 +131,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                 "name": "footer",
                 "message": (
                     "Footer. Information about Breaking Changes and "
-                    "reference issues that this commit closes: (press enter to skip)\n"
+                    "reference issues that this commit closes: (press [enter] to skip)\n"
                 ),
             },
         ]
