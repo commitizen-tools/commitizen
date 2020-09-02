@@ -100,8 +100,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                 "type": "input",
                 "name": "scope",
                 "message": (
-                    "Scope. Could be anything specifying place of the "
-                    "commit change (users, db, poll):\n"
+                    "What is the scope of this change? (class or file name): (press enter to skip)\n"
                 ),
                 "filter": parse_scope,
             },
@@ -110,16 +109,14 @@ class ConventionalCommitsCz(BaseCommitizen):
                 "name": "subject",
                 "filter": parse_subject,
                 "message": (
-                    "Subject. Concise description of the changes. "
-                    "Imperative, lower case and no final dot:\n"
+                    "Write a short and imperative summary of the code changes:\n"
                 ),
             },
             {
                 "type": "input",
                 "name": "body",
                 "message": (
-                    "Body. Motivation for the change and contrast this "
-                    "with previous behavior:\n"
+                    "Provide additional contextual information about the code changes: (press enter to skip)\n"
                 ),
                 "filter": multiple_line_breaker,
             },
@@ -134,7 +131,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                 "name": "footer",
                 "message": (
                     "Footer. Information about Breaking Changes and "
-                    "reference issues that this commit closes:\n"
+                    "reference issues that this commit closes: (press enter to skip)\n"
                 ),
             },
         ]
