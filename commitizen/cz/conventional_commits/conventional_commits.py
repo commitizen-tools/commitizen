@@ -109,7 +109,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                 "name": "subject",
                 "filter": parse_subject,
                 "message": (
-                    "Write a short and imperative summary of the code changes:\n"
+                    "Write a short and imperative summary of the code changes: (lower case and no period)\n"
                 ),
             },
             {
