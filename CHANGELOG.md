@@ -1,3 +1,14 @@
+## v2.3.0 (2020-09-03)
+
+### Fix
+
+- **cli**: add guideline for subject input
+- **cli**: wrap the word enter with brackets
+
+### Feat
+
+- **cli**: rewrite cli instructions to be more succinct about what they require
+
 ## v2.2.0 (2020-08-31)
 
 ### Feat
