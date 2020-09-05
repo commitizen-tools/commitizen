@@ -171,9 +171,9 @@ class ConventionalCommitsCz(BaseCommitizen):
         return (
             "<type>(<scope>): <subject>\n"
             "<BLANK LINE>\n"
-            "(BREAKING CHANGE: )<body>\n"
+            "<body>\n"
             "<BLANK LINE>\n"
-            "<footer>"
+            "(BREAKING CHANGE: )<footer>"
         )
 
     def schema_pattern(self) -> str:
