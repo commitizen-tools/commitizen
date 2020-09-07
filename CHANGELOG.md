@@ -1,3 +1,9 @@
+## v2.3.1 (2020-09-07)
+
+### Fix
+
+- conventional commit schema
+
 ## v2.3.0 (2020-09-03)
 
 ### Fix
