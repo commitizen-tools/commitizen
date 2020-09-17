@@ -1,71 +1,47 @@
+# Check
+
 ## About
-
 This feature checks whether the commit message follows the given committing rules.
+If you want to setup an automatic check before every git commit, please refer to 
+[Automatically check message before commit](auto_check.md).
 
-## Checking before the commit
-To automatically check a commit message prior to committing, you can use a [git hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks). There are two common methods for installing the hook:
+## Usage
+There are three arguments that you can use one of them to check commit message.
 
-### Method 1: Add git hook through [pre-commit](https://pre-commit.com/)
-
-* Step 1: Install [pre-commit](https://pre-commit.com/)
-
-```sh
-python -m pip install pre-commit
-```
-
-* Step 2: Create `.pre-commit-config.yaml` at your root directory with the following content
-
-```yaml
----
-repos:
-  - repo: https://github.com/commitizen-tools/commitizen
-    rev: v1.17.0
-    hooks:
-      - id: commitizen
-        stages: [commit-msg]
-```
-
-* Step 3: Install the configuration into git hook through `pre-commit`
+### Git Rev Range
+If you'd like to check a commit's message after it has already been created, then you can specify the range of commits to check with `--rev-range REV_RANGE`.
 
 ```bash
-pre-commit install --hook-type commit-msg
+$ cz check --rev-range REV_RANGE
 ```
-
-### Method 2: Manually add git hook
-The command might be included inside of a Git hook (inside of `.git/hooks/` at the root of the project).
-
-The selected hook might be the file called commit-msg.
-
-This example shows how to use the check command inside of commit-msg.
-
-At the root of the project:
-
-```bash
-cd .git/hooks
-touch commit-msg
-chmod +x commit-msg
-```
-
-Open the file and edit it:
-
-```sh
-#!/bin/bash
-MSG_FILE=$1
-cz check --commit-msg-file $MSG_FILE
-```
-
-Where `$1` is the name of the temporary file that contains the current commit message. To be more explicit, the previous variable is stored in another variable called `$MSG_FILE`, for didactic purposes.
-
-The `--commit-msg-file` flag is required, not optional.
-
-Each time you create a commit, automatically, this hook will analyze it.
-If the commit message is invalid, it'll be rejected.
-
-The commit should follow the given committing rules; otherwise, it won't be accepted.
-
-## Checking after the commit
-If you'd like to check a commit's message after it has already been created, then you can specify the range of commits to check with `--rev-range REV_RANGE`
 
 For example, if you'd like to check all commits on a branch, you can use `--rev-range master..HEAD`. Or, if you'd like to check all commits starting from when you first implemented commit message linting, you can use `--rev-range <first_commit_sha>..HEAD`.
 
 For more info on how git commit ranges work, you can check the [git documentation](https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection#_commit_ranges).
+
+### Commit Message
+There are two ways you can provide your plain message and check it.
+#### Method 1: use -m or --message
+
+```bash
+$ cz check --message MESSAGE
+```
+
+In this option, MESSAGE is the commit message to be checked.
+
+#### Method 2: use pipe to pipe it to `cz check`
+
+```bash
+$ echo MESSAGE | cz check
+```
+
+In this option, MESSAGE is piped to cz check and would be checked.
+
+### Commit Message File
+
+```bash
+$ cz check --commit-msg-file COMMIT_MSG_FILE
+```
+
+In this option, COMMIT_MSG_FILE is the path of the temporal file that contains the commit message.
+This argument can be useful when cooperating with git hook, please check [Automatically check message before commit](auto_check.md) for more information about how to use this argument with git hook.
