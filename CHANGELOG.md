@@ -1,3 +1,9 @@
+## v2.4.0 (2020-09-18)
+
+### Feat
+
+- **cz_check**: cz check can read commit message from pipe
+
 ## v2.3.1 (2020-09-07)
 
 ### Fix
