@@ -396,6 +396,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../jenkins_pipeline/" title="Jenkins pipeline" class="md-nav__link">
+      Jenkins pipeline
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -541,38 +553,23 @@ with the following content.</p>
 <span class="nt">on</span><span class="p">:</span>
   <span class="nt">push</span><span class="p">:</span>
     <span class="nt">branches</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">master</span>  <span class="c1"># another branch could be specified here</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">master</span>
 
 <span class="nt">jobs</span><span class="p">:</span>
-  <span class="nt">build</span><span class="p">:</span>
+  <span class="nt">bump-version</span><span class="p">:</span>
     <span class="nt">if</span><span class="p">:</span> <span class="s">&quot;!startsWith(github.event.head_commit.message,</span><span class="nv"> </span><span class="s">&#39;bump:&#39;)&quot;</span>
     <span class="nt">runs-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
-    <span class="nt">strategy</span><span class="p">:</span>
-      <span class="nt">matrix</span><span class="p">:</span>
-        <span class="nt">python-version</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&#39;3.x&#39;</span><span class="p p-Indicator">]</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="s">&quot;Bump</span><span class="nv"> </span><span class="s">version</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">create</span><span class="nv"> </span><span class="s">changelog</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">commitizen&quot;</span>
     <span class="nt">steps</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/checkout@v2</span>
-      <span class="nt">with</span><span class="p">:</span>
-        <span class="nt">token</span><span class="p">:</span> <span class="s">&#39;${{</span><span class="nv"> </span><span class="s">secrets.PERSONAL_ACCESS_TOKEN</span><span class="nv"> </span><span class="s">}}&#39;</span>
-        <span class="nt">fetch-depth</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Set up Python ${{ matrix.python-version }}</span>
-      <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v1</span>
-      <span class="nt">with</span><span class="p">:</span>
-        <span class="nt">python-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ matrix.python-version }}</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
-      <span class="nt">run</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-        <span class="no">python --version</span>
-        <span class="no">python -m pip install -U commitizen</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Create bump</span>
-      <span class="nt">run</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-        <span class="no">git config --local user.email &quot;action@github.com&quot;</span>
-        <span class="no">git config --local user.name &quot;GitHub Action&quot;</span>
-        <span class="no">cz bump --yes</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Push changes</span>
-      <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Woile/github-push-action@master</span>
-      <span class="nt">with</span><span class="p">:</span>
-        <span class="nt">github_token</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ secrets.PERSONAL_ACCESS_TOKEN }}</span>
-        <span class="nt">tags</span><span class="p">:</span> <span class="s">&quot;true&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Check out</span>
+        <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/checkout@v2</span>
+        <span class="nt">with</span><span class="p">:</span>
+          <span class="nt">token</span><span class="p">:</span> <span class="s">&#39;${{</span><span class="nv"> </span><span class="s">secrets.PERSONAL_ACCESS_TOKEN</span><span class="nv"> </span><span class="s">}}&#39;</span>
+          <span class="nt">fetch-depth</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Create bump and changelog</span>
+        <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">commitizen-tools/commitizen-action@master</span>
+        <span class="nt">with</span><span class="p">:</span>
+          <span class="nt">github_token</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ secrets.PERSONAL_ACCESS_TOKEN }}</span>
 </code></pre></div>
 
 
@@ -650,13 +647,13 @@ You can also use <a href="https://github.com/pypa/gh-action-pypi-publish">pypa/g
           </a>
         
         
-          <a href="../../faq/" title="FAQ" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../jenkins_pipeline/" title="Jenkins pipeline" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                FAQ
+                Jenkins pipeline
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">

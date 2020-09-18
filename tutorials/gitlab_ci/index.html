@@ -360,14 +360,14 @@
         
           <li class="md-nav__item">
   <a href="#development-workflow" class="md-nav__link">
-    Development Workflow:
+    Development Workflow
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#gitlab-configuration" class="md-nav__link">
-    Gitlab Configuration:
+    Gitlab Configuration
   </a>
   
 </li>
@@ -406,6 +406,18 @@
   <li class="md-nav__item">
     <a href="../github_actions/" title="Github Actions" class="md-nav__link">
       Github Actions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../jenkins_pipeline/" title="Jenkins pipeline" class="md-nav__link">
+      Jenkins pipeline
     </a>
   </li>
 
@@ -506,14 +518,14 @@
         
           <li class="md-nav__item">
   <a href="#development-workflow" class="md-nav__link">
-    Development Workflow:
+    Development Workflow
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#gitlab-configuration" class="md-nav__link">
-    Gitlab Configuration:
+    Gitlab Configuration
   </a>
   
 </li>
@@ -555,10 +567,10 @@
                 
                   <h1>GitLab CI</h1>
                 
-                <h3 id="create-a-new-release-using-gitlab-ci">Create a new release using GitLab CI</h3>
+                <h2 id="create-a-new-release-using-gitlab-ci">Create a new release using GitLab CI</h2>
 <p>For this example, we have a <code>python/django</code> application and <code>Docker</code> as a containerization tool.</p>
 <p><em>Goal</em>: Bump a new version every time that a change occurs on the <code>master</code> branch. The bump should be executed automatically by the <code>CI</code> process.</p>
-<h4 id="development-workflow">Development Workflow:</h4>
+<h3 id="development-workflow">Development Workflow</h3>
 <ol>
 <li>A developer creates a new commit on any branch (except <code>master</code>)</li>
 <li>A developer creates a merge request (MR) against <code>master</code> branch</li>
@@ -566,7 +578,7 @@
 <li>For simplification, we store the software version in a file called <code>VERSION</code>. You can use any file that you want as <code>commitizen</code> supports it.</li>
 <li>The commit message executed automatically by the <code>CI</code> must include <code>[skip-ci]</code> in the message; otherwise, the process will generate a loop. You can define the message structure in <a href="https://commitizen-tools.github.io/commitizen/bump/">commitizen</a> as well.</li>
 </ol>
-<h4 id="gitlab-configuration">Gitlab Configuration:</h4>
+<h3 id="gitlab-configuration">Gitlab Configuration</h3>
 <p>To be able to change files and push new changes with <code>Gitlab CI</code> runners, we need to have a <code>ssh</code> key and configure a git user.</p>
 <p>First, let's create a <code>ssh key</code>. The only requirement is to create it without a passphrase:</p>
 <div class="codehilite"><pre><span></span><code>ssh-keygen -f deploy_key -N <span class="s2">&quot;&quot;</span>
@@ -582,20 +594,18 @@
 <p><img alt="gitlab deploy key" src="../../images/gitlab_ci/gitlab_deploy_key.png" /></p>
 <p>If you have more projects under the same organization, you can reuse the deploy key created before, but you will have to repeat the step where we have created the environment variables (ssh key, email, and username).</p>
 <p>tip: If the CI raise some errors, try to unprotected the private key.</p>
-<h4 id="defining-gitlab-ci-pipeline">Defining GitLab CI Pipeline</h4>
+<h3 id="defining-gitlab-ci-pipeline">Defining GitLab CI Pipeline</h3>
 <ol>
 <li>
 <p>Create a <code>.gitlab-ci.yaml</code> file that contains <code>stages</code> and <code>jobs</code> configurations. You can find more info <a href="https://docs.gitlab.com/ee/ci/quick_start/">here</a>.</p>
 </li>
 <li>
 <p>Define <code>stages</code> and <code>jobs</code>. For this example, we define two <code>stages</code> with one <code>job</code> each one.</p>
-<ul>
+</li>
 <li>Test the application.</li>
 <li>Auto bump the version. This means changing the file/s that reflects the version, creating a new commit and git tag.</li>
-</ul>
-</li>
 </ol>
-<h4 id="stages-and-jobs">Stages and Jobs</h4>
+<h3 id="stages-and-jobs">Stages and Jobs</h3>
 <div class="codehilite"><pre><span></span><code><span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker:latest</span>
 
 <span class="nt">services</span><span class="p">:</span>
@@ -621,7 +631,7 @@
   <span class="nt">stage</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">auto-bump</span>
   <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">python:3.6</span>
   <span class="nt">before_script</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="s">&#39;which</span><span class="nv"> </span><span class="s">ssh-agent</span><span class="nv"> </span><span class="s">||</span><span class="nv"> </span><span class="s">(</span><span class="nv"> </span><span class="s">apt-get</span><span class="nv"> </span><span class="s">update</span><span class="nv"> </span><span class="s">-qy</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">apt-get</span><span class="nv"> </span><span class="s">install</span><span class="nv"> </span><span class="s">openssh-client</span><span class="nv"> </span><span class="s">-qqy</span><span class="nv"> </span><span class="s">)&#39;</span>
+    <span class="p p-Indicator">-</span> <span class="s">&quot;which</span><span class="nv"> </span><span class="s">ssh-agent</span><span class="nv"> </span><span class="s">||</span><span class="nv"> </span><span class="s">(</span><span class="nv"> </span><span class="s">apt-get</span><span class="nv"> </span><span class="s">update</span><span class="nv"> </span><span class="s">-qy</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">apt-get</span><span class="nv"> </span><span class="s">install</span><span class="nv"> </span><span class="s">openssh-client</span><span class="nv"> </span><span class="s">-qqy</span><span class="nv"> </span><span class="s">)&quot;</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">eval `ssh-agent -s`</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">echo &quot;${SSH_PRIVATE_KEY}&quot; | tr -d &#39;\r&#39; | ssh-add - &gt; /dev/null</span> <span class="c1"># add ssh key</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pip3 install -U Commitizen</span> <span class="c1"># install commitizen</span>
@@ -647,7 +657,7 @@
       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">master</span>
   <span class="nt">artifacts</span><span class="p">:</span>
     <span class="nt">paths</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">variables</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">variables</span>
 </code></pre></div>
 
 
