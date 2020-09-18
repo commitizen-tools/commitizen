@@ -1,10 +1,10 @@
-### Create a new release using GitLab CI
+## Create a new release using GitLab CI
 
 For this example, we have a `python/django` application and `Docker` as a containerization tool.
 
-*Goal*: Bump a new version every time that a change occurs on the `master` branch. The bump should be executed automatically by the `CI` process.
+_Goal_: Bump a new version every time that a change occurs on the `master` branch. The bump should be executed automatically by the `CI` process.
 
-#### Development Workflow:
+### Development Workflow
 
 1. A developer creates a new commit on any branch (except `master`)
 2. A developer creates a merge request (MR) against `master` branch
@@ -12,7 +12,7 @@ For this example, we have a `python/django` application and `Docker` as a contai
 4. For simplification, we store the software version in a file called `VERSION`. You can use any file that you want as `commitizen` supports it.
 5. The commit message executed automatically by the `CI` must include `[skip-ci]` in the message; otherwise, the process will generate a loop. You can define the message structure in [commitizen](https://commitizen-tools.github.io/commitizen/bump/) as well.
 
-#### Gitlab Configuration:
+### Gitlab Configuration
 
 To be able to change files and push new changes with `Gitlab CI` runners, we need to have a `ssh` key and configure a git user.
 
@@ -40,15 +40,15 @@ If you have more projects under the same organization, you can reuse the deploy 
 
 tip: If the CI raise some errors, try to unprotected the private key.
 
-#### Defining GitLab CI Pipeline
+### Defining GitLab CI Pipeline
 
 1. Create a `.gitlab-ci.yaml` file that contains `stages` and `jobs` configurations. You can find more info [here](https://docs.gitlab.com/ee/ci/quick_start/).
 
 2. Define `stages` and `jobs`. For this example, we define two `stages` with one `job` each one.
-    * Test the application.
-    * Auto bump the version. This means changing the file/s that reflects the version, creating a new commit and git tag.
+   - Test the application.
+   - Auto bump the version. This means changing the file/s that reflects the version, creating a new commit and git tag.
 
-#### Stages and Jobs
+### Stages and Jobs
 
 ```yaml
 image: docker:latest
@@ -76,7 +76,7 @@ auto-bump:
   stage: auto-bump
   image: python:3.6
   before_script:
-    - 'which ssh-agent || ( apt-get update -qy && apt-get install openssh-client -qqy )'
+    - "which ssh-agent || ( apt-get update -qy && apt-get install openssh-client -qqy )"
     - eval `ssh-agent -s`
     - echo "${SSH_PRIVATE_KEY}" | tr -d '\r' | ssh-add - > /dev/null # add ssh key
     - pip3 install -U Commitizen # install commitizen
@@ -102,7 +102,7 @@ auto-bump:
       - master
   artifacts:
     paths:
-    - variables
+      - variables
 ```
 
 So, every time that a developer push to any branch, the `test` job is executed. If the branch is `master` and the test jobs success, the `auto-bump` takes place.

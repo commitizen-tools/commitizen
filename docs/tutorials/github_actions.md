@@ -16,38 +16,24 @@ name: Bump version
 on:
   push:
     branches:
-      - master  # another branch could be specified here
+      - master
 
 jobs:
-  build:
+  bump-version:
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.x']
+    name: "Bump version and create changelog with commitizen"
     steps:
-    - uses: actions/checkout@v2
-      with:
-        token: '${{ secrets.PERSONAL_ACCESS_TOKEN }}'
-        fetch-depth: 0
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python --version
-        python -m pip install -U commitizen
-    - name: Create bump
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        cz bump --yes
-    - name: Push changes
-      uses: Woile/github-push-action@master
-      with:
-        github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        tags: "true"
+      - name: Check out
+        uses: actions/checkout@v2
+        with:
+          token: '${{ secrets.PERSONAL_ACCESS_TOKEN }}'
+          fetch-depth: 0
+      - name: Create bump and changelog
+        uses: commitizen-tools/commitizen-action@master
+        with:
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
 ```
 
 Push to master and that's it.
