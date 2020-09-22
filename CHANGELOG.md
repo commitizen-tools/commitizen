@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fix
+
+- **#271**: add annotated_tag option to bump
+
 ## v2.4.0 (2020-09-18)
 
 ### Feat
@@ -97,17 +103,17 @@
 ### Fix
 
 - **commands/bump**: use `return_code` in commands used by bump
-- **commands/commit**: use return_code to raise commit error, not stderr
-
-### Refactor
-
-- **cmd**: add return code to Command
 
 ## v1.23.2 (2020-07-25)
 
 ### Fix
 
 - **bump**: add changelog file into stage when running `cz bump --changelog`
+- **commands/commit**: use return_code to raise commit error, not stderr
+
+### Refactor
+
+- **cmd**: add return code to Command
 
 ## v1.23.1 (2020-07-14)
 
@@ -124,16 +130,19 @@
 - **commands/init**: add test case and remove unaccessible code
 - **exception**: move output message related to exception into exception
 - **exception**: implement message handling mechanism for CommitizenException
-- **cli**: do not show traceback if the raised exception is CommitizenException
-- introduce DryRunExit, ExpectedExit, NoCommandFoundError, InvalidCommandArgumentError
-- use custom exception for error handling
-- **error_codes**: remove unused NO_COMMIT_MSG error code
 
 ### Feat
 
 - **cli**: enable displaying all traceback for CommitizenException when --debug flag is used
 
 ## v1.22.3 (2020-06-10)
+
+### Refactor
+
+- **cli**: do not show traceback if the raised exception is CommitizenException
+- introduce DryRunExit, ExpectedExit, NoCommandFoundError, InvalidCommandArgumentError
+- use custom exception for error handling
+- **error_codes**: remove unused NO_COMMIT_MSG error code
 
 ## v1.22.2 (2020-05-29)
 

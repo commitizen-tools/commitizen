@@ -54,32 +54,30 @@ Some examples:
 
 ```bash
 $ cz bump --help
-usage: cz bump [-h] [--dry-run] [--files-only] [--changelog] [--no-verify]
-               [--yes] [--tag-format TAG_FORMAT] [--bump-message BUMP_MESSAGE]
-               [--prerelease {alpha,beta,rc}]
-               [--increment {MAJOR,MINOR,PATCH}] [--check-consistency]
+usage: cz bump [-h] [--dry-run] [--files-only] [--changelog] [--no-verify] [--yes]
+               [--tag-format TAG_FORMAT] [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}]
+               [--increment {MAJOR,MINOR,PATCH}] [--check-consistency] [--annotated-tag]
 
 optional arguments:
   -h, --help            show this help message and exit
   --dry-run             show output to stdout, no commit, no modified files
   --files-only          bump version in the files from the config
   --changelog, -ch      generate the changelog for the newest version
-  --no-verify           this option bypasses the pre-commit and commit-msg
-                        hooks
+  --no-verify           this option bypasses the pre-commit and commit-msg hooks
   --yes                 accept automatically questions done
   --tag-format TAG_FORMAT
-                        the format used to tag the commit and read it, use it
-                        in existing projects, wrap around simple quotes
+                        the format used to tag the commit and read it, use it in existing projects, wrap
+                        around simple quotes
   --bump-message BUMP_MESSAGE
-                        template used to create the release commit, useful
-                        when working with CI
+                        template used to create the release commit, useful when working with CI
   --prerelease {alpha,beta,rc}, -pr {alpha,beta,rc}
                         choose type of prerelease
   --increment {MAJOR,MINOR,PATCH}
                         manually specify the desired increment
   --check-consistency, -cc
-                        check consistency among versions defined in commitizen
-                        configuration and version_files
+                        check consistency among versions defined in commitizen configuration and
+                        version_files
+  --annotated-tag, -at  create annotated tag instead of lightweight one
 ```
 
 ### `--changelog`
@@ -214,6 +212,15 @@ Some examples
 ```toml
 [tool.commitizen]
 bump_message = "release $current_version → $new_version [skip-ci]"
+```
+
+### `annotated_tag`
+
+Whether to create annotated tags or lightweight ones.
+
+```toml
+[tool.commitizen]
+annotated_tag = true
 ```
 
 ## Custom bump
