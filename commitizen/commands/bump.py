@@ -32,7 +32,13 @@ class Bump:
             **config.settings,
             **{
                 key: arguments[key]
-                for key in ["tag_format", "prerelease", "increment", "bump_message"]
+                for key in [
+                    "tag_format",
+                    "prerelease",
+                    "increment",
+                    "bump_message",
+                    "annotated_tag",
+                ]
                 if arguments[key] is not None
             },
         }
@@ -183,7 +189,11 @@ class Bump:
         c = git.commit(message, args=self._get_commit_args())
         if c.return_code != 0:
             raise BumpCommitFailedError(f'git.commit error: "{c.err.strip()}"')
-        c = git.tag(new_tag_version)
+        c = git.tag(
+            new_tag_version,
+            annotated=self.bump_settings.get("annotated_tag", False)
+            or bool(self.config.settings.get("annotated_tag", False)),
+        )
         if c.return_code != 0:
             raise BumpTagFailedError(c.err)
         out.success("Done!")

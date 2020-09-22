@@ -45,8 +45,8 @@ class GitTag(GitObject):
         return f"GitTag('{self.name}', '{self.rev}', '{self.date}')"
 
 
-def tag(tag: str):
-    c = cmd.run(f"git tag {tag}")
+def tag(tag: str, annotated: bool = False):
+    c = cmd.run(f"git tag -a {tag} -m {tag}" if annotated else f"git tag {tag}")
     return c
 
 
