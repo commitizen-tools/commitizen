@@ -123,6 +123,18 @@ def get_latest_tag_name() -> Optional[str]:
     return c.out.strip()
 
 
+def get_latest_tag() -> GitTag:
+    latest_tag_name = get_latest_tag_name()
+    tags = get_tags()
+
+    if tags[0].name == latest_tag_name:
+        return tags[0]
+
+    tag_names = [tag.name for tag in tags]
+    latest_tag_index = tag_names.index(latest_tag_name)
+    return tags[latest_tag_index]
+
+
 def get_tag_names() -> Optional[List[str]]:
     c = cmd.run("git tag --list")
     if c.err:

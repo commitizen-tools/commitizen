@@ -12,7 +12,7 @@ class Undo:
         self.arguments = arguments
 
     def _get_bump_command(self):
-        created_tag = git.get_tags()[0]
+        created_tag = git.get_latest_tag()
         created_commit = git.get_commits()[0]
 
         if created_tag.rev != created_commit.rev:
@@ -22,7 +22,7 @@ class Undo:
                 f"Latest Commit: {created_commit.title}, {created_commit.rev}"
             )
 
-        command = f"git tag --delete {created_tag} && git reset HEAD~ && git reset --hard HEAD"
+        command = f"git tag --delete {created_tag.name} && git reset HEAD~ && git reset --hard HEAD"
 
         return command
 
@@ -44,5 +44,7 @@ class Undo:
 
         c = cmd.run(command)
         if c.err:
-            return None
-        return c.out.strip()
+            out.error(c.err)
+
+        out.write(c.out)
+        out.success("Undo successful!")
