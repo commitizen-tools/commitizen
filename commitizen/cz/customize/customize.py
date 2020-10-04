@@ -45,6 +45,9 @@ class CustomizeCommitsCz(BaseCommitizen):
     def example(self) -> Optional[str]:
         return self.custom_settings.get("example")
 
+    def schema_pattern(self) -> Optional[str]:
+        return self.custom_settings.get("schema_pattern")
+
     def schema(self) -> Optional[str]:
         return self.custom_settings.get("schema")
 
