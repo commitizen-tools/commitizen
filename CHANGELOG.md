@@ -1,3 +1,9 @@
+## v2.4.1 (2020-10-04)
+
+### Fix
+
+- **cz_customize**: make schema_pattern customiziable through config for cz_customize
+
 ## v2.4.0 (2020-09-18)
 
 ### Feat
