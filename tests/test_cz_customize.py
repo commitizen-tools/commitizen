@@ -12,6 +12,8 @@ def config():
     message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
     example = "feature: this feature enable customize through config file"
     schema = "<type>: <body>"
+    schema_pattern = "(feature|bug fix):(\\s.*)"
+
     bump_pattern = "^(break|new|fix|hotfix)"
     bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
     info = "This is a customized cz."
@@ -112,6 +114,11 @@ def test_example(config):
 def test_schema(config):
     cz = CustomizeCommitsCz(config)
     assert "<type>: <body>" in cz.schema()
+
+
+def test_schema_pattern(config):
+    cz = CustomizeCommitsCz(config)
+    assert r"(feature|bug fix):(\s.*)" in cz.schema_pattern()
 
 
 def test_info(config):
