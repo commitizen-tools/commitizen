@@ -1,6 +1,4 @@
 
-
-
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -13,7 +11,7 @@
       
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.12">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.0.1">
     
     
       
@@ -21,13 +19,17 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.4dd2dd8d.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.38780c08.min.css">
       
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.3f72e892.min.css">
+        
       
     
     
     
       
+        
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
@@ -42,9 +44,14 @@
   </head>
   
   
-    <body dir="ltr">
-  
     
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
@@ -134,8 +141,6 @@
 </header>
     
     <div class="md-container" data-md-component="container">
-      
-        
       
       
         
@@ -626,9 +631,6 @@
               
                 
                 
-                  
-                
-                
                   <h1>Customization</h1>
                 
                 <p>Customizing commitizen is not hard at all.
@@ -648,6 +650,7 @@ We have two different ways to do so.</p>
 <span class="n">message_template</span> <span class="o">=</span> <span class="s">&quot;{{change_type}}:{% if show_message %} {{message}}{% endif %}&quot;</span>
 <span class="n">example</span> <span class="o">=</span> <span class="s">&quot;feature: this feature enable customize through config file&quot;</span>
 <span class="n">schema</span> <span class="o">=</span> <span class="s">&quot;&lt;type&gt;: &lt;body&gt;&quot;</span>
+<span class="n">schema_pattern</span> <span class="o">=</span> <span class="s">&quot;(feature|bug fix):(\\s.*)&quot;</span>
 <span class="n">bump_pattern</span> <span class="o">=</span> <span class="s">&quot;^(break|new|fix|hotfix)&quot;</span>
 <span class="n">bump_map</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;break&quot;</span> <span class="o">=</span> <span class="s">&quot;MAJOR&quot;</span><span class="p">,</span> <span class="s">&quot;new&quot;</span> <span class="o">=</span> <span class="s">&quot;MINOR&quot;</span><span class="p">,</span> <span class="s">&quot;fix&quot;</span> <span class="o">=</span> <span class="s">&quot;PATCH&quot;</span><span class="p">,</span> <span class="s">&quot;hotfix&quot;</span> <span class="o">=</span> <span class="s">&quot;PATCH&quot;</span><span class="p">}</span>
 <span class="n">info_path</span> <span class="o">=</span> <span class="s">&quot;cz_customize_info.txt&quot;</span>
@@ -708,6 +711,12 @@ We have two different ways to do so.</p>
 <td><code>str</code></td>
 <td><code>None</code></td>
 <td>(OPTIONAL) Show the schema used. Used by <code>cz schema</code>.</td>
+</tr>
+<tr>
+<td><code>schema_pattern</code></td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td>(OPTIONAL) The regular expression used to do commit message validation. Used by <code>cz check</code>.</td>
 </tr>
 <tr>
 <td><code>info_path</code></td>
@@ -1075,15 +1084,15 @@ You can customize it of course, and this are the variables you need to add to yo
       
     </div>
     
-      <script src="../assets/javascripts/vendor.3636a4ec.min.js"></script>
-      <script src="../assets/javascripts/bundle.e9fe3281.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="../assets/javascripts/vendor.77e55a48.min.js"></script>
+      <script src="../assets/javascripts/bundle.aa3f9871.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({
           base: "..",
           features: [],
           search: Object.assign({
-            worker: "../assets/javascripts/worker/search.5eca75d3.min.js"
+            worker: "../assets/javascripts/worker/search.4ac00218.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>
