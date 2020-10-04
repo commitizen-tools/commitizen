@@ -4,6 +4,7 @@
 
 To execute `cz bump` in your CI, and push the new commit and
 the new tag, back to your master branch, we have to:
+
 1. Create a personal access token. [Follow the instructions here](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token). And copy the generated key
 2. Create a secret called `PERSONAL_ACCESS_TOKEN`, with the copied key, by going to your
 project repository and then `Settings > Secrets > Add new secret`.
