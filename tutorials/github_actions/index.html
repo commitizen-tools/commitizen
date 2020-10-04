@@ -544,12 +544,14 @@
                 <h2 id="create-a-new-release-with-github-actions">Create a new release with Github Actions</h2>
 <h3 id="automatic-bumping-of-version">Automatic bumping of version</h3>
 <p>To execute <code>cz bump</code> in your CI, and push the new commit and
-the new tag, back to your master branch, we have to:
-1. Create a personal access token. <a href="https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token">Follow the instructions here</a>. And copy the generated key
-2. Create a secret called <code>PERSONAL_ACCESS_TOKEN</code>, with the copied key, by going to your
-project repository and then <code>Settings &gt; Secrets &gt; Add new secret</code>.
-3. In your repository create a new file <code>.github/workflows/bumpversion.yml</code>
-with the following content.</p>
+the new tag, back to your master branch, we have to:</p>
+<ol>
+<li>Create a personal access token. <a href="https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token">Follow the instructions here</a>. And copy the generated key</li>
+<li>Create a secret called <code>PERSONAL_ACCESS_TOKEN</code>, with the copied key, by going to your
+project repository and then <code>Settings &gt; Secrets &gt; Add new secret</code>.</li>
+<li>In your repository create a new file <code>.github/workflows/bumpversion.yml</code>
+with the following content.</li>
+</ol>
 <div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Bump version</span>
 
 <span class="nt">on</span><span class="p">:</span>
