@@ -5,6 +5,7 @@ Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?st
 release](https://img.shields.io/pypi/v/commitizen.svg?style=flat-square)](https://pypi.org/project/commitizen/)
 [![Supported
 versions](https://img.shields.io/pypi/pyversions/commitizen.svg?style=flat-square)](https://pypi.org/project/commitizen/)
+[![homebrew](https://img.shields.io/homebrew/v/commitizen?color=teal&style=flat-square)](https://formulae.brew.sh/formula/commitizen)
 [![Codecov](https://img.shields.io/codecov/c/github/commitizen-tools/commitizen.svg?style=flat-square)](https://codecov.io/gh/commitizen-tools/commitizen)
 
 ![Using commitizen cli](images/demo.gif)
@@ -60,6 +61,14 @@ pip install -U commitizen
 
 ```bash
 poetry add commitizen --dev
+```
+
+### macOS
+
+On macOS, it can also be installed via [homebrew](https://formulae.brew.sh/formula/commitizen):
+
+```bash
+brew install commitizen
 ```
 
 ## Usage
