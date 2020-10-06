@@ -1,0 +1,17 @@
+name: Publish to Homebrew
+
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Update Homebrew formula
+      uses: dawidd6/action-homebrew-bump-formula@v3
+      with:
+        token: ${{secrets.PERSONAL_ACCESS_TOKEN}}
+        formula: commitizen
