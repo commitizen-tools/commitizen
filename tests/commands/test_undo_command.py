@@ -2,8 +2,7 @@ import sys
 
 import pytest
 
-from commitizen import cli, cmd, commands, git
-from commitizen.exceptions import InvalidCommandArgumentError
+from commitizen import cli, git
 from tests.utils import create_file_and_commit
 
 
@@ -29,14 +28,9 @@ def _execute_command(mocker, testargs):
 
 def _undo_bump(mocker, tag_num: int = 0):
     testargs = ["cz", "undo", "--bump"]
-    tags = git.get_tags()
-    print(tags)
     _execute_command(mocker, testargs)
 
     tags = git.get_tags()
-    print(tags)
-    print(git.get_commits())
-
     assert len(tags) == tag_num
 
 

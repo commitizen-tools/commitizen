@@ -4,7 +4,7 @@ from commitizen.exceptions import InvalidCommandArgumentError
 
 
 class Undo:
-    """  """
+    """Reset the latest git commit or git tag."""
 
     def __init__(self, config: BaseConfig, arguments: dict):
         self.config: BaseConfig = config
@@ -13,7 +13,10 @@ class Undo:
 
     def _get_bump_command(self):
         created_tag = git.get_latest_tag()
-        created_commit = git.get_commits()[0]
+        commits = git.get_commits()
+
+        if created_tag and commits:
+            created_commit = commits[0]
 
         if created_tag.rev != created_commit.rev:
             raise InvalidCommandArgumentError(
