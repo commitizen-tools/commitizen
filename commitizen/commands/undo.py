@@ -17,6 +17,8 @@ class Undo:
 
         if created_tag and commits:
             created_commit = commits[0]
+        else:
+            raise InvalidCommandArgumentError("There is no tag or commit to undo")
 
         if created_tag.rev != created_commit.rev:
             raise InvalidCommandArgumentError(

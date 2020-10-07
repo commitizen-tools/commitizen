@@ -54,7 +54,7 @@ def test_undo_bump(config, mocker):
     _execute_command(mocker, ["cz", "bump", "--prerelease", "alpha"])
     _undo_bump(mocker, 1)
 
-    # # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
+    # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
     create_file_and_commit("feat: location")
     _execute_command(mocker, ["cz", "bump", "--prerelease", "alpha"])
     _execute_command(mocker, ["cz", "bump"])
