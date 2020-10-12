@@ -138,7 +138,7 @@ def get_latest_tag() -> Optional[GitTag]:
     return tags[latest_tag_index]
 
 
-def get_tag_names() -> Optional[List[str]]:
+def get_tag_names() -> List[Optional[str]]:
     c = cmd.run("git tag --list")
     if c.err:
         return []
