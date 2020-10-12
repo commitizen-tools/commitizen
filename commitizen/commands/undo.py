@@ -29,6 +29,10 @@ class Undo:
 
         command = f"git tag --delete {created_tag.name} && git reset HEAD~ && git reset --hard HEAD"
 
+        out.info("Reverting version bump, running:")
+        out.info(f"{command}")
+        out.info(f"The tag can be removed from a remote by running `git push origin :{created_tag.name}`")
+
         return command
 
     def __call__(self):
