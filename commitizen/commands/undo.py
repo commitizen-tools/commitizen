@@ -31,7 +31,9 @@ class Undo:
 
         out.info("Reverting version bump, running:")
         out.info(f"{command}")
-        out.info(f"The tag can be removed from a remote by running `git push origin :{created_tag.name}`")
+        out.info(
+            f"The tag can be removed from a remote by running `git push origin :{created_tag.name}`"
+        )
 
         return command
 

@@ -139,12 +139,12 @@ data = {
                 "func": commands.Undo,
                 "arguments": [
                     {
-                        "name": ["--bump"],
+                        "name": ["--bump", "-b"],
                         "action": "store_true",
                         "help": "revert bump",
                     },
                     {
-                        "name": "--commit",
+                        "name": ["--commit", "-c"],
                         "action": "store_true",
                         "help": "revert latest commit, equal to git reset HEAD~",
                     },
