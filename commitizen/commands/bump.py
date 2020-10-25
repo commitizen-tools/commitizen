@@ -109,11 +109,6 @@ class Bump:
         if increment is None:
             increment = self.find_increment(commits)
 
-            # if increment != 'PATCH' and increment != 'MINOR':
-            #    if increment != 'MAJOR':
-            #        import ipdb; ipdb.set_trace()
-
-            # git.tag_exist()
 
         # Increment is removed when current and next version
         # are expected to be prereleases.
@@ -124,7 +119,6 @@ class Bump:
             current_version, increment, prerelease=prerelease
         )
         new_tag_version = bump.create_tag(new_version, tag_format=tag_format)
-
         message = bump.create_commit_message(
             current_version, new_version, bump_commit_message
         )
@@ -168,7 +162,6 @@ class Bump:
         c = git.commit(message, args=self._get_commit_args())
         if c.return_code != 0:
             raise BumpCommitFailedError(f'git.commit error: "{c.err.strip()}"')
-
         c = git.tag(new_tag_version)
         if c.return_code != 0:
             raise BumpTagFailedError(c.err)

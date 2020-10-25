@@ -54,7 +54,7 @@ class DryRunExit(ExpectedExit):
 
 
 class NoneIncrementExit(ExpectedExit):
-    ...
+    pass
 
 
 class NoCommitizenFoundException(CommitizenException):
