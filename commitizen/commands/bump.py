@@ -109,7 +109,6 @@ class Bump:
         if increment is None:
             increment = self.find_increment(commits)
 
-
         # Increment is removed when current and next version
         # are expected to be prereleases.
         if prerelease and current_version_instance.is_prerelease:
