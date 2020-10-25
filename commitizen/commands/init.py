@@ -47,7 +47,7 @@ class Init:
     def _ask_config_path(self) -> str:
         name = questionary.select(
             "Please choose a supported config file: (default: pyproject.toml)",
-            choices=config_files,
+            choices=config_files,  # type: ignore
             default="pyproject.toml",
             style=self.cz.style,
         ).ask()
@@ -79,7 +79,7 @@ class Init:
 
             latest_tag = questionary.select(
                 "Please choose the latest tag: ",
-                choices=get_tag_names(),
+                choices=get_tag_names(),  # type: ignore
                 style=self.cz.style,
             ).ask()
 
