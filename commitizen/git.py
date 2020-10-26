@@ -123,7 +123,7 @@ def get_latest_tag_name() -> Optional[str]:
     return c.out.strip()
 
 
-def get_tag_names() -> Optional[List[str]]:
+def get_tag_names() -> List[Optional[str]]:
     c = cmd.run("git tag --list")
     if c.err:
         return []

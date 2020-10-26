@@ -1,7 +1,10 @@
+import inspect
 import sys
+from unittest.mock import MagicMock
 
 import pytest
 
+import commitizen.commands.bump as bump
 from commitizen import cli, cmd, git
 from commitizen.exceptions import (
     BumpTagFailedError,
@@ -9,6 +12,7 @@ from commitizen.exceptions import (
     DryRunExit,
     ExpectedExit,
     NoCommitsFoundError,
+    NoneIncrementExit,
     NoPatternMapError,
     NotAGitProjectError,
     NoVersionSpecifiedError,
@@ -262,3 +266,38 @@ def test_bump_in_non_git_project(tmpdir, config, mocker):
         with pytest.raises(NotAGitProjectError):
             with pytest.raises(ExpectedExit):
                 cli.main()
+
+
+def test_none_increment_exit_should_be_a_class():
+    assert inspect.isclass(NoneIncrementExit)
+
+
+def test_none_increment_exit_should_be_expected_exit_subclass():
+    assert issubclass(NoneIncrementExit, ExpectedExit)
+
+
+def test_none_increment_exit_should_exist_in_bump():
+    assert hasattr(bump, "NoneIncrementExit")
+
+
+def test_none_increment_exit_is_exception():
+    assert bump.NoneIncrementExit == NoneIncrementExit
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_none_increment_should_not_call_git_tag(mocker, tmp_commitizen_project):
+    create_file_and_commit("test(test_get_all_droplets): fix bad comparison test")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    # stash git.tag for later restore
+    stashed_git_tag = git.tag
+    dummy_value = git.tag("0.0.2")
+    git.tag = MagicMock(return_value=dummy_value)
+
+    with pytest.raises(NoneIncrementExit):
+        cli.main()
+        git.tag.assert_not_called()
+
+    # restore pop stashed
+    git.tag = stashed_git_tag

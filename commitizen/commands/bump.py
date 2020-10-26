@@ -12,6 +12,7 @@ from commitizen.exceptions import (
     DryRunExit,
     ExpectedExit,
     NoCommitsFoundError,
+    NoneIncrementExit,
     NoPatternMapError,
     NotAGitProjectError,
     NoVersionSpecifiedError,
@@ -127,6 +128,9 @@ class Bump:
             f"tag to create: {new_tag_version}\n"
             f"increment detected: {increment}\n"
         )
+
+        if increment is None and new_tag_version == current_tag_version:
+            raise NoneIncrementExit()
 
         # Do not perform operations over files or git.
         if dry_run:
