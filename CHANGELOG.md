@@ -1,3 +1,14 @@
+## v2.4.2 (2020-10-26)
+
+### Fix
+
+- **init.py**: mypy error (types)
+- **commands/bump**: Add NoneIncrementExit to fix git fatal error when creating existing tag
+
+### Refactor
+
+- **commands/bump**: Remove comment and changed ... for pass
+
 ## v2.4.1 (2020-10-04)
 
 ### Fix
