@@ -20,6 +20,11 @@ def changelog_path() -> str:
     return os.path.join(os.getcwd(), "CHANGELOG.md")
 
 
+@pytest.fixture()
+def config_path() -> str:
+    return os.path.join(os.getcwd(), "pyproject.toml")
+
+
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_on_empty_project(mocker):
     testargs = ["cz", "changelog", "--dry-run"]
@@ -389,3 +394,48 @@ def test_breaking_change_content_v1(mocker, capsys):
         "## Unreleased\n\n### Feat\n\n- **users**: email pattern corrected\n\n"
         "### BREAKING CHANGE\n\n- migrate by renaming user to users\n\n"
     )
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_config_flag_increment(mocker, changelog_path, config_path):
+
+    with open(config_path, "a") as f:
+        f.write("changelog_incremental = true\n")
+    with open(changelog_path, "a") as f:
+        f.write("\nnote: this should be persisted using increment\n")
+
+    create_file_and_commit("feat: add new output")
+
+    testargs = ["cz", "changelog"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    assert "this should be persisted using increment" in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_config_start_rev_option(mocker, capsys, config_path):
+
+    # create commit and tag
+    create_file_and_commit("feat: new file")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    capsys.readouterr()
+
+    create_file_and_commit("feat: after 0.2.0")
+    create_file_and_commit("feat: after 0.2")
+
+    with open(config_path, "a") as f:
+        f.write('changelog_start_rev = "0.2.0"\n')
+
+    testargs = ["cz", "changelog", "--dry-run"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(DryRunExit):
+        cli.main()
+
+    out, _ = capsys.readouterr()
+    assert out == "## Unreleased\n\n### Feat\n\n- after 0.2\n- after 0.2.0\n\n"

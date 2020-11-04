@@ -114,6 +114,8 @@ cz changelog --file-name="CHANGES.md"
 
 ### `incremental`
 
+This flag can be set in the `toml` file with the key `changelog_incremental` under `tools.commitizen`
+
 Benefits:
 
 - Build from latest version found in changelog, this is useful if you have a different changelog and want to use commitizen
@@ -122,6 +124,28 @@ Benefits:
 
 ```bash
 cz changelog --incremental
+```
+
+```toml
+[tools.commitizen]
+# ...
+changelog_incremental = true
+```
+
+### `start-rev`
+
+This value can be set in the `toml` file with the key `changelog_start_rev` under `tools.commitizen`
+
+Start from a given git rev to generate the changelog. Commits before that rev will not be considered. This is especially useful for long-running projects adopting conventional commits, where old commit messages might fail to be parsed for changelog generation.
+
+```bash
+cz changelog --start-rev="v0.2.0"
+```
+
+```toml
+[tools.commitizen]
+# ...
+changelog_start_rev = "v0.2.0"
 ```
 
 ## Hooks

@@ -29,11 +29,15 @@ class Changelog:
         self.config: BaseConfig = config
         self.cz = factory.commiter_factory(self.config)
 
-        self.start_rev = args.get("start_rev")
+        self.start_rev = args.get("start_rev") or self.config.settings.get(
+            "changelog_start_rev"
+        )
         self.file_name = args.get("file_name") or self.config.settings.get(
             "changelog_file"
         )
-        self.incremental = args["incremental"]
+        self.incremental = args["incremental"] or self.config.settings.get(
+            "changelog_incremental"
+        )
         self.dry_run = args["dry_run"]
         self.unreleased_version = args["unreleased_version"]
         self.change_type_map = (
