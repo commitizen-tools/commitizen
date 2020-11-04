@@ -11,7 +11,7 @@
       
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.0">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.2">
     
     
       
@@ -19,10 +19,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.bc7e593a.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.19190aaf.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab28b872.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.24b84193.min.css">
         
       
     
@@ -355,6 +355,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#start-rev" class="md-nav__link">
+    start-rev
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -628,6 +635,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#start-rev" class="md-nav__link">
+    start-rev
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -774,6 +788,7 @@ if your tag is the same as the raw version, then ignore this.</p>
 </code></pre></div>
 
 <h3 id="incremental"><code>incremental</code></h3>
+<p>This flag can be set in the <code>toml</code> file with the key <code>changelog_incremental</code> under <code>tools.commitizen</code></p>
 <p>Benefits:</p>
 <ul>
 <li>Build from latest version found in changelog, this is useful if you have a different changelog and want to use commitizen</li>
@@ -781,6 +796,22 @@ if your tag is the same as the raw version, then ignore this.</p>
 <li>Allows users to manually touch the changelog without being rewritten.</li>
 </ul>
 <div class="codehilite"><pre><span></span><code>cz changelog --incremental
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">[tools.commitizen]</span>
+<span class="c1"># ...</span>
+<span class="n">changelog_incremental</span> <span class="o">=</span> <span class="kc">true</span>
+</code></pre></div>
+
+<h3 id="start-rev"><code>start-rev</code></h3>
+<p>This value can be set in the <code>toml</code> file with the key <code>changelog_start_rev</code> under <code>tools.commitizen</code></p>
+<p>Start from a given git rev to generate the changelog. Commits before that rev will not be considered. This is especially useful for long-running projects adopting conventional commits, where old commit messages might fail to be parsed for changelog generation.</p>
+<div class="codehilite"><pre><span></span><code>cz changelog --start-rev<span class="o">=</span><span class="s2">&quot;v0.2.0&quot;</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="k">[tools.commitizen]</span>
+<span class="c1"># ...</span>
+<span class="n">changelog_start_rev</span> <span class="o">=</span> <span class="s">&quot;v0.2.0&quot;</span>
 </code></pre></div>
 
 <h2 id="hooks">Hooks</h2>
@@ -856,8 +887,8 @@ if your tag is the same as the raw version, then ignore this.</p>
       
     </div>
     
-      <script src="../assets/javascripts/vendor.6a3d08fc.min.js"></script>
-      <script src="../assets/javascripts/bundle.71201edf.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      <script src="../assets/javascripts/vendor.7e0ee788.min.js"></script>
+      <script src="../assets/javascripts/bundle.c1ccee15.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({
