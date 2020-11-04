@@ -216,6 +216,19 @@ Some examples
 bump_message = "release $current_version → $new_version [skip-ci]"
 ```
 
+---
+
+### `update_changelog_on_bump`
+
+When set to `true` the changelog is always updated incrementally when running `cz bump`, so the user does not have to provide the `--changelog` flag every time.
+
+defaults to: `false`
+
+```toml
+[tool.commitizen]
+update_changelog_on_bump = true
+```
+
 ## Custom bump
 
 Read the [customizing section](./customization.md).
