@@ -11,6 +11,8 @@ DEFAULT_SETTINGS: Dict[str, Any] = {
     "tag_format": None,  # example v$version
     "bump_message": None,  # bumped v$current_version to $new_version
     "changelog_file": "CHANGELOG.md",
+    "changelog_incremental": False,
+    "changelog_start_rev": None,
 }
 
 MAJOR = "MAJOR"
