@@ -37,7 +37,9 @@ class Bump:
             },
         }
         self.cz = factory.commiter_factory(self.config)
-        self.changelog = arguments["changelog"]
+        self.changelog = arguments["changelog"] or self.config.settings.get(
+            "update_changelog_on_bump"
+        )
         self.no_verify = arguments["no_verify"]
         self.check_consistency = arguments["check_consistency"]
 
