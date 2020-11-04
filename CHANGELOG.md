@@ -1,3 +1,9 @@
+## v2.5.0 (2020-11-04)
+
+### Feat
+
+- **commands/changelog**: add config file options for start_rev and incremental
+
 ## v2.4.2 (2020-10-26)
 
 ### Fix
