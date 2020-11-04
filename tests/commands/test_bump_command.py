@@ -301,3 +301,36 @@ def test_none_increment_should_not_call_git_tag(mocker, tmp_commitizen_project):
 
     # restore pop stashed
     git.tag = stashed_git_tag
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_with_changelog_arg(mocker, changelog_path):
+    create_file_and_commit("feat(user): new file")
+    testargs = ["cz", "bump", "--yes", "--changelog"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    tag_exists = git.tag_exist("0.2.0")
+    assert tag_exists is True
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+    assert out.startswith("#")
+    assert "0.2.0" in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_with_changelog_config(mocker, changelog_path, config_path):
+    create_file_and_commit("feat(user): new file")
+    with open(config_path, "a") as fp:
+        fp.write("update_changelog_on_bump = true\n")
+
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    tag_exists = git.tag_exist("0.2.0")
+    assert tag_exists is True
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+    assert out.startswith("#")
+    assert "0.2.0" in out

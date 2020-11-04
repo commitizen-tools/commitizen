@@ -34,6 +34,7 @@ _settings = {
     "changelog_file": "CHANGELOG.md",
     "changelog_incremental": False,
     "changelog_start_rev": None,
+    "update_changelog_on_bump": False,
 }
 
 _new_settings = {
@@ -46,6 +47,7 @@ _new_settings = {
     "changelog_file": "CHANGELOG.md",
     "changelog_incremental": False,
     "changelog_start_rev": None,
+    "update_changelog_on_bump": False,
 }
 
 _read_settings = {

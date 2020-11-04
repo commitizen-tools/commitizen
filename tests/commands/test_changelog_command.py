@@ -1,4 +1,3 @@
-import os
 import sys
 from datetime import date
 
@@ -13,16 +12,6 @@ from commitizen.exceptions import (
     NotAGitProjectError,
 )
 from tests.utils import create_file_and_commit
-
-
-@pytest.fixture()
-def changelog_path() -> str:
-    return os.path.join(os.getcwd(), "CHANGELOG.md")
-
-
-@pytest.fixture()
-def config_path() -> str:
-    return os.path.join(os.getcwd(), "pyproject.toml")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
