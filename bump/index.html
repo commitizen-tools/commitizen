@@ -324,6 +324,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#update_changelog_on_bump" class="md-nav__link">
+    update_changelog_on_bump
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -614,6 +621,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#update_changelog_on_bump" class="md-nav__link">
+    update_changelog_on_bump
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -856,6 +870,14 @@ in a line containing the <code>version</code> substring.</p>
 <p><code>pyproject.toml</code> or <code>.cz.toml</code></p>
 <div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">bump_message</span> <span class="o">=</span> <span class="s">&quot;release $current_version → $new_version [skip-ci]&quot;</span>
+</code></pre></div>
+
+<hr />
+<h3 id="update_changelog_on_bump"><code>update_changelog_on_bump</code></h3>
+<p>When set to <code>true</code> the changelog is always updated incrementally when running <code>cz bump</code>, so the user does not have to provide the <code>--changelog</code> flag every time.</p>
+<p>defaults to: <code>false</code></p>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">update_changelog_on_bump</span> <span class="o">=</span> <span class="kc">true</span>
 </code></pre></div>
 
 <h2 id="custom-bump">Custom bump</h2>
