@@ -1,3 +1,9 @@
+## v2.6.0 (2020-11-04)
+
+### Feat
+
+- **commands/bump**: add config option to create changelog on bump
+
 ## v2.5.0 (2020-11-04)
 
 ### Feat
