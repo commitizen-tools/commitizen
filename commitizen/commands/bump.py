@@ -148,8 +148,6 @@ class Bump:
             version_files,
             check_consistency=self.check_consistency,
         )
-        if is_files_only:
-            raise ExpectedExit()
 
         if self.changelog:
             changelog_cmd = Changelog(
@@ -164,6 +162,10 @@ class Bump:
             c = cmd.run(f"git add {changelog_cmd.file_name}")
 
         self.config.set_key("version", str(new_version))
+
+        if is_files_only:
+            raise ExpectedExit()
+
         c = git.commit(message, args=self._get_commit_args())
         if c.return_code != 0:
             raise BumpCommitFailedError(f'git.commit error: "{c.err.strip()}"')
