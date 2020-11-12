@@ -242,6 +242,9 @@ def test_bump_files_only(mocker, tmp_commitizen_project):
     with open(tmp_version_file, "r") as f:
         assert "0.3.0" in f.read()
 
+    with open(tmp_commitizen_cfg_file, "r") as f:
+        assert "0.3.0" in f.read()
+
 
 def test_bump_local_version(mocker, tmp_commitizen_project):
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
