@@ -108,7 +108,10 @@ def semver_generator(current_version: str, increment: str = None) -> str:
 
 
 def generate_version(
-    current_version: str, increment: str, prerelease: Optional[str] = None
+    current_version: str,
+    increment: str,
+    prerelease: Optional[str] = None,
+    is_local_version: bool = False,
 ) -> Version:
     """Based on the given increment a proper semver will be generated.
 
@@ -122,10 +125,18 @@ def generate_version(
         MAJOR 1.0.0 -> 2.0.0
     """
     pre_version = prerelease_generator(current_version, prerelease=prerelease)
-    semver = semver_generator(current_version, increment=increment)
-    # TODO: post version
-    # TODO: dev version
-    return Version(f"{semver}{pre_version}")
+
+    if is_local_version:
+        version = Version(current_version)
+        local_semver = semver_generator(str(version.local), increment=increment)
+
+        return Version(f"{version.public}+{local_semver}{pre_version}")
+    else:
+        semver = semver_generator(current_version, increment=increment)
+
+        # TODO: post version
+        # TODO: dev version
+        return Version(f"{semver}{pre_version}")
 
 
 def update_version_in_files(

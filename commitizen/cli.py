@@ -82,6 +82,11 @@ data = {
                         "help": "bump version in the files from the config",
                     },
                     {
+                        "name": "--local-version",
+                        "action": "store_true",
+                        "help": "bump only the local version portion",
+                    },
+                    {
                         "name": ["--changelog", "-ch"],
                         "action": "store_true",
                         "default": False,
