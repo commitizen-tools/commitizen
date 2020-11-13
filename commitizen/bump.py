@@ -124,14 +124,14 @@ def generate_version(
         MINOR 1.0.0 -> 1.1.0
         MAJOR 1.0.0 -> 2.0.0
     """
-    pre_version = prerelease_generator(current_version, prerelease=prerelease)
-
     if is_local_version:
         version = Version(current_version)
-        local_semver = semver_generator(str(version.local), increment=increment)
+        pre_version = prerelease_generator(str(version.local), prerelease=prerelease)
+        semver = semver_generator(str(version.local), increment=increment)
 
-        return Version(f"{version.public}+{local_semver}{pre_version}")
+        return Version(f"{version.public}+{semver}{pre_version}")
     else:
+        pre_version = prerelease_generator(current_version, prerelease=prerelease)
         semver = semver_generator(current_version, increment=increment)
 
         # TODO: post version
@@ -199,7 +199,7 @@ def create_tag(version: Union[Version, str], tag_format: Optional[str] = None):
         version = Version(version)
 
     if not tag_format:
-        return version.public
+        return str(version)
 
     major, minor, patch = version.release
     prerelease = ""

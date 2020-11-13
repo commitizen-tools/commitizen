@@ -10,6 +10,9 @@ conversion = [
     (("1.2.3", "ver$major.$minor.$patch"), "ver1.2.3"),
     (("1.2.3a0", "ver$major.$minor.$patch.$prerelease"), "ver1.2.3.a0"),
     (("1.2.3rc2", "$major.$minor.$patch.$prerelease-majestic"), "1.2.3.rc2-majestic"),
+    (("1.2.3+1.0.0", "v$version"), "v1.2.3+1.0.0"),
+    (("1.2.3+1.0.0", "v$version-local"), "v1.2.3+1.0.0-local"),
+    (("1.2.3+1.0.0", "ver$major.$minor.$patch"), "ver1.2.3"),
 ]
 
 
