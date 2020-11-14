@@ -148,7 +148,7 @@ For example, if we have `pyproject.toml`
 version = "5.3.5+0.1.0"
 ```
 
-If `--local-version` is used, it will bump only the local version `0.1.0` and keep the public version `5.3.1` intact, bumping to the version `5.3.5+0.2.0`.
+If `--local-version` is used, it will bump only the local version `0.1.0` and keep the public version `5.3.5` intact, bumping to the version `5.3.5+0.2.0`.
 
 ## Configuration
 
