@@ -83,6 +83,14 @@ optional arguments:
                         configuration and version_files
 ```
 
+### `--files-only`
+
+Bumps the version in the files defined in `version_files` without creating a commit and tag on the git repository,
+
+```bash
+cz bump --files-only
+```
+
 ### `--changelog`
 
 Generate a **changelog** along with the new version and tag when bumping.
