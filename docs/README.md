@@ -144,6 +144,32 @@ commands:
                         current project (default: installed commitizen)
 ```
 
+## Setting up bash completion
+
+When using bash as your shell (limited support for zsh, fish, and tcsh is available), Commitizen can use [argcomplete](https://kislyuk.github.io/argcomplete/) for auto-completion. For this argcomplete needs to be enabled.
+
+argcomplete is installed when you install Commitizen since it's a dependency.
+
+If Commitizen is installed globally, global activation can be executed:
+
+```bash
+sudo activate-global-python-argcomplete
+```
+
+For permanent (but not global) Commitizen activation, use:
+
+```bash
+register-python-argcomplete cz >> ~/.bashrc
+```
+
+For one-time activation of argcomplete for Commitizen only, use:
+
+```bash
+eval "$(register-python-argcomplete cz)"
+```
+
+For further information on activation, please visit the [argcomplete website](https://kislyuk.github.io/argcomplete/).
+
 ## Third-Party Commitizen Templates
 
 See [Third-Party Commitizen Templates](third-party-commitizen.md).
