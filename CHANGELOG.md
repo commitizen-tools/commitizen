@@ -1,3 +1,9 @@
+## v2.7.0 (2020-11-14)
+
+### Feat
+
+- **bump**: add flag `--local-version` that supports bumping only the local version instead of the public
+
 ## v2.6.0 (2020-11-04)
 
 ### Feat
