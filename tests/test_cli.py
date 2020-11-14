@@ -1,4 +1,5 @@
 import sys
+import subprocess
 
 import pytest
 
@@ -78,3 +79,16 @@ def test_commitizen_debug_excepthook(capsys):
     assert excinfo.type == SystemExit
     assert excinfo.value.code == NotAGitProjectError.exit_code
     assert "NotAGitProjectError" in str(excinfo.traceback[0])
+
+
+def test_argcomplete_activation():
+    """
+    This function is testing the one-time activation of argcomplete for
+    commitizen only.
+
+    Equivalent to run:
+    $ eval "$(register-python-argcomplete pytest)"
+    """
+    output = subprocess.run(["register-python-argcomplete", "cz"])
+
+    assert output.returncode == 0
