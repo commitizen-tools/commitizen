@@ -54,7 +54,7 @@ Some examples:
 
 ```bash
 $ cz bump --help
-usage: cz bump [-h] [--dry-run] [--files-only] [--changelog] [--no-verify]
+usage: cz bump [-h] [--dry-run] [--files-only] [--changelog] [--no-verify] [--local-version]
                [--yes] [--tag-format TAG_FORMAT] [--bump-message BUMP_MESSAGE]
                [--prerelease {alpha,beta,rc}]
                [--increment {MAJOR,MINOR,PATCH}] [--check-consistency]
@@ -67,6 +67,7 @@ optional arguments:
   --no-verify           this option bypasses the pre-commit and commit-msg
                         hooks
   --yes                 accept automatically questions done
+  --local-version       bump the local portion of the version
   --tag-format TAG_FORMAT
                         the format used to tag the commit and read it, use it
                         in existing projects, wrap around simple quotes
@@ -130,6 +131,24 @@ However, it will still update `pyproject.toml` and `src/__version__.py`.
 
 To fix it, you'll first `git checkout .` to reset to the status before trying to bump and update
 the version in `setup.py` to `1.21.0`
+
+
+### `--local-version`
+
+Bump the local portion of the version.
+
+```bash
+cz bump --local-version
+```
+
+For example, if we have `pyproject.toml`
+
+```toml
+[tool.commitizen]
+version = "5.3.5+0.1.0"
+```
+
+If `--local-version` is used, it will bump only the local version `0.1.0` and keep the public version `5.3.5` intact, bumping to the version `5.3.5+0.2.0`.
 
 ## Configuration
 

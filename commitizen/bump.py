@@ -108,7 +108,10 @@ def semver_generator(current_version: str, increment: str = None) -> str:
 
 
 def generate_version(
-    current_version: str, increment: str, prerelease: Optional[str] = None
+    current_version: str,
+    increment: str,
+    prerelease: Optional[str] = None,
+    is_local_version: bool = False,
 ) -> Version:
     """Based on the given increment a proper semver will be generated.
 
@@ -121,11 +124,19 @@ def generate_version(
         MINOR 1.0.0 -> 1.1.0
         MAJOR 1.0.0 -> 2.0.0
     """
-    pre_version = prerelease_generator(current_version, prerelease=prerelease)
-    semver = semver_generator(current_version, increment=increment)
-    # TODO: post version
-    # TODO: dev version
-    return Version(f"{semver}{pre_version}")
+    if is_local_version:
+        version = Version(current_version)
+        pre_version = prerelease_generator(str(version.local), prerelease=prerelease)
+        semver = semver_generator(str(version.local), increment=increment)
+
+        return Version(f"{version.public}+{semver}{pre_version}")
+    else:
+        pre_version = prerelease_generator(current_version, prerelease=prerelease)
+        semver = semver_generator(current_version, increment=increment)
+
+        # TODO: post version
+        # TODO: dev version
+        return Version(f"{semver}{pre_version}")
 
 
 def update_version_in_files(
@@ -188,7 +199,7 @@ def create_tag(version: Union[Version, str], tag_format: Optional[str] = None):
         version = Version(version)
 
     if not tag_format:
-        return version.public
+        return str(version)
 
     major, minor, patch = version.release
     prerelease = ""

@@ -92,6 +92,7 @@ class Bump:
         increment: Optional[str] = self.arguments["increment"]
         prerelease: str = self.arguments["prerelease"]
         is_files_only: Optional[bool] = self.arguments["files_only"]
+        is_local_version: Optional[bool] = self.arguments["local_version"]
 
         current_tag_version: str = bump.create_tag(
             current_version, tag_format=tag_format
@@ -117,7 +118,10 @@ class Bump:
             increment = None
 
         new_version = bump.generate_version(
-            current_version, increment, prerelease=prerelease
+            current_version,
+            increment,
+            prerelease=prerelease,
+            is_local_version=is_local_version,
         )
         new_tag_version = bump.create_tag(new_version, tag_format=tag_format)
         message = bump.create_commit_message(
@@ -140,7 +144,7 @@ class Bump:
 
         bump.update_version_in_files(
             current_version,
-            new_version.public,
+            str(new_version),
             version_files,
             check_consistency=self.check_consistency,
         )
@@ -159,7 +163,7 @@ class Bump:
             changelog_cmd()
             c = cmd.run(f"git add {changelog_cmd.file_name}")
 
-        self.config.set_key("version", new_version.public)
+        self.config.set_key("version", str(new_version))
         c = git.commit(message, args=self._get_commit_args())
         if c.return_code != 0:
             raise BumpCommitFailedError(f'git.commit error: "{c.err.strip()}"')

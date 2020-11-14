@@ -243,6 +243,27 @@ def test_bump_files_only(mocker, tmp_commitizen_project):
         assert "0.3.0" in f.read()
 
 
+def test_bump_local_version(mocker, tmp_commitizen_project):
+    tmp_version_file = tmp_commitizen_project.join("__version__.py")
+    tmp_version_file.write("4.5.1+0.1.0")
+    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_commitizen_cfg_file.write(
+        f"[tool.commitizen]\n"
+        'version="4.5.1+0.1.0"\n'
+        f'version_files = ["{str(tmp_version_file)}"]'
+    )
+
+    create_file_and_commit("feat: new user interface")
+    testargs = ["cz", "bump", "--yes", "--local-version"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    tag_exists = git.tag_exist("4.5.1+0.2.0")
+    assert tag_exists is True
+
+    with open(tmp_version_file, "r") as f:
+        assert "4.5.1+0.2.0" in f.read()
+
+
 def test_bump_dry_run(mocker, capsys, tmp_commitizen_project):
     create_file_and_commit("feat: new file")
 
