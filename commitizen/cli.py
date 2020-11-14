@@ -3,6 +3,7 @@ import logging
 import sys
 from functools import partial
 
+import argcomplete
 from decli import cli
 
 from commitizen import commands, config
@@ -265,6 +266,7 @@ def main():
     conf = config.read_cfg()
     parser = cli(data)
 
+    argcomplete.autocomplete(parser)
     # Show help if no arg provided
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)

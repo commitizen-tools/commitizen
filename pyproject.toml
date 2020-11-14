@@ -53,6 +53,7 @@ packaging = ">=19,<21"
 tomlkit = "^0.5.3"
 jinja2 = "^2.10.3"
 pyyaml = ">=3.08"
+argcomplete = "^1.12.1"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.2"
