@@ -1,3 +1,9 @@
+## v2.8.0 (2020-11-15)
+
+### Feat
+
+- allow files-only to set config version and create changelog
+
 ## v2.7.0 (2020-11-14)
 
 ### Feat
