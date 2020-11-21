@@ -12,7 +12,7 @@ versions](https://img.shields.io/pypi/pyversions/commitizen.svg?style=flat-squar
 
 ---
 
-**Documentation**: https://commitizen-tools.github.io/commitizen/
+**Documentation:** [https://commitizen-tools.github.io/commitizen/](https://commitizen-tools.github.io/commitizen/)
 
 ---
 
