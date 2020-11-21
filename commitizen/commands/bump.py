@@ -112,6 +112,19 @@ class Bump:
         if increment is None:
             increment = self.find_increment(commits)
 
+        # It may happen that there are commits, but they are not elegible
+        # for an increment, this generates a problem when using prerelease (#281)
+        if (
+            prerelease
+            and increment is None
+            and not current_version_instance.is_prerelease
+        ):
+            raise NoCommitsFoundError(
+                "[NO_COMMITS_FOUND]\n"
+                "No commits found to generate a pre-release.\n"
+                "To avoid this error, manually specify the type of increment with `--increment`"
+            )
+
         # Increment is removed when current and next version
         # are expected to be prereleases.
         if prerelease and current_version_instance.is_prerelease:
@@ -123,6 +136,7 @@ class Bump:
             prerelease=prerelease,
             is_local_version=is_local_version,
         )
+
         new_tag_version = bump.create_tag(new_version, tag_format=tag_format)
         message = bump.create_commit_message(
             current_version, new_version, bump_commit_message

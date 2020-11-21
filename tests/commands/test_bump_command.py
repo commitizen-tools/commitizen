@@ -358,3 +358,29 @@ def test_bump_with_changelog_config(mocker, changelog_path, config_path):
         out = f.read()
     assert out.startswith("#")
     assert "0.2.0" in out
+
+
+def test_prevent_prerelease_when_no_increment_detected(
+    mocker, capsys, tmp_commitizen_project
+):
+    create_file_and_commit("feat: new file")
+
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    cli.main()
+    out, _ = capsys.readouterr()
+
+    assert "0.2.0" in out
+
+    create_file_and_commit("test: new file")
+    testargs = ["cz", "bump", "-pr", "beta"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.raises(NoCommitsFoundError) as excinfo:
+        cli.main()
+
+    expected_error_message = (
+        "[NO_COMMITS_FOUND]\n" "No commits found to generate a pre-release."
+    )
+    assert expected_error_message in str(excinfo.value)
