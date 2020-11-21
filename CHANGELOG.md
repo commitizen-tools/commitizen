@@ -1,3 +1,9 @@
+## v2.8.2 (2020-11-21)
+
+### Fix
+
+- support `!` in cz check command
+
 ## v2.8.1 (2020-11-21)
 
 ### Fix
