@@ -11,6 +11,9 @@ project repository and then `Settings > Secrets > Add new secret`.
 3. In your repository create a new file `.github/workflows/bumpversion.yml`
 with the following content.
 
+!!! warning
+    If you use `GITHUB_TOKEN` instead of `PERSONAL_ACCESS_TOKEN`, the job won't trigger another workflow. It's like using `[skip ci]` in other CI's.
+
 ```yaml
 name: Bump version
 
