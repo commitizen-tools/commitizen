@@ -555,6 +555,10 @@ project repository and then <code>Settings &gt; Secrets &gt; Add new secret</cod
 <li>In your repository create a new file <code>.github/workflows/bumpversion.yml</code>
 with the following content.</li>
 </ol>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you use <code>GITHUB_TOKEN</code> instead of <code>PERSONAL_ACCESS_TOKEN</code>, the job won't trigger another workflow. It's like using <code>[skip ci]</code> in other CI's.</p>
+</div>
 <div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Bump version</span>
 
 <span class="nt">on</span><span class="p">:</span>
