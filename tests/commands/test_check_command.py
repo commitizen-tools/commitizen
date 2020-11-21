@@ -44,6 +44,7 @@ COMMIT_LOG = [
         'Revert "fix(pre-commit): set pre-commit check stage to commit-msg"\n'
         "This reverts commit afc70133e4a81344928561fbf3bb20738dfc8a0b."
     ),
+    "feat!: add user stuff",
 ]
 
 
