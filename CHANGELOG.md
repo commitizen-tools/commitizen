@@ -1,3 +1,9 @@
+## v2.8.1 (2020-11-21)
+
+### Fix
+
+- prevent prerelase from creating a bump when there are no commits
+
 ## v2.8.0 (2020-11-15)
 
 ### Feat
