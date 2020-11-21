@@ -178,7 +178,7 @@ class ConventionalCommitsCz(BaseCommitizen):
 
     def schema_pattern(self) -> str:
         PATTERN = (
-            r"(build|ci|docs|feat|fix|perf|refactor|style|test|chore|revert|bump)"
+            r"(build|ci|docs|feat|fix|perf|refactor|style|test|chore|revert|bump)!?"
             r"(\(\S+\))?:(\s.*)"
         )
         return PATTERN
