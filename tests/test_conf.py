@@ -1,3 +1,4 @@
+import json
 import os
 from pathlib import Path
 
@@ -23,6 +24,14 @@ line-length = 88
 target-version = ['py36', 'py37', 'py38']
 """
 
+JSON_CONFIG = {
+    "commitizen": {
+        "name": "cz_jira",
+        "version": "1.0.0",
+        "version_files": ["commitizen/__version__.py", "pyproject.toml"],
+        "style": [["pointer", "reverse"], ["question", "underline"]],
+    }
+}
 
 _settings = {
     "name": "cz_jira",
@@ -66,6 +75,8 @@ def config_files_manager(request, tmpdir):
         with open(filename, "w") as f:
             if "toml" in filename:
                 f.write(PYPROJECT)
+            if "json" in filename:
+                json.dump(JSON_CONFIG, f)
         yield
 
 
@@ -129,3 +140,13 @@ class TestTomlConfig:
 
         with open(path, "r") as toml_file:
             assert toml_file.read() == existing_content + "[tool.commitizen]"
+
+
+class TestJsonConfig:
+    def test_init_empty_config_content(self, tmpdir):
+        path = tmpdir.mkdir("commitizen").join(".cz.json")
+        json_config = config.JsonConfig(data="{}", path=path)
+        json_config.init_empty_config_content()
+
+        with open(path, "r") as json_file:
+            assert json.load(json_file) == {"commitizen": ""}
