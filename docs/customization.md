@@ -3,7 +3,7 @@ We have two different ways to do so.
 
 ## 1. Customize in configuration file
 
-**This is only supported when configuring through `toml` (e.g., `pyproject.toml`, `.cz`, and `.cz.toml`)**
+**This is only supported when configuring through `toml` or `json` (e.g., `pyproject.toml`, `.cz.toml`, `.cz.toml`, `.cz.json`, and `cz.json`)**
 
 The basic steps are:
 
@@ -44,6 +44,58 @@ message = "Body."
 type = "confirm"
 name = "show_message"
 message = "Do you want to add body message in commit?"
+```
+
+The equivalent example for a json config file:
+
+```json
+{
+    "commitizen": {
+	"name": "cz_customize",
+        "customize": {
+            "message_template": "{{change_type}}:{% if show_message %} {{message}}{% endif %}",
+            "example": "feature: this feature enable customize through config file",
+            "schema": "<type>: <body>",
+            "schema_pattern": "(feature|bug fix):(\\s.*)",
+            "bump_pattern": "^(break|new|fix|hotfix)",
+            "bump_map": {
+                "break": "MAJOR",
+                "new": "MINOR",
+                "fix": "PATCH",
+                "hotfix": "PATCH"
+            },
+	    "info_path": "cz_customize_info.txt",
+            "info": "This is customized info",
+            "questions": [
+                {
+                    "type": "list",
+                    "name": "change_type",
+                    "choices": [
+                        {
+                            "value": "feature",
+                            "name": "feature: A new feature."
+                        },
+                        {
+                            "value": "bug fix",
+                            "name": "bug fix: A bug fix."
+                        }
+                    ],
+                    "message": "Select the type of change you are committing"
+                },
+                {
+                    "type": "input",
+                    "name": "message",
+                    "message": "Body."
+                },
+                {
+                    "type": "confirm",
+                    "name": "show_message",
+                    "message": "Do you want to add body message in commit?"
+                }
+            ]
+        }
+    }
+}
 ```
 
 ### Customize configuration
