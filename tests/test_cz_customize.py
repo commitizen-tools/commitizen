@@ -1,13 +1,10 @@
 import pytest
 
-from commitizen.config import BaseConfig, TomlConfig
+from commitizen.config import BaseConfig, JsonConfig, TomlConfig
 from commitizen.cz.customize import CustomizeCommitsCz
 from commitizen.exceptions import MissingCzCustomizeConfigError
 
-
-@pytest.fixture(scope="module")
-def config():
-    toml_str = r"""
+TOML_STR = r"""
     [tool.commitizen.customize]
     message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
     example = "feature: this feature enable customize through config file"
@@ -36,8 +33,154 @@ def config():
     type = "confirm"
     name = "show_message"
     message = "Do you want to add body message in commit?"
+"""
+
+JSON_STR = r"""
+    {
+        "commitizen": {
+            "name": "cz_jira",
+            "version": "1.0.0",
+            "version_files": [
+                "commitizen/__version__.py",
+                "pyproject.toml"
+            ],
+            "customize": {
+                "message_template": "{{change_type}}:{% if show_message %} {{message}}{% endif %}",
+                "example": "feature: this feature enable customize through config file",
+                "schema": "<type>: <body>",
+                "schema_pattern": "(feature|bug fix):(\\s.*)",
+                "bump_pattern": "^(break|new|fix|hotfix)",
+                "bump_map": {
+                    "break": "MAJOR",
+                    "new": "MINOR",
+                    "fix": "PATCH",
+                    "hotfix": "PATCH"
+                },
+                "info": "This is a customized cz.",
+                "questions": [
+                    {
+                        "type": "list",
+                        "name": "change_type",
+                        "choices": [
+                            {
+                                "value": "feature",
+                                "name": "feature: A new feature."
+                            },
+                            {
+                                "value": "bug fix",
+                                "name": "bug fix: A bug fix."
+                            }
+                        ],
+                        "message": "Select the type of change you are committing"
+                    },
+                    {
+                        "type": "input",
+                        "name": "message",
+                        "message": "Body."
+                    },
+                    {
+                        "type": "confirm",
+                        "name": "show_message",
+                        "message": "Do you want to add body message in commit?"
+                    }
+                ]
+            }
+        }
+    }
+"""
+
+TOML_STR_INFO_PATH = """
+    [tool.commitizen.customize]
+    message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
+    example = "feature: this feature enable customize through config file"
+    schema = "<type>: <body>"
+    bump_pattern = "^(break|new|fix|hotfix)"
+    bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
+    info_path = "info.txt"
+"""
+
+JSON_STR_INFO_PATH = r"""
+    {
+        "commitizen": {
+            "customize": {
+                "message_template": "{{change_type}}:{% if show_message %} {{message}}{% endif %}",
+                "example": "feature: this feature enable customize through config file",
+                "schema": "<type>: <body>",
+                "bump_pattern": "^(break|new|fix|hotfix)",
+                "bump_map": {
+                    "break": "MAJOR",
+                    "new": "MINOR",
+                    "fix": "PATCH",
+                    "hotfix": "PATCH"
+                },
+                "info_path": "info.txt"
+            }
+        }
+    }
+"""
+
+TOML_STR_WITHOUT_INFO = """
+    [tool.commitizen.customize]
+    message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
+    example = "feature: this feature enable customize through config file"
+    schema = "<type>: <body>"
+    bump_pattern = "^(break|new|fix|hotfix)"
+    bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
+"""
+
+JSON_STR_WITHOUT_PATH = r"""
+    {
+        "commitizen": {
+            "customize": {
+                "message_template": "{{change_type}}:{% if show_message %} {{message}}{% endif %}",
+                "example": "feature: this feature enable customize through config file",
+                "schema": "<type>: <body>",
+                "bump_pattern": "^(break|new|fix|hotfix)",
+                "bump_map": {
+                    "break": "MAJOR",
+                    "new": "MINOR",
+                    "fix": "PATCH",
+                    "hotfix": "PATCH"
+                }
+            }
+        }
+    }
+"""
+
+
+@pytest.fixture(
+    params=[
+        TomlConfig(data=TOML_STR, path="not_exist.toml"),
+        JsonConfig(data=JSON_STR, path="not_exist.json"),
+    ]
+)
+def config(request):
+    """Parametrize the config fixture
+
+    This fixture allow to test multiple config formats,
+    without add the builtin parametrize decorator
     """
-    return TomlConfig(data=toml_str, path="not_exist.toml")
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        TomlConfig(data=TOML_STR_INFO_PATH, path="not_exist.toml"),
+        JsonConfig(data=JSON_STR_INFO_PATH, path="not_exist.json"),
+    ]
+)
+def config_info(request):
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        TomlConfig(data=TOML_STR_WITHOUT_INFO, path="not_exist.toml"),
+        JsonConfig(data=JSON_STR_WITHOUT_PATH, path="not_exist.json"),
+    ]
+)
+def config_without_info(request):
+    return request.param
 
 
 def test_initialize_cz_customize_failed():
@@ -126,34 +269,15 @@ def test_info(config):
     assert "This is a customized cz." in cz.info()
 
 
-def test_info_with_info_path(tmpdir):
+def test_info_with_info_path(tmpdir, config_info):
     with tmpdir.as_cwd():
         tmpfile = tmpdir.join("info.txt")
         tmpfile.write("Test info")
 
-        toml_str = """
-        [tool.commitizen.customize]
-        message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
-        example = "feature: this feature enable customize through config file"
-        schema = "<type>: <body>"
-        bump_pattern = "^(break|new|fix|hotfix)"
-        bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
-        info_path = "info.txt"
-        """
-        config = TomlConfig(data=toml_str, path="not_exist.toml")
-        cz = CustomizeCommitsCz(config)
+        cz = CustomizeCommitsCz(config_info)
         assert "Test info" in cz.info()
 
 
-def test_info_without_info():
-    toml_str = """
-    [tool.commitizen.customize]
-    message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
-    example = "feature: this feature enable customize through config file"
-    schema = "<type>: <body>"
-    bump_pattern = "^(break|new|fix|hotfix)"
-    bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
-    """
-    config = TomlConfig(data=toml_str, path="not_exist.toml")
-    cz = CustomizeCommitsCz(config)
+def test_info_without_info(config_without_info):
+    cz = CustomizeCommitsCz(config_without_info)
     assert cz.info() is None
