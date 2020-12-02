@@ -1,3 +1,14 @@
+## v2.9.0 (2020-12-02)
+
+### Fix
+
+- **json_config**: fix the emtpy_config_content method
+
+### Feat
+
+- **Init**: add the json config support as an option at Init
+- **commitizen/config/json_config**: add json support for configuration
+
 ## v2.8.2 (2020-11-21)
 
 ### Fix
