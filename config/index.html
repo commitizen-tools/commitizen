@@ -12,7 +12,7 @@
       
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.5">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.6">
     
     
       
@@ -20,7 +20,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.21aed14c.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.6910b76c.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.196e0c26.min.css">
@@ -312,6 +312,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#czjson-or-czjson" class="md-nav__link">
+    .cz.json or cz.json
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#settings" class="md-nav__link">
     Settings
   </a>
@@ -501,6 +508,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#czjson-or-czjson" class="md-nav__link">
+    .cz.json or cz.json
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#settings" class="md-nav__link">
     Settings
   </a>
@@ -545,6 +559,62 @@
 </code></pre></div>
 
 <p><code>.cz.toml</code> is recommended for <strong>other languages</strong> projects (js, go, etc).</p>
+<h2 id="czjson-or-czjson">.cz.json or cz.json</h2>
+<p>JSON may be a more commong configuration format for non-python projects, so Commitizen supports JSON config files, now.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+    <span class="nt">&quot;commitizen&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;cz_conventional_commits&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;version_files&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;src/__version__.py&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pyproject.toml:version&quot;</span>
+        <span class="p">],</span>
+        <span class="nt">&quot;style&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">[</span>
+                <span class="s2">&quot;qmark&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fg:#ff9d00 bold&quot;</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="s2">&quot;question&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;bold&quot;</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="s2">&quot;answer&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fg:#ff9d00 bold&quot;</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="s2">&quot;pointer&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fg:#ff9d00 bold&quot;</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="s2">&quot;highlighted&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fg:#ff9d00 bold&quot;</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="s2">&quot;selected&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fg:#cc5454&quot;</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="s2">&quot;separator&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fg:#cc5454&quot;</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="s2">&quot;instruction&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;&quot;</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;&quot;</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="s2">&quot;disabled&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fg:#858585 italic&quot;</span>
+            <span class="p">]</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
 <h2 id="settings">Settings</h2>
 <table>
 <thead>
@@ -672,8 +742,8 @@
       
     </div>
     
-      <script src="../assets/javascripts/vendor.7e0ee788.min.js"></script>
-      <script src="../assets/javascripts/bundle.b3a72adc.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      <script src="../assets/javascripts/vendor.fd16492e.min.js"></script>
+      <script src="../assets/javascripts/bundle.7836ba4d.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({

@@ -12,7 +12,7 @@
       
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.5">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.6">
     
     
       
@@ -20,7 +20,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.21aed14c.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.6910b76c.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.196e0c26.min.css">
@@ -639,7 +639,7 @@
                 <p>Customizing commitizen is not hard at all.
 We have two different ways to do so.</p>
 <h2 id="1-customize-in-configuration-file">1. Customize in configuration file</h2>
-<p><strong>This is only supported when configuring through <code>toml</code> (e.g., <code>pyproject.toml</code>, <code>.cz</code>, and <code>.cz.toml</code>)</strong></p>
+<p><strong>This is only supported when configuring through <code>toml</code> or <code>json</code> (e.g., <code>pyproject.toml</code>, <code>.cz.toml</code>, <code>.cz.toml</code>, <code>.cz.json</code>, and <code>cz.json</code>)</strong></p>
 <p>The basic steps are:</p>
 <ol>
 <li>Define your custom committing or bumping rules in the configuration file.</li>
@@ -677,6 +677,56 @@ We have two different ways to do so.</p>
 <span class="n">type</span> <span class="o">=</span> <span class="s">&quot;confirm&quot;</span>
 <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;show_message&quot;</span>
 <span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Do you want to add body message in commit?&quot;</span>
+</code></pre></div>
+
+<p>The equivalent example for a json config file:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+    <span class="nt">&quot;commitizen&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;cz_customize&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;customize&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;message_template&quot;</span><span class="p">:</span> <span class="s2">&quot;{{change_type}}:{% if show_message %} {{message}}{% endif %}&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;example&quot;</span><span class="p">:</span> <span class="s2">&quot;feature: this feature enable customize through config file&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;schema&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;type&gt;: &lt;body&gt;&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;schema_pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;(feature|bug fix):(\\s.*)&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;bump_pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^(break|new|fix|hotfix)&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;bump_map&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;break&quot;</span><span class="p">:</span> <span class="s2">&quot;MAJOR&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;new&quot;</span><span class="p">:</span> <span class="s2">&quot;MINOR&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;fix&quot;</span><span class="p">:</span> <span class="s2">&quot;PATCH&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;hotfix&quot;</span><span class="p">:</span> <span class="s2">&quot;PATCH&quot;</span>
+            <span class="p">},</span>
+        <span class="nt">&quot;info_path&quot;</span><span class="p">:</span> <span class="s2">&quot;cz_customize_info.txt&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;info&quot;</span><span class="p">:</span> <span class="s2">&quot;This is customized info&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;questions&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;change_type&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;choices&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;feature&quot;</span><span class="p">,</span>
+                            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;feature: A new feature.&quot;</span>
+                        <span class="p">},</span>
+                        <span class="p">{</span>
+                            <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;bug fix&quot;</span><span class="p">,</span>
+                            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;bug fix: A bug fix.&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">],</span>
+                    <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Select the type of change you are committing&quot;</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;message&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Body.&quot;</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;confirm&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;show_message&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Do you want to add body message in commit?&quot;</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 
 <h3 id="customize-configuration">Customize configuration</h3>
@@ -1079,8 +1129,8 @@ You can customize it of course, and this are the variables you need to add to yo
       
     </div>
     
-      <script src="../assets/javascripts/vendor.7e0ee788.min.js"></script>
-      <script src="../assets/javascripts/bundle.b3a72adc.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      <script src="../assets/javascripts/vendor.fd16492e.min.js"></script>
+      <script src="../assets/javascripts/bundle.7836ba4d.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({
