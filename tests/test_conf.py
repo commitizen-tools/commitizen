@@ -149,4 +149,4 @@ class TestJsonConfig:
         json_config.init_empty_config_content()
 
         with open(path, "r") as json_file:
-            assert json.load(json_file) == {"commitizen": ""}
+            assert json.load(json_file) == {"commitizen": {}}

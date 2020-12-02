@@ -1,3 +1,4 @@
+import json
 import os
 
 import pytest
@@ -29,6 +30,14 @@ expected_config = (
     'version = "0.0.1"\n'
     'tag_format = "$version"\n'
 )
+
+EXPECTED_JSON_CONFIG = {
+    "commitizen": {
+        "name": "cz_conventional_commits",
+        "version": "0.0.1",
+        "tag_format": "$version",
+    }
+}
 
 
 def test_init_without_setup_pre_commit_hook(tmpdir, mocker, config):
@@ -85,47 +94,54 @@ def test_init_without_choosing_tag(config, mocker, tmpdir):
 
 
 class TestPreCommitCases:
-    @pytest.fixture(scope="function", autouse=True)
-    def default_choices(_, mocker):
+    @pytest.fixture(scope="function", params=["pyproject.toml", ".cz.json"])
+    def default_choice(_, request, mocker):
         mocker.patch(
             "questionary.select",
             side_effect=[
-                FakeQuestion("pyproject.toml"),
+                FakeQuestion(request.param),
                 FakeQuestion("cz_conventional_commits"),
             ],
         )
         mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
         mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
         mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+        return request.param
 
-    def test_no_existing_pre_commit_conifg(_, tmpdir, config):
+    def test_no_existing_pre_commit_json_conifg(_, default_choice, tmpdir, config):
         with tmpdir.as_cwd():
             commands.Init(config)()
 
-            with open("pyproject.toml", "r") as toml_file:
-                config_data = toml_file.read()
-            assert config_data == expected_config
+            with open(default_choice, "r") as file:
+                if "json" in default_choice:
+                    assert json.load(file) == EXPECTED_JSON_CONFIG
+                else:
+                    config_data = file.read()
+                    assert config_data == expected_config
 
             with open(pre_commit_config_filename, "r") as pre_commit_file:
                 pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
             assert pre_commit_config_data == {"repos": [cz_hook_config]}
 
-    def test_empty_pre_commit_config(_, tmpdir, config):
+    def test_empty_pre_commit_config(_, default_choice, tmpdir, config):
         with tmpdir.as_cwd():
             p = tmpdir.join(pre_commit_config_filename)
             p.write("")
 
             commands.Init(config)()
 
-            with open("pyproject.toml", "r") as toml_file:
-                config_data = toml_file.read()
-            assert config_data == expected_config
+            with open(default_choice, "r") as file:
+                if "json" in default_choice:
+                    assert json.load(file) == EXPECTED_JSON_CONFIG
+                else:
+                    config_data = file.read()
+                    assert config_data == expected_config
 
             with open(pre_commit_config_filename, "r") as pre_commit_file:
                 pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
             assert pre_commit_config_data == {"repos": [cz_hook_config]}
 
-    def test_pre_commit_config_without_cz_hook(_, tmpdir, config):
+    def test_pre_commit_config_without_cz_hook(_, default_choice, tmpdir, config):
         existing_hook_config = {
             "repo": "https://github.com/pre-commit/pre-commit-hooks",
             "rev": "v1.2.3",
@@ -138,9 +154,12 @@ class TestPreCommitCases:
 
             commands.Init(config)()
 
-            with open("pyproject.toml", "r") as toml_file:
-                config_data = toml_file.read()
-            assert config_data == expected_config
+            with open(default_choice, "r") as file:
+                if "json" in default_choice:
+                    assert json.load(file) == EXPECTED_JSON_CONFIG
+                else:
+                    config_data = file.read()
+                    assert config_data == expected_config
 
             with open(pre_commit_config_filename, "r") as pre_commit_file:
                 pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
@@ -148,16 +167,19 @@ class TestPreCommitCases:
                 "repos": [existing_hook_config, cz_hook_config]
             }
 
-    def test_cz_hook_exists_in_pre_commit_config(_, tmpdir, config):
+    def test_cz_hook_exists_in_pre_commit_config(_, default_choice, tmpdir, config):
         with tmpdir.as_cwd():
             p = tmpdir.join(pre_commit_config_filename)
             p.write(yaml.safe_dump({"repos": [cz_hook_config]}))
 
             commands.Init(config)()
 
-            with open("pyproject.toml", "r") as toml_file:
-                config_data = toml_file.read()
-            assert config_data == expected_config
+            with open(default_choice, "r") as file:
+                if "json" in default_choice:
+                    assert json.load(file) == EXPECTED_JSON_CONFIG
+                else:
+                    config_data = file.read()
+                    assert config_data == expected_config
 
             with open(pre_commit_config_filename, "r") as pre_commit_file:
                 pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
