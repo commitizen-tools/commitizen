@@ -14,7 +14,7 @@ class JsonConfig(BaseConfig):
 
     def init_empty_config_content(self):
         with open(self.path, "a") as json_file:
-            json.dump({"commitizen": ""}, json_file)
+            json.dump({"commitizen": {}}, json_file)
 
     def set_key(self, key, value):
         """Set or update a key in the conf.
