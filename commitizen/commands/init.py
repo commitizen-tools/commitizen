@@ -6,7 +6,7 @@ from packaging.version import Version
 
 from commitizen import cmd, factory, out
 from commitizen.__version__ import __version__
-from commitizen.config import BaseConfig, TomlConfig
+from commitizen.config import BaseConfig, JsonConfig, TomlConfig
 from commitizen.cz import registry
 from commitizen.defaults import config_files
 from commitizen.exceptions import NoAnswersError
@@ -26,6 +26,8 @@ class Init:
             config_path = self._ask_config_path()
             if "toml" in config_path:
                 self.config = TomlConfig(data="", path=config_path)
+            elif "json" in config_path:
+                self.config = JsonConfig(data="{}", path=config_path)
 
             self.config.init_empty_config_content()
 
