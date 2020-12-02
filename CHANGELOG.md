@@ -1,3 +1,9 @@
+## v2.10.0 (2020-12-02)
+
+### Feat
+
+- **commitizen/cli**: add the integration with argcomplete
+
 ## v2.9.0 (2020-12-02)
 
 ### Fix
