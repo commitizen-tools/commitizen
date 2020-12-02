@@ -304,6 +304,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#setting-up-bash-completion" class="md-nav__link">
+    Setting up bash completion
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#third-party-commitizen-templates" class="md-nav__link">
     Third-Party Commitizen Templates
   </a>
@@ -691,6 +698,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#setting-up-bash-completion" class="md-nav__link">
+    Setting up bash completion
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#third-party-commitizen-templates" class="md-nav__link">
     Third-Party Commitizen Templates
   </a>
@@ -856,6 +870,22 @@ commands:
                         current project <span class="o">(</span>default: installed commitizen<span class="o">)</span>
 </code></pre></div>
 
+<h2 id="setting-up-bash-completion">Setting up bash completion</h2>
+<p>When using bash as your shell (limited support for zsh, fish, and tcsh is available), Commitizen can use <a href="https://kislyuk.github.io/argcomplete/">argcomplete</a> for auto-completion. For this argcomplete needs to be enabled.</p>
+<p>argcomplete is installed when you install Commitizen since it's a dependency.</p>
+<p>If Commitizen is installed globally, global activation can be executed:</p>
+<div class="codehilite"><pre><span></span><code>sudo activate-global-python-argcomplete
+</code></pre></div>
+
+<p>For permanent (but not global) Commitizen activation, use:</p>
+<div class="codehilite"><pre><span></span><code>register-python-argcomplete cz &gt;&gt; ~/.bashrc
+</code></pre></div>
+
+<p>For one-time activation of argcomplete for Commitizen only, use:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">eval</span> <span class="s2">&quot;</span><span class="k">$(</span>register-python-argcomplete cz<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+
+<p>For further information on activation, please visit the <a href="https://kislyuk.github.io/argcomplete/">argcomplete website</a>.</p>
 <h2 id="third-party-commitizen-templates">Third-Party Commitizen Templates</h2>
 <p>See <a href="third-party-commitizen/">Third-Party Commitizen Templates</a>.</p>
 <h2 id="faq">FAQ</h2>
