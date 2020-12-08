@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 
 import pytest
+import yaml
 
 from commitizen import config, defaults, git
 
@@ -24,7 +25,7 @@ line-length = 88
 target-version = ['py36', 'py37', 'py38']
 """
 
-JSON_CONFIG = {
+DICT_CONFIG = {
     "commitizen": {
         "name": "cz_jira",
         "version": "1.0.0",
@@ -32,6 +33,7 @@ JSON_CONFIG = {
         "style": [["pointer", "reverse"], ["question", "underline"]],
     }
 }
+
 
 _settings = {
     "name": "cz_jira",
@@ -75,8 +77,10 @@ def config_files_manager(request, tmpdir):
         with open(filename, "w") as f:
             if "toml" in filename:
                 f.write(PYPROJECT)
-            if "json" in filename:
-                json.dump(JSON_CONFIG, f)
+            elif "json" in filename:
+                json.dump(DICT_CONFIG, f)
+            elif "yaml" in filename:
+                yaml.dump(DICT_CONFIG, f)
         yield
 
 

@@ -2,7 +2,14 @@ from collections import OrderedDict
 from typing import Any, Dict, List
 
 name: str = "cz_conventional_commits"
-config_files: List[str] = ["pyproject.toml", ".cz.toml", ".cz.json", "cz.json"]
+config_files: List[str] = [
+    "pyproject.toml",
+    ".cz.toml",
+    ".cz.json",
+    "cz.json",
+    ".cz.yaml",
+    "cz.yaml",
+]
 
 DEFAULT_SETTINGS: Dict[str, Any] = {
     "name": "cz_conventional_commits",
