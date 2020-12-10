@@ -1,3 +1,13 @@
+## v2.11.0 (2020-12-10)
+
+### Feat
+
+- add yaml as a config option
+
+### feat
+
+- **config**: add support for the new class YAMLConfig at the root of the confi internal package
+
 ## v2.10.0 (2020-12-02)
 
 ### Feat
