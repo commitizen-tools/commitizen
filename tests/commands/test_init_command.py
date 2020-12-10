@@ -31,7 +31,7 @@ expected_config = (
     'tag_format = "$version"\n'
 )
 
-EXPECTED_JSON_CONFIG = {
+EXPECTED_DICT_CONFIG = {
     "commitizen": {
         "name": "cz_conventional_commits",
         "version": "0.0.1",
@@ -94,7 +94,7 @@ def test_init_without_choosing_tag(config, mocker, tmpdir):
 
 
 class TestPreCommitCases:
-    @pytest.fixture(scope="function", params=["pyproject.toml", ".cz.json"])
+    @pytest.fixture(scope="function", params=["pyproject.toml", ".cz.json", ".cz.yaml"])
     def default_choice(_, request, mocker):
         mocker.patch(
             "questionary.select",
@@ -108,13 +108,15 @@ class TestPreCommitCases:
         mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
         return request.param
 
-    def test_no_existing_pre_commit_json_conifg(_, default_choice, tmpdir, config):
+    def test_no_existing_pre_commit_conifg(_, default_choice, tmpdir, config):
         with tmpdir.as_cwd():
             commands.Init(config)()
 
             with open(default_choice, "r") as file:
                 if "json" in default_choice:
-                    assert json.load(file) == EXPECTED_JSON_CONFIG
+                    assert json.load(file) == EXPECTED_DICT_CONFIG
+                elif "yaml" in default_choice:
+                    assert yaml.load(file) == EXPECTED_DICT_CONFIG
                 else:
                     config_data = file.read()
                     assert config_data == expected_config
@@ -132,7 +134,9 @@ class TestPreCommitCases:
 
             with open(default_choice, "r") as file:
                 if "json" in default_choice:
-                    assert json.load(file) == EXPECTED_JSON_CONFIG
+                    assert json.load(file) == EXPECTED_DICT_CONFIG
+                elif "yaml" in default_choice:
+                    assert yaml.load(file) == EXPECTED_DICT_CONFIG
                 else:
                     config_data = file.read()
                     assert config_data == expected_config
@@ -156,7 +160,9 @@ class TestPreCommitCases:
 
             with open(default_choice, "r") as file:
                 if "json" in default_choice:
-                    assert json.load(file) == EXPECTED_JSON_CONFIG
+                    assert json.load(file) == EXPECTED_DICT_CONFIG
+                elif "yaml" in default_choice:
+                    assert yaml.load(file) == EXPECTED_DICT_CONFIG
                 else:
                     config_data = file.read()
                     assert config_data == expected_config
@@ -176,7 +182,9 @@ class TestPreCommitCases:
 
             with open(default_choice, "r") as file:
                 if "json" in default_choice:
-                    assert json.load(file) == EXPECTED_JSON_CONFIG
+                    assert json.load(file) == EXPECTED_DICT_CONFIG
+                elif "yaml" in default_choice:
+                    assert yaml.load(file) == EXPECTED_DICT_CONFIG
                 else:
                     config_data = file.read()
                     assert config_data == expected_config

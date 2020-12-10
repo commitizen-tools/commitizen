@@ -6,6 +6,7 @@ from commitizen import defaults, git
 from .base_config import BaseConfig
 from .json_config import JsonConfig
 from .toml_config import TomlConfig
+from .yaml_config import YAMLConfig
 
 
 def read_cfg() -> BaseConfig:
@@ -25,15 +26,17 @@ def read_cfg() -> BaseConfig:
         if not filename.exists():
             continue
 
+        _conf: Union[TomlConfig, JsonConfig, YAMLConfig]
+
         with open(filename, "r") as f:
             data: str = f.read()
 
-        _conf: Union[TomlConfig, JsonConfig]
         if "toml" in filename.suffix:
             _conf = TomlConfig(data=data, path=filename)
-
-        if "json" in filename.suffix:
+        elif "json" in filename.suffix:
             _conf = JsonConfig(data=data, path=filename)
+        elif "yaml" in filename.suffix:
+            _conf = YAMLConfig(data=data, path=filename)
 
         if _conf.is_empty_config:
             continue

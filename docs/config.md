@@ -30,7 +30,7 @@ style = [
 
 ## .cz.json or cz.json
 
-JSON may be a more commong configuration format for non-python projects, so Commitizen supports JSON config files, now.
+JSON might be a more common configuration format for non-python projects, so Commitizen supports JSON config files, now.
 
 ```json
 {
@@ -85,6 +85,39 @@ JSON may be a more commong configuration format for non-python projects, so Comm
         ]
     }
 }
+```
+
+## .cz.yaml or cz.yaml
+YAML is another format for **non-python** proyects as well, supported by Commitizen:
+
+```yaml
+commitizen:
+  name: cz_conventional_commits
+  version: 0.1.0
+  version_files:
+  - src/__version__.py
+  - pyproject.toml:version
+  style:
+  - - qmark
+    - fg:#ff9d00 bold
+  - - question
+    - bold
+  - - answer
+    - fg:#ff9d00 bold
+  - - pointer
+    - fg:#ff9d00 bold
+  - - highlighted
+    - fg:#ff9d00 bold
+  - - selected
+    - fg:#cc5454
+  - - separator
+    - fg:#cc5454
+  - - instruction
+    - ''
+  - - text
+    - ''
+  - - disabled
+    - fg:#858585 italic
 ```
 
 ## Settings
