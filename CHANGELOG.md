@@ -1,3 +1,9 @@
+## v2.11.1 (2020-12-16)
+
+### Fix
+
+- **commit**: attach user info to backup for permission denied issue
+
 ## v2.11.0 (2020-12-10)
 
 ### Feat
