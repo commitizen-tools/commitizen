@@ -28,7 +28,10 @@ class Commit:
         self.config: BaseConfig = config
         self.cz = factory.commiter_factory(self.config)
         self.arguments = arguments
-        self.temp_file: str = os.path.join(tempfile.gettempdir(), "cz.commit.backup")
+        self.temp_file: str = os.path.join(
+            tempfile.gettempdir(),
+            "cz.commit{user}.backup".format(user=os.environ.get("USER", "")),
+        )
 
     def read_backup_message(self) -> str:
         # Check the commit backup file exists
