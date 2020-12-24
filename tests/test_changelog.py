@@ -472,7 +472,7 @@ TAGS = [
 ]
 
 
-@pytest.fixture  # type: ignore
+@pytest.fixture
 def gitcommits() -> list:
     commits = [
         git.GitCommit(
@@ -487,13 +487,13 @@ def gitcommits() -> list:
     return commits
 
 
-@pytest.fixture  # type: ignore
+@pytest.fixture
 def tags() -> list:
     tags = [git.GitTag(*tag) for tag in TAGS]
     return tags
 
 
-@pytest.fixture  # type: ignore
+@pytest.fixture
 def changelog_content() -> str:
     changelog_path = "tests/CHANGELOG_FOR_TEST.md"
     with open(changelog_path, "r") as f:
