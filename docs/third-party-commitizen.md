@@ -18,3 +18,15 @@ Just like *conventional commit* format, but with emojis and optionally time spen
 It can be installed with `pip install commitizen-emoji`.
 
 Usage: `cz --name cz_commitizen_emoji commit`.
+
+### [Conventional Legacy (cz_legacy)][1]
+
+An extension of the *conventional commit* format to include user-specified
+legacy change types in the `CHANGELOG` while preventing the legacy change types
+from being used in new commit messages
+
+`cz_legacy` can be installed with `pip install cz_legacy`
+
+See the [README][1] for instructions on configuration
+
+  [1]: https://pypi.org/project/cz_legacy
