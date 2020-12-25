@@ -1,5 +1,20 @@
 from collections import OrderedDict
-from typing import Any, Dict, List
+from typing import List, Optional, TypedDict
+
+
+# Type
+class Settings(TypedDict):
+    name: str
+    version: Optional[str]
+    version_files: List[str]
+    tag_format: Optional[str]
+    bump_message: Optional[str]
+    changelog_file: str
+    changelog_incremental: bool
+    changelog_start_rev: Optional[str]
+    update_changelog_on_bump: bool
+    use_shortcuts: bool
+
 
 name: str = "cz_conventional_commits"
 config_files: List[str] = [
@@ -11,7 +26,7 @@ config_files: List[str] = [
     "cz.yaml",
 ]
 
-DEFAULT_SETTINGS: Dict[str, Any] = {
+DEFAULT_SETTINGS: Settings = {
     "name": "cz_conventional_commits",
     "version": None,
     "version_files": [],

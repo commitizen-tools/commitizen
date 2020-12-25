@@ -30,7 +30,7 @@ class JsonConfig(BaseConfig):
             json.dump(parser, f, indent=2)
         return self
 
-    def _parse_setting(self, data: Union[bytes, str]):
+    def _parse_setting(self, data: Union[bytes, str]) -> None:
         """We expect to have a section in .cz.json looking like
 
         ```

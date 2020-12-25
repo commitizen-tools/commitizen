@@ -132,7 +132,7 @@ def generate_version(
 
 def update_version_in_files(
     current_version: str, new_version: str, files: List[str], *, check_consistency=False
-):
+) -> None:
     """Change old version to the new one in every file given.
 
     Note that this version is not the tag formatted one.
@@ -196,7 +196,7 @@ def _version_to_regex(version: str):
     return re.compile(f"{clean_regex}")
 
 
-def create_tag(version: Union[Version, str], tag_format: Optional[str] = None):
+def create_tag(version: Union[Version, str], tag_format: Optional[str] = None) -> str:
     """The tag and the software version might be different.
 
     That's why this function exists.
