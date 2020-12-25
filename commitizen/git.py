@@ -54,12 +54,12 @@ class GitTag(GitObject):
         return cls(name=name, rev=obj, date=date)
 
 
-def tag(tag: str, annotated: bool = False):
+def tag(tag: str, annotated: bool = False) -> cmd.Command:
     c = cmd.run(f"git tag -a {tag} -m {tag}" if annotated else f"git tag {tag}")
     return c
 
 
-def commit(message: str, args: str = ""):
+def commit(message: str, args: str = "") -> cmd.Command:
     f = NamedTemporaryFile("wb", delete=False)
     f.write(message.encode("utf-8"))
     f.close()

@@ -25,11 +25,11 @@ class BaseConfig:
         """
         raise NotImplementedError()
 
-    def update(self, data: dict):
+    def update(self, data: dict) -> None:
         self._settings.update(data)
 
-    def add_path(self, path: Union[str, Path]):
+    def add_path(self, path: Union[str, Path]) -> None:
         self._path = Path(path)
 
-    def _parse_setting(self, data: Union[bytes, str]) -> dict:
+    def _parse_setting(self, data: Union[bytes, str]) -> None:
         raise NotImplementedError()

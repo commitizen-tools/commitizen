@@ -17,7 +17,7 @@ class YAMLConfig(BaseConfig):
         with open(self.path, "a") as json_file:
             yaml.dump({"commitizen": {}}, json_file)
 
-    def _parse_setting(self, data: Union[bytes, str]):
+    def _parse_setting(self, data: Union[bytes, str]) -> None:
         """We expect to have a section in cz.yaml looking like
 
         ```

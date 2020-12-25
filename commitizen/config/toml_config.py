@@ -41,7 +41,7 @@ class TomlConfig(BaseConfig):
             f.write(parser.as_string().encode("utf-8"))
         return self
 
-    def _parse_setting(self, data: Union[bytes, str]):
+    def _parse_setting(self, data: Union[bytes, str]) -> None:
         """We expect to have a section in pyproject looking like
 
         ```
