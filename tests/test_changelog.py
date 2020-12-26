@@ -509,6 +509,283 @@ def test_get_commit_tag_is_None(gitcommits, tags):
     assert current_key is None
 
 
+COMMITS_TREE = (
+    {
+        "version": "v1.2.0",
+        "date": "2019-04-19",
+        "changes": {
+            "feat": [
+                {
+                    "scope": None,
+                    "breaking": None,
+                    "message": "custom cz plugins now support bumping version",
+                }
+            ]
+        },
+    },
+    {
+        "version": "v1.1.1",
+        "date": "2019-04-18",
+        "changes": {
+            "refactor": [
+                {
+                    "scope": None,
+                    "breaking": None,
+                    "message": "changed stdout statements",
+                },
+                {
+                    "scope": "schema",
+                    "breaking": None,
+                    "message": "command logic removed from commitizen base",
+                },
+                {
+                    "scope": "info",
+                    "breaking": None,
+                    "message": "command logic removed from commitizen base",
+                },
+                {
+                    "scope": "example",
+                    "breaking": None,
+                    "message": "command logic removed from commitizen base",
+                },
+                {
+                    "scope": "commit",
+                    "breaking": None,
+                    "message": "moved most of the commit logic to the commit command",
+                },
+            ],
+            "fix": [
+                {
+                    "scope": "bump",
+                    "breaking": None,
+                    "message": "commit message now fits better with semver",
+                },
+                {
+                    "scope": None,
+                    "breaking": None,
+                    "message": "conventional commit 'breaking change' in body instead of title",
+                },
+            ],
+        },
+    },
+    {
+        "version": "v1.1.0",
+        "date": "2019-04-14",
+        "changes": {
+            "feat": [
+                {
+                    "scope": None,
+                    "breaking": None,
+                    "message": "new working bump command",
+                },
+                {"scope": None, "breaking": None, "message": "create version tag"},
+                {
+                    "scope": None,
+                    "breaking": None,
+                    "message": "update given files with new version",
+                },
+                {
+                    "scope": "config",
+                    "breaking": None,
+                    "message": "new set key, used to set version to cfg",
+                },
+                {
+                    "scope": None,
+                    "breaking": None,
+                    "message": "support for pyproject.toml",
+                },
+                {
+                    "scope": None,
+                    "breaking": None,
+                    "message": "first semantic version bump implementation",
+                },
+            ],
+            "fix": [
+                {
+                    "scope": None,
+                    "breaking": None,
+                    "message": "removed all from commit",
+                },
+                {
+                    "scope": None,
+                    "breaking": None,
+                    "message": "fix config file not working",
+                },
+            ],
+            "refactor": [
+                {
+                    "scope": None,
+                    "breaking": None,
+                    "message": "added commands folder, better integration with decli",
+                }
+            ],
+        },
+    },
+    {
+        "version": "v1.0.0",
+        "date": "2019-03-01",
+        "changes": {
+            "refactor": [
+                {
+                    "scope": None,
+                    "breaking": None,
+                    "message": "removed delegator, added decli and many tests",
+                }
+            ],
+            "BREAKING CHANGE": [
+                {"scope": None, "breaking": None, "message": "API is stable"}
+            ],
+        },
+    },
+    {"version": "1.0.0b2", "date": "2019-01-18", "changes": {}},
+    {
+        "version": "v1.0.0b1",
+        "date": "2019-01-17",
+        "changes": {
+            "feat": [
+                {
+                    "scope": None,
+                    "breaking": None,
+                    "message": "py3 only, tests and conventional commits 1.0",
+                }
+            ]
+        },
+    },
+    {
+        "version": "v0.9.11",
+        "date": "2018-12-17",
+        "changes": {
+            "fix": [
+                {
+                    "scope": "config",
+                    "breaking": None,
+                    "message": "load config reads in order without failing if there is no commitizen section",
+                }
+            ]
+        },
+    },
+    {
+        "version": "v0.9.10",
+        "date": "2018-09-22",
+        "changes": {
+            "fix": [
+                {
+                    "scope": None,
+                    "breaking": None,
+                    "message": "parse scope (this is my punishment for not having tests)",
+                }
+            ]
+        },
+    },
+    {
+        "version": "v0.9.9",
+        "date": "2018-09-22",
+        "changes": {
+            "fix": [{"scope": None, "breaking": None, "message": "parse scope empty"}]
+        },
+    },
+    {
+        "version": "v0.9.8",
+        "date": "2018-09-22",
+        "changes": {
+            "fix": [
+                {
+                    "scope": "scope",
+                    "breaking": None,
+                    "message": "parse correctly again",
+                }
+            ]
+        },
+    },
+    {
+        "version": "v0.9.7",
+        "date": "2018-09-22",
+        "changes": {
+            "fix": [{"scope": "scope", "breaking": None, "message": "parse correctly"}]
+        },
+    },
+    {
+        "version": "v0.9.6",
+        "date": "2018-09-19",
+        "changes": {
+            "refactor": [
+                {
+                    "scope": "conventionalCommit",
+                    "breaking": None,
+                    "message": "moved filters to questions instead of message",
+                }
+            ],
+            "fix": [
+                {
+                    "scope": "manifest",
+                    "breaking": None,
+                    "message": "included missing files",
+                }
+            ],
+        },
+    },
+    {
+        "version": "v0.9.5",
+        "date": "2018-08-24",
+        "changes": {
+            "fix": [
+                {
+                    "scope": "config",
+                    "breaking": None,
+                    "message": "home path for python versions between 3.0 and 3.5",
+                }
+            ]
+        },
+    },
+    {
+        "version": "v0.9.4",
+        "date": "2018-08-02",
+        "changes": {
+            "feat": [{"scope": "cli", "breaking": None, "message": "added version"}]
+        },
+    },
+    {
+        "version": "v0.9.3",
+        "date": "2018-07-28",
+        "changes": {
+            "feat": [
+                {
+                    "scope": "committer",
+                    "breaking": None,
+                    "message": "conventional commit is a bit more intelligent now",
+                }
+            ]
+        },
+    },
+    {
+        "version": "v0.9.2",
+        "date": "2017-11-11",
+        "changes": {
+            "refactor": [
+                {
+                    "scope": None,
+                    "breaking": None,
+                    "message": "renamed conventional_changelog to conventional_commits, not backward compatible",
+                }
+            ]
+        },
+    },
+    {
+        "version": "v0.9.1",
+        "date": "2017-11-11",
+        "changes": {
+            "fix": [
+                {
+                    "scope": "setup.py",
+                    "breaking": None,
+                    "message": "future is now required for every python version",
+                }
+            ]
+        },
+    },
+)
+
+
 def test_generate_tree_from_commits(gitcommits, tags):
     parser = defaults.commit_parser
     changelog_pattern = defaults.bump_pattern
@@ -516,285 +793,7 @@ def test_generate_tree_from_commits(gitcommits, tags):
         gitcommits, tags, parser, changelog_pattern
     )
 
-    assert tuple(tree) == (
-        {
-            "version": "v1.2.0",
-            "date": "2019-04-19",
-            "changes": {
-                "feat": [
-                    {
-                        "scope": None,
-                        "breaking": None,
-                        "message": "custom cz plugins now support bumping version",
-                    }
-                ]
-            },
-        },
-        {
-            "version": "v1.1.1",
-            "date": "2019-04-18",
-            "changes": {
-                "refactor": [
-                    {
-                        "scope": None,
-                        "breaking": None,
-                        "message": "changed stdout statements",
-                    },
-                    {
-                        "scope": "schema",
-                        "breaking": None,
-                        "message": "command logic removed from commitizen base",
-                    },
-                    {
-                        "scope": "info",
-                        "breaking": None,
-                        "message": "command logic removed from commitizen base",
-                    },
-                    {
-                        "scope": "example",
-                        "breaking": None,
-                        "message": "command logic removed from commitizen base",
-                    },
-                    {
-                        "scope": "commit",
-                        "breaking": None,
-                        "message": "moved most of the commit logic to the commit command",
-                    },
-                ],
-                "fix": [
-                    {
-                        "scope": "bump",
-                        "breaking": None,
-                        "message": "commit message now fits better with semver",
-                    },
-                    {
-                        "scope": None,
-                        "breaking": None,
-                        "message": "conventional commit 'breaking change' in body instead of title",
-                    },
-                ],
-            },
-        },
-        {
-            "version": "v1.1.0",
-            "date": "2019-04-14",
-            "changes": {
-                "feat": [
-                    {
-                        "scope": None,
-                        "breaking": None,
-                        "message": "new working bump command",
-                    },
-                    {"scope": None, "breaking": None, "message": "create version tag"},
-                    {
-                        "scope": None,
-                        "breaking": None,
-                        "message": "update given files with new version",
-                    },
-                    {
-                        "scope": "config",
-                        "breaking": None,
-                        "message": "new set key, used to set version to cfg",
-                    },
-                    {
-                        "scope": None,
-                        "breaking": None,
-                        "message": "support for pyproject.toml",
-                    },
-                    {
-                        "scope": None,
-                        "breaking": None,
-                        "message": "first semantic version bump implementation",
-                    },
-                ],
-                "fix": [
-                    {
-                        "scope": None,
-                        "breaking": None,
-                        "message": "removed all from commit",
-                    },
-                    {
-                        "scope": None,
-                        "breaking": None,
-                        "message": "fix config file not working",
-                    },
-                ],
-                "refactor": [
-                    {
-                        "scope": None,
-                        "breaking": None,
-                        "message": "added commands folder, better integration with decli",
-                    }
-                ],
-            },
-        },
-        {
-            "version": "v1.0.0",
-            "date": "2019-03-01",
-            "changes": {
-                "refactor": [
-                    {
-                        "scope": None,
-                        "breaking": None,
-                        "message": "removed delegator, added decli and many tests",
-                    }
-                ],
-                "BREAKING CHANGE": [
-                    {"scope": None, "breaking": None, "message": "API is stable"}
-                ],
-            },
-        },
-        {"version": "1.0.0b2", "date": "2019-01-18", "changes": {}},
-        {
-            "version": "v1.0.0b1",
-            "date": "2019-01-17",
-            "changes": {
-                "feat": [
-                    {
-                        "scope": None,
-                        "breaking": None,
-                        "message": "py3 only, tests and conventional commits 1.0",
-                    }
-                ]
-            },
-        },
-        {
-            "version": "v0.9.11",
-            "date": "2018-12-17",
-            "changes": {
-                "fix": [
-                    {
-                        "scope": "config",
-                        "breaking": None,
-                        "message": "load config reads in order without failing if there is no commitizen section",
-                    }
-                ]
-            },
-        },
-        {
-            "version": "v0.9.10",
-            "date": "2018-09-22",
-            "changes": {
-                "fix": [
-                    {
-                        "scope": None,
-                        "breaking": None,
-                        "message": "parse scope (this is my punishment for not having tests)",
-                    }
-                ]
-            },
-        },
-        {
-            "version": "v0.9.9",
-            "date": "2018-09-22",
-            "changes": {
-                "fix": [
-                    {"scope": None, "breaking": None, "message": "parse scope empty"}
-                ]
-            },
-        },
-        {
-            "version": "v0.9.8",
-            "date": "2018-09-22",
-            "changes": {
-                "fix": [
-                    {
-                        "scope": "scope",
-                        "breaking": None,
-                        "message": "parse correctly again",
-                    }
-                ]
-            },
-        },
-        {
-            "version": "v0.9.7",
-            "date": "2018-09-22",
-            "changes": {
-                "fix": [
-                    {"scope": "scope", "breaking": None, "message": "parse correctly"}
-                ]
-            },
-        },
-        {
-            "version": "v0.9.6",
-            "date": "2018-09-19",
-            "changes": {
-                "refactor": [
-                    {
-                        "scope": "conventionalCommit",
-                        "breaking": None,
-                        "message": "moved filters to questions instead of message",
-                    }
-                ],
-                "fix": [
-                    {
-                        "scope": "manifest",
-                        "breaking": None,
-                        "message": "included missing files",
-                    }
-                ],
-            },
-        },
-        {
-            "version": "v0.9.5",
-            "date": "2018-08-24",
-            "changes": {
-                "fix": [
-                    {
-                        "scope": "config",
-                        "breaking": None,
-                        "message": "home path for python versions between 3.0 and 3.5",
-                    }
-                ]
-            },
-        },
-        {
-            "version": "v0.9.4",
-            "date": "2018-08-02",
-            "changes": {
-                "feat": [{"scope": "cli", "breaking": None, "message": "added version"}]
-            },
-        },
-        {
-            "version": "v0.9.3",
-            "date": "2018-07-28",
-            "changes": {
-                "feat": [
-                    {
-                        "scope": "committer",
-                        "breaking": None,
-                        "message": "conventional commit is a bit more intelligent now",
-                    }
-                ]
-            },
-        },
-        {
-            "version": "v0.9.2",
-            "date": "2017-11-11",
-            "changes": {
-                "refactor": [
-                    {
-                        "scope": None,
-                        "breaking": None,
-                        "message": "renamed conventional_changelog to conventional_commits, not backward compatible",
-                    }
-                ]
-            },
-        },
-        {
-            "version": "v0.9.1",
-            "date": "2017-11-11",
-            "changes": {
-                "fix": [
-                    {
-                        "scope": "setup.py",
-                        "breaking": None,
-                        "message": "future is now required for every python version",
-                    }
-                ]
-            },
-        },
-    )
+    assert tuple(tree) == COMMITS_TREE
 
 
 def test_render_changelog(gitcommits, tags, changelog_content):
