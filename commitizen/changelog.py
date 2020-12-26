@@ -24,9 +24,10 @@ Extra:
 - [x] hook after changelog is generated (api calls)
 - [x] add support for change_type maps
 """
+
 import os
 import re
-from collections import defaultdict
+from collections import OrderedDict, defaultdict
 from datetime import date
 from typing import Callable, Dict, Iterable, List, Optional
 
@@ -98,7 +99,7 @@ def generate_tree_from_commits(
                 "date": current_tag_date,
                 "changes": changes,
             }
-            # TODO: Check if tag matches the version pattern, otherwie skip it.
+            # TODO: Check if tag matches the version pattern, otherwise skip it.
             # This in order to prevent tags that are not versions.
             current_tag_name = commit_tag.name
             current_tag_date = commit_tag.date
@@ -126,6 +127,19 @@ def generate_tree_from_commits(
             changes[change_type].append(parsed_message_body)
 
     yield {"version": current_tag_name, "date": current_tag_date, "changes": changes}
+
+
+def order_changelog_tree(tree: Iterable, change_type_order: List[str]) -> Iterable:
+    sorted_tree = []
+    for entry in tree:
+        entry_change_types = sorted(entry["changes"].keys())
+        ordered_change_types = []
+        for ct in change_type_order + entry_change_types:
+            if ct in entry_change_types and ct not in ordered_change_types:
+                ordered_change_types.append(ct)
+        changes = [(ct, entry["changes"][ct]) for ct in ordered_change_types]
+        sorted_tree.append({**entry, **{"changes": OrderedDict(changes)}})
+    return sorted_tree
 
 
 def render_changelog(tree: Iterable) -> str:
