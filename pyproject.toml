@@ -71,6 +71,9 @@ freezegun = "^0.3.15"
 pydocstyle = "^5.0.2"
 pre-commit = "^2.6.0"
 
+# FIXME: Remove for submission (testing issues/319-only)
+pytest-watch = "*"
+
 [tool.poetry.scripts]
 cz = "commitizen.cli:main"
 git-cz = "commitizen.cli:main"
@@ -81,6 +84,7 @@ include_trailing_comma = true
 force_grid_wrap = 0
 combine_as_imports = true
 line_length = 88
+known_first_party = ["commitizen", "tests"]
 
 [tool.coverage]
     [tool.coverage.report]

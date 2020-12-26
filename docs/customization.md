@@ -23,6 +23,7 @@ schema = "<type>: <body>"
 schema_pattern = "(feature|bug fix):(\\s.*)"
 bump_pattern = "^(break|new|fix|hotfix)"
 bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
+change_type_order = ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]
 info_path = "cz_customize_info.txt"
 info = """
 This is customized info
@@ -51,7 +52,7 @@ The equivalent example for a json config file:
 ```json
 {
     "commitizen": {
-	"name": "cz_customize",
+    "name": "cz_customize",
         "customize": {
             "message_template": "{{change_type}}:{% if show_message %} {{message}}{% endif %}",
             "example": "feature: this feature enable customize through config file",
@@ -64,7 +65,8 @@ The equivalent example for a json config file:
                 "fix": "PATCH",
                 "hotfix": "PATCH"
             },
-	    "info_path": "cz_customize_info.txt",
+            "change_type_order": ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"],
+            "info_path": "cz_customize_info.txt",
             "info": "This is customized info",
             "questions": [
                 {
@@ -114,6 +116,7 @@ commitizen:
       new: MINOR
       fix: PATCH
       hotfix: PATCH
+    change_type_order: ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]
     info_path: cz_customize_info.txt
     info: This is customized info
     questions:
@@ -146,6 +149,7 @@ commitizen:
 | `info`             | `str`  | `None`  | (OPTIONAL) Explanation of the commit rules. Used by `cz info`.                                                                                                                                                                                                         |
 | `bump_map`         | `dict` | `None`  | (OPTIONAL) Dictionary mapping the extracted information to a `SemVer` increment type (`MAJOR`, `MINOR`, `PATCH`)                                                                                                                                                       |
 | `bump_pattern`     | `str`  | `None`  | (OPTIONAL) Regex to extract information from commit (subject and body)                                                                                                                                                                                                 |
+| `change_type_order`| `str`  | `None`  | (OPTIONAL) List of strings used to order the Changelog. All other types will be sorted alphabetically. Default is `["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]`                                                                                             |
 
 #### Detailed `questions` content
 
@@ -298,7 +302,7 @@ You can customize it of course, and this are the variables you need to add to yo
 | Parameter                        | Type                                                                     | Required | Description                                                                                                                                                                                                         |
 | -------------------------------- | ------------------------------------------------------------------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `commit_parser`                  | `str`                                                                    | NO       | Regex which should provide the variables explained in the [changelog description][changelog-des]                                                                                                                    |
-| `changelog_pattern`              | `str`                                                                    | NO       | Regex to validate the commits, this is useful to skip commits that don't meet your rulling standards like a Merge. Usually the same as bump_pattern                                                                 |
+| `changelog_pattern`              | `str`                                                                    | NO       | Regex to validate the commits, this is useful to skip commits that don't meet your ruling standards like a Merge. Usually the same as bump_pattern                                                                  |
 | `change_type_map`                | `dict`                                                                   | NO       | Convert the title of the change type that will appear in the changelog, if a value is not found, the original will be provided                                                                                      |
 | `changelog_message_builder_hook` | `method: (dict, git.GitCommit) -> dict`                                  | NO       | Customize with extra information your message output, like adding links, this function is executed per parsed commit. Each GitCommit contains the following attrs: `rev`, `title`, `body`, `author`, `author_email` |
 | `changelog_hook`                 | `method: (full_changelog: str, partial_changelog: Optional[str]) -> str` | NO       | Receives the whole and partial (if used incremental) changelog. Useful to send slack messages or notify a compliance department. Must return the full_changelog                                                     |

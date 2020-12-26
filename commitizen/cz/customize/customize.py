@@ -16,6 +16,7 @@ __all__ = ["CustomizeCommitsCz"]
 class CustomizeCommitsCz(BaseCommitizen):
     bump_pattern = defaults.bump_pattern
     bump_map = defaults.bump_map
+    change_type_order = defaults.change_type_order
 
     def __init__(self, config: BaseConfig):
         super(CustomizeCommitsCz, self).__init__(config)
@@ -31,6 +32,10 @@ class CustomizeCommitsCz(BaseCommitizen):
         custom_bump_map = self.custom_settings.get("bump_map")
         if custom_bump_map:
             self.bump_map = custom_bump_map
+
+        custom_change_type_order = self.custom_settings.get("change_type_order")
+        if custom_change_type_order:
+            self.change_type_order = custom_change_type_order
 
     def questions(self) -> List[Dict[str, Any]]:
         return self.custom_settings.get("questions")

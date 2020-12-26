@@ -249,6 +249,7 @@ def test_changelog_hook(mocker, config):
     create_file_and_commit("refactor: is in changelog")
     create_file_and_commit("Merge into master")
 
+    config.settings["change_type_order"] = ["Refactor", "Feat"]
     changelog = Changelog(
         config, {"unreleased_version": None, "incremental": True, "dry_run": False}
     )

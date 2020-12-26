@@ -796,6 +796,33 @@ def test_generate_tree_from_commits(gitcommits, tags):
     assert tuple(tree) == COMMITS_TREE
 
 
+@pytest.mark.parametrize(
+    "change_type_order, expected_reordering",
+    (
+        ([], {}),
+        (
+            ["BREAKING CHANGE", "refactor"],
+            {
+                2: (["refactor", "feat", "fix"], ["feat", "fix", "refactor"]),
+                3: (["BREAKING CHANGE", "refactor"], ["refactor", "BREAKING CHANGE"]),
+            },
+        ),
+    ),
+)
+def test_order_changelog_tree(change_type_order, expected_reordering):
+    tree = tuple(changelog.order_changelog_tree(COMMITS_TREE, change_type_order))
+
+    index_of_reordered_entry = [*expected_reordering.keys()]
+    for index, entry in enumerate(tuple(tree)):
+        if index in index_of_reordered_entry:
+            sorted_order, original_order = expected_reordering[index]
+            assert [*tree[index].keys()] == [*COMMITS_TREE[index].keys()]
+            assert [*tree[index]["changes"].keys()] == sorted_order
+            assert [*COMMITS_TREE[index]["changes"].keys()] == original_order
+        else:
+            assert [*entry["changes"].keys()] == [*tree[index]["changes"].keys()]
+
+
 def test_render_changelog(gitcommits, tags, changelog_content):
     parser = defaults.commit_parser
     changelog_pattern = defaults.bump_pattern

@@ -13,6 +13,7 @@ TOML_STR = r"""
 
     bump_pattern = "^(break|new|fix|hotfix)"
     bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
+    change_type_order = ["perf", "BREAKING CHANGE", "feat", "fix", "refactor"]
     info = "This is a customized cz."
 
     [[tool.commitizen.customize.questions]]
@@ -56,6 +57,7 @@ JSON_STR = r"""
                     "fix": "PATCH",
                     "hotfix": "PATCH"
                 },
+                "change_type_order": ["perf", "BREAKING CHANGE", "feat", "fix", "refactor"],
                 "info": "This is a customized cz.",
                 "questions": [
                     {
@@ -107,6 +109,7 @@ commitizen:
       new: MINOR
       fix: PATCH
       hotfix: PATCH
+    change_type_order: ["perf", "BREAKING CHANGE", "feat", "fix", "refactor"]
     info: This is a customized cz.
     questions:
     - type: list
@@ -272,6 +275,17 @@ def test_bump_map(config):
         "fix": "PATCH",
         "hotfix": "PATCH",
     }
+
+
+def test_change_type_order(config):
+    cz = CustomizeCommitsCz(config)
+    assert cz.change_type_order == [
+        "perf",
+        "BREAKING CHANGE",
+        "feat",
+        "fix",
+        "refactor",
+    ]
 
 
 def test_questions(config):
