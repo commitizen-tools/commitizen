@@ -80,7 +80,7 @@ class Check:
     def _get_commits(self):
         # Get commit message from file (--commit-msg-file)
         if self.commit_msg_file:
-            with open(self.commit_msg_file, "r") as commit_file:
+            with open(self.commit_msg_file, "r", encoding="utf-8") as commit_file:
                 commit_title = commit_file.readline()
                 commit_body = commit_file.read()
             return [git.GitCommit(rev="", title=commit_title, body=commit_body)]
