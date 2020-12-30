@@ -803,24 +803,40 @@ def test_generate_tree_from_commits(gitcommits, tags):
         (
             ["BREAKING CHANGE", "refactor"],
             {
-                2: (["refactor", "feat", "fix"], ["feat", "fix", "refactor"]),
-                3: (["BREAKING CHANGE", "refactor"], ["refactor", "BREAKING CHANGE"]),
+                "1.1.0": {
+                    "original": ["feat", "fix", "refactor"],
+                    "sorted": ["refactor", "feat", "fix"],
+                },
+                "1.0.0": {
+                    "original": ["refactor", "BREAKING CHANGE"],
+                    "sorted": ["BREAKING CHANGE", "refactor"],
+                },
             },
         ),
     ),
 )
 def test_order_changelog_tree(change_type_order, expected_reordering):
-    tree = tuple(changelog.order_changelog_tree(COMMITS_TREE, change_type_order))
+    tree = changelog.order_changelog_tree(COMMITS_TREE, change_type_order)
 
-    index_of_reordered_entry = [*expected_reordering.keys()]
     for index, entry in enumerate(tuple(tree)):
-        if index in index_of_reordered_entry:
-            sorted_order, original_order = expected_reordering[index]
+        version = tree[index]["version"]
+        if version in expected_reordering:
+            # Verify that all keys are present
             assert [*tree[index].keys()] == [*COMMITS_TREE[index].keys()]
-            assert [*tree[index]["changes"].keys()] == sorted_order
-            assert [*COMMITS_TREE[index]["changes"].keys()] == original_order
+            # Verify that the reorder only impacted the returned dict and not the original
+            expected = expected_reordering[version]
+            assert [*tree[index]["changes"].keys()] == expected["sorted"]
+            assert [*COMMITS_TREE[index]["changes"].keys()] == expected["original"]
         else:
             assert [*entry["changes"].keys()] == [*tree[index]["changes"].keys()]
+
+
+def test_order_changelog_tree_raises():
+    change_type_order = ["BREAKING CHANGE", "feat", "refactor", "feat"]
+    with pytest.raises(RuntimeError) as excinfo:
+        changelog.order_changelog_tree(COMMITS_TREE, change_type_order)
+
+    assert " duplicate" in str(excinfo)
 
 
 def test_render_changelog(gitcommits, tags, changelog_content):

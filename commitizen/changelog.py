@@ -130,14 +130,21 @@ def generate_tree_from_commits(
 
 
 def order_changelog_tree(tree: Iterable, change_type_order: List[str]) -> Iterable:
+    if len(set(change_type_order)) != len(change_type_order):
+        raise RuntimeError(
+            f"Change types contain duplicates types ({change_type_order})"
+        )
+
     sorted_tree = []
     for entry in tree:
-        entry_change_types = sorted(entry["changes"].keys())
-        ordered_change_types = []
-        for ct in change_type_order + entry_change_types:
-            if ct in entry_change_types and ct not in ordered_change_types:
-                ordered_change_types.append(ct)
-        changes = [(ct, entry["changes"][ct]) for ct in ordered_change_types]
+        ordered_change_types = change_type_order + sorted(
+            set(entry["changes"].keys()) - set(change_type_order)
+        )
+        changes = [
+            (ct, entry["changes"][ct])
+            for ct in ordered_change_types
+            if ct in entry["changes"]
+        ]
         sorted_tree.append({**entry, **{"changes": OrderedDict(changes)}})
     return sorted_tree
 
