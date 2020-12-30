@@ -1,3 +1,9 @@
+## v2.12.1 (2020-12-30)
+
+### Fix
+
+- read commit_msg_file with utf-8
+
 ## v2.12.0 (2020-12-30)
 
 ### Feat
