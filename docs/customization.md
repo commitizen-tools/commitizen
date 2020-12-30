@@ -66,7 +66,7 @@ The equivalent example for a json config file:
                 "hotfix": "PATCH"
             },
             "change_type_order": ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"],
-    "info_path": "cz_customize_info.txt",
+	    "info_path": "cz_customize_info.txt",
             "info": "This is customized info",
             "questions": [
                 {
