@@ -1,3 +1,9 @@
+## v2.12.0 (2020-12-30)
+
+### Feat
+
+- **deps**: Update and relax tomlkit version requirement
+
 ## v2.11.1 (2020-12-16)
 
 ### Fix
