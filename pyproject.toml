@@ -66,7 +66,7 @@ codecov = "^2.0"
 mypy = "^0.770"
 mkdocs = "^1.0"
 mkdocs-material = "^4.1"
-isort = "^4.3.21"
+isort = "^5.7.0"
 freezegun = "^0.3.15"
 pydocstyle = "^5.0.2"
 pre-commit = "^2.6.0"
@@ -76,11 +76,7 @@ cz = "commitizen.cli:main"
 git-cz = "commitizen.cli:main"
 
 [tool.isort]
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-combine_as_imports = true
-line_length = 88
+profile = "black"
 known_first_party = ["commitizen", "tests"]
 
 [tool.coverage]
