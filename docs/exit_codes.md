@@ -26,3 +26,4 @@ These exit codes can be found in `commitizen/exceptions.py::ExitCode`.
 | NoRevisionError | 16 | No revision found |
 | CurrentVersionNotFoundError | 17 | current version cannot be found in *version_files* |
 | InvalidCommandArgumentError | 18 | The argument provide to command is invalid (e.g. `cz check -commit-msg-file filename --rev-range master..`) |
+| InvalidConfigurationError | 19 | An error was found in the Commitizen Configuration, such as duplicates in `change_type_order` |

@@ -34,6 +34,7 @@ from typing import Callable, Dict, Iterable, List, Optional
 from jinja2 import Environment, PackageLoader
 
 from commitizen import defaults
+from commitizen.exceptions import InvalidConfigurationError
 from commitizen.git import GitCommit, GitTag
 
 CATEGORIES = [
@@ -131,7 +132,7 @@ def generate_tree_from_commits(
 
 def order_changelog_tree(tree: Iterable, change_type_order: List[str]) -> Iterable:
     if len(set(change_type_order)) != len(change_type_order):
-        raise RuntimeError(
+        raise InvalidConfigurationError(
             f"Change types contain duplicates types ({change_type_order})"
         )
 
