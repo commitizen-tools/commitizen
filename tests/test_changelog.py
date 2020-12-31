@@ -1,6 +1,7 @@
 import pytest
 
 from commitizen import changelog, defaults, git
+from commitizen.exceptions import InvalidConfigurationError
 
 COMMITS_DATA = [
     {
@@ -833,10 +834,10 @@ def test_order_changelog_tree(change_type_order, expected_reordering):
 
 def test_order_changelog_tree_raises():
     change_type_order = ["BREAKING CHANGE", "feat", "refactor", "feat"]
-    with pytest.raises(RuntimeError) as excinfo:
+    with pytest.raises(InvalidConfigurationError) as excinfo:
         changelog.order_changelog_tree(COMMITS_TREE, change_type_order)
 
-    assert " duplicate" in str(excinfo)
+    assert "Change types contain duplicates types" in str(excinfo)
 
 
 def test_render_changelog(gitcommits, tags, changelog_content):
