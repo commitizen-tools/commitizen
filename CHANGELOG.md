@@ -1,3 +1,15 @@
+## v2.13.0 (2021-01-01)
+
+### Refactor
+
+- raise an InvalidConfigurationError
+- **#323**: address PR feedback
+- move expected COMMITS_TREE to global
+
+### Feat
+
+- **#319**: add optional change_type_order
+
 ## v2.12.1 (2020-12-30)
 
 ### Fix
