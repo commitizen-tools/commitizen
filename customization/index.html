@@ -688,6 +688,7 @@ We have two different ways to do so.</p>
 <span class="n">schema_pattern</span> <span class="o">=</span> <span class="s">&quot;(feature|bug fix):(\\s.*)&quot;</span>
 <span class="n">bump_pattern</span> <span class="o">=</span> <span class="s">&quot;^(break|new|fix|hotfix)&quot;</span>
 <span class="n">bump_map</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;break&quot;</span> <span class="o">=</span> <span class="s">&quot;MAJOR&quot;</span><span class="p">,</span> <span class="s">&quot;new&quot;</span> <span class="o">=</span> <span class="s">&quot;MINOR&quot;</span><span class="p">,</span> <span class="s">&quot;fix&quot;</span> <span class="o">=</span> <span class="s">&quot;PATCH&quot;</span><span class="p">,</span> <span class="s">&quot;hotfix&quot;</span> <span class="o">=</span> <span class="s">&quot;PATCH&quot;</span><span class="p">}</span>
+<span class="n">change_type_order</span> <span class="o">=</span> <span class="k">[&quot;BREAKING CHANGE&quot;, &quot;feat&quot;, &quot;fix&quot;, &quot;refactor&quot;, &quot;perf&quot;]</span>
 <span class="n">info_path</span> <span class="o">=</span> <span class="s">&quot;cz_customize_info.txt&quot;</span>
 <span class="n">info</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
 <span class="s">This is customized info</span>
@@ -727,6 +728,7 @@ We have two different ways to do so.</p>
                 <span class="nt">&quot;fix&quot;</span><span class="p">:</span> <span class="s2">&quot;PATCH&quot;</span><span class="p">,</span>
                 <span class="nt">&quot;hotfix&quot;</span><span class="p">:</span> <span class="s2">&quot;PATCH&quot;</span>
             <span class="p">},</span>
+            <span class="nt">&quot;change_type_order&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;BREAKING CHANGE&quot;</span><span class="p">,</span> <span class="s2">&quot;feat&quot;</span><span class="p">,</span> <span class="s2">&quot;fix&quot;</span><span class="p">,</span> <span class="s2">&quot;refactor&quot;</span><span class="p">,</span> <span class="s2">&quot;perf&quot;</span><span class="p">],</span>
         <span class="nt">&quot;info_path&quot;</span><span class="p">:</span> <span class="s2">&quot;cz_customize_info.txt&quot;</span><span class="p">,</span>
             <span class="nt">&quot;info&quot;</span><span class="p">:</span> <span class="s2">&quot;This is customized info&quot;</span><span class="p">,</span>
             <span class="nt">&quot;questions&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -775,6 +777,7 @@ We have two different ways to do so.</p>
       <span class="nt">new</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MINOR</span>
       <span class="nt">fix</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PATCH</span>
       <span class="nt">hotfix</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PATCH</span>
+    <span class="nt">change_type_order</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;BREAKING</span><span class="nv"> </span><span class="s">CHANGE&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;feat&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;fix&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;refactor&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;perf&quot;</span><span class="p p-Indicator">]</span>
     <span class="nt">info_path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cz_customize_info.txt</span>
     <span class="nt">info</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">This is customized info</span>
     <span class="nt">questions</span><span class="p">:</span>
@@ -858,6 +861,12 @@ We have two different ways to do so.</p>
 <td><code>str</code></td>
 <td><code>None</code></td>
 <td>(OPTIONAL) Regex to extract information from commit (subject and body)</td>
+</tr>
+<tr>
+<td><code>change_type_order</code></td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td>(OPTIONAL) List of strings used to order the Changelog. All other types will be sorted alphabetically. Default is <code>["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]</code></td>
 </tr>
 </tbody>
 </table>
@@ -1061,7 +1070,7 @@ You can customize it of course, and this are the variables you need to add to yo
 <td><code>changelog_pattern</code></td>
 <td><code>str</code></td>
 <td>NO</td>
-<td>Regex to validate the commits, this is useful to skip commits that don't meet your rulling standards like a Merge. Usually the same as bump_pattern</td>
+<td>Regex to validate the commits, this is useful to skip commits that don't meet your ruling standards like a Merge. Usually the same as bump_pattern</td>
 </tr>
 <tr>
 <td><code>change_type_map</code></td>
