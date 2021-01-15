@@ -12,7 +12,7 @@
       
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.3">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.4">
     
     
       
@@ -20,10 +20,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.3b61ea93.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.15aa0b43.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.39b8e14a.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.75751829.min.css">
         
       
     
@@ -782,7 +782,7 @@ usage: cz bump <span class="o">[</span>-h<span class="o">]</span> <span class="o
 optional arguments:
   -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
   --dry-run             show output to stdout, no commit, no modified files
-  --files-only          bump version in the files from the config
+  --files-only          bump version <span class="k">in</span> the files from the config
   --changelog, -ch      generate the changelog <span class="k">for</span> the newest version
   --no-verify           this option bypasses the pre-commit and commit-msg
                         hooks
@@ -790,7 +790,7 @@ optional arguments:
   --local-version       bump the <span class="nb">local</span> portion of the version
   --tag-format TAG_FORMAT
                         the format used to tag the commit and <span class="nb">read</span> it, use it
-                        in existing projects, wrap around simple quotes
+                        <span class="k">in</span> existing projects, wrap around simple quotes
   --bump-message BUMP_MESSAGE
                         template used to create the release commit, useful
                         when working with CI
@@ -799,7 +799,7 @@ optional arguments:
   --increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}</span>
                         manually specify the desired increment
   --check-consistency, -cc
-                        check consistency among versions defined in commitizen
+                        check consistency among versions defined <span class="k">in</span> commitizen
                         configuration and version_files
 </code></pre></div>
 
@@ -858,10 +858,10 @@ the version in <code>setup.py</code> to <code>1.21.0</code></p>
 <h3 id="tag_format"><code>tag_format</code></h3>
 <p>It is used to read the format from the git tags, and also to generate the tags.</p>
 <p>Commitizen supports 2 types of formats, a simple and a more complex.</p>
-<div class="codehilite"><pre><span></span><code>cz bump --tag_format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$version</span><span class="s2">&quot;</span>
+<div class="codehilite"><pre><span></span><code>cz bump --tag-format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$version</span><span class="s2">&quot;</span>
 </code></pre></div>
 
-<div class="codehilite"><pre><span></span><code>cz bump --tag_format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$minor</span><span class="s2">.</span><span class="nv">$major</span><span class="s2">.</span><span class="nv">$patch$prerelease</span><span class="s2">&quot;</span>
+<div class="codehilite"><pre><span></span><code>cz bump --tag-format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$minor</span><span class="s2">.</span><span class="nv">$major</span><span class="s2">.</span><span class="nv">$patch$prerelease</span><span class="s2">&quot;</span>
 </code></pre></div>
 
 <p>In your <code>pyproject.toml</code> or <code>.cz.toml</code></p>
@@ -1024,8 +1024,8 @@ in a line containing the <code>version</code> substring.</p>
       
     </div>
     
-      <script src="../assets/javascripts/vendor.08c56446.min.js"></script>
-      <script src="../assets/javascripts/bundle.6ced434e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      <script src="../assets/javascripts/vendor.93c04032.min.js"></script>
+      <script src="../assets/javascripts/bundle.83e5331e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({
