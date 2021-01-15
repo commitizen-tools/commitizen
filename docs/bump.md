@@ -167,11 +167,11 @@ It is used to read the format from the git tags, and also to generate the tags.
 Commitizen supports 2 types of formats, a simple and a more complex.
 
 ```bash
-cz bump --tag_format="v$version"
+cz bump --tag-format="v$version"
 ```
 
 ```bash
-cz bump --tag_format="v$minor.$major.$patch$prerelease"
+cz bump --tag-format="v$minor.$major.$patch$prerelease"
 ```
 
 In your `pyproject.toml` or `.cz.toml`
