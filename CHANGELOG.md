@@ -1,3 +1,9 @@
+## v2.14.0 (2021-01-20)
+
+### Feat
+
+- **#271**: enable creation of annotated tags when bumping
+
 ## v2.13.0 (2021-01-01)
 
 ### Refactor
