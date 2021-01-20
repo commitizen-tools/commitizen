@@ -137,6 +137,11 @@ data = {
                         ),
                         "action": "store_true",
                     },
+                    {
+                        "name": ["--annotated-tag", "-at"],
+                        "help": "create annotated tag instead of lightweight one",
+                        "action": "store_true",
+                    },
                 ],
             },
             {
