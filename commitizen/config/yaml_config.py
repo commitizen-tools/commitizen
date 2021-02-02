@@ -38,7 +38,7 @@ class YAMLConfig(BaseConfig):
         We use to update the version number.
         """
         with open(self.path, "r") as yaml_file:
-            parser = yaml.load(yaml_file)
+            parser = yaml.load(yaml_file, Loader=yaml.FullLoader)
 
         parser["commitizen"][key] = value
         with open(self.path, "w") as yaml_file:
