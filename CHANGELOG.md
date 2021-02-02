@@ -1,3 +1,9 @@
+## v2.14.1 (2021-02-02)
+
+### Fix
+
+- remove yaml warnings when using '.cz.yaml'
+
 ## v2.14.0 (2021-01-20)
 
 ### Feat
