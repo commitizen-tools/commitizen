@@ -1,3 +1,9 @@
+## v2.14.2 (2021-02-06)
+
+### Fix
+
+- **git**: handle the empty commit and empty email cases
+
 ## v2.14.1 (2021-02-02)
 
 ### Fix
