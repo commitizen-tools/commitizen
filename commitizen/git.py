@@ -79,8 +79,7 @@ def get_commits(
         return []
 
     git_commits = []
-    for rev_and_commit in c.out.split(delimiter):
-        rev_and_commit = rev_and_commit.strip()
+    for rev_and_commit in c.out.split(f"\n{delimiter}\n"):
         if not rev_and_commit:
             continue
         rev, title, author, author_email, *body_list = rev_and_commit.split("\n")

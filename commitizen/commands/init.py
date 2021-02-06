@@ -122,7 +122,6 @@ class Init:
             # .pre-commit-config does not exist
             config_data["repos"] = [cz_hook_config]
         else:
-            # breakpoint()
             with open(pre_commit_config_filename) as config_file:
                 yaml_data = yaml.safe_load(config_file)
                 if yaml_data:

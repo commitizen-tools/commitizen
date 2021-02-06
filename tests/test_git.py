@@ -3,7 +3,7 @@ from typing import List, Optional
 
 import pytest
 
-from commitizen import git
+from commitizen import cmd, git
 from tests.utils import FakeCommand, create_file_and_commit
 
 
@@ -73,7 +73,45 @@ def test_get_commits_author_and_email():
     assert "@" in commit.author_email
 
 
+def test_get_commits_without_email(mocker):
+    raw_commit = (
+        "a515bb8f71c403f6f7d1c17b9d8ebf2ce3959395\n"
+        "\n"
+        "user name\n"
+        "\n"
+        "----------commit-delimiter----------\n"
+        "12d3b4bdaa996ea7067a07660bb5df4772297bdd\n"
+        "feat(users): add username\n"
+        "user name\n"
+        "\n"
+        "----------commit-delimiter----------\n"
+    )
+    mocker.patch("commitizen.cmd.run", return_value=FakeCommand(out=raw_commit))
+
+    commits = git.get_commits()
+
+    assert commits[0].author == "user name"
+    assert commits[1].author == "user name"
+
+    assert commits[0].author_email == ""
+    assert commits[1].author_email == ""
+
+    assert commits[0].title == ""
+    assert commits[1].title == "feat(users): add username"
+
+
 def test_get_tag_names_has_correct_arrow_annotation():
     arrow_annotation = inspect.getfullargspec(git.get_tag_names).annotations["return"]
 
     assert arrow_annotation == List[Optional[str]]
+
+
+def test_get_latest_tag_name(tmp_commitizen_project):
+    with tmp_commitizen_project.as_cwd():
+        tag_name = git.get_latest_tag_name()
+        assert tag_name is None
+
+        create_file_and_commit("feat(test): test")
+        cmd.run("git tag 1.0")
+        tag_name = git.get_latest_tag_name()
+        assert tag_name == "1.0"
