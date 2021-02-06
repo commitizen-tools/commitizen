@@ -3,7 +3,7 @@ from typing import List, Optional
 
 import pytest
 
-from commitizen import git
+from commitizen import cmd, git
 from tests.utils import FakeCommand, create_file_and_commit
 
 
@@ -104,3 +104,14 @@ def test_get_tag_names_has_correct_arrow_annotation():
     arrow_annotation = inspect.getfullargspec(git.get_tag_names).annotations["return"]
 
     assert arrow_annotation == List[Optional[str]]
+
+
+def test_get_latest_tag_name(tmp_commitizen_project):
+    with tmp_commitizen_project.as_cwd():
+        tag_name = git.get_latest_tag_name()
+        assert tag_name is None
+
+        create_file_and_commit("feat(test): test")
+        cmd.run("git tag 1.0")
+        tag_name = git.get_latest_tag_name()
+        assert tag_name == "1.0"
