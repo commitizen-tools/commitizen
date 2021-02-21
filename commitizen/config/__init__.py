@@ -28,8 +28,8 @@ def read_cfg() -> BaseConfig:
 
         _conf: Union[TomlConfig, JsonConfig, YAMLConfig]
 
-        with open(filename, "r") as f:
-            data: str = f.read()
+        with open(filename, "rb") as f:
+            data: bytes = f.read()
 
         if "toml" in filename.suffix:
             _conf = TomlConfig(data=data, path=filename)
