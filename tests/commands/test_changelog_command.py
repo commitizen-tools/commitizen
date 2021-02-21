@@ -387,6 +387,30 @@ def test_breaking_change_content_v1(mocker, capsys):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+def test_breaking_change_content_v1_multiline(mocker, capsys):
+    commit_message = (
+        "feat(users): email pattern corrected\n\n"
+        "body content\n\n"
+        "BREAKING CHANGE: migrate by renaming user to users.\n"
+        "and then connect the thingy with the other thingy\n\n"
+        "footer content"
+    )
+    create_file_and_commit(commit_message)
+    testargs = ["cz", "changelog", "--dry-run"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(DryRunExit):
+        cli.main()
+    out, _ = capsys.readouterr()
+
+    assert out == (
+        "## Unreleased\n\n### Feat\n\n- **users**: email pattern corrected\n\n"
+        "### BREAKING CHANGE\n\n- migrate by renaming user to users.\n"
+        "and then connect the thingy with the other thingy"
+        "\n\n"
+    )
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_config_flag_increment(mocker, changelog_path, config_path):
 
     with open(config_path, "a") as f:
