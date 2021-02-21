@@ -7,7 +7,7 @@ from .base_config import BaseConfig
 
 
 class YAMLConfig(BaseConfig):
-    def __init__(self, *, data: str, path: Union[Path, str]):
+    def __init__(self, *, data: bytes, path: Union[Path, str]):
         super(YAMLConfig, self).__init__()
         self.is_empty_config = False
         self._parse_setting(data)
@@ -17,7 +17,7 @@ class YAMLConfig(BaseConfig):
         with open(self.path, "a") as json_file:
             yaml.dump({"commitizen": {}}, json_file)
 
-    def _parse_setting(self, data: str):
+    def _parse_setting(self, data: bytes):
         """We expect to have a section in cz.yaml looking like
 
         ```
@@ -37,7 +37,7 @@ class YAMLConfig(BaseConfig):
         For now only strings are supported.
         We use to update the version number.
         """
-        with open(self.path, "r") as yaml_file:
+        with open(self.path, "rb") as yaml_file:
             parser = yaml.load(yaml_file, Loader=yaml.FullLoader)
 
         parser["commitizen"][key] = value
