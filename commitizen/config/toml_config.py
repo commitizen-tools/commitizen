@@ -7,7 +7,7 @@ from .base_config import BaseConfig
 
 
 class TomlConfig(BaseConfig):
-    def __init__(self, *, data: str, path: Union[Path, str]):
+    def __init__(self, *, data: bytes, path: Union[Path, str]):
         super(TomlConfig, self).__init__()
         self.is_empty_config = False
         self._parse_setting(data)
@@ -23,7 +23,7 @@ class TomlConfig(BaseConfig):
         For now only strings are supported.
         We use to update the version number.
         """
-        with open(self.path, "r") as f:
+        with open(self.path, "rb") as f:
             parser = parse(f.read())
 
         parser["tool"]["commitizen"][key] = value
@@ -31,7 +31,7 @@ class TomlConfig(BaseConfig):
             f.write(parser.as_string())
         return self
 
-    def _parse_setting(self, data: str):
+    def _parse_setting(self, data: bytes):
         """We expect to have a section in pyproject looking like
 
         ```
