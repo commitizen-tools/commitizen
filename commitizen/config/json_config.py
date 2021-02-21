@@ -6,7 +6,7 @@ from .base_config import BaseConfig
 
 
 class JsonConfig(BaseConfig):
-    def __init__(self, *, data: str, path: Union[Path, str]):
+    def __init__(self, *, data: bytes, path: Union[Path, str]):
         super(JsonConfig, self).__init__()
         self.is_empty_config = False
         self._parse_setting(data)
@@ -22,7 +22,7 @@ class JsonConfig(BaseConfig):
         For now only strings are supported.
         We use to update the version number.
         """
-        with open(self.path, "r") as f:
+        with open(self.path, "rb") as f:
             parser = json.load(f)
 
         parser["commitizen"][key] = value
@@ -30,7 +30,7 @@ class JsonConfig(BaseConfig):
             json.dump(parser, f)
         return self
 
-    def _parse_setting(self, data: str):
+    def _parse_setting(self, data: bytes):
         """We expect to have a section in .cz.json looking like
 
         ```
