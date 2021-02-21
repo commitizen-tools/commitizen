@@ -6,7 +6,7 @@ from .base_config import BaseConfig
 
 
 class JsonConfig(BaseConfig):
-    def __init__(self, *, data: bytes, path: Union[Path, str]):
+    def __init__(self, *, data: Union[bytes, str], path: Union[Path, str]):
         super(JsonConfig, self).__init__()
         self.is_empty_config = False
         self._parse_setting(data)

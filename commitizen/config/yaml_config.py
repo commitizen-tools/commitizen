@@ -7,7 +7,7 @@ from .base_config import BaseConfig
 
 
 class YAMLConfig(BaseConfig):
-    def __init__(self, *, data: bytes, path: Union[Path, str]):
+    def __init__(self, *, data: Union[bytes, str], path: Union[Path, str]):
         super(YAMLConfig, self).__init__()
         self.is_empty_config = False
         self._parse_setting(data)
@@ -17,7 +17,7 @@ class YAMLConfig(BaseConfig):
         with open(self.path, "a") as json_file:
             yaml.dump({"commitizen": {}}, json_file)
 
-    def _parse_setting(self, data: bytes):
+    def _parse_setting(self, data: Union[bytes, str]):
         """We expect to have a section in cz.yaml looking like
 
         ```

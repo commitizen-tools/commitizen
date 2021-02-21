@@ -7,7 +7,7 @@ from .base_config import BaseConfig
 
 
 class TomlConfig(BaseConfig):
-    def __init__(self, *, data: bytes, path: Union[Path, str]):
+    def __init__(self, *, data: Union[bytes, str], path: Union[Path, str]):
         super(TomlConfig, self).__init__()
         self.is_empty_config = False
         self._parse_setting(data)
@@ -31,7 +31,7 @@ class TomlConfig(BaseConfig):
             f.write(parser.as_string())
         return self
 
-    def _parse_setting(self, data: bytes):
+    def _parse_setting(self, data: Union[bytes, str]):
         """We expect to have a section in pyproject looking like
 
         ```

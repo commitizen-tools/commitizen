@@ -31,5 +31,5 @@ class BaseConfig:
     def add_path(self, path: Union[str, Path]):
         self._path = Path(path)
 
-    def _parse_setting(self, data: str) -> dict:
+    def _parse_setting(self, data: Union[bytes, str]) -> dict:
         raise NotImplementedError()
