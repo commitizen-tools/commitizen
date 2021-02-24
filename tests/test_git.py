@@ -100,6 +100,43 @@ def test_get_commits_without_email(mocker):
     assert commits[1].title == "feat(users): add username"
 
 
+def test_get_commits_without_breakline_in_each_commit(mocker):
+    raw_commit = (
+        "ae9ba6fc5526cf478f52ef901418d85505109744\n"
+        "bump: version 2.13.0 → 2.14.0\n"
+        "GitHub Action\n"
+        "action@github.com\n"
+        "----------commit-delimiter----------\n"
+        "ff2f56ca844de72a9d59590831087bf5a97bac84\n"
+        "Merge pull request #332 from cliles/feature/271-redux\n"
+        "User\n"
+        "user@email.com\n"
+        "Feature/271 redux----------commit-delimiter----------\n"
+        "20a54bf1b82cd7b573351db4d1e8814dd0be205d\n"
+        "feat(#271): enable creation of annotated tags when bumping\n"
+        "User 2\n"
+        "user@email.edu\n"
+        "----------commit-delimiter----------\n"
+    )
+    mocker.patch("commitizen.cmd.run", return_value=FakeCommand(out=raw_commit))
+
+    commits = git.get_commits()
+
+    assert commits[0].author == "GitHub Action"
+    assert commits[1].author == "User"
+    assert commits[2].author == "User 2"
+
+    assert commits[0].author_email == "action@github.com"
+    assert commits[1].author_email == "user@email.com"
+    assert commits[2].author_email == "user@email.edu"
+
+    assert commits[0].title == "bump: version 2.13.0 → 2.14.0"
+    assert commits[1].title == "Merge pull request #332 from cliles/feature/271-redux"
+    assert (
+        commits[2].title == "feat(#271): enable creation of annotated tags when bumping"
+    )
+
+
 def test_get_tag_names_has_correct_arrow_annotation():
     arrow_annotation = inspect.getfullargspec(git.get_tag_names).annotations["return"]
 
