@@ -1,8 +1,21 @@
+
 ## v2.15.2 (2021-02-24)
+
+### Fix
+
+- **git**: fix get_commits deliminator
 
 ## v2.15.1 (2021-02-21)
 
+### Fix
+
+- **config**: change read mode from `r` to `rb`
+
 ## v2.15.0 (2021-02-21)
+
+### Feat
+
+- **changelog**: add support for multiline BREAKING paragraph
 
 ## v2.14.2 (2021-02-06)
 
