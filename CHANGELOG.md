@@ -1,4 +1,10 @@
 
+## v2.15.3 (2021-02-26)
+
+### Fix
+
+- add utf-8 encode when write toml file
+
 ## v2.15.2 (2021-02-24)
 
 ### Fix
