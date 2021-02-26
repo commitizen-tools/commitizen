@@ -27,8 +27,8 @@ class TomlConfig(BaseConfig):
             parser = parse(f.read())
 
         parser["tool"]["commitizen"][key] = value
-        with open(self.path, "w") as f:
-            f.write(parser.as_string())
+        with open(self.path, "wb") as f:
+            f.write(parser.as_string().encode("utf-8"))
         return self
 
     def _parse_setting(self, data: Union[bytes, str]):
