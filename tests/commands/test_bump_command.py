@@ -414,3 +414,21 @@ def test_prevent_prerelease_when_no_increment_detected(
         "[NO_COMMITS_FOUND]\n" "No commits found to generate a pre-release."
     )
     assert expected_error_message in str(excinfo.value)
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_with_changelog_to_stdout_arg(mocker, capsys, changelog_path):
+    create_file_and_commit("feat(user): this should appear in stdout")
+    testargs = ["cz", "bump", "--yes", "--changelog-to-stdout"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    out, _ = capsys.readouterr()
+
+    assert "this should appear in stdout" in out
+    tag_exists = git.tag_exist("0.2.0")
+    assert tag_exists is True
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+    assert out.startswith("#")
+    assert "0.2.0" in out

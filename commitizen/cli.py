@@ -142,6 +142,12 @@ data = {
                         "help": "create annotated tag instead of lightweight one",
                         "action": "store_true",
                     },
+                    {
+                        "name": ["--changelog-to-stdout"],
+                        "action": "store_true",
+                        "default": False,
+                        "help": "Output changelog to the stdout",
+                    },
                 ],
             },
             {
