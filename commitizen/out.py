@@ -26,3 +26,7 @@ def success(value: str):
 def info(value: str):
     message = colored(value, "blue")
     line(message)
+
+
+def diagnostic(value: str):
+    line(value, file=sys.stderr)

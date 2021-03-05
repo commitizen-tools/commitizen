@@ -46,6 +46,7 @@ class Bump:
         self.changelog = arguments["changelog"] or self.config.settings.get(
             "update_changelog_on_bump"
         )
+        self.changelog_to_stdout = arguments["changelog_to_stdout"]
         self.no_verify = arguments["no_verify"]
         self.check_consistency = arguments["check_consistency"]
 
@@ -110,6 +111,11 @@ class Bump:
         else:
             commits = git.get_commits(current_tag_version)
 
+        # If user specified changelog_to_stdout, they probably want the
+        # changelog to be generated as well, this is the most intuitive solution
+        if not self.changelog and self.changelog_to_stdout:
+            self.changelog = True
+
         # No commits, there is no need to create an empty tag.
         # Unless we previously had a prerelease.
         if not commits and not current_version_instance.is_prerelease:
@@ -149,11 +155,19 @@ class Bump:
         )
 
         # Report found information
-        out.write(
+        information = (
             f"{message}\n"
             f"tag to create: {new_tag_version}\n"
             f"increment detected: {increment}\n"
         )
+
+        if self.changelog_to_stdout:
+            # When the changelog goes to stdout, we want to send
+            # the bump information to stderr, this way the
+            # changelog output can be captured
+            out.diagnostic(information)
+        else:
+            out.write(information)
 
         if increment is None and new_tag_version == current_tag_version:
             raise NoneIncrementExit()
@@ -170,6 +184,19 @@ class Bump:
         )
 
         if self.changelog:
+            if self.changelog_to_stdout:
+                changelog_cmd = Changelog(
+                    self.config,
+                    {
+                        "unreleased_version": new_tag_version,
+                        "incremental": True,
+                        "dry_run": True,
+                    },
+                )
+                try:
+                    changelog_cmd()
+                except DryRunExit:
+                    pass
             changelog_cmd = Changelog(
                 self.config,
                 {
@@ -196,7 +223,12 @@ class Bump:
         )
         if c.return_code != 0:
             raise BumpTagFailedError(c.err)
-        out.success("Done!")
+
+        # TODO: For v3 output this only as diagnostic and remove this if
+        if self.changelog_to_stdout:
+            out.diagnostic("Done!")
+        else:
+            out.success("Done!")
 
     def _get_commit_args(self):
         commit_args = ["-a"]
