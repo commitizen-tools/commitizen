@@ -116,7 +116,9 @@ class TestPreCommitCases:
                 if "json" in default_choice:
                     assert json.load(file) == EXPECTED_DICT_CONFIG
                 elif "yaml" in default_choice:
-                    assert yaml.load(file) == EXPECTED_DICT_CONFIG
+                    assert (
+                        yaml.load(file, Loader=yaml.FullLoader) == EXPECTED_DICT_CONFIG
+                    )
                 else:
                     config_data = file.read()
                     assert config_data == expected_config
@@ -136,7 +138,9 @@ class TestPreCommitCases:
                 if "json" in default_choice:
                     assert json.load(file) == EXPECTED_DICT_CONFIG
                 elif "yaml" in default_choice:
-                    assert yaml.load(file) == EXPECTED_DICT_CONFIG
+                    assert (
+                        yaml.load(file, Loader=yaml.FullLoader) == EXPECTED_DICT_CONFIG
+                    )
                 else:
                     config_data = file.read()
                     assert config_data == expected_config
@@ -162,7 +166,9 @@ class TestPreCommitCases:
                 if "json" in default_choice:
                     assert json.load(file) == EXPECTED_DICT_CONFIG
                 elif "yaml" in default_choice:
-                    assert yaml.load(file) == EXPECTED_DICT_CONFIG
+                    assert (
+                        yaml.load(file, Loader=yaml.FullLoader) == EXPECTED_DICT_CONFIG
+                    )
                 else:
                     config_data = file.read()
                     assert config_data == expected_config
@@ -184,7 +190,9 @@ class TestPreCommitCases:
                 if "json" in default_choice:
                     assert json.load(file) == EXPECTED_DICT_CONFIG
                 elif "yaml" in default_choice:
-                    assert yaml.load(file) == EXPECTED_DICT_CONFIG
+                    assert (
+                        yaml.load(file, Loader=yaml.FullLoader) == EXPECTED_DICT_CONFIG
+                    )
                 else:
                     config_data = file.read()
                     assert config_data == expected_config
