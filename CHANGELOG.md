@@ -1,4 +1,10 @@
 
+## v2.16.0 (2021-03-08)
+
+### Feat
+
+- **bump**: send incremental changelog to stdout and bump output to stderr
+
 ## v2.15.3 (2021-02-26)
 
 ### Fix
