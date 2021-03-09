@@ -413,6 +413,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#creating-a-github-release" class="md-nav__link">
+    Creating a github release
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#publishing-a-python-package" class="md-nav__link">
     Publishing a python package
   </a>
@@ -563,6 +570,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#creating-a-github-release" class="md-nav__link">
+    Creating a github release
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#publishing-a-python-package" class="md-nav__link">
     Publishing a python package
   </a>
@@ -596,14 +610,14 @@ the new tag, back to your master branch, we have to:</p>
 <ol>
 <li>Create a personal access token. <a href="https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token">Follow the instructions here</a>. And copy the generated key</li>
 <li>Create a secret called <code>PERSONAL_ACCESS_TOKEN</code>, with the copied key, by going to your
-project repository and then <code>Settings &gt; Secrets &gt; Add new secret</code>.</li>
+   project repository and then <code>Settings &gt; Secrets &gt; Add new secret</code>.</li>
 <li>In your repository create a new file <code>.github/workflows/bumpversion.yml</code>
-with the following content.</li>
+   with the following content.</li>
 </ol>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>If you use <code>GITHUB_TOKEN</code> instead of <code>PERSONAL_ACCESS_TOKEN</code>, the job won't trigger another workflow. It's like using <code>[skip ci]</code> in other CI's.</p>
 </div>
+<p>If you use <code>GITHUB_TOKEN</code> instead of <code>PERSONAL_ACCESS_TOKEN</code>, the job won't trigger another workflow. It's like using <code>[skip ci]</code> in other CI's.</p>
 <div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Bump version</span>
 
 <span class="nt">on</span><span class="p">:</span>
@@ -620,7 +634,7 @@ with the following content.</li>
       <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Check out</span>
         <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/checkout@v2</span>
         <span class="nt">with</span><span class="p">:</span>
-          <span class="nt">token</span><span class="p">:</span> <span class="s">&#39;${{</span><span class="nv"> </span><span class="s">secrets.PERSONAL_ACCESS_TOKEN</span><span class="nv"> </span><span class="s">}}&#39;</span>
+          <span class="nt">token</span><span class="p">:</span> <span class="s">&quot;${{</span><span class="nv"> </span><span class="s">secrets.PERSONAL_ACCESS_TOKEN</span><span class="nv"> </span><span class="s">}}&quot;</span>
           <span class="nt">fetch-depth</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
       <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Create bump and changelog</span>
         <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">commitizen-tools/commitizen-action@master</span>
@@ -629,6 +643,27 @@ with the following content.</li>
 </code></pre></div>
 
 <p>Push to master and that's it.</p>
+<h3 id="creating-a-github-release">Creating a github release</h3>
+<p>You can modify the previous action.</p>
+<p>Add the variable <code>changelog_increment_filename</code> in the <code>commitizen-action</code>, specifying
+where to output the content of the changelog for the newly created version.</p>
+<p>And then add a step using a github action to create the release: <code>softprops/action-gh-release</code></p>
+<p>The commitizen action creates an env variable called <code>REVISION</code>, containing the
+newely created version.</p>
+<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Create bump and changelog</span>
+  <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">commitizen-tools/commitizen-action@master</span>
+  <span class="nt">with</span><span class="p">:</span>
+    <span class="nt">github_token</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ secrets.PERSONAL_ACCESS_TOKEN }}</span>
+    <span class="nt">changelog_increment_filename</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body.md</span>
+<span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Release</span>
+  <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">softprops/action-gh-release@v1</span>
+  <span class="nt">with</span><span class="p">:</span>
+    <span class="nt">body_path</span><span class="p">:</span> <span class="s">&quot;body.md&quot;</span>
+    <span class="nt">tag_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ env.REVISION }}</span>
+  <span class="nt">env</span><span class="p">:</span>
+    <span class="nt">GITHUB_TOKEN</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ secrets.GITHUB_TOKEN }}</span>
+</code></pre></div>
+
 <h3 id="publishing-a-python-package">Publishing a python package</h3>
 <p>Once the new tag is created, triggering an automatic publish command would be desired.</p>
 <p>In order to do so, the crendetial needs to be added with the information of our PyPI account.</p>
@@ -641,28 +676,28 @@ with the following content.</li>
 <span class="nt">on</span><span class="p">:</span>
   <span class="nt">push</span><span class="p">:</span>
     <span class="nt">tags</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="s">&#39;*&#39;</span> <span class="c1"># Will trigger for every tag, alternative: &#39;v*&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="s">&quot;*&quot;</span> <span class="c1"># Will trigger for every tag, alternative: &#39;v*&#39;</span>
 
 <span class="nt">jobs</span><span class="p">:</span>
   <span class="nt">deploy</span><span class="p">:</span>
     <span class="nt">runs-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
     <span class="nt">steps</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/checkout@v1</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Set up Python</span>
-      <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v1</span>
-      <span class="nt">with</span><span class="p">:</span>
-        <span class="nt">python-version</span><span class="p">:</span> <span class="s">&#39;3.x&#39;</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
-      <span class="nt">run</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-        <span class="no">python -m pip install --pre -U poetry</span>
-        <span class="no">poetry --version</span>
-        <span class="no">poetry install</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Build and publish</span>
-      <span class="nt">env</span><span class="p">:</span>
-        <span class="nt">PYPI_USERNAME</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">__token__</span>
-        <span class="nt">PYPI_PASSWORD</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ secrets.PYPI_PASSWORD }}</span>
-      <span class="nt">run</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-        <span class="no">./scripts/publish</span>
+      <span class="p p-Indicator">-</span> <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/checkout@v1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Set up Python</span>
+        <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v1</span>
+        <span class="nt">with</span><span class="p">:</span>
+          <span class="nt">python-version</span><span class="p">:</span> <span class="s">&quot;3.x&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
+        <span class="nt">run</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">python -m pip install --pre -U poetry</span>
+          <span class="no">poetry --version</span>
+          <span class="no">poetry install</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Build and publish</span>
+        <span class="nt">env</span><span class="p">:</span>
+          <span class="nt">PYPI_USERNAME</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">__token__</span>
+          <span class="nt">PYPI_PASSWORD</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ secrets.PYPI_PASSWORD }}</span>
+        <span class="nt">run</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">./scripts/publish</span>
 </code></pre></div>
 
 <p>Notice that we are calling a bash script in <code>./scripts/publish</code>, you should configure it with your tools (twine, poetry, etc.). Check <a href="https://github.com/commitizen-tools/commitizen/blob/master/scripts/publish">commitizen example</a>
