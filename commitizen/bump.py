@@ -150,26 +150,25 @@ def update_version_in_files(
     """
     # TODO: separate check step and write step
     for location in files:
-        filepath, *regexes = location.split(":", maxsplit=1)
+        filepath, *regexes = location.split(":")
         regex = regexes[0] if regexes else None
-
-        # Read in the file
-        file_content = []
         current_version_found = False
-        with open(filepath, "r") as version_file:
-            for line in version_file:
-                if regex:
-                    match = re.search(regex, line)
-                    if not match:
-                        file_content.append(line)
-                        continue
 
-                # Replace the target string
-                if current_version in line:
-                    current_version_found = True
-                    file_content.append(line.replace(current_version, new_version))
-                else:
-                    file_content.append(line)
+        version_file = open(filepath, "r").read()
+        match = regex and re.search(regex, version_file, re.MULTILINE)
+        if match:
+            left = version_file[: match.end()]
+            right = version_file[match.end() :]
+            line_break = _get_line_break_position(right)
+            middle = right[:line_break]
+            current_version_found = current_version in middle
+            right = right[line_break:]
+            version_file = left + middle.replace(current_version, new_version) + right
+
+        if not regex:
+            current_version_regex = _version_to_regex(current_version)
+            current_version_found = current_version_regex.search(version_file) and True
+            version_file = current_version_regex.sub(new_version, version_file)
 
         if check_consistency and not current_version_found:
             raise CurrentVersionNotFoundError(
@@ -180,7 +179,17 @@ def update_version_in_files(
 
         # Write the file out again
         with open(filepath, "w") as file:
-            file.write("".join(file_content))
+            file.write("".join(version_file))
+
+
+def _get_line_break_position(text: str) -> int:
+    position = text.find("\n")
+    return max(position, 0)
+
+
+def _version_to_regex(version: str):
+    clean_regex = version.replace(".", r"\.").replace("+", r"\+")
+    return re.compile(f"\\b{clean_regex}\\b")
 
 
 def create_tag(version: Union[Version, str], tag_format: Optional[str] = None):

@@ -1,3 +1,5 @@
+import re
+
 import pytest
 
 from commitizen import bump
@@ -33,6 +35,21 @@ REPEATED_VERSION_NUMBER = """
 }
 """
 
+# The order cannot be guaranteed here
+CARGO_LOCK = """
+[[package]]
+name = "textwrap"
+version = "1.2.3"
+
+[[package]]
+name = "there-i-fixed-it"
+version = "1.2.3"
+
+[[package]]
+name = "other-project"
+version = "1.2.3"
+"""
+
 
 @pytest.fixture(scope="function")
 def commitizen_config_file(tmpdir):
@@ -52,6 +69,13 @@ def python_version_file(tmpdir):
 def inconsistent_python_version_file(tmpdir):
     tmp_file = tmpdir.join("__verion__.py")
     tmp_file.write(INCONSISTENT_VERSION_PY)
+    return str(tmp_file)
+
+
+@pytest.fixture(scope="function")
+def random_location_version_file(tmpdir):
+    tmp_file = tmpdir.join("Cargo.lock")
+    tmp_file.write(CARGO_LOCK)
     return str(tmp_file)
 
 
@@ -88,6 +112,18 @@ def test_partial_update_of_file(version_repeated_file):
         data = f.read()
         assert new_version in data
         assert old_version in data
+
+
+def test_random_location(random_location_version_file):
+    old_version = "1.2.3"
+    new_version = "2.0.0"
+    location = f"{random_location_version_file}:there-i-fixed-it.+\nversion"
+
+    bump.update_version_in_files(old_version, new_version, [location])
+    with open(random_location_version_file, "r") as f:
+        data = f.read()
+        assert len(re.findall(old_version, data)) == 2
+        assert len(re.findall(new_version, data)) == 1
 
 
 def test_file_version_inconsistent_error(
