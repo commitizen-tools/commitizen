@@ -154,7 +154,9 @@ def update_version_in_files(
         regex = regexes[0] if regexes else None
         current_version_found = False
 
-        version_file = open(filepath, "r").read()
+        with open(filepath, "r") as f:
+            version_file = f.read()
+
         match = regex and re.search(regex, version_file, re.MULTILINE)
         if match:
             left = version_file[: match.end()]
@@ -167,7 +169,7 @@ def update_version_in_files(
 
         if not regex:
             current_version_regex = _version_to_regex(current_version)
-            current_version_found = current_version_regex.search(version_file) and True
+            current_version_found = bool(current_version_regex.search(version_file))
             version_file = current_version_regex.sub(new_version, version_file)
 
         if check_consistency and not current_version_found:
