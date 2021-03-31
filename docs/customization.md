@@ -3,7 +3,7 @@ We have two different ways to do so.
 
 ## 1. Customize in configuration file
 
-**This is only supported when configuring through `toml` or `json` (e.g., `pyproject.toml`, `.cz.toml`, `.cz.toml`, `.cz.json`, and `cz.json`)**
+**This is only supported when configuring through `toml` or `json` (e.g., `pyproject.toml`, `.cz.toml`, `.cz.json`, and `cz.json`)**
 
 The basic steps are:
 
