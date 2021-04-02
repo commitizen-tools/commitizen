@@ -1,4 +1,10 @@
 
+## v2.17.0 (2021-04-02)
+
+### Feat
+
+- Support versions on random positions
+
 ## v2.16.0 (2021-03-08)
 
 ### Feat
