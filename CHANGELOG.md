@@ -1,4 +1,10 @@
 
+## v2.17.1 (2021-04-08)
+
+### Fix
+
+- **commands/init**: fix toml config format error
+
 ## v2.17.0 (2021-04-02)
 
 ### Feat
