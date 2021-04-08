@@ -25,6 +25,7 @@ cz_hook_config = {
 }
 
 expected_config = (
+    "[tool]\n"
     "[tool.commitizen]\n"
     'name = "cz_conventional_commits"\n'
     'version = "0.0.1"\n'
