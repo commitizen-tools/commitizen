@@ -1,7 +1,8 @@
+import os
 from pathlib import Path
 from typing import Union
 
-from tomlkit import exceptions, parse
+from tomlkit import exceptions, parse, table
 
 from .base_config import BaseConfig
 
@@ -14,8 +15,17 @@ class TomlConfig(BaseConfig):
         self.add_path(path)
 
     def init_empty_config_content(self):
-        with open(self.path, "a") as toml_file:
-            toml_file.write("[tool.commitizen]")
+        if os.path.isfile(self.path):
+            with open(self.path, "rb") as input_toml_file:
+                parser = parse(input_toml_file.read())
+        else:
+            parser = parse("")
+
+        with open(self.path, "wb") as output_toml_file:
+            if parser.get("tool") is None:
+                parser["tool"] = table()
+            parser["tool"]["commitizen"] = table()
+            output_toml_file.write(parser.as_string().encode("utf-8"))
 
     def set_key(self, key, value):
         """Set or update a key in the conf.

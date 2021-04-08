@@ -132,7 +132,7 @@ class TestTomlConfig:
         toml_config.init_empty_config_content()
 
         with open(path, "r") as toml_file:
-            assert toml_file.read() == "[tool.commitizen]"
+            assert toml_file.read() == "[tool]\n[tool.commitizen]\n"
 
     def test_init_empty_config_content_with_existing_content(self, tmpdir):
         existing_content = "[tool.black]\n" "line-length = 88\n"
@@ -143,7 +143,7 @@ class TestTomlConfig:
         toml_config.init_empty_config_content()
 
         with open(path, "r") as toml_file:
-            assert toml_file.read() == existing_content + "[tool.commitizen]"
+            assert toml_file.read() == existing_content + "\n[tool.commitizen]\n"
 
 
 class TestJsonConfig:
