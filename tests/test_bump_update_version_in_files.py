@@ -126,6 +126,18 @@ def test_random_location(random_location_version_file):
         assert len(re.findall(new_version, data)) == 1
 
 
+def test_duplicates_are_change_with_no_regex(random_location_version_file):
+    old_version = "1.2.3"
+    new_version = "2.0.0"
+    location = f"{random_location_version_file}:version"
+
+    bump.update_version_in_files(old_version, new_version, [location])
+    with open(random_location_version_file, "r") as f:
+        data = f.read()
+        assert len(re.findall(old_version, data)) == 0
+        assert len(re.findall(new_version, data)) == 3
+
+
 def test_file_version_inconsistent_error(
     commitizen_config_file, inconsistent_python_version_file, version_repeated_file
 ):
