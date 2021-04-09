@@ -2,8 +2,9 @@
 version = "2.17.1"
 tag_format = "v$version"
 version_files = [
-  "pyproject.toml:version",
-  "commitizen/__version__.py"
+    "pyproject.toml:[tool.commitizen]\nversion",
+    "pyproject.toml:[tool.poetry]\nname = \"commitizen\"\nversion",
+    "commitizen/__version__.py"
 ]
 
 [tool.black]
@@ -29,7 +30,7 @@ exclude = '''
 
 [tool.poetry]
 name = "commitizen"
-version = "2.17.0"
+version = "2.17.1"
 description = "Python commitizen client tool"
 authors = ["Santiago Fraire <santiwilly@gmail.com>"]
 license = "MIT"
