@@ -157,15 +157,17 @@ def update_version_in_files(
         with open(filepath, "r") as f:
             version_file = f.read()
 
-        match = regex and re.search(regex, version_file, re.MULTILINE)
-        if match:
-            left = version_file[: match.end()]
-            right = version_file[match.end() :]
-            line_break = _get_line_break_position(right)
-            middle = right[:line_break]
-            current_version_found = current_version in middle
-            right = right[line_break:]
-            version_file = left + middle.replace(current_version, new_version) + right
+        if regex:
+            for match in re.finditer(regex, version_file, re.MULTILINE):
+                left = version_file[: match.end()]
+                right = version_file[match.end() :]
+                line_break = _get_line_break_position(right)
+                middle = right[:line_break]
+                current_version_found = current_version in middle
+                right = right[line_break:]
+                version_file = (
+                    left + middle.replace(current_version, new_version) + right
+                )
 
         if not regex:
             current_version_regex = _version_to_regex(current_version)
