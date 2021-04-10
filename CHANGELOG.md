@@ -1,4 +1,11 @@
 
+## v2.17.2 (2021-04-10)
+
+### Fix
+
+- **bump**: replace all occurances that match regex
+- **wip**: add test for current breaking change
+
 ## v2.17.1 (2021-04-08)
 
 ### Fix
