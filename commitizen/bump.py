@@ -152,24 +152,15 @@ def update_version_in_files(
     for location in files:
         filepath, *regexes = location.split(":")
         regex = regexes[0] if regexes else None
-        current_version_found = False
 
         with open(filepath, "r") as f:
             version_file = f.read()
 
         if regex:
-            for match in re.finditer(regex, version_file, re.MULTILINE):
-                left = version_file[: match.end()]
-                right = version_file[match.end() :]
-                line_break = _get_line_break_position(right)
-                middle = right[:line_break]
-                current_version_found = current_version in middle
-                right = right[line_break:]
-                version_file = (
-                    left + middle.replace(current_version, new_version) + right
-                )
-
-        if not regex:
+            current_version_found, version_file = _bump_with_regex(
+                version_file, current_version, new_version, regex
+            )
+        else:
             current_version_regex = _version_to_regex(current_version)
             current_version_found = bool(current_version_regex.search(version_file))
             version_file = current_version_regex.sub(new_version, version_file)
@@ -184,6 +175,27 @@ def update_version_in_files(
         # Write the file out again
         with open(filepath, "w") as file:
             file.write("".join(version_file))
+
+
+def _bump_with_regex(version_file_contents, current_version, new_version, regex):
+    current_version_found = False
+    # Bumping versions that change the string length move the offset on the file contents as finditer keeps a
+    # reference to the initial string that was used and calling search many times would lead in infinite loops
+    # e.g.: 1.1.9 -> 1.1.20
+    offset = 0
+    for match in re.finditer(regex, version_file_contents, re.MULTILINE):
+        left = version_file_contents[: match.end() + offset]
+        right = version_file_contents[match.end() + offset :]
+        line_break = _get_line_break_position(right)
+        middle = right[:line_break]
+        current_version_found_in_block = current_version in middle
+        offset += len(new_version) - len(current_version)
+        current_version_found |= current_version_found_in_block
+        right = right[line_break:]
+        version_file_contents = (
+            left + middle.replace(current_version, new_version) + right
+        )
+    return current_version_found, version_file_contents
 
 
 def _get_line_break_position(text: str) -> int:
