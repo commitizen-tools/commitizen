@@ -1,4 +1,10 @@
 
+## v2.17.3 (2021-04-19)
+
+### Fix
+
+- fix multiple versions bumps when version changes the string size
+
 ## v2.17.2 (2021-04-10)
 
 ### Fix
