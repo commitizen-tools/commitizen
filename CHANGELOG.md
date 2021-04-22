@@ -1,4 +1,10 @@
 
+## v2.17.4 (2021-04-22)
+
+### Fix
+
+- version update in a docker-compose.yaml file
+
 ## v2.17.3 (2021-04-19)
 
 ### Fix
