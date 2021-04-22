@@ -205,7 +205,7 @@ def _get_line_break_position(text: str) -> int:
 
 def _version_to_regex(version: str):
     clean_regex = version.replace(".", r"\.").replace("+", r"\+")
-    return re.compile(f"\\b{clean_regex}\\b")
+    return re.compile(f"{clean_regex}")
 
 
 def create_tag(version: Union[Version, str], tag_format: Optional[str] = None):

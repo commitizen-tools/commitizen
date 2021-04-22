@@ -50,6 +50,15 @@ name = "other-project"
 version = "1.2.3"
 """
 
+DOCKER_COMPOSE = """
+version: "3.3"
+
+services:
+  app:
+    image: my-repo/my-container:v1.2.3
+  command: my-command
+"""
+
 MULTIPLE_VERSIONS_INCREASE_STRING = 'version = "1.2.9"\n' * 30
 MULTIPLE_VERSIONS_REDUCE_STRING = 'version = "1.2.10"\n' * 30
 
@@ -104,8 +113,25 @@ def multiple_versions_reduce_string(tmpdir):
 
 
 @pytest.fixture(scope="function")
-def version_files(commitizen_config_file, python_version_file, version_repeated_file):
-    return [commitizen_config_file, python_version_file, version_repeated_file]
+def docker_compose_file(tmpdir):
+    tmp_file = tmpdir.join("docker-compose.yaml")
+    tmp_file.write(DOCKER_COMPOSE)
+    return str(tmp_file)
+
+
+@pytest.fixture(scope="function")
+def version_files(
+    commitizen_config_file,
+    python_version_file,
+    version_repeated_file,
+    docker_compose_file,
+):
+    return [
+        commitizen_config_file,
+        python_version_file,
+        version_repeated_file,
+        docker_compose_file,
+    ]
 
 
 def test_update_version_in_files(version_files):
