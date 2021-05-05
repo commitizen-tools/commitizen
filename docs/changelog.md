@@ -88,7 +88,7 @@ By introducing `unreleased_version` you can prevent this situation.
 Before bumping you can run:
 
 ```bash
-cz changelog --unreleased_version="v1.0.0"
+cz changelog --unreleased-version="v1.0.0"
 ```
 
 Remember to use the tag instead of the raw version number
