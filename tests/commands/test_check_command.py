@@ -125,11 +125,7 @@ def test_check_conventional_commit_succeeds(mocker, capsys):
 
 
 @pytest.mark.parametrize(
-    "commit_msg",
-    (
-        "feat!(lang): removed polish language",
-        "no conventional commit",
-    ),
+    "commit_msg", ("feat!(lang): removed polish language", "no conventional commit",),
 )
 def test_check_no_conventional_commit(commit_msg, config, mocker, tmpdir):
     with pytest.raises(InvalidCommitMessageError):
