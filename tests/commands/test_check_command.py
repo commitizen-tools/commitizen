@@ -124,12 +124,15 @@ def test_check_conventional_commit_succeeds(mocker, capsys):
     assert "Commit validation: successful!" in out
 
 
-def test_check_no_conventional_commit(config, mocker, tmpdir):
+@pytest.mark.parametrize(
+    "commit_msg", ("feat!(lang): removed polish language", "no conventional commit",),
+)
+def test_check_no_conventional_commit(commit_msg, config, mocker, tmpdir):
     with pytest.raises(InvalidCommitMessageError):
         error_mock = mocker.patch("commitizen.out.error")
 
         tempfile = tmpdir.join("temp_commit_file")
-        tempfile.write("no conventional commit")
+        tempfile.write(commit_msg)
 
         check_cmd = commands.Check(
             config=config, arguments={"commit_msg_file": tempfile}
@@ -141,6 +144,7 @@ def test_check_no_conventional_commit(config, mocker, tmpdir):
 @pytest.mark.parametrize(
     "commit_msg",
     (
+        "feat(lang)!: removed polish language",
         "feat(lang): added polish language",
         "feat: add polish language",
         "bump: 0.0.1 -> 1.0.0",
