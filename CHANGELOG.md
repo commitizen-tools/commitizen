@@ -1,4 +1,10 @@
 
+## v2.17.6 (2021-05-06)
+
+### Fix
+
+- **cz/conventional_commits**: optionally expect '!' right before ':' in schema_pattern
+
 ## v2.17.5 (2021-05-06)
 
 ## v2.17.4 (2021-04-22)
