@@ -49,8 +49,8 @@ class TomlConfig(BaseConfig):
         name = "cz_conventional_commits"
         ```
         """
-        doc = parse(data)
+        doc = parse(data)  # type: ignore
         try:
-            self.settings.update(doc["tool"]["commitizen"])
+            self.settings.update(doc["tool"]["commitizen"])  # type: ignore
         except exceptions.NonExistentKey:
             self.is_empty_config = True
