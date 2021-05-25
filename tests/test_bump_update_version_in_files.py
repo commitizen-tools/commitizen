@@ -267,13 +267,13 @@ def test_file_version_inconsistent_error(
     assert expected_msg in str(excinfo.value)
 
 
-def test_multiplt_versions_to_bump(multiple_versions_to_update_poetry_lock):
+def test_multiplt_versions_to_bump(
+    multiple_versions_to_update_poetry_lock, file_regression
+):
     old_version = "1.2.9"
     new_version = "1.2.10"
     location = f"{multiple_versions_to_update_poetry_lock}:version"
 
     bump.update_version_in_files(old_version, new_version, [location])
     with open(multiple_versions_to_update_poetry_lock, "r") as f:
-        data = f.read()
-        assert len(re.findall(old_version, data)) == 0
-        assert len(re.findall(new_version, data)) == 2
+        file_regression.check(f.read(), extension=".toml")
