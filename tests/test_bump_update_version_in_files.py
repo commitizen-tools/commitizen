@@ -59,6 +59,36 @@ services:
   command: my-command
 """
 
+MULTIPLE_VERSIONS_TO_UPDATE_POETRY_LOCK = """
+[[package]]
+name = "to-update-1"
+version = "1.2.9"
+
+[[package]]
+name = "not-to-update"
+version = "1.3.3"
+
+[[package]]
+name = "not-to-update"
+version = "1.3.3"
+
+[[package]]
+name = "not-to-update"
+version = "1.3.3"
+
+[[package]]
+name = "not-to-update"
+version = "1.3.3"
+
+[[package]]
+name = "not-to-update"
+version = "1.3.3"
+
+[[package]]
+name = "to-update-2"
+version = "1.2.9"
+"""
+
 MULTIPLE_VERSIONS_INCREASE_STRING = 'version = "1.2.9"\n' * 30
 MULTIPLE_VERSIONS_REDUCE_STRING = 'version = "1.2.10"\n' * 30
 
@@ -116,6 +146,13 @@ def multiple_versions_reduce_string(tmpdir):
 def docker_compose_file(tmpdir):
     tmp_file = tmpdir.join("docker-compose.yaml")
     tmp_file.write(DOCKER_COMPOSE)
+    return str(tmp_file)
+
+
+@pytest.fixture(scope="function")
+def multiple_versions_to_update_poetry_lock(tmpdir):
+    tmp_file = tmpdir.join("pyproject.toml")
+    tmp_file.write(MULTIPLE_VERSIONS_TO_UPDATE_POETRY_LOCK)
     return str(tmp_file)
 
 
@@ -228,3 +265,15 @@ def test_file_version_inconsistent_error(
         "version_files are possibly inconsistent."
     )
     assert expected_msg in str(excinfo.value)
+
+
+def test_multiplt_versions_to_bump(multiple_versions_to_update_poetry_lock):
+    old_version = "1.2.9"
+    new_version = "1.2.10"
+    location = f"{multiple_versions_to_update_poetry_lock}:version"
+
+    bump.update_version_in_files(old_version, new_version, [location])
+    with open(multiple_versions_to_update_poetry_lock, "r") as f:
+        data = f.read()
+        assert len(re.findall(old_version, data)) == 0
+        assert len(re.findall(new_version, data)) == 2
