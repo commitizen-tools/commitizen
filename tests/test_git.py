@@ -152,3 +152,14 @@ def test_get_latest_tag_name(tmp_commitizen_project):
         cmd.run("git tag 1.0")
         tag_name = git.get_latest_tag_name()
         assert tag_name == "1.0"
+
+
+def test_is_staging_clean(tmp_commitizen_project):
+    with tmp_commitizen_project.as_cwd():
+        assert git.is_staging_clean() is True
+
+        cmd.run("touch test_file")
+        cmd.run("git add test_file")
+        cmd.run("echo 'test' > test_file")
+
+        assert git.is_staging_clean() is False
