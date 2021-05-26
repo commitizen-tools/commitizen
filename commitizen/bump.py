@@ -188,10 +188,10 @@ def _bump_with_regex(version_file_contents, current_version, new_version, regex)
         right = version_file_contents[match.end() + offset :]
         line_break = _get_line_break_position(right)
         middle = right[:line_break]
+        right = right[line_break:]
         if current_version in middle:
             offset += len(new_version) - len(current_version)
             current_version_found = True
-            right = right[line_break:]
             version_file_contents = (
                 left + middle.replace(current_version, new_version) + right
             )

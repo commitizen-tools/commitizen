@@ -1,0 +1,7 @@
+{
+  "name": "magictool",
+  "version": "1.2.3",
+  "dependencies": {
+      "lodash": "1.2.3"
+  }
+}
