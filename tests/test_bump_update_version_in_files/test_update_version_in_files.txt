@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "commitizen"
+version = "2.0.0"
+__title__ = "requests"
+__description__ = "Python HTTP for Humans."
+__url__ = "http://python-requests.org"
+__version__ = "2.0.0"
+{
+  "name": "magictool",
+  "version": "2.0.0",
+  "dependencies": {
+      "lodash": "2.0.0"
+  }
+}
+version: "3.3"
+
+services:
+  app:
+    image: my-repo/my-container:v2.0.0
+  command: my-command
