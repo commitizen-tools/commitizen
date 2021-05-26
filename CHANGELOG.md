@@ -1,4 +1,11 @@
 
+## v2.17.7 (2021-05-26)
+
+### Fix
+
+- **bump**: fix error due to bumping version file without eol through regex
+- **bump**: fix offset error due to partially match
+
 ## v2.17.6 (2021-05-06)
 
 ### Fix
