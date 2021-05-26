@@ -8,7 +8,7 @@ from commitizen.exceptions import CurrentVersionNotFoundError
 MULTIPLE_VERSIONS_INCREASE_STRING = 'version = "1.2.9"\n' * 30
 MULTIPLE_VERSIONS_REDUCE_STRING = 'version = "1.2.10"\n' * 30
 
-TESTING_FILE_PREFIX = "tests/testing_version_files"
+TESTING_FILE_PREFIX = "tests/data"
 
 
 @pytest.fixture(scope="function")
@@ -19,7 +19,7 @@ def commitizen_config_file(tmpdir):
 
 
 @pytest.fixture(scope="function")
-def python_version_file(tmpdir):
+def python_version_file(tmpdir, request):
     tmp_file = tmpdir.join("__verion__.py")
     copyfile(f"{TESTING_FILE_PREFIX}/sample_version.py", str(tmp_file))
     return str(tmp_file)
@@ -67,12 +67,18 @@ def docker_compose_file(tmpdir):
     return str(tmp_file)
 
 
-@pytest.fixture(scope="function")
-def multiple_versions_to_update_poetry_lock(tmpdir):
+@pytest.fixture(
+    scope="function",
+    params=(
+        "multiple_versions_to_update_pyproject.toml",
+        "multiple_versions_to_update_pyproject_wo_eol.toml",
+    ),
+    ids=("with_eol", "without_eol"),
+)
+def multiple_versions_to_update_poetry_lock(tmpdir, request):
     tmp_file = tmpdir.join("pyproject.toml")
     copyfile(
-        f"{TESTING_FILE_PREFIX}/multiple_versions_to_update_pyproject.toml",
-        str(tmp_file),
+        f"{TESTING_FILE_PREFIX}/{request.param}", str(tmp_file),
     )
     return str(tmp_file)
 

@@ -5,7 +5,7 @@ repos:
     hooks:
       - id: check-vcs-permalinks
       - id: end-of-file-fixer
-        exclude: "tests/test_*/*"
+        exclude: "tests/[test_*|data]/*"
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
       - id: debug-statements
