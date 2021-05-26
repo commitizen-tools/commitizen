@@ -1,6 +1,7 @@
 from shutil import copyfile
 
 import pytest
+from py._path.local import LocalPath
 
 from commitizen import bump
 from commitizen.exceptions import CurrentVersionNotFoundError
@@ -11,39 +12,62 @@ MULTIPLE_VERSIONS_REDUCE_STRING = 'version = "1.2.10"\n' * 30
 TESTING_FILE_PREFIX = "tests/data"
 
 
+def _copy_sample_file_to_tmpdir(
+    tmpdir: LocalPath, source_filename: str, dest_filename: str
+) -> str:
+    tmp_file = tmpdir.join(dest_filename)
+    copyfile(f"{TESTING_FILE_PREFIX}/{source_filename}", str(tmp_file))
+    return str(tmp_file)
+
+
 @pytest.fixture(scope="function")
 def commitizen_config_file(tmpdir):
-    tmp_file = tmpdir.join("pyproject.toml")
-    copyfile(f"{TESTING_FILE_PREFIX}/sample_pyproject.toml", str(tmp_file))
-    return str(tmp_file)
+    return _copy_sample_file_to_tmpdir(
+        tmpdir, "sample_pyproject.toml", "pyproject.toml"
+    )
 
 
 @pytest.fixture(scope="function")
 def python_version_file(tmpdir, request):
-    tmp_file = tmpdir.join("__verion__.py")
-    copyfile(f"{TESTING_FILE_PREFIX}/sample_version.py", str(tmp_file))
-    return str(tmp_file)
+    return _copy_sample_file_to_tmpdir(tmpdir, "sample_version.py", "__version__.py")
 
 
 @pytest.fixture(scope="function")
 def inconsistent_python_version_file(tmpdir):
-    tmp_file = tmpdir.join("__verion__.py")
-    copyfile(f"{TESTING_FILE_PREFIX}/inconsistent_version.py", str(tmp_file))
-    return str(tmp_file)
+    return _copy_sample_file_to_tmpdir(
+        tmpdir, "inconsistent_version.py", "__version__.py"
+    )
 
 
 @pytest.fixture(scope="function")
 def random_location_version_file(tmpdir):
-    tmp_file = tmpdir.join("Cargo.lock")
-    copyfile(f"{TESTING_FILE_PREFIX}/sample_cargo.lock", str(tmp_file))
-    return str(tmp_file)
+    return _copy_sample_file_to_tmpdir(tmpdir, "sample_cargo.lock", "Cargo.lock")
 
 
 @pytest.fixture(scope="function")
 def version_repeated_file(tmpdir):
-    tmp_file = tmpdir.join("package.json")
-    copyfile(f"{TESTING_FILE_PREFIX}/repeated_version_number.json", str(tmp_file))
-    return str(tmp_file)
+    return _copy_sample_file_to_tmpdir(
+        tmpdir, "repeated_version_number.json", "package.json"
+    )
+
+
+@pytest.fixture(scope="function")
+def docker_compose_file(tmpdir):
+    return _copy_sample_file_to_tmpdir(
+        tmpdir, "sample_docker_compose.yaml", "docker-compose.yaml"
+    )
+
+
+@pytest.fixture(
+    scope="function",
+    params=(
+        "multiple_versions_to_update_pyproject.toml",
+        "multiple_versions_to_update_pyproject_wo_eol.toml",
+    ),
+    ids=("with_eol", "without_eol"),
+)
+def multiple_versions_to_update_poetry_lock(tmpdir, request):
+    return _copy_sample_file_to_tmpdir(tmpdir, request.param, "pyproject.toml")
 
 
 @pytest.fixture(scope="function")
@@ -61,41 +85,18 @@ def multiple_versions_reduce_string(tmpdir):
 
 
 @pytest.fixture(scope="function")
-def docker_compose_file(tmpdir):
-    tmp_file = tmpdir.join("docker-compose.yaml")
-    copyfile(f"{TESTING_FILE_PREFIX}/sample_docker_compose.yaml", str(tmp_file))
-    return str(tmp_file)
-
-
-@pytest.fixture(
-    scope="function",
-    params=(
-        "multiple_versions_to_update_pyproject.toml",
-        "multiple_versions_to_update_pyproject_wo_eol.toml",
-    ),
-    ids=("with_eol", "without_eol"),
-)
-def multiple_versions_to_update_poetry_lock(tmpdir, request):
-    tmp_file = tmpdir.join("pyproject.toml")
-    copyfile(
-        f"{TESTING_FILE_PREFIX}/{request.param}", str(tmp_file),
-    )
-    return str(tmp_file)
-
-
-@pytest.fixture(scope="function")
 def version_files(
     commitizen_config_file,
     python_version_file,
     version_repeated_file,
     docker_compose_file,
 ):
-    return [
+    return (
         commitizen_config_file,
         python_version_file,
         version_repeated_file,
         docker_compose_file,
-    ]
+    )
 
 
 def test_update_version_in_files(version_files, file_regression):
