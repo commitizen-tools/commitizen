@@ -1,4 +1,10 @@
 
+## v2.17.8 (2021-05-28)
+
+### Fix
+
+- **changelog**: annotated tags not generating proper changelog
+
 ## v2.17.7 (2021-05-26)
 
 ### Fix
