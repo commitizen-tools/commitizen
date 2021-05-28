@@ -19,9 +19,9 @@ def test_git_object_eq():
 
 def test_get_tags(mocker):
     tag_str = (
-        "v1.0.0---inner_delimiter---333---inner_delimiter---2020-01-20\n"
-        "v0.5.0---inner_delimiter---222---inner_delimiter---2020-01-17\n"
-        "v0.0.1---inner_delimiter---111---inner_delimiter---2020-01-17\n"
+        "v1.0.0---inner_delimiter---333---inner_delimiter---2020-01-20---inner_delimiter---\n"
+        "v0.5.0---inner_delimiter---222---inner_delimiter---2020-01-17---inner_delimiter---\n"
+        "v0.0.1---inner_delimiter---111---inner_delimiter---2020-01-17---inner_delimiter---\n"
     )
     mocker.patch("commitizen.cmd.run", return_value=FakeCommand(out=tag_str))
 

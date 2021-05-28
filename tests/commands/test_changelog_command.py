@@ -453,3 +453,30 @@ def test_changelog_config_start_rev_option(mocker, capsys, config_path):
 
     out, _ = capsys.readouterr()
     assert out == "## Unreleased\n\n### Feat\n\n- after 0.2\n- after 0.2.0\n\n"
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_incremental_keep_a_changelog_sample_with_annotated_tag(
+    mocker, capsys, changelog_path, file_regression
+):
+    """Fix #378"""
+    with open(changelog_path, "w") as f:
+        f.write(KEEP_A_CHANGELOG)
+    create_file_and_commit("irrelevant commit")
+    git.tag("1.0.0", annotated=True)
+
+    create_file_and_commit("feat: add new output")
+    create_file_and_commit("fix: output glitch")
+    create_file_and_commit("fix: mama gotta work")
+    create_file_and_commit("feat: add more stuff")
+    create_file_and_commit("Merge into master")
+
+    testargs = ["cz", "changelog", "--incremental"]
+
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")

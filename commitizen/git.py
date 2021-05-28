@@ -44,6 +44,15 @@ class GitTag(GitObject):
     def __repr__(self):
         return f"GitTag('{self.name}', '{self.rev}', '{self.date}')"
 
+    @classmethod
+    def from_line(cls, line: str, inner_delimiter: str) -> "GitTag":
+
+        name, objectname, date, obj = line.split(inner_delimiter)
+        if not obj:
+            obj = objectname
+
+        return cls(name=name, rev=obj, date=date)
+
 
 def tag(tag: str, annotated: bool = False):
     c = cmd.run(f"git tag -a {tag} -m {tag}" if annotated else f"git tag {tag}")
@@ -100,13 +109,19 @@ def get_tags(dateformat: str = "%Y-%m-%d") -> List[GitTag]:
     formatter = (
         f'"%(refname:lstrip=2){inner_delimiter}'
         f"%(objectname){inner_delimiter}"
-        f'%(committerdate:format:{dateformat})"'
+        f"%(creatordate:format:{dateformat}){inner_delimiter}"
+        f'%(object)"'
     )
-    c = cmd.run(f"git tag --format={formatter} --sort=-committerdate")
+    c = cmd.run(f"git tag --format={formatter} --sort=-creatordate")
+
     if c.err or not c.out:
         return []
 
-    git_tags = [GitTag(*line.split(inner_delimiter)) for line in c.out.split("\n")[:-1]]
+    git_tags = [
+        GitTag.from_line(line=line, inner_delimiter=inner_delimiter)
+        for line in c.out.split("\n")[:-1]
+    ]
+
     return git_tags
 
 
