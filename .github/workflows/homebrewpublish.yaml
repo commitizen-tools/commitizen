@@ -13,8 +13,19 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        python -m pip install -U commitizen
+    - name: Set Project version env variable
+      run: |
+        echo "project_version=$(cz version --project)" >> $GITHUB_ENV
     - name: Update Homebrew formula
       uses: dawidd6/action-homebrew-bump-formula@v3
       with:
         token: ${{secrets.PERSONAL_ACCESS_TOKEN}}
         formula: commitizen
+        tag: v${{ env.project_version }}
