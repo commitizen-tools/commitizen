@@ -1,5 +1,5 @@
 [tool.commitizen]
-version = "2.17.8"
+version = "2.17.9"
 tag_format = "v$version"
 version_files = [
   "pyproject.toml:version",
@@ -29,7 +29,7 @@ exclude = '''
 
 [tool.poetry]
 name = "commitizen"
-version = "2.17.8"
+version = "2.17.9"
 description = "Python commitizen client tool"
 authors = ["Santiago Fraire <santiwilly@gmail.com>"]
 license = "MIT"

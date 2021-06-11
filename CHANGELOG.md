@@ -1,4 +1,10 @@
 
+## v2.17.9 (2021-06-11)
+
+### Fix
+
+- **changelog**: generating changelog after a pre-release
+
 ## v2.17.8 (2021-05-28)
 
 ### Fix
