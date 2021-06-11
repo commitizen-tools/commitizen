@@ -11,19 +11,19 @@
       
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.1.5">
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.7">
     
     
       
-        <title>Writing commits - Commitizen</title>
+        <title>Automatically check message before commit - Commitizen</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.bde7dde4.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.ca7ac06f.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ef6f36e2.min.css">
+        <link rel="stylesheet" href="assets/stylesheets/palette.f1a3b89f.min.css">
         
       
     
@@ -53,7 +53,7 @@
     <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
   
     
-    <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    <script>function __prefix(e){return new URL(".",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -61,7 +61,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#conventional-commits" class="md-skip">
+        <a href="#automatically-check-message-before-commit" class="md-skip">
           Skip to content
         </a>
       
@@ -72,7 +72,7 @@
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Commitizen" class="md-header__button md-logo" aria-label="Commitizen" data-md-component="logo">
+    <a href="index.html" title="Commitizen" class="md-header__button md-logo" aria-label="Commitizen" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -91,7 +91,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Writing commits
+              Automatically check message before commit
             
           </span>
         </div>
@@ -165,7 +165,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Commitizen" class="md-nav__button md-logo" aria-label="Commitizen" data-md-component="logo">
+    <a href="index.html" title="Commitizen" class="md-nav__button md-logo" aria-label="Commitizen" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -197,7 +197,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href="index.html" class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -233,7 +233,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../init/" class="md-nav__link">
+      <a href="init.html" class="md-nav__link">
         Init
       </a>
     </li>
@@ -245,7 +245,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../bump/" class="md-nav__link">
+      <a href="bump.html" class="md-nav__link">
         Bump
       </a>
     </li>
@@ -257,7 +257,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../check/" class="md-nav__link">
+      <a href="check.html" class="md-nav__link">
         Check
       </a>
     </li>
@@ -269,7 +269,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../changelog/" class="md-nav__link">
+      <a href="changelog.html" class="md-nav__link">
         Changelog
       </a>
     </li>
@@ -290,7 +290,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/" class="md-nav__link">
+      <a href="config.html" class="md-nav__link">
         Configuration
       </a>
     </li>
@@ -305,7 +305,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../customization/" class="md-nav__link">
+      <a href="customization.html" class="md-nav__link">
         Customization
       </a>
     </li>
@@ -318,14 +318,12 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
       
       <label class="md-nav__link" for="__nav_5">
         Tutorials
@@ -341,67 +339,11 @@
             
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Writing commits
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="tutorials/writing_commits.html" class="md-nav__link">
         Writing commits
       </a>
-      
-        
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#conventional-commits" class="md-nav__link">
-    Conventional commits
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#writing-commits" class="md-nav__link">
-    Writing commits
-  </a>
-  
-    <nav class="md-nav" aria-label="Writing commits">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#recommendations" class="md-nav__link">
-    Recommendations
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -411,7 +353,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gitlab_ci/" class="md-nav__link">
+      <a href="tutorials/gitlab_ci.html" class="md-nav__link">
         GitLab CI
       </a>
     </li>
@@ -423,7 +365,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../github_actions/" class="md-nav__link">
+      <a href="tutorials/github_actions.html" class="md-nav__link">
         Github Actions
       </a>
     </li>
@@ -435,7 +377,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../jenkins_pipeline/" class="md-nav__link">
+      <a href="tutorials/jenkins_pipeline.html" class="md-nav__link">
         Jenkins pipeline
       </a>
     </li>
@@ -456,7 +398,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../faq/" class="md-nav__link">
+      <a href="faq.html" class="md-nav__link">
         FAQ
       </a>
     </li>
@@ -471,7 +413,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../exit_codes/" class="md-nav__link">
+      <a href="exit_codes.html" class="md-nav__link">
         Exit Codes
       </a>
     </li>
@@ -486,7 +428,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../third-party-commitizen/" class="md-nav__link">
+      <a href="third-party-commitizen.html" class="md-nav__link">
         Third-Party Commitizen Templates
       </a>
     </li>
@@ -501,7 +443,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributing/" class="md-nav__link">
+      <a href="contributing.html" class="md-nav__link">
         Contributing
       </a>
     </li>
@@ -516,7 +458,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../external_links/" class="md-nav__link">
+      <a href="external_links.html" class="md-nav__link">
         Resources
       </a>
     </li>
@@ -539,6 +481,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -547,23 +491,30 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#conventional-commits" class="md-nav__link">
-    Conventional commits
+  <a href="#about" class="md-nav__link">
+    About
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#writing-commits" class="md-nav__link">
-    Writing commits
+  <a href="#how-to" class="md-nav__link">
+    How to
   </a>
   
-    <nav class="md-nav" aria-label="Writing commits">
+    <nav class="md-nav" aria-label="How to">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#recommendations" class="md-nav__link">
-    Recommendations
+  <a href="#method-1-add-git-hook-through-pre-commit" class="md-nav__link">
+    Method 1: Add git hook through pre-commit
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-manually-add-git-hook" class="md-nav__link">
+    Method 2: Manually add git hook
   </a>
   
 </li>
@@ -586,52 +537,57 @@
               
                 
                 
-                  <h1>Writing commits</h1>
-                
-                <p>For this project to work well in your pipeline, a commit convention
-must be followed.</p>
-<p>By default commitizen uses the known <a href="https://www.conventionalcommits.org">conventional commits</a>, but you can create
-your own following the docs information over <a href="https://commitizen-tools.github.io/commitizen/customization/">customization</a>.</p>
-<h2 id="conventional-commits">Conventional commits</h2>
-<p>If you are using <a href="https://www.conventionalcommits.org">conventional commits</a>, the most important
-thing to know is that you must begin your commits with at least one of these tags: <code>fix</code>, <code>feat</code>. And if you introduce a breaking change, then, you must
-add to your commit body the following <code>BREAKING CHANGE</code>.
-Using these 3 keywords will allow the proper identification of the semantic version.
-Of course, there are other keywords, but I'll leave it to the reader to explore them.</p>
-<h2 id="writing-commits">Writing commits</h2>
-<p>Not to the important part, when writing commits, it's important to think about:</p>
+                <h1 id="automatically-check-message-before-commit">Automatically check message before commit</h1>
+<h2 id="about">About</h2>
+<p>To automatically check a commit message prior to committing, you can use a <a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks">git hook</a>. </p>
+<h2 id="how-to">How to</h2>
+<p>There are two common methods for installing the hook:</p>
+<h3 id="method-1-add-git-hook-through-pre-commit">Method 1: Add git hook through <a href="https://pre-commit.com/">pre-commit</a></h3>
 <ul>
-<li>Your future self</li>
-<li>Your colleagues</li>
+<li>Step 1: Install <a href="https://pre-commit.com/">pre-commit</a></li>
 </ul>
-<p>You may think this is trivial, but it's not. It's important for the reader to
-understand what happened.</p>
-<h3 id="recommendations">Recommendations</h3>
+<div class="codehilite"><pre><span></span><code>python -m pip install pre-commit
+</code></pre></div>
+
 <ul>
-<li><strong>Keep the message short</strong>: Makes the list of commits more readable (~50 chars).</li>
-<li><strong>Talk imperative</strong>: Follow this rule: <code>If applied, this commit will &lt;commit message&gt;</code></li>
-<li><strong>Think about the CHANGELOG</strong>: Your commits will probably end up in the changelog
-  so try writing for it, but also keep in mind that you can skip sending commits to the CHANGELOG by using different keywords (like <code>build</code>).</li>
-<li><strong>Use a commit per new feature</strong>: if you introduce multiple things related to the same commit, squash them. This is useful for auto-generating CHANGELOG.</li>
+<li>Step 2: Create <code>.pre-commit-config.yaml</code> at your root directory with the following content</li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>Do's</th>
-<th>Don'ts</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>fix(commands): bump error when no user provided</code></td>
-<td><code>fix: stuff</code></td>
-</tr>
-<tr>
-<td><code>feat: add new commit command</code></td>
-<td><code>feat: commit command introduced</code></td>
-</tr>
-</tbody>
-</table>
+<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<span class="nt">repos</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">repo</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/commitizen-tools/commitizen</span>
+    <span class="nt">rev</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v1.17.0</span>
+    <span class="nt">hooks</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">commitizen</span>
+        <span class="nt">stages</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">commit-msg</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+
+<ul>
+<li>Step 3: Install the configuration into git hook through <code>pre-commit</code></li>
+</ul>
+<div class="codehilite"><pre><span></span><code>pre-commit install --hook-type commit-msg
+</code></pre></div>
+
+<h3 id="method-2-manually-add-git-hook">Method 2: Manually add git hook</h3>
+<p>The command might be included inside of a Git hook (inside of <code>.git/hooks/</code> at the root of the project).</p>
+<p>The selected hook might be the file called commit-msg.</p>
+<p>This example shows how to use the check command inside of commit-msg.</p>
+<p>At the root of the project:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span> .git/hooks
+touch commit-msg
+chmod +x commit-msg
+</code></pre></div>
+
+<p>Open the file and edit it:</p>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="nv">MSG_FILE</span><span class="o">=</span><span class="nv">$1</span>
+cz check --commit-msg-file <span class="nv">$MSG_FILE</span>
+</code></pre></div>
+
+<p>Where <code>$1</code> is the name of the temporary file that contains the current commit message. To be more explicit, the previous variable is stored in another variable called <code>$MSG_FILE</code>, for didactic purposes.</p>
+<p>The <code>--commit-msg-file</code> flag is required, not optional.</p>
+<p>Each time you create a commit, automatically, this hook will analyze it.
+If the commit message is invalid, it'll be rejected.</p>
+<p>The commit should follow the given committing rules; otherwise, it won't be accepted.</p>
                 
               
               
@@ -647,39 +603,6 @@ understand what happened.</p>
       
         
 <footer class="md-footer">
-  
-    <nav class="md-footer__inner md-grid" aria-label="Footer">
-      
-        <a href="../../customization/" class="md-footer__link md-footer__link--prev" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              Customization
-            </div>
-          </div>
-        </a>
-      
-      
-        <a href="../gitlab_ci/" class="md-footer__link md-footer__link--next" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              GitLab CI
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
-          </div>
-        </a>
-      
-    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -700,10 +623,10 @@ understand what happened.</p>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../assets/javascripts/workers/search.d351de03.min.js", "version": null}</script>
+    <script id="__config" type="application/json">{"base": ".", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "assets/javascripts/workers/search.b0710199.min.js", "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.a1609d9a.min.js"></script>
+      <script src="assets/javascripts/bundle.76f349be.min.js"></script>
       
     
   </body>
