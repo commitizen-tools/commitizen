@@ -484,6 +484,7 @@ def test_changelog_incremental_keep_a_changelog_sample_with_annotated_tag(
 
 @pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2021-06-11")
 def test_changelog_incremental_with_release_candidate_version(
     mocker, capsys, changelog_path, file_regression, test_input
 ):

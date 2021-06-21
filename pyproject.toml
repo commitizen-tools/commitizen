@@ -51,7 +51,7 @@ colorama = "^0.4.1"
 termcolor = "^1.1"
 packaging = ">=19,<21"
 tomlkit = ">=0.5.3,<1.0.0"
-jinja2 = "^2.10.3"
+jinja2 = ">=2.10.3"
 pyyaml = ">=3.08"
 argcomplete = "^1.12.1"
 
@@ -71,6 +71,7 @@ freezegun = "^0.3.15"
 pydocstyle = "^5.0.2"
 pre-commit = "^2.6.0"
 pytest-regressions = "^2.2.0"
+pytest-freezegun = "^0.4.2"
 
 [tool.poetry.scripts]
 cz = "commitizen.cli:main"
