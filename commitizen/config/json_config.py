@@ -27,7 +27,7 @@ class JsonConfig(BaseConfig):
 
         parser["commitizen"][key] = value
         with open(self.path, "w") as f:
-            json.dump(parser, f)
+            json.dump(parser, f, indent=2)
         return self
 
     def _parse_setting(self, data: Union[bytes, str]):
