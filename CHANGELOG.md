@@ -1,4 +1,10 @@
 
+## v2.17.11 (2021-06-24)
+
+### Fix
+
+- correct indentation for json config for better readability
+
 ## v2.17.10 (2021-06-22)
 
 ### Fix
