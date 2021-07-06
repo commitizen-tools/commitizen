@@ -1,4 +1,10 @@
 
+## v2.17.12 (2021-07-06)
+
+### Fix
+
+- **git.py**: ensure signed commits in changelog when git config log.showsignature=true
+
 ## v2.17.11 (2021-06-24)
 
 ### Fix
