@@ -77,7 +77,9 @@ def get_commits(
     args: str = "",
 ) -> List[GitCommit]:
     """Get the commits between start and end."""
-    git_log_cmd = f"git log --pretty={log_format}{delimiter} {args}"
+    git_log_cmd = (
+        f"git -c log.showSignature=False log --pretty={log_format}{delimiter} {args}"
+    )
 
     if start:
         c = cmd.run(f"{git_log_cmd} {start}..{end}")
