@@ -1,4 +1,5 @@
 import inspect
+import shutil
 from typing import List, Optional
 
 import pytest
@@ -135,6 +136,27 @@ def test_get_commits_without_breakline_in_each_commit(mocker):
     assert (
         commits[2].title == "feat(#271): enable creation of annotated tags when bumping"
     )
+
+
+def test_get_commits_with_signature():
+    config_file = ".git/config"
+    config_backup = ".git/config.bak"
+    shutil.copy(config_file, config_backup)
+
+    try:
+        # temporarily turn on --show-signature
+        cmd.run("git config log.showsignature true")
+
+        # retrieve a commit that we know has a signature
+        commit = git.get_commits(
+            start="bec20ebf433f2281c70f1eb4b0b6a1d0ed83e9b2",
+            end="9eae518235d051f145807ddf971ceb79ad49953a",
+        )[0]
+
+        assert commit.title.startswith("fix")
+    finally:
+        # restore the repo's original config
+        shutil.move(config_backup, config_file)
 
 
 def test_get_tag_names_has_correct_arrow_annotation():
