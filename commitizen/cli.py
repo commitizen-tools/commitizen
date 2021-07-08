@@ -189,6 +189,12 @@ data = {
                         ),
                     },
                     {
+                        "name": "rev_range",
+                        "type": str,
+                        "nargs": "?",
+                        "help": "generates changelog for the given version (e.g: 1.5.3) or version range (e.g: 1.5.3..1.7.9)",
+                    },
+                    {
                         "name": "--start-rev",
                         "default": None,
                         "help": (

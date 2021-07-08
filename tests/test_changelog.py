@@ -912,3 +912,18 @@ def test_render_changelog_with_changelog_message_builder_hook(gitcommits, tags):
     result = changelog.render_changelog(tree)
 
     assert "[link](github.com/232323232) Commitizen author@cz.dev" in result
+
+
+def test_get_smart_tag_range_returns_an_extra_for_a_range(tags):
+    start, end = (
+        tags[0],
+        tags[2],
+    )  # len here is 3, but we expect one more tag as designed
+    res = changelog.get_smart_tag_range(tags, start.name, end.name)
+    assert 4 == len(res)
+
+
+def test_get_smart_tag_range_returns_an_extra_for_a_single_tag(tags):
+    start = tags[0]  # len here is 1, but we expect one more tag as designed
+    res = changelog.get_smart_tag_range(tags, start.name)
+    assert 2 == len(res)

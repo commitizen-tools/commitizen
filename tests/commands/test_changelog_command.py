@@ -10,6 +10,7 @@ from commitizen.exceptions import (
     NoCommitsFoundError,
     NoRevisionError,
     NotAGitProjectError,
+    NotAllowed,
 )
 from tests.utils import create_file_and_commit
 
@@ -279,7 +280,7 @@ def test_changelog_multiple_incremental_do_not_add_new_lines(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    create_file_and_commit("fix: mama gotta work")
+    create_file_and_commit("fix: no more explosions")
 
     testargs = ["cz", "changelog", "--incremental"]
     mocker.patch.object(sys, "argv", testargs)
@@ -486,7 +487,7 @@ def test_changelog_incremental_keep_a_changelog_sample_with_annotated_tag(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2021-06-11")
 def test_changelog_incremental_with_release_candidate_version(
-    mocker, capsys, changelog_path, file_regression, test_input
+    mocker, changelog_path, file_regression, test_input
 ):
     """Fix #357"""
     with open(changelog_path, "w") as f:
@@ -512,5 +513,291 @@ def test_changelog_incremental_with_release_candidate_version(
 
     with open(changelog_path, "r") as f:
         out = f.read()
+
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_with_filename_as_empty_string(mocker, changelog_path, config_path):
+
+    with open(config_path, "a") as f:
+        f.write("changelog_file = true\n")
+
+    create_file_and_commit("feat: add new output")
+
+    testargs = ["cz", "changelog"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(NotAllowed):
+        cli.main()
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
+def test_changelog_from_rev_first_version_from_arg(
+    mocker, config_path, changelog_path, file_regression
+):
+    with open(config_path, "a") as f:
+        f.write('tag_format = "$version"\n')
+
+    # create commit and tag
+    create_file_and_commit("feat: new file")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("feat: after 0.2.0")
+    create_file_and_commit("feat: another feature")
+
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    testargs = ["cz", "changelog", "0.2.0"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
+def test_changelog_from_rev_latest_version_from_arg(
+    mocker, config_path, changelog_path, file_regression
+):
+    with open(config_path, "a") as f:
+        f.write('tag_format = "$version"\n')
+
+    # create commit and tag
+    create_file_and_commit("feat: new file")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("feat: after 0.2.0")
+    create_file_and_commit("feat: another feature")
+
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    testargs = ["cz", "changelog", "0.3.0"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
+def test_changelog_from_rev_single_version_not_found(
+    mocker, config_path, changelog_path
+):
+    with open(config_path, "a") as f:
+        f.write('tag_format = "$version"\n')
+
+    # create commit and tag
+    create_file_and_commit("feat: new file")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("feat: after 0.2.0")
+    create_file_and_commit("feat: another feature")
+
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    testargs = ["cz", "changelog", "0.8.0"]  # it shouldn't exist
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(NoCommitsFoundError) as excinfo:
+        cli.main()
+
+    assert "No commits found" in str(excinfo)
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
+def test_changelog_from_rev_range_version_not_found(mocker, config_path):
+    with open(config_path, "a") as f:
+        f.write('tag_format = "$version"\n')
+
+    # create commit and tag
+    create_file_and_commit("feat: new file")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("feat: after 0.2.0")
+    create_file_and_commit("feat: another feature")
+
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    testargs = ["cz", "changelog", "0.5.0..0.8.0"]  # it shouldn't exist
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(NoCommitsFoundError) as excinfo:
+        cli.main()
+
+    assert "No commits found" in str(excinfo)
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
+def test_changelog_from_rev_version_range_including_first_tag(
+    mocker, config_path, changelog_path, file_regression
+):
+    with open(config_path, "a") as f:
+        f.write('tag_format = "$version"\n')
+
+    # create commit and tag
+    create_file_and_commit("feat: new file")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("feat: after 0.2.0")
+    create_file_and_commit("feat: another feature")
+
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    testargs = ["cz", "changelog", "0.2.0..0.3.0"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    print(out)
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
+def test_changelog_from_rev_version_range_from_arg(
+    mocker, config_path, changelog_path, file_regression
+):
+    with open(config_path, "a") as f:
+        f.write('tag_format = "$version"\n')
+
+    # create commit and tag
+    create_file_and_commit("feat: new file")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("feat: after 0.2.0")
+    create_file_and_commit("feat: another feature")
+
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("feat: getting ready for this")
+
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    testargs = ["cz", "changelog", "0.3.0..0.4.0"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
+def test_changelog_from_rev_version_with_big_range_from_arg(
+    mocker, config_path, changelog_path, file_regression
+):
+    with open(config_path, "a") as f:
+        f.write('tag_format = "$version"\n')
+
+    # create commit and tag
+    create_file_and_commit("feat: new file")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("feat: after 0.2.0")
+    create_file_and_commit("feat: another feature")
+
+    testargs = ["cz", "bump", "--yes"]  # 0.3.0
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("feat: getting ready for this")
+
+    testargs = ["cz", "bump", "--yes"]  # 0.4.0
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("fix: small error")
+
+    testargs = ["cz", "bump", "--yes"]  # 0.4.1
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("feat: new shinny feature")
+
+    testargs = ["cz", "bump", "--yes"]  # 0.5.0
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("feat: amazing different shinny feature")
+
+    testargs = ["cz", "bump", "--yes"]  # 0.6.0
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    testargs = ["cz", "changelog", "0.3.0..0.5.0"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
+def test_changelog_from_rev_latest_version_dry_run(
+    mocker, capsys, config_path, changelog_path, file_regression
+):
+
+    with open(config_path, "a") as f:
+        f.write('tag_format = "$version"\n')
+
+    # create commit and tag
+    create_file_and_commit("feat: new file")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("feat: after 0.2.0")
+    create_file_and_commit("feat: another feature")
+
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    capsys.readouterr()
+
+    testargs = ["cz", "changelog", "0.3.0", "--dry-run"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(DryRunExit):
+        cli.main()
+
+    out, _ = capsys.readouterr()
 
     file_regression.check(out, extension=".md")

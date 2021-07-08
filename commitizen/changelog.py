@@ -29,7 +29,7 @@ import os
 import re
 from collections import OrderedDict, defaultdict
 from datetime import date
-from typing import Callable, Dict, Iterable, List, Optional
+from typing import Callable, Dict, Iterable, List, Optional, Tuple
 
 from jinja2 import Environment, PackageLoader
 
@@ -281,3 +281,72 @@ def incremental_build(new_content: str, lines: List, metadata: Dict) -> List:
     if not isinstance(latest_version_position, int):
         output_lines.append(new_content)
     return output_lines
+
+
+def get_smart_tag_range(
+    tags: List[GitTag], start: str, end: Optional[str] = None
+) -> List[GitTag]:
+    """Smart because it finds the N+1 tag.
+
+    This is because we need to find until the next tag
+    """
+    accumulator = []
+    keep = False
+    if not end:
+        end = start
+    for index, tag in enumerate(tags):
+        if tag.name == start:
+            keep = True
+        if keep:
+            accumulator.append(tag)
+        if tag.name == end:
+            keep = False
+            try:
+                accumulator.append(tags[index + 1])
+            except IndexError:
+                pass
+            break
+    return accumulator
+
+
+def get_start_and_end_rev(
+    tags: List[GitTag], version: str, tag_format: str, create_tag: Callable
+) -> Tuple[Optional[str], Optional[str]]:
+    """Find the tags for the given version.
+
+    `version` may come in different formats:
+    - `0.1.0..0.4.0`: as a range
+    - `0.3.0`: as a single version
+    """
+    start: Optional[str] = None
+    end: Optional[str] = None
+
+    try:
+        start, end = version.split("..")
+    except ValueError:
+        end = version
+
+    end_tag = create_tag(end, tag_format=tag_format)
+
+    start_tag = None
+    if start:
+        start_tag = create_tag(start, tag_format=tag_format)
+
+    tags_range = get_smart_tag_range(tags, start=end_tag, end=start_tag)
+    if len(tags_range) == 0:
+        return None, None
+
+    start_rev: Optional[str] = tags_range[-1].name
+    end_rev = end_tag
+
+    # check if it's the first tag created
+    # and it's also being requested as part of the range
+    if start_rev == tags[-1].name and start_rev == start_tag:
+        return None, end_rev
+
+    # when they are the same, and it's also the
+    # first tag crated
+    if start_rev == end_rev:
+        return None, end_rev
+
+    return start_rev, end_rev

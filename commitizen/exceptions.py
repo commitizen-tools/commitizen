@@ -24,6 +24,7 @@ class ExitCode(enum.IntEnum):
     CURRENT_VERSION_NOT_FOUND = 17
     INVALID_COMMAND_ARGUMENT = 18
     INVALID_CONFIGURATION = 19
+    NOT_ALLOWED = 20
 
 
 class CommitizenException(Exception):
@@ -142,3 +143,7 @@ class InvalidCommandArgumentError(CommitizenException):
 
 class InvalidConfigurationError(CommitizenException):
     exit_code = ExitCode.INVALID_CONFIGURATION
+
+
+class NotAllowed(CommitizenException):
+    exit_code = ExitCode.NOT_ALLOWED
