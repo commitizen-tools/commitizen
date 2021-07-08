@@ -72,7 +72,7 @@ isort = "^5.7.0"
 # linter
 flake8 = "^3.6"
 pre-commit = "^2.6.0"
-mypy = "0.910"
+mypy = "^0.931"
 types-PyYAML = "^5.4.3"
 types-termcolor = "^0.1.1"
 # documentation

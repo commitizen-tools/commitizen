@@ -3,7 +3,7 @@ from difflib import SequenceMatcher
 from operator import itemgetter
 from typing import Callable, Dict, List, Optional
 
-from commitizen import changelog, factory, git, out
+from commitizen import bump, changelog, factory, git, out
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
     DryRunExit,
@@ -11,6 +11,7 @@ from commitizen.exceptions import (
     NoPatternMapError,
     NoRevisionError,
     NotAGitProjectError,
+    NotAllowed,
 )
 from commitizen.git import GitTag
 
@@ -46,6 +47,10 @@ class Changelog:
         self.change_type_order = (
             self.config.settings.get("change_type_order") or self.cz.change_type_order
         )
+        self.rev_range = args.get("rev_range")
+        self.tag_format = args.get("tag_format") or self.config.settings.get(
+            "tag_format"
+        )
 
     def _find_incremental_rev(self, latest_version: str, tags: List[GitTag]) -> str:
         """Try to find the 'start_rev'.
@@ -73,6 +78,30 @@ class Changelog:
         start_rev = tag.name
         return start_rev
 
+    def write_changelog(
+        self, changelog_out: str, lines: List[str], changelog_meta: Dict
+    ):
+        if not isinstance(self.file_name, str):
+            raise NotAllowed(
+                "Changelog file name is broken.\n"
+                "Check the flag `--file-name` in the terminal "
+                f"or the setting `changelog_file` in {self.config.path}"
+            )
+
+        changelog_hook: Optional[Callable] = self.cz.changelog_hook
+        with open(self.file_name, "w") as changelog_file:
+            partial_changelog: Optional[str] = None
+            if self.incremental:
+                new_lines = changelog.incremental_build(
+                    changelog_out, lines, changelog_meta
+                )
+                changelog_out = "".join(new_lines)
+                partial_changelog = changelog_out
+
+            if changelog_hook:
+                changelog_out = changelog_hook(changelog_out, partial_changelog)
+            changelog_file.write(changelog_out)
+
     def __call__(self):
         commit_parser = self.cz.commit_parser
         changelog_pattern = self.cz.changelog_pattern
@@ -83,15 +112,20 @@ class Changelog:
         changelog_message_builder_hook: Optional[
             Callable
         ] = self.cz.changelog_message_builder_hook
-        changelog_hook: Optional[Callable] = self.cz.changelog_hook
+
         if not changelog_pattern or not commit_parser:
             raise NoPatternMapError(
                 f"'{self.config.settings['name']}' rule does not support changelog"
             )
 
+        if self.incremental and self.rev_range:
+            raise NotAllowed("--incremental cannot be combined with a rev_range")
+
         tags = git.get_tags()
         if not tags:
             tags = []
+
+        end_rev = "HEAD"
 
         if self.incremental:
             changelog_meta = changelog.get_metadata(self.file_name)
@@ -99,7 +133,17 @@ class Changelog:
             if latest_version:
                 start_rev = self._find_incremental_rev(latest_version, tags)
 
-        commits = git.get_commits(start=start_rev, args="--author-date-order")
+        if self.rev_range and self.tag_format:
+            start_rev, end_rev = changelog.get_start_and_end_rev(
+                tags,
+                version=self.rev_range,
+                tag_format=self.tag_format,
+                create_tag=bump.create_tag,
+            )
+
+        commits = git.get_commits(
+            start=start_rev, end=end_rev, args="--author-date-order"
+        )
         if not commits:
             raise NoCommitsFoundError("No commits found")
 
@@ -126,15 +170,4 @@ class Changelog:
             with open(self.file_name, "r") as changelog_file:
                 lines = changelog_file.readlines()
 
-        with open(self.file_name, "w") as changelog_file:
-            partial_changelog: Optional[str] = None
-            if self.incremental:
-                new_lines = changelog.incremental_build(
-                    changelog_out, lines, changelog_meta
-                )
-                changelog_out = "".join(new_lines)
-                partial_changelog = changelog_out
-
-            if changelog_hook:
-                changelog_out = changelog_hook(changelog_out, partial_changelog)
-            changelog_file.write(changelog_out)
+        self.write_changelog(changelog_out, lines, changelog_meta)

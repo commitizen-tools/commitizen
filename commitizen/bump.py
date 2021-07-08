@@ -21,7 +21,7 @@ def find_increment(
     # Most important cases are major and minor.
     # Everything else will be considered patch.
     select_pattern = re.compile(regex)
-    increment = None
+    increment: Optional[str] = None
 
     for commit in commits:
         for message in commit.message.split("\n"):
