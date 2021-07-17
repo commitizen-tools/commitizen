@@ -45,16 +45,23 @@ class ConventionalCommitsCz(BaseCommitizen):
                 "type": "list",
                 "name": "prefix",
                 "message": "Select the type of change you are committing",
+                "use_shortcuts": self.config.settings['use_shortcuts'],
                 "choices": [
                     {
                         "value": "fix",
                         "name": "fix: A bug fix. Correlates with PATCH in SemVer",
+                        "key": "x",
                     },
                     {
                         "value": "feat",
                         "name": "feat: A new feature. Correlates with MINOR in SemVer",
+                        "key": "f",
                     },
-                    {"value": "docs", "name": "docs: Documentation only changes"},
+                    {
+                        "value": "docs",
+                        "name": "docs: Documentation only changes",
+                        "key": "d",
+                    },
                     {
                         "value": "style",
                         "name": (
@@ -62,6 +69,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                             "meaning of the code (white-space, formatting,"
                             " missing semi-colons, etc)"
                         ),
+                        "key": "s",
                     },
                     {
                         "value": "refactor",
@@ -69,16 +77,19 @@ class ConventionalCommitsCz(BaseCommitizen):
                             "refactor: A code change that neither fixes "
                             "a bug nor adds a feature"
                         ),
+                        "key": "r",
                     },
                     {
                         "value": "perf",
                         "name": "perf: A code change that improves performance",
+                        "key": "p",
                     },
                     {
                         "value": "test",
                         "name": (
                             "test: Adding missing or correcting " "existing tests"
                         ),
+                        "key": "t",
                     },
                     {
                         "value": "build",
@@ -86,6 +97,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                             "build: Changes that affect the build system or "
                             "external dependencies (example scopes: pip, docker, npm)"
                         ),
+                        "key": "b",
                     },
                     {
                         "value": "ci",
@@ -93,7 +105,8 @@ class ConventionalCommitsCz(BaseCommitizen):
                             "ci: Changes to our CI configuration files and "
                             "scripts (example scopes: GitLabCI)"
                         ),
-                    },
+                        "key": "c",
+                    }
                 ],
             },
             {
