@@ -21,6 +21,7 @@ DEFAULT_SETTINGS: Dict[str, Any] = {
     "changelog_incremental": False,
     "changelog_start_rev": None,
     "update_changelog_on_bump": False,
+    "use_shortcuts": False, 
 }
 
 MAJOR = "MAJOR"
