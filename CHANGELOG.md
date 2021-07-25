@@ -1,3 +1,8 @@
+## Unreleased
+
+### Fix
+
+- **commands.init.py**: Remove type ignore directive in Init._ask_config_path()
 
 ## v2.17.13 (2021-07-14)
 
@@ -160,16 +165,14 @@
 ### Feat
 
 - add yaml as a config option
-
-### feat
-
 - **config**: add support for the new class YAMLConfig at the root of the confi internal package
+- **init**: add support for yaml config file at init
+
+### Fix
+
+- **YAMLConfig**: add a TypeError exception to handle in _parse_settings method
 
 ## v2.10.0 (2020-12-02)
-
-### Feat
-
-- **commitizen/cli**: add the integration with argcomplete
 
 ## v2.9.0 (2020-12-02)
 
@@ -198,6 +201,7 @@
 
 ### Feat
 
+- **commitizen/cli**: add the integration with argcomplete
 - allow files-only to set config version and create changelog
 
 ## v2.7.0 (2020-11-14)
@@ -310,6 +314,7 @@
 - setup.cfg, .cz and .cz.cfg are no longer supported
 - Use "cz verion" instead
 - "cz --debug" will no longer work
+ #47
 
 ## v1.25.0 (2020-07-26)
 
@@ -334,17 +339,17 @@
 ### Fix
 
 - **commands/bump**: use `return_code` in commands used by bump
-- **commands/commit**: use return_code to raise commit error, not stderr
-
-### Refactor
-
-- **cmd**: add return code to Command
 
 ## v1.23.2 (2020-07-25)
 
 ### Fix
 
 - **bump**: add changelog file into stage when running `cz bump --changelog`
+- **commands/commit**: use return_code to raise commit error, not stderr
+
+### Refactor
+
+- **cmd**: add return code to Command
 
 ## v1.23.1 (2020-07-14)
 
@@ -361,16 +366,19 @@
 - **commands/init**: add test case and remove unaccessible code
 - **exception**: move output message related to exception into exception
 - **exception**: implement message handling mechanism for CommitizenException
-- **cli**: do not show traceback if the raised exception is CommitizenException
-- introduce DryRunExit, ExpectedExit, NoCommandFoundError, InvalidCommandArgumentError
-- use custom exception for error handling
-- **error_codes**: remove unused NO_COMMIT_MSG error code
 
 ### Feat
 
 - **cli**: enable displaying all traceback for CommitizenException when --debug flag is used
 
 ## v1.22.3 (2020-06-10)
+
+### Refactor
+
+- **cli**: do not show traceback if the raised exception is CommitizenException
+- introduce DryRunExit, ExpectedExit, NoCommandFoundError, InvalidCommandArgumentError
+- use custom exception for error handling
+- **error_codes**: remove unused NO_COMMIT_MSG error code
 
 ## v1.22.2 (2020-05-29)
 
