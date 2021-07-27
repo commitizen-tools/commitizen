@@ -51,7 +51,7 @@ class Init:
     def _ask_config_path(self) -> str:
         name = questionary.select(
             "Please choose a supported config file: (default: pyproject.toml)",
-            choices=config_files,
+            choices=config_files,  # type: ignore
             default="pyproject.toml",
             style=self.cz.style,
         ).ask()
