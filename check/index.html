@@ -11,19 +11,19 @@
       
       
       
-      <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.10">
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.2">
     
     
       
-        <title>Init - Commitizen</title>
+        <title>Check - Commitizen</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.1fe995fd.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.1118c9be.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.f1a3b89f.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ba0d045b.min.css">
         
       
     
@@ -55,12 +55,17 @@
     <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
   
     
-    <script>function __prefix(e){return new URL(".",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#check" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -69,7 +74,7 @@
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="index.html" title="Commitizen" class="md-header__button md-logo" aria-label="Commitizen" data-md-component="logo">
+    <a href=".." title="Commitizen" class="md-header__button md-logo" aria-label="Commitizen" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -88,7 +93,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Init
+              Check
             
           </span>
         </div>
@@ -105,14 +110,18 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
       </label>
-      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
-      </button>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
@@ -162,7 +171,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="index.html" title="Commitizen" class="md-nav__button md-logo" aria-label="Commitizen" data-md-component="logo">
+    <a href=".." title="Commitizen" class="md-nav__button md-logo" aria-label="Commitizen" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -194,7 +203,7 @@
   
   
     <li class="md-nav__item">
-      <a href="index.html" class="md-nav__link">
+      <a href=".." class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -230,19 +239,11 @@
             
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="init.html" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../init/" class="md-nav__link">
         Init
       </a>
-      
     </li>
   
 
@@ -252,7 +253,7 @@
   
   
     <li class="md-nav__item">
-      <a href="bump.html" class="md-nav__link">
+      <a href="../bump/" class="md-nav__link">
         Bump
       </a>
     </li>
@@ -262,11 +263,105 @@
             
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="check.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Check
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Check
       </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#about" class="md-nav__link">
+    About
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#git-rev-range" class="md-nav__link">
+    Git Rev Range
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit-message" class="md-nav__link">
+    Commit Message
+  </a>
+  
+    <nav class="md-nav" aria-label="Commit Message">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-use-m-or-message" class="md-nav__link">
+    Method 1: use -m or --message
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-use-pipe-to-pipe-it-to-cz-check" class="md-nav__link">
+    Method 2: use pipe to pipe it to cz check
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit-message-file" class="md-nav__link">
+    Commit Message File
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -276,7 +371,7 @@
   
   
     <li class="md-nav__item">
-      <a href="changelog.html" class="md-nav__link">
+      <a href="../changelog/" class="md-nav__link">
         Changelog
       </a>
     </li>
@@ -297,7 +392,7 @@
   
   
     <li class="md-nav__item">
-      <a href="config.html" class="md-nav__link">
+      <a href="../config/" class="md-nav__link">
         Configuration
       </a>
     </li>
@@ -312,7 +407,7 @@
   
   
     <li class="md-nav__item">
-      <a href="customization.html" class="md-nav__link">
+      <a href="../customization/" class="md-nav__link">
         Customization
       </a>
     </li>
@@ -348,7 +443,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorials/writing_commits.html" class="md-nav__link">
+      <a href="../tutorials/writing_commits/" class="md-nav__link">
         Writing commits
       </a>
     </li>
@@ -360,7 +455,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorials/gitlab_ci.html" class="md-nav__link">
+      <a href="../tutorials/gitlab_ci/" class="md-nav__link">
         GitLab CI
       </a>
     </li>
@@ -372,7 +467,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorials/github_actions.html" class="md-nav__link">
+      <a href="../tutorials/github_actions/" class="md-nav__link">
         Github Actions
       </a>
     </li>
@@ -384,7 +479,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorials/jenkins_pipeline.html" class="md-nav__link">
+      <a href="../tutorials/jenkins_pipeline/" class="md-nav__link">
         Jenkins pipeline
       </a>
     </li>
@@ -405,7 +500,7 @@
   
   
     <li class="md-nav__item">
-      <a href="faq.html" class="md-nav__link">
+      <a href="../faq/" class="md-nav__link">
         FAQ
       </a>
     </li>
@@ -420,7 +515,7 @@
   
   
     <li class="md-nav__item">
-      <a href="exit_codes.html" class="md-nav__link">
+      <a href="../exit_codes/" class="md-nav__link">
         Exit Codes
       </a>
     </li>
@@ -435,7 +530,7 @@
   
   
     <li class="md-nav__item">
-      <a href="third-party-commitizen.html" class="md-nav__link">
+      <a href="../third-party-commitizen/" class="md-nav__link">
         Third-Party Commitizen Templates
       </a>
     </li>
@@ -450,7 +545,7 @@
   
   
     <li class="md-nav__item">
-      <a href="contributing.html" class="md-nav__link">
+      <a href="../contributing/" class="md-nav__link">
         Contributing
       </a>
     </li>
@@ -465,7 +560,7 @@
   
   
     <li class="md-nav__item">
-      <a href="external_links.html" class="md-nav__link">
+      <a href="../external_links/" class="md-nav__link">
         Resources
       </a>
     </li>
@@ -479,26 +574,130 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#about" class="md-nav__link">
+    About
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#git-rev-range" class="md-nav__link">
+    Git Rev Range
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit-message" class="md-nav__link">
+    Commit Message
+  </a>
+  
+    <nav class="md-nav" aria-label="Commit Message">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-use-m-or-message" class="md-nav__link">
+    Method 1: use -m or --message
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-use-pipe-to-pipe-it-to-cz-check" class="md-nav__link">
+    Method 2: use pipe to pipe it to cz check
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit-message-file" class="md-nav__link">
+    Commit Message File
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                  <h1>Init</h1>
-                
-                <p>For new projects, it is possible to run <code>cz init</code>.</p>
-<p>This command will prompt the user for information about the project and will
-configure the selected file type (<code>pyproject.toml</code>, <code>.cz.toml</code>, etc.).</p>
-<p>This will help you quickly set up your project with <code>commitizen</code>.</p>
-<p>Currently <code>init</code> is detecting</p>
-<ol>
-<li>Commit convention rules (<code>name</code>).</li>
-<li>Version detection based on the existing tags (<code>version</code>).</li>
-<li>Tag format, if your tag convention uses, for example <code>v*</code> in front of the version. (<code>tag_format</code>)</li>
-</ol>
-<p>We hope to detect the files where the version is also repeated eventually,
-like <code>package.json</code> or <code>__version__</code>.</p>
+                <h1 id="check">Check</h1>
+<h2 id="about">About</h2>
+<p>This feature checks whether the commit message follows the given committing rules.
+If you want to setup an automatic check before every git commit, please refer to 
+<a href="../auto_check/">Automatically check message before commit</a>.</p>
+<h2 id="usage">Usage</h2>
+<p>There are three arguments that you can use one of them to check commit message.</p>
+<h3 id="git-rev-range">Git Rev Range</h3>
+<p>If you'd like to check a commit's message after it has already been created, then you can specify the range of commits to check with <code>--rev-range REV_RANGE</code>.</p>
+<div class="codehilite"><pre><span></span><code>$ cz check --rev-range REV_RANGE
+</code></pre></div>
+
+<p>For example, if you'd like to check all commits on a branch, you can use <code>--rev-range master..HEAD</code>. Or, if you'd like to check all commits starting from when you first implemented commit message linting, you can use <code>--rev-range &lt;first_commit_sha&gt;..HEAD</code>.</p>
+<p>For more info on how git commit ranges work, you can check the <a href="https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection#_commit_ranges">git documentation</a>.</p>
+<h3 id="commit-message">Commit Message</h3>
+<p>There are two ways you can provide your plain message and check it.</p>
+<h4 id="method-1-use-m-or-message">Method 1: use -m or --message</h4>
+<div class="codehilite"><pre><span></span><code>$ cz check --message MESSAGE
+</code></pre></div>
+
+<p>In this option, MESSAGE is the commit message to be checked.</p>
+<h4 id="method-2-use-pipe-to-pipe-it-to-cz-check">Method 2: use pipe to pipe it to <code>cz check</code></h4>
+<div class="codehilite"><pre><span></span><code>$ <span class="nb">echo</span> MESSAGE <span class="p">|</span> cz check
+</code></pre></div>
+
+<p>In this option, MESSAGE is piped to cz check and would be checked.</p>
+<h3 id="commit-message-file">Commit Message File</h3>
+<div class="codehilite"><pre><span></span><code>$ cz check --commit-msg-file COMMIT_MSG_FILE
+</code></pre></div>
+
+<p>In this option, COMMIT_MSG_FILE is the path of the temporal file that contains the commit message.
+This argument can be useful when cooperating with git hook, please check <a href="../auto_check/">Automatically check message before commit</a> for more information about how to use this argument with git hook.</p>
                 
               
               
@@ -518,7 +717,7 @@ like <code>package.json</code> or <code>__version__</code>.</p>
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="index.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Introduction" rel="prev">
+        <a href="../bump/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Bump" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -527,20 +726,20 @@ like <code>package.json</code> or <code>__version__</code>.</p>
               <span class="md-footer__direction">
                 Previous
               </span>
-              Introduction
+              Bump
             </div>
           </div>
         </a>
       
       
         
-        <a href="bump.html" class="md-footer__link md-footer__link--next" aria-label="Next: Bump" rel="next">
+        <a href="../changelog/" class="md-footer__link md-footer__link--next" aria-label="Next: Changelog" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Bump
+              Changelog
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -569,10 +768,10 @@ like <code>package.json</code> or <code>__version__</code>.</p>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": ".", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "assets/javascripts/workers/search.477d984a.min.js", "version": null}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.709b4209.min.js", "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.ddd52ceb.min.js"></script>
+      <script src="../assets/javascripts/bundle.2b46852b.min.js"></script>
       
     
   </body>

@@ -11,19 +11,19 @@
       
       
       
-      <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.10">
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.2">
     
     
       
-        <title>FAQ - Commitizen</title>
+        <title>Writing commits - Commitizen</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.1fe995fd.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.1118c9be.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.f1a3b89f.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ba0d045b.min.css">
         
       
     
@@ -55,7 +55,7 @@
     <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
   
     
-    <script>function __prefix(e){return new URL(".",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -63,7 +63,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#support-for-pep621" class="md-skip">
+        <a href="#conventional-commits" class="md-skip">
           Skip to content
         </a>
       
@@ -74,7 +74,7 @@
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="index.html" title="Commitizen" class="md-header__button md-logo" aria-label="Commitizen" data-md-component="logo">
+    <a href="../.." title="Commitizen" class="md-header__button md-logo" aria-label="Commitizen" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -93,7 +93,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              FAQ
+              Writing commits
             
           </span>
         </div>
@@ -110,14 +110,18 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
       </label>
-      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
-      </button>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
@@ -167,7 +171,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="index.html" title="Commitizen" class="md-nav__button md-logo" aria-label="Commitizen" data-md-component="logo">
+    <a href="../.." title="Commitizen" class="md-nav__button md-logo" aria-label="Commitizen" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -199,7 +203,7 @@
   
   
     <li class="md-nav__item">
-      <a href="index.html" class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -235,7 +239,7 @@
   
   
     <li class="md-nav__item">
-      <a href="init.html" class="md-nav__link">
+      <a href="../../init/" class="md-nav__link">
         Init
       </a>
     </li>
@@ -247,7 +251,7 @@
   
   
     <li class="md-nav__item">
-      <a href="bump.html" class="md-nav__link">
+      <a href="../../bump/" class="md-nav__link">
         Bump
       </a>
     </li>
@@ -259,7 +263,7 @@
   
   
     <li class="md-nav__item">
-      <a href="check.html" class="md-nav__link">
+      <a href="../../check/" class="md-nav__link">
         Check
       </a>
     </li>
@@ -271,7 +275,7 @@
   
   
     <li class="md-nav__item">
-      <a href="changelog.html" class="md-nav__link">
+      <a href="../../changelog/" class="md-nav__link">
         Changelog
       </a>
     </li>
@@ -292,7 +296,7 @@
   
   
     <li class="md-nav__item">
-      <a href="config.html" class="md-nav__link">
+      <a href="../../config/" class="md-nav__link">
         Configuration
       </a>
     </li>
@@ -307,7 +311,7 @@
   
   
     <li class="md-nav__item">
-      <a href="customization.html" class="md-nav__link">
+      <a href="../../customization/" class="md-nav__link">
         Customization
       </a>
     </li>
@@ -320,12 +324,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
       
       <label class="md-nav__link" for="__nav_5">
         Tutorials
@@ -341,11 +347,67 @@
             
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="tutorials/writing_commits.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Writing commits
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Writing commits
       </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#conventional-commits" class="md-nav__link">
+    Conventional commits
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#writing-commits" class="md-nav__link">
+    Writing commits
+  </a>
+  
+    <nav class="md-nav" aria-label="Writing commits">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommendations" class="md-nav__link">
+    Recommendations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -355,7 +417,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorials/gitlab_ci.html" class="md-nav__link">
+      <a href="../gitlab_ci/" class="md-nav__link">
         GitLab CI
       </a>
     </li>
@@ -367,7 +429,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorials/github_actions.html" class="md-nav__link">
+      <a href="../github_actions/" class="md-nav__link">
         Github Actions
       </a>
     </li>
@@ -379,7 +441,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorials/jenkins_pipeline.html" class="md-nav__link">
+      <a href="../jenkins_pipeline/" class="md-nav__link">
         Jenkins pipeline
       </a>
     </li>
@@ -398,68 +460,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          FAQ
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="faq.html" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
         FAQ
       </a>
-      
-        
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#support-for-pep621" class="md-nav__link">
-    Support for PEP621
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-are-revert-and-chore-valid-types-in-the-check-pattern-of-cz-conventional_commits-but-not-types-we-can-select" class="md-nav__link">
-    Why are revert and chore valid types in the check pattern of cz conventional_commits but not types we can select?
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-revert-a-bump" class="md-nav__link">
-    How to revert a bump?
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#is-this-project-affiliated-with-the-commitizen-js-project" class="md-nav__link">
-    Is this project affiliated with the Commitizen JS project?
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -472,7 +477,7 @@
   
   
     <li class="md-nav__item">
-      <a href="exit_codes.html" class="md-nav__link">
+      <a href="../../exit_codes/" class="md-nav__link">
         Exit Codes
       </a>
     </li>
@@ -487,7 +492,7 @@
   
   
     <li class="md-nav__item">
-      <a href="third-party-commitizen.html" class="md-nav__link">
+      <a href="../../third-party-commitizen/" class="md-nav__link">
         Third-Party Commitizen Templates
       </a>
     </li>
@@ -502,7 +507,7 @@
   
   
     <li class="md-nav__item">
-      <a href="contributing.html" class="md-nav__link">
+      <a href="../../contributing/" class="md-nav__link">
         Contributing
       </a>
     </li>
@@ -517,7 +522,7 @@
   
   
     <li class="md-nav__item">
-      <a href="external_links.html" class="md-nav__link">
+      <a href="../../external_links/" class="md-nav__link">
         Resources
       </a>
     </li>
@@ -548,30 +553,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#support-for-pep621" class="md-nav__link">
-    Support for PEP621
+  <a href="#conventional-commits" class="md-nav__link">
+    Conventional commits
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-are-revert-and-chore-valid-types-in-the-check-pattern-of-cz-conventional_commits-but-not-types-we-can-select" class="md-nav__link">
-    Why are revert and chore valid types in the check pattern of cz conventional_commits but not types we can select?
+  <a href="#writing-commits" class="md-nav__link">
+    Writing commits
+  </a>
+  
+    <nav class="md-nav" aria-label="Writing commits">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommendations" class="md-nav__link">
+    Recommendations
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-revert-a-bump" class="md-nav__link">
-    How to revert a bump?
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#is-this-project-affiliated-with-the-commitizen-js-project" class="md-nav__link">
-    Is this project affiliated with the Commitizen JS project?
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -588,60 +592,52 @@
               
                 
                 
-                  <h1>FAQ</h1>
+                  <h1>Writing commits</h1>
                 
-                <h2 id="support-for-pep621">Support for PEP621</h2>
-<p>PEP621 establishes a <code>[project]</code> definition inside <code>pyproject.toml</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">[project]</span>
-<span class="n">name</span> <span class="o">=</span> <span class="s">&quot;spam&quot;</span>
-<span class="n">version</span> <span class="o">=</span> <span class="s">&quot;2020.0.0&quot;</span>
-</code></pre></div>
-
-<p>Commitizen <strong>won't</strong> use the <code>project.version</code> as a source of truth because it's a
-tool aimed for any kind of project.</p>
-<p>If we were to use it, it would increase the complexity of the tool. Also why
-wouldn't we support other project files like <code>cargo.toml</code> or <code>package.json</code>?</p>
-<p>Instead of supporting all the different project files, you can use <code>version_files</code>
-inside <code>[tool.commitizen]</code>, and it will cheaply keep any of these project files in sync</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
-<span class="n">version</span> <span class="o">=</span> <span class="s">&quot;2.5.1&quot;</span>
-<span class="n">version_files</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s">&quot;pyproject.toml:^version&quot;</span><span class="p">,</span>
-    <span class="s">&quot;cargo.toml:^version&quot;</span><span class="p">,</span>
-    <span class="s">&quot;package.json:\&quot;version\&quot;:&quot;</span>
-<span class="p">]</span>
-</code></pre></div>
-
-<h2 id="why-are-revert-and-chore-valid-types-in-the-check-pattern-of-cz-conventional_commits-but-not-types-we-can-select">Why are <code>revert</code> and <code>chore</code> valid types in the check pattern of cz conventional_commits but not types we can select?</h2>
-<p><code>revert</code> and <code>chore</code> are added to the "pattern" in <code>cz check</code> in order to prevent backward errors, but officially they are not part of conventional commits, we are using the latest <a href="https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type">types from Angular</a> (they used to but were removed).
-However, you can create a customized <code>cz</code> with those extra types. (See <a href="https://commitizen-tools.github.io/commitizen/customization/">Customization</a></p>
-<p>See more discussion in issue <a href="https://github.com/commitizen-tools/commitizen/issues/142">#142</a> and <a href="https://github.com/commitizen-tools/commitizen/issues/36">#36</a></p>
-<h2 id="how-to-revert-a-bump">How to revert a bump?</h2>
-<p>If for any reason, the created tag and changelog were to be undone, this is the snippet:</p>
-<div class="codehilite"><pre><span></span><code>git tag --delete &lt;created_tag&gt;
-git reset HEAD~
-git reset --hard HEAD
-</code></pre></div>
-
-<p>This will remove the last tag created, plus the commit containing the update to <code>.cz.toml</code> and the changelog generated for the version.</p>
-<p>In case the commit was pushed to the server you can remove it by running</p>
-<div class="codehilite"><pre><span></span><code>git push --delete origin &lt;created_tag&gt;
-</code></pre></div>
-
-<h2 id="is-this-project-affiliated-with-the-commitizen-js-project">Is this project affiliated with the Commitizen JS project?</h2>
-<p>It is not affiliated.</p>
-<p>Both are used for similar purposes, parsing commits, generating changelog and version we presume.
-This one is written in python to make integration easier for python projects and the other serves the JS packages.</p>
-<p>They differ a bit in design, not sure if cz-js does any of this, but these are some of the stuff you can do with this repo (python's commitizen):</p>
+                <p>For this project to work well in your pipeline, a commit convention
+must be followed.</p>
+<p>By default commitizen uses the known <a href="https://www.conventionalcommits.org">conventional commits</a>, but you can create
+your own following the docs information over <a href="https://commitizen-tools.github.io/commitizen/customization/">customization</a>.</p>
+<h2 id="conventional-commits">Conventional commits</h2>
+<p>If you are using <a href="https://www.conventionalcommits.org">conventional commits</a>, the most important
+thing to know is that you must begin your commits with at least one of these tags: <code>fix</code>, <code>feat</code>. And if you introduce a breaking change, then, you must
+add to your commit body the following <code>BREAKING CHANGE</code>.
+Using these 3 keywords will allow the proper identification of the semantic version.
+Of course, there are other keywords, but I'll leave it to the reader to explore them.</p>
+<h2 id="writing-commits">Writing commits</h2>
+<p>Not to the important part, when writing commits, it's important to think about:</p>
 <ul>
-<li>create custom rules, version bumps and changelog generation, by default we use the popular conventional commits (I think cz-js allows this).</li>
-<li>single package, install one thing and it will work (cz-js is a monorepo, but you have to install different dependencies AFAIK)</li>
-<li>pre-commit integration</li>
-<li>works on any language project, as long as you create the <code>.cz.toml</code> file.</li>
+<li>Your future self</li>
+<li>Your colleagues</li>
 </ul>
-<p>Where do they cross paths?</p>
-<p>If you are using conventional commits in your git history, then you could swap one with the other in theory.</p>
-<p>Regarding the name, <a href="https://github.com/commitizen/cz-cli">cz-js</a> came first, they used the word commitizen first. When this project was created originally, the creator read "be a good commitizen", and thought it was just a cool word that made sense, and this would be a package that helps you be a good "commit citizen".</p>
+<p>You may think this is trivial, but it's not. It's important for the reader to
+understand what happened.</p>
+<h3 id="recommendations">Recommendations</h3>
+<ul>
+<li><strong>Keep the message short</strong>: Makes the list of commits more readable (~50 chars).</li>
+<li><strong>Talk imperative</strong>: Follow this rule: <code>If applied, this commit will &lt;commit message&gt;</code></li>
+<li><strong>Think about the CHANGELOG</strong>: Your commits will probably end up in the changelog
+  so try writing for it, but also keep in mind that you can skip sending commits to the CHANGELOG by using different keywords (like <code>build</code>).</li>
+<li><strong>Use a commit per new feature</strong>: if you introduce multiple things related to the same commit, squash them. This is useful for auto-generating CHANGELOG.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Do's</th>
+<th>Don'ts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fix(commands): bump error when no user provided</code></td>
+<td><code>fix: stuff</code></td>
+</tr>
+<tr>
+<td><code>feat: add new commit command</code></td>
+<td><code>feat: commit command introduced</code></td>
+</tr>
+</tbody>
+</table>
                 
               
               
@@ -661,7 +657,7 @@ This one is written in python to make integration easier for python projects and
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="tutorials/jenkins_pipeline.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Jenkins pipeline" rel="prev">
+        <a href="../../customization/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Customization" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -670,20 +666,20 @@ This one is written in python to make integration easier for python projects and
               <span class="md-footer__direction">
                 Previous
               </span>
-              Jenkins pipeline
+              Customization
             </div>
           </div>
         </a>
       
       
         
-        <a href="exit_codes.html" class="md-footer__link md-footer__link--next" aria-label="Next: Exit Codes" rel="next">
+        <a href="../gitlab_ci/" class="md-footer__link md-footer__link--next" aria-label="Next: GitLab CI" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Exit Codes
+              GitLab CI
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -712,10 +708,10 @@ This one is written in python to make integration easier for python projects and
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": ".", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "assets/javascripts/workers/search.477d984a.min.js", "version": null}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.709b4209.min.js", "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.ddd52ceb.min.js"></script>
+      <script src="../../assets/javascripts/bundle.2b46852b.min.js"></script>
       
     
   </body>
