@@ -46,6 +46,7 @@ _settings = {
     "changelog_incremental": False,
     "changelog_start_rev": None,
     "update_changelog_on_bump": False,
+    "use_shortcuts": False,
 }
 
 _new_settings = {
@@ -59,6 +60,7 @@ _new_settings = {
     "changelog_incremental": False,
     "changelog_start_rev": None,
     "update_changelog_on_bump": False,
+    "use_shortcuts": False,
 }
 
 _read_settings = {
