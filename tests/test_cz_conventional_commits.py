@@ -66,9 +66,9 @@ def test_choices_all_have_keyboard_shortcuts(config):
     conventional_commits = ConventionalCommitsCz(config)
     questions = conventional_commits.questions()
 
-    list_questions = (q for q in questions if q['type'] == "list")
+    list_questions = (q for q in questions if q["type"] == "list")
     for select in list_questions:
-        assert all('key' in choice for choice in select['choices'])
+        assert all("key" in choice for choice in select["choices"])
 
 
 def test_small_answer(config):
