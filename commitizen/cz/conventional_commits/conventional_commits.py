@@ -45,7 +45,6 @@ class ConventionalCommitsCz(BaseCommitizen):
                 "type": "list",
                 "name": "prefix",
                 "message": "Select the type of change you are committing",
-                "use_shortcuts": self.config.settings["use_shortcuts"],
                 "choices": [
                     {
                         "value": "fix",
