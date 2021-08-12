@@ -46,6 +46,8 @@ class Commit:
         # Prompt user for the commit message
         cz = self.cz
         questions = cz.questions()
+        for question in filter(lambda q: q['type'] == 'list', questions):
+            question["use_shortcuts"] = self.config.settings["use_shortcuts"]
         try:
             answers = questionary.prompt(questions, style=cz.style)
         except ValueError as err:
