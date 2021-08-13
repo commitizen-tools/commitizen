@@ -1,4 +1,14 @@
 
+## v2.18.0 (2021-08-13)
+
+### Refactor
+
+- **shortcuts**: move check for shortcut config setting to apply to any list select
+
+### Feat
+
+- **prompt**: add keyboard shortcuts with config option
+
 ## v2.17.13 (2021-07-14)
 
 ## v2.17.12 (2021-07-06)
