@@ -11,6 +11,17 @@ meaningful way.
 
 It can be installed with `pip install conventional-JIRA`.
 
+### [GitHub JIRA Conventional](https://pypi.org/project/cz-github-jira-conventional/)
+
+This plugin extends the commitizen tools by:
+- requiring a JIRA issue id in the commit message
+- creating links to GitHub commits in the CHANGELOG.md
+- creating links to JIRA issues in the CHANGELOG.md
+
+It can be installed with `cz-github-jira-conventional`.
+
+For installation instructions (configuration and pre-commit) please visit https://github.com/apheris/cz-github-jira-conventional
+
 ### [Commitizen emoji](https://pypi.org/project/commitizen-emoji/)
 
 Just like *conventional commit* format, but with emojis and optionally time spent and related tasks.
