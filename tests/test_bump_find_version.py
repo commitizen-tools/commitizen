@@ -95,3 +95,23 @@ def test_generate_version_local(test_input, expected):
         prerelease=prerelease,
         is_local_version=is_local_version,
     ) == Version(expected)
+
+
+@pytest.mark.parametrize(
+    "current_version,increment,tag_format,expected,",
+    (
+        ("0.1.1", "MINOR", "v$version", "0.2.0"),
+        ("21.05.06", "PATCH", "%y.%m.%d", "21.05.06"),
+        ("21.5.6.1.2", "MAJOR", "%y.%-m.%-d.$major.$minor", "21.5.6.2.0"),
+    ),
+)
+def test_generate_version_with_formats(
+    current_version, increment, tag_format, expected
+):
+    assert generate_version(
+        current_version,
+        increment=increment,
+        prerelease=None,
+        is_local_version=False,
+        tag_format=tag_format,
+    ) == Version(expected)

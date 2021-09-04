@@ -124,7 +124,7 @@ class Bump:
         if increment is None:
             increment = self.find_increment(commits)
 
-        # It may happen that there are commits, but they are not elegible
+        # It may happen that there are commits, but they are not eligible
         # for an increment, this generates a problem when using prerelease (#281)
         if (
             prerelease
@@ -147,6 +147,7 @@ class Bump:
             increment,
             prerelease=prerelease,
             is_local_version=is_local_version,
+            tag_format=tag_format,
         )
 
         new_tag_version = bump.create_tag(new_version, tag_format=tag_format)

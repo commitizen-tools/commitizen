@@ -1,8 +1,9 @@
 import re
 from collections import OrderedDict
+from datetime import datetime
 from itertools import zip_longest
 from string import Template
-from typing import List, Optional, Union
+from typing import Iterable, List, Optional, Tuple, Union
 
 from packaging.version import Version
 
@@ -53,6 +54,44 @@ def find_increment(
     return increment
 
 
+# TODO: Create new Version class to parse the version based on tag_format and encapsulate the bump logic
+def _parse_release_semver(
+    release: Iterable[int], tag_format: Optional[str] = None
+) -> Tuple[int, int, int]:
+    """Parse the SemVer components from the release version by handling reordering and CalVer."""
+    major, minor, patch = [*release, 0, 0, 0][:3]
+    if tag_format:
+        semver_names = ["major", "minor", "patch"]
+        tag_format = tag_format.replace("$version", "$" + ".$".join(semver_names))
+        keys = [key.split("$")[-1] for key in tag_format.split(".")]
+        if len(keys) == len(list(release)) and any(key in keys for key in semver_names):
+            tag_lookup = dict(zip(keys, release))
+            major, minor, patch = [tag_lookup.get(key, 0) for key in semver_names]
+
+    return major, minor, patch
+
+
+def _merge_semver(
+    _current: str, _new_semver: str, tag_format: Optional[str] = None
+) -> str:
+    """HACK: Merge the results of the incremented SemVer back into the release version to handle CalVer."""
+    current: Iterable[int] = Version(_current).release
+    new_semver: Iterable[int] = Version(_new_semver).release
+
+    release = new_semver
+    if tag_format:
+        semver_names = ["major", "minor", "patch"]
+        semver_lookup = dict(zip(semver_names, new_semver))
+        tag_format = tag_format.replace("$version", "$" + ".$".join(semver_names))
+        keys = [key.split("$")[-1] for key in tag_format.split(".")]
+        if len(keys) == len(list(current)):
+            release = [
+                semver_lookup.get(key, value) for key, value in zip(keys, current)
+            ]
+
+    return ".".join(map(str, release))
+
+
 def prerelease_generator(current_version: str, prerelease: Optional[str] = None) -> str:
     """Generate prerelease
 
@@ -78,9 +117,11 @@ def prerelease_generator(current_version: str, prerelease: Optional[str] = None)
     return pre_version
 
 
-def semver_generator(current_version: str, increment: str = None) -> str:
+def semver_generator(
+    current_version: str, increment: str = None, tag_format: Optional[str] = None
+) -> str:
     version = Version(current_version)
-    prev_release = list(version.release)
+    prev_release = list(_parse_release_semver(version.release, tag_format))
     increments = [MAJOR, MINOR, PATCH]
     increments_version = dict(zip_longest(increments, prev_release, fillvalue=0))
 
@@ -112,6 +153,7 @@ def generate_version(
     increment: str,
     prerelease: Optional[str] = None,
     is_local_version: bool = False,
+    tag_format: Optional[str] = None,
 ) -> Version:
     """Based on the given increment a proper semver will be generated.
 
@@ -127,16 +169,21 @@ def generate_version(
     if is_local_version:
         version = Version(current_version)
         pre_version = prerelease_generator(str(version.local), prerelease=prerelease)
-        semver = semver_generator(str(version.local), increment=increment)
+        semver = semver_generator(
+            str(version.local), increment=increment, tag_format=tag_format
+        )
 
         return Version(f"{version.public}+{semver}{pre_version}")
     else:
         pre_version = prerelease_generator(current_version, prerelease=prerelease)
-        semver = semver_generator(current_version, increment=increment)
+        semver = semver_generator(
+            current_version, increment=increment, tag_format=tag_format
+        )
+        release = _merge_semver(current_version, semver, tag_format)
 
         # TODO: post version
         # TODO: dev version
-        return Version(f"{semver}{pre_version}")
+        return Version(f"{release}{pre_version}")
 
 
 def update_version_in_files(
@@ -223,16 +270,17 @@ def create_tag(version: Union[Version, str], tag_format: Optional[str] = None):
     if not tag_format:
         return str(version)
 
-    major, minor, patch = version.release
+    major, minor, patch = _parse_release_semver(version.release, tag_format)
     prerelease = ""
     # version.pre is needed for mypy check
     if version.is_prerelease and version.pre:
         prerelease = f"{version.pre[0]}{version.pre[1]}"
 
     t = Template(tag_format)
-    return t.safe_substitute(
+    t_ver = t.safe_substitute(
         version=version, major=major, minor=minor, patch=patch, prerelease=prerelease
     )
+    return datetime.utcnow().strftime(t_ver)
 
 
 def create_commit_message(

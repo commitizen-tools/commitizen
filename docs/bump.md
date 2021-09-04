@@ -183,26 +183,28 @@ cz bump --changelog --changelog-to-stdout > body.md
 
 ### `tag_format`
 
-It is used to read the format from the git tags, and also to generate the tags.
+The `tag_format` is used to parse the format from the git tags and to generate new tags.
 
-Commitizen supports 2 types of formats, a simple and a more complex.
+Commitizen defaults to the standard Semver format (`$version`) or can be customized using a predefined set of variables.
 
 ```bash
 cz bump --tag-format="v$version"
 ```
 
 ```bash
-cz bump --tag-format="v$minor.$major.$patch$prerelease"
+cz bump --tag-format="v$major.$minor.$patch$prerelease"
 ```
 
 In your `pyproject.toml` or `.cz.toml`
 
 ```toml
 [tool.commitizen]
-tag_format = "v$minor.$major.$patch$prerelease"
+tag_format = "v$major.$minor.$patch$prerelease"
 ```
 
-The variables must be preceded by a `$` sign.
+#### Standard SemVer Variables
+
+The SemVer variables must be preceded by a `$` sign.
 
 Supported variables:
 
@@ -213,6 +215,34 @@ Supported variables:
 | `$minor`      | MINOR increment                            |
 | `$patch`      | PATCH increment                            |
 | `$prerelease` | Prerelase (alpha, beta, release candidate) |
+
+#### CalVer Variables
+
+Commitizen also supports [CalVer](https://calver.org/) in any combination with or without SemVer; however, using standard CalVer formats is recommended for interoperability with other tools. Common CalVer `tag_format`'s include `%Y.%m` or `%y.%m.%d`.
+
+If a unique build number is desired, this could either be implemented by incrementing the string in the configuration file with whatever build tool is used (i.e. `%Y.%m.123` to `%Y.%m.124`) or by mapping all commit types to one SemVer component through the `bump_map` configuration and a `tag_format` of `"%Y.%m.$major`.
+
+```bash
+cz bump --tag-format="%y.%-m.%-d$prerelease"
+cz bump --tag-format="%Y.%m.$major.$prerelease"
+cz bump --tag-format="%Y.%m.$version"
+```
+
+```toml
+[tool.commitizen]
+tag_format = "%Y.%m.%d$prerelease"
+```
+
+The full `strftime` formatting options are supported. Below are the most common for CalVer. For a full list, see: [https://strftime.org/](https://strftime.org/)
+
+| Code  | Description                                                | Example       |
+| ----- | ---------------------------------------------------------- | ------------- |
+| `%y`  | Year without century as a zero-padded decimal number.      | 08 (for 2008) |
+| `%Y`  | Year with century as a decimal number.                     | 2008          |
+| `$m`  | Month as a zero-padded decimal number.                     | 01 (for Jan)  |
+| `$-m` | Month as a decimal number. (Platform specific)             | 1 (for Jan)   |
+| `$d`  | Day of the month as a zero-padded decimal number.          | 05            |
+| `$-d` | Day of the month as a decimal number. (Platform specific)  | 5             |
 
 ---
 
