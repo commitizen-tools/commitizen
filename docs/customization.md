@@ -170,7 +170,7 @@ commitizen:
 When the [`use_shortcuts`](https://commitizen-tools.github.io/commitizen/config/#settings) config option is enabled, commitizen can show and use keyboard shortcuts to select items from lists directly.
 For example, when using the `cz_conventional_commits` commitizen template, shortcut keys are shown when selecting the commit type. Unless otherwise defined, keyboard shortcuts will be numbered automatically.
 To specify keyboard shortcuts for your custom choices, provide the shortcut using the `key` parameter in dictionary form for each choice you would like to customize.
- 
+
 ## 2. Customize through customizing a class
 
 The basic steps are:
