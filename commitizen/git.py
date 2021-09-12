@@ -154,7 +154,7 @@ def find_git_project_root() -> Optional[Path]:
 
 
 def is_staging_clean() -> bool:
-    """Check if staing is clean."""
+    """Check if staging is clean."""
     c = cmd.run("git diff --no-ext-diff --cached --name-only")
     return not bool(c.out)
 
