@@ -70,7 +70,7 @@ def test_get_commits_author_and_email():
     create_file_and_commit("fix: username exception")
     commit = git.get_commits()[0]
 
-    assert commit.author is not ""
+    assert commit.author != ""
     assert "@" in commit.author_email
 
 
@@ -176,12 +176,30 @@ def test_get_latest_tag_name(tmp_commitizen_project):
         assert tag_name == "1.0"
 
 
-def test_is_staging_clean(tmp_commitizen_project):
+def test_is_staging_clean_when_adding_file(tmp_commitizen_project):
+    with tmp_commitizen_project.as_cwd():
+        assert git.is_staging_clean() is True
+
+        cmd.run("touch test_file")
+
+        assert git.is_staging_clean() is True
+
+        cmd.run("git add test_file")
+
+        assert git.is_staging_clean() is False
+
+
+def test_is_staging_clean_when_updating_file(tmp_commitizen_project):
     with tmp_commitizen_project.as_cwd():
         assert git.is_staging_clean() is True
 
         cmd.run("touch test_file")
         cmd.run("git add test_file")
+        cmd.run("git commit -m 'add test_file'")
         cmd.run("echo 'test' > test_file")
+
+        assert git.is_staging_clean() is True
+
+        cmd.run("git add test_file")
 
         assert git.is_staging_clean() is False
