@@ -1,4 +1,10 @@
 
+## v2.18.1 (2021-09-12)
+
+### Fix
+
+- **commit**: correct the stage checker before commiting
+
 ## v2.18.0 (2021-08-13)
 
 ### Refactor
