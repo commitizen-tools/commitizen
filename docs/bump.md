@@ -199,7 +199,7 @@ In your `pyproject.toml` or `.cz.toml`
 
 ```toml
 [tool.commitizen]
-tag_format = "v$minor.$major.$patch$prerelease"
+tag_format = "v$major.$minor.$patch$prerelease"
 ```
 
 The variables must be preceded by a `$` sign.
