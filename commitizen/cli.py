@@ -286,8 +286,13 @@ def main():
     # This is for the command required constraint in 2.0
     try:
         args = parser.parse_args()
-    except TypeError:
-        raise NoCommandFoundError()
+    except (TypeError, SystemExit) as e:
+        # https://github.com/commitizen-tools/commitizen/issues/429
+        # argparse raises TypeError when non exist command is provided on Python < 3.9
+        # but raise SystemExit with exit code == 2 on Python 3.9
+        if isinstance(e, TypeError) or (isinstance(e, SystemExit) and e.code == 2):
+            raise NoCommandFoundError()
+        raise e
 
     if args.name:
         conf.update({"name": args.name})
