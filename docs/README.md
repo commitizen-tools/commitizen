@@ -175,23 +175,11 @@ See [Third-Party Commitizen Templates](third-party-commitizen.md).
 
 ## FAQ
 
-### Why are `revert` and `chore` valid types in the check pattern of cz conventional_commits but not types we can select?
-
-`revert` and `chore` are added to the "pattern" in `cz check` in order to prevent backward errors, but officially they are not part of conventional commits, we are using the latest [types from Angular](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type) (they used to but were removed).
-However, you can create a customized `cz` with those extra types. (See [Customization](https://commitizen-tools.github.io/commitizen/customization))
-
-See more discussion in issue [#142](https://github.com/commitizen-tools/commitizen/issues/142) and [#36](https://github.com/commitizen-tools/commitizen/issues/36)
-
-### How to handle revert commits?
-
-```sh
-git revert --no-commit <SHA>
-git commit -m "revert: foo bar"
-```
+See [FAQ - commitizen](https://commitizen-tools.github.io/commitizen/faq/).
 
 ## Contributing
 
-See [Contributing](contributing.md)
+See [Contributing](contributing.md).
 
 [conventional_commits]: https://www.conventionalcommits.org
 [semver]: https://semver.org/

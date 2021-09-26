@@ -73,3 +73,10 @@ If you are using conventional commits in your git history, then you could swap o
 Regarding the name, [cz-js][cz-js] came first, they used the word commitizen first. When this project was created originally, the creator read "be a good commitizen", and thought it was just a cool word that made sense, and this would be a package that helps you be a good "commit citizen".
 
 [cz-js]: https://github.com/commitizen/cz-cli
+
+### How to handle revert commits?
+
+```sh
+git revert --no-commit <SHA>
+git commit -m "revert: foo bar"
+```
