@@ -74,9 +74,15 @@ Regarding the name, [cz-js][cz-js] came first, they used the word commitizen fir
 
 [cz-js]: https://github.com/commitizen/cz-cli
 
-### How to handle revert commits?
+## How to handle revert commits?
 
 ```sh
 git revert --no-commit <SHA>
 git commit -m "revert: foo bar"
 ```
+
+## I got `Exception [WinError 995] The I/O operation ...` error
+
+This error is cause by a python bug on windows and it should be fixed in some newer version. (e.g. 3.8.7) So if you encounter this error. Upgrade python version may solve this.
+
+More discussion can be found in issue [#318](https://github.com/commitizen-tools/commitizen/issues/318).
