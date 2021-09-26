@@ -83,6 +83,6 @@ git commit -m "revert: foo bar"
 
 ## I got `Exception [WinError 995] The I/O operation ...` error
 
-This error is cause by a python bug on windows and it should be fixed in some newer version. (e.g. 3.8.7) So if you encounter this error. Upgrade python version may solve this.
+This error was caused by a Python bug on Windows. It's been fixed by [this PR](https://github.com/python/cpython/pull/22017), and according to Python's changelog, [3.8.6rc1](https://docs.python.org/3.8/whatsnew/changelog.html#python-3-8-6-release-candidate-1) and [3.9.0rc2](https://docs.python.org/3.9/whatsnew/changelog.html#python-3-9-0-release-candidate-2) should be the accurate versions first contain this fix. In conclusion, upgrade your Python version might solve this issue.
 
 More discussion can be found in issue [#318](https://github.com/commitizen-tools/commitizen/issues/318).
