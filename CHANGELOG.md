@@ -1,4 +1,10 @@
 
+## v2.18.2 (2021-09-27)
+
+### Fix
+
+- **cli**: handle argparse different behavior after python 3.9
+
 ## v2.18.1 (2021-09-12)
 
 ### Fix
