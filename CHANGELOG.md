@@ -1,4 +1,10 @@
 
+## v2.19.0 (2021-09-27)
+
+### Feat
+
+- utility for showing system information
+
 ## v2.18.2 (2021-09-27)
 
 ### Fix
