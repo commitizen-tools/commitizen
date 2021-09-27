@@ -228,6 +228,12 @@ data = {
                 "func": commands.Version,
                 "arguments": [
                     {
+                        "name": ["-r", "--report"],
+                        "help": "get system information for reporting bugs",
+                        "action": "store_true",
+                        "exclusive_group": "group1",
+                    },
+                    {
                         "name": ["-p", "--project"],
                         "help": "get the version of the current project",
                         "action": "store_true",
