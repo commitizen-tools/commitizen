@@ -28,11 +28,18 @@ If applicable, add screenshots to help explain your problem.
 
 ## Environment
 <!--
+For older commitizen versions, please include the
+output of the following commands manually:
+
 cz version
 python --version
 python3 -c "import platform; print(platform.system())"
 -->
-
+Add output of the following command to include the following
 - commitizen version:
 - python version:
 - operating system:
+```bash
+cz version --report
+```
+

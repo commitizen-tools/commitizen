@@ -1,3 +1,6 @@
+import platform
+import sys
+
 from commitizen import out
 from commitizen.__version__ import __version__
 from commitizen.config import BaseConfig
@@ -9,9 +12,15 @@ class Version:
     def __init__(self, config: BaseConfig, *args):
         self.config: BaseConfig = config
         self.parameter = args[0]
+        self.operating_system = platform.system()
+        self.python_version = sys.version
 
     def __call__(self):
-        if self.parameter.get("project"):
+        if self.parameter.get("report"):
+            out.write(f"Commitizen Version: {__version__}")
+            out.write(f"Python Version: {self.python_version}")
+            out.write(f"Operating System: {self.operating_system}")
+        elif self.parameter.get("project"):
             version = self.config.settings["version"]
             if version:
                 out.write(f"{version}")
