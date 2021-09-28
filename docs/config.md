@@ -134,9 +134,9 @@ commitizen:
 | `customize`      | `dict` | `None`                      | **This is only supported when config through `toml`.** Custom rules for committing and bumping. [See more](customization)                                     |
 | `use_shortcuts`  | `bool` | `false`                     | If enabled, commitizen will show keyboard shortcuts when selecting from a list. Define a `key` for each of your choices to set the key. [See more](shortcuts) |
 
-[version_files]: https://commitizen-tools.github.io/commitizen/bump/#version_files
-[tag_format]: https://commitizen-tools.github.io/commitizen/bump/#tag_format
-[bump_message]: https://commitizen-tools.github.io/commitizen/bump/#bump_message
+[version_files]: bump.md#version_files
+[tag_format]: bump.md#tag_format
+[bump_message]: bump.md#bump_message
 [additional-features]: https://github.com/tmbo/questionary#additional-features
-[customization]: https://commitizen-tools.github.io/commitizen/customization/
-[shortcuts]: https://commitizen-tools.github.io/commitizen/customization/#shortcut-keys
+[customization]: customization.md
+[shortcuts]: customization.md#shortcut-keys
