@@ -120,7 +120,7 @@ After the configuration is added, you'll need to run
 pre-commit install --hook-type commit-msg
 ```
 
-Read more about the `check` command [here](https://commitizen-tools.github.io/commitizen/check/).
+Read more about the `check` command [here](check.md).
 
 ### Help
 
@@ -189,7 +189,7 @@ See [Third-Party Commitizen Templates](third-party-commitizen.md).
 
 ## FAQ
 
-See [FAQ - commitizen](https://commitizen-tools.github.io/commitizen/faq/).
+See [FAQ](faq.md).
 
 ## Contributing
 
