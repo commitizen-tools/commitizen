@@ -49,6 +49,11 @@ data = {
                         "action": "store_true",
                         "help": "show output to stdout, no commit, no modified files",
                     },
+                    {
+                        "name": "--signoff",
+                        "action": "store_true",
+                        "help": "Sign off the commit",
+                    },
                 ],
             },
             {

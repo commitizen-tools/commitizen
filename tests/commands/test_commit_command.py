@@ -107,6 +107,26 @@ def test_commit_command_with_dry_run_option(config, mocker):
         commit_cmd()
 
 
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_with_signoff_option(config, mocker):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "",
+        "footer": "",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", "", "", 0)
+    success_mock = mocker.patch("commitizen.out.success")
+
+    commands.Commit(config, {"signoff": True})()
+    success_mock.assert_called_once()
+
+
 def test_commit_when_nothing_to_commit(config, mocker):
     is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
     is_staging_clean_mock.return_value = True
