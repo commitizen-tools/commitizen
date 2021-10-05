@@ -10,6 +10,9 @@ TOML_STR = r"""
     example = "feature: this feature enable customize through config file"
     schema = "<type>: <body>"
     schema_pattern = "(feature|bug fix):(\\s.*)"
+    commit_parser = "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?"
+    changelog_pattern = "^(feature|bug fix)?(!)?"
+    change_type_map = {"feature" = "Feat", "bug fix" = "Fix"}
 
     bump_pattern = "^(break|new|fix|hotfix)"
     bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
@@ -57,6 +60,9 @@ JSON_STR = r"""
                     "fix": "PATCH",
                     "hotfix": "PATCH"
                 },
+                "commit_parser": "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?",
+                "changelog_pattern": "^(feature|bug fix)?(!)?",
+                "change_type_map": {"feature": "Feat", "bug fix": "Fix"},
                 "change_type_order": ["perf", "BREAKING CHANGE", "feat", "fix", "refactor"],
                 "info": "This is a customized cz.",
                 "questions": [
@@ -363,3 +369,18 @@ def test_info_with_info_path(tmpdir, config_info):
 def test_info_without_info(config_without_info):
     cz = CustomizeCommitsCz(config_without_info)
     assert cz.info() is None
+
+
+def test_commit_parser(config):
+    cz = CustomizeCommitsCz(config)
+    assert cz.commit_parser == "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?"
+
+
+def test_changelog_pattern(config):
+    cz = CustomizeCommitsCz(config)
+    assert cz.changelog_pattern == "^(feature|bug fix)?(!)?"
+
+
+def test_change_type_map(config):
+    cz = CustomizeCommitsCz(config)
+    assert cz.change_type_map == {"feature": "Feat", "bug fix": "Fix"}
