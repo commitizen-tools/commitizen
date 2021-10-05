@@ -38,6 +38,18 @@ class CustomizeCommitsCz(BaseCommitizen):
         if custom_change_type_order:
             self.change_type_order = custom_change_type_order
 
+        commit_parser = self.custom_settings.get("commit_parser")
+        if commit_parser:
+            self.commit_parser = commit_parser
+
+        changelog_pattern = self.custom_settings.get("changelog_pattern")
+        if changelog_pattern:
+            self.changelog_pattern = changelog_pattern
+
+        change_type_map = self.custom_settings.get("change_type_map")
+        if change_type_map:
+            self.change_type_map = change_type_map
+
     def questions(self) -> Questions:
         return self.custom_settings.get("questions", [{}])
 
