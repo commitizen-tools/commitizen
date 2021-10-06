@@ -42,4 +42,3 @@ Add output of the following command to include the following
 ```bash
 cz version --report
 ```
-
