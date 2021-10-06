@@ -50,7 +50,7 @@ data = {
                         "help": "show output to stdout, no commit, no modified files",
                     },
                     {
-                        "name": "--signoff",
+                        "name": ["-s", "--signoff"],
                         "action": "store_true",
                         "help": "Sign off the commit",
                     },
