@@ -10,4 +10,4 @@ ${PREFIX}black commitizen tests --check
 ${PREFIX}isort --check-only commitizen tests
 ${PREFIX}flake8 commitizen/ tests/
 ${PREFIX}mypy commitizen/ tests/
-${PREFIX}pydocstyle --convention=google --add-ignore=D1,D415
+${PREFIX}pydocstyle --convention=google --add-ignore=D1,D415 --match-dir='^(?!venv|[\.]).*'
