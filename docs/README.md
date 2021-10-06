@@ -86,6 +86,20 @@ or the shortcut
 cz c
 ```
 
+#### Sign off the commit
+
+Run in the terminal
+
+```bash
+cz commit --signoff
+```
+
+or the shortcut
+
+```bash
+cz commit -s
+```
+
 ### Integrating with Pre-commit
 Commitizen can lint your commit message for you with `cz check`.
 You can integrate this in your [pre-commit](https://pre-commit.com/) config with:
