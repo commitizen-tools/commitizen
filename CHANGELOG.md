@@ -1,4 +1,11 @@
 
+## v2.20.0 (2021-10-06)
+
+### Feat
+
+- **cli.py**: add shortcut for signoff command
+- add signoff parameter to commit command
+
 ## v2.19.0 (2021-09-27)
 
 ### Feat
