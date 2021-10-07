@@ -38,5 +38,5 @@ understand what happened.
 | `fix(commands): bump error when no user provided` | `fix: stuff` |
 | `feat: add new commit command` | `feat: commit command introduced` |
 
-[customization]: customization.md
+[customization]: ../customization.md
 [conventional_commits]: https://www.conventionalcommits.org
