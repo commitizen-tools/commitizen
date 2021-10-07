@@ -18,6 +18,7 @@ If you're a first-time contributor, you can check the issues with [good first is
 7. Use [commitizen](https://github.com/commitizen-tools/commitizen) to do git commit. We follow [conventional commmits][conventional-commmits]
 8. Run `./scripts/format` and `./scripts/test` to ensure you follow the coding style and the tests pass.
 9. Update `README.md`. Do **not** update the `CHANGELOG.md`, it will be automatically created after merging to `master`.
-10. Send a [pull request](https://github.com/commitizen-tools/commitizen/pulls) 🙏
+10. If your changes are about documentation. Run `poetry run mkdocs serve` to serve documentation locally and check whether there is any warning or error.
+11. Send a [pull request](https://github.com/commitizen-tools/commitizen/pulls) 🙏
 
 [conventional-commmits]: https://www.conventionalcommits.org/
