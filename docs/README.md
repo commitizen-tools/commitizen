@@ -183,18 +183,6 @@ eval "$(register-python-argcomplete cz)"
 
 For further information on activation, please visit the [argcomplete website](https://kislyuk.github.io/argcomplete/).
 
-## Third-Party Commitizen Templates
-
-See [Third-Party Commitizen Templates](third-party-commitizen.md).
-
-## FAQ
-
-See [FAQ](faq.md).
-
-## Contributing
-
-See [Contributing](contributing.md).
-
 [conventional_commits]: https://www.conventionalcommits.org
 [semver]: https://semver.org/
 [keepchangelog]: https://keepachangelog.com/
