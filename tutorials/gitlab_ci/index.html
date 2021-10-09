@@ -660,7 +660,7 @@
 <li>A developer creates a merge request (MR) against <code>master</code> branch</li>
 <li>When the <code>MR</code> is merged into master, the 2 stages of the CI are executed</li>
 <li>For simplification, we store the software version in a file called <code>VERSION</code>. You can use any file that you want as <code>commitizen</code> supports it.</li>
-<li>The commit message executed automatically by the <code>CI</code> must include <code>[skip-ci]</code> in the message; otherwise, the process will generate a loop. You can define the message structure in <a href="https://commitizen-tools.github.io/commitizen/bump/">commitizen</a> as well.</li>
+<li>The commit message executed automatically by the <code>CI</code> must include <code>[skip-ci]</code> in the message; otherwise, the process will generate a loop. You can define the message structure in <a href="../../bump/">commitizen</a> as well.</li>
 </ol>
 <h3 id="gitlab-configuration">Gitlab Configuration</h3>
 <p>To be able to change files and push new changes with <code>Gitlab CI</code> runners, we need to have a <code>ssh</code> key and configure a git user.</p>

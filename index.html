@@ -344,47 +344,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#third-party-commitizen-templates" class="md-nav__link">
-    Third-Party Commitizen Templates
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#faq" class="md-nav__link">
-    FAQ
-  </a>
-  
-    <nav class="md-nav" aria-label="FAQ">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#why-are-revert-and-chore-valid-types-in-the-check-pattern-of-cz-conventional_commits-but-not-types-we-can-select" class="md-nav__link">
-    Why are revert and chore valid types in the check pattern of cz conventional_commits but not types we can select?
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#how-to-handle-revert-commits" class="md-nav__link">
-    How to handle revert commits?
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#contributing" class="md-nav__link">
-    Contributing
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -809,47 +768,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#third-party-commitizen-templates" class="md-nav__link">
-    Third-Party Commitizen Templates
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#faq" class="md-nav__link">
-    FAQ
-  </a>
-  
-    <nav class="md-nav" aria-label="FAQ">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#why-are-revert-and-chore-valid-types-in-the-check-pattern-of-cz-conventional_commits-but-not-types-we-can-select" class="md-nav__link">
-    Why are revert and chore valid types in the check pattern of cz conventional_commits but not types we can select?
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#how-to-handle-revert-commits" class="md-nav__link">
-    How to handle revert commits?
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#contributing" class="md-nav__link">
-    Contributing
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -949,7 +867,7 @@ You can integrate this in your <a href="https://pre-commit.com/">pre-commit</a> 
 <div class="codehilite"><pre><span></span><code>pre-commit install --hook-type commit-msg
 </code></pre></div>
 
-<p>Read more about the <code>check</code> command <a href="https://commitizen-tools.github.io/commitizen/check/">here</a>.</p>
+<p>Read more about the <code>check</code> command <a href="check/">here</a>.</p>
 <h3 id="help">Help</h3>
 <div class="codehilite"><pre><span></span><code>$ cz --help
 usage: cz <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--debug<span class="o">]</span> <span class="o">[</span>-n NAME<span class="o">]</span> <span class="o">[</span>--version<span class="o">]</span>
@@ -999,20 +917,6 @@ commands:
 </code></pre></div>
 
 <p>For further information on activation, please visit the <a href="https://kislyuk.github.io/argcomplete/">argcomplete website</a>.</p>
-<h2 id="third-party-commitizen-templates">Third-Party Commitizen Templates</h2>
-<p>See <a href="third-party-commitizen/">Third-Party Commitizen Templates</a>.</p>
-<h2 id="faq">FAQ</h2>
-<h3 id="why-are-revert-and-chore-valid-types-in-the-check-pattern-of-cz-conventional_commits-but-not-types-we-can-select">Why are <code>revert</code> and <code>chore</code> valid types in the check pattern of cz conventional_commits but not types we can select?</h3>
-<p><code>revert</code> and <code>chore</code> are added to the "pattern" in <code>cz check</code> in order to prevent backward errors, but officially they are not part of conventional commits, we are using the latest <a href="https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type">types from Angular</a> (they used to but were removed).
-However, you can create a customized <code>cz</code> with those extra types. (See <a href="https://commitizen-tools.github.io/commitizen/customization">Customization</a>)</p>
-<p>See more discussion in issue <a href="https://github.com/commitizen-tools/commitizen/issues/142">#142</a> and <a href="https://github.com/commitizen-tools/commitizen/issues/36">#36</a></p>
-<h3 id="how-to-handle-revert-commits">How to handle revert commits?</h3>
-<div class="codehilite"><pre><span></span><code>git revert --no-commit &lt;SHA&gt;
-git commit -m <span class="s2">&quot;revert: foo bar&quot;</span>
-</code></pre></div>
-
-<h2 id="contributing">Contributing</h2>
-<p>See <a href="contributing/">Contributing</a></p>
                 
               
               

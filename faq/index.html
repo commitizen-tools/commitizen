@@ -489,6 +489,20 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#how-to-handle-revert-commits" class="md-nav__link">
+    How to handle revert commits?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#i-got-exception-winerror-995-the-io-operation-error" class="md-nav__link">
+    I got Exception [WinError 995] The I/O operation ... error
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -608,6 +622,20 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#how-to-handle-revert-commits" class="md-nav__link">
+    How to handle revert commits?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#i-got-exception-winerror-995-the-io-operation-error" class="md-nav__link">
+    I got Exception [WinError 995] The I/O operation ... error
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -647,7 +675,7 @@ inside <code>[tool.commitizen]</code>, and it will cheaply keep any of these pro
 
 <h2 id="why-are-revert-and-chore-valid-types-in-the-check-pattern-of-cz-conventional_commits-but-not-types-we-can-select">Why are <code>revert</code> and <code>chore</code> valid types in the check pattern of cz conventional_commits but not types we can select?</h2>
 <p><code>revert</code> and <code>chore</code> are added to the "pattern" in <code>cz check</code> in order to prevent backward errors, but officially they are not part of conventional commits, we are using the latest <a href="https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type">types from Angular</a> (they used to but were removed).
-However, you can create a customized <code>cz</code> with those extra types. (See <a href="https://commitizen-tools.github.io/commitizen/customization/">Customization</a></p>
+However, you can create a customized <code>cz</code> with those extra types. (See <a href="../customization/">Customization</a></p>
 <p>See more discussion in issue <a href="https://github.com/commitizen-tools/commitizen/issues/142">#142</a> and <a href="https://github.com/commitizen-tools/commitizen/issues/36">#36</a></p>
 <h2 id="how-to-revert-a-bump">How to revert a bump?</h2>
 <p>If for any reason, the created tag and changelog were to be undone, this is the snippet:</p>
@@ -675,6 +703,14 @@ This one is written in python to make integration easier for python projects and
 <p>Where do they cross paths?</p>
 <p>If you are using conventional commits in your git history, then you could swap one with the other in theory.</p>
 <p>Regarding the name, <a href="https://github.com/commitizen/cz-cli">cz-js</a> came first, they used the word commitizen first. When this project was created originally, the creator read "be a good commitizen", and thought it was just a cool word that made sense, and this would be a package that helps you be a good "commit citizen".</p>
+<h2 id="how-to-handle-revert-commits">How to handle revert commits?</h2>
+<div class="codehilite"><pre><span></span><code>git revert --no-commit &lt;SHA&gt;
+git commit -m <span class="s2">&quot;revert: foo bar&quot;</span>
+</code></pre></div>
+
+<h2 id="i-got-exception-winerror-995-the-io-operation-error">I got <code>Exception [WinError 995] The I/O operation ...</code> error</h2>
+<p>This error was caused by a Python bug on Windows. It's been fixed by <a href="https://github.com/python/cpython/pull/22017">this PR</a>, and according to Python's changelog, <a href="https://docs.python.org/3.8/whatsnew/changelog.html#python-3-8-6-release-candidate-1">3.8.6rc1</a> and <a href="https://docs.python.org/3.9/whatsnew/changelog.html#python-3-9-0-release-candidate-2">3.9.0rc2</a> should be the accurate versions first contain this fix. In conclusion, upgrade your Python version might solve this issue.</p>
+<p>More discussion can be found in issue <a href="https://github.com/commitizen-tools/commitizen/issues/318">#318</a>.</p>
                 
               
               
