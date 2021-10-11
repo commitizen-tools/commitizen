@@ -264,6 +264,28 @@ def test_changelog_hook(mocker, config):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_hook_customize(mocker, config_customize):
+    changelog_hook_mock = mocker.Mock()
+    changelog_hook_mock.return_value = "cool changelog hook"
+
+    create_file_and_commit("feat: new file")
+    create_file_and_commit("refactor: is in changelog")
+    create_file_and_commit("Merge into master")
+
+    changelog = Changelog(
+        config_customize,
+        {"unreleased_version": None, "incremental": True, "dry_run": False},
+    )
+    mocker.patch.object(changelog.cz, "changelog_hook", changelog_hook_mock)
+    changelog()
+    full_changelog = (
+        "## Unreleased\n\n### Refactor\n\n- is in changelog\n\n### Feat\n\n- new file\n"
+    )
+
+    changelog_hook_mock.assert_called_with(full_changelog, full_changelog)
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_multiple_incremental_do_not_add_new_lines(
     mocker, capsys, changelog_path
 ):

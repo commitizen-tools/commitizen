@@ -1,6 +1,6 @@
 import pathlib
 from collections import OrderedDict
-from typing import Any, Iterable, List, MutableMapping, Optional, Tuple, Union
+from typing import Any, Dict, Iterable, List, MutableMapping, Optional, Tuple, Union
 
 from typing_extensions import TypedDict
 
@@ -20,6 +20,9 @@ class CzSettings(TypedDict, total=False):
     info_path: Union[str, pathlib.Path]
     info: str
     message_template: str
+    commit_parser: Optional[str]
+    changelog_pattern: Optional[str]
+    change_type_map: Optional[Dict[str, str]]
 
 
 class Settings(TypedDict, total=False):
