@@ -2,10 +2,13 @@ from __future__ import annotations
 
 import contextlib
 import os
+import selectors
 import shutil
 import subprocess
 import sys
 import tempfile
+from asyncio import DefaultEventLoopPolicy, get_event_loop_policy, set_event_loop_policy
+from io import IOBase
 
 import questionary
 
@@ -27,14 +30,31 @@ from commitizen.exceptions import (
 from commitizen.git import smart_open
 
 
-class WrapStdin:
-    def __init__(self):
-        fd = os.open("/dev/tty", os.O_RDWR | os.O_NOCTTY)
-        tty = open(fd, "wb+", buffering=0)
+class CZEventLoopPolicy(DefaultEventLoopPolicy):
+    def get_event_loop(self):
+        self.set_event_loop(self._loop_factory(selectors.SelectSelector()))
+        return self._local._loop
+
+
+class WrapStdx:
+    def __init__(self, stdx: IOBase):
+        self._fileno = stdx.fileno()
+        if sys.platform == "linux":
+            if self._fileno == 0:
+                fd = os.open("/dev/tty", os.O_RDWR | os.O_NOCTTY)
+                tty = open(fd, "wb+", buffering=0)
+            else:
+                tty = open("/dev/tty", "w")
+        else:
+            fd = os.open("/dev/tty", os.O_RDWR | os.O_NOCTTY)
+            if self._fileno == 0:
+                tty = open(fd, "wb+", buffering=0)
+            else:
+                tty = open(fd, "rb+", buffering=0)
         self.tty = tty
 
     def __getattr__(self, key):
-        if key == "encoding":
+        if key == "encoding" and (sys.platform != "linux" or self._fileno == 0):
             return "UTF-8"
         return getattr(self.tty, key)
 
@@ -126,9 +146,11 @@ class Commit:
             old_stdin = sys.stdin
             old_stdout = sys.stdout
             old_stderr = sys.stderr
-            sys.stdin = WrapStdin()
-            sys.stdout = open("/dev/tty", "w")
-            sys.stderr = open("/dev/tty", "w")
+            old_event_loop_policy = get_event_loop_policy()
+            set_event_loop_policy(CZEventLoopPolicy())
+            sys.stdin = WrapStdx(sys.stdin)
+            sys.stdout = WrapStdx(sys.stdout)
+            sys.stderr = WrapStdx(sys.stderr)
 
         if git.is_staging_clean() and not (dry_run or allow_empty):
             raise NothingToCommitError("No files added to staging!")
@@ -151,9 +173,17 @@ class Commit:
         else:
             m = self.prompt_commit_questions()
 
+        if commit_msg_file:
+            sys.stdin.close()
+            sys.stdout.close()
+            sys.stderr.close()
+            set_event_loop_policy(old_event_loop_policy)
+            sys.stdin = old_stdin
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
+
         if manual_edit:
             m = self.manual_edit(m)
-
         out.info(f"\n{m}\n")
 
         if write_message_to_file:
@@ -164,12 +194,6 @@ class Commit:
             raise DryRunExit()
 
         if commit_msg_file:
-            sys.stdin.close()
-            sys.stdout.close()
-            sys.stderr.close()
-            sys.stdin = old_stdin
-            sys.stdout = old_stdout
-            sys.stderr = old_stderr
             defaultmesaage = ""
             with open(commit_msg_file) as f:
                 defaultmesaage = f.read()

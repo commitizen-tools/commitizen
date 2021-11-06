@@ -542,7 +542,8 @@ def test_commit_from_pre_commit_msg_hook(config, mocker, capsys):
     }
 
     commit_mock = mocker.patch("commitizen.git.commit")
-    mocker.patch("commitizen.commands.commit.WrapStdin")
+    commit_mock.return_value = cmd.Command("success", "", "", "", 0)
+    mocker.patch("commitizen.commands.commit.WrapStdx")
     mocker.patch("os.open")
     reader_mock = mocker.mock_open(read_data="\n\n#test\n")
     mocker.patch("builtins.open", reader_mock, create=True)
@@ -553,13 +554,38 @@ def test_commit_from_pre_commit_msg_hook(config, mocker, capsys):
     assert "Commit message is successful!" in out
     commit_mock.assert_not_called()
 
-
-def test_WrapStdin(mocker):
+def test_WrapStdx(mocker):
     mocker.patch("os.open")
     reader_mock = mocker.mock_open(read_data="data")
     mocker.patch("builtins.open", reader_mock, create=True)
 
-    wrap_stdin = commands.commit.WrapStdin()
+    stdin_mock_fileno=mocker.patch.object(sys.stdin, 'fileno')
+    stdin_mock_fileno.return_value = 0
+    wrap_stdin = commands.commit.WrapStdx(sys.stdin)
 
     assert wrap_stdin.encoding == "UTF-8"
     assert wrap_stdin.read() == "data"
+
+
+    writer_mock = mocker.mock_open(read_data="data")
+    mocker.patch("builtins.open", writer_mock, create=True)
+    stdout_mock_fileno=mocker.patch.object(sys.stdout, 'fileno')
+    stdout_mock_fileno.return_value = 1
+    wrap_stout = commands.commit.WrapStdx(sys.stdout)
+    wrap_stout.write("data")
+
+    writer_mock.assert_called_once_with("/dev/tty", 'w')
+    writer_mock().write.assert_called_once_with("data")
+
+
+    writer_mock = mocker.mock_open(read_data="data")
+    mocker.patch("builtins.open", writer_mock, create=True)
+    stderr_mock_fileno=mocker.patch.object(sys.stdout, 'fileno')
+    stderr_mock_fileno.return_value = 2
+    wrap_sterr = commands.commit.WrapStdx(sys.stderr)
+
+
+    wrap_sterr.write("data")
+
+    writer_mock.assert_called_once_with("/dev/tty", 'w')
+    writer_mock().write.assert_called_once_with("data")
