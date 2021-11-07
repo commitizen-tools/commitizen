@@ -229,7 +229,10 @@ def test_WrapStdx(mocker):
     wrap_stout = commands.commit.WrapStdx(sys.stdout)
     wrap_stout.write("data")
 
-    writer_mock.assert_called_once_with("/dev/tty", 'w')
+    if sys.platform == 'linux':
+        writer_mock.assert_called_once_with("/dev/tty", 'w')
+    else:
+        pass
     writer_mock().write.assert_called_once_with("data")
 
 
@@ -242,5 +245,8 @@ def test_WrapStdx(mocker):
 
     wrap_sterr.write("data")
 
-    writer_mock.assert_called_once_with("/dev/tty", 'w')
+    if sys.platform == 'linux':
+        writer_mock.assert_called_once_with("/dev/tty", 'w')
+    else:
+        pass
     writer_mock().write.assert_called_once_with("data")
