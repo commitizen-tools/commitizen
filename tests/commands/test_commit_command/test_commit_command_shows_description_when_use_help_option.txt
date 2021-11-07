@@ -1,6 +1,7 @@
 usage: cz commit [-h] [--retry] [--no-retry] [--dry-run]
                  [--write-message-to-file FILE_PATH] [-s] [-a] [-e]
                  [-l MESSAGE_LENGTH_LIMIT] [--]
+                 [--commit-msg-file COMMIT_MSG_FILE]
 
 create new commit
 
@@ -20,3 +21,7 @@ options:
   -l, --message-length-limit MESSAGE_LENGTH_LIMIT
                         length limit of the commit message; 0 for no limit
   --                    Positional arguments separator (recommended)
+  --commit-msg-file COMMIT_MSG_FILE
+                        ask for the name of the temporal file that contains
+                        the commit message. Using it in a git hook script:
+                        MSG_FILE=$1
