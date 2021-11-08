@@ -120,6 +120,7 @@ After the configuration is added, you'll need to run
 
 ```sh
 pre-commit install --hook-type commit-msg
+pre-commit install --hook-type prepare-commit-msg
 ```
 
 Read more about the `check` command [here](check.md).

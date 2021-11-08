@@ -28,10 +28,11 @@ class CZEventLoopPolicy(DefaultEventLoopPolicy):
         self.set_event_loop(self._loop_factory(selectors.SelectSelector()))
         return self._local._loop
 
+
 class WrapStdx:
-    def __init__(self, stdx:IOBase):
+    def __init__(self, stdx: IOBase):
         self._fileno = stdx.fileno()
-        if sys.platform == 'linux':
+        if sys.platform == "linux":
             if self._fileno == 0:
                 fd = os.open("/dev/tty", os.O_RDWR | os.O_NOCTTY)
                 tty = open(fd, "wb+", buffering=0)
@@ -46,7 +47,7 @@ class WrapStdx:
         self.tty = tty
 
     def __getattr__(self, key):
-        if key == "encoding" and (sys.platform != 'linux' or self._fileno == 0) :
+        if key == "encoding" and (sys.platform != "linux" or self._fileno == 0):
             return "UTF-8"
         return getattr(self.tty, key)
 
@@ -104,7 +105,7 @@ class Commit:
             old_stdin = sys.stdin
             old_stdout = sys.stdout
             old_stderr = sys.stderr
-            old_event_loop_policy=get_event_loop_policy()
+            old_event_loop_policy = get_event_loop_policy()
             set_event_loop_policy(CZEventLoopPolicy())
             sys.stdin = WrapStdx(sys.stdin)
             sys.stdout = WrapStdx(sys.stdout)
@@ -135,12 +136,12 @@ class Commit:
             raise DryRunExit()
 
         if commit_msg_file:
-            defaultmesaage = ""
+            default_mesaage = ""
             with open(commit_msg_file) as f:
-                defaultmesaage = f.read()
+                default_message = f.read()
             with open(commit_msg_file, "w") as f:
                 f.write(m)
-                f.write(defaultmesaage)
+                f.write(default_message)
                 out.success("Commit message is successful!")
                 return
 
@@ -150,7 +151,6 @@ class Commit:
             c = git.commit(m, "-s")
         else:
             c = git.commit(m)
-
 
         if c.return_code != 0:
             out.error(c.err)
