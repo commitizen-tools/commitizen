@@ -194,12 +194,12 @@ class Commit:
             raise DryRunExit()
 
         if commit_msg_file:
-            defaultmesaage = ""
+            default_message = ""
             with open(commit_msg_file) as f:
-                defaultmesaage = f.read()
+                default_message = f.read()
             with open(commit_msg_file, "w") as f:
                 f.write(m)
-                f.write(defaultmesaage)
+                f.write(default_message)
                 out.success("Commit message is successful!")
                 return
 

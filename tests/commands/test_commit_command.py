@@ -554,44 +554,42 @@ def test_commit_from_pre_commit_msg_hook(config, mocker, capsys):
     assert "Commit message is successful!" in out
     commit_mock.assert_not_called()
 
+
 def test_WrapStdx(mocker):
     mocker.patch("os.open")
     reader_mock = mocker.mock_open(read_data="data")
     mocker.patch("builtins.open", reader_mock, create=True)
 
-    stdin_mock_fileno=mocker.patch.object(sys.stdin, 'fileno')
+    stdin_mock_fileno = mocker.patch.object(sys.stdin, "fileno")
     stdin_mock_fileno.return_value = 0
     wrap_stdin = commands.commit.WrapStdx(sys.stdin)
 
     assert wrap_stdin.encoding == "UTF-8"
     assert wrap_stdin.read() == "data"
 
-
     writer_mock = mocker.mock_open(read_data="data")
     mocker.patch("builtins.open", writer_mock, create=True)
-    stdout_mock_fileno=mocker.patch.object(sys.stdout, 'fileno')
+    stdout_mock_fileno = mocker.patch.object(sys.stdout, "fileno")
     stdout_mock_fileno.return_value = 1
     wrap_stout = commands.commit.WrapStdx(sys.stdout)
     wrap_stout.write("data")
 
-    if sys.platform == 'linux':
-        writer_mock.assert_called_once_with("/dev/tty", 'w')
+    if sys.platform == "linux":
+        writer_mock.assert_called_once_with("/dev/tty", "w")
     else:
         pass
     writer_mock().write.assert_called_once_with("data")
 
-
     writer_mock = mocker.mock_open(read_data="data")
     mocker.patch("builtins.open", writer_mock, create=True)
-    stderr_mock_fileno=mocker.patch.object(sys.stdout, 'fileno')
+    stderr_mock_fileno = mocker.patch.object(sys.stdout, "fileno")
     stderr_mock_fileno.return_value = 2
     wrap_sterr = commands.commit.WrapStdx(sys.stderr)
 
-
     wrap_sterr.write("data")
 
-    if sys.platform == 'linux':
-        writer_mock.assert_called_once_with("/dev/tty", 'w')
+    if sys.platform == "linux":
+        writer_mock.assert_called_once_with("/dev/tty", "w")
     else:
         pass
     writer_mock().write.assert_called_once_with("data")
