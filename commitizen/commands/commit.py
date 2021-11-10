@@ -3,8 +3,7 @@ import os
 import selectors
 import sys
 import tempfile
-
-from asyncio import set_event_loop_policy, get_event_loop_policy, DefaultEventLoopPolicy
+from asyncio import DefaultEventLoopPolicy, get_event_loop_policy, set_event_loop_policy
 from io import IOBase
 
 import questionary
@@ -136,7 +135,7 @@ class Commit:
             raise DryRunExit()
 
         if commit_msg_file:
-            default_mesaage = ""
+            default_message = ""
             with open(commit_msg_file) as f:
                 default_message = f.read()
             with open(commit_msg_file, "w") as f:
