@@ -575,7 +575,7 @@ def test_WrapStdx(mocker):
     wrap_stout.write("data")
 
     if sys.platform == "linux":
-        writer_mock.assert_called_once_with("/dev/tty", "w")
+        writer_mock.assert_called_once_with("/dev/tty", "wb")
     else:
         pass
     writer_mock().write.assert_called_once_with("data")
@@ -589,7 +589,7 @@ def test_WrapStdx(mocker):
     wrap_sterr.write("data")
 
     if sys.platform == "linux":
-        writer_mock.assert_called_once_with("/dev/tty", "w")
+        writer_mock.assert_called_once_with("/dev/tty", "wb")
     else:
         pass
     writer_mock().write.assert_called_once_with("data")
