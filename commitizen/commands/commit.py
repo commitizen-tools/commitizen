@@ -3,7 +3,8 @@ import os
 import selectors
 import sys
 import tempfile
-from asyncio import DefaultEventLoopPolicy, get_event_loop_policy, set_event_loop_policy
+from asyncio import get_event_loop_policy, set_event_loop_policy
+from asyncio.unix_events import _UnixDefaultEventLoopPolicy
 from io import IOBase
 
 import questionary
@@ -22,7 +23,7 @@ from commitizen.exceptions import (
 )
 
 
-class CZEventLoopPolicy(DefaultEventLoopPolicy):
+class CZEventLoopPolicy(_UnixDefaultEventLoopPolicy):
     def get_event_loop(self):
         self.set_event_loop(self._loop_factory(selectors.SelectSelector()))
         return self._local._loop
@@ -36,7 +37,7 @@ class WrapStdx:
                 fd = os.open("/dev/tty", os.O_RDWR | os.O_NOCTTY)
                 tty = open(fd, "wb+", buffering=0)
             else:
-                tty = open("/dev/tty", "w")
+                tty = open("/dev/tty", "wb")
         else:
             fd = os.open("/dev/tty", os.O_RDWR | os.O_NOCTTY)
             if self._fileno == 0:
