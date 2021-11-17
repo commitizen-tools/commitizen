@@ -11,7 +11,7 @@ class CZEventLoopPolicy(DefaultEventLoopPolicy):  # type: ignore
         return self._local._loop
 
 
-class WrapStdioLinux:
+class WrapStdioUnix:
     def __init__(self, stdx: IOBase):
         self._fileno = stdx.fileno()
         fd = os.open("/dev/tty", os.O_RDWR | os.O_NOCTTY)
@@ -43,15 +43,15 @@ def _wrap_stdio():
 
     global backup_stdin
     backup_stdin = sys.stdin
-    sys.stdin = WrapStdioLinux(sys.stdin)
+    sys.stdin = WrapStdioUnix(sys.stdin)
 
     global backup_stdout
     backup_stdout = sys.stdout
-    sys.stdout = WrapStdioLinux(sys.stdout)
+    sys.stdout = WrapStdioUnix(sys.stdout)
 
     global backup_stderr
     backup_stdout = sys.stderr
-    sys.stderr = WrapStdioLinux(sys.stderr)
+    sys.stderr = WrapStdioUnix(sys.stderr)
 
 
 def _unwrap_stdio():
