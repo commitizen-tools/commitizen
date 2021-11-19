@@ -10,9 +10,7 @@ else:
 
 def wrap_stdio():
     _wrap_stdio()
-    return None
 
 
 def unwrap_stdio():
     _unwrap_stdio()
-    return None
