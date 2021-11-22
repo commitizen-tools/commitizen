@@ -5,15 +5,11 @@ if sys.platform != "win32" and sys.platform != "linux":  # pragma: no cover
     import selectors
     from asyncio import (
         DefaultEventLoopPolicy,
+        SelectorEventLoop,
         get_event_loop_policy,
         set_event_loop_policy,
     )
     from io import IOBase
-
-    class CZEventLoopPolicy(DefaultEventLoopPolicy):  # pragma: no cover
-        def get_event_loop(self):
-            self.set_event_loop(self._loop_factory(selectors.SelectSelector()))
-            return self._local._loop
 
     class WrapStdioUnix:
         def __init__(self, stdx: IOBase):
@@ -33,6 +29,7 @@ if sys.platform != "win32" and sys.platform != "linux":  # pragma: no cover
         def __del__(self):
             self.tty.close()
 
+    # backup_event_loop = None
     backup_event_loop_policy = None
     backup_stdin = None
     backup_stdout = None
@@ -41,7 +38,10 @@ if sys.platform != "win32" and sys.platform != "linux":  # pragma: no cover
     def _wrap_stdio():
         global backup_event_loop_policy
         backup_event_loop_policy = get_event_loop_policy()
-        set_event_loop_policy(CZEventLoopPolicy())
+
+        event_loop = DefaultEventLoopPolicy()
+        event_loop.set_event_loop(SelectorEventLoop(selectors.SelectSelector()))
+        set_event_loop_policy(event_loop)
 
         global backup_stdin
         backup_stdin = sys.stdin
