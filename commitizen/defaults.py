@@ -1,9 +1,9 @@
 from collections import OrderedDict
-from typing import List, Optional, TypedDict
+from typing import Any, List, Optional, Tuple, TypedDict
 
 
 # Type
-class Settings(TypedDict):
+class Settings(TypedDict, total=False):
     name: str
     version: Optional[str]
     version_files: List[str]
@@ -14,6 +14,8 @@ class Settings(TypedDict):
     changelog_start_rev: Optional[str]
     update_changelog_on_bump: bool
     use_shortcuts: bool
+    style: Optional[List[Tuple[str, str]]]
+    customize: Any
 
 
 name: str = "cz_conventional_commits"

@@ -1,16 +1,16 @@
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Optional, Union
 
-from commitizen.defaults import DEFAULT_SETTINGS
+from commitizen.defaults import DEFAULT_SETTINGS, Settings
 
 
 class BaseConfig:
     def __init__(self):
-        self._settings: Dict[str, Any] = DEFAULT_SETTINGS.copy()
+        self._settings: Settings = DEFAULT_SETTINGS.copy()
         self._path: Optional[Path] = None
 
     @property
-    def settings(self) -> Dict[str, Any]:
+    def settings(self) -> Settings:
         return self._settings
 
     @property
@@ -25,7 +25,7 @@ class BaseConfig:
         """
         raise NotImplementedError()
 
-    def update(self, data: dict) -> None:
+    def update(self, data: Settings) -> None:
         self._settings.update(data)
 
     def add_path(self, path: Union[str, Path]) -> None:
