@@ -66,13 +66,13 @@ def get_commit_tag(commit: GitCommit, tags: List[GitTag]) -> Optional[GitTag]:
 
 
 def generate_tree_from_commits(
-    commits: List[GitCommit],
-    tags: List[GitTag],
-    commit_parser: str,
-    changelog_pattern: str = defaults.bump_pattern,
-    unreleased_version: Optional[str] = None,
-    change_type_map: Optional[Dict[str, str]] = None,
-    changelog_message_builder_hook: Optional[Callable] = None,
+        commits: List[GitCommit],
+        tags: List[GitTag],
+        commit_parser: str,
+        changelog_pattern: str = defaults.bump_pattern,
+        unreleased_version: Optional[str] = None,
+        change_type_map: Optional[Dict[str, str]] = None,
+        changelog_message_builder_hook: Optional[Callable] = None,
 ) -> Iterable[Dict]:
     pat = re.compile(changelog_pattern)
     map_pat = re.compile(commit_parser, re.MULTILINE)
@@ -169,13 +169,25 @@ def render_changelog(tree: Iterable) -> str:
     return changelog
 
 
-def parse_version_from_markdown(value: str) -> Optional[str]:
+def parse_version_from_markdown(value: str, pr_filter: str) -> Optional[str]:
+    """
+    :param pr_filter: pass to only find a certain type of version, or None for any
+    version type. Example: when there is 1.0.0 and 2.0.0b1 and you pass "" 1.0.0 will be returned
+    as it is the last release.
+    """
     if not value.startswith("#"):
+        return None
+    if not value.__contains__(pr_filter):
         return None
     m = re.search(defaults.version_parser, value)
     if not m:
         return None
-    return m.groupdict().get("version")
+    version = m.groupdict().get("version")
+    # when pr_filter is provided but empty
+    is_stable = re.match(defaults.stable_parser, version)
+    if not is_stable and pr_filter == "":
+        return None  # because the version is a pre-release but a "full" release is expected
+    return version
 
 
 def parse_title_type_of_line(value: str) -> Optional[str]:
@@ -186,7 +198,7 @@ def parse_title_type_of_line(value: str) -> Optional[str]:
     return m.groupdict().get("title")
 
 
-def get_metadata(filepath: str) -> Dict:
+def get_metadata(filepath: str, pr_filter: str) -> Dict:
     unreleased_start: Optional[int] = None
     unreleased_end: Optional[int] = None
     unreleased_title: Optional[str] = None
@@ -213,13 +225,13 @@ def get_metadata(filepath: str) -> Dict:
                 unreleased_title = unreleased
                 continue
             elif (
-                isinstance(unreleased_title, str)
-                and parse_title_type_of_line(line) == unreleased_title
+                    isinstance(unreleased_title, str)
+                    and parse_title_type_of_line(line) == unreleased_title
             ):
                 unreleased_end = index
 
             # Try to find the latest release done
-            version = parse_version_from_markdown(line)
+            version = parse_version_from_markdown(line, pr_filter)
             if version:
                 latest_version = version
                 latest_version_position = index
@@ -259,10 +271,10 @@ def incremental_build(new_content: str, lines: List, metadata: Dict) -> List:
         elif index == unreleased_end:
             skip = False
             if (
-                latest_version_position is None
-                or isinstance(latest_version_position, int)
-                and isinstance(unreleased_end, int)
-                and latest_version_position > unreleased_end
+                    latest_version_position is None
+                    or isinstance(latest_version_position, int)
+                    and isinstance(unreleased_end, int)
+                    and latest_version_position > unreleased_end
             ):
                 continue
 
@@ -270,10 +282,9 @@ def incremental_build(new_content: str, lines: List, metadata: Dict) -> List:
             continue
 
         if (
-            isinstance(latest_version_position, int)
-            and index == latest_version_position
+                isinstance(latest_version_position, int)
+                and index == latest_version_position
         ):
-
             output_lines.append(new_content)
             output_lines.append("\n")
 

@@ -110,6 +110,19 @@ data = {
                         "help": "accept automatically questions done",
                     },
                     {
+                        "name": "--separate-pre-changelog",
+                        "action": "store_true",
+                        "default": False,
+                        "help": "use a separate changelog for each type of prerelease"
+                    },
+                    {
+                        "name": "--separate-pre-releases",
+                        "action": "store_true",
+                        "default": False,
+                        "help": "changes in the changelog will always relate to the latest "
+                                "release of the same pre-release"
+                    },
+                    {
                         "name": "--tag-format",
                         "help": (
                             "the format used to tag the commit and read it, "
@@ -260,7 +273,7 @@ data = {
                         "exclusive_group": "group1",
                     },
                 ],
-            },
+            }
         ],
     },
 }

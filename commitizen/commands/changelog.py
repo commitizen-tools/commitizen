@@ -22,7 +22,7 @@ def similar(a, b):
 class Changelog:
     """Generate a changelog based on the commit history."""
 
-    def __init__(self, config: BaseConfig, args):
+    def __init__(self, config: BaseConfig, args: dict):
         if not git.is_git_project():
             raise NotAGitProjectError()
 
@@ -40,6 +40,12 @@ class Changelog:
         )
         self.dry_run = args["dry_run"]
         self.unreleased_version = args["unreleased_version"]
+        self.separate_pre_releases = args["separate_pre_releases"]
+        self.separate_pre_changelog = args["separate_pre_changelog"]
+        self.pre_release = args["prerelease"]
+        if self.separate_pre_changelog:
+            self.separate_pre_releases = True
+            self.file_name = f"{self.file_name}-${self.pre_release}"
         self.change_type_map = (
             self.config.settings.get("change_type_map") or self.cz.change_type_map
         )
@@ -94,7 +100,10 @@ class Changelog:
             tags = []
 
         if self.incremental:
-            changelog_meta = changelog.get_metadata(self.file_name)
+            pr_filter = None
+            if self.separate_pre_releases:
+                pr_filter = self.pre_release
+            changelog_meta = changelog.get_metadata(self.file_name, pr_filter)
             latest_version = changelog_meta.get("latest_version")
             if latest_version:
                 start_rev = self._find_incremental_rev(latest_version, tags)
