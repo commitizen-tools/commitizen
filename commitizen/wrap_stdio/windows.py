@@ -15,7 +15,7 @@ if sys.platform == "win32":  # pragma: no cover
             self._fileno = stdx.fileno()
             if self._fileno == 0:
                 fd = os.open("CONIN$", os.O_RDWR | os.O_BINARY)
-                tty = open(fd, "r")
+                tty = open(fd)
                 handle = HANDLE(msvcrt.get_osfhandle(fd))  # noqa
                 windll.kernel32.SetStdHandle(STD_INPUT_HANDLE, handle)
             elif self._fileno == 1:

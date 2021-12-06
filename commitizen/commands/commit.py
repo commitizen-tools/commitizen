@@ -5,6 +5,7 @@ import os
 import shutil
 import subprocess
 import tempfile
+from os.path import exists
 
 import questionary
 
@@ -93,6 +94,17 @@ class Commit:
         file.unlink()
         return message
 
+    def is_blank_commit_file(self, filename) -> bool:
+        if not exists(filename):
+            return True
+        with open(filename, "tr") as f:
+            for x in f:
+                if len(x) == 0 or x[0] == "#":
+                    continue
+                elif x[0] != "\r" and x[0] != "\n":
+                    return False
+        return True
+
     def __call__(self):
         extra_args: str = self.arguments.get("extra_cli_args", "")
 
@@ -108,6 +120,8 @@ class Commit:
 
         commit_msg_file: str = self.arguments.get("commit_msg_file")
         if commit_msg_file:
+            if not self.is_blank_commit_file(commit_msg_file):
+                return
             wrap_stdio()
 
         if git.is_staging_clean() and not (dry_run or allow_empty):

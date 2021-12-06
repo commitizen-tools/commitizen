@@ -1,21 +1,19 @@
 import sys
 
-from commitizen import wrap_stdio, wrap_stdio_linux, wrap_stdio_unix, wrap_stdio_windows
+from commitizen import wrap_stdio
 
-
-def test_warp_stdio_exists():
-    assert hasattr(wrap_stdio_windows, "sys")
-    assert hasattr(wrap_stdio_linux, "sys")
-    assert hasattr(wrap_stdio_unix, "sys")
+# def test_warp_stdio_exists():
+#     assert hasattr(wrap_stdio_windows, "sys")
+#     assert hasattr(wrap_stdio_linux, "sys")
+#     assert hasattr(wrap_stdio_unix, "sys")
 
 
 if sys.platform == "win32":  # pragma: no cover
     pass
 elif sys.platform == "linux":
-    from commitizen.wrap_stdio_linux import WrapStdinLinux, WrapStdoutLinux
+    from commitizen.wrap_stdio.linux import WrapStdinLinux, WrapStdoutLinux
 
     def test_wrap_stdin_linux(mocker):
-
         tmp_stdin = sys.stdin
 
         mocker.patch("os.open")
@@ -36,7 +34,6 @@ elif sys.platform == "linux":
         assert sys.stdin == tmp_stdin
 
     def test_wrap_stdout_linux(mocker):
-
         tmp_stdout = sys.stdout
         tmp_stderr = sys.stderr
 
