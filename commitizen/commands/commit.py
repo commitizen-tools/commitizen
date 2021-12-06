@@ -1,6 +1,7 @@
 import contextlib
 import os
 import tempfile
+from os.path import exists
 
 import questionary
 
@@ -61,11 +62,24 @@ class Commit:
             raise NoAnswersError()
         return cz.message(answers)
 
+    def is_blank_commit_file(self, filename) -> bool:
+        if not exists(filename):
+            return True
+        with open(filename, "tr") as f:
+            for x in f:
+                if len(x) == 0 or x[0] == "#":
+                    continue
+                elif x[0] != "\r" and x[0] != "\n":
+                    return False
+        return True
+
     def __call__(self):
         dry_run: bool = self.arguments.get("dry_run")
 
         commit_msg_file: str = self.arguments.get("commit_msg_file")
         if commit_msg_file:
+            if not self.is_blank_commit_file(commit_msg_file):
+                return
             wrap_stdio()
 
         if git.is_staging_clean() and not dry_run:
