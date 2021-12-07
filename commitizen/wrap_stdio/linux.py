@@ -3,8 +3,6 @@ import sys
 if sys.platform == "linux":  # pragma: no cover
     import os
 
-    # from io import IOBase
-
     class WrapStdinLinux:
         def __init__(self):
             fd = os.open("/dev/tty", os.O_RDWR | os.O_NOCTTY)

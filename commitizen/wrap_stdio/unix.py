@@ -26,10 +26,6 @@ if sys.platform != "win32" and sys.platform != "linux":  # pragma: no cover
                 return "UTF-8"
             return getattr(self.tty, key)
 
-        def __del__(self):
-            self.tty.close()
-
-    # backup_event_loop = None
     backup_event_loop_policy = None
     backup_stdin = None
     backup_stdout = None
