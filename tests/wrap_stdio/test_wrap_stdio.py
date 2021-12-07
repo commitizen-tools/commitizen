@@ -2,12 +2,6 @@ import sys
 
 from commitizen import wrap_stdio
 
-# def test_warp_stdio_exists():
-#     assert hasattr(wrap_stdio_windows, "sys")
-#     assert hasattr(wrap_stdio_linux, "sys")
-#     assert hasattr(wrap_stdio_unix, "sys")
-
-
 if sys.platform == "win32":  # pragma: no cover
     pass
 elif sys.platform == "linux":
@@ -54,7 +48,6 @@ elif sys.platform == "linux":
         readerwriter_mock().write.assert_called_with("stderr")
 
         wrap_stdio.unwrap_stdio()
-
         assert sys.stdout == tmp_stdout
         assert sys.stderr == tmp_stderr
 
