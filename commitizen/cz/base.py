@@ -5,11 +5,12 @@ from prompt_toolkit.styles import Style, merge_styles
 
 from commitizen import git
 from commitizen.config.base_config import BaseConfig
+from commitizen.defaults import Questions
 
 
 class BaseCommitizen(metaclass=ABCMeta):
     bump_pattern: Optional[str] = None
-    bump_map: Optional[dict] = None
+    bump_map: Optional[Dict[str, str]] = None
     default_style_config: List[Tuple[str, str]] = [
         ("qmark", "fg:#ff9d00 bold"),
         ("question", "bold"),
@@ -45,7 +46,7 @@ class BaseCommitizen(metaclass=ABCMeta):
             self.config.settings.update({"style": BaseCommitizen.default_style_config})
 
     @abstractmethod
-    def questions(self) -> list:
+    def questions(self) -> Questions:
         """Questions regarding the commit message."""
 
     @abstractmethod

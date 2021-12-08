@@ -1,8 +1,35 @@
-from collections import OrderedDict
-from typing import Any, List, Optional, Tuple, TypedDict
-
+import collections
+import pathlib
+from typing import (
+    Any,
+    Iterable,
+    List,
+    MutableMapping,
+    Optional,
+    OrderedDict,
+    Tuple,
+    TypedDict,
+    Union,
+)
 
 # Type
+Questions = Iterable[MutableMapping[str, Any]]
+
+
+class CzSettings(TypedDict, total=False):
+    bump_pattern: str
+    bump_map: OrderedDict[str, str]
+    change_type_order: List[str]
+
+    questions: Questions
+    example: Optional[str]
+    schema_pattern: Optional[str]
+    schema: Optional[str]
+    info_path: Union[str, pathlib.Path]
+    info: str
+    message_template: str
+
+
 class Settings(TypedDict, total=False):
     name: str
     version: Optional[str]
@@ -15,7 +42,7 @@ class Settings(TypedDict, total=False):
     update_changelog_on_bump: bool
     use_shortcuts: bool
     style: Optional[List[Tuple[str, str]]]
-    customize: Any
+    customize: CzSettings
 
 
 name: str = "cz_conventional_commits"
@@ -46,7 +73,7 @@ MINOR = "MINOR"
 PATCH = "PATCH"
 
 bump_pattern = r"^(BREAKING[\-\ ]CHANGE|feat|fix|refactor|perf)(\(.+\))?(!)?"
-bump_map = OrderedDict(
+bump_map = collections.OrderedDict(
     (
         (r"^.+!$", MAJOR),
         (r"^BREAKING[\-\ ]CHANGE", MAJOR),
@@ -56,9 +83,10 @@ bump_map = OrderedDict(
         (r"^perf", PATCH),
     )
 )
+change_type_order = ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]
+
 bump_message = "bump: version $current_version → $new_version"
 
-change_type_order = ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]
 
 commit_parser = r"^(?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?:\s(?P<message>.*)?"  # noqa
 version_parser = r"(?P<version>([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?(\w+)?)"

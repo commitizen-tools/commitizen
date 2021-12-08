@@ -1,11 +1,11 @@
 import os
 import re
 from collections import OrderedDict
-from typing import Any, Dict, List
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.utils import multiple_line_breaker, required_validator
+from commitizen.defaults import Questions
 
 __all__ = ["ConventionalCommitsCz"]
 
@@ -49,8 +49,8 @@ class ConventionalCommitsCz(BaseCommitizen):
         "perf": "Perf",
     }
 
-    def questions(self) -> List[Dict[str, Any]]:
-        questions: List[Dict[str, Any]] = [
+    def questions(self) -> Questions:
+        questions: Questions = [
             {
                 "type": "list",
                 "name": "prefix",
