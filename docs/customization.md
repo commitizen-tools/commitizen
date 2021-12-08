@@ -140,7 +140,7 @@ commitizen:
 
 | Parameter           | Type   | Default | Description                                                                                                                                                                                                                      |
 | ------------------- | ------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `questions`         | `Questions` | `None`  | Questions regarding the commit message. Detailed below. The type `Questions` is an alias to `Iterable[MutableMapping[str, Any]]` which is definied in `commitizen.defaults`. |
+| `questions`         | `Questions` | `None`  | Questions regarding the commit message. Detailed below. The type `Questions` is an alias to `Iterable[MutableMapping[str, Any]]` which is definied in `commitizen.defaults`. It expects a list of dictionaries. |
 | `message_template`  | `str`  | `None`  | The template for generating message from the given answers. `message_template` should either follow [Jinja2][jinja2] formatting specification, and all the variables in this template should be defined in `name` in `questions` |
 | `example`           | `str`  | `None`  | (OPTIONAL) Provide an example to help understand the style. Used by `cz example`.                                                                                                                                                |
 | `schema`            | `str`  | `None`  | (OPTIONAL) Show the schema used. Used by `cz schema`.                                                                                                                                                                            |
@@ -202,6 +202,7 @@ from commitizen.defaults import Questions
 
 class JiraCz(BaseCommitizen):
     # Questions = Iterable[MutableMapping[str, Any]]
+    # It expect a list with dictionaries.
     def questions(self) -> Questions:
         """Questions regarding the commit message."""
         questions = [
