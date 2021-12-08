@@ -1,13 +1,13 @@
 import os
-from typing import Any, Dict, List
 
 from commitizen.cz.base import BaseCommitizen
+from commitizen.defaults import Questions
 
 __all__ = ["JiraSmartCz"]
 
 
 class JiraSmartCz(BaseCommitizen):
-    def questions(self) -> List[Dict[str, Any]]:
+    def questions(self) -> Questions:
         questions = [
             {
                 "type": "input",

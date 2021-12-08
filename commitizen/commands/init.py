@@ -49,7 +49,7 @@ class Init:
             out.line(f"Config file {self.config.path} already exists")
 
     def _ask_config_path(self) -> str:
-        name = questionary.select(
+        name: str = questionary.select(
             "Please choose a supported config file: (default: pyproject.toml)",
             choices=config_files,
             default="pyproject.toml",
@@ -58,7 +58,7 @@ class Init:
         return name
 
     def _ask_name(self) -> str:
-        name = questionary.select(
+        name: str = questionary.select(
             "Please choose a cz (commit rule): (default: cz_conventional_commits)",
             choices=list(registry.keys()),
             default="cz_conventional_commits",

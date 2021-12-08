@@ -3,11 +3,12 @@ try:
 except ImportError:
     from string import Template  # type: ignore
 
-from typing import Any, Dict, List, Optional
+from typing import Optional
 
 from commitizen import defaults
 from commitizen.config import BaseConfig
 from commitizen.cz.base import BaseCommitizen
+from commitizen.defaults import Questions
 from commitizen.exceptions import MissingCzCustomizeConfigError
 
 __all__ = ["CustomizeCommitsCz"]
@@ -37,11 +38,11 @@ class CustomizeCommitsCz(BaseCommitizen):
         if custom_change_type_order:
             self.change_type_order = custom_change_type_order
 
-    def questions(self) -> List[Dict[str, Any]]:
-        return self.custom_settings.get("questions")
+    def questions(self) -> Questions:
+        return self.custom_settings.get("questions", [{}])
 
     def message(self, answers: dict) -> str:
-        message_template = Template(self.custom_settings.get("message_template"))
+        message_template = Template(self.custom_settings.get("message_template", ""))
         if getattr(Template, "substitute", None):
             return message_template.substitute(**answers)  # type: ignore
         else:

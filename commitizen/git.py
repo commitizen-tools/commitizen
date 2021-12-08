@@ -14,7 +14,7 @@ class GitObject:
     def __eq__(self, other) -> bool:
         if not hasattr(other, "rev"):
             return False
-        return self.rev == other.rev
+        return self.rev == other.rev  # type: ignore
 
 
 class GitCommit(GitObject):
