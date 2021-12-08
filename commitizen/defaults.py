@@ -8,9 +8,10 @@ from typing import (
     Optional,
     OrderedDict,
     Tuple,
-    TypedDict,
     Union,
 )
+
+from typing_extensions import TypedDict
 
 # Type
 Questions = Iterable[MutableMapping[str, Any]]
