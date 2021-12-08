@@ -1,15 +1,6 @@
-import collections
 import pathlib
-from typing import (
-    Any,
-    Iterable,
-    List,
-    MutableMapping,
-    Optional,
-    OrderedDict,
-    Tuple,
-    Union,
-)
+from collections import OrderedDict
+from typing import Any, Iterable, List, MutableMapping, Optional, Tuple, Union
 
 from typing_extensions import TypedDict
 
@@ -19,7 +10,7 @@ Questions = Iterable[MutableMapping[str, Any]]
 
 class CzSettings(TypedDict, total=False):
     bump_pattern: str
-    bump_map: OrderedDict[str, str]
+    bump_map: "OrderedDict[str, str]"
     change_type_order: List[str]
 
     questions: Questions
@@ -74,7 +65,7 @@ MINOR = "MINOR"
 PATCH = "PATCH"
 
 bump_pattern = r"^(BREAKING[\-\ ]CHANGE|feat|fix|refactor|perf)(\(.+\))?(!)?"
-bump_map = collections.OrderedDict(
+bump_map = OrderedDict(
     (
         (r"^.+!$", MAJOR),
         (r"^BREAKING[\-\ ]CHANGE", MAJOR),
