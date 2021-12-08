@@ -140,7 +140,7 @@ commitizen:
 
 | Parameter           | Type   | Default | Description                                                                                                                                                                                                                      |
 | ------------------- | ------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `questions`         | `dict` | `None`  | Questions regarding the commit message. Detailed below.                                                                                                                                                                          |
+| `questions`         | `Questions` | `None`  | Questions regarding the commit message. Detailed below. The type `Questions` is an alias to `Iterable[MutableMapping[str, Any]]` which is definied in `commitizen.defaults`. |
 | `message_template`  | `str`  | `None`  | The template for generating message from the given answers. `message_template` should either follow [Jinja2][jinja2] formatting specification, and all the variables in this template should be defined in `name` in `questions` |
 | `example`           | `str`  | `None`  | (OPTIONAL) Provide an example to help understand the style. Used by `cz example`.                                                                                                                                                |
 | `schema`            | `str`  | `None`  | (OPTIONAL) Show the schema used. Used by `cz schema`.                                                                                                                                                                            |
@@ -152,6 +152,7 @@ commitizen:
 | `change_type_order` | `str`  | `None`  | (OPTIONAL) List of strings used to order the Changelog. All other types will be sorted alphabetically. Default is `["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]`                                                       |
 
 [jinja2]: https://jinja.palletsprojects.com/en/2.10.x/
+
 #### Detailed `questions` content
 
 | Parameter | Type   | Default | Description                                                                                                                                                                                     |
@@ -162,7 +163,6 @@ commitizen:
 | `choices` | `list` | `None`  | (OPTIONAL) The choices when `type = list`. Either use a list of values or a list of dictionaries with `name` and `value` keys. Keyboard shortcuts can be defined via `key`. See examples above. |
 | `default` | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                                                                 |
 | `filter`  | `str`  | `None`  | (Optional) Validator for user's answer. **(Work in Progress)**                                                                                                                                  |
-
 [different-question-types]: https://github.com/tmbo/questionary#different-question-types
 
 #### Shortcut keys
@@ -194,15 +194,15 @@ See [commitizen_cz_template](https://github.com/commitizen-tools/commitizen_cz_t
 
 Create a file starting with `cz_`, for example `cz_jira.py`. This prefix is used to detect the plug-in. Same method [flask uses]
 
-Inherit from `BaseCommitizen`, and you must define `questions` and
-`message`. The others are optional.
+Inherit from `BaseCommitizen`, and you must define `questions` and `message`. The others are optional.
 
 ```python
 from commitizen.cz.base import BaseCommitizen
+from commitizen.defaults import Questions
 
 class JiraCz(BaseCommitizen):
-
-    def questions(self) -> list:
+    # Questions = Iterable[MutableMapping[str, Any]]
+    def questions(self) -> Questions:
         """Questions regarding the commit message."""
         questions = [
             {
