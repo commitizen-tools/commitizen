@@ -144,9 +144,18 @@ def test_info(config):
 @pytest.mark.parametrize(
     ("commit_message", "expected_message"),
     [
-        ("test(test_scope): this is test msg", "this is test msg",),
-        ("test(test_scope)!: this is test msg", "this is test msg",),
-        ("test!(test_scope): this is test msg", "",),
+        (
+            "test(test_scope): this is test msg",
+            "this is test msg",
+        ),
+        (
+            "test(test_scope)!: this is test msg",
+            "this is test msg",
+        ),
+        (
+            "test!(test_scope): this is test msg",
+            "",
+        ),
     ],
 )
 def test_process_commit(commit_message, expected_message, config):

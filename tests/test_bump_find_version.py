@@ -82,16 +82,20 @@ def test_generate_version(test_input, expected):
 
 
 @pytest.mark.parametrize(
-    "test_input,expected", itertools.chain(local_versions),
+    "test_input,expected",
+    itertools.chain(local_versions),
 )
 def test_generate_version_local(test_input, expected):
     current_version = test_input[0]
     increment = test_input[1]
     prerelease = test_input[2]
     is_local_version = True
-    assert generate_version(
-        current_version,
-        increment=increment,
-        prerelease=prerelease,
-        is_local_version=is_local_version,
-    ) == Version(expected)
+    assert (
+        generate_version(
+            current_version,
+            increment=increment,
+            prerelease=prerelease,
+            is_local_version=is_local_version,
+        )
+        == Version(expected)
+    )

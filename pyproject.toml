@@ -44,7 +44,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6.1"
+python = "^3.6.2"
 questionary = "^1.4.0"
 decli = "^0.5.2"
 colorama = "^0.4.1"
@@ -57,7 +57,7 @@ argcomplete = "^1.12.1"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.2"
-black = "^19.3b0"
+black = "^21.12b0"
 pytest = "^5.0"
 flake8 = "^3.6"
 pytest-cov = "^2.6"
