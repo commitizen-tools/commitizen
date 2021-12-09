@@ -202,7 +202,7 @@ from commitizen.defaults import Questions
 
 class JiraCz(BaseCommitizen):
     # Questions = Iterable[MutableMapping[str, Any]]
-    # It expect a list with dictionaries.
+    # It expects a list with dictionaries.
     def questions(self) -> Questions:
         """Questions regarding the commit message."""
         questions = [
