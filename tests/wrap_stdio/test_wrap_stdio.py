@@ -51,6 +51,5 @@ elif sys.platform == "linux":
         assert sys.stdout == tmp_stdout
         assert sys.stderr == tmp_stderr
 
-
 else:
     pass
