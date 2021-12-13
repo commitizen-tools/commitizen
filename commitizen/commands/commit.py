@@ -65,8 +65,8 @@ class Commit:
     def is_blank_commit_file(self, filename) -> bool:
         if not exists(filename):
             return True
-        with open(filename, "tr") as f:
-            for x in f:
+        with open(filename, "r") as f:
+            for x in f.readlines():
                 if len(x) == 0 or x[0] == "#":
                     continue
                 elif x[0] != "\r" and x[0] != "\n":

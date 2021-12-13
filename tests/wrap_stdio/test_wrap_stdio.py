@@ -2,6 +2,13 @@ import sys
 
 from commitizen import wrap_stdio
 
+
+def test_import_sub_files():
+    import commitizen.wrap_stdio.linux  # noqa: F401
+    import commitizen.wrap_stdio.unix  # noqa: F401
+    import commitizen.wrap_stdio.windows  # noqa: F401
+
+
 if sys.platform == "win32":  # pragma: no cover
     pass
 elif sys.platform == "linux":
