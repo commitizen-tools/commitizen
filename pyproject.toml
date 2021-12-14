@@ -54,27 +54,31 @@ tomlkit = ">=0.5.3,<1.0.0"
 jinja2 = ">=2.10.3"
 pyyaml = ">=3.08"
 argcomplete = "^1.12.1"
+typing-extensions = "^4.0.1"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.2"
-black = "^21.12b0"
+# test
 pytest = "^5.0"
-flake8 = "^3.6"
 pytest-cov = "^2.6"
 pytest-mock = "^2.0"
 codecov = "^2.0"
-mypy = "0.910"
-mkdocs = "^1.0"
-mkdocs-material = "^4.1"
-isort = "^5.7.0"
 freezegun = "^0.3.15"
-pydocstyle = "^5.0.2"
-pre-commit = "^2.6.0"
 pytest-regressions = "^2.2.0"
 pytest-freezegun = "^0.4.2"
+# code formatter
+black = "^21.12b0"
+isort = "^5.7.0"
+# linter
+flake8 = "^3.6"
+pre-commit = "^2.6.0"
+mypy = "0.910"
 types-PyYAML = "^5.4.3"
 types-termcolor = "^0.1.1"
-typing-extensions = "^4.0.1"
+# documentation
+mkdocs = "^1.0"
+mkdocs-material = "^4.1"
+pydocstyle = "^5.0.2"
 
 [tool.poetry.scripts]
 cz = "commitizen.cli:main"
