@@ -74,6 +74,7 @@ pytest-regressions = "^2.2.0"
 pytest-freezegun = "^0.4.2"
 types-PyYAML = "^5.4.3"
 types-termcolor = "^0.1.1"
+typing-extensions = "^4.0.1"
 
 [tool.poetry.scripts]
 cz = "commitizen.cli:main"
