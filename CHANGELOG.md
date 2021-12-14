@@ -1,4 +1,17 @@
 
+## v2.20.1 (2021-12-14)
+
+### Refactor
+
+- **conventional_commits**: remove duplicate patterns and import from defaults
+- **config**: add CzSettings and Questions TypedDict
+- **defaults**: add Settings typeddict
+- **defaults**: move bump_map, bump_pattern, commit_parser from defaults to ConventionalCommitsCz
+
+### Fix
+
+- import TypedDict from type_extensions for backward compatibility
+
 ## v2.20.0 (2021-10-06)
 
 ### Feat
