@@ -1,4 +1,10 @@
 
+## v2.20.2 (2021-12-14)
+
+### Fix
+
+- **poetry**: add typing-exteions to dev
+
 ## v2.20.1 (2021-12-14)
 
 ### Refactor
