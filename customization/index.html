@@ -11,7 +11,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.0.5">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.1">
     
     
       
@@ -19,10 +19,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.a617204b.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.23b6d78a.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.9204c3b2.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.e6a45f82.min.css">
         
       
     
@@ -868,9 +868,9 @@ We have two different ways to do so.</p>
 <tbody>
 <tr>
 <td><code>questions</code></td>
-<td><code>dict</code></td>
+<td><code>Questions</code></td>
 <td><code>None</code></td>
-<td>Questions regarding the commit message. Detailed below.</td>
+<td>Questions regarding the commit message. Detailed below. The type <code>Questions</code> is an alias to <code>Iterable[MutableMapping[str, Any]]</code> which is definied in <code>commitizen.defaults</code>. It expects a list of dictionaries.</td>
 </tr>
 <tr>
 <td><code>message_template</code></td>
@@ -943,7 +943,7 @@ We have two different ways to do so.</p>
 <td><code>type</code></td>
 <td><code>str</code></td>
 <td><code>None</code></td>
-<td>The type of questions. Valid type: <code>list</code>, <code>input</code> and etc. <a href="https://github.com/tmbo/questionary#different-question-types">See More</a></td>
+<td>The type of questions. Valid type: <code>list</code>, <code>input</code> and etc. [See More][different-question-types]</td>
 </tr>
 <tr>
 <td><code>name</code></td>
@@ -975,6 +975,12 @@ We have two different ways to do so.</p>
 <td><code>None</code></td>
 <td>(Optional) Validator for user's answer. <strong>(Work in Progress)</strong></td>
 </tr>
+<tr>
+<td>[different-question-types]: https://github.com/tmbo/questionary#different-question-types</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <h4 id="shortcut-keys">Shortcut keys</h4>
@@ -997,13 +1003,14 @@ To specify keyboard shortcuts for your custom choices, provide the shortcut usin
 <p>See <a href="https://github.com/commitizen-tools/commitizen_cz_template">commitizen_cz_template</a> for detail.</p>
 <h3 id="custom-commit-rules">Custom commit rules</h3>
 <p>Create a file starting with <code>cz_</code>, for example <code>cz_jira.py</code>. This prefix is used to detect the plug-in. Same method <a href="http://flask.pocoo.org/docs/0.12/extensiondev/">flask uses</a></p>
-<p>Inherit from <code>BaseCommitizen</code>, and you must define <code>questions</code> and
-<code>message</code>. The others are optional.</p>
+<p>Inherit from <code>BaseCommitizen</code>, and you must define <code>questions</code> and <code>message</code>. The others are optional.</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">commitizen.cz.base</span> <span class="kn">import</span> <span class="n">BaseCommitizen</span>
+<span class="kn">from</span> <span class="nn">commitizen.defaults</span> <span class="kn">import</span> <span class="n">Questions</span>
 
 <span class="k">class</span> <span class="nc">JiraCz</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
-
-    <span class="k">def</span> <span class="nf">questions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="c1"># Questions = Iterable[MutableMapping[str, Any]]</span>
+    <span class="c1"># It expects a list with dictionaries.</span>
+    <span class="k">def</span> <span class="nf">questions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Questions</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Questions regarding the commit message.&quot;&quot;&quot;</span>
         <span class="n">questions</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">{</span>
@@ -1264,10 +1271,10 @@ You can customize it of course, and this are the variables you need to add to yo
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.cefbb252.min.js"}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.c7dec7e7.min.js"}</script>
     
     
-      <script src="../assets/javascripts/bundle.a5f8ea78.min.js"></script>
+      <script src="../assets/javascripts/bundle.da79ceb7.min.js"></script>
       
     
   </body>
