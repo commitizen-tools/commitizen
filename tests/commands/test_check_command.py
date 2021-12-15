@@ -275,3 +275,23 @@ def test_check_command_with_pipe_message_and_failed(mocker):
     with pytest.raises(InvalidCommitMessageError) as excinfo:
         cli.main()
     assert "commit validation: failed!" in str(excinfo.value)
+
+
+def test_check_command_with_comment_in_messege_file(mocker, capsys):
+    testargs = ["cz", "check", "--commit-msg-file", "some_file"]
+    mocker.patch.object(sys, "argv", testargs)
+    mocker.patch(
+        "commitizen.commands.check.open",
+        mocker.mock_open(
+            read_data="# <type>: (If applied, this commit will...) <subject>\n"
+            "# |<---- Try to Limit to a Max of 50 char ---->|\n"
+            "ci: add commitizen pre-commit hook\n"
+            "\n"
+            "# Explain why this change is being made\n"
+            "# |<---- Try To Limit Each Line to a Max Of 72 Char ---->|\n"
+            "This pre-commit hook will check our commits automatically."
+        ),
+    )
+    cli.main()
+    out, _ = capsys.readouterr()
+    assert "Commit validation: successful!" in out
