@@ -81,14 +81,22 @@ class Check:
         # Get commit message from file (--commit-msg-file)
         if self.commit_msg_file:
             with open(self.commit_msg_file, "r", encoding="utf-8") as commit_file:
-                commit_title = commit_file.readline()
-                commit_body = commit_file.read()
+                msg = commit_file.read()
+            msg = self._filter_comments(msg)
+            msg = msg.lstrip("\n")
+            commit_title = msg.split("\n")[0]
+            commit_body = "\n".join(msg.split("\n")[1:])
             return [git.GitCommit(rev="", title=commit_title, body=commit_body)]
         elif self.commit_msg:
+            self.commit_msg = self._filter_comments(self.commit_msg)
             return [git.GitCommit(rev="", title="", body=self.commit_msg)]
 
         # Get commit messages from git log (--rev-range)
         return git.get_commits(end=self.rev_range)
+
+    def _filter_comments(self, msg: str) -> str:
+        lines = [line for line in msg.split('\n') if not line.startswith('#')]
+        return "\n".join(lines)
 
     @staticmethod
     def validate_commit_message(commit_msg: str, pattern: str) -> bool:
