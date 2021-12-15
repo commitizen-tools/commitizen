@@ -95,7 +95,7 @@ class Check:
         return git.get_commits(end=self.rev_range)
 
     def _filter_comments(self, msg: str) -> str:
-        lines = [line for line in msg.split('\n') if not line.startswith('#')]
+        lines = [line for line in msg.split("\n") if not line.startswith("#")]
         return "\n".join(lines)
 
     @staticmethod
