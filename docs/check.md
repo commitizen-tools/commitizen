@@ -1,8 +1,9 @@
 # Check
 
 ## About
-This feature checks whether the commit message follows the given committing rules.
-If you want to setup an automatic check before every git commit, please refer to 
+This feature checks whether the commit message follows the given committing rules. And comment in git message will be ignored.
+
+If you want to setup an automatic check before every git commit, please refer to
 [Automatically check message before commit](auto_check.md).
 
 ## Usage
