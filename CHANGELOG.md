@@ -1,4 +1,10 @@
 
+## v2.20.3 (2021-12-20)
+
+### Fix
+
+- **check**: filter out comment messege when checking
+
 ## v2.20.2 (2021-12-14)
 
 ### Fix
