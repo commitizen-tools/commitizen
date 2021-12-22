@@ -13,11 +13,11 @@ def config():
     return _config
 
 
-@pytest.fixture()  # type: ignore
+@pytest.fixture()
 def changelog_path() -> str:
     return os.path.join(os.getcwd(), "CHANGELOG.md")
 
 
-@pytest.fixture()  # type: ignore
+@pytest.fixture()
 def config_path() -> str:
     return os.path.join(os.getcwd(), "pyproject.toml")
