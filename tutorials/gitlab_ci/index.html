@@ -11,7 +11,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.4">
     
     
       
@@ -19,7 +19,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.edf004c2.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.bb3983ee.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.e6a45f82.min.css">
@@ -686,58 +686,58 @@
 <li>Auto bump the version. This means changing the file/s that reflects the version, creating a new commit and git tag.</li>
 </ol>
 <h3 id="stages-and-jobs">Stages and Jobs</h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker:latest</span>
+<div class="codehilite"><pre><span></span><code><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:latest</span><span class="w"></span>
 
-<span class="nt">services</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">docker:dind</span>
+<span class="nt">services</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:dind</span><span class="w"></span>
 
-<span class="nt">variables</span><span class="p">:</span>
-  <span class="nt">API_IMAGE_NAME</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME</span>
+<span class="nt">variables</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">API_IMAGE_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME</span><span class="w"></span>
 
-<span class="nt">before_script</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">apk add --no-cache py-pip</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pip install docker-compose</span>
+<span class="nt">before_script</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apk add --no-cache py-pip</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install docker-compose</span><span class="w"></span>
 
-<span class="nt">stages</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">test</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">auto-bump</span>
+<span class="nt">stages</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto-bump</span><span class="w"></span>
 
-<span class="nt">test</span><span class="p">:</span>
-  <span class="nt">stage</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test</span>
-  <span class="nt">script</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">docker-compose run -e DJANGO_ENVIRONMENT=dev your_project python manage.py test</span> <span class="c1"># run tests</span>
+<span class="nt">test</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span><span class="w"></span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker-compose run -e DJANGO_ENVIRONMENT=dev your_project python manage.py test</span><span class="w"> </span><span class="c1"># run tests</span><span class="w"></span>
 
-<span class="nt">auto-bump</span><span class="p">:</span>
-  <span class="nt">stage</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">auto-bump</span>
-  <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">python:3.6</span>
-  <span class="nt">before_script</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="s">&quot;which</span><span class="nv"> </span><span class="s">ssh-agent</span><span class="nv"> </span><span class="s">||</span><span class="nv"> </span><span class="s">(</span><span class="nv"> </span><span class="s">apt-get</span><span class="nv"> </span><span class="s">update</span><span class="nv"> </span><span class="s">-qy</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">apt-get</span><span class="nv"> </span><span class="s">install</span><span class="nv"> </span><span class="s">openssh-client</span><span class="nv"> </span><span class="s">-qqy</span><span class="nv"> </span><span class="s">)&quot;</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">eval `ssh-agent -s`</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">echo &quot;${SSH_PRIVATE_KEY}&quot; | tr -d &#39;\r&#39; | ssh-add - &gt; /dev/null</span> <span class="c1"># add ssh key</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pip3 install -U Commitizen</span> <span class="c1"># install commitizen</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">mkdir -p ~/.ssh</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">chmod 700 ~/.ssh</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">echo &quot;$SSH_PUBLIC_KEY&quot; &gt;&gt; ~/.ssh/id_rsa.pub</span>
-    <span class="p p-Indicator">-</span> <span class="s">&#39;[[</span><span class="nv"> </span><span class="s">-f</span><span class="nv"> </span><span class="s">/.dockerenv</span><span class="nv"> </span><span class="s">]]</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">echo</span><span class="nv"> </span><span class="s">-e</span><span class="nv"> </span><span class="s">&quot;Host</span><span class="nv"> </span><span class="s">*\n\tStrictHostKeyChecking</span><span class="nv"> </span><span class="s">no\n\n&quot;</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">~/.ssh/config&#39;</span>
-  <span class="nt">dependencies</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">test</span>
-  <span class="nt">script</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">git remote set-url origin git@gitlab.com:discover/rentee-core.git</span> <span class="c1"># git configuration</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">git config --global user.email &quot;${CI_EMAIL}&quot; &amp;&amp; git config --global user.name &quot;${CI_USERNAME}&quot;</span>
-    <span class="p p-Indicator">-</span> <span class="s">&#39;exists=`git</span><span class="nv"> </span><span class="s">show-ref</span><span class="nv"> </span><span class="s">refs/heads/master`</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">[</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">&quot;$exists&quot;</span><span class="nv"> </span><span class="s">];</span><span class="nv"> </span><span class="s">then</span><span class="nv"> </span><span class="s">git</span><span class="nv"> </span><span class="s">branch</span><span class="nv"> </span><span class="s">-D</span><span class="nv"> </span><span class="s">master;</span><span class="nv"> </span><span class="s">fi&#39;</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">git checkout -b master</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">cz bump</span> <span class="c1"># execute auto bump and push to master</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">git push origin master:$CI_COMMIT_REF_NAME</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">TAG=$(head -n 1 VERSION)</span> <span class="c1"># get the new software version and save into artifacts</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">echo &quot;#!/bin/sh&quot; &gt;&gt; variables</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">echo &quot;export TAG=&#39;$TAG&#39;&quot; &gt;&gt; variables</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">git push origin $TAG</span>
-  <span class="nt">only</span><span class="p">:</span>
-    <span class="nt">refs</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">master</span>
-  <span class="nt">artifacts</span><span class="p">:</span>
-    <span class="nt">paths</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">variables</span>
+<span class="nt">auto-bump</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto-bump</span><span class="w"></span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python:3.6</span><span class="w"></span>
+<span class="w">  </span><span class="nt">before_script</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;which</span><span class="nv"> </span><span class="s">ssh-agent</span><span class="nv"> </span><span class="s">||</span><span class="nv"> </span><span class="s">(</span><span class="nv"> </span><span class="s">apt-get</span><span class="nv"> </span><span class="s">update</span><span class="nv"> </span><span class="s">-qy</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">apt-get</span><span class="nv"> </span><span class="s">install</span><span class="nv"> </span><span class="s">openssh-client</span><span class="nv"> </span><span class="s">-qqy</span><span class="nv"> </span><span class="s">)&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval `ssh-agent -s`</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;${SSH_PRIVATE_KEY}&quot; | tr -d &#39;\r&#39; | ssh-add - &gt; /dev/null</span><span class="w"> </span><span class="c1"># add ssh key</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip3 install -U Commitizen</span><span class="w"> </span><span class="c1"># install commitizen</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdir -p ~/.ssh</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chmod 700 ~/.ssh</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;$SSH_PUBLIC_KEY&quot; &gt;&gt; ~/.ssh/id_rsa.pub</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;[[</span><span class="nv"> </span><span class="s">-f</span><span class="nv"> </span><span class="s">/.dockerenv</span><span class="nv"> </span><span class="s">]]</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">echo</span><span class="nv"> </span><span class="s">-e</span><span class="nv"> </span><span class="s">&quot;Host</span><span class="nv"> </span><span class="s">*\n\tStrictHostKeyChecking</span><span class="nv"> </span><span class="s">no\n\n&quot;</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">~/.ssh/config&#39;</span><span class="w"></span>
+<span class="w">  </span><span class="nt">dependencies</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span><span class="w"></span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git remote set-url origin git@gitlab.com:discover/rentee-core.git</span><span class="w"> </span><span class="c1"># git configuration</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git config --global user.email &quot;${CI_EMAIL}&quot; &amp;&amp; git config --global user.name &quot;${CI_USERNAME}&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;exists=`git</span><span class="nv"> </span><span class="s">show-ref</span><span class="nv"> </span><span class="s">refs/heads/master`</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">[</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">&quot;$exists&quot;</span><span class="nv"> </span><span class="s">];</span><span class="nv"> </span><span class="s">then</span><span class="nv"> </span><span class="s">git</span><span class="nv"> </span><span class="s">branch</span><span class="nv"> </span><span class="s">-D</span><span class="nv"> </span><span class="s">master;</span><span class="nv"> </span><span class="s">fi&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git checkout -b master</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cz bump</span><span class="w"> </span><span class="c1"># execute auto bump and push to master</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git push origin master:$CI_COMMIT_REF_NAME</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TAG=$(head -n 1 VERSION)</span><span class="w"> </span><span class="c1"># get the new software version and save into artifacts</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;#!/bin/sh&quot; &gt;&gt; variables</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;export TAG=&#39;$TAG&#39;&quot; &gt;&gt; variables</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git push origin $TAG</span><span class="w"></span>
+<span class="w">  </span><span class="nt">only</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">refs</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">master</span><span class="w"></span>
+<span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">paths</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">variables</span><span class="w"></span>
 </code></pre></div>
 
 <p>So, every time that a developer push to any branch, the <code>test</code> job is executed. If the branch is <code>master</code> and the test jobs success, the <code>auto-bump</code> takes place.
@@ -809,10 +809,10 @@ To be able to push using the Gitlab runner, we have to set the ssh key, configur
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.0bbba5b5.min.js"}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.361d90f1.min.js"}</script>
     
     
-      <script src="../../assets/javascripts/bundle.e1a181d9.min.js"></script>
+      <script src="../../assets/javascripts/bundle.289a2a4b.min.js"></script>
       
     
   </body>

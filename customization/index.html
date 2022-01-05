@@ -11,7 +11,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.4">
     
     
       
@@ -19,7 +19,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.edf004c2.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.bb3983ee.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.e6a45f82.min.css">
@@ -736,123 +736,123 @@ We have two different ways to do so.</p>
 <li>Declare <code>name = "cz_customize"</code> in your configuration file, or add <code>-n cz_customize</code> when running commitizen.</li>
 </ol>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
-<span class="n">name</span> <span class="o">=</span> <span class="s">&quot;cz_customize&quot;</span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;cz_customize&quot;</span><span class="w"></span>
 
-<span class="k">[tool.commitizen.customize]</span>
-<span class="n">message_template</span> <span class="o">=</span> <span class="s">&quot;{{change_type}}:{% if show_message %} {{message}}{% endif %}&quot;</span>
-<span class="n">example</span> <span class="o">=</span> <span class="s">&quot;feature: this feature enable customize through config file&quot;</span>
-<span class="n">schema</span> <span class="o">=</span> <span class="s">&quot;&lt;type&gt;: &lt;body&gt;&quot;</span>
-<span class="n">schema_pattern</span> <span class="o">=</span> <span class="s">&quot;(feature|bug fix):(\\s.*)&quot;</span>
-<span class="n">bump_pattern</span> <span class="o">=</span> <span class="s">&quot;^(break|new|fix|hotfix)&quot;</span>
-<span class="n">bump_map</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;break&quot;</span> <span class="o">=</span> <span class="s">&quot;MAJOR&quot;</span><span class="p">,</span> <span class="s">&quot;new&quot;</span> <span class="o">=</span> <span class="s">&quot;MINOR&quot;</span><span class="p">,</span> <span class="s">&quot;fix&quot;</span> <span class="o">=</span> <span class="s">&quot;PATCH&quot;</span><span class="p">,</span> <span class="s">&quot;hotfix&quot;</span> <span class="o">=</span> <span class="s">&quot;PATCH&quot;</span><span class="p">}</span>
-<span class="n">change_type_order</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;BREAKING CHANGE&quot;</span><span class="p">,</span> <span class="s">&quot;feat&quot;</span><span class="p">,</span> <span class="s">&quot;fix&quot;</span><span class="p">,</span> <span class="s">&quot;refactor&quot;</span><span class="p">,</span> <span class="s">&quot;perf&quot;</span><span class="p">]</span>
-<span class="n">info_path</span> <span class="o">=</span> <span class="s">&quot;cz_customize_info.txt&quot;</span>
-<span class="n">info</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="k">[tool.commitizen.customize]</span><span class="w"></span>
+<span class="n">message_template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;{{change_type}}:{% if show_message %} {{message}}{% endif %}&quot;</span><span class="w"></span>
+<span class="n">example</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;feature: this feature enable customize through config file&quot;</span><span class="w"></span>
+<span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&lt;type&gt;: &lt;body&gt;&quot;</span><span class="w"></span>
+<span class="n">schema_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;(feature|bug fix):(\\s.*)&quot;</span><span class="w"></span>
+<span class="n">bump_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;^(break|new|fix|hotfix)&quot;</span><span class="w"></span>
+<span class="n">bump_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;break&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MAJOR&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;new&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MINOR&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fix&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;PATCH&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;hotfix&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;PATCH&quot;</span><span class="p">}</span><span class="w"></span>
+<span class="n">change_type_order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;BREAKING CHANGE&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;feat&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fix&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;refactor&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;perf&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="n">info_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;cz_customize_info.txt&quot;</span><span class="w"></span>
+<span class="n">info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">This is customized info</span>
-<span class="s">&quot;&quot;&quot;</span>
+<span class="s">&quot;&quot;&quot;</span><span class="w"></span>
 
-<span class="k">[[tool.commitizen.customize.questions]]</span>
-<span class="n">type</span> <span class="o">=</span> <span class="s">&quot;list&quot;</span>
-<span class="n">name</span> <span class="o">=</span> <span class="s">&quot;change_type&quot;</span>
-<span class="n">choices</span> <span class="o">=</span> <span class="p">[{</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;feature&quot;</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;feature: A new feature.&quot;</span><span class="p">},</span> <span class="p">{</span><span class="n">value</span> <span class="o">=</span> <span class="s">&quot;bug fix&quot;</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;bug fix: A bug fix.&quot;</span><span class="p">}]</span>
-<span class="c1"># choices = [&quot;feature&quot;, &quot;fix&quot;]  # short version</span>
-<span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Select the type of change you are committing&quot;</span>
+<span class="k">[[tool.commitizen.customize.questions]]</span><span class="w"></span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="w"></span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;change_type&quot;</span><span class="w"></span>
+<span class="n">choices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[{</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;feature&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;feature: A new feature.&quot;</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bug fix&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bug fix: A bug fix.&quot;</span><span class="p">}]</span><span class="w"></span>
+<span class="c1"># choices = [&quot;feature&quot;, &quot;fix&quot;]  # short version</span><span class="w"></span>
+<span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Select the type of change you are committing&quot;</span><span class="w"></span>
 
-<span class="k">[[tool.commitizen.customize.questions]]</span>
-<span class="n">type</span> <span class="o">=</span> <span class="s">&quot;input&quot;</span>
-<span class="n">name</span> <span class="o">=</span> <span class="s">&quot;message&quot;</span>
-<span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Body.&quot;</span>
+<span class="k">[[tool.commitizen.customize.questions]]</span><span class="w"></span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;input&quot;</span><span class="w"></span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;message&quot;</span><span class="w"></span>
+<span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Body.&quot;</span><span class="w"></span>
 
-<span class="k">[[tool.commitizen.customize.questions]]</span>
-<span class="n">type</span> <span class="o">=</span> <span class="s">&quot;confirm&quot;</span>
-<span class="n">name</span> <span class="o">=</span> <span class="s">&quot;show_message&quot;</span>
-<span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Do you want to add body message in commit?&quot;</span>
+<span class="k">[[tool.commitizen.customize.questions]]</span><span class="w"></span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;confirm&quot;</span><span class="w"></span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;show_message&quot;</span><span class="w"></span>
+<span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Do you want to add body message in commit?&quot;</span><span class="w"></span>
 </code></pre></div>
 
 <p>The equivalent example for a json config file:</p>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
-    <span class="nt">&quot;commitizen&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;cz_customize&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;customize&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="nt">&quot;message_template&quot;</span><span class="p">:</span> <span class="s2">&quot;{{change_type}}:{% if show_message %} {{message}}{% endif %}&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;example&quot;</span><span class="p">:</span> <span class="s2">&quot;feature: this feature enable customize through config file&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;schema&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;type&gt;: &lt;body&gt;&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;schema_pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;(feature|bug fix):(\\s.*)&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;bump_pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^(break|new|fix|hotfix)&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;bump_map&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="nt">&quot;break&quot;</span><span class="p">:</span> <span class="s2">&quot;MAJOR&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;new&quot;</span><span class="p">:</span> <span class="s2">&quot;MINOR&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;fix&quot;</span><span class="p">:</span> <span class="s2">&quot;PATCH&quot;</span><span class="p">,</span>
-                <span class="nt">&quot;hotfix&quot;</span><span class="p">:</span> <span class="s2">&quot;PATCH&quot;</span>
-            <span class="p">},</span>
-            <span class="nt">&quot;change_type_order&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;BREAKING CHANGE&quot;</span><span class="p">,</span> <span class="s2">&quot;feat&quot;</span><span class="p">,</span> <span class="s2">&quot;fix&quot;</span><span class="p">,</span> <span class="s2">&quot;refactor&quot;</span><span class="p">,</span> <span class="s2">&quot;perf&quot;</span><span class="p">],</span>
-        <span class="nt">&quot;info_path&quot;</span><span class="p">:</span> <span class="s2">&quot;cz_customize_info.txt&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;info&quot;</span><span class="p">:</span> <span class="s2">&quot;This is customized info&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;questions&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="p">{</span>
-                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;change_type&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;choices&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="p">{</span>
-                            <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;feature&quot;</span><span class="p">,</span>
-                            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;feature: A new feature.&quot;</span>
-                        <span class="p">},</span>
-                        <span class="p">{</span>
-                            <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;bug fix&quot;</span><span class="p">,</span>
-                            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;bug fix: A bug fix.&quot;</span>
-                        <span class="p">}</span>
-                    <span class="p">],</span>
-                    <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Select the type of change you are committing&quot;</span>
-                <span class="p">},</span>
-                <span class="p">{</span>
-                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;message&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Body.&quot;</span>
-                <span class="p">},</span>
-                <span class="p">{</span>
-                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;confirm&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;show_message&quot;</span><span class="p">,</span>
-                    <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Do you want to add body message in commit?&quot;</span>
-                <span class="p">}</span>
-            <span class="p">]</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;commitizen&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cz_customize&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;customize&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;message_template&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{change_type}}:{% if show_message %} {{message}}{% endif %}&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;example&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;feature: this feature enable customize through config file&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;type&gt;: &lt;body&gt;&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;schema_pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;(feature|bug fix):(\\s.*)&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;bump_pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^(break|new|fix|hotfix)&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;bump_map&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;break&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MAJOR&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;new&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MINOR&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;fix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PATCH&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;hotfix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PATCH&quot;</span><span class="w"></span>
+<span class="w">            </span><span class="p">},</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;change_type_order&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;BREAKING CHANGE&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;feat&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fix&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;refactor&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;perf&quot;</span><span class="p">],</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;info_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cz_customize_info.txt&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;info&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;This is customized info&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;questions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                </span><span class="p">{</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;list&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;change_type&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;choices&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">                        </span><span class="p">{</span><span class="w"></span>
+<span class="w">                            </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;feature&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;feature: A new feature.&quot;</span><span class="w"></span>
+<span class="w">                        </span><span class="p">},</span><span class="w"></span>
+<span class="w">                        </span><span class="p">{</span><span class="w"></span>
+<span class="w">                            </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bug fix&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bug fix: A bug fix.&quot;</span><span class="w"></span>
+<span class="w">                        </span><span class="p">}</span><span class="w"></span>
+<span class="w">                    </span><span class="p">],</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Select the type of change you are committing&quot;</span><span class="w"></span>
+<span class="w">                </span><span class="p">},</span><span class="w"></span>
+<span class="w">                </span><span class="p">{</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;input&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;message&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Body.&quot;</span><span class="w"></span>
+<span class="w">                </span><span class="p">},</span><span class="w"></span>
+<span class="w">                </span><span class="p">{</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;confirm&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;show_message&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Do you want to add body message in commit?&quot;</span><span class="w"></span>
+<span class="w">                </span><span class="p">}</span><span class="w"></span>
+<span class="w">            </span><span class="p">]</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </code></pre></div>
 
 <p>And the correspondent example for a yaml json file:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">commitizen</span><span class="p">:</span>
-  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cz_customize</span>
-  <span class="nt">customize</span><span class="p">:</span>
-    <span class="nt">message_template</span><span class="p">:</span> <span class="s">&quot;{{change_type}}:{%</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">show_message</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">{{message}}{%</span><span class="nv"> </span><span class="s">endif</span><span class="nv"> </span><span class="s">%}&quot;</span>
-    <span class="nt">example</span><span class="p">:</span> <span class="s">&#39;feature:</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">feature</span><span class="nv"> </span><span class="s">enable</span><span class="nv"> </span><span class="s">customize</span><span class="nv"> </span><span class="s">through</span><span class="nv"> </span><span class="s">config</span><span class="nv"> </span><span class="s">file&#39;</span>
-    <span class="nt">schema</span><span class="p">:</span> <span class="s">&quot;&lt;type&gt;:</span><span class="nv"> </span><span class="s">&lt;body&gt;&quot;</span>
-    <span class="nt">schema_pattern</span><span class="p">:</span> <span class="s">&quot;(feature|bug</span><span class="nv"> </span><span class="s">fix):(\\s.*)&quot;</span>
-    <span class="nt">bump_pattern</span><span class="p">:</span> <span class="s">&quot;^(break|new|fix|hotfix)&quot;</span>
-    <span class="nt">bump_map</span><span class="p">:</span>
-      <span class="nt">break</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MAJOR</span>
-      <span class="nt">new</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MINOR</span>
-      <span class="nt">fix</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PATCH</span>
-      <span class="nt">hotfix</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PATCH</span>
-    <span class="nt">change_type_order</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;BREAKING</span><span class="nv"> </span><span class="s">CHANGE&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;feat&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;fix&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;refactor&quot;</span><span class="p p-Indicator">,</span> <span class="s">&quot;perf&quot;</span><span class="p p-Indicator">]</span>
-    <span class="nt">info_path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cz_customize_info.txt</span>
-    <span class="nt">info</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">This is customized info</span>
-    <span class="nt">questions</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">list</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">change_type</span>
-      <span class="nt">choices</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">feature</span>
-        <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;feature:</span><span class="nv"> </span><span class="s">A</span><span class="nv"> </span><span class="s">new</span><span class="nv"> </span><span class="s">feature.&#39;</span>
-      <span class="p p-Indicator">-</span> <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bug fix</span>
-        <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;bug</span><span class="nv"> </span><span class="s">fix:</span><span class="nv"> </span><span class="s">A</span><span class="nv"> </span><span class="s">bug</span><span class="nv"> </span><span class="s">fix.&#39;</span>
-      <span class="nt">message</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Select the type of change you are committing</span>
-    <span class="p p-Indicator">-</span> <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">input</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">message</span>
-      <span class="nt">message</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Body.</span>
-    <span class="p p-Indicator">-</span> <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">confirm</span>
-      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">show_message</span>
-      <span class="nt">message</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Do you want to add body message in commit?</span>
+<div class="codehilite"><pre><span></span><code><span class="nt">commitizen</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cz_customize</span><span class="w"></span>
+<span class="w">  </span><span class="nt">customize</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">message_template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{change_type}}:{%</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">show_message</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">{{message}}{%</span><span class="nv"> </span><span class="s">endif</span><span class="nv"> </span><span class="s">%}&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">example</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;feature:</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">feature</span><span class="nv"> </span><span class="s">enable</span><span class="nv"> </span><span class="s">customize</span><span class="nv"> </span><span class="s">through</span><span class="nv"> </span><span class="s">config</span><span class="nv"> </span><span class="s">file&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;type&gt;:</span><span class="nv"> </span><span class="s">&lt;body&gt;&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">schema_pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;(feature|bug</span><span class="nv"> </span><span class="s">fix):(\\s.*)&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">bump_pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;^(break|new|fix|hotfix)&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">bump_map</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">break</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MAJOR</span><span class="w"></span>
+<span class="w">      </span><span class="nt">new</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MINOR</span><span class="w"></span>
+<span class="w">      </span><span class="nt">fix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PATCH</span><span class="w"></span>
+<span class="w">      </span><span class="nt">hotfix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PATCH</span><span class="w"></span>
+<span class="w">    </span><span class="nt">change_type_order</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;BREAKING</span><span class="nv"> </span><span class="s">CHANGE&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;feat&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;fix&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;refactor&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;perf&quot;</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">info_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cz_customize_info.txt</span><span class="w"></span>
+<span class="w">    </span><span class="nt">info</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">This is customized info</span><span class="w"></span>
+<span class="w">    </span><span class="nt">questions</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list</span><span class="w"></span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">change_type</span><span class="w"></span>
+<span class="w">      </span><span class="nt">choices</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">feature</span><span class="w"></span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;feature:</span><span class="nv"> </span><span class="s">A</span><span class="nv"> </span><span class="s">new</span><span class="nv"> </span><span class="s">feature.&#39;</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bug fix</span><span class="w"></span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;bug</span><span class="nv"> </span><span class="s">fix:</span><span class="nv"> </span><span class="s">A</span><span class="nv"> </span><span class="s">bug</span><span class="nv"> </span><span class="s">fix.&#39;</span><span class="w"></span>
+<span class="w">      </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Select the type of change you are committing</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">input</span><span class="w"></span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">message</span><span class="w"></span>
+<span class="w">      </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Body.</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">confirm</span><span class="w"></span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">show_message</span><span class="w"></span>
+<span class="w">      </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Do you want to add body message in commit?</span><span class="w"></span>
 </code></pre></div>
 
 <h3 id="customize-configuration">Customize configuration</h3>
@@ -1271,10 +1271,10 @@ You can customize it of course, and this are the variables you need to add to yo
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.0bbba5b5.min.js"}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.361d90f1.min.js"}</script>
     
     
-      <script src="../assets/javascripts/bundle.e1a181d9.min.js"></script>
+      <script src="../assets/javascripts/bundle.289a2a4b.min.js"></script>
       
     
   </body>

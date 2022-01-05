@@ -11,7 +11,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.4">
     
     
       
@@ -19,7 +19,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.edf004c2.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.bb3983ee.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.e6a45f82.min.css">
@@ -650,9 +650,9 @@
 
 <h2 id="support-for-pep621">Support for PEP621</h2>
 <p>PEP621 establishes a <code>[project]</code> definition inside <code>pyproject.toml</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">[project]</span>
-<span class="n">name</span> <span class="o">=</span> <span class="s">&quot;spam&quot;</span>
-<span class="n">version</span> <span class="o">=</span> <span class="s">&quot;2020.0.0&quot;</span>
+<div class="codehilite"><pre><span></span><code><span class="k">[project]</span><span class="w"></span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;spam&quot;</span><span class="w"></span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;2020.0.0&quot;</span><span class="w"></span>
 </code></pre></div>
 
 <p>Commitizen <strong>won't</strong> use the <code>project.version</code> as a source of truth because it's a
@@ -661,13 +661,13 @@ tool aimed for any kind of project.</p>
 wouldn't we support other project files like <code>cargo.toml</code> or <code>package.json</code>?</p>
 <p>Instead of supporting all the different project files, you can use <code>version_files</code>
 inside <code>[tool.commitizen]</code>, and it will cheaply keep any of these project files in sync</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
-<span class="n">version</span> <span class="o">=</span> <span class="s">&quot;2.5.1&quot;</span>
-<span class="n">version_files</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s">&quot;pyproject.toml:^version&quot;</span><span class="p">,</span>
-    <span class="s">&quot;cargo.toml:^version&quot;</span><span class="p">,</span>
-    <span class="s">&quot;package.json:\&quot;version\&quot;:&quot;</span>
-<span class="p">]</span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;2.5.1&quot;</span><span class="w"></span>
+<span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;pyproject.toml:^version&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;cargo.toml:^version&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;package.json:\&quot;version\&quot;:&quot;</span><span class="w"></span>
+<span class="p">]</span><span class="w"></span>
 </code></pre></div>
 
 <h2 id="why-are-revert-and-chore-valid-types-in-the-check-pattern-of-cz-conventional_commits-but-not-types-we-can-select">Why are <code>revert</code> and <code>chore</code> valid types in the check pattern of cz conventional_commits but not types we can select?</h2>
@@ -773,10 +773,10 @@ git commit -m <span class="s2">&quot;revert: foo bar&quot;</span>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.0bbba5b5.min.js"}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.361d90f1.min.js"}</script>
     
     
-      <script src="../assets/javascripts/bundle.e1a181d9.min.js"></script>
+      <script src="../assets/javascripts/bundle.289a2a4b.min.js"></script>
       
     
   </body>
