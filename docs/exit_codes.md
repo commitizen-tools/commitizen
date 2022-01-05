@@ -10,7 +10,7 @@ These exit codes can be found in `commitizen/exceptions.py::ExitCode`.
 | DryRunExit | 0 | Exit due to passing `--dry-run` option |
 | NoCommitizenFoundException | 1 | Using a cz (e.g., `cz_jira`) that cannot be found in your system |
 | NotAGitProjectError | 2 | Not in a git project |
-| NoCommitsFoundError | 4 | No commit found |
+| NoCommitsFoundError | 3 | No commit found |
 | NoVersionSpecifiedError | 4 | Version can not be found in configuration file |
 | NoPatternMapError | 5 | bump / changelog pattern or map can not be found in configuration file |
 | BumpCommitFailedError | 6 | Commit error when bumping version |
