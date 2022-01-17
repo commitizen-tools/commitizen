@@ -1,4 +1,11 @@
 
+## v2.20.4 (2022-01-17)
+
+### Fix
+
+- **bump**: raise non zero error code when there's no elegible commit to bump
+- **bump**: raise non zero error code when there's no elegible commit to bump
+
 ## v2.20.3 (2021-12-20)
 
 ### Fix
