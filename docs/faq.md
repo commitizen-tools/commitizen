@@ -90,17 +90,17 @@ More discussion can be found in issue [#318](https://github.com/commitizen-tools
 ## Why does commitizen not support CalVer?
 
 `commitizen` could support CalVer alongside SemVer, but in practice implementing CalVer
-creates numerous edge cases that are difficult to maintain (#385) and more generally
+creates numerous edge cases that are difficult to maintain ([#385]) and more generally
 mixing the two version schemes may not be a good idea. If CalVer or other custom
 versioning scheme is needed, `commitizen` could still be used to standardize commits
 and create changelogs, but a separate package should be used for version increments.
 
 Mixing CalVer and SemVer is generally not recommended because each versioning scheme
 serves a different purposes. Diverging from either specification can be confusing to
-users and cause errors when third party tools that don't expect the non-standard format.
+users and cause errors with third party tools that don't expect the non-standard format.
 
 In the future, `commitizen` may support some implementation of CalVer, but at the time
-of writing, there are no plans to implement the feature (#173).
+of writing, there are no plans to implement the feature ([#173]).
 
 If you would like to learn more about both schemes, there are plenty of good resources:
 
@@ -111,3 +111,6 @@ If you would like to learn more about both schemes, there are plenty of good res
 - [SemVer vs. CalVer and Why I Use Both](https://mikestaszel.com/2021/04/03/semver-vs-calver-and-why-i-use-both/) (but not at the same time)
 - [Semver Will Not Save You](https://hynek.me/articles/semver-will-not-save-you/)
 - [Why I Don't Like SemVer](https://snarky.ca/why-i-dont-like-semver/)
+
+[#173]: https://github.com/commitizen-tools/commitizen/issues/173
+[#385]: https://github.com/commitizen-tools/commitizen/pull/385
