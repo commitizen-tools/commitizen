@@ -170,7 +170,10 @@ class Bump:
             out.write(information)
 
         if increment is None and new_tag_version == current_tag_version:
-            raise NoneIncrementExit()
+            raise NoneIncrementExit(
+                "[NO_COMMITS_TO_BUMP]\n"
+                "The commits found are not elegible to be bumped"
+            )
 
         # Do not perform operations over files or git.
         if dry_run:

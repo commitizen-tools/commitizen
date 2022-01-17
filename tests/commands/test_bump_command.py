@@ -8,8 +8,10 @@ import commitizen.commands.bump as bump
 from commitizen import cli, cmd, git
 from commitizen.exceptions import (
     BumpTagFailedError,
+    CommitizenException,
     CurrentVersionNotFoundError,
     DryRunExit,
+    ExitCode,
     ExpectedExit,
     NoCommitsFoundError,
     NoneIncrementExit,
@@ -327,7 +329,7 @@ def test_none_increment_exit_should_be_a_class():
 
 
 def test_none_increment_exit_should_be_expected_exit_subclass():
-    assert issubclass(NoneIncrementExit, ExpectedExit)
+    assert issubclass(NoneIncrementExit, CommitizenException)
 
 
 def test_none_increment_exit_should_exist_in_bump():
@@ -339,7 +341,9 @@ def test_none_increment_exit_is_exception():
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_none_increment_should_not_call_git_tag(mocker, tmp_commitizen_project):
+def test_none_increment_should_not_call_git_tag_and_error_code_is_not_zero(
+    mocker, tmp_commitizen_project
+):
     create_file_and_commit("test(test_get_all_droplets): fix bad comparison test")
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
@@ -350,8 +354,12 @@ def test_none_increment_should_not_call_git_tag(mocker, tmp_commitizen_project):
     git.tag = MagicMock(return_value=dummy_value)
 
     with pytest.raises(NoneIncrementExit):
-        cli.main()
-        git.tag.assert_not_called()
+        try:
+            cli.main()
+        except NoneIncrementExit as e:
+            git.tag.assert_not_called()
+            assert e.exit_code == ExitCode.NO_COMMITS_FOUND
+            raise e
 
     # restore pop stashed
     git.tag = stashed_git_tag

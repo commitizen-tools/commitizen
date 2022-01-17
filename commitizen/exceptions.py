@@ -54,8 +54,8 @@ class DryRunExit(ExpectedExit):
     pass
 
 
-class NoneIncrementExit(ExpectedExit):
-    pass
+class NoneIncrementExit(CommitizenException):
+    exit_code = ExitCode.NO_COMMITS_FOUND
 
 
 class NoCommitizenFoundException(CommitizenException):
