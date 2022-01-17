@@ -12,5 +12,6 @@
 
 - [Python Table Manners - Commitizen: 規格化 commit message](https://lee-w.github.io/posts/tech/2020/03/python-table-manners-commitizen/) (Written in Traditional Mandarin)
 - [Automating semantic release with commitizen](https://woile.dev/posts/automating-semver-releases-with-commitizen/) (English)
+- [How to Write Better Git Commit Messages – A Step-By-Step Guide](https://www.freecodecamp.org/news/how-to-write-better-git-commit-messages/?utm_source=tldrnewsletter) (English)
 
 [automatizando]: https://youtu.be/t3aE2M8UPBo
