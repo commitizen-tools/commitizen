@@ -86,3 +86,31 @@ git commit -m "revert: foo bar"
 This error was caused by a Python bug on Windows. It's been fixed by [this PR](https://github.com/python/cpython/pull/22017), and according to Python's changelog, [3.8.6rc1](https://docs.python.org/3.8/whatsnew/changelog.html#python-3-8-6-release-candidate-1) and [3.9.0rc2](https://docs.python.org/3.9/whatsnew/changelog.html#python-3-9-0-release-candidate-2) should be the accurate versions first contain this fix. In conclusion, upgrade your Python version might solve this issue.
 
 More discussion can be found in issue [#318](https://github.com/commitizen-tools/commitizen/issues/318).
+
+## Why does commitizen not support CalVer?
+
+`commitizen` could support CalVer alongside SemVer, but in practice implementing CalVer
+creates numerous edge cases that are difficult to maintain ([#385]) and more generally
+mixing the two version schemes may not be a good idea. If CalVer or other custom
+versioning scheme is needed, `commitizen` could still be used to standardize commits
+and create changelogs, but a separate package should be used for version increments.
+
+Mixing CalVer and SemVer is generally not recommended because each versioning scheme
+serves a different purposes. Diverging from either specification can be confusing to
+users and cause errors with third party tools that don't expect the non-standard format.
+
+In the future, `commitizen` may support some implementation of CalVer, but at the time
+of writing, there are no plans to implement the feature ([#173]).
+
+If you would like to learn more about both schemes, there are plenty of good resources:
+
+- [Announcing CalVer](https://sedimental.org/calver.html)
+- [API Versioning from Stripe](https://stripe.com/blog/api-versioning)
+- [Discussion about pip's use of CalVer](https://github.com/pypa/pip/issues/5645#issuecomment-407192448)
+- [Git Version Numbering](https://code.erpenbeck.io/git/2021/12/16/git-version-numbering/)
+- [SemVer vs. CalVer and Why I Use Both](https://mikestaszel.com/2021/04/03/semver-vs-calver-and-why-i-use-both/) (but not at the same time)
+- [Semver Will Not Save You](https://hynek.me/articles/semver-will-not-save-you/)
+- [Why I Don't Like SemVer](https://snarky.ca/why-i-dont-like-semver/)
+
+[#173]: https://github.com/commitizen-tools/commitizen/issues/173
+[#385]: https://github.com/commitizen-tools/commitizen/pull/385
