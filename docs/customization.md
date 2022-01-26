@@ -50,7 +50,7 @@ The equivalent example for a json config file:
 ```json
 {
     "commitizen": {
-	"name": "cz_customize",
+        "name": "cz_customize",
         "customize": {
             "message_template": "{{change_type}}:{% if show_message %} {{message}}{% endif %}",
             "example": "feature: this feature enable customize through config file",
@@ -64,7 +64,7 @@ The equivalent example for a json config file:
                 "hotfix": "PATCH"
             },
             "change_type_order": ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"],
-	    "info_path": "cz_customize_info.txt",
+            "info_path": "cz_customize_info.txt",
             "info": "This is customized info",
             "questions": [
                 {
