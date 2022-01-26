@@ -38,8 +38,8 @@ JSON might be a more common configuration format for non-python projects, so Com
         "name": "cz_conventional_commits",
         "version": "0.1.0",
         "version_files": [
-	    "src/__version__.py",
-	    "pyproject.toml:version"
+            "src/__version__.py",
+            "pyproject.toml:version"
         ],
         "style": [
             [
