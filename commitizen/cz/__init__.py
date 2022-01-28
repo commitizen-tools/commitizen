@@ -1,24 +1,32 @@
 import importlib
-import logging
 import pkgutil
-from typing import Dict, Type
+import warnings
+from pathlib import Path
+from typing import Dict, Iterable, Type
 
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.conventional_commits import ConventionalCommitsCz
 from commitizen.cz.customize import CustomizeCommitsCz
 from commitizen.cz.jira import JiraSmartCz
 
-logger = logging.getLogger(__name__)
 
+def discover_plugins(path: Iterable[Path] = None) -> Dict[str, Type[BaseCommitizen]]:
+    """Discover commitizen plugins on the path
 
-def discover_plugins():
+    Args:
+        path (Path, optional): If provided, 'path' should be either None or a list of paths to look for
+    modules in. If path is None, all top-level modules on sys.path.. Defaults to None.
+
+    Returns:
+        Dict[str, Type[BaseCommitizen]]: Registry with found plugins
+    """
     plugins = {}
-    for finder, name, ispkg in pkgutil.iter_modules():
+    for finder, name, ispkg in pkgutil.iter_modules(path):
         try:
             if name.startswith("cz_"):
                 plugins[name] = importlib.import_module(name).discover_this
         except AttributeError as e:
-            logger.warning(e.args[0])
+            warnings.warn(UserWarning(e.args[0]))
             continue
     return plugins
 
