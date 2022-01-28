@@ -1,14 +1,15 @@
 import importlib
 import logging
 import pkgutil
-
 from typing import Dict, Type
+
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.conventional_commits import ConventionalCommitsCz
 from commitizen.cz.customize import CustomizeCommitsCz
 from commitizen.cz.jira import JiraSmartCz
 
 logger = logging.getLogger(__name__)
+
 
 def discover_plugins():
     plugins = {}
@@ -20,6 +21,7 @@ def discover_plugins():
             logger.warning(e.args[0])
             continue
     return plugins
+
 
 registry: Dict[str, Type[BaseCommitizen]] = {
     "cz_conventional_commits": ConventionalCommitsCz,
