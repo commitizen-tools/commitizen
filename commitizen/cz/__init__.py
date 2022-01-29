@@ -1,7 +1,6 @@
 import importlib
 import pkgutil
 import warnings
-from pathlib import Path
 from typing import Dict, Iterable, Type
 
 from commitizen.cz.base import BaseCommitizen
@@ -10,7 +9,7 @@ from commitizen.cz.customize import CustomizeCommitsCz
 from commitizen.cz.jira import JiraSmartCz
 
 
-def discover_plugins(path: Iterable[Path] = None) -> Dict[str, Type[BaseCommitizen]]:
+def discover_plugins(path: Iterable[str] = None) -> Dict[str, Type[BaseCommitizen]]:
     """Discover commitizen plugins on the path
 
     Args:

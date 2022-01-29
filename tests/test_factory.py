@@ -38,7 +38,7 @@ def test_discover_plugins(module_content, plugin_name, expected_plugins, tmp_pat
 
     sys.path.append(tmp_path.as_posix())
     with pytest.warns(UserWarning) as record:
-        discovered_plugins = discover_plugins([tmp_path])
+        discovered_plugins = discover_plugins([tmp_path.as_posix()])
     sys.path.pop()
 
     assert (
