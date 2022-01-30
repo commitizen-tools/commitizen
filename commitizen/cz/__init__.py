@@ -23,7 +23,7 @@ def discover_plugins(path: Iterable[str] = None) -> Dict[str, Type[BaseCommitize
     for finder, name, ispkg in pkgutil.iter_modules(path):
         try:
             if name.startswith("cz_"):
-                plugins[name] = importlib.import_module(name).discover_this
+                plugins[name] = importlib.import_module(name).discover_this  # type: ignore
         except AttributeError as e:
             warnings.warn(UserWarning(e.args[0]))
             continue
