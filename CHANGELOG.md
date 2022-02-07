@@ -1,4 +1,15 @@
 
+## v2.20.5 (2022-02-07)
+
+### Refactor
+
+- iter_modules only accepts str
+
+### Fix
+
+- Ignore packages that are not plugins
+- Ignore packages that are not plugins
+
 ## v2.20.4 (2022-01-17)
 
 ### Fix
