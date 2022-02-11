@@ -5,6 +5,7 @@ from typing import Dict, Iterable, Type
 
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.conventional_commits import ConventionalCommitsCz
+from commitizen.cz.conventional_commits_appender.conventional_commits_appender import ConventionalCommitsAppenderCz
 from commitizen.cz.customize import CustomizeCommitsCz
 from commitizen.cz.jira import JiraSmartCz
 
@@ -32,6 +33,7 @@ def discover_plugins(path: Iterable[str] = None) -> Dict[str, Type[BaseCommitize
 
 registry: Dict[str, Type[BaseCommitizen]] = {
     "cz_conventional_commits": ConventionalCommitsCz,
+    "cz_conventional_commits_appender": ConventionalCommitsAppenderCz,
     "cz_jira": JiraSmartCz,
     "cz_customize": CustomizeCommitsCz,
 }
