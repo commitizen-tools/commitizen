@@ -6,9 +6,11 @@ This command will generate a changelog following the committing rules establishe
 
 ```bash
 $ cz changelog --help
-usage: cz changelog [-h] [--dry-run] [--file-name FILE_NAME]
-                    [--unreleased-version UNRELEASED_VERSION] [--incremental]
-                    [--start-rev START_REV]
+usage: cz changelog [-h] [--dry-run] [--file-name FILE_NAME] [--unreleased-version UNRELEASED_VERSION] [--incremental] [--start-rev START_REV]
+                    [rev_range]
+
+positional arguments:
+  rev_range             generates changelog for the given version (e.g: 1.5.3) or version range (e.g: 1.5.3..1.7.9)
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -16,16 +18,15 @@ optional arguments:
   --file-name FILE_NAME
                         file name of changelog (default: 'CHANGELOG.md')
   --unreleased-version UNRELEASED_VERSION
-                        set the value for the new version (use the tag value),
-                        instead of using unreleased
-  --incremental         generates changelog from last created version, useful
-                        if the changelog has been manually modified
+                        set the value for the new version (use the tag value), instead of using unreleased
+  --incremental         generates changelog from last created version, useful if the changelog has been manually modified
   --start-rev START_REV
-                        start rev of the changelog.If not set, it will
-                        generate changelog from the start
+                        start rev of the changelog.If not set, it will generate changelog from the start
 ```
 
 ### Examples
+
+#### Generate full changelog
 
 ```bash
 cz changelog
@@ -33,6 +34,18 @@ cz changelog
 
 ```bash
 cz ch
+```
+
+#### Get the changelog for the given version
+
+```bash
+cz changelog 0.3.0
+```
+
+#### Get the changelog for the given version range
+
+```bash
+cz changelog 0.3.0..0.4.0
 ```
 
 ## Constrains
@@ -66,7 +79,7 @@ and the following variables are expected:
 | `change_type` | The group where the commit belongs to, this is optional. Example: fix                          | `commit regex` |
 | `message`\*   | Information extracted from the commit message                                                  | `commit regex` |
 | `scope`       | Contextual information. Should be parsed using the regex from the message, it will be **bold** | `commit regex` |
-| `breaking`    | Whether is a breaking change or not                                                             | `commit regex` |
+| `breaking`    | Whether is a breaking change or not                                                            | `commit regex` |
 
 - **required**: is the only one required to be parsed by the regex
 
@@ -74,7 +87,7 @@ and the following variables are expected:
 
 ### `unreleased_version`
 
-There is usually an egg and chicken situation when automatically
+There is usually a chicken and egg situation when automatically
 bumping the version and creating the changelog.
 If you bump the version first, you have no changelog, you have to
 create it later, and it won't be included in
