@@ -1,0 +1,21 @@
+[tool.commitizen]
+name = "cz_conventional_commits_appender"
+version = "2.20.4"
+tag_format = "v$version"
+version_files = [
+  "pyproject.toml:version",
+  "commitizen/__version__.py"
+]
+    [tool.commitizen.ConventionalCommitsAppenderCz]
+        [tool.commitizen.ConventionalCommitsAppenderCz.prefix]
+            [[tool.commitizen.ConventionalCommitsAppenderCz.prefix.choices]]
+            value = "impr"
+            name = "improvement: An improvement (but not as big as a feature). Correlates with MINOR in SemVer"
+            key = "i"
+
+        [tool.commitizen.ConventionalCommitsAppenderCz.schema_allow_locally]
+            patterns = [
+                "fixup!",
+                "squash!",
+                "a",
+            ]

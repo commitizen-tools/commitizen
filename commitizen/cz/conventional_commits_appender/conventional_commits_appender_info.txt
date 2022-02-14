@@ -1,0 +1,5 @@
+This is exactly the same as `conventional_commits`, with the exception that
+it will read the first `.conventional_commit_appender_rc` file it encounters,
+and append its patterns to the conventional_commits' ones.
+
+=== Below is the rest of the `conventional_commits_info.txt` ===

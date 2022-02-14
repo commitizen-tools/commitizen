@@ -18,6 +18,11 @@ def error(value: str) -> None:
     line(message, file=sys.stderr)
 
 
+def warning(value: str) -> None:
+    message = colored(value, "yellow")
+    line(message)
+
+
 def success(value: str) -> None:
     message = colored(value, "green")
     line(message)

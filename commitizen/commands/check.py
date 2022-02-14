@@ -5,6 +5,7 @@ from typing import Dict, Optional
 
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
+from commitizen.cz import ConventionalCommitsAppenderCz
 from commitizen.exceptions import (
     InvalidCommandArgumentError,
     InvalidCommitMessageError,
@@ -60,7 +61,7 @@ class Check:
         ill_formated_commits = [
             commit
             for commit in commits
-            if not Check.validate_commit_message(commit.message, pattern)
+            if not self.validate_commit_message(commit.message, pattern)
         ]
         displayed_msgs_content = "\n".join(
             [
@@ -98,8 +99,19 @@ class Check:
         lines = [line for line in msg.split("\n") if not line.startswith("#")]
         return "\n".join(lines)
 
-    @staticmethod
-    def validate_commit_message(commit_msg: str, pattern: str) -> bool:
+    def validate_commit_message(self, commit_msg: str, pattern: str) -> bool:
         if commit_msg.startswith("Merge") or commit_msg.startswith("Revert"):
             return True
-        return bool(re.match(pattern, commit_msg))
+
+        validate = bool(re.match(pattern, commit_msg))
+
+        if not validate and isinstance(self.cz, ConventionalCommitsAppenderCz):
+            if os.environ.get(self.cz.APPENDER_CZ_LOCAL, None):
+                pattern = self.cz.schema_pattern(local=True)
+
+            validate = bool(re.match(pattern, commit_msg))
+            if validate:
+                out.warning("Title line is only allowed locally! "
+                            "It will be rejected upstream.")
+
+        return validate
