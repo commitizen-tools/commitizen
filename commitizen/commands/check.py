@@ -100,6 +100,10 @@ class Check:
 
     @staticmethod
     def validate_commit_message(commit_msg: str, pattern: str) -> bool:
-        if commit_msg.startswith("Merge") or commit_msg.startswith("Revert"):
+        if (
+            commit_msg.startswith("Merge")
+            or commit_msg.startswith("Revert")
+            or commit_msg.startswith("Pull request")
+        ):
             return True
         return bool(re.match(pattern, commit_msg))
