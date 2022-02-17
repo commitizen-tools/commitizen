@@ -1,4 +1,11 @@
 
+## v2.21.0 (2022-02-17)
+
+### Feat
+
+- skip merge messages that start with Pull request
+- skip merge messages that start with Pull request
+
 ## v2.20.5 (2022-02-07)
 
 ### Refactor
