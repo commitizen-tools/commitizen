@@ -4,7 +4,7 @@ title: Content to be added or fixed
 labels: [documentation]
 body:
   - type: checkboxes
-    id: typo
+    id: type
     attributes:
       label: Type
       options:
