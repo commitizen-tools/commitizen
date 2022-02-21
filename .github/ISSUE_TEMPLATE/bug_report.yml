@@ -43,8 +43,6 @@ body:
       label: Screenshots
       description: |
         If applicable, add screenshots to help explain your problem.
-    validations:
-      required: true
   - type: textarea
     id: environment
     attributes:
