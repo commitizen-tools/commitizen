@@ -1,4 +1,10 @@
 
+## v2.21.2 (2022-02-22)
+
+### Fix
+
+- remove type ignore
+
 ## v2.21.1 (2022-02-22)
 
 ### Refactor
