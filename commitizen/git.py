@@ -39,10 +39,14 @@ class GitTag(GitObject):
     def __init__(self, name, rev, date):
         self.rev = rev.strip()
         self.name = name.strip()
-        self.date = date.strip()
+        self._date = date.strip()
 
     def __repr__(self):
         return f"GitTag('{self.name}', '{self.rev}', '{self.date}')"
+
+    @property
+    def date(self):
+        return self._date
 
     @classmethod
     def from_line(cls, line: str, inner_delimiter: str) -> "GitTag":
