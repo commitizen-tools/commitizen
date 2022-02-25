@@ -1,5 +1,8 @@
 import sys
+import time
+
 from datetime import date
+from unittest import mock
 
 import pytest
 
@@ -533,6 +536,7 @@ def test_changelog_with_filename_as_empty_string(mocker, changelog_path, config_
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
+@mock.patch("commitizen.git.GitTag.date", "2022-02-13")
 def test_changelog_from_rev_first_version_from_arg(
     mocker, config_path, changelog_path, file_regression
 ):
@@ -541,17 +545,18 @@ def test_changelog_from_rev_first_version_from_arg(
 
     # create commit and tag
     create_file_and_commit("feat: new file")
+
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-
+    time.sleep(0.5)
     create_file_and_commit("feat: after 0.2.0")
     create_file_and_commit("feat: another feature")
 
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-
+    time.sleep(0.5)
     testargs = ["cz", "changelog", "0.2.0"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
@@ -564,6 +569,7 @@ def test_changelog_from_rev_first_version_from_arg(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
+@mock.patch("commitizen.git.GitTag.date", "2022-02-13")
 def test_changelog_from_rev_latest_version_from_arg(
     mocker, config_path, changelog_path, file_regression
 ):
@@ -575,14 +581,14 @@ def test_changelog_from_rev_latest_version_from_arg(
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-
+    time.sleep(0.5)
     create_file_and_commit("feat: after 0.2.0")
     create_file_and_commit("feat: another feature")
 
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-
+    time.sleep(0.5)
     testargs = ["cz", "changelog", "0.3.0"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
@@ -651,6 +657,7 @@ def test_changelog_from_rev_range_version_not_found(mocker, config_path):
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
+@mock.patch("commitizen.git.GitTag.date", "2022-02-13")
 def test_changelog_from_rev_version_range_including_first_tag(
     mocker, config_path, changelog_path, file_regression
 ):
@@ -682,6 +689,7 @@ def test_changelog_from_rev_version_range_including_first_tag(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
+@mock.patch("commitizen.git.GitTag.date", "2022-02-13")
 def test_changelog_from_rev_version_range_from_arg(
     mocker, config_path, changelog_path, file_regression
 ):
@@ -693,19 +701,21 @@ def test_changelog_from_rev_version_range_from_arg(
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-
+    time.sleep(0.5)
     create_file_and_commit("feat: after 0.2.0")
     create_file_and_commit("feat: another feature")
 
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
+    time.sleep(0.5)
 
     create_file_and_commit("feat: getting ready for this")
 
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
+    time.sleep(0.5)
 
     testargs = ["cz", "changelog", "0.3.0..0.4.0"]
     mocker.patch.object(sys, "argv", testargs)
@@ -718,6 +728,7 @@ def test_changelog_from_rev_version_range_from_arg(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
+@mock.patch("commitizen.git.GitTag.date", "2022-02-13")
 def test_changelog_from_rev_version_with_big_range_from_arg(
     mocker, config_path, changelog_path, file_regression
 ):
@@ -726,9 +737,11 @@ def test_changelog_from_rev_version_with_big_range_from_arg(
 
     # create commit and tag
     create_file_and_commit("feat: new file")
+
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
+    time.sleep(0.5)
 
     create_file_and_commit("feat: after 0.2.0")
     create_file_and_commit("feat: another feature")
@@ -736,30 +749,32 @@ def test_changelog_from_rev_version_with_big_range_from_arg(
     testargs = ["cz", "bump", "--yes"]  # 0.3.0
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-
+    time.sleep(0.5)
     create_file_and_commit("feat: getting ready for this")
 
     testargs = ["cz", "bump", "--yes"]  # 0.4.0
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-
+    time.sleep(0.5)
     create_file_and_commit("fix: small error")
 
     testargs = ["cz", "bump", "--yes"]  # 0.4.1
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-
+    time.sleep(0.5)
     create_file_and_commit("feat: new shinny feature")
 
     testargs = ["cz", "bump", "--yes"]  # 0.5.0
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-
+    time.sleep(0.5)
     create_file_and_commit("feat: amazing different shinny feature")
+    # dirty hack to avoid same time between tags
 
     testargs = ["cz", "bump", "--yes"]  # 0.6.0
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
+    time.sleep(0.5)
 
     testargs = ["cz", "changelog", "0.3.0..0.5.0"]
     mocker.patch.object(sys, "argv", testargs)
@@ -772,6 +787,7 @@ def test_changelog_from_rev_version_with_big_range_from_arg(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
+@mock.patch("commitizen.git.GitTag.date", "2022-02-13")
 def test_changelog_from_rev_latest_version_dry_run(
     mocker, capsys, config_path, changelog_path, file_regression
 ):
@@ -784,7 +800,7 @@ def test_changelog_from_rev_latest_version_dry_run(
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-
+    time.sleep(0.5)
     create_file_and_commit("feat: after 0.2.0")
     create_file_and_commit("feat: another feature")
 
@@ -792,7 +808,7 @@ def test_changelog_from_rev_latest_version_dry_run(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
     capsys.readouterr()
-
+    time.sleep(0.5)
     testargs = ["cz", "changelog", "0.3.0", "--dry-run"]
     mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(DryRunExit):

@@ -320,7 +320,6 @@ def get_start_and_end_rev(
     """
     start: Optional[str] = None
     end: Optional[str] = None
-
     try:
         start, end = version.split("..")
     except ValueError:
