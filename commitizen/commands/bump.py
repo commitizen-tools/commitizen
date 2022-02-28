@@ -101,7 +101,7 @@ class Bump:
         is_files_only: Optional[bool] = self.arguments["files_only"]
         is_local_version: Optional[bool] = self.arguments["local_version"]
 
-        current_tag_version: str = bump.create_tag(
+        current_tag_version: str = bump.normalize_tag(
             current_version, tag_format=tag_format
         )
 
@@ -149,7 +149,7 @@ class Bump:
             is_local_version=is_local_version,
         )
 
-        new_tag_version = bump.create_tag(new_version, tag_format=tag_format)
+        new_tag_version = bump.normalize_tag(new_version, tag_format=tag_format)
         message = bump.create_commit_message(
             current_version, new_version, bump_commit_message
         )

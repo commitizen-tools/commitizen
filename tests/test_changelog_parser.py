@@ -33,15 +33,17 @@ def changelog_content() -> str:
 
 
 @pytest.fixture
-def existing_changelog_file():
-    changelog_path = "tests/CHANGELOG.md"
+def existing_changelog_file(tmpdir):
+    with tmpdir.as_cwd():
+        changelog_path = os.path.join(os.getcwd(), "CHANGELOG.md")
+        # changelog_path = "tests/CHANGELOG.md"
 
-    with open(changelog_path, "w") as f:
-        f.write(CHANGELOG_TEMPLATE)
+        with open(changelog_path, "w") as f:
+            f.write(CHANGELOG_TEMPLATE)
 
-    yield changelog_path
+        yield changelog_path
 
-    os.remove(changelog_path)
+        os.remove(changelog_path)
 
 
 def test_read_changelog_blocks(existing_changelog_file):
