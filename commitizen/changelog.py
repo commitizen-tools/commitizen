@@ -34,6 +34,7 @@ from typing import Callable, Dict, Iterable, List, Optional, Tuple
 from jinja2 import Environment, PackageLoader
 
 from commitizen import defaults
+from commitizen.bump import normalize_tag
 from commitizen.exceptions import InvalidConfigurationError
 from commitizen.git import GitCommit, GitTag
 
@@ -284,7 +285,7 @@ def incremental_build(new_content: str, lines: List, metadata: Dict) -> List:
 
 
 def get_smart_tag_range(
-    tags: List[GitTag], start: str, end: Optional[str] = None
+    tags: List[GitTag], newest: str, oldest: Optional[str] = None
 ) -> List[GitTag]:
     """Smart because it finds the N+1 tag.
 
@@ -292,14 +293,14 @@ def get_smart_tag_range(
     """
     accumulator = []
     keep = False
-    if not end:
-        end = start
+    if not oldest:
+        oldest = newest
     for index, tag in enumerate(tags):
-        if tag.name == start:
+        if tag.name == newest:
             keep = True
         if keep:
             accumulator.append(tag)
-        if tag.name == end:
+        if tag.name == oldest:
             keep = False
             try:
                 accumulator.append(tags[index + 1])
@@ -309,8 +310,8 @@ def get_smart_tag_range(
     return accumulator
 
 
-def get_start_and_end_rev(
-    tags: List[GitTag], version: str, tag_format: str, create_tag: Callable
+def get_oldest_and_newest_rev(
+    tags: List[GitTag], version: str, tag_format: str
 ) -> Tuple[Optional[str], Optional[str]]:
     """Find the tags for the given version.
 
@@ -318,34 +319,34 @@ def get_start_and_end_rev(
     - `0.1.0..0.4.0`: as a range
     - `0.3.0`: as a single version
     """
-    start: Optional[str] = None
-    end: Optional[str] = None
+    oldest: Optional[str] = None
+    newest: Optional[str] = None
     try:
-        start, end = version.split("..")
+        oldest, newest = version.split("..")
     except ValueError:
-        end = version
+        newest = version
 
-    end_tag = create_tag(end, tag_format=tag_format)
+    newest_tag = normalize_tag(newest, tag_format=tag_format)
 
-    start_tag = None
-    if start:
-        start_tag = create_tag(start, tag_format=tag_format)
+    oldest_tag = None
+    if oldest:
+        oldest_tag = normalize_tag(oldest, tag_format=tag_format)
 
-    tags_range = get_smart_tag_range(tags, start=end_tag, end=start_tag)
-    if len(tags_range) == 0:
+    tags_range = get_smart_tag_range(tags, newest=newest_tag, oldest=oldest_tag)
+    if not tags_range:
         return None, None
 
-    start_rev: Optional[str] = tags_range[-1].name
-    end_rev = end_tag
+    oldest_rev: Optional[str] = tags_range[-1].name
+    newest_rev = newest_tag
 
     # check if it's the first tag created
     # and it's also being requested as part of the range
-    if start_rev == tags[-1].name and start_rev == start_tag:
-        return None, end_rev
+    if oldest_rev == tags[-1].name and oldest_rev == oldest_tag:
+        return None, newest_rev
 
     # when they are the same, and it's also the
-    # first tag crated
-    if start_rev == end_rev:
-        return None, end_rev
+    # first tag created
+    if oldest_rev == newest_rev:
+        return None, newest_rev
 
-    return start_rev, end_rev
+    return oldest_rev, newest_rev

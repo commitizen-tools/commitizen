@@ -79,6 +79,7 @@ types-termcolor = "^0.1.1"
 mkdocs = "^1.0"
 mkdocs-material = "^4.1"
 pydocstyle = "^5.0.2"
+pytest-xdist = "^2.5.0"
 
 [tool.poetry.scripts]
 cz = "commitizen.cli:main"

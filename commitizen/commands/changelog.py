@@ -3,7 +3,7 @@ from difflib import SequenceMatcher
 from operator import itemgetter
 from typing import Callable, Dict, List, Optional
 
-from commitizen import bump, changelog, factory, git, out
+from commitizen import changelog, factory, git, out
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
     DryRunExit,
@@ -125,7 +125,7 @@ class Changelog:
         if not tags:
             tags = []
 
-        end_rev = "HEAD"
+        end_rev = ""
 
         if self.incremental:
             changelog_meta = changelog.get_metadata(self.file_name)
@@ -134,11 +134,10 @@ class Changelog:
                 start_rev = self._find_incremental_rev(latest_version, tags)
 
         if self.rev_range and self.tag_format:
-            start_rev, end_rev = changelog.get_start_and_end_rev(
+            start_rev, end_rev = changelog.get_oldest_and_newest_rev(
                 tags,
                 version=self.rev_range,
                 tag_format=self.tag_format,
-                create_tag=bump.create_tag,
             )
 
         commits = git.get_commits(

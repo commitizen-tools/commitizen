@@ -5,7 +5,7 @@ if [ -d 'venv' ] ; then
     export PREFIX="venv/bin/"
 fi
 
-${PREFIX}pytest --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen tests/
+${PREFIX}pytest -n 3 --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen tests/
 ${PREFIX}black commitizen tests --check
 ${PREFIX}isort --check-only commitizen tests
 ${PREFIX}flake8 commitizen/ tests/

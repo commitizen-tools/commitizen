@@ -196,7 +196,9 @@ def _version_to_regex(version: str):
     return re.compile(f"{clean_regex}")
 
 
-def create_tag(version: Union[Version, str], tag_format: Optional[str] = None) -> str:
+def normalize_tag(
+    version: Union[Version, str], tag_format: Optional[str] = None
+) -> str:
     """The tag and the software version might be different.
 
     That's why this function exists.

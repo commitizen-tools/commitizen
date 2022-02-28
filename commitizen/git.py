@@ -86,10 +86,10 @@ def get_commits(
     )
 
     if start:
-        c = cmd.run(f"{git_log_cmd} {start}..{end}")
+        command = f"{git_log_cmd} {start}..{end}"
     else:
-        c = cmd.run(f"{git_log_cmd} {end}")
-
+        command = f"{git_log_cmd} {end}"
+    c = cmd.run(command)
     if not c.out:
         return []
 

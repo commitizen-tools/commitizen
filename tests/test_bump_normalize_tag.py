@@ -19,5 +19,5 @@ conversion = [
 @pytest.mark.parametrize("test_input,expected", conversion)
 def test_create_tag(test_input, expected):
     version, format = test_input
-    new_tag = bump.create_tag(Version(version), format)
+    new_tag = bump.normalize_tag(Version(version), format)
     assert new_tag == expected
