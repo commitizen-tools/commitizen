@@ -30,3 +30,8 @@ def info(value: str) -> None:
 
 def diagnostic(value: str):
     line(value, file=sys.stderr)
+
+
+def warn(value: str) -> None:
+    message = colored(value, "magenta")
+    line(message)
