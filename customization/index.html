@@ -752,6 +752,9 @@ We have two different ways to do so.</p>
 <span class="n">info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">This is customized info</span>
 <span class="s">&quot;&quot;&quot;</span><span class="w"></span>
+<span class="n">commit_parser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;^(?P&lt;change_type&gt;feature|bug fix):\\s(?P&lt;message&gt;.*)?&quot;</span><span class="w"></span>
+<span class="n">changelog_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;^(feature|bug fix)?(!)?&quot;</span><span class="w"></span>
+<span class="n">change_type_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;feature&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Feat&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;bug fix&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Fix&quot;</span><span class="p">}</span><span class="w"></span>
 
 <span class="k">[[tool.commitizen.customize.questions]]</span><span class="w"></span>
 <span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="w"></span>
@@ -790,6 +793,9 @@ We have two different ways to do so.</p>
 <span class="w">            </span><span class="nt">&quot;change_type_order&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;BREAKING CHANGE&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;feat&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fix&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;refactor&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;perf&quot;</span><span class="p">],</span><span class="w"></span>
 <span class="w">            </span><span class="nt">&quot;info_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cz_customize_info.txt&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">            </span><span class="nt">&quot;info&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;This is customized info&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;commit_parser&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^(?P&lt;change_type&gt;feature|bug fix):\\s(?P&lt;message&gt;.*)?&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;changelog_pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^(feature|bug fix)?(!)?&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;change_type_map&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;feature&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Feat&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;bug fix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Fix&quot;</span><span class="p">},</span><span class="w"></span>
 <span class="w">            </span><span class="nt">&quot;questions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
 <span class="w">                </span><span class="p">{</span><span class="w"></span>
 <span class="w">                    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;list&quot;</span><span class="p">,</span><span class="w"></span>
@@ -831,6 +837,11 @@ We have two different ways to do so.</p>
 <span class="w">    </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;type&gt;:</span><span class="nv"> </span><span class="s">&lt;body&gt;&quot;</span><span class="w"></span>
 <span class="w">    </span><span class="nt">schema_pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;(feature|bug</span><span class="nv"> </span><span class="s">fix):(\\s.*)&quot;</span><span class="w"></span>
 <span class="w">    </span><span class="nt">bump_pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;^(break|new|fix|hotfix)&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">commit_parser</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;^(?P&lt;change_type&gt;feature|bug</span><span class="nv"> </span><span class="s">fix):\\s(?P&lt;message&gt;.*)?&quot;</span><span class="err">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">changelog_pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;^(feature|bug</span><span class="nv"> </span><span class="s">fix)?(!)?&quot;</span><span class="err">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">change_type_map</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">feature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Feat</span><span class="w"></span>
+<span class="w">      </span><span class="nt">bug fix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Fix</span><span class="w"></span>
 <span class="w">    </span><span class="nt">bump_map</span><span class="p">:</span><span class="w"></span>
 <span class="w">      </span><span class="nt">break</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MAJOR</span><span class="w"></span>
 <span class="w">      </span><span class="nt">new</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MINOR</span><span class="w"></span>
@@ -926,6 +937,24 @@ We have two different ways to do so.</p>
 <td><code>str</code></td>
 <td><code>None</code></td>
 <td>(OPTIONAL) List of strings used to order the Changelog. All other types will be sorted alphabetically. Default is <code>["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]</code></td>
+</tr>
+<tr>
+<td><code>commit_parser</code></td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td>(OPTIONAL) Regex to extract information used in creating changelog. <a href="https://commitizen-tools.github.io/commitizen/changelog/">See more</a></td>
+</tr>
+<tr>
+<td><code>changelog_pattern</code></td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td>(OPTIONAL) Regex to understand which commits to include in the changelog</td>
+</tr>
+<tr>
+<td><code>change_type_map</code></td>
+<td><code>dict</code></td>
+<td><code>None</code></td>
+<td>(OPTIONAL) Dictionary mapping the type of the commit to a changelog entry</td>
 </tr>
 </tbody>
 </table>
