@@ -1,11 +1,11 @@
 default_stages: [push]
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.1.0
+    rev: v4.1.0
     hooks:
       - id: check-vcs-permalinks
       - id: end-of-file-fixer
-        exclude: "tests/[test_*|data]/*"
+        exclude: "tests/[test_*|data|commands/tests_*]/*"
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
       - id: debug-statements

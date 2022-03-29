@@ -53,7 +53,7 @@ body:
         - commitizen version: `cz version`
         - python version: `python --version`
         - operating system: `python3 -c "import platform; print(platform.system())"`
-        
+
         ```bash
         cz version --report
         ```
