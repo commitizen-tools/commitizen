@@ -1,7 +1,7 @@
 # Automatically check message before commit
 
 ## About
-To automatically check a commit message prior to committing, you can use a [git hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks). 
+To automatically check a commit message prior to committing, you can use a [git hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks).
 
 ## How to
 There are two common methods for installing the hook:
@@ -62,4 +62,3 @@ Each time you create a commit, automatically, this hook will analyze it.
 If the commit message is invalid, it'll be rejected.
 
 The commit should follow the given committing rules; otherwise, it won't be accepted.
-
