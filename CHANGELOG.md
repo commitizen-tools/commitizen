@@ -1,4 +1,15 @@
 
+## v2.22.0 (2022-03-29)
+
+### Refactor
+
+- speed up testing and wait for tags
+- **git**: use date as a function in GitTag to easily patch
+
+### Feat
+
+- **changelog**: add support for single version and version range
+
 ## v2.21.2 (2022-02-22)
 
 ### Fix
