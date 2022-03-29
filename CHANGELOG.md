@@ -1,4 +1,10 @@
 
+## v2.23.0 (2022-03-29)
+
+### Feat
+
+- **customize.py**: adding support for commit_parser, changelog_pattern, change_type_map
+
 ## v2.22.0 (2022-03-29)
 
 ### Refactor
