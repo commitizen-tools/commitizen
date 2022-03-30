@@ -1,5 +1,4 @@
 import sys
-from datetime import date
 
 import pytest
 
@@ -27,7 +26,7 @@ def test_changelog_on_empty_project(mocker):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_from_version_zero_point_two(mocker, capsys):
+def test_changelog_from_version_zero_point_two(mocker, capsys, file_regression):
     create_file_and_commit("feat: new file")
     create_file_and_commit("refactor: not in changelog")
 
@@ -46,11 +45,11 @@ def test_changelog_from_version_zero_point_two(mocker, capsys):
         cli.main()
 
     out, _ = capsys.readouterr()
-    assert out == "## Unreleased\n\n### Feat\n\n- after 0.2\n- after 0.2.0\n\n"
+    file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_with_different_cz(mocker, capsys):
+def test_changelog_with_different_cz(mocker, capsys, file_regression):
     create_file_and_commit("JRA-34 #comment corrected indent issue")
     create_file_and_commit("JRA-35 #time 1w 2d 4h 30m Total work logged")
 
@@ -60,14 +59,11 @@ def test_changelog_with_different_cz(mocker, capsys):
     with pytest.raises(DryRunExit):
         cli.main()
     out, _ = capsys.readouterr()
-    assert (
-        out
-        == "## Unreleased\n\n\n- JRA-35 #time 1w 2d 4h 30m Total work logged\n- JRA-34 #comment corrected indent issue\n\n"
-    )
+    file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_from_start(mocker, capsys, changelog_path):
+def test_changelog_from_start(mocker, capsys, changelog_path, file_regression):
     create_file_and_commit("feat: new file")
     create_file_and_commit("refactor: is in changelog")
     create_file_and_commit("Merge into master")
@@ -78,16 +74,12 @@ def test_changelog_from_start(mocker, capsys, changelog_path):
 
     with open(changelog_path, "r") as f:
         out = f.read()
-
-    assert (
-        out
-        == "## Unreleased\n\n### Refactor\n\n- is in changelog\n\n### Feat\n\n- new file\n"
-    )
+    file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_replacing_unreleased_using_incremental(
-    mocker, capsys, changelog_path
+    mocker, capsys, changelog_path, file_regression
 ):
     create_file_and_commit("feat: add new output")
     create_file_and_commit("fix: output glitch")
@@ -112,15 +104,13 @@ def test_changelog_replacing_unreleased_using_incremental(
     with open(changelog_path, "r") as f:
         out = f.read()
 
-    today = date.today().isoformat()
-    assert (
-        out
-        == f"## Unreleased\n\n### Feat\n\n- add more stuff\n\n### Fix\n\n- mama gotta work\n\n## 0.2.0 ({today})\n\n### Fix\n\n- output glitch\n\n### Feat\n\n- add new output\n"
-    )
+    file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_is_persisted_using_incremental(mocker, capsys, changelog_path):
+def test_changelog_is_persisted_using_incremental(
+    mocker, capsys, changelog_path, file_regression
+):
 
     create_file_and_commit("feat: add new output")
     create_file_and_commit("fix: output glitch")
@@ -149,15 +139,13 @@ def test_changelog_is_persisted_using_incremental(mocker, capsys, changelog_path
     with open(changelog_path, "r") as f:
         out = f.read()
 
-    today = date.today().isoformat()
-    assert (
-        out
-        == f"## Unreleased\n\n### Feat\n\n- add more stuff\n\n### Fix\n\n- mama gotta work\n\n## 0.2.0 ({today})\n\n### Fix\n\n- output glitch\n\n### Feat\n\n- add new output\n\nnote: this should be persisted using increment\n"
-    )
+    file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_incremental_angular_sample(mocker, capsys, changelog_path):
+def test_changelog_incremental_angular_sample(
+    mocker, capsys, changelog_path, file_regression
+):
     with open(changelog_path, "w") as f:
         f.write(
             "# [10.0.0-next.3](https://github.com/angular/angular/compare/10.0.0-next.2...10.0.0-next.3) (2020-04-22)\n"
@@ -183,10 +171,7 @@ def test_changelog_incremental_angular_sample(mocker, capsys, changelog_path):
     with open(changelog_path, "r") as f:
         out = f.read()
 
-    assert (
-        out
-        == "## Unreleased\n\n### Feat\n\n- add more stuff\n- add new output\n\n### Fix\n\n- mama gotta work\n- output glitch\n\n# [10.0.0-next.3](https://github.com/angular/angular/compare/10.0.0-next.2...10.0.0-next.3) (2020-04-22)\n\n### Bug Fixes\n* **common:** format day-periods that cross midnight ([#36611](https://github.com/angular/angular/issues/36611)) ([c6e5fc4](https://github.com/angular/angular/commit/c6e5fc4)), closes [#36566](https://github.com/angular/angular/issues/36566)\n"
-    )
+    file_regression.check(out, extension=".md")
 
 
 KEEP_A_CHANGELOG = """# Changelog
@@ -215,7 +200,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_incremental_keep_a_changelog_sample(mocker, capsys, changelog_path):
+def test_changelog_incremental_keep_a_changelog_sample(
+    mocker, capsys, changelog_path, file_regression
+):
     with open(changelog_path, "w") as f:
         f.write(KEEP_A_CHANGELOG)
     create_file_and_commit("irrelevant commit")
@@ -235,10 +222,7 @@ def test_changelog_incremental_keep_a_changelog_sample(mocker, capsys, changelog
     with open(changelog_path, "r") as f:
         out = f.read()
 
-    assert (
-        out
-        == """# Changelog\nAll notable changes to this project will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).\n\n## Unreleased\n\n### Feat\n\n- add more stuff\n- add new output\n\n### Fix\n\n- mama gotta work\n- output glitch\n\n## [1.0.0] - 2017-06-20\n### Added\n- New visual identity by [@tylerfortune8](https://github.com/tylerfortune8).\n- Version navigation.\n\n### Changed\n- Start using "changelog" over "change log" since it\'s the common usage.\n\n### Removed\n- Section about "changelog" vs "CHANGELOG".\n\n## [0.3.0] - 2015-12-03\n### Added\n- RU translation from [@aishek](https://github.com/aishek).\n"""
-    )
+    file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -287,7 +271,7 @@ def test_changelog_hook_customize(mocker, config_customize):
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_multiple_incremental_do_not_add_new_lines(
-    mocker, capsys, changelog_path
+    mocker, capsys, changelog_path, file_regression
 ):
     """Test for bug https://github.com/commitizen-tools/commitizen/issues/192"""
     create_file_and_commit("feat: add new output")
@@ -317,7 +301,7 @@ def test_changelog_multiple_incremental_do_not_add_new_lines(
     with open(changelog_path, "r") as f:
         out = f.read()
 
-    assert out.startswith("#")
+    file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -394,7 +378,7 @@ def test_changelog_in_non_git_project(tmpdir, config, mocker):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_breaking_change_content_v1_beta(mocker, capsys):
+def test_breaking_change_content_v1_beta(mocker, capsys, file_regression):
     commit_message = (
         "feat(users): email pattern corrected\n\n"
         "BREAKING CHANGE: migrate by renaming user to users\n\n"
@@ -406,15 +390,11 @@ def test_breaking_change_content_v1_beta(mocker, capsys):
     with pytest.raises(DryRunExit):
         cli.main()
     out, _ = capsys.readouterr()
-
-    assert out == (
-        "## Unreleased\n\n### Feat\n\n- **users**: email pattern corrected\n\n"
-        "### BREAKING CHANGE\n\n- migrate by renaming user to users\n\n"
-    )
+    file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_breaking_change_content_v1(mocker, capsys):
+def test_breaking_change_content_v1(mocker, capsys, file_regression):
     commit_message = (
         "feat(users): email pattern corrected\n\n"
         "body content\n\n"
@@ -427,14 +407,11 @@ def test_breaking_change_content_v1(mocker, capsys):
         cli.main()
     out, _ = capsys.readouterr()
 
-    assert out == (
-        "## Unreleased\n\n### Feat\n\n- **users**: email pattern corrected\n\n"
-        "### BREAKING CHANGE\n\n- migrate by renaming user to users\n\n"
-    )
+    file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_breaking_change_content_v1_multiline(mocker, capsys):
+def test_breaking_change_content_v1_multiline(mocker, capsys, file_regression):
     commit_message = (
         "feat(users): email pattern corrected\n\n"
         "body content\n\n"
@@ -448,17 +425,13 @@ def test_breaking_change_content_v1_multiline(mocker, capsys):
     with pytest.raises(DryRunExit):
         cli.main()
     out, _ = capsys.readouterr()
-
-    assert out == (
-        "## Unreleased\n\n### Feat\n\n- **users**: email pattern corrected\n\n"
-        "### BREAKING CHANGE\n\n- migrate by renaming user to users.\n"
-        "and then connect the thingy with the other thingy"
-        "\n\n"
-    )
+    file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_config_flag_increment(mocker, changelog_path, config_path):
+def test_changelog_config_flag_increment(
+    mocker, changelog_path, config_path, file_regression
+):
 
     with open(config_path, "a") as f:
         f.write("changelog_incremental = true\n")
@@ -475,10 +448,13 @@ def test_changelog_config_flag_increment(mocker, changelog_path, config_path):
         out = f.read()
 
     assert "this should be persisted using increment" in out
+    file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_config_start_rev_option(mocker, capsys, config_path):
+def test_changelog_config_start_rev_option(
+    mocker, capsys, config_path, file_regression
+):
 
     # create commit and tag
     create_file_and_commit("feat: new file")
@@ -499,7 +475,7 @@ def test_changelog_config_start_rev_option(mocker, capsys, config_path):
         cli.main()
 
     out, _ = capsys.readouterr()
-    assert out == "## Unreleased\n\n### Feat\n\n- after 0.2\n- after 0.2.0\n\n"
+    file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
