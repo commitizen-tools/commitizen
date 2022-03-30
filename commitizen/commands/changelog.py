@@ -3,7 +3,7 @@ from difflib import SequenceMatcher
 from operator import itemgetter
 from typing import Callable, Dict, List, Optional
 
-from commitizen import changelog, factory, git, out
+from commitizen import changelog, defaults, factory, git, out
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
     DryRunExit,
@@ -45,7 +45,9 @@ class Changelog:
             self.config.settings.get("change_type_map") or self.cz.change_type_map
         )
         self.change_type_order = (
-            self.config.settings.get("change_type_order") or self.cz.change_type_order
+            self.config.settings.get("change_type_order")
+            or self.cz.change_type_order
+            or defaults.change_type_order
         )
         self.rev_range = args.get("rev_range")
         self.tag_format = args.get("tag_format") or self.config.settings.get(
