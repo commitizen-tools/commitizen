@@ -78,6 +78,7 @@ def test_changelog_from_start(mocker, capsys, changelog_path, file_regression):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-03-30")
 def test_changelog_replacing_unreleased_using_incremental(
     mocker, capsys, changelog_path, file_regression
 ):
@@ -108,6 +109,7 @@ def test_changelog_replacing_unreleased_using_incremental(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-03-30")
 def test_changelog_is_persisted_using_incremental(
     mocker, capsys, changelog_path, file_regression
 ):
@@ -869,6 +871,7 @@ def test_invalid_subject_is_skipped(mocker, capsys):
 
 
 @pytest.mark.freeze_time("2022-02-13")
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_with_customized_change_type_order(
     mocker, config_path, changelog_path, file_regression
 ):
