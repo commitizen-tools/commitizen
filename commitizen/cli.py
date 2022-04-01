@@ -310,9 +310,10 @@ sys.excepthook = commitizen_excepthook
 
 
 def parse_no_raise(comma_separated_no_raise: str) -> List[int]:
-    """
-    Convert the given string with exit code digits or exit
-    codes name to its integer representation
+    """Convert the given string to exit codes.
+
+    Receives digits and strings and outputs the parsed integer which
+    represents the exit code found in exceptions.
     """
     no_raise_items: List[str] = comma_separated_no_raise.split(",")
     no_raise_codes = []
