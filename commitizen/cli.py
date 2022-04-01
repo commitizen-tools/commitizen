@@ -314,16 +314,16 @@ def parse_no_raise(comma_separated_no_raise: str) -> List[int]:
     Convert the given string with exit code digits or exit
     codes name to its integer representation
     """
-    no_raise_items = comma_separated_no_raise.split(",")
+    no_raise_items: List[str] = comma_separated_no_raise.split(",")
     no_raise_codes = []
     for item in no_raise_items:
         if item.isdecimal():
             no_raise_codes.append(int(item))
             continue
         try:
-            exit_code = ExitCode[item]
+            exit_code = ExitCode[item.strip()]
         except KeyError:
-            out.warn(f"WARN: no_raise key {item} does not exist. Skipping.")
+            out.warn(f"WARN: no_raise key `{item}` does not exist. Skipping.")
             continue
         else:
             no_raise_codes.append(exit_code.value)
