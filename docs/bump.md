@@ -179,6 +179,69 @@ Example:
 cz bump --changelog --changelog-to-stdout > body.md
 ```
 
+## Avoid raising errors
+
+Some situations from commitizen rise an exit code different than 0.
+If the error code is different than 0, any CI or script running commitizen might be interrupted.
+
+If you have special use case, where you don't want one of this error codes to be raised, you can
+tell commitizen to not raise them.
+
+### Recommended use case
+
+At the moment, we've identified that the most common error code to skip is
+
+| Error name        | Exit code |
+| ----------------- | --------- |
+| NoneIncrementExit | 21        |
+
+There are some situations where you don't want to get an error code when some
+commits do not match your rules, you just want those commits to be skipped.
+
+```sh
+cz -nr 21 bump
+```
+
+### Easy way
+
+Check which error code was raised by commitizen by running in the terminal
+
+```sh
+echo $?
+```
+
+The output should be an integer like this
+
+```sh
+3
+```
+
+And then you can tell commitizen to ignore it:
+
+```sh
+cz --no-raise 3
+```
+
+You can tell commitizen to skip more than one if needed:
+
+```sh
+cz --no-raise 3,4,5
+```
+
+### Longer way
+
+Check the list of [exit_codes](./exit_codes.md) and understand which one you have
+to skip and why.
+
+Remember to document somewhere this, because you'll forget.
+
+For example if the system raises a `NoneIncrementExit` error, you look it up
+on the list and then you can use the exit code:
+
+```sh
+cz -nr 21 bump
+```
+
 ## Configuration
 
 ### `tag_format`
