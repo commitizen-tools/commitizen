@@ -82,20 +82,18 @@ class Check:
         out.success("Commit validation: successful!")
 
     def _get_commits(self):
+        msg = None
         # Get commit message from file (--commit-msg-file)
         if self.commit_msg_file is not None:
             # Enter this branch if commit_msg_file is "".
             with open(self.commit_msg_file, "r", encoding="utf-8") as commit_file:
                 msg = commit_file.read()
+        # Get commit message from command line (--message)
+        elif self.commit_msg:
+            msg = self.commit_msg
+        if msg is not None:
             msg = self._filter_comments(msg)
-            msg = msg.lstrip("\n")
-            commit_title = msg.split("\n")[0]
-            commit_body = "\n".join(msg.split("\n")[1:])
-            return [git.GitCommit(rev="", title=commit_title, body=commit_body)]
-        elif self.commit_msg is not None:
-            # Enter this branch if commit_msg is "".
-            self.commit_msg = self._filter_comments(self.commit_msg)
-            return [git.GitCommit(rev="", title="", body=self.commit_msg)]
+            return [git.GitCommit(rev="", title="", body=msg)]
 
         # Get commit messages from git log (--rev-range)
         return git.get_commits(end=self.rev_range)
