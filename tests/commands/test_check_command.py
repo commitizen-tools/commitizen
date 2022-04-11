@@ -129,6 +129,11 @@ def test_check_conventional_commit_succeeds(mocker, capsys):
     (
         "feat!(lang): removed polish language",
         "no conventional commit",
+        (
+            "ci: check commit message on merge\n"
+            "testing with more complex commit mes\n\n"
+            "age with error"
+        ),
     ),
 )
 def test_check_no_conventional_commit(commit_msg, config, mocker, tmpdir):
