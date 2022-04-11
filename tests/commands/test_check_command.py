@@ -17,20 +17,20 @@ COMMIT_LOG = [
     "refactor(git): remove unnecessary dot between git range",
     "bump: version 1.16.3 → 1.16.4",
     (
-        "Merge pull request #139 from Lee-W/fix-init-clean-config-file\n"
+        "Merge pull request #139 from Lee-W/fix-init-clean-config-file\n\n"
         "Fix init clean config file"
     ),
     "ci(pyproject.toml): add configuration for coverage",
-    "fix(commands/init): fix clean up file when initialize commitizen config\n#138",
+    "fix(commands/init): fix clean up file when initialize commitizen config\n\n#138",
     "refactor(defaults): split config files into long term support and deprecated ones",
     "bump: version 1.16.2 → 1.16.3",
     (
-        "Merge pull request #136 from Lee-W/remove-redundant-readme\n"
+        "Merge pull request #136 from Lee-W/remove-redundant-readme\n\n"
         "Remove redundant readme"
     ),
     "fix: replace README.rst with docs/README.md in config files",
     (
-        "refactor(docs): remove README.rst and use docs/README.md\n"
+        "refactor(docs): remove README.rst and use docs/README.md\n\n"
         "By removing README.rst, we no longer need to maintain "
         "two document with almost the same content\n"
         "Github can read docs/README.md as README for the project."
@@ -38,10 +38,10 @@ COMMIT_LOG = [
     "docs(check): pin pre-commit to v1.16.2",
     "docs(check): fix pre-commit setup",
     "bump: version 1.16.1 → 1.16.2",
-    "Merge pull request #135 from Lee-W/fix-pre-commit-hook\nFix pre commit hook",
+    "Merge pull request #135 from Lee-W/fix-pre-commit-hook\n\nFix pre commit hook",
     "docs(check): enforce cz check only whem committing",
     (
-        'Revert "fix(pre-commit): set pre-commit check stage to commit-msg"\n'
+        'Revert "fix(pre-commit): set pre-commit check stage to commit-msg"\n\n'
         "This reverts commit afc70133e4a81344928561fbf3bb20738dfc8a0b."
     ),
     "feat!: add user stuff",
