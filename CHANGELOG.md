@@ -1,4 +1,14 @@
 
+## v2.24.0 (2022-04-15)
+
+### Fix
+
+- change error code for NoneIncrementExit
+
+### Feat
+
+- add --no-raise to avoid raising error codes
+
 ## v2.23.0 (2022-03-29)
 
 ### Feat
