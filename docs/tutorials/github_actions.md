@@ -12,7 +12,7 @@ the new tag, back to your master branch, we have to:
    with the following content.
 
 !!! warning
-If you use `GITHUB_TOKEN` instead of `PERSONAL_ACCESS_TOKEN`, the job won't trigger another workflow. It's like using `[skip ci]` in other CI's.
+    If you use `GITHUB_TOKEN` instead of `PERSONAL_ACCESS_TOKEN`, the job won't trigger another workflow. It's like using `[skip ci]` in other CI's.
 
 ```yaml
 name: Bump version

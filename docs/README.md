@@ -124,11 +124,9 @@ Read more about the `check` command [here](check.md).
 
 ### Help
 
-```bash
+```sh
 $ cz --help
-usage: cz [-h] [--debug] [-n NAME] [--version]
-          {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version}
-          ...
+usage: cz [-h] [--debug] [-n NAME] [-nr NO_RAISE] {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version} ...
 
 Commitizen is a cli tool to generate conventional commits.
 For more information about the topic go to https://conventionalcommits.org/
@@ -136,9 +134,10 @@ For more information about the topic go to https://conventionalcommits.org/
 optional arguments:
   -h, --help            show this help message and exit
   --debug               use debug mode
-  -n NAME, --name NAME  use the given commitizen (default:
-                        cz_conventional_commits)
-  --version             get the version of the installed commitizen
+  -n NAME, --name NAME  use the given commitizen (default: cz_conventional_commits)
+  -nr NO_RAISE, --no-raise NO_RAISE
+                        comma separated error codes that won't rise error, e.g: cz -nr 1,2,3 bump. See codes at https://commitizen-
+                        tools.github.io/commitizen/exit_codes/
 
 commands:
   {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version}
@@ -149,12 +148,9 @@ commands:
     info                show information about the cz
     schema              show commit schema
     bump                bump semantic version based on the git log
-    changelog (ch)      generate changelog (note that it will overwrite
-                        existing file)
-    check               validates that a commit message matches the commitizen
-                        schema
-    version             get the version of the installed commitizen or the
-                        current project (default: installed commitizen)
+    changelog (ch)      generate changelog (note that it will overwrite existing file)
+    check               validates that a commit message matches the commitizen schema
+    version             get the version of the installed commitizen or the current project (default: installed commitizen)
 ```
 
 ## Setting up bash completion

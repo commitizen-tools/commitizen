@@ -358,7 +358,7 @@ def test_none_increment_should_not_call_git_tag_and_error_code_is_not_zero(
             cli.main()
         except NoneIncrementExit as e:
             git.tag.assert_not_called()
-            assert e.exit_code == ExitCode.NO_COMMITS_FOUND
+            assert e.exit_code == ExitCode.NO_INCREMENT
             raise e
 
     # restore pop stashed

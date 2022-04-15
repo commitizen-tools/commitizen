@@ -25,6 +25,7 @@ class ExitCode(enum.IntEnum):
     INVALID_COMMAND_ARGUMENT = 18
     INVALID_CONFIGURATION = 19
     NOT_ALLOWED = 20
+    NO_INCREMENT = 21
 
 
 class CommitizenException(Exception):
@@ -56,7 +57,7 @@ class DryRunExit(ExpectedExit):
 
 
 class NoneIncrementExit(CommitizenException):
-    exit_code = ExitCode.NO_COMMITS_FOUND
+    exit_code = ExitCode.NO_INCREMENT
 
 
 class NoCommitizenFoundException(CommitizenException):
