@@ -46,7 +46,7 @@ class TomlConfig(BaseConfig):
 
         ```
         [tool.commitizen]
-        name = "cz_conventional_commits"
+        name = "cz_cohhnventional_commits"
         ```
         """
         doc = parse(data)
