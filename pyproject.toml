@@ -1,121 +1,66 @@
 [tool.commitizen]
-version = "2.24.0"
-tag_format = "v$version"
+name = "cz_customize"
+version = "0.1.0"
 version_files = [
-  "pyproject.toml:version",
-  "commitizen/__version__.py"
+    "src/__version__.py",
+    "pyproject.toml:version"
+]
+style = [
+    ["qmark", "fg:#ff9d00 bold"],
+    ["question", "bold"],
+    ["answer", "fg:#ff9d00 bold"],
+    ["pointer", "fg:#ff9d00 bold"],
+    ["highlighted", "fg:#ff9d00 bold"],
+    ["selected", "fg:#cc5454"],
+    ["separator", "fg:#cc5454"],
+    ["instruction", ""],
+    ["text", "fg:#ffffff"],
+    ["disabled", "fg:#858585 italic"]
 ]
 
-[tool.black]
-line-length = 88
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-  # The following are specific to Black, you probably don't want those.
-  | blib2to3
-  | tests/data
-  | profiling
-)/
-'''
+#(major|breaking|minor|feature|fix|patch)
 
-[tool.poetry]
-name = "commitizen"
-version = "2.24.0"
-description = "Python commitizen client tool"
-authors = ["Santiago Fraire <santiwilly@gmail.com>"]
-license = "MIT"
-keywords = ["commitizen", "conventional", "commits", "git"]
-readme = "docs/README.md"
-homepage = "https://github.com/commitizen-tools/commitizen"
-classifiers = [
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: Implementation :: CPython",
+[tool.commitizen.customize]
+message_template = "{{title}}\n\n{{description}}\n\n+ref: {{ticket_ref}}\n+semver: {{change_type}}\n{% if is_breaking_change %}\nBREAKING CHANGE: {{footer}}{% endif %}"
+example = "feature: this feature enable customize through config file"
+schema = "<type>: <body>"
+schema_pattern = "(feature|bug fix):(\\s.*)"
+#bump_pattern = "^(major|breaking|minor|feature|fix|patch)"
+#bump_map = {"major" = "MAJOR", "breaking" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
+change_type_order = ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]
+info_path = "cz_customize_info.txt"
+info = """
+This is customized info
+"""
+commit_parser = "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?"
+changelog_pattern = "^(feature|bug fix)?(!)?"
+change_type_map = {"feature" = "Feat", "bug fix" = "Fix"}
+
+[[tool.commitizen.customize.questions]]
+type = "list"
+name = "change_type"
+choices = [
+    "major",
+    "breaking",
+    "minor",
+    "feature",
+    "fix",
+    "patch",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.6.2"
-questionary = "^1.4.0"
-decli = "^0.5.2"
-colorama = "^0.4.1"
-termcolor = "^1.1"
-packaging = ">=19,<22"
-tomlkit = ">=0.5.3,<1.0.0"
-jinja2 = ">=2.10.3"
-pyyaml = ">=3.08"
-argcomplete = "^1.12.1"
-typing-extensions = "^4.0.1"
+message = "Select the type of change you are committing"
 
-[tool.poetry.dev-dependencies]
-ipython = "^7.2"
-# test
-pytest = "^6.2.5"
-pytest-cov = "^2.6"
-pytest-mock = "^2.0"
-codecov = "^2.0"
-freezegun = "^0.3.15"
-pytest-regressions = "^2.2.0"
-pytest-freezegun = "^0.4.2"
-# code formatter
-black = "^21.12b0"
-isort = "^5.7.0"
-# linter
-flake8 = "^3.6"
-pre-commit = "^2.6.0"
-mypy = "^0.931"
-types-PyYAML = "^5.4.3"
-types-termcolor = "^0.1.1"
-# documentation
-mkdocs = "^1.0"
-mkdocs-material = "^4.1"
-pydocstyle = "^5.0.2"
-pytest-xdist = "^2.5.0"
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "ticket_ref"
+message = "Enter a ticket reference (Enter to skip):"
 
-[tool.poetry.scripts]
-cz = "commitizen.cli:main"
-git-cz = "commitizen.cli:main"
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "title"
+message = "Enter a descriptive title:"
 
-[tool.isort]
-profile = "black"
-known_first_party = ["commitizen", "tests"]
-
-[tool.coverage]
-    [tool.coverage.report]
-    show_missing = true
-    exclude_lines = [
-        # Have to re-enable the standard pragma
-        'pragma: no cover',
-
-        # Don't complain about missing debug-only code:
-        'def __repr__',
-        'if self\.debug',
-
-        # Don't complain if tests don't hit defensive assertion code:
-        'raise AssertionError',
-        'raise NotImplementedError',
-
-        # Don't complain if non-runnable code isn't run:
-        'if 0:',
-        'if __name__ == .__main__.:'
-    ]
-    omit = [
-        'env/*',
-        'venv/*',
-        '*/virtualenv/*',
-        '*/virtualenvs/*',
-        '*/tests/*'
-    ]
-
-[build-system]
-requires = ["poetry_core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "description"
+message = "Enter a description:"

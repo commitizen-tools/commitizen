@@ -1,0 +1,153 @@
+[tool.commitizen]
+name = "cz_customize"
+version = "2.24.0"
+tag_format = "v$version"
+version_files = ["pyproject.toml:version", "commitizen/__version__.py"]
+
+[tool.black]
+line-length = 88
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  # The following are specific to Black, you probably don't want those.
+  | blib2to3
+  | tests/data
+  | profiling
+)/
+'''
+
+[tool.poetry]
+name = "commitizen"
+version = "2.24.0"
+description = "Python commitizen client tool"
+authors = ["Santiago Fraire <santiwilly@gmail.com>"]
+license = "MIT"
+keywords = ["commitizen", "conventional", "commits", "git"]
+readme = "docs/README.md"
+homepage = "https://github.com/commitizen-tools/commitizen"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: Implementation :: CPython",
+]
+
+[tool.poetry.dependencies]
+python = "^3.6.2"
+questionary = "^1.4.0"
+decli = "^0.5.2"
+colorama = "^0.4.1"
+termcolor = "^1.1"
+packaging = ">=19,<22"
+tomlkit = ">=0.5.3,<1.0.0"
+jinja2 = ">=2.10.3"
+pyyaml = ">=3.08"
+argcomplete = "^1.12.1"
+typing-extensions = "^4.0.1"
+
+[tool.poetry.dev-dependencies]
+ipython = "^7.2"
+# test
+pytest = "^6.2.5"
+pytest-cov = "^2.6"
+pytest-mock = "^2.0"
+codecov = "^2.0"
+freezegun = "^0.3.15"
+pytest-regressions = "^2.2.0"
+pytest-freezegun = "^0.4.2"
+# code formatter
+black = "^21.12b0"
+isort = "^5.7.0"
+# linter
+flake8 = "^3.6"
+pre-commit = "^2.6.0"
+mypy = "^0.931"
+types-PyYAML = "^5.4.3"
+types-termcolor = "^0.1.1"
+# documentation
+mkdocs = "^1.0"
+mkdocs-material = "^4.1"
+pydocstyle = "^5.0.2"
+pytest-xdist = "^2.5.0"
+
+[tool.poetry.scripts]
+cz = "commitizen.cli:main"
+git-cz = "commitizen.cli:main"
+
+[tool.isort]
+profile = "black"
+known_first_party = ["commitizen", "tests"]
+
+[tool.coverage]
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+    # Have to re-enable the standard pragma
+    'pragma: no cover',
+
+    # Don't complain about missing debug-only code:
+    'def __repr__',
+    'if self\.debug',
+
+    # Don't complain if tests don't hit defensive assertion code:
+    'raise AssertionError',
+    'raise NotImplementedError',
+
+    # Don't complain if non-runnable code isn't run:
+    'if 0:',
+    'if __name__ == .__main__.:',
+]
+omit = ['env/*', 'venv/*', '*/virtualenv/*', '*/virtualenvs/*', '*/tests/*']
+
+[build-system]
+requires = ["poetry_core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.commitizen.customize]
+message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
+example = "feature: this feature enable customize through config file"
+schema = "<type>: <body>"
+schema_pattern = "(feature|bug fix):(\\s.*)"
+bump_pattern = "^(break|new|fix|hotfix)"
+bump_map = { "break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH" }
+change_type_order = ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]
+info_path = "cz_customize_info.txt"
+info = """
+This is customized info
+"""
+commit_parser = "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?"
+changelog_pattern = "^(feature|bug fix)?(!)?"
+change_type_map = { "feature" = "Feat", "bug fix" = "Fix" }
+
+[[tool.commitizen.customize.questions]]
+type = "list"
+name = "change_type"
+#choices = [{value = "feature", name = "feature: A new feature."}, {value = "bug fix", name = "bug fix: A bug fix."}]
+choices = [
+    "major:",
+    "breaking:",
+    "minor:",
+    "feature:",
+    "fix:",
+    "patch:",
+] # short version
+message = "Select the type of change you are committing"
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "ticket"
+message = "Enter a ticket reference. (Enter to skip): GP-"
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "message"
+message = "Enter a descriptive title."
