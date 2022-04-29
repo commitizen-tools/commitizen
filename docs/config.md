@@ -88,7 +88,7 @@ JSON might be a more common configuration format for non-python projects, so Com
 ```
 
 ## .cz.yaml or cz.yaml
-YAML is another format for **non-python** proyects as well, supported by Commitizen:
+YAML is another format for **non-python** projects as well, supported by Commitizen:
 
 ```yaml
 commitizen:
