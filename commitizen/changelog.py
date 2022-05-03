@@ -238,8 +238,8 @@ def get_metadata(filepath: str) -> Dict:
 def incremental_build(new_content: str, lines: List, metadata: Dict) -> List:
     """Takes the original lines and updates with new_content.
 
-    The metadata holds information enough to remove the old unreleased and
-    where to place the new content
+    The metadata governs how to remove the old unreleased section and where to place the
+    new content.
 
     Args:
         lines: The lines from the changelog
