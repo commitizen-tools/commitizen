@@ -235,7 +235,7 @@ def get_metadata(filepath: str) -> Dict:
     }
 
 
-def incremental_build(new_content: str, lines: List, metadata: Dict) -> List:
+def incremental_build(new_content: str, lines: List[str], metadata: Dict) -> List[str]:
     """Takes the original lines and updates with new_content.
 
     The metadata governs how to remove the old unreleased section and where to place the
@@ -253,7 +253,7 @@ def incremental_build(new_content: str, lines: List, metadata: Dict) -> List:
     unreleased_end = metadata.get("unreleased_end")
     latest_version_position = metadata.get("latest_version_position")
     skip = False
-    output_lines: List = []
+    output_lines: List[str] = []
     for index, line in enumerate(lines):
         if index == unreleased_start:
             skip = True
@@ -270,13 +270,8 @@ def incremental_build(new_content: str, lines: List, metadata: Dict) -> List:
         if skip:
             continue
 
-        if (
-            isinstance(latest_version_position, int)
-            and index == latest_version_position
-        ):
-
-            output_lines.append(new_content)
-            output_lines.append("\n")
+        if index == latest_version_position:
+            output_lines.extend([new_content, "\n"])
 
         output_lines.append(line)
     if not isinstance(latest_version_position, int):
