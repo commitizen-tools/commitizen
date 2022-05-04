@@ -165,6 +165,12 @@ data = {
                         "default": False,
                         "help": "Output changelog to the stdout",
                     },
+                    {
+                        "name": ["--retry"],
+                        "action": "store_true",
+                        "default": False,
+                        "help": "retry commit if it fails the 1st time",
+                    },
                 ],
             },
             {
