@@ -320,6 +320,30 @@ def test_changelog_multiple_incremental_do_not_add_new_lines(
     assert out.startswith("#")
 
 
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_incremental_newline_separates_new_content_from_old(
+    mocker, changelog_path
+):
+    """Test for https://github.com/commitizen-tools/commitizen/issues/509"""
+    with open(changelog_path, "w") as f:
+        f.write("Pre-existing content that should be kept\n")
+
+    create_file_and_commit("feat: add more cat videos")
+
+    testargs = ["cz", "changelog", "--incremental"]
+
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    assert (
+        out
+        == "Pre-existing content that should be kept\n\n## Unreleased\n\n### Feat\n\n- add more cat videos\n"
+    )
+
+
 def test_changelog_without_revision(mocker, tmp_commitizen_project):
     changelog_file = tmp_commitizen_project.join("CHANGELOG.md")
     changelog_file.write(

@@ -275,6 +275,9 @@ def incremental_build(new_content: str, lines: List[str], metadata: Dict) -> Lis
 
         output_lines.append(line)
     if not isinstance(latest_version_position, int):
+        if output_lines and output_lines[-1].strip():
+            # Ensure at least one blank line between existing and new content.
+            output_lines.append("\n")
         output_lines.append(new_content)
     return output_lines
 
