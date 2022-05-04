@@ -1,3 +1,4 @@
+from logging import getLogger
 from typing import List, Optional
 
 import questionary
@@ -17,6 +18,8 @@ from commitizen.exceptions import (
     NotAGitProjectError,
     NoVersionSpecifiedError,
 )
+
+logger = getLogger("commitizen")
 
 
 class Bump:
@@ -49,6 +52,7 @@ class Bump:
         self.changelog_to_stdout = arguments["changelog_to_stdout"]
         self.no_verify = arguments["no_verify"]
         self.check_consistency = arguments["check_consistency"]
+        self.retry = arguments["retry"]
 
     def is_initial_tag(self, current_tag_version: str, is_yes: bool = False) -> bool:
         """Check if reading the whole git tree up to HEAD is needed."""
@@ -209,7 +213,7 @@ class Bump:
                 },
             )
             changelog_cmd()
-            c = cmd.run(f"git add {changelog_cmd.file_name}")
+            c = cmd.run(f"git add {changelog_cmd.file_name} {' '.join(version_files)}")
 
         self.config.set_key("version", str(new_version))
 
@@ -217,8 +221,14 @@ class Bump:
             raise ExpectedExit()
 
         c = git.commit(message, args=self._get_commit_args())
+        if self.retry and c.return_code != 0 and self.changelog:
+            # Maybe pre-commit reformatted some files? Retry once
+            logger.debug("1st git.commit error: %s", c.err)
+            logger.info("1st commit attempt failed; retrying once")
+            cmd.run(f"git add {changelog_cmd.file_name} {' '.join(version_files)}")
+            c = git.commit(message, args=self._get_commit_args())
         if c.return_code != 0:
-            raise BumpCommitFailedError(f'git.commit error: "{c.err.strip()}"')
+            raise BumpCommitFailedError(f'2nd git.commit error: "{c.err.strip()}"')
         c = git.tag(
             new_tag_version,
             annotated=self.bump_settings.get("annotated_tag", False)

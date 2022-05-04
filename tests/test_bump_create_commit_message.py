@@ -1,7 +1,11 @@
+import sys
+from pathlib import Path
+from textwrap import dedent
+
 import pytest
 from packaging.version import Version
 
-from commitizen import bump
+from commitizen import bump, cli, cmd
 
 conversion = [
     (
@@ -20,3 +24,47 @@ def test_create_tag(test_input, expected):
         Version(current_version), Version(new_version), message_template
     )
     assert new_tag == expected
+
+
+@pytest.mark.parametrize("retry", (True, False))
+def test_bump_pre_commit_changelog(tmp_commitizen_project, mocker, freezer, retry):
+    freezer.move_to("2022-04-01")
+    testargs = ["cz", "bump", "--changelog", "--yes"]
+    if retry:
+        testargs.append("--retry")
+    else:
+        pytest.xfail("it will fail because pre-commit will reformat CHANGELOG.md")
+    mocker.patch.object(sys, "argv", testargs)
+    with tmp_commitizen_project.as_cwd():
+        # Configure prettier as a pre-commit hook
+        Path(".pre-commit-config.yaml").write_text(
+            """
+            repos:
+              - repo: https://github.com/pre-commit/mirrors-prettier
+                rev: v2.6.2
+                hooks:
+                - id: prettier
+                  stages: [commit]
+            """
+        )
+        # Prettier inherits editorconfig
+        Path(".editorconfig").write_text(
+            """
+            [*]
+            indent_size = 4
+            """
+        )
+        cmd.run("git add -A")
+        cmd.run("git commit -m 'fix: _test'")
+        cmd.run("pre-commit install")
+        cli.main()
+        # Pre-commit fixed last line adding extra indent and "\" char
+        assert Path("CHANGELOG.md").read_text() == dedent(
+            """\
+            ## 0.1.1 (2022-04-01)
+
+            ### Fix
+
+            -   \\_test
+            """
+        )
