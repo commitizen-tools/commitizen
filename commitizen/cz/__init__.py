@@ -20,7 +20,7 @@ def discover_plugins(path: Iterable[str] = None) -> Dict[str, Type[BaseCommitize
         Dict[str, Type[BaseCommitizen]]: Registry with found plugins
     """
     plugins = {}
-    for finder, name, ispkg in pkgutil.iter_modules(path):
+    for _finder, name, _ispkg in pkgutil.iter_modules(path):
         try:
             if name.startswith("cz_"):
                 plugins[name] = importlib.import_module(name).discover_this
