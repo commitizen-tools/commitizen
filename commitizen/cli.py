@@ -240,6 +240,12 @@ data = {
                         "help": "commit message that needs to be checked",
                         "exclusive_group": "group1",
                     },
+                    {
+                        "name": ["--allow-abort"],
+                        "action": "store_true",
+                        "default": False,
+                        "help": "allow empty commit messages, which typically abort a commit",
+                    },
                 ],
             },
             {

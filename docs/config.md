@@ -131,6 +131,7 @@ commitizen:
 | `update_changelog_on_bump` | `bool` | `false`                     | Create changelog when running `cz bump`                                                                                                                                                         |
 | `annotated_tag`            | `bool` | `false`                     | Use annotated tags instead of lightweight tags. [See difference][annotated-tags-vs-lightweight]                                                                                                 |
 | `bump_message`             | `str`  | `None`                      | Create custom commit message, useful to skip ci. [See more][bump_message]                                                                                                                       |
+| `allow_abort`              | `bool` | `false`                     | Disallow empty commit messages, useful in ci. [See more][allow_abort]                                                                                                                           |
 | `changelog_file`           | `str`  | `CHANGELOG.md`              | filename of exported changelog                                                                                                                                                                  |
 | `changelog_incremental`    | `bool` | `false`                     | Update changelog with the missing versions. This is good if you don't want to replace previous versions in the file. Note: when doing `cz bump --changelog` this is automatically set to `true` |
 | `changelog_start_rev`      | `str`  | `None`                      | Start from a given git rev to generate the changelog                                                                                                                                            |
@@ -141,6 +142,7 @@ commitizen:
 [version_files]: bump.md#version_files
 [tag_format]: bump.md#tag_format
 [bump_message]: bump.md#bump_message
+[allow_abort]: check.md#allow-abort
 [additional-features]: https://github.com/tmbo/questionary#additional-features
 [customization]: customization.md
 [shortcuts]: customization.md#shortcut-keys
