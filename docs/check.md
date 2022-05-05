@@ -7,7 +7,11 @@ If you want to setup an automatic check before every git commit, please refer to
 [Automatically check message before commit](auto_check.md).
 
 ## Usage
-There are three arguments that you can use one of them to check commit message.
+There are three mutually exclusive ways to use `cz check`:
+
+- with `--rev-range` to check a range of pre-existing commits
+- with `--message` or by piping the message to it to check a given string
+- or with `--commit-msg-file` to read the commit message from a file
 
 ### Git Rev Range
 If you'd like to check a commit's message after it has already been created, then you can specify the range of commits to check with `--rev-range REV_RANGE`.
@@ -46,3 +50,12 @@ $ cz check --commit-msg-file COMMIT_MSG_FILE
 
 In this option, COMMIT_MSG_FILE is the path of the temporal file that contains the commit message.
 This argument can be useful when cooperating with git hook, please check [Automatically check message before commit](auto_check.md) for more information about how to use this argument with git hook.
+
+### Allow Abort
+
+```bash
+cz check --message MESSAGE --allow-abort
+```
+
+Empty commit messages typically instruct Git to abort a commit, so you can pass `--allow-abort` to
+permit them. Since `git commit` accepts an `--allow-empty-message` flag (primarily for wrapper scripts), you may wish to disallow such commits in CI. `--allow-abort` may be used in conjunction with any of the other options.

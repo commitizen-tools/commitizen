@@ -206,8 +206,9 @@ def test_check_command_with_invalid_argument(config):
             config=config,
             arguments={"commit_msg_file": "some_file", "rev_range": "HEAD~10..master"},
         )
-    assert "One and only one argument is required for check command!" in str(
-        excinfo.value
+    assert (
+        "Only one of --rev-range, --message, and --commit-msg-file is permitted by check command!"
+        in str(excinfo.value)
     )
 
 
@@ -251,6 +252,46 @@ def test_check_command_with_valid_message(config, mocker):
 def test_check_command_with_invalid_message(config, mocker):
     error_mock = mocker.patch("commitizen.out.error")
     check_cmd = commands.Check(config=config, arguments={"message": "bad commit"})
+
+    with pytest.raises(InvalidCommitMessageError):
+        check_cmd()
+        error_mock.assert_called_once()
+
+
+def test_check_command_with_empty_message(config, mocker):
+    error_mock = mocker.patch("commitizen.out.error")
+    check_cmd = commands.Check(config=config, arguments={"message": ""})
+
+    with pytest.raises(InvalidCommitMessageError):
+        check_cmd()
+        error_mock.assert_called_once()
+
+
+def test_check_command_with_allow_abort_arg(config, mocker):
+    success_mock = mocker.patch("commitizen.out.success")
+    check_cmd = commands.Check(
+        config=config, arguments={"message": "", "allow_abort": True}
+    )
+
+    check_cmd()
+    success_mock.assert_called_once()
+
+
+def test_check_command_with_allow_abort_config(config, mocker):
+    success_mock = mocker.patch("commitizen.out.success")
+    config.settings["allow_abort"] = True
+    check_cmd = commands.Check(config=config, arguments={"message": ""})
+
+    check_cmd()
+    success_mock.assert_called_once()
+
+
+def test_check_command_override_allow_abort_config(config, mocker):
+    error_mock = mocker.patch("commitizen.out.error")
+    config.settings["allow_abort"] = True
+    check_cmd = commands.Check(
+        config=config, arguments={"message": "", "allow_abort": False}
+    )
 
     with pytest.raises(InvalidCommitMessageError):
         check_cmd()

@@ -31,6 +31,7 @@ class Settings(TypedDict, total=False):
     version_files: List[str]
     tag_format: Optional[str]
     bump_message: Optional[str]
+    allow_abort: bool
     changelog_file: str
     changelog_incremental: bool
     changelog_start_rev: Optional[str]
@@ -56,6 +57,7 @@ DEFAULT_SETTINGS: Settings = {
     "version_files": [],
     "tag_format": None,  # example v$version
     "bump_message": None,  # bumped v$current_version to $new_version
+    "allow_abort": False,
     "changelog_file": "CHANGELOG.md",
     "changelog_incremental": False,
     "changelog_start_rev": None,
