@@ -200,7 +200,7 @@ def test_check_a_range_of_git_commits_and_failed(config, mocker):
         error_mock.assert_called_once()
 
 
-def test_check_command_with_invalid_argment(config):
+def test_check_command_with_invalid_argument(config):
     with pytest.raises(InvalidCommandArgumentError) as excinfo:
         commands.Check(
             config=config,
