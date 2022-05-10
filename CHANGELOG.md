@@ -1,4 +1,14 @@
 
+## v2.25.0 (2022-05-10)
+
+### Feat
+
+- **changelog**: Improve whitespace in changelog
+
+### Refactor
+
+- **changelog**: Simplify incremental_build
+
 ## v2.24.0 (2022-04-15)
 
 ### Fix
