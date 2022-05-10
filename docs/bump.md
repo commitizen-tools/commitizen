@@ -54,32 +54,38 @@ Some examples:
 
 ```bash
 $ cz bump --help
-usage: cz bump [-h] [--dry-run] [--files-only] [--changelog] [--no-verify] [--local-version]
-               [--yes] [--tag-format TAG_FORMAT] [--bump-message BUMP_MESSAGE]
-               [--prerelease {alpha,beta,rc}]
-               [--increment {MAJOR,MINOR,PATCH}] [--check-consistency] [--annotated-tag]
+usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
+               [--no-verify] [--yes] [--tag-format TAG_FORMAT]
+               [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}]
+               [--increment {MAJOR,MINOR,PATCH}] [--check-consistency]
+               [--annotated-tag] [--changelog-to-stdout] [--retry]
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   --dry-run             show output to stdout, no commit, no modified files
   --files-only          bump version in the files from the config
+  --local-version       bump only the local version portion
   --changelog, -ch      generate the changelog for the newest version
-  --no-verify           this option bypasses the pre-commit and commit-msg hooks
+  --no-verify           this option bypasses the pre-commit and commit-msg
+                        hooks
   --yes                 accept automatically questions done
-  --local-version       bump the local portion of the version
   --tag-format TAG_FORMAT
-                        the format used to tag the commit and read it, use it in existing projects, wrap
-                        around simple quotes
+                        the format used to tag the commit and read it, use it
+                        in existing projects, wrap around simple quotes
   --bump-message BUMP_MESSAGE
-                        template used to create the release commit, useful when working with CI
+                        template used to create the release commit, useful
+                        when working with CI
   --prerelease {alpha,beta,rc}, -pr {alpha,beta,rc}
                         choose type of prerelease
   --increment {MAJOR,MINOR,PATCH}
                         manually specify the desired increment
   --check-consistency, -cc
-                        check consistency among versions defined in commitizen configuration and
-                        version_files
+                        check consistency among versions defined in commitizen
+                        configuration and version_files
   --annotated-tag, -at  create annotated tag instead of lightweight one
+  --changelog-to-stdout
+                        Output changelog to the stdout
+  --retry               retry commit if it fails the 1st time
 ```
 
 ### `--files-only`
@@ -178,6 +184,13 @@ Example:
 ```bash
 cz bump --changelog --changelog-to-stdout > body.md
 ```
+
+### `--retry`
+
+If you use tools like [pre-commit](https://pre-commit.com/), add this flag.
+It will retry the commit if it fails the 1st time.
+
+Useful to combine with code formatters, like [Prettier](https://prettier.io/).
 
 ## Avoid raising errors
 
