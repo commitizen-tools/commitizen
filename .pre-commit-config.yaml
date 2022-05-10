@@ -5,14 +5,14 @@ repos:
     hooks:
       - id: check-vcs-permalinks
       - id: end-of-file-fixer
-        exclude: "tests/[test_*|data|commands/tests_*]/*"
+        exclude: "tests/((commands|data)/|test_).+"
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
       - id: debug-statements
       - id: no-commit-to-branch
 
-  - repo: https://github.com/Woile/commitizen
-    rev: v1.23.0
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v2.24.0 # automatically updated by Commitizen
     hooks:
       - id: commitizen
         stages: [commit-msg]
