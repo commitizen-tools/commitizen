@@ -5,7 +5,7 @@ from textwrap import dedent
 import pytest
 from packaging.version import Version
 
-from commitizen import bump, cli, cmd
+from commitizen import bump, cli, cmd, exceptions
 
 conversion = [
     (
@@ -68,3 +68,32 @@ def test_bump_pre_commit_changelog(tmp_commitizen_project, mocker, freezer, retr
             -   \\_test
             """
         )
+
+
+@pytest.mark.parametrize("retry", (True, False))
+def test_bump_pre_commit_changelog_fails_always(
+    tmp_commitizen_project, mocker, freezer, retry
+):
+    freezer.move_to("2022-04-01")
+    testargs = ["cz", "bump", "--changelog", "--yes"]
+    if retry:
+        testargs.append("--retry")
+    mocker.patch.object(sys, "argv", testargs)
+    with tmp_commitizen_project.as_cwd():
+        Path(".pre-commit-config.yaml").write_text(
+            """
+            repos:
+              - repo: local
+                hooks:
+                - id: forbid-changelog
+                  name: changelogs are forbidden
+                  entry: changelogs are forbidden
+                  language: fail
+                  files: CHANGELOG.md
+            """
+        )
+        cmd.run("git add -A")
+        cmd.run("git commit -m 'feat: forbid changelogs'")
+        cmd.run("pre-commit install")
+        with pytest.raises(exceptions.BumpCommitFailedError):
+            cli.main()
