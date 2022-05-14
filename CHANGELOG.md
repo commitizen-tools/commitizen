@@ -1,4 +1,10 @@
 
+## v2.26.0 (2022-05-14)
+
+### Feat
+
+- **check**: Add --allow-abort option
+
 ## v2.25.0 (2022-05-10)
 
 ### Feat
