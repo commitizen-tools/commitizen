@@ -1,4 +1,10 @@
 
+## v2.27.0 (2022-05-16)
+
+### Feat
+
+- **bump**: let it respect pre-commit reformats when bumping
+
 ## v2.26.0 (2022-05-14)
 
 ### Feat
