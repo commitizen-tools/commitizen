@@ -50,7 +50,7 @@ Open the file and edit it:
 ```sh
 #!/bin/bash
 MSG_FILE=$1
-cz check --commit-msg-file $MSG_FILE
+cz check --allow-abort --commit-msg-file $MSG_FILE
 ```
 
 Where `$1` is the name of the temporary file that contains the current commit message. To be more explicit, the previous variable is stored in another variable called `$MSG_FILE`, for didactic purposes.
