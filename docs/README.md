@@ -111,7 +111,6 @@ repos:
     rev: master
     hooks:
       - id: commitizen
-        stages: [commit-msg]
 ```
 
 After the configuration is added, you'll need to run

@@ -21,7 +21,7 @@ pre_commit_config_filename = ".pre-commit-config.yaml"
 cz_hook_config = {
     "repo": "https://github.com/commitizen-tools/commitizen",
     "rev": f"v{__version__}",
-    "hooks": [{"id": "commitizen", "stages": ["commit-msg"]}],
+    "hooks": [{"id": "commitizen"}],
 }
 
 expected_config = (
