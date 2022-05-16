@@ -11,7 +11,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.14">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.15">
     
     
       
@@ -19,7 +19,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.3de6f41f.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.c382b1dc.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.cc9b2e1e.min.css">
@@ -343,6 +343,13 @@
           <li class="md-nav__item">
   <a href="#-changelog-to-stdout" class="md-nav__link">
     --changelog-to-stdout
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-retry" class="md-nav__link">
+    --retry
   </a>
   
 </li>
@@ -760,6 +767,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#-retry" class="md-nav__link">
+    --retry
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -930,32 +944,38 @@
 <p><code>post</code> and <code>dev</code> releases are not supported yet.</p>
 <h2 id="usage">Usage</h2>
 <div class="codehilite"><pre><span></span><code>$ cz bump --help
-usage: cz bump <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--dry-run<span class="o">]</span> <span class="o">[</span>--files-only<span class="o">]</span> <span class="o">[</span>--changelog<span class="o">]</span> <span class="o">[</span>--no-verify<span class="o">]</span> <span class="o">[</span>--local-version<span class="o">]</span>
-               <span class="o">[</span>--yes<span class="o">]</span> <span class="o">[</span>--tag-format TAG_FORMAT<span class="o">]</span> <span class="o">[</span>--bump-message BUMP_MESSAGE<span class="o">]</span>
-               <span class="o">[</span>--prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}]</span>
-               <span class="o">[</span>--increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span> <span class="o">[</span>--check-consistency<span class="o">]</span> <span class="o">[</span>--annotated-tag<span class="o">]</span>
+usage: cz bump <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--dry-run<span class="o">]</span> <span class="o">[</span>--files-only<span class="o">]</span> <span class="o">[</span>--local-version<span class="o">]</span> <span class="o">[</span>--changelog<span class="o">]</span>
+               <span class="o">[</span>--no-verify<span class="o">]</span> <span class="o">[</span>--yes<span class="o">]</span> <span class="o">[</span>--tag-format TAG_FORMAT<span class="o">]</span>
+               <span class="o">[</span>--bump-message BUMP_MESSAGE<span class="o">]</span> <span class="o">[</span>--prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}]</span>
+               <span class="o">[</span>--increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span> <span class="o">[</span>--check-consistency<span class="o">]</span>
+               <span class="o">[</span>--annotated-tag<span class="o">]</span> <span class="o">[</span>--changelog-to-stdout<span class="o">]</span> <span class="o">[</span>--retry<span class="o">]</span>
 
-optional arguments:
+options:
   -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
   --dry-run             show output to stdout, no commit, no modified files
   --files-only          bump version <span class="k">in</span> the files from the config
+  --local-version       bump only the <span class="nb">local</span> version portion
   --changelog, -ch      generate the changelog <span class="k">for</span> the newest version
-  --no-verify           this option bypasses the pre-commit and commit-msg hooks
+  --no-verify           this option bypasses the pre-commit and commit-msg
+                        hooks
   --yes                 accept automatically questions <span class="k">done</span>
-  --local-version       bump the <span class="nb">local</span> portion of the version
   --tag-format TAG_FORMAT
-                        the format used to tag the commit and <span class="nb">read</span> it, use it <span class="k">in</span> existing projects, wrap
-                        around simple quotes
+                        the format used to tag the commit and <span class="nb">read</span> it, use it
+                        <span class="k">in</span> existing projects, wrap around simple quotes
   --bump-message BUMP_MESSAGE
-                        template used to create the release commit, useful when working with CI
+                        template used to create the release commit, useful
+                        when working with CI
   --prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}</span>, -pr <span class="o">{</span>alpha,beta,rc<span class="o">}</span>
                         choose <span class="nb">type</span> of prerelease
   --increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}</span>
                         manually specify the desired increment
   --check-consistency, -cc
-                        check consistency among versions defined <span class="k">in</span> commitizen configuration and
-                        version_files
+                        check consistency among versions defined <span class="k">in</span> commitizen
+                        configuration and version_files
   --annotated-tag, -at  create annotated tag instead of lightweight one
+  --changelog-to-stdout
+                        Output changelog to the stdout
+  --retry               retry commit <span class="k">if</span> it fails the 1st <span class="nb">time</span>
 </code></pre></div>
 
 <h3 id="-files-only"><code>--files-only</code></h3>
@@ -1024,6 +1044,10 @@ It can be sent to an auditing system, or to create a Github Release.</p>
 <div class="codehilite"><pre><span></span><code>cz bump --changelog --changelog-to-stdout &gt; body.md
 </code></pre></div>
 
+<h3 id="-retry"><code>--retry</code></h3>
+<p>If you use tools like <a href="https://pre-commit.com/">pre-commit</a>, add this flag.
+It will retry the commit if it fails the 1st time.</p>
+<p>Useful to combine with code formatters, like <a href="https://prettier.io/">Prettier</a>.</p>
 <h2 id="avoid-raising-errors">Avoid raising errors</h2>
 <p>Some situations from commitizen rise an exit code different than 0.
 If the error code is different than 0, any CI or script running commitizen might be interrupted.</p>
@@ -1255,7 +1279,7 @@ in a line containing the <code>version</code> substring.</p>
     <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.c2e1ee47.min.js"></script>
+      <script src="../assets/javascripts/bundle.a6c66575.min.js"></script>
       
     
   </body>
