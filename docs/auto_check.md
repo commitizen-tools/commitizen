@@ -22,7 +22,6 @@ repos:
     rev: v1.17.0
     hooks:
       - id: commitizen
-        stages: [commit-msg]
 ```
 
 * Step 3: Install the configuration into git hook through `pre-commit`

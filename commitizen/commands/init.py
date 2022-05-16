@@ -114,7 +114,7 @@ class Init:
         cz_hook_config = {
             "repo": "https://github.com/commitizen-tools/commitizen",
             "rev": f"v{__version__}",
-            "hooks": [{"id": "commitizen", "stages": ["commit-msg"]}],
+            "hooks": [{"id": "commitizen"}],
         }
 
         config_data = {}

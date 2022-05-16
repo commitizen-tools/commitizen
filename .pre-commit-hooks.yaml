@@ -2,6 +2,7 @@
   name: commitizen check
   description: "Check whether the commit message follows commiting rules"
   entry: cz check --commit-msg-file
+  stages: [commit-msg]
   language: python
   language_version: python3
   minimum_pre_commit_version: "1.4.3"
