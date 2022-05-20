@@ -1,8 +1,9 @@
 import os
+import sys
 
 import pytest
 
-from commitizen import cmd, commands
+from commitizen import cli, cmd, commands
 from commitizen.cz.exceptions import CzException
 from commitizen.exceptions import (
     CommitError,
@@ -178,3 +179,87 @@ def test_commit_in_non_git_project(tmpdir, config):
     with tmpdir.as_cwd():
         with pytest.raises(NotAGitProjectError):
             commands.Commit(config, {})
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_from_pre_commit_msg_hook(config, mocker, capsys):
+    testargs = ["cz", "commit", "--commit-msg-file", "some_file"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "",
+        "footer": "",
+    }
+
+    is_blank_commit_file_mock = mocker.patch(
+        "commitizen.commands.commit.Commit.is_blank_commit_file"
+    )
+    is_blank_commit_file_mock.return_value = True
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", "", "", 0)
+
+    mocker.patch("commitizen.commands.commit.wrap_stdio")
+    mocker.patch("commitizen.commands.commit.unwrap_stdio")
+    reader_mock = mocker.mock_open(read_data="\n\n#test\n")
+    mocker.patch("builtins.open", reader_mock, create=True)
+
+    cli.main()
+
+    out, _ = capsys.readouterr()
+    assert "Commit message is successful!" in out
+    commit_mock.assert_not_called()
+
+
+def test_commit_with_msg_from_pre_commit_msg_hook(config, mocker, capsys):
+    testargs = ["cz", "commit", "--commit-msg-file", "some_file"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "",
+        "footer": "",
+    }
+
+    is_blank_commit_file_mock = mocker.patch(
+        "commitizen.commands.commit.Commit.is_blank_commit_file"
+    )
+    is_blank_commit_file_mock.return_value = False
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", "", "", 0)
+
+    cli.main()
+
+    prompt_mock.assert_not_called()
+    commit_mock.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "isexist, commitmsg, returnvalue",
+    [
+        [False, "", True],
+        [True, "\n#test", True],
+        [True, "test: test\n#test", False],
+        [True, "#test: test\n#test", True],
+    ],
+)
+def test_is_blank_commit_file(config, mocker, isexist, commitmsg, returnvalue):
+    exists_mock = mocker.patch("commitizen.commands.commit.exists")
+    exists_mock.return_value = isexist
+
+    reader_mock = mocker.mock_open(read_data=commitmsg)
+    mocker.patch("builtins.open", reader_mock)
+
+    commit_cmd = commands.Commit(config, {})
+    ret = commit_cmd.is_blank_commit_file("test")
+    assert ret == returnvalue
