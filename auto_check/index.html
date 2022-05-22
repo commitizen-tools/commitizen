@@ -591,7 +591,6 @@
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.17.0</span><span class="w"></span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span><span class="w"></span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">commitizen</span><span class="w"></span>
-<span class="w">        </span><span class="nt">stages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">commit-msg</span><span class="p p-Indicator">]</span><span class="w"></span>
 </code></pre></div>
 
 <ul>
@@ -613,7 +612,7 @@ chmod +x commit-msg
 <p>Open the file and edit it:</p>
 <div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 <span class="nv">MSG_FILE</span><span class="o">=</span><span class="nv">$1</span>
-cz check --commit-msg-file <span class="nv">$MSG_FILE</span>
+cz check --allow-abort --commit-msg-file <span class="nv">$MSG_FILE</span>
 </code></pre></div>
 
 <p>Where <code>$1</code> is the name of the temporary file that contains the current commit message. To be more explicit, the previous variable is stored in another variable called <code>$MSG_FILE</code>, for didactic purposes.</p>
