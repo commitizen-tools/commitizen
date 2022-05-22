@@ -1,4 +1,13 @@
 
+## v2.27.1 (2022-05-22)
+
+### Fix
+
+- **pre-commit**: Use new --allow-abort option
+- **pre-commit**: Confine hook to commit-msg stage
+- **pre-commit**: Set min pre-commit to v1.4.3
+- **pre-commit**: Don't require serial execution
+
 ## v2.27.0 (2022-05-16)
 
 ### Feat
