@@ -58,7 +58,7 @@ usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
                [--no-verify] [--yes] [--tag-format TAG_FORMAT]
                [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}]
                [--increment {MAJOR,MINOR,PATCH}] [--check-consistency]
-               [--annotated-tag] [--changelog-to-stdout] [--retry]
+               [--annotated-tag] [--signed-tag] [--changelog-to-stdout] [--retry]
 
 options:
   -h, --help            show this help message and exit
@@ -83,6 +83,7 @@ options:
                         check consistency among versions defined in commitizen
                         configuration and version_files
   --annotated-tag, -at  create annotated tag instead of lightweight one
+  --signed-tag, -st  create a signed tag instead of lightweight one or annotated tag
   --changelog-to-stdout
                         Output changelog to the stdout
   --retry               retry commit if it fails the 1st time
