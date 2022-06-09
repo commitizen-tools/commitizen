@@ -66,6 +66,24 @@ def test_bump_minor_increment_annotated(commit_msg, mocker):
     cmd_res = cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"')
     assert tag_exists is True and "tag:refs/tags/0.2.0\n" in cmd_res.out
 
+    _is_signed = git.is_signed_tag("0.2.0")
+    assert _is_signed is False
+
+
+@pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_minor_increment_annotated(commit_msg, mocker):
+    create_file_and_commit(commit_msg)
+    testargs = ["cz", "bump", "--yes", "--signed-tag"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    tag_exists = git.tag_exist("0.2.0")
+    cmd_res = cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"')
+    assert tag_exists is True and "tag:refs/tags/0.2.0\n" in cmd_res.out
+
+    _is_signed = git.is_signed_tag("0.2.0")
+    assert _is_signed is True
+
 
 @pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
 def test_bump_minor_increment_annotated_config_file(
@@ -82,6 +100,29 @@ def test_bump_minor_increment_annotated_config_file(
     tag_exists = git.tag_exist("0.2.0")
     cmd_res = cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"')
     assert tag_exists is True and "tag:refs/tags/0.2.0\n" in cmd_res.out
+
+    _is_signed = git.is_signed_tag("0.2.0")
+    assert _is_signed is False
+
+
+@pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
+def test_bump_minor_increment_signed_config_file(
+    commit_msg, mocker, tmp_commitizen_project
+):
+    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_commitizen_cfg_file.write(
+        f"{tmp_commitizen_cfg_file.read()}\n" f"signed_tag = 1"
+    )
+    create_file_and_commit(commit_msg)
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    tag_exists = git.tag_exist("0.2.0")
+    cmd_res = cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"')
+    assert tag_exists is True and "tag:refs/tags/0.2.0\n" in cmd_res.out
+
+    _is_signed = git.is_signed_tag("0.2.0")
+    assert _is_signed is True
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
