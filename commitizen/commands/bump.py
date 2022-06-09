@@ -41,6 +41,7 @@ class Bump:
                     "increment",
                     "bump_message",
                     "annotated_tag",
+                    "signed_tag",
                 ]
                 if arguments[key] is not None
             },
@@ -233,6 +234,8 @@ class Bump:
             new_tag_version,
             annotated=self.bump_settings.get("annotated_tag", False)
             or bool(self.config.settings.get("annotated_tag", False)),
+            signed=self.bump_settings.get("signed_tag", False)
+            or bool(self.config.settings.get("signed_tag", False)),
         )
         if c.return_code != 0:
             raise BumpTagFailedError(c.err)
