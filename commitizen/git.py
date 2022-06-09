@@ -1,3 +1,4 @@
+import re
 import os
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -58,8 +59,13 @@ class GitTag(GitObject):
         return cls(name=name, rev=obj, date=date)
 
 
-def tag(tag: str, annotated: bool = False) -> cmd.Command:
-    c = cmd.run(f"git tag -a {tag} -m {tag}" if annotated else f"git tag {tag}")
+def tag(tag: str, annotated: bool = False, signed: bool = False) -> cmd.Command:
+    _opt = ""
+    if annotated:
+        _opt = f"-a {tag} -m"
+    if signed:
+        _opt = f"-s {tag} -m"
+    c = cmd.run(f"git tag {_opt} {tag}")
     return c
 
 
@@ -134,6 +140,14 @@ def get_tags(dateformat: str = "%Y-%m-%d") -> List[GitTag]:
 def tag_exist(tag: str) -> bool:
     c = cmd.run(f"git tag --list {tag}")
     return tag in c.out
+
+
+def is_signed_tag(tag: str) -> bool:
+    c = cmd.run(f"git tag -v {tag}")
+    _ret = False
+    if re.match("gpg: Signature made [0-9/:A-Za-z ]*", c.err):
+        _ret = True
+    return _ret
 
 
 def get_latest_tag_name() -> Optional[str]:

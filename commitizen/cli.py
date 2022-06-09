@@ -160,6 +160,12 @@ data = {
                         "action": "store_true",
                     },
                     {
+                        "name": ["--signed-tag", "-st"],
+                        "help": "sign tag instead of lightweight one",
+                        "default": False,
+                        "action": "store_true",
+                    },
+                    {
                         "name": ["--changelog-to-stdout"],
                         "action": "store_true",
                         "default": False,
