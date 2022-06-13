@@ -1,5 +1,4 @@
 import os
-import platform
 import re
 
 import pytest
@@ -39,12 +38,9 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
         f.write(f"Name-Email: {_signer_mail}" + os.linesep)
         f.write("Expire-Date: 1" + os.linesep)
 
-    _key = cmd.run(
+    cmd.run(
         f"gpg --batch --passphrase '' --pinentry-mode loopback --generate-key {_gpg_file}"
     )
-    # debug for mac github actions
-    if platform.system().lower() == "darwin":
-        print(f"MAC OS: new key created?\n{_key.out}\n{_key.err}")
 
     _new_key = cmd.run(f"gpg --list-secret-keys {_signer_mail}")
     _m = re.search(
@@ -54,20 +50,8 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
 
     if _m:
         _key_id = _m.group(1)
-        print(f"Key {_key_id} found for {_signer_mail}")
         cmd.run("git config --global commit.gpgsign true")
         cmd.run(f"git config --global user.signingkey {_key_id}")
-
-    # debug for mac github actions
-    if platform.system().lower() == "darwin":
-        _check_macos = cmd.run('echo "test" | gpg --clearsign')
-        print(f"MACOS CHECK:\n{_check_macos.out}\n{_check_macos.err}")
-
-        _key_exist_macos = cmd.run("gpg --list-secret-keys")
-        print(f"MACOS List keys:\n{_key_exist_macos.out}\n{_key_exist_macos.err}")
-
-        _key_gpg2_macos = cmd.run("gpg --list-keys")
-        print(f"MACOS List keys:\n{_key_gpg2_macos.out}\n{_key_gpg2_macos.err}")
 
     yield tmp_commitizen_project
 
