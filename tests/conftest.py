@@ -27,25 +27,27 @@ def tmp_commitizen_project(tmp_git_project):
 @pytest.fixture(scope="function")
 def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
     _gpg_file = tmp_commitizen_project.join("gpg_setup")
+    _signer_mail = "joe@foo.bar"
     with open(_gpg_file, "w", newline="") as f:
         f.write("Key-Type: default" + os.linesep)
         f.write("Subkey-Type: default" + os.linesep)
         f.write("Name-Real: Joe Tester" + os.linesep)
         f.write("Name-Comment: with stupid passphrase" + os.linesep)
-        f.write("Name-Email: joe@foo.bar" + os.linesep)
-        f.write("Expire-Date: 0" + os.linesep)
+        f.write(f"Name-Email: {_signer_mail}" + os.linesep)
+        f.write("Expire-Date: 1" + os.linesep)
 
     cmd.run(
         f"gpg --batch --passphrase '' --pinentry-mode loopback --generate-key {_gpg_file}"
     )
 
-    _new_key = cmd.run("gpg --list-secret-keys joe@foo.bar")
+    _new_key = cmd.run(f"gpg --list-secret-keys {_signer_mail}")
     _m = re.search(
         rf"[a-zA-Z0-9 \[\]-_]*{os.linesep}[ ]*([0-9A-Za-z]*){os.linesep}[{os.linesep}a-zA-Z0-9 \[\]-_<>@]*",
         _new_key.out,
     )
     if _m:
         _key_id = _m.group(1)
+        print(f"Key {_key_id} found for {_signer_mail}")
         cmd.run("git config --global commit.gpgsign true")
         cmd.run(f"git config --global user.signingkey {_key_id}")
 
