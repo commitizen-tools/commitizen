@@ -20,4 +20,10 @@ def run(cmd: str) -> Command:
     )
     stdout, stderr = process.communicate()
     return_code = process.returncode
-    return Command(stdout.decode(), stderr.decode(), stdout, stderr, return_code)
+    return Command(
+        stdout.decode("iso-8859-1"),
+        stderr.decode("iso-8859-1"),
+        stdout,
+        stderr,
+        return_code,
+    )
