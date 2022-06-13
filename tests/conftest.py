@@ -1,4 +1,5 @@
 import os
+import platform
 import re
 
 import pytest
@@ -52,8 +53,15 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
         cmd.run(f"git config --global user.signingkey {_key_id}")
 
     # debug for mac github actions
-    _check_macos = cmd.run('echo "test" | gpg --clearsign')
-    print(f"MACOS CHECK:\n{_check_macos.out}\n{_check_macos.err}")
+    if platform.system().lower() == "darwin":
+        _check_macos = cmd.run('echo "test" | gpg --clearsign')
+        print(f"MACOS CHECK:\n{_check_macos.out}\n{_check_macos.err}")
+
+        _key_exist_macos = cmd.run("gpg --list-secret-keys")
+        print(f"MACOS List keys:\n{_key_exist_macos.out}\n{_key_exist_macos.err}")
+
+        _key_gpg2_macos = cmd.run("gpg2 --list-keys")
+        print(f"MACOS List keys:\n{_key_gpg2_macos.out}\n{_key_gpg2_macos.err}")
 
     yield tmp_commitizen_project
 
