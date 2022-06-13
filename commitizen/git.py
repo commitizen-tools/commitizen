@@ -1,5 +1,5 @@
-import re
 import os
+import re
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import List, Optional
