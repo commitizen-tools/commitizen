@@ -23,7 +23,7 @@ jobs:
         poetry --version
         poetry install
     - name: Install pinentry on macos
-      if: runner.os == 'Darwin'
+      if: runner.os == 'macOs'
       run: |
         brew install pinentry
     - name: Run tests and linters
