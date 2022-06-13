@@ -51,6 +51,10 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
         cmd.run("git config --global commit.gpgsign true")
         cmd.run(f"git config --global user.signingkey {_key_id}")
 
+    # debug for mac github actions
+    _check_macos = cmd.run('echo "test" | gpg --clearsign')
+    print(f"MACOS CHECK:\n{_check_macos.out}\n{_check_macos.err}")
+
     yield tmp_commitizen_project
 
 
