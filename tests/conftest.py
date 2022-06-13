@@ -37,18 +37,18 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
         f.write(f"Name-Email: {_signer_mail}" + os.linesep)
         f.write("Expire-Date: 1" + os.linesep)
 
-    cmd.run(
+    _key = cmd.run(
         f"gpg --batch --passphrase '' --pinentry-mode loopback --generate-key {_gpg_file}"
     )
+    # debug for mac github actions
+    if platform.system().lower() == "darwin":
+        print(f"MAC OS: new key created?\n{_key.out}\n{_key.err}")
 
     _new_key = cmd.run(f"gpg --list-secret-keys {_signer_mail}")
     _m = re.search(
         rf"[a-zA-Z0-9 \[\]-_]*{os.linesep}[ ]*([0-9A-Za-z]*){os.linesep}[{os.linesep}a-zA-Z0-9 \[\]-_<>@]*",
         _new_key.out,
     )
-    # debug for mac github actions
-    if platform.system().lower() == "darwin":
-        print(f"MAC OS: new key created?\n{_new_key.out}\n{_new_key.err}")
 
     if _m:
         _key_id = _m.group(1)
