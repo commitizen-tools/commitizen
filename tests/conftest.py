@@ -30,8 +30,10 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
     _gpg_file = tmp_commitizen_project.join("gpg_setup")
     _signer_mail = "action@github.com"
     with open(_gpg_file, "w", newline="") as f:
-        f.write("Key-Type: default" + os.linesep)
-        f.write("Subkey-Type: default" + os.linesep)
+        f.write("Key-Type: RSA" + os.linesep)
+        f.write("Key-Length: 2048" + os.linesep)
+        f.write("Subkey-Type: RSA" + os.linesep)
+        f.write("Subkey-Length: 2048" + os.linesep)
         f.write("Name-Real: GitHub Action" + os.linesep)
         f.write("Name-Comment: with stupid passphrase" + os.linesep)
         f.write(f"Name-Email: {_signer_mail}" + os.linesep)
