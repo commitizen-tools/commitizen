@@ -1,6 +1,6 @@
 import os
-
 import re
+
 import pytest
 
 from commitizen import cmd, defaults
@@ -26,8 +26,8 @@ def tmp_commitizen_project(tmp_git_project):
 
 @pytest.fixture(scope="function")
 def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
-    _gpg_file = tmp_commitizen_project.join('gpg_setup')
-    with open(_gpg_file, "w", newline='') as f:
+    _gpg_file = tmp_commitizen_project.join("gpg_setup")
+    with open(_gpg_file, "w", newline="") as f:
         f.write("Key-Type: default" + os.linesep)
         f.write("Subkey-Type: default" + os.linesep)
         f.write("Name-Real: Joe Tester" + os.linesep)
@@ -38,9 +38,11 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
 
     cmd.run(f"gpg --batch --generate-key {_gpg_file}")
 
-    _new_key = cmd.run(f"gpg --list-secret-keys joe@foo.bar")
-    _m = re.search(f"[a-zA-Z0-9 \[\]-_]*{os.linesep}[ ]*([0-9A-Za-z]*){os.linesep}[{os.linesep}a-zA-Z0-9 \[\]-_<>@]*",
-                   _new_key.out)
+    _new_key = cmd.run("gpg --list-secret-keys joe@foo.bar")
+    _m = re.search(
+        rf"[a-zA-Z0-9 \[\]-_]*{os.linesep}[ ]*([0-9A-Za-z]*){os.linesep}[{os.linesep}a-zA-Z0-9 \[\]-_<>@]*",
+        _new_key.out,
+    )
     if _m:
         _key_id = _m.group(1)
         cmd.run("git config --global commit.gpgsign true")
