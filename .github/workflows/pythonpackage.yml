@@ -24,8 +24,8 @@ jobs:
         poetry install
     - name: Install pinentry on macos
       if: runner.os == 'Darwin'
-        run: |
-          brew install pinentry
+      run: |
+        brew install pinentry
     - name: Run tests and linters
       run: |
         git config --global user.email "action@github.com"
