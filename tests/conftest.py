@@ -34,9 +34,8 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
         f.write("Name-Comment: with stupid passphrase" + os.linesep)
         f.write("Name-Email: joe@foo.bar" + os.linesep)
         f.write("Expire-Date: 0" + os.linesep)
-        f.write("Passphrase: abc" + os.linesep)
 
-    cmd.run(f"gpg --batch --generate-key {_gpg_file}")
+    cmd.run(f"gpg --batch --passphrase '' --pinentry-mode loopback --generate-key {_gpg_file}")
 
     _new_key = cmd.run("gpg --list-secret-keys joe@foo.bar")
     _m = re.search(
