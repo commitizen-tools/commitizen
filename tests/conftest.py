@@ -46,6 +46,10 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
         rf"[a-zA-Z0-9 \[\]-_]*{os.linesep}[ ]*([0-9A-Za-z]*){os.linesep}[{os.linesep}a-zA-Z0-9 \[\]-_<>@]*",
         _new_key.out,
     )
+    # debug for mac github actions
+    if platform.system().lower() == "darwin":
+        print(f"MAC OS: new key created?\n{_new_key.out}\n{_new_key.err}")
+
     if _m:
         _key_id = _m.group(1)
         print(f"Key {_key_id} found for {_signer_mail}")
@@ -60,7 +64,7 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
         _key_exist_macos = cmd.run("gpg --list-secret-keys")
         print(f"MACOS List keys:\n{_key_exist_macos.out}\n{_key_exist_macos.err}")
 
-        _key_gpg2_macos = cmd.run("gpg2 --list-keys")
+        _key_gpg2_macos = cmd.run("gpg --list-keys")
         print(f"MACOS List keys:\n{_key_gpg2_macos.out}\n{_key_gpg2_macos.err}")
 
     yield tmp_commitizen_project
