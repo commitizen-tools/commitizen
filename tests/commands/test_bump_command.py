@@ -110,6 +110,27 @@ def test_bump_major_increment(commit_msg, mocker):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.parametrize(
+    "commit_msg,increment,expected_tag",
+    [
+        ("feat: new file", "PATCH", "0.1.1"),
+        ("fix: username exception", "major", "1.0.0"),
+        ("refactor: remove ini configuration support", "patch", "0.1.1"),
+        ("BREAKING CHANGE: age is no longer supported", "minor", "0.2.0"),
+    ],
+)
+def test_bump_command_increment_option(commit_msg, increment, expected_tag, mocker):
+    create_file_and_commit(commit_msg)
+
+    testargs = ["cz", "bump", "--increment", increment, "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    tag_exists = git.tag_exist(expected_tag)
+    assert tag_exists is True
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_command_prelease(mocker):
     # PRERELEASE
     create_file_and_commit("feat: location")

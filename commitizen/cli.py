@@ -145,6 +145,7 @@ data = {
                         "name": ["--increment"],
                         "help": "manually specify the desired increment",
                         "choices": ["MAJOR", "MINOR", "PATCH"],
+                        "type": str.upper,
                     },
                     {
                         "name": ["--check-consistency", "-cc"],
