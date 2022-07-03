@@ -1,4 +1,10 @@
 
+## v2.28.0 (2022-07-03)
+
+### Feat
+
+- **bump**: make increment option case insensitive
+
 ## v2.27.1 (2022-05-22)
 
 ### Fix
