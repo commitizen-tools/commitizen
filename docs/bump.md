@@ -82,7 +82,7 @@ options:
   --check-consistency, -cc
                         check consistency among versions defined in commitizen
                         configuration and version_files
-  --sign, -s  create a signed tag instead of lightweight one or annotated tag
+  --gpg-sign, -s  create a signed tag instead of lightweight one or annotated tag
   --annotated-tag, -at  create annotated tag instead of lightweight one
   --changelog-to-stdout
                         Output changelog to the stdout
