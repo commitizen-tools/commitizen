@@ -40,8 +40,8 @@ class Bump:
                     "prerelease",
                     "increment",
                     "bump_message",
-                    "annotated_tag",
-                    "signed_tag",
+                    "annotate",
+                    "gpg_sign",
                 ]
                 if arguments[key] is not None
             },
@@ -232,10 +232,10 @@ class Bump:
             raise BumpCommitFailedError(f'2nd git.commit error: "{c.err.strip()}"')
         c = git.tag(
             new_tag_version,
-            annotated=self.bump_settings.get("annotated_tag", False)
-            or bool(self.config.settings.get("annotated_tag", False)),
-            signed=self.bump_settings.get("signed_tag", False)
-            or bool(self.config.settings.get("signed_tag", False)),
+            annotated=self.bump_settings.get("annotate", False)
+            or bool(self.config.settings.get("annotate", False)),
+            signed=self.bump_settings.get("gpg_sign", False)
+            or bool(self.config.settings.get("gpg_sign", False)),
         )
         if c.return_code != 0:
             raise BumpTagFailedError(c.err)

@@ -58,7 +58,7 @@ usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
                [--no-verify] [--yes] [--tag-format TAG_FORMAT]
                [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}]
                [--increment {MAJOR,MINOR,PATCH}] [--check-consistency]
-               [--annotated-tag] [--signed-tag] [--changelog-to-stdout] [--retry]
+               [--annotate] [--sign] [--changelog-to-stdout] [--retry]
 
 options:
   -h, --help            show this help message and exit
@@ -82,8 +82,8 @@ options:
   --check-consistency, -cc
                         check consistency among versions defined in commitizen
                         configuration and version_files
-  --annotated-tag, -at  create annotated tag instead of lightweight one
-  --signed-tag, -st  create a signed tag instead of lightweight one or annotated tag
+  --annotate, -a  create annotated tag instead of lightweight one
+  --sign, -s  create a signed tag instead of lightweight one or annotated tag
   --changelog-to-stdout
                         Output changelog to the stdout
   --retry               retry commit if it fails the 1st time
@@ -163,9 +163,9 @@ version = "5.3.5+0.1.0"
 
 If `--local-version` is used, it will bump only the local version `0.1.0` and keep the public version `5.3.5` intact, bumping to the version `5.3.5+0.2.0`.
 
-### `--annotated-tag`
+### `--annotate`
 
-If `--annotated-tag` is used, commitizen will create annotated tags. Also available via configuration, in `pyproject.toml` or `.cz.toml`.
+If `--annotate` is used, commitizen will create annotated tags. Also available via configuration, in `pyproject.toml` or `.cz.toml`.
 
 ### `--changelog-to-stdout`
 
@@ -356,13 +356,24 @@ update_changelog_on_bump = true
 
 ---
 
-### `annotated_tag`
+### `annotate`
 
 When set to `true` commitizen will create annotated tags.
 
 ```toml
 [tool.commitizen]
-annotated_tag = true
+annotate = true
+```
+
+---
+
+### `gpg_sign`
+
+When set to `true` commitizen will create gpg signed tags.
+
+```toml
+[tool.commitizen]
+gpg_sign = true
 ```
 
 ## Custom bump

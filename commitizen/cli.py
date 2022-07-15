@@ -156,12 +156,12 @@ data = {
                         "action": "store_true",
                     },
                     {
-                        "name": ["--annotated-tag", "-at"],
+                        "name": ["--annotate", "-a"],
                         "help": "create annotated tag instead of lightweight one",
                         "action": "store_true",
                     },
                     {
-                        "name": ["--signed-tag", "-st"],
+                        "name": ["--sign", "-s"],
                         "help": "sign tag instead of lightweight one",
                         "default": False,
                         "action": "store_true",
