@@ -155,7 +155,7 @@ data = {
                         "action": "store_true",
                     },
                     {
-                        "name": ["--annotate", "-a"],
+                        "name": ["--annotated-tag", "-at"],
                         "help": "create annotated tag instead of lightweight one",
                         "action": "store_true",
                     },

@@ -59,7 +59,7 @@ def test_bump_minor_increment(commit_msg, mocker):
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_minor_increment_annotated(commit_msg, mocker):
     create_file_and_commit(commit_msg)
-    testargs = ["cz", "bump", "--yes", "--annotate"]
+    testargs = ["cz", "bump", "--yes", "--annotated-tag"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
     tag_exists = git.tag_exist("0.2.0")
@@ -90,7 +90,9 @@ def test_bump_minor_increment_annotated_config_file(
     commit_msg, mocker, tmp_commitizen_project
 ):
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
-    tmp_commitizen_cfg_file.write(f"{tmp_commitizen_cfg_file.read()}\n" f"gpg_sign = 1")
+    tmp_commitizen_cfg_file.write(
+        f"{tmp_commitizen_cfg_file.read()}\n" f"annotated_tag = 1"
+    )
     create_file_and_commit(commit_msg)
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)

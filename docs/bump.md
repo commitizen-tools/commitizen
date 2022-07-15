@@ -58,7 +58,7 @@ usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
                [--no-verify] [--yes] [--tag-format TAG_FORMAT]
                [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}]
                [--increment {MAJOR,MINOR,PATCH}] [--check-consistency]
-               [--annotate] [--sign] [--changelog-to-stdout] [--retry]
+               [--annotated-tag] [--gpg-sign] [--changelog-to-stdout] [--retry]
 
 options:
   -h, --help            show this help message and exit
@@ -82,8 +82,8 @@ options:
   --check-consistency, -cc
                         check consistency among versions defined in commitizen
                         configuration and version_files
-  --annotate, -a  create annotated tag instead of lightweight one
   --sign, -s  create a signed tag instead of lightweight one or annotated tag
+  --annotated-tag, -at  create annotated tag instead of lightweight one
   --changelog-to-stdout
                         Output changelog to the stdout
   --retry               retry commit if it fails the 1st time
@@ -163,9 +163,9 @@ version = "5.3.5+0.1.0"
 
 If `--local-version` is used, it will bump only the local version `0.1.0` and keep the public version `5.3.5` intact, bumping to the version `5.3.5+0.2.0`.
 
-### `--annotate`
+### `--annotated-tag`
 
-If `--annotate` is used, commitizen will create annotated tags. Also available via configuration, in `pyproject.toml` or `.cz.toml`.
+If `--annotated-tag` is used, commitizen will create annotated tags. Also available via configuration, in `pyproject.toml` or `.cz.toml`.
 
 ### `--changelog-to-stdout`
 
@@ -356,14 +356,12 @@ update_changelog_on_bump = true
 
 ---
 
-### `annotate`
+### `annotated_tag`
 
 When set to `true` commitizen will create annotated tags.
 
 ```toml
 [tool.commitizen]
-annotate = true
-```
 
 ---
 
@@ -374,6 +372,7 @@ When set to `true` commitizen will create gpg signed tags.
 ```toml
 [tool.commitizen]
 gpg_sign = true
+annotated_tag = true
 ```
 
 ## Custom bump
