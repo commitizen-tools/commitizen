@@ -161,7 +161,7 @@ data = {
                         "action": "store_true",
                     },
                     {
-                        "name": ["--sign", "-s"],
+                        "name": ["--gpg-sign", "-s"],
                         "help": "sign tag instead of lightweight one",
                         "default": False,
                         "action": "store_true",
