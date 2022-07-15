@@ -50,8 +50,8 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
 
     if _m:
         _key_id = _m.group(1)
-        cmd.run("git config --global commit.gpgsign true")
-        cmd.run(f"git config --global user.signingkey {_key_id}")
+        cmd.run("git config commit.gpgsign true")
+        cmd.run(f"git config user.signingkey {_key_id}")
 
     yield tmp_commitizen_project
 
