@@ -872,3 +872,21 @@ def test_changelog_from_rev_latest_version_dry_run(
     out, _ = capsys.readouterr()
 
     file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_invalid_subject_is_skipped(mocker, capsys):
+    """Fix #510"""
+    non_conformant_commit_title = (
+        "Merge pull request #487 from manang/master\n\n"
+        "feat: skip merge messages that start with Pull request\n"
+    )
+    create_file_and_commit(non_conformant_commit_title)
+    create_file_and_commit("feat: a new world")
+    testargs = ["cz", "changelog", "--dry-run"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(DryRunExit):
+        cli.main()
+    out, _ = capsys.readouterr()
+
+    assert out == ("## Unreleased\n\n### Feat\n\n- a new world\n\n")

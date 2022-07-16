@@ -38,6 +38,7 @@ class ConventionalCommitsCz(BaseCommitizen):
         "refactor": "Refactor",
         "perf": "Perf",
     }
+    changelog_pattern = defaults.bump_pattern
 
     def questions(self) -> Questions:
         questions: Questions = [
