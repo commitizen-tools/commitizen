@@ -872,3 +872,50 @@ def test_changelog_from_rev_latest_version_dry_run(
     out, _ = capsys.readouterr()
 
     file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
+@pytest.mark.parametrize(
+    "cli_args, line, filtered",
+    [
+        ([], r'tag_parser = "v[0-9]*\\.[0-9]*\\.[0-9]*"', True),  # version filter
+        (["--tag-parser", r"v[0-9]*\.[0-9]*\.[0-9]*"], "", True),  # cli arg filter
+        ([], "", False),  # default tag_parser
+    ],
+)
+def test_changelog_tag_parser_config(
+    mocker, config_path, changelog_path, cli_args, line, filtered
+):
+    mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
+
+    with open(config_path, "a") as f:
+        # f.write('tag_format = "$version"\n')
+        f.write(line)
+
+    # create a valid start tag
+    create_file_and_commit("feat: initial")
+    git.tag("v1.0.0")
+
+    # create a tag for this test
+    create_file_and_commit("feat: add new")
+    git.tag("v1.1.0-beta")
+
+    # create a valid end tag
+    create_file_and_commit("feat: add more")
+    git.tag("v1.1.0")
+
+    # call CLI
+    command = ["cz", "changelog"]
+    command.extend(cli_args)
+    mocker.patch.object(sys, "argv", command)
+    cli.main()
+
+    # open CLI output
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    # test if cli is handling tag_format
+    assert "v1.0.0" in out
+    assert ("v1.1.0-beta" in out) is not filtered
+    assert "v1.1.0" in out

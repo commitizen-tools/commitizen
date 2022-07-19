@@ -1,3 +1,6 @@
+import re
+from typing import Dict, Iterable, List, Pattern
+
 import pytest
 
 from commitizen import changelog, defaults, git
@@ -458,6 +461,7 @@ TAGS = [
     ("v1.0.0", "aa44a92d68014d0da98965c0c2cb8c07957d4362", "2019-03-01"),
     ("1.0.0b2", "aab33d13110f26604fb786878856ec0b9e5fc32b", "2019-01-18"),
     ("v1.0.0b1", "7c7e96b723c2aaa1aec3a52561f680adf0b60e97", "2019-01-17"),
+    ("user_def", "ed830019581c83ba633bfd734720e6758eca6061", "2019-01-10"),
     ("v0.9.11", "c52eca6f74f844ab3ffbde61d98ef96071e132b7", "2018-12-17"),
     ("v0.9.10", "b3f89892222340150e32631ae6b7aab65230036f", "2018-09-22"),
     ("v0.9.9", "684e0259cc95c7c5e94854608cd3dcebbd53219e", "2018-09-22"),
@@ -642,9 +646,10 @@ COMMITS_TREE = (
         },
     },
     {"version": "1.0.0b2", "date": "2019-01-18", "changes": {}},
+    {"version": "v1.0.0b1", "date": "2019-01-17", "changes": {}},
     {
-        "version": "v1.0.0b1",
-        "date": "2019-01-17",
+        "version": "user_def",
+        "date": "2019-01-10",
         "changes": {
             "feat": [
                 {
@@ -790,14 +795,57 @@ COMMITS_TREE = (
 )
 
 
-def test_generate_tree_from_commits(gitcommits, tags):
+def _filter_tree(tag_pattern: Pattern, tree: Iterable[Dict]) -> List[Dict[str, str]]:
+    """filters the tree. commits with invalid tags are kept within the current node"""
+
+    current = None
+    out = []
+    for node in tree:
+        if not current or tag_pattern.fullmatch(node["version"]) or not out:
+            current = node.copy()
+            out.append(current)
+        else:
+            changes = current["changes"]
+            for key, value in node["changes"].items():
+                if key in changes:
+                    changes[key].extend(value)
+                else:
+                    changes[key] = value
+
+    return out
+
+
+@pytest.mark.parametrize(
+    "tag_parser",
+    [
+        (None),  # backwards compatibility check
+        (".*"),  # default tag_parser
+        (r"v[0-9]*\.[0-9]*\.[0-9]*"),  # version filter
+    ],
+)
+def test_generate_tree_from_commits(gitcommits, tags, tag_parser):
     parser = defaults.commit_parser
     changelog_pattern = defaults.bump_pattern
-    tree = changelog.generate_tree_from_commits(
-        gitcommits, tags, parser, changelog_pattern
-    )
 
-    assert tuple(tree) == COMMITS_TREE
+    # generate the tree and expected_tree
+    if tag_parser is None:
+        tree = changelog.generate_tree_from_commits(
+            gitcommits, tags, parser, changelog_pattern
+        )
+        # commits tree is unfiltered
+        expected_tree = COMMITS_TREE
+    else:
+        tag_pattern = re.compile(tag_parser)
+        tree = changelog.generate_tree_from_commits(
+            gitcommits, tags, parser, changelog_pattern, tag_pattern=tag_pattern
+        )
+        # filter the COMMITS_TREE to what we expect it to be
+        expected_tree = _filter_tree(tag_pattern, COMMITS_TREE)
+
+    # compare the contents of each tree
+    tree = list(tree)
+    for outcome, expected in zip(tree, expected_tree):
+        assert outcome == expected
 
 
 @pytest.mark.parametrize(

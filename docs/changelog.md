@@ -161,6 +161,24 @@ cz changelog --start-rev="v0.2.0"
 changelog_start_rev = "v0.2.0"
 ```
 
+### `tag-parser`
+
+This value can be set in the `toml` file with the key `tag_parser` under `tools.commitizen`
+
+The default the changelog will capture all git tags (e.g. regex `.*`).
+The user may specify a regex pattern of their own display only
+specific tags within the changelog.
+
+```bash
+cz changelog --tag-parser=".*"
+```
+
+```toml
+[tools.commitizen]
+# ...
+tag_parser = "v[0-9]*\\.[0-9]*\\.[0-9]*"
+```
+
 ## Hooks
 
 Supported hook methods:
