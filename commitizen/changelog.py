@@ -81,23 +81,20 @@ def generate_tree_from_commits(
     body_map_pat = re.compile(commit_parser, re.MULTILINE | re.DOTALL)
 
     # Check if the latest commit is not tagged
-    latest_commit = commits[0]
-    current_tag: Optional[GitTag] = get_commit_tag(latest_commit, tags)
+    latest_commit: GitCommit = commits[0]
 
-    current_tag_name: str = unreleased_version or "Unreleased"
-    current_tag_date: str = ""
-    if unreleased_version is not None:
-        current_tag_date = date.today().isoformat()
-    if (
-        current_tag is not None
-        and current_tag.name
-        and tag_pattern.fullmatch(current_tag.name)
-    ):
-        current_tag_name = current_tag.name
-        current_tag_date = current_tag.date
+    # create the first_tag
+    # Note: Changelog has no date for "Unreleased".
+    if unreleased_version:
+        first_tag = GitTag(
+            unreleased_version, latest_commit.rev, date.today().isoformat()
+        )
+    else:
+        unreleased_tag = GitTag("Unreleased", latest_commit.rev, "")
+        first_tag = get_commit_tag(latest_commit, tags) or unreleased_tag
 
     changes: Dict = defaultdict(list)
-    used_tags: List = [current_tag]
+    used_tags: List = [first_tag]
     for commit in commits:
 
         # determine if we found a new matching tag
@@ -110,15 +107,12 @@ def generate_tree_from_commits(
 
         # new node if we have a tag match
         if is_tag_match:
-            used_tags.append(commit_tag)
             yield {
-                "version": current_tag_name,
-                "date": current_tag_date,
+                "version": used_tags[-1].name,
+                "date": used_tags[-1].date,
                 "changes": changes,
             }
-            assert commit_tag is not None  # for mypy
-            current_tag_name = commit_tag.name
-            current_tag_date = commit_tag.date
+            used_tags.append(commit_tag)
             changes = defaultdict(list)
 
         matches = pat.match(commit.message)
@@ -134,7 +128,11 @@ def generate_tree_from_commits(
             body_map_pat,
         )
 
-    yield {"version": current_tag_name, "date": current_tag_date, "changes": changes}
+    yield {
+        "version": used_tags[-1].name,
+        "date": used_tags[-1].date,
+        "changes": changes,
+    }
 
 
 def update_changes_for_commit(

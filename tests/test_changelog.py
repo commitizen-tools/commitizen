@@ -843,6 +843,7 @@ def test_generate_tree_from_commits(gitcommits, tags, tag_parser):
         expected_tree = _filter_tree(tag_pattern, COMMITS_TREE)
 
     # compare the contents of each tree
+    tree = list(tree)
     for outcome, expected in zip(tree, expected_tree):
         assert outcome == expected
 
