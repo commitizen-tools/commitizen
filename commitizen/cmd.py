@@ -23,8 +23,8 @@ def run(cmd: str) -> Command:
     stdout, stderr = process.communicate()
     return_code = process.returncode
     return Command(
-        stdout.decode(chardet.detect(stdout)["encoding"]),
-        stderr.decode(chardet.detect(stderr)["encoding"]),
+        stdout.decode(chardet.detect(stdout)["encoding"] or "utf-8"),
+        stderr.decode(chardet.detect(stderr)["encoding"] or "utf-8"),
         stdout,
         stderr,
         return_code,
