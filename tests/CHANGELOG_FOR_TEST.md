@@ -54,6 +54,8 @@
 
 ## v1.0.0b1 (2019-01-17)
 
+## user_def (2019-01-10)
+
 ### feat
 
 - py3 only, tests and conventional commits 1.0
