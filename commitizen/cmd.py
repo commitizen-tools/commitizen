@@ -1,6 +1,8 @@
 import subprocess
 from typing import NamedTuple
 
+import chardet
+
 
 class Command(NamedTuple):
     out: str
@@ -21,8 +23,8 @@ def run(cmd: str) -> Command:
     stdout, stderr = process.communicate()
     return_code = process.returncode
     return Command(
-        stdout.decode("iso-8859-1"),
-        stderr.decode("iso-8859-1"),
+        stdout.decode(chardet.detect(stdout)["encoding"]),
+        stderr.decode(chardet.detect(stderr)["encoding"]),
         stdout,
         stderr,
         return_code,
