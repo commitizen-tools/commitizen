@@ -1,3 +1,6 @@
+import re
+from typing import Dict, Iterable, List, Pattern
+
 import pytest
 
 from commitizen import changelog, defaults, git
@@ -790,6 +793,26 @@ COMMITS_TREE = (
 )
 
 
+def _filter_tree(tag_pattern: Pattern, tree: Iterable[Dict]) -> List[Dict[str, str]]:
+    """filters the tree. commits with invalid tags are kept within the current node"""
+
+    current = None
+    out = []
+    for node in tree:
+        if not current or tag_pattern.fullmatch(node["version"]) or not out:
+            current = node.copy()
+            out.append(current)
+        else:
+            changes = current["changes"]
+            for key, value in node["changes"].items():
+                if key in changes:
+                    changes[key].extend(value)
+                else:
+                    changes[key] = value
+
+    return out
+
+
 def test_generate_tree_from_commits(gitcommits, tags):
     parser = defaults.commit_parser
     changelog_pattern = defaults.bump_pattern
@@ -798,6 +821,23 @@ def test_generate_tree_from_commits(gitcommits, tags):
     )
 
     assert tuple(tree) == COMMITS_TREE
+
+
+def test_generate_tree_from_commits_release_filter(gitcommits, tags):
+    parser = defaults.commit_parser
+    changelog_pattern = defaults.bump_pattern
+
+    # match release tags only
+    tag_parser = r"v([0-9]+)\.([0-9]+)\.([0-9]+)"
+    tag_pattern = re.compile(tag_parser)
+
+    tree = changelog.generate_tree_from_commits(
+        gitcommits, tags, parser, changelog_pattern, tag_pattern=tag_pattern
+    )
+
+    expected_tree = _filter_tree(tag_pattern, COMMITS_TREE)
+
+    assert list(tree) == expected_tree
 
 
 @pytest.mark.parametrize(

@@ -29,7 +29,7 @@ import os
 import re
 from collections import OrderedDict, defaultdict
 from datetime import date
-from typing import Callable, Dict, Iterable, List, Optional, Tuple
+from typing import Callable, Dict, Iterable, List, Optional, Pattern, Tuple
 
 from jinja2 import Environment, PackageLoader
 
@@ -74,6 +74,7 @@ def generate_tree_from_commits(
     unreleased_version: Optional[str] = None,
     change_type_map: Optional[Dict[str, str]] = None,
     changelog_message_builder_hook: Optional[Callable] = None,
+    tag_pattern: Pattern = re.compile(".*"),
 ) -> Iterable[Dict]:
     pat = re.compile(changelog_pattern)
     map_pat = re.compile(commit_parser, re.MULTILINE)
@@ -87,24 +88,35 @@ def generate_tree_from_commits(
     current_tag_date: str = ""
     if unreleased_version is not None:
         current_tag_date = date.today().isoformat()
-    if current_tag is not None and current_tag.name:
+    if (
+        current_tag is not None
+        and current_tag.name
+        and tag_pattern.fullmatch(current_tag.name)
+    ):
         current_tag_name = current_tag.name
         current_tag_date = current_tag.date
 
     changes: Dict = defaultdict(list)
     used_tags: List = [current_tag]
     for commit in commits:
-        commit_tag = get_commit_tag(commit, tags)
 
-        if commit_tag is not None and commit_tag not in used_tags:
+        # determine if we found a new matching tag
+        commit_tag = get_commit_tag(commit, tags)
+        is_tag_match = False
+        if commit_tag:
+            matches = tag_pattern.fullmatch(commit_tag.name)
+            if matches and (commit_tag not in used_tags):
+                is_tag_match = True
+
+        # new node if we have a tag match
+        if is_tag_match:
             used_tags.append(commit_tag)
             yield {
                 "version": current_tag_name,
                 "date": current_tag_date,
                 "changes": changes,
             }
-            # TODO: Check if tag matches the version pattern, otherwise skip it.
-            # This in order to prevent tags that are not versions.
+            assert commit_tag is not None  # for mypy
             current_tag_name = commit_tag.name
             current_tag_date = commit_tag.date
             changes = defaultdict(list)

@@ -128,6 +128,7 @@ commitizen:
 | `version`                  | `str`  | `None`                      | Current version. Example: "0.1.2"                                                                                                                                                               |
 | `version_files`            | `list` | `[ ]`                       | Files were the version will be updated. A pattern to match a line, can also be specified, separated by `:` [See more][version_files]                                                            |
 | `tag_format`               | `str`  | `None`                      | Format for the git tag, useful for old projects, that use a convention like `"v1.2.1"`. [See more][tag_format]                                                                                  |
+| `tag_parser `              | `str`  | `.*`                        | Generate changelog using only tags matching the regex pattern (e.g. `"v([0-9.])*"`). [See more][tag_parser]                                                                                  |
 | `update_changelog_on_bump` | `bool` | `false`                     | Create changelog when running `cz bump`                                                                                                                                                         |
 | `annotated_tag`            | `bool` | `false`                     | Use annotated tags instead of lightweight tags. [See difference][annotated-tags-vs-lightweight]                                                                                                 |
 | `bump_message`             | `str`  | `None`                      | Create custom commit message, useful to skip ci. [See more][bump_message]                                                                                                                       |
@@ -142,6 +143,7 @@ commitizen:
 [version_files]: bump.md#version_files
 [tag_format]: bump.md#tag_format
 [bump_message]: bump.md#bump_message
+[tag_parser]: changelog.md#tag_parser
 [allow_abort]: check.md#allow-abort
 [additional-features]: https://github.com/tmbo/questionary#additional-features
 [customization]: customization.md

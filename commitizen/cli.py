@@ -220,6 +220,13 @@ data = {
                             "If not set, it will generate changelog from the start"
                         ),
                     },
+                    {
+                        "name": "--tag-parser",
+                        "help": (
+                            "regex match for tags represented "
+                            "within the changelog. default: '.*'"
+                        ),
+                    },
                 ],
             },
             {

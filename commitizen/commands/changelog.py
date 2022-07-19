@@ -1,4 +1,5 @@
 import os.path
+import re
 from difflib import SequenceMatcher
 from operator import itemgetter
 from typing import Callable, Dict, List, Optional
@@ -51,6 +52,10 @@ class Changelog:
         self.tag_format = args.get("tag_format") or self.config.settings.get(
             "tag_format"
         )
+        tag_parser = args.get("tag_parser")
+        if tag_parser is None:
+            tag_parser = self.config.settings.get("tag_parser", r".*")
+        self.tag_pattern = re.compile(tag_parser)
 
     def _find_incremental_rev(self, latest_version: str, tags: List[GitTag]) -> str:
         """Try to find the 'start_rev'.
@@ -154,6 +159,7 @@ class Changelog:
             unreleased_version,
             change_type_map=change_type_map,
             changelog_message_builder_hook=changelog_message_builder_hook,
+            tag_pattern=self.tag_pattern,
         )
         if self.change_type_order:
             tree = changelog.order_changelog_tree(tree, self.change_type_order)
