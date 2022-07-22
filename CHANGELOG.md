@@ -1,4 +1,16 @@
 
+## v2.29.0 (2022-07-22)
+
+### Feat
+
+- use chardet to get correct encoding
+- **bump**: add signed tag support for bump command
+
+### Fix
+
+- avoid that pytest overrides existing gpg config
+- **test**: set git to work with gpg
+
 ## v2.28.1 (2022-07-22)
 
 ### Fix
