@@ -9,5 +9,5 @@ ${PREFIX}pytest -n 3 --cov-report term-missing --cov-report=xml:coverage.xml --c
 ${PREFIX}black commitizen tests --check
 ${PREFIX}isort --check-only commitizen tests
 ${PREFIX}flake8 commitizen/ tests/
-${PREFIX}mypy --install-types --non-interactive commitizen/ tests/
+${PREFIX}mypy commitizen/ tests/
 ${PREFIX}pydocstyle --convention=google --add-ignore=D1,D415
