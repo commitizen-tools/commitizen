@@ -949,7 +949,7 @@ usage: cz bump <span class="o">[</span>-h<span class="o">]</span> <span class="o
                <span class="o">[</span>--no-verify<span class="o">]</span> <span class="o">[</span>--yes<span class="o">]</span> <span class="o">[</span>--tag-format TAG_FORMAT<span class="o">]</span>
                <span class="o">[</span>--bump-message BUMP_MESSAGE<span class="o">]</span> <span class="o">[</span>--prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}]</span>
                <span class="o">[</span>--increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span> <span class="o">[</span>--check-consistency<span class="o">]</span>
-               <span class="o">[</span>--annotated-tag<span class="o">]</span> <span class="o">[</span>--changelog-to-stdout<span class="o">]</span> <span class="o">[</span>--retry<span class="o">]</span>
+               <span class="o">[</span>--annotated-tag<span class="o">]</span> <span class="o">[</span>--gpg-sign<span class="o">]</span> <span class="o">[</span>--changelog-to-stdout<span class="o">]</span> <span class="o">[</span>--retry<span class="o">]</span>
 
 options:
   -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
@@ -973,6 +973,7 @@ options:
   --check-consistency, -cc
                         check consistency among versions defined <span class="k">in</span> commitizen
                         configuration and version_files
+  --gpg-sign, -s  create a signed tag instead of lightweight one or annotated tag
   --annotated-tag, -at  create annotated tag instead of lightweight one
   --changelog-to-stdout
                         Output changelog to the stdout
@@ -1207,6 +1208,16 @@ in a line containing the <code>version</code> substring.</p>
 <h3 id="annotated_tag"><code>annotated_tag</code></h3>
 <p>When set to <code>true</code> commitizen will create annotated tags.</p>
 <div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
+
+<span class="err">---</span><span class="w"></span>
+
+<span class="c1">### `gpg_sign`</span><span class="w"></span>
+
+<span class="n">When</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="err">`</span><span class="n">true</span><span class="err">`</span><span class="w"> </span><span class="n">commitizen</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">create</span><span class="w"> </span><span class="n">gpg</span><span class="w"> </span><span class="n">signed</span><span class="w"> </span><span class="n">tags</span><span class="p">.</span><span class="w"></span>
+
+<span class="err">```</span><span class="n">toml</span><span class="w"></span>
+<span class="k">[tool.commitizen]</span><span class="w"></span>
+<span class="n">gpg_sign</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
 <span class="n">annotated_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
 </code></pre></div>
 
