@@ -1,4 +1,10 @@
 
+## v2.28.1 (2022-07-22)
+
+### Fix
+
+- **changelog**: skip non-compliant commit subjects when building changelog
+
 ## v2.28.0 (2022-07-03)
 
 ### Feat
