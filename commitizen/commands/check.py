@@ -89,7 +89,7 @@ class Check:
             with open(self.commit_msg_file, "r", encoding="utf-8") as commit_file:
                 msg = commit_file.read()
         # Get commit message from command line (--message)
-        elif self.commit_msg:
+        elif self.commit_msg is not None:
             msg = self.commit_msg
         if msg is not None:
             msg = self._filter_comments(msg)
