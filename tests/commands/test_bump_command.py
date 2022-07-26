@@ -500,3 +500,21 @@ def test_bump_with_changelog_to_stdout_arg(mocker, capsys, changelog_path):
         out = f.read()
     assert out.startswith("#")
     assert "0.2.0" in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_with_changelog_to_stdout_dry_run_arg(mocker, capsys, changelog_path):
+    create_file_and_commit(
+        "feat(user): this should appear in stdout with dry-run enabled"
+    )
+    testargs = ["cz", "bump", "--yes", "--changelog-to-stdout", "--dry-run"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(DryRunExit):
+        cli.main()
+    out, _ = capsys.readouterr()
+
+    tag_exists = git.tag_exist("0.2.0")
+    assert tag_exists is False
+    assert out.startswith("#")
+    assert "this should appear in stdout with dry-run enabled" in out
+    assert "0.2.0" in out
