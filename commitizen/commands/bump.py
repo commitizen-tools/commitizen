@@ -180,17 +180,6 @@ class Bump:
                 "The commits found are not elegible to be bumped"
             )
 
-        # Do not perform operations over files or git.
-        if dry_run:
-            raise DryRunExit()
-
-        bump.update_version_in_files(
-            current_version,
-            str(new_version),
-            version_files,
-            check_consistency=self.check_consistency,
-        )
-
         if self.changelog:
             if self.changelog_to_stdout:
                 changelog_cmd = Changelog(
@@ -215,6 +204,17 @@ class Bump:
             )
             changelog_cmd()
             c = cmd.run(f"git add {changelog_cmd.file_name} {' '.join(version_files)}")
+
+        # Do not perform operations over files or git.
+        if dry_run:
+            raise DryRunExit()
+
+        bump.update_version_in_files(
+            current_version,
+            str(new_version),
+            version_files,
+            check_consistency=self.check_consistency,
+        )
 
         self.config.set_key("version", str(new_version))
 
