@@ -1,4 +1,10 @@
 
+## v2.29.2 (2022-07-27)
+
+### Fix
+
+- **bump**: send changelog to stdout when `dry-run` is paired with `changelog-to-stdout`
+
 ## v2.29.1 (2022-07-26)
 
 ### Fix
