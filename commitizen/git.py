@@ -5,7 +5,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import List, Optional
 
-from commitizen import cmd
+from commitizen import cmd, out
 from commitizen.exceptions import GitCommandError
 
 UNIX_EOL = "\n"
@@ -150,8 +150,13 @@ def get_tags(dateformat: str = "%Y-%m-%d") -> List[GitTag]:
         f'%(object)"'
     )
     c = cmd.run(f"git tag --format={formatter} --sort=-creatordate")
+    if c.return_code != 0:
+        raise GitCommandError(c.err)
 
-    if c.err or not c.out:
+    if c.err:
+        out.warn(f"Attempting to proceed after: {c.err}")
+
+    if not c.out:
         return []
 
     git_tags = [
