@@ -10,6 +10,7 @@ from commitizen.exceptions import (
     InvalidCommitMessageError,
     NoCommitsFoundError,
 )
+from tests.utils import create_file_and_commit
 
 COMMIT_LOG = [
     "refactor: A code change that neither fixes a bug nor adds a feature",
@@ -217,7 +218,12 @@ def test_check_command_with_invalid_argument(config):
     )
 
 
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_check_command_with_empty_range(config, mocker):
+
+    # must initialize git with a commit
+    create_file_and_commit("feat: initial")
+
     check_cmd = commands.Check(config=config, arguments={"rev_range": "master..master"})
     with pytest.raises(NoCommitsFoundError) as excinfo:
         check_cmd()
