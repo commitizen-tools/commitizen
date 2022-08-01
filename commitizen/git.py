@@ -6,6 +6,7 @@ from tempfile import NamedTemporaryFile
 from typing import List, Optional
 
 from commitizen import cmd
+from commitizen.exceptions import GitCommandError
 
 UNIX_EOL = "\n"
 WINDOWS_EOL = "\r\n"
@@ -118,6 +119,8 @@ def get_commits(
     else:
         command = f"{git_log_cmd} {end}"
     c = cmd.run(command)
+    if c.return_code != 0:
+        raise GitCommandError(c.err)
     if not c.out:
         return []
 

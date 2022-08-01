@@ -27,6 +27,7 @@ class ExitCode(enum.IntEnum):
     NOT_ALLOWED = 20
     NO_INCREMENT = 21
     UNRECOGNIZED_CHARACTERSET_ENCODING = 22
+    GIT_COMMAND_ERROR = 23
 
 
 class CommitizenException(Exception):
@@ -153,3 +154,7 @@ class NotAllowed(CommitizenException):
 
 class CharacterSetDecodeError(CommitizenException):
     exit_code = ExitCode.UNRECOGNIZED_CHARACTERSET_ENCODING
+
+
+class GitCommandError(CommitizenException):
+    exit_code = ExitCode.GIT_COMMAND_ERROR
