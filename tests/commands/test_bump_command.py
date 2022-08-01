@@ -273,9 +273,19 @@ def test_bump_when_version_is_not_specify(mocker):
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_when_no_new_commit(mocker):
+    """bump without any commits since the last bump."""
+    # We need this first commit otherwise the revision is invalid.
+    create_file_and_commit("feat: initial")
+
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
 
+    # First bump.
+    # The next bump should fail since
+    # there is not a commit between the two bumps.
+    cli.main()
+
+    # bump without a new commit.
     with pytest.raises(NoCommitsFoundError) as excinfo:
         cli.main()
 
