@@ -38,29 +38,6 @@ from commitizen.bump import normalize_tag
 from commitizen.exceptions import InvalidConfigurationError
 from commitizen.git import GitCommit, GitTag
 
-CATEGORIES = [
-    ("fix", "fix"),
-    ("breaking", "BREAKING CHANGES"),
-    ("feat", "feat"),
-    ("refactor", "refactor"),
-    ("perf", "perf"),
-    ("test", "test"),
-    ("build", "build"),
-    ("ci", "ci"),
-    ("chore", "chore"),
-]
-
-
-def transform_change_type(change_type: str) -> str:
-    # TODO: Use again to parse, for this we have to wait until the maps get
-    # defined again.
-    _change_type_lower = change_type.lower()
-    for match_value, output in CATEGORIES:
-        if re.search(match_value, _change_type_lower):
-            return output
-    else:
-        raise ValueError(f"Could not match a change_type with {change_type}")
-
 
 def get_commit_tag(commit: GitCommit, tags: List[GitTag]) -> Optional[GitTag]:
     return next((tag for tag in tags if tag.rev == commit.rev), None)
