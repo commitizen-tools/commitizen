@@ -351,6 +351,15 @@ def test_changelog_without_revision(mocker, tmp_commitizen_project):
         cli.main()
 
 
+def test_changelog_incremental_with_revision(mocker):
+    """combining incremental with a revision doesn't make sense"""
+    testargs = ["cz", "changelog", "--incremental", "0.2.0"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.raises(NotAllowed):
+        cli.main()
+
+
 def test_changelog_with_different_tag_name_and_changelog_content(
     mocker, tmp_commitizen_project
 ):
@@ -918,3 +927,15 @@ def test_changelog_with_customized_change_type_order(
         out = f.read()
 
     file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_empty_commit_list(mocker):
+    create_file_and_commit("feat: a new world")
+
+    # test changelog properly handles when no commits are found for the revision
+    mocker.patch("commitizen.git.get_commits", return_value=[])
+    testargs = ["cz", "changelog"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(NoCommitsFoundError):
+        cli.main()
