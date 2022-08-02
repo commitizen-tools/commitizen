@@ -1,4 +1,10 @@
 
+## v2.29.3 (2022-08-02)
+
+### Refactor
+
+- **changelog**: removes unused code. duplicates are found in changelog_parser
+
 ## v2.29.2 (2022-07-27)
 
 ### Fix
