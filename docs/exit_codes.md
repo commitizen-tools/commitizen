@@ -28,4 +28,5 @@ These exit codes can be found in `commitizen/exceptions.py::ExitCode`.
 | InvalidCommandArgumentError | 18        | The argument provide to command is invalid (e.g. `cz check -commit-msg-file filename --rev-range master..`) |
 | InvalidConfigurationError   | 19        | An error was found in the Commitizen Configuration, such as duplicates in `change_type_order`               |
 | NotAllowed                  | 20        | `--incremental` cannot be combined with a `rev_range`                                                       |
-| NoneIncrementExit           | 21        | The commits found are not elegible to be bumped                                                             |
+| NoneIncrementExit           | 21        | The commits found are not eligible to be bumped                                                             |
+| CharacterSetDecodeError     | 22        | The character encoding of the command output could not be determined                                        |
