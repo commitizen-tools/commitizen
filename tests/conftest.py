@@ -1,5 +1,6 @@
 import os
 import re
+import tempfile
 
 import pytest
 
@@ -24,34 +25,39 @@ def tmp_commitizen_project(tmp_git_project):
         yield tmp_git_project
 
 
-@pytest.fixture(scope="function")
-def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
-    _gpg_file = tmp_commitizen_project.join("gpg_setup")
-    _signer_mail = "action@github.com"
-    with open(_gpg_file, "w", newline="") as f:
-        f.write("Key-Type: RSA" + os.linesep)
-        f.write("Key-Length: 2048" + os.linesep)
-        f.write("Subkey-Type: RSA" + os.linesep)
-        f.write("Subkey-Length: 2048" + os.linesep)
-        f.write("Name-Real: GitHub Action" + os.linesep)
-        f.write("Name-Comment: with stupid passphrase" + os.linesep)
-        f.write(f"Name-Email: {_signer_mail}" + os.linesep)
-        f.write("Expire-Date: 1" + os.linesep)
-
-    cmd.run(
-        f"gpg --batch --passphrase '' --pinentry-mode loopback --generate-key {_gpg_file}"
-    )
-
-    _new_key = cmd.run(f"gpg --list-secret-keys {_signer_mail}")
+def _get_gpg_keyid(signer_mail):
+    _new_key = cmd.run(f"gpg --list-secret-keys {signer_mail}")
     _m = re.search(
         rf"[a-zA-Z0-9 \[\]-_]*{os.linesep}[ ]*([0-9A-Za-z]*){os.linesep}[{os.linesep}a-zA-Z0-9 \[\]-_<>@]*",
         _new_key.out,
     )
+    return _m.group(1) if _m else None
 
-    if _m:
-        _key_id = _m.group(1)
-        cmd.run("git config commit.gpgsign true")
-        cmd.run(f"git config user.signingkey {_key_id}")
+
+@pytest.fixture(scope="function")
+def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
+    signer = "GitHub Action"
+    signer_mail = "action@github.com"
+
+    # create a temporary GPGHOME to store a temporary keyring.
+    # Home path must be less than 104 characters
+    gpg_home = tempfile.TemporaryDirectory(suffix="_cz")
+    os.environ["GNUPGHOME"] = gpg_home.name  # tempdir = temp keyring
+
+    # create a key (a keyring will be generated within GPUPGHOME)
+    c = cmd.run(
+        f"gpg --batch --yes --debug-quick-random --passphrase '' --quick-gen-key '{signer} {signer_mail}'"
+    )
+    if c.return_code != 0:
+        raise Exception(f"gpg keygen failed with err: '{c.err}'")
+    key_id = _get_gpg_keyid(signer_mail)
+    assert key_id
+
+    # configure git
+    cmd.run("git config commit.gpgsign true")
+    cmd.run(f"git config user.name {signer}")
+    cmd.run(f"git config user.email {signer_mail}")
+    cmd.run(f"git config user.signingkey {key_id}")
 
     yield tmp_commitizen_project
 
