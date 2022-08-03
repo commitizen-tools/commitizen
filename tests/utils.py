@@ -3,7 +3,7 @@ import uuid
 from pathlib import Path
 from typing import Optional
 
-from commitizen import cmd, git
+from commitizen import cmd, exceptions, git
 
 
 class FakeCommand:
@@ -18,8 +18,12 @@ def create_file_and_commit(message: str, filename: Optional[str] = None):
         filename = str(uuid.uuid4())
 
     Path(f"./{filename}").touch()
-    cmd.run("git add .")
-    git.commit(message)
+    c = cmd.run("git add .")
+    if c.return_code != 0:
+        raise exceptions.CommitError(c.err)
+    c = git.commit(message)
+    if c.return_code != 0:
+        raise exceptions.CommitError(c.err)
 
 
 def wait_for_tag():
