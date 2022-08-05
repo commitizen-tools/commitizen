@@ -1,4 +1,10 @@
 
+## v2.29.4 (2022-08-05)
+
+### Refactor
+
+- **tool**: use charset_normalizer instead of chardet
+
 ## v2.29.3 (2022-08-02)
 
 ### Refactor
