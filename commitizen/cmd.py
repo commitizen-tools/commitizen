@@ -1,7 +1,7 @@
 import subprocess
 from typing import NamedTuple
 
-import chardet
+from charset_normalizer import from_bytes
 
 
 class Command(NamedTuple):
@@ -23,8 +23,8 @@ def run(cmd: str) -> Command:
     stdout, stderr = process.communicate()
     return_code = process.returncode
     return Command(
-        stdout.decode(chardet.detect(stdout)["encoding"] or "utf-8"),
-        stderr.decode(chardet.detect(stderr)["encoding"] or "utf-8"),
+        str(from_bytes(stdout).best()),
+        str(from_bytes(stderr).best()),
         stdout,
         stderr,
         return_code,
