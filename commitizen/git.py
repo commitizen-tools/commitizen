@@ -1,5 +1,4 @@
 import os
-import re
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import List, Optional
@@ -143,11 +142,7 @@ def tag_exist(tag: str) -> bool:
 
 
 def is_signed_tag(tag: str) -> bool:
-    c = cmd.run(f"git tag -v {tag}")
-    _ret = False
-    if re.match("gpg: Signature made [0-9/:A-Za-z ]*", c.err):
-        _ret = True
-    return _ret
+    return cmd.run(f"git tag -v {tag}").return_code == 0
 
 
 def get_latest_tag_name() -> Optional[str]:
