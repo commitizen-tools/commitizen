@@ -1,4 +1,10 @@
 
+## v2.29.5 (2022-08-07)
+
+### Fix
+
+- **git**: use "git tag -v" return_code to check whether a tag is signed
+
 ## v2.29.4 (2022-08-05)
 
 ### Refactor
