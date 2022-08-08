@@ -46,6 +46,8 @@ COMMIT_LOG = [
         "This reverts commit afc70133e4a81344928561fbf3bb20738dfc8a0b."
     ),
     "feat!: add user stuff",
+    "fixup! test(commands): ignore fixup! prefix",
+    "fixup! test(commands): ignore squash! prefix",
 ]
 
 
