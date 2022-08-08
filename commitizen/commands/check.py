@@ -109,6 +109,8 @@ class Check:
             commit_msg.startswith("Merge")
             or commit_msg.startswith("Revert")
             or commit_msg.startswith("Pull request")
+            or commit_msg.startswith("fixup!")
+            or commit_msg.startswith("squash!")
         ):
             return True
         return bool(re.match(pattern, commit_msg))
