@@ -1,4 +1,6 @@
 import os
+import shutil
+from typing import Any, Dict
 
 import questionary
 import yaml
@@ -9,7 +11,7 @@ from commitizen.__version__ import __version__
 from commitizen.config import BaseConfig, JsonConfig, TomlConfig, YAMLConfig
 from commitizen.cz import registry
 from commitizen.defaults import config_files
-from commitizen.exceptions import NoAnswersError
+from commitizen.exceptions import InitFailedError, NoAnswersError
 from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
 
 
@@ -19,34 +21,36 @@ class Init:
         self.cz = factory.commiter_factory(self.config)
 
     def __call__(self):
-        values_to_add = {}
+        if self.config.path:
+            out.line(f"Config file {self.config.path} already exists")
+            return
 
         # No config for commitizen exist
-        if not self.config.path:
-            config_path = self._ask_config_path()
-            if "toml" in config_path:
-                self.config = TomlConfig(data="", path=config_path)
-            elif "json" in config_path:
-                self.config = JsonConfig(data="{}", path=config_path)
-            elif "yaml" in config_path:
-                self.config = YAMLConfig(data="", path=config_path)
+        config_path = self._ask_config_path()
+        if "toml" in config_path:
+            self.config = TomlConfig(data="", path=config_path)
+        elif "json" in config_path:
+            self.config = JsonConfig(data="{}", path=config_path)
+        elif "yaml" in config_path:
+            self.config = YAMLConfig(data="", path=config_path)
+        self.config.init_empty_config_content()
 
-            self.config.init_empty_config_content()
+        values_to_add = {}
+        values_to_add["name"] = self._ask_name()
+        tag = self._ask_tag()
+        values_to_add["version"] = Version(tag).public
+        values_to_add["tag_format"] = self._ask_tag_format(tag)
+        self._update_config_file(values_to_add)
 
-            values_to_add["name"] = self._ask_name()
-            tag = self._ask_tag()
-            values_to_add["version"] = Version(tag).public
-            values_to_add["tag_format"] = self._ask_tag_format(tag)
-            self._update_config_file(values_to_add)
+        if questionary.confirm("Do you want to install pre-commit hook?").ask():
+            if not self._install_pre_commit_hook():
+                raise InitFailedError(
+                    "Installation failed. See error outputs for more information."
+                )
 
-            if questionary.confirm("Do you want to install pre-commit hook?").ask():
-                self._install_pre_commit_hook()
-
-            out.write("You can bump the version and create changelog running:\n")
-            out.info("cz bump --changelog")
-            out.success("The configuration are all set.")
-        else:
-            out.line(f"Config file {self.config.path} already exists")
+        out.write("You can bump the version and create changelog running:\n")
+        out.info("cz bump --changelog")
+        out.success("The configuration are all set.")
 
     def _ask_config_path(self) -> str:
         name: str = questionary.select(
@@ -109,7 +113,20 @@ class Init:
                 tag_format = "$version"
         return tag_format
 
-    def _install_pre_commit_hook(self):
+    def _search_pre_commit(self):
+        return shutil.which("pre-commit") is not None
+
+    def _exec_install_pre_commit_hook(self):
+        cmd_str = "pre-commit install --hook-type commit-msg"
+        c = cmd.run(cmd_str)
+        if c.return_code != 0:
+            out.error(f"Error running {cmd_str}. Outputs are attached below:")
+            out.error(f"stdout: {c.out}")
+            out.error(f"stderr: {c.err}")
+            return False
+        return True
+
+    def _install_pre_commit_hook(self) -> bool:
         pre_commit_config_filename = ".pre-commit-config.yaml"
         cz_hook_config = {
             "repo": "https://github.com/commitizen-tools/commitizen",
@@ -119,7 +136,7 @@ class Init:
 
         config_data = {}
         if not os.path.isfile(pre_commit_config_filename):
-            # .pre-commit-config does not exist
+            # .pre-commit-config.yaml does not exist
             config_data["repos"] = [cz_hook_config]
         else:
             with open(pre_commit_config_filename) as config_file:
@@ -135,23 +152,22 @@ class Init:
                 else:
                     config_data["repos"].append(cz_hook_config)
             else:
-                # .pre-commit-config exists but there's no "repos" key
+                # .pre-commit-config.yaml exists but there's no "repos" key
                 config_data["repos"] = [cz_hook_config]
 
         with smart_open(pre_commit_config_filename, "w") as config_file:
             yaml.safe_dump(config_data, stream=config_file)
 
-        c = cmd.run("pre-commit install --hook-type commit-msg")
-        if c.return_code == 127:
-            out.error(
-                "pre-commit is not installed in current environement.\n"
-                "Run 'pre-commit install --hook-type commit-msg' again after it's installed"
-            )
-        elif c.return_code != 0:
-            out.error(c.err)
-        else:
-            out.write("commitizen pre-commit hook is now installed in your '.git'\n")
+        if not self._search_pre_commit():
+            out.error("pre-commit is not installed in current environement.")
+            return False
 
-    def _update_config_file(self, values):
+        if not self._exec_install_pre_commit_hook():
+            return False
+
+        out.write("commitizen pre-commit hook is now installed in your '.git'\n")
+        return True
+
+    def _update_config_file(self, values: Dict[str, Any]):
         for key, value in values.items():
             self.config.set_key(key, value)

@@ -105,7 +105,15 @@ class TestPreCommitCases:
         )
         mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
         mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
-        mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+        # Assume the `pre-commit` is installed
+        mocker.patch(
+            "commitizen.commands.init.Init._search_pre_commit",
+            return_value=True,
+        )
+        mocker.patch(
+            "commitizen.commands.init.Init._exec_install_pre_commit_hook",
+            return_value=True,
+        )
         return request.param
 
     def test_no_existing_pre_commit_conifg(_, default_choice, tmpdir, config):
