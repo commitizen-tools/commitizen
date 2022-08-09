@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+from functools import partial
 
 import pytest
 from pytest_mock import MockFixture
@@ -61,7 +62,9 @@ def test_arg_debug(mocker: MockFixture):
     testargs = ["cz", "--debug", "info"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-    assert sys.excepthook.keywords.get("debug") is True
+    excepthook = sys.excepthook
+    assert isinstance(excepthook, partial)
+    assert excepthook.keywords.get("debug") is True
 
 
 def test_commitizen_excepthook(capsys):
