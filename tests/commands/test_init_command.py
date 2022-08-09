@@ -3,6 +3,7 @@ import os
 
 import pytest
 import yaml
+from pytest_mock import MockFixture
 
 from commitizen import commands
 from commitizen.__version__ import __version__
@@ -40,7 +41,7 @@ EXPECTED_DICT_CONFIG = {
 }
 
 
-def test_init_without_setup_pre_commit_hook(tmpdir, mocker, config):
+def test_init_without_setup_pre_commit_hook(tmpdir, mocker: MockFixture, config):
     mocker.patch(
         "questionary.select",
         side_effect=[
@@ -72,7 +73,7 @@ def test_init_when_config_already_exists(config, capsys):
     assert captured.out == f"Config file {path} already exists\n"
 
 
-def test_init_without_choosing_tag(config, mocker, tmpdir):
+def test_init_without_choosing_tag(config, mocker: MockFixture, tmpdir):
     mocker.patch(
         "commitizen.commands.init.get_tag_names", return_value=["0.0.1", "0.0.2"]
     )
@@ -95,7 +96,7 @@ def test_init_without_choosing_tag(config, mocker, tmpdir):
 
 class TestPreCommitCases:
     @pytest.fixture(scope="function", params=["pyproject.toml", ".cz.json", ".cz.yaml"])
-    def default_choice(_, request, mocker):
+    def default_choice(_, request, mocker: MockFixture):
         mocker.patch(
             "questionary.select",
             side_effect=[

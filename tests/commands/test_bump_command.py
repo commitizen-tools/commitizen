@@ -4,6 +4,7 @@ from typing import Tuple
 from unittest.mock import MagicMock
 
 import pytest
+from pytest_mock import MockFixture
 
 import commitizen.commands.bump as bump
 from commitizen import cli, cmd, git
@@ -37,7 +38,7 @@ from tests.utils import create_file_and_commit, create_tag
     ),
 )
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_patch_increment(commit_msg, mocker):
+def test_bump_patch_increment(commit_msg, mocker: MockFixture):
     create_file_and_commit(commit_msg)
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
@@ -48,7 +49,7 @@ def test_bump_patch_increment(commit_msg, mocker):
 
 @pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_minor_increment(commit_msg, mocker):
+def test_bump_minor_increment(commit_msg, mocker: MockFixture):
     create_file_and_commit(commit_msg)
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
@@ -60,7 +61,7 @@ def test_bump_minor_increment(commit_msg, mocker):
 
 @pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_minor_increment_annotated(commit_msg, mocker):
+def test_bump_minor_increment_annotated(commit_msg, mocker: MockFixture):
     create_file_and_commit(commit_msg)
     testargs = ["cz", "bump", "--yes", "--annotated-tag"]
     mocker.patch.object(sys, "argv", testargs)
@@ -75,7 +76,7 @@ def test_bump_minor_increment_annotated(commit_msg, mocker):
 
 @pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
 @pytest.mark.usefixtures("tmp_commitizen_project_with_gpg")
-def test_bump_minor_increment_signed(commit_msg, mocker):
+def test_bump_minor_increment_signed(commit_msg, mocker: MockFixture):
     create_file_and_commit(commit_msg)
     testargs = ["cz", "bump", "--yes", "--gpg-sign"]
     mocker.patch.object(sys, "argv", testargs)
@@ -90,7 +91,7 @@ def test_bump_minor_increment_signed(commit_msg, mocker):
 
 @pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
 def test_bump_minor_increment_annotated_config_file(
-    commit_msg, mocker, tmp_commitizen_project
+    commit_msg, mocker: MockFixture, tmp_commitizen_project
 ):
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
     tmp_commitizen_cfg_file.write(
@@ -110,7 +111,7 @@ def test_bump_minor_increment_annotated_config_file(
 
 @pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
 def test_bump_minor_increment_signed_config_file(
-    commit_msg, mocker, tmp_commitizen_project_with_gpg
+    commit_msg, mocker: MockFixture, tmp_commitizen_project_with_gpg
 ):
     tmp_commitizen_cfg_file = tmp_commitizen_project_with_gpg.join("pyproject.toml")
     tmp_commitizen_cfg_file.write(f"{tmp_commitizen_cfg_file.read()}\n" f"gpg_sign = 1")
@@ -140,7 +141,7 @@ def test_bump_minor_increment_signed_config_file(
         "BREAKING-CHANGE: age is no longer supported",
     ),
 )
-def test_bump_major_increment(commit_msg, mocker):
+def test_bump_major_increment(commit_msg, mocker: MockFixture):
     create_file_and_commit(commit_msg)
 
     testargs = ["cz", "bump", "--yes"]
@@ -186,7 +187,9 @@ def test_bump_major_increment_major_version_zero(commit_msg, mocker):
         ("BREAKING CHANGE: age is no longer supported", "minor", "0.2.0"),
     ],
 )
-def test_bump_command_increment_option(commit_msg, increment, expected_tag, mocker):
+def test_bump_command_increment_option(
+    commit_msg, increment, expected_tag, mocker: MockFixture
+):
     create_file_and_commit(commit_msg)
 
     testargs = ["cz", "bump", "--increment", increment, "--yes"]
@@ -198,7 +201,7 @@ def test_bump_command_increment_option(commit_msg, increment, expected_tag, mock
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_command_prelease(mocker):
+def test_bump_command_prelease(mocker: MockFixture):
     # PRERELEASE
     create_file_and_commit("feat: location")
 
@@ -219,7 +222,7 @@ def test_bump_command_prelease(mocker):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_on_git_with_hooks_no_verify_disabled(mocker):
+def test_bump_on_git_with_hooks_no_verify_disabled(mocker: MockFixture):
     """Bump commit without --no-verify"""
     cmd.run("mkdir .git/hooks")
     with open(".git/hooks/pre-commit", "w") as f:
@@ -239,7 +242,7 @@ def test_bump_on_git_with_hooks_no_verify_disabled(mocker):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_tag_exists_raises_exception(mocker):
+def test_bump_tag_exists_raises_exception(mocker: MockFixture):
     cmd.run("mkdir .git/hooks")
     with open(".git/hooks/post-commit", "w") as f:
         f.write("#!/usr/bin/env bash\n" "exit 9")
@@ -258,7 +261,7 @@ def test_bump_tag_exists_raises_exception(mocker):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_on_git_with_hooks_no_verify_enabled(mocker):
+def test_bump_on_git_with_hooks_no_verify_enabled(mocker: MockFixture):
     cmd.run("mkdir .git/hooks")
     with open(".git/hooks/pre-commit", "w") as f:
         f.write("#!/usr/bin/env bash\n" 'echo "0.1.0"')
@@ -275,7 +278,7 @@ def test_bump_on_git_with_hooks_no_verify_enabled(mocker):
     assert tag_exists is True
 
 
-def test_bump_when_bumpping_is_not_support(mocker, tmp_commitizen_project):
+def test_bump_when_bumpping_is_not_support(mocker: MockFixture, tmp_commitizen_project):
     create_file_and_commit(
         "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported"
     )
@@ -290,7 +293,7 @@ def test_bump_when_bumpping_is_not_support(mocker, tmp_commitizen_project):
 
 
 @pytest.mark.usefixtures("tmp_git_project")
-def test_bump_when_version_is_not_specify(mocker):
+def test_bump_when_version_is_not_specify(mocker: MockFixture):
     mocker.patch.object(sys, "argv", ["cz", "bump"])
 
     with pytest.raises(NoVersionSpecifiedError) as excinfo:
@@ -300,7 +303,7 @@ def test_bump_when_version_is_not_specify(mocker):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_when_no_new_commit(mocker):
+def test_bump_when_no_new_commit(mocker: MockFixture):
     """bump without any commits since the last bump."""
     # We need this first commit otherwise the revision is invalid.
     create_file_and_commit("feat: initial")
@@ -322,7 +325,7 @@ def test_bump_when_no_new_commit(mocker):
 
 
 def test_bump_when_version_inconsistent_in_version_files(
-    tmp_commitizen_project, mocker
+    tmp_commitizen_project, mocker: MockFixture
 ):
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_version_file.write("100.999.10000")
@@ -374,7 +377,7 @@ def test_bump_major_version_zero_when_major_is_not_zero(mocker, tmp_commitizen_p
     assert expected_error_message in str(excinfo.value)
 
 
-def test_bump_files_only(mocker, tmp_commitizen_project):
+def test_bump_files_only(mocker: MockFixture, tmp_commitizen_project):
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_version_file.write("0.1.0")
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
@@ -407,7 +410,7 @@ def test_bump_files_only(mocker, tmp_commitizen_project):
         assert "0.3.0" in f.read()
 
 
-def test_bump_local_version(mocker, tmp_commitizen_project):
+def test_bump_local_version(mocker: MockFixture, tmp_commitizen_project):
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_version_file.write("4.5.1+0.1.0")
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
@@ -429,7 +432,7 @@ def test_bump_local_version(mocker, tmp_commitizen_project):
         assert "4.5.1+0.2.0" in f.read()
 
 
-def test_bump_dry_run(mocker, capsys, tmp_commitizen_project):
+def test_bump_dry_run(mocker: MockFixture, capsys, tmp_commitizen_project):
     create_file_and_commit("feat: new file")
 
     testargs = ["cz", "bump", "--yes", "--dry-run"]
@@ -444,7 +447,7 @@ def test_bump_dry_run(mocker, capsys, tmp_commitizen_project):
     assert tag_exists is False
 
 
-def test_bump_in_non_git_project(tmpdir, config, mocker):
+def test_bump_in_non_git_project(tmpdir, config, mocker: MockFixture):
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
 
@@ -472,7 +475,7 @@ def test_none_increment_exit_is_exception():
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_none_increment_should_not_call_git_tag_and_error_code_is_not_zero(
-    mocker, tmp_commitizen_project
+    mocker: MockFixture, tmp_commitizen_project
 ):
     create_file_and_commit("test(test_get_all_droplets): fix bad comparison test")
     testargs = ["cz", "bump", "--yes"]
@@ -496,7 +499,7 @@ def test_none_increment_should_not_call_git_tag_and_error_code_is_not_zero(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_with_changelog_arg(mocker, changelog_path):
+def test_bump_with_changelog_arg(mocker: MockFixture, changelog_path):
     create_file_and_commit("feat(user): new file")
     testargs = ["cz", "bump", "--yes", "--changelog"]
     mocker.patch.object(sys, "argv", testargs)
@@ -511,7 +514,7 @@ def test_bump_with_changelog_arg(mocker, changelog_path):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_with_changelog_config(mocker, changelog_path, config_path):
+def test_bump_with_changelog_config(mocker: MockFixture, changelog_path, config_path):
     create_file_and_commit("feat(user): new file")
     with open(config_path, "a") as fp:
         fp.write("update_changelog_on_bump = true\n")
@@ -529,7 +532,7 @@ def test_bump_with_changelog_config(mocker, changelog_path, config_path):
 
 
 def test_prevent_prerelease_when_no_increment_detected(
-    mocker, capsys, tmp_commitizen_project
+    mocker: MockFixture, capsys, tmp_commitizen_project
 ):
     create_file_and_commit("feat: new file")
 
@@ -555,7 +558,7 @@ def test_prevent_prerelease_when_no_increment_detected(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_with_changelog_to_stdout_arg(mocker, capsys, changelog_path):
+def test_bump_with_changelog_to_stdout_arg(mocker: MockFixture, capsys, changelog_path):
     create_file_and_commit("feat(user): this should appear in stdout")
     testargs = ["cz", "bump", "--yes", "--changelog-to-stdout"]
     mocker.patch.object(sys, "argv", testargs)
@@ -573,7 +576,9 @@ def test_bump_with_changelog_to_stdout_arg(mocker, capsys, changelog_path):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_with_changelog_to_stdout_dry_run_arg(mocker, capsys, changelog_path):
+def test_bump_with_changelog_to_stdout_dry_run_arg(
+    mocker: MockFixture, capsys, changelog_path
+):
     create_file_and_commit(
         "feat(user): this should appear in stdout with dry-run enabled"
     )

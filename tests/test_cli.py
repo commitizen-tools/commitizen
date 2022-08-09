@@ -3,12 +3,13 @@ import subprocess
 import sys
 
 import pytest
+from pytest_mock import MockFixture
 
 from commitizen import cli
 from commitizen.exceptions import ExpectedExit, NoCommandFoundError, NotAGitProjectError
 
 
-def test_sysexit_no_argv(mocker, capsys):
+def test_sysexit_no_argv(mocker: MockFixture, capsys):
     testargs = ["cz"]
     mocker.patch.object(sys, "argv", testargs)
 
@@ -18,7 +19,7 @@ def test_sysexit_no_argv(mocker, capsys):
         assert out.startswith("usage")
 
 
-def test_cz_with_arg_but_without_command(mocker):
+def test_cz_with_arg_but_without_command(mocker: MockFixture):
     testargs = ["cz", "--name", "cz_jira"]
     mocker.patch.object(sys, "argv", testargs)
 
@@ -27,7 +28,7 @@ def test_cz_with_arg_but_without_command(mocker):
     assert "Command is required" in str(excinfo.value)
 
 
-def test_name(mocker, capsys):
+def test_name(mocker: MockFixture, capsys):
     testargs = ["cz", "-n", "cz_jira", "example"]
     mocker.patch.object(sys, "argv", testargs)
 
@@ -37,7 +38,7 @@ def test_name(mocker, capsys):
 
 
 @pytest.mark.usefixtures("tmp_git_project")
-def test_name_default_value(mocker, capsys):
+def test_name_default_value(mocker: MockFixture, capsys):
     testargs = ["cz", "example"]
     mocker.patch.object(sys, "argv", testargs)
 
@@ -46,7 +47,7 @@ def test_name_default_value(mocker, capsys):
     assert out.startswith("fix: correct minor typos in code")
 
 
-def test_ls(mocker, capsys):
+def test_ls(mocker: MockFixture, capsys):
     testargs = ["cz", "-n", "cz_jira", "ls"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
@@ -56,7 +57,7 @@ def test_ls(mocker, capsys):
     assert isinstance(out, str)
 
 
-def test_arg_debug(mocker):
+def test_arg_debug(mocker: MockFixture):
     testargs = ["cz", "--debug", "info"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()

@@ -4,6 +4,7 @@ import shutil
 from typing import List, Optional
 
 import pytest
+from pytest_mock import MockFixture
 
 from commitizen import cmd, exceptions, git
 from tests.utils import FakeCommand, create_file_and_commit
@@ -19,7 +20,7 @@ def test_git_object_eq():
     assert git_commit != "sha1-code"
 
 
-def test_get_tags(mocker):
+def test_get_tags(mocker: MockFixture):
     tag_str = (
         "v1.0.0---inner_delimiter---333---inner_delimiter---2020-01-20---inner_delimiter---\n"
         "v0.5.0---inner_delimiter---222---inner_delimiter---2020-01-17---inner_delimiter---\n"
@@ -39,7 +40,7 @@ def test_get_tags(mocker):
     assert git.get_tags() == []
 
 
-def test_get_tag_names(mocker):
+def test_get_tag_names(mocker: MockFixture):
     tag_str = "v1.0.0\n" "v0.5.0\n" "v0.0.1\n"
     mocker.patch("commitizen.cmd.run", return_value=FakeCommand(out=tag_str))
 
@@ -85,7 +86,7 @@ def test_get_commits_author_and_email():
     assert "@" in commit.author_email
 
 
-def test_get_commits_without_email(mocker):
+def test_get_commits_without_email(mocker: MockFixture):
     raw_commit = (
         "a515bb8f71c403f6f7d1c17b9d8ebf2ce3959395\n"
         "\n"
@@ -112,7 +113,7 @@ def test_get_commits_without_email(mocker):
     assert commits[1].title == "feat(users): add username"
 
 
-def test_get_commits_without_breakline_in_each_commit(mocker):
+def test_get_commits_without_breakline_in_each_commit(mocker: MockFixture):
     raw_commit = (
         "ae9ba6fc5526cf478f52ef901418d85505109744\n"
         "bump: version 2.13.0 → 2.14.0\n"
