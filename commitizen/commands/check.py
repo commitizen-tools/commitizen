@@ -1,7 +1,7 @@
 import os
 import re
 import sys
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
@@ -15,7 +15,7 @@ from commitizen.exceptions import (
 class Check:
     """Check if the current commit msg matches the commitizen format."""
 
-    def __init__(self, config: BaseConfig, arguments: Dict[str, str], cwd=os.getcwd()):
+    def __init__(self, config: BaseConfig, arguments: Dict[str, Any], cwd=os.getcwd()):
         """Initial check command.
 
         Args:

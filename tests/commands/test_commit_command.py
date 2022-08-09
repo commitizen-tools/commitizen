@@ -35,7 +35,7 @@ def test_commit(config, mocker: MockFixture):
     }
 
     commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", "", "", 0)
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
     success_mock = mocker.patch("commitizen.out.success")
 
     commands.Commit(config, {})()
@@ -45,7 +45,7 @@ def test_commit(config, mocker: MockFixture):
 @pytest.mark.usefixtures("staging_is_clean")
 def test_commit_retry_fails_no_backup(config, mocker: MockFixture):
     commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", "", "", 0)
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
 
     with pytest.raises(NoCommitBackupError) as excinfo:
         commands.Commit(config, {"retry": True})()
@@ -66,7 +66,7 @@ def test_commit_retry_works(config, mocker: MockFixture):
     }
 
     commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("", "error", "", "", 9)
+    commit_mock.return_value = cmd.Command("", "error", b"", b"", 9)
     error_mock = mocker.patch("commitizen.out.error")
 
     with pytest.raises(CommitError):
@@ -80,7 +80,7 @@ def test_commit_retry_works(config, mocker: MockFixture):
 
     # Previous commit failed, so retry should pick up the backup commit
     # commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", "", "", 0)
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
     success_mock = mocker.patch("commitizen.out.success")
 
     commands.Commit(config, {"retry": True})()
@@ -121,7 +121,7 @@ def test_commit_command_with_signoff_option(config, mocker: MockFixture):
     }
 
     commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", "", "", 0)
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
     success_mock = mocker.patch("commitizen.out.success")
 
     commands.Commit(config, {"signoff": True})()
