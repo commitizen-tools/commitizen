@@ -3,6 +3,7 @@ from io import StringIO
 from typing import List
 
 import pytest
+from pytest_mock import MockFixture
 
 from commitizen import cli, commands, git
 from commitizen.exceptions import (
@@ -55,7 +56,7 @@ def _build_fake_git_commits(commit_msgs: List[str]) -> List[git.GitCommit]:
     return [git.GitCommit("test_rev", commit_msg) for commit_msg in commit_msgs]
 
 
-def test_check_jira_fails(mocker):
+def test_check_jira_fails(mocker: MockFixture):
     testargs = ["cz", "-n", "cz_jira", "check", "--commit-msg-file", "some_file"]
     mocker.patch.object(sys, "argv", testargs)
     mocker.patch(
@@ -67,7 +68,7 @@ def test_check_jira_fails(mocker):
     assert "commit validation: failed!" in str(excinfo.value)
 
 
-def test_check_jira_command_after_issue_one_space(mocker, capsys):
+def test_check_jira_command_after_issue_one_space(mocker: MockFixture, capsys):
     testargs = ["cz", "-n", "cz_jira", "check", "--commit-msg-file", "some_file"]
     mocker.patch.object(sys, "argv", testargs)
     mocker.patch(
@@ -79,7 +80,7 @@ def test_check_jira_command_after_issue_one_space(mocker, capsys):
     assert "Commit validation: successful!" in out
 
 
-def test_check_jira_command_after_issue_two_spaces(mocker, capsys):
+def test_check_jira_command_after_issue_two_spaces(mocker: MockFixture, capsys):
     testargs = ["cz", "-n", "cz_jira", "check", "--commit-msg-file", "some_file"]
     mocker.patch.object(sys, "argv", testargs)
     mocker.patch(
@@ -91,7 +92,7 @@ def test_check_jira_command_after_issue_two_spaces(mocker, capsys):
     assert "Commit validation: successful!" in out
 
 
-def test_check_jira_text_between_issue_and_command(mocker, capsys):
+def test_check_jira_text_between_issue_and_command(mocker: MockFixture, capsys):
     testargs = ["cz", "-n", "cz_jira", "check", "--commit-msg-file", "some_file"]
     mocker.patch.object(sys, "argv", testargs)
     mocker.patch(
@@ -103,7 +104,7 @@ def test_check_jira_text_between_issue_and_command(mocker, capsys):
     assert "Commit validation: successful!" in out
 
 
-def test_check_jira_multiple_commands(mocker, capsys):
+def test_check_jira_multiple_commands(mocker: MockFixture, capsys):
     testargs = ["cz", "-n", "cz_jira", "check", "--commit-msg-file", "some_file"]
     mocker.patch.object(sys, "argv", testargs)
     mocker.patch(
@@ -115,7 +116,7 @@ def test_check_jira_multiple_commands(mocker, capsys):
     assert "Commit validation: successful!" in out
 
 
-def test_check_conventional_commit_succeeds(mocker, capsys):
+def test_check_conventional_commit_succeeds(mocker: MockFixture, capsys):
     testargs = ["cz", "check", "--commit-msg-file", "some_file"]
     mocker.patch.object(sys, "argv", testargs)
     mocker.patch(
@@ -139,7 +140,7 @@ def test_check_conventional_commit_succeeds(mocker, capsys):
         ),
     ),
 )
-def test_check_no_conventional_commit(commit_msg, config, mocker, tmpdir):
+def test_check_no_conventional_commit(commit_msg, config, mocker: MockFixture, tmpdir):
     with pytest.raises(InvalidCommitMessageError):
         error_mock = mocker.patch("commitizen.out.error")
 
@@ -162,7 +163,7 @@ def test_check_no_conventional_commit(commit_msg, config, mocker, tmpdir):
         "bump: 0.0.1 -> 1.0.0",
     ),
 )
-def test_check_conventional_commit(commit_msg, config, mocker, tmpdir):
+def test_check_conventional_commit(commit_msg, config, mocker: MockFixture, tmpdir):
     success_mock = mocker.patch("commitizen.out.success")
 
     tempfile = tmpdir.join("temp_commit_file")
@@ -179,7 +180,7 @@ def test_check_command_when_commit_file_not_found(config):
         commands.Check(config=config, arguments={"commit_msg_file": "no_such_file"})()
 
 
-def test_check_a_range_of_git_commits(config, mocker):
+def test_check_a_range_of_git_commits(config, mocker: MockFixture):
     success_mock = mocker.patch("commitizen.out.success")
     mocker.patch(
         "commitizen.git.get_commits", return_value=_build_fake_git_commits(COMMIT_LOG)
@@ -193,7 +194,7 @@ def test_check_a_range_of_git_commits(config, mocker):
     success_mock.assert_called_once()
 
 
-def test_check_a_range_of_git_commits_and_failed(config, mocker):
+def test_check_a_range_of_git_commits_and_failed(config, mocker: MockFixture):
     error_mock = mocker.patch("commitizen.out.error")
     mocker.patch(
         "commitizen.git.get_commits",
@@ -221,7 +222,7 @@ def test_check_command_with_invalid_argument(config):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_check_command_with_empty_range(config, mocker):
+def test_check_command_with_empty_range(config, mocker: MockFixture):
 
     # must initialize git with a commit
     create_file_and_commit("feat: initial")
@@ -233,7 +234,7 @@ def test_check_command_with_empty_range(config, mocker):
     assert "No commit found with range: 'master..master'" in str(excinfo)
 
 
-def test_check_a_range_of_failed_git_commits(config, mocker):
+def test_check_a_range_of_failed_git_commits(config, mocker: MockFixture):
     ill_formated_commits_msgs = [
         "First commit does not follow rule",
         "Second commit does not follow rule",
@@ -252,7 +253,7 @@ def test_check_a_range_of_failed_git_commits(config, mocker):
     assert all([msg in str(excinfo.value) for msg in ill_formated_commits_msgs])
 
 
-def test_check_command_with_valid_message(config, mocker):
+def test_check_command_with_valid_message(config, mocker: MockFixture):
     success_mock = mocker.patch("commitizen.out.success")
     check_cmd = commands.Check(
         config=config, arguments={"message": "fix(scope): some commit message"}
@@ -262,7 +263,7 @@ def test_check_command_with_valid_message(config, mocker):
     success_mock.assert_called_once()
 
 
-def test_check_command_with_invalid_message(config, mocker):
+def test_check_command_with_invalid_message(config, mocker: MockFixture):
     error_mock = mocker.patch("commitizen.out.error")
     check_cmd = commands.Check(config=config, arguments={"message": "bad commit"})
 
@@ -271,7 +272,7 @@ def test_check_command_with_invalid_message(config, mocker):
         error_mock.assert_called_once()
 
 
-def test_check_command_with_empty_message(config, mocker):
+def test_check_command_with_empty_message(config, mocker: MockFixture):
     error_mock = mocker.patch("commitizen.out.error")
     check_cmd = commands.Check(config=config, arguments={"message": ""})
 
@@ -280,7 +281,7 @@ def test_check_command_with_empty_message(config, mocker):
         error_mock.assert_called_once()
 
 
-def test_check_command_with_allow_abort_arg(config, mocker):
+def test_check_command_with_allow_abort_arg(config, mocker: MockFixture):
     success_mock = mocker.patch("commitizen.out.success")
     check_cmd = commands.Check(
         config=config, arguments={"message": "", "allow_abort": True}
@@ -290,7 +291,7 @@ def test_check_command_with_allow_abort_arg(config, mocker):
     success_mock.assert_called_once()
 
 
-def test_check_command_with_allow_abort_config(config, mocker):
+def test_check_command_with_allow_abort_config(config, mocker: MockFixture):
     success_mock = mocker.patch("commitizen.out.success")
     config.settings["allow_abort"] = True
     check_cmd = commands.Check(config=config, arguments={"message": ""})
@@ -299,7 +300,7 @@ def test_check_command_with_allow_abort_config(config, mocker):
     success_mock.assert_called_once()
 
 
-def test_check_command_override_allow_abort_config(config, mocker):
+def test_check_command_override_allow_abort_config(config, mocker: MockFixture):
     error_mock = mocker.patch("commitizen.out.error")
     config.settings["allow_abort"] = True
     check_cmd = commands.Check(
@@ -311,7 +312,7 @@ def test_check_command_override_allow_abort_config(config, mocker):
         error_mock.assert_called_once()
 
 
-def test_check_command_with_pipe_message(mocker, capsys):
+def test_check_command_with_pipe_message(mocker: MockFixture, capsys):
     testargs = ["cz", "check"]
     mocker.patch.object(sys, "argv", testargs)
     mocker.patch("sys.stdin", StringIO("fix(scope): some commit message"))
@@ -321,7 +322,7 @@ def test_check_command_with_pipe_message(mocker, capsys):
     assert "Commit validation: successful!" in out
 
 
-def test_check_command_with_pipe_message_and_failed(mocker):
+def test_check_command_with_pipe_message_and_failed(mocker: MockFixture):
     testargs = ["cz", "check"]
     mocker.patch.object(sys, "argv", testargs)
     mocker.patch("sys.stdin", StringIO("bad commit message"))
@@ -331,7 +332,7 @@ def test_check_command_with_pipe_message_and_failed(mocker):
     assert "commit validation: failed!" in str(excinfo.value)
 
 
-def test_check_command_with_comment_in_messege_file(mocker, capsys):
+def test_check_command_with_comment_in_messege_file(mocker: MockFixture, capsys):
     testargs = ["cz", "check", "--commit-msg-file", "some_file"]
     mocker.patch.object(sys, "argv", testargs)
     mocker.patch(

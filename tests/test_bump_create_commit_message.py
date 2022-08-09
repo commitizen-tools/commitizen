@@ -5,6 +5,7 @@ from textwrap import dedent
 
 import pytest
 from packaging.version import Version
+from pytest_mock import MockFixture
 
 from commitizen import bump, cli, cmd, exceptions
 
@@ -28,7 +29,9 @@ def test_create_tag(test_input, expected):
 
 
 @pytest.mark.parametrize("retry", (True, False))
-def test_bump_pre_commit_changelog(tmp_commitizen_project, mocker, freezer, retry):
+def test_bump_pre_commit_changelog(
+    tmp_commitizen_project, mocker: MockFixture, freezer, retry
+):
     freezer.move_to("2022-04-01")
     testargs = ["cz", "bump", "--changelog", "--yes"]
     if retry:
@@ -76,7 +79,7 @@ def test_bump_pre_commit_changelog(tmp_commitizen_project, mocker, freezer, retr
 
 @pytest.mark.parametrize("retry", (True, False))
 def test_bump_pre_commit_changelog_fails_always(
-    tmp_commitizen_project, mocker, freezer, retry
+    tmp_commitizen_project, mocker: MockFixture, freezer, retry
 ):
     freezer.move_to("2022-04-01")
     testargs = ["cz", "bump", "--changelog", "--yes"]

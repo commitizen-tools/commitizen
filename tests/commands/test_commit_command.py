@@ -1,6 +1,7 @@
 import os
 
 import pytest
+from pytest_mock import MockFixture
 
 from commitizen import cmd, commands
 from commitizen.cz.exceptions import CzException
@@ -16,13 +17,13 @@ from commitizen.exceptions import (
 
 
 @pytest.fixture
-def staging_is_clean(mocker):
+def staging_is_clean(mocker: MockFixture):
     is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
     is_staging_clean_mock.return_value = False
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit(config, mocker):
+def test_commit(config, mocker: MockFixture):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
         "prefix": "feat",
@@ -42,7 +43,7 @@ def test_commit(config, mocker):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_retry_fails_no_backup(config, mocker):
+def test_commit_retry_fails_no_backup(config, mocker: MockFixture):
     commit_mock = mocker.patch("commitizen.git.commit")
     commit_mock.return_value = cmd.Command("success", "", "", "", 0)
 
@@ -53,7 +54,7 @@ def test_commit_retry_fails_no_backup(config, mocker):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_retry_works(config, mocker):
+def test_commit_retry_works(config, mocker: MockFixture):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
         "prefix": "feat",
@@ -91,7 +92,7 @@ def test_commit_retry_works(config, mocker):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_command_with_dry_run_option(config, mocker):
+def test_commit_command_with_dry_run_option(config, mocker: MockFixture):
     prompt_mock = mocker = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
         "prefix": "feat",
@@ -108,7 +109,7 @@ def test_commit_command_with_dry_run_option(config, mocker):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_command_with_signoff_option(config, mocker):
+def test_commit_command_with_signoff_option(config, mocker: MockFixture):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
         "prefix": "feat",
@@ -127,7 +128,7 @@ def test_commit_command_with_signoff_option(config, mocker):
     success_mock.assert_called_once()
 
 
-def test_commit_when_nothing_to_commit(config, mocker):
+def test_commit_when_nothing_to_commit(config, mocker: MockFixture):
     is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
     is_staging_clean_mock.return_value = True
 
@@ -139,7 +140,7 @@ def test_commit_when_nothing_to_commit(config, mocker):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_when_customized_expected_raised(config, mocker, capsys):
+def test_commit_when_customized_expected_raised(config, mocker: MockFixture, capsys):
     _err = ValueError()
     _err.__context__ = CzException("This is the root custom err")
     prompt_mock = mocker.patch("questionary.prompt")
@@ -154,7 +155,9 @@ def test_commit_when_customized_expected_raised(config, mocker, capsys):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_when_non_customized_expected_raised(config, mocker, capsys):
+def test_commit_when_non_customized_expected_raised(
+    config, mocker: MockFixture, capsys
+):
     _err = ValueError()
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.side_effect = _err
@@ -165,7 +168,7 @@ def test_commit_when_non_customized_expected_raised(config, mocker, capsys):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_when_no_user_answer(config, mocker, capsys):
+def test_commit_when_no_user_answer(config, mocker: MockFixture, capsys):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = None
 
