@@ -5,6 +5,7 @@ SVE: Semantic version at the end
 import pytest
 
 from commitizen import bump
+from commitizen.config.base_config import BaseConfig
 from commitizen.cz import ConventionalCommitsCz
 from commitizen.git import GitCommit
 
@@ -72,11 +73,12 @@ semantic_version_map = {"MAJOR": "MAJOR", "MINOR": "MINOR", "PATCH": "PATCH"}
     ),
 )
 def test_find_increment(messages, expected_type):
+    cz = ConventionalCommitsCz(BaseConfig())
     commits = [GitCommit(rev="test", title=message) for message in messages]
     increment_type = bump.find_increment(
         commits,
-        regex=ConventionalCommitsCz.bump_pattern,
-        increments_map=ConventionalCommitsCz.bump_map,
+        regex=cz.bump_pattern,
+        increments_map=cz.bump_map,
     )
     assert increment_type == expected_type
 

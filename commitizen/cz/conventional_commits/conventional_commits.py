@@ -1,7 +1,11 @@
 import os
 import re
 
-from commitizen import defaults
+try:
+    from jinja2 import Template
+except ImportError:
+    from string import Template  # type: ignore
+
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.utils import multiple_line_breaker, required_validator
 from commitizen.defaults import Questions
@@ -28,18 +32,6 @@ def parse_subject(text):
 
 
 class ConventionalCommitsCz(BaseCommitizen):
-    bump_pattern = defaults.bump_pattern
-    bump_map = defaults.bump_map
-    commit_parser = defaults.commit_parser
-    version_parser = defaults.version_parser
-    change_type_map = {
-        "feat": "Feat",
-        "fix": "Fix",
-        "refactor": "Refactor",
-        "perf": "Perf",
-    }
-    changelog_pattern = defaults.bump_pattern
-
     def questions(self) -> Questions:
         questions: Questions = [
             {
@@ -148,9 +140,20 @@ class ConventionalCommitsCz(BaseCommitizen):
                 ),
             },
         ]
-        return questions
+
+        return self.config.settings.get("questions", questions)
 
     def message(self, answers: dict) -> str:
+        custom_message = self.config.settings.get("message_template")
+        if custom_message:
+            message_template = Template(
+                str(self.config.settings.get("message_template", ""))
+            )
+            if getattr(Template, "substitute", None):
+                return message_template.substitute(**answers)  # type: ignore
+            else:
+                return message_template.render(**answers)
+
         prefix = answers["prefix"]
         scope = answers["scope"]
         subject = answers["subject"]
@@ -172,32 +175,36 @@ class ConventionalCommitsCz(BaseCommitizen):
         return message
 
     def example(self) -> str:
-        return (
-            "fix: correct minor typos in code\n"
-            "\n"
-            "see the issue for details on the typos fixed\n"
-            "\n"
-            "closes issue #12"
+        return str(
+            self.config.settings.get(
+                "example",
+                "fix: correct minor typos in code\n"
+                "\n"
+                "see the issue for details on the typos fixed\n"
+                "\n"
+                "closes issue #12",
+            )
         )
 
     def schema(self) -> str:
-        return (
+        return self.config.settings.get(
+            "schema",
             "<type>(<scope>): <subject>\n"
             "<BLANK LINE>\n"
             "<body>\n"
             "<BLANK LINE>\n"
-            "(BREAKING CHANGE: )<footer>"
+            "(BREAKING CHANGE: )<footer>",
         )
 
     def schema_pattern(self) -> str:
         PATTERN = (
-            r"(?s)"  # To explictly make . match new line
+            r"(?s)"  # To explicitly make . match new line
             r"(build|ci|docs|feat|fix|perf|refactor|style|test|chore|revert|bump)"  # type
             r"(\(\S+\))?!?:"  # scope
             r"( [^\n\r]+)"  # subject
             r"((\n\n.*)|(\s*))?$"
         )
-        return PATTERN
+        return self.config.settings.get("schema_pattern", PATTERN)
 
     def info(self) -> str:
         dir_path = os.path.dirname(os.path.realpath(__file__))

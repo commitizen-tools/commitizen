@@ -1,5 +1,6 @@
 import os
 
+from commitizen.config.base_config import BaseConfig
 from commitizen.cz.base import BaseCommitizen
 from commitizen.defaults import Questions
 
@@ -7,6 +8,13 @@ __all__ = ["JiraSmartCz"]
 
 
 class JiraSmartCz(BaseCommitizen):
+    def __init__(self, config: BaseConfig):
+        super().__init__(config)
+        self.bump_map = None
+        self.bump_pattern = None
+        self.commit_parser = r"(?P<message>.*)"
+        self.changelog_pattern = r".*"
+
     def questions(self) -> Questions:
         questions = [
             {
