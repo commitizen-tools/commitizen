@@ -1,9 +1,32 @@
 import os
+from enum import Enum
+from os import linesep
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import List, Optional
 
 from commitizen import cmd
+
+UNIX_EOL = "\n"
+WINDOWS_EOL = "\r\n"
+
+
+class EOLTypes(Enum):
+    """The EOL type from `git config core.eol`."""
+
+    LF = "lf"
+    CRLF = "crlf"
+    NATIVE = "native"
+
+    def get_eol_for_open(self) -> str:
+        """Get the EOL character for `open()`."""
+        map = {
+            EOLTypes.CRLF: WINDOWS_EOL,
+            EOLTypes.LF: UNIX_EOL,
+            EOLTypes.NATIVE: linesep,
+        }
+
+        return map[self]
 
 
 class GitObject:
@@ -177,3 +200,31 @@ def is_git_project() -> bool:
     if c.out.strip() == "true":
         return True
     return False
+
+
+def get_eol_style() -> EOLTypes:
+    c = cmd.run("git config core.eol")
+    eol = c.out.strip().lower()
+
+    # We enumerate the EOL types of the response of
+    # `git config core.eol`, and map it to our enumration EOLTypes.
+    #
+    # It is just like the varient of the "match" syntax.
+    map = {
+        "lf": EOLTypes.LF,
+        "crlf": EOLTypes.CRLF,
+        "native": EOLTypes.NATIVE,
+    }
+
+    # If the response of `git config core.eol` is in the map:
+    if eol in map:
+        return map[eol]
+    else:
+        # The default value is "native".
+        # https://git-scm.com/docs/git-config#Documentation/git-config.txt-coreeol
+        return map["native"]
+
+
+def smart_open(*args, **kargs):
+    """Open a file with the EOL style determined from Git."""
+    return open(*args, newline=get_eol_style().get_eol_for_open(), **kargs)

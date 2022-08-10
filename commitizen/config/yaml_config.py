@@ -3,6 +3,8 @@ from typing import Union
 
 import yaml
 
+from commitizen.git import smart_open
+
 from .base_config import BaseConfig
 
 
@@ -14,7 +16,7 @@ class YAMLConfig(BaseConfig):
         self.add_path(path)
 
     def init_empty_config_content(self):
-        with open(self.path, "a") as json_file:
+        with smart_open(self.path, "a") as json_file:
             yaml.dump({"commitizen": {}}, json_file)
 
     def _parse_setting(self, data: Union[bytes, str]) -> None:
@@ -41,7 +43,7 @@ class YAMLConfig(BaseConfig):
             parser = yaml.load(yaml_file, Loader=yaml.FullLoader)
 
         parser["commitizen"][key] = value
-        with open(self.path, "w") as yaml_file:
+        with smart_open(self.path, "w") as yaml_file:
             yaml.dump(parser, yaml_file)
 
         return self

@@ -10,7 +10,7 @@ from commitizen.config import BaseConfig, JsonConfig, TomlConfig, YAMLConfig
 from commitizen.cz import registry
 from commitizen.defaults import config_files
 from commitizen.exceptions import NoAnswersError
-from commitizen.git import get_latest_tag_name, get_tag_names
+from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
 
 
 class Init:
@@ -138,7 +138,7 @@ class Init:
                 # .pre-commit-config exists but there's no "repos" key
                 config_data["repos"] = [cz_hook_config]
 
-        with open(pre_commit_config_filename, "w") as config_file:
+        with smart_open(pre_commit_config_filename, "w") as config_file:
             yaml.safe_dump(config_data, stream=config_file)
 
         c = cmd.run("pre-commit install --hook-type commit-msg")

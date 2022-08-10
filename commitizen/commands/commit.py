@@ -16,6 +16,7 @@ from commitizen.exceptions import (
     NotAGitProjectError,
     NothingToCommitError,
 )
+from commitizen.git import smart_open
 
 
 class Commit:
@@ -89,7 +90,7 @@ class Commit:
             out.error(c.err)
 
             # Create commit backup
-            with open(self.temp_file, "w") as f:
+            with smart_open(self.temp_file, "w") as f:
                 f.write(m)
 
             raise CommitError()

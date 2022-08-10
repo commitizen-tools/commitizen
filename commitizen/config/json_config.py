@@ -2,6 +2,8 @@ import json
 from pathlib import Path
 from typing import Union
 
+from commitizen.git import smart_open
+
 from .base_config import BaseConfig
 
 
@@ -13,7 +15,7 @@ class JsonConfig(BaseConfig):
         self.add_path(path)
 
     def init_empty_config_content(self):
-        with open(self.path, "a") as json_file:
+        with smart_open(self.path, "a") as json_file:
             json.dump({"commitizen": {}}, json_file)
 
     def set_key(self, key, value):
@@ -26,7 +28,7 @@ class JsonConfig(BaseConfig):
             parser = json.load(f)
 
         parser["commitizen"][key] = value
-        with open(self.path, "w") as f:
+        with smart_open(self.path, "w") as f:
             json.dump(parser, f, indent=2)
         return self
 

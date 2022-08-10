@@ -8,7 +8,7 @@ from packaging.version import Version
 
 from commitizen.defaults import MAJOR, MINOR, PATCH, bump_message
 from commitizen.exceptions import CurrentVersionNotFoundError
-from commitizen.git import GitCommit
+from commitizen.git import GitCommit, smart_open
 
 
 def find_increment(
@@ -164,7 +164,7 @@ def update_version_in_files(
             )
 
         # Write the file out again
-        with open(filepath, "w") as file:
+        with smart_open(filepath, "w") as file:
             file.write("".join(version_file))
 
 
