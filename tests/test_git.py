@@ -1,4 +1,5 @@
 import inspect
+import os
 import shutil
 from typing import List, Optional
 
@@ -203,3 +204,23 @@ def test_is_staging_clean_when_updating_file(tmp_commitizen_project):
         cmd.run("git add test_file")
 
         assert git.is_staging_clean() is False
+
+
+def test_git_eol_style(tmp_commitizen_project):
+    with tmp_commitizen_project.as_cwd():
+        assert git.get_eol_style() == git.EOLTypes.NATIVE
+
+        cmd.run("git config core.eol lf")
+        assert git.get_eol_style() == git.EOLTypes.LF
+
+        cmd.run("git config core.eol crlf")
+        assert git.get_eol_style() == git.EOLTypes.CRLF
+
+        cmd.run("git config core.eol native")
+        assert git.get_eol_style() == git.EOLTypes.NATIVE
+
+
+def test_eoltypes_get_eol_for_open():
+    assert git.EOLTypes.get_eol_for_open(git.EOLTypes.NATIVE) == os.linesep
+    assert git.EOLTypes.get_eol_for_open(git.EOLTypes.LF) == "\n"
+    assert git.EOLTypes.get_eol_for_open(git.EOLTypes.CRLF) == "\r\n"

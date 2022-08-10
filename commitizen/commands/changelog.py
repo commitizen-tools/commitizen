@@ -13,7 +13,7 @@ from commitizen.exceptions import (
     NotAGitProjectError,
     NotAllowed,
 )
-from commitizen.git import GitTag
+from commitizen.git import GitTag, smart_open
 
 
 def similar(a, b):
@@ -89,7 +89,7 @@ class Changelog:
             )
 
         changelog_hook: Optional[Callable] = self.cz.changelog_hook
-        with open(self.file_name, "w") as changelog_file:
+        with smart_open(self.file_name, "w") as changelog_file:
             partial_changelog: Optional[str] = None
             if self.incremental:
                 new_lines = changelog.incremental_build(
@@ -120,6 +120,9 @@ class Changelog:
 
         if self.incremental and self.rev_range:
             raise NotAllowed("--incremental cannot be combined with a rev_range")
+
+        # Don't continue if no `file_name` specified.
+        assert self.file_name
 
         tags = git.get_tags()
         if not tags:
