@@ -6,26 +6,12 @@ from commitizen import cli, git
 from commitizen.commands.changelog import Changelog
 from commitizen.exceptions import (
     DryRunExit,
-    GitCommandError,
     NoCommitsFoundError,
     NoRevisionError,
     NotAGitProjectError,
     NotAllowed,
 )
 from tests.utils import create_file_and_commit, wait_for_tag
-
-
-@pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_on_empty_project(mocker):
-    testargs = ["cz", "changelog", "--dry-run"]
-    mocker.patch.object(sys, "argv", testargs)
-
-    with pytest.raises(GitCommandError):
-        cli.main()
-
-    #  git will error out with something like:
-    #  "your current branch 'XYZ' does not have any commits yet"
-    #  is it wise to assert the exception contains a message like this?
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")

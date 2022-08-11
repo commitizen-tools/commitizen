@@ -105,27 +105,12 @@ def get_commits(
     start: Optional[str] = None,
     end: str = "HEAD",
     *,
-    log_format: str = "%H%n%s%n%an%n%ae%n%b",
-    delimiter: str = "----------commit-delimiter----------",
     args: str = "",
 ) -> List[GitCommit]:
     """Get the commits between start and end."""
-    git_log_cmd = (
-        f"git -c log.showSignature=False log --pretty={log_format}{delimiter} {args}"
-    )
-
-    if start:
-        command = f"{git_log_cmd} {start}..{end}"
-    else:
-        command = f"{git_log_cmd} {end}"
-    c = cmd.run(command)
-    if c.return_code != 0:
-        raise GitCommandError(c.err)
-    if not c.out:
-        return []
-
+    git_log_entries = _get_log_as_str_list(start, end, args)
     git_commits = []
-    for rev_and_commit in c.out.split(f"{delimiter}\n"):
+    for rev_and_commit in git_log_entries:
         if not rev_and_commit:
             continue
         rev, title, author, author_email, *body_list = rev_and_commit.split("\n")
@@ -236,3 +221,22 @@ def get_eol_style() -> EOLTypes:
 def smart_open(*args, **kargs):
     """Open a file with the EOL style determined from Git."""
     return open(*args, newline=get_eol_style().get_eol_for_open(), **kargs)
+
+
+def _get_log_as_str_list(start: Optional[str], end: str, args: str) -> List[str]:
+    """Get string representation of each log entry"""
+    delimiter = "----------commit-delimiter----------"
+    log_format: str = "%H%n%s%n%an%n%ae%n%b"
+    git_log_cmd = (
+        f"git -c log.showSignature=False log --pretty={log_format}{delimiter} {args}"
+    )
+    if start:
+        command = f"{git_log_cmd} {start}..{end}"
+    else:
+        command = f"{git_log_cmd} {end}"
+    c = cmd.run(command)
+    if c.return_code != 0:
+        raise GitCommandError(c.err)
+    if not c.out:
+        return []
+    return c.out.split(f"{delimiter}\n")
