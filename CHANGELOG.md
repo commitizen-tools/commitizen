@@ -1,4 +1,10 @@
 
+## v2.29.6 (2022-08-13)
+
+### Fix
+
+- **cmd**: improve character encoding detection for sub-commands
+
 ## v2.29.5 (2022-08-07)
 
 ### Fix
