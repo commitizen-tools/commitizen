@@ -210,6 +210,8 @@ Create a file starting with `cz_`, for example `cz_jira.py`. This prefix is used
 Inherit from `BaseCommitizen`, and you must define `questions` and `message`. The others are optional.
 
 ```python
+from typing import Optional
+
 from commitizen.cz.base import BaseCommitizen
 from commitizen.defaults import Questions
 
@@ -232,7 +234,7 @@ class JiraCz(BaseCommitizen):
         ]
         return questions
 
-    def message(self, answers: dict) -> str:
+    def message(self, answers: dict, check_length: Optional[bool] = False) -> str:
         """Generate the message with the given answers."""
         return '{0} (#{1})'.format(answers['title'], answers['issue'])
 

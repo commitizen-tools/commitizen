@@ -50,7 +50,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         """Questions regarding the commit message."""
 
     @abstractmethod
-    def message(self, answers: dict) -> str:
+    def message(self, answers: dict, check_length: Optional[bool] = False) -> str:
         """Format your git message."""
 
     @property

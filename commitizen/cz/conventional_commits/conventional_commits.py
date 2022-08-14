@@ -1,10 +1,12 @@
 import os
 import re
+from typing import Optional
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.utils import multiple_line_breaker, required_validator
 from commitizen.defaults import Questions
+from commitizen.exceptions import CommitMessageLineLengthExceededError
 
 __all__ = ["ConventionalCommitsCz"]
 
@@ -150,7 +152,7 @@ class ConventionalCommitsCz(BaseCommitizen):
         ]
         return questions
 
-    def message(self, answers: dict) -> str:
+    def message(self, answers: dict, check_length: Optional[bool] = False) -> str:
         prefix = answers["prefix"]
         scope = answers["scope"]
         subject = answers["subject"]
@@ -167,7 +169,15 @@ class ConventionalCommitsCz(BaseCommitizen):
         if footer:
             footer = f"\n\n{footer}"
 
-        message = f"{prefix}{scope}: {subject}{body}{footer}"
+        message = f"{prefix}{scope}: {subject}"
+        message_len = len(message)
+        MESSAGE_LEN_LIMIT = 72
+        if check_length and message_len > MESSAGE_LEN_LIMIT:
+            raise CommitMessageLineLengthExceededError(
+                f"Length of commit message exceeded limit ({message_len}/{MESSAGE_LEN_LIMIT})"
+            )
+
+        message = f"{message}{body}{footer}"
 
         return message
 

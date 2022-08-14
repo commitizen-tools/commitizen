@@ -29,6 +29,8 @@ class Commit:
         self.config: BaseConfig = config
         self.cz = factory.commiter_factory(self.config)
         self.arguments = arguments
+        print(self.config)
+        print(self.arguments)
         self.temp_file: str = os.path.join(
             tempfile.gettempdir(),
             "cz.commit{user}.backup".format(user=os.environ.get("USER", "")),
@@ -59,7 +61,9 @@ class Commit:
 
         if not answers:
             raise NoAnswersError()
-        return cz.message(answers)
+
+        check_length: bool = self.arguments.get("check_length", False)
+        return cz.message(answers, check_length=check_length)
 
     def __call__(self):
         dry_run: bool = self.arguments.get("dry_run")

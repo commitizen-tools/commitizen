@@ -66,6 +66,11 @@ data = {
                         "action": "store_true",
                         "help": "Sign off the commit",
                     },
+                    {
+                        "name": ["-cl", "--check-length"],
+                        "action": "store_true",
+                        "help": "check if length of commit message is within limit",
+                    },
                 ],
             },
             {

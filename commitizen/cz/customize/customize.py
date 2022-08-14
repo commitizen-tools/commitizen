@@ -53,7 +53,7 @@ class CustomizeCommitsCz(BaseCommitizen):
     def questions(self) -> Questions:
         return self.custom_settings.get("questions", [{}])
 
-    def message(self, answers: dict) -> str:
+    def message(self, answers: dict, check_length: Optional[bool] = False) -> str:
         message_template = Template(self.custom_settings.get("message_template", ""))
         if getattr(Template, "substitute", None):
             return message_template.substitute(**answers)  # type: ignore

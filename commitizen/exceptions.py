@@ -27,6 +27,7 @@ class ExitCode(enum.IntEnum):
     NOT_ALLOWED = 20
     NO_INCREMENT = 21
     UNRECOGNIZED_CHARACTERSET_ENCODING = 22
+    COMMIT_MESSAGE_LINE_LENGTH_EXCEEDED = 23
 
 
 class CommitizenException(Exception):
@@ -153,3 +154,7 @@ class NotAllowed(CommitizenException):
 
 class CharacterSetDecodeError(CommitizenException):
     exit_code = ExitCode.UNRECOGNIZED_CHARACTERSET_ENCODING
+
+
+class CommitMessageLineLengthExceededError(CommitizenException):
+    exit_code = ExitCode.COMMIT_MESSAGE_LINE_LENGTH_EXCEEDED
