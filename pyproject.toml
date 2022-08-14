@@ -132,5 +132,3 @@ known_first_party = ["commitizen", "tests"]
 [build-system]
 requires = ["poetry_core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-tag_format = "$version"
-change_type_order = ["BREAKING CHANGE", "Perf", "Fix", "Feat", "Refactor"]
