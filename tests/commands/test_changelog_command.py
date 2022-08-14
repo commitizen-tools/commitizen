@@ -866,3 +866,47 @@ def test_invalid_subject_is_skipped(mocker, capsys):
     out, _ = capsys.readouterr()
 
     assert out == ("## Unreleased\n\n### Feat\n\n- a new world\n\n")
+
+
+@pytest.mark.freeze_time("2022-02-13")
+def test_changelog_with_customized_change_type_order(
+    mocker, config_path, changelog_path, file_regression
+):
+    mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
+
+    with open(config_path, "a") as f:
+        f.write('tag_format = "$version"\n')
+        f.write(
+            'change_type_order = ["BREAKING CHANGE", "Perf", "Fix", "Feat", "Refactor"]\n'
+        )
+
+    # create commit and tag
+    create_file_and_commit("feat: new file")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    wait_for_tag()
+    create_file_and_commit("feat: after 0.2.0")
+    create_file_and_commit("feat: another feature")
+    create_file_and_commit("fix: fix bug")
+
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    wait_for_tag()
+
+    create_file_and_commit("feat: getting ready for this")
+    create_file_and_commit("perf: perf improvement")
+
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    wait_for_tag()
+
+    testargs = ["cz", "changelog", "0.3.0..0.4.0"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
