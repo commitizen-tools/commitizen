@@ -1,4 +1,16 @@
 
+## v2.31.0 (2022-08-14)
+
+### Fix
+
+- **pyproject.toml**: remove test added configurations
+- **changelog**: use defaults.change_type_order in conventional commit
+- capitalize types in default change_type_order
+
+### Feat
+
+- new file
+
 ## v2.30.0 (2022-08-14)
 
 ### Feat
