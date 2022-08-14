@@ -1,4 +1,10 @@
 
+## v2.30.0 (2022-08-14)
+
+### Feat
+
+- Determine newline to write with Git
+
 ## v2.29.6 (2022-08-13)
 
 ### Fix
