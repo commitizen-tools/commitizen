@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 from commitizen.cz.base import BaseCommitizen
 from commitizen.defaults import Questions
@@ -44,7 +45,7 @@ class JiraSmartCz(BaseCommitizen):
         ]
         return questions
 
-    def message(self, answers) -> str:
+    def message(self, answers: dict, check_length: Optional[bool] = False) -> str:
         return " ".join(
             filter(
                 bool,

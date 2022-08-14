@@ -1,3 +1,5 @@
+from typing import Optional
+
 import pytest
 
 from commitizen.cz.base import BaseCommitizen
@@ -7,7 +9,7 @@ class DummyCz(BaseCommitizen):
     def questions(self):
         return [{"type": "input", "name": "commit", "message": "Initial commit:\n"}]
 
-    def message(self, answers):
+    def message(self, answers: dict, check_length: Optional[bool] = False):
         return answers["commit"]
 
 
