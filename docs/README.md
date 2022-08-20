@@ -101,7 +101,9 @@ cz commit -s
 ```
 
 ### Integrating with Pre-commit
-Commitizen can lint your commit messages for you with `cz check`.
+
+Commitizen can lint your commit message for you with `cz check`.
+
 You can integrate this in your [pre-commit](https://pre-commit.com/) config with:
 
 ```yaml
@@ -127,6 +129,12 @@ If you aren't using both hooks, you needn't install both stages.
 | ----------------- | ----------------- |
 | commitizen        | commit-msg        |
 | commitizen-branch | pre-push          |
+
+Note that pre-commit discourages using `master` as a revision, and the above command will print a warning. You should replace the `master` revision with the [latest tag](https://github.com/commitizen-tools/commitizen/tags). This can be done automatically with:
+
+```sh
+pre-commit autoupdate
+```
 
 Read more about the `check` command [here](check.md).
 
