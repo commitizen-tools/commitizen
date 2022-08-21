@@ -1,4 +1,10 @@
 
+## v2.32.0 (2022-08-21)
+
+### Feat
+
+- **pre-commit**: Add commitizen-branch hook
+
 ## v2.31.0 (2022-08-14)
 
 ### Fix
