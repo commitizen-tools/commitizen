@@ -1,4 +1,16 @@
 
+## v2.32.1 (2022-08-21)
+
+### Fix
+
+- **git**: Improves error checking in get_tags
+- **git**: improves git error checking in get_commits
+
+### Refactor
+
+- **git**: test the git log parser behaves properly when the repository has no commits
+- **changelog**: fixes logic issue made evident by latest fix(git) commit
+
 ## v2.32.0 (2022-08-21)
 
 ### Feat
