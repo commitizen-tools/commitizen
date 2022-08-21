@@ -142,14 +142,14 @@ def test_changelog_incremental_angular_sample(
 ):
     with open(changelog_path, "w") as f:
         f.write(
-            "# [10.0.0-next.3](https://github.com/angular/angular/compare/10.0.0-next.2...10.0.0-next.3) (2020-04-22)\n"
+            "# [10.0.0-rc.3](https://github.com/angular/angular/compare/10.0.0-rc.2...10.0.0-rc.3) (2020-04-22)\n"
             "\n"
             "### Bug Fixes"
             "\n"
             "* **common:** format day-periods that cross midnight ([#36611](https://github.com/angular/angular/issues/36611)) ([c6e5fc4](https://github.com/angular/angular/commit/c6e5fc4)), closes [#36566](https://github.com/angular/angular/issues/36566)\n"
         )
     create_file_and_commit("irrelevant commit")
-    git.tag("10.0.0-next.3")
+    git.tag("10.0.0-rc.3")
 
     create_file_and_commit("feat: add new output")
     create_file_and_commit("fix: output glitch")
