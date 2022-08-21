@@ -3,7 +3,7 @@ from difflib import SequenceMatcher
 from operator import itemgetter
 from typing import Callable, Dict, List, Optional
 
-from commitizen import changelog, defaults, factory, git, out
+from commitizen import bump, changelog, defaults, factory, git, out
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
     DryRunExit,
@@ -132,7 +132,10 @@ class Changelog:
             changelog_meta = changelog.get_metadata(self.file_name)
             latest_version = changelog_meta.get("latest_version")
             if latest_version:
-                start_rev = self._find_incremental_rev(latest_version, tags)
+                latest_tag_version: str = bump.normalize_tag(
+                    latest_version, tag_format=self.tag_format
+                )
+                start_rev = self._find_incremental_rev(latest_tag_version, tags)
 
         if self.rev_range and self.tag_format:
             start_rev, end_rev = changelog.get_oldest_and_newest_rev(
