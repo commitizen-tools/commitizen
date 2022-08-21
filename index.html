@@ -852,7 +852,7 @@ the version or a changelog.</p>
 </code></pre></div>
 
 <h3 id="integrating-with-pre-commit">Integrating with Pre-commit</h3>
-<p>Commitizen can lint your commit message for you with <code>cz check</code>.
+<p>Commitizen can lint your commit messages for you with <code>cz check</code>.
 You can integrate this in your <a href="https://pre-commit.com/">pre-commit</a> config with:</p>
 <div class="codehilite"><pre><span></span><code><span class="nn">---</span><span class="w"></span>
 <span class="nt">repos</span><span class="p">:</span><span class="w"></span>
@@ -860,12 +860,33 @@ You can integrate this in your <a href="https://pre-commit.com/">pre-commit</a> 
 <span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">master</span><span class="w"></span>
 <span class="w">    </span><span class="nt">hooks</span><span class="p">:</span><span class="w"></span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">commitizen</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">commitizen-branch</span><span class="w"></span>
+<span class="w">        </span><span class="nt">stages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">push</span><span class="p p-Indicator">]</span><span class="w"></span>
 </code></pre></div>
 
-<p>After the configuration is added, you'll need to run</p>
-<div class="codehilite"><pre><span></span><code>pre-commit install --hook-type commit-msg
+<p>After the configuration is added, you'll need to run:</p>
+<div class="codehilite"><pre><span></span><code>pre-commit install --hook-type commit-msg pre-push
 </code></pre></div>
 
+<p>If you aren't using both hooks, you needn't install both stages.</p>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>Recommended Stage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>commitizen</td>
+<td>commit-msg</td>
+</tr>
+<tr>
+<td>commitizen-branch</td>
+<td>pre-push</td>
+</tr>
+</tbody>
+</table>
 <p>Read more about the <code>check</code> command <a href="check/">here</a>.</p>
 <h3 id="help">Help</h3>
 <div class="codehilite"><pre><span></span><code>$ cz --help
