@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 
 import pytest
 
@@ -78,7 +79,6 @@ def test_changelog_from_start(mocker, capsys, changelog_path, file_regression):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-@pytest.mark.freeze_time("2022-03-30")
 def test_changelog_replacing_unreleased_using_incremental(
     mocker, capsys, changelog_path, file_regression
 ):
@@ -103,13 +103,14 @@ def test_changelog_replacing_unreleased_using_incremental(
     cli.main()
 
     with open(changelog_path, "r") as f:
-        out = f.read()
+        out = f.read().replace(
+            datetime.strftime(datetime.now(), "%Y-%m-%d"), "2022-08-14"
+        )
 
     file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-@pytest.mark.freeze_time("2022-03-30")
 def test_changelog_is_persisted_using_incremental(
     mocker, capsys, changelog_path, file_regression
 ):
@@ -139,7 +140,9 @@ def test_changelog_is_persisted_using_incremental(
     cli.main()
 
     with open(changelog_path, "r") as f:
-        out = f.read()
+        out = f.read().replace(
+            datetime.strftime(datetime.now(), "%Y-%m-%d"), "2022-08-14"
+        )
 
     file_regression.check(out, extension=".md")
 
