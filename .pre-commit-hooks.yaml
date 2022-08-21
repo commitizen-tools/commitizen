@@ -1,9 +1,27 @@
 - id: commitizen
   name: commitizen check
-  description: "Check whether the commit message follows commiting rules"
+  description: >
+    Check whether the current commit message follows commiting rules. Allow
+    empty commit messages by default, because they typically indicate to Git
+    that the commit should be aborted.
   entry: cz check
   args: [--allow-abort, --commit-msg-file]
   stages: [commit-msg]
+  language: python
+  language_version: python3
+  minimum_pre_commit_version: "1.4.3"
+
+- id: commitizen-branch
+  name: commitizen check branch
+  description: >
+    Check all commit messages that are already on the current branch but not the
+    default branch on the origin repository. Useful for checking messages after
+    the fact (e.g., pre-push or in CI) without an expensive check of the entire
+    repository history.
+  entry: cz check
+  args: [--rev-range, origin/HEAD..HEAD]
+  always_run: true
+  pass_filenames: false
   language: python
   language_version: python3
   minimum_pre_commit_version: "1.4.3"

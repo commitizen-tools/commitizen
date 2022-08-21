@@ -15,7 +15,6 @@ repos:
     rev: v2.31.0 # automatically updated by Commitizen
     hooks:
       - id: commitizen
-        stages: [commit-msg]
 
   - repo: local
     hooks:
