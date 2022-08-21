@@ -35,7 +35,7 @@ from jinja2 import Environment, PackageLoader
 
 from commitizen import defaults
 from commitizen.bump import normalize_tag
-from commitizen.exceptions import InvalidConfigurationError
+from commitizen.exceptions import InvalidConfigurationError, NoCommitsFoundError
 from commitizen.git import GitCommit, GitTag
 
 
@@ -309,7 +309,7 @@ def get_oldest_and_newest_rev(
 
     tags_range = get_smart_tag_range(tags, newest=newest_tag, oldest=oldest_tag)
     if not tags_range:
-        return None, None
+        raise NoCommitsFoundError("Could not find a valid revision range.")
 
     oldest_rev: Optional[str] = tags_range[-1].name
     newest_rev = newest_tag

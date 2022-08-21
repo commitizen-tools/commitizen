@@ -30,3 +30,4 @@ These exit codes can be found in `commitizen/exceptions.py::ExitCode`.
 | NotAllowed                  | 20        | `--incremental` cannot be combined with a `rev_range`                                                       |
 | NoneIncrementExit           | 21        | The commits found are not eligible to be bumped                                                             |
 | CharacterSetDecodeError     | 22        | The character encoding of the command output could not be determined                                        |
+| GitCommandError             | 23       | Unexpected failure while calling a git command                                                              |

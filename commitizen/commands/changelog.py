@@ -16,10 +16,6 @@ from commitizen.exceptions import (
 from commitizen.git import GitTag, smart_open
 
 
-def similar(a, b):
-    return SequenceMatcher(None, a, b).ratio()
-
-
 class Changelog:
     """Generate a changelog based on the commit history."""
 

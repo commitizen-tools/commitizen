@@ -16,17 +16,6 @@ from tests.utils import create_file_and_commit, wait_for_tag
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_on_empty_project(mocker):
-    testargs = ["cz", "changelog", "--dry-run"]
-    mocker.patch.object(sys, "argv", testargs)
-
-    with pytest.raises(NoCommitsFoundError) as excinfo:
-        cli.main()
-
-    assert "No commits found" in str(excinfo)
-
-
-@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_from_version_zero_point_two(mocker, capsys, file_regression):
     create_file_and_commit("feat: new file")
     create_file_and_commit("refactor: not in changelog")
@@ -351,6 +340,15 @@ def test_changelog_without_revision(mocker, tmp_commitizen_project):
         cli.main()
 
 
+def test_changelog_incremental_with_revision(mocker):
+    """combining incremental with a revision doesn't make sense"""
+    testargs = ["cz", "changelog", "--incremental", "0.2.0"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.raises(NotAllowed):
+        cli.main()
+
+
 def test_changelog_with_different_tag_name_and_changelog_content(
     mocker, tmp_commitizen_project
 ):
@@ -633,6 +631,7 @@ def test_changelog_from_rev_latest_version_from_arg(
 def test_changelog_from_rev_single_version_not_found(
     mocker, config_path, changelog_path
 ):
+    """Provides an invalid revision ID to changelog command"""
     with open(config_path, "a") as f:
         f.write('tag_format = "$version"\n')
 
@@ -657,12 +656,13 @@ def test_changelog_from_rev_single_version_not_found(
     with pytest.raises(NoCommitsFoundError) as excinfo:
         cli.main()
 
-    assert "No commits found" in str(excinfo)
+    assert "Could not find a valid revision" in str(excinfo)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_range_version_not_found(mocker, config_path):
+    """Provides an invalid end revision ID to changelog command"""
     with open(config_path, "a") as f:
         f.write('tag_format = "$version"\n')
 
@@ -684,7 +684,7 @@ def test_changelog_from_rev_range_version_not_found(mocker, config_path):
     with pytest.raises(NoCommitsFoundError) as excinfo:
         cli.main()
 
-    assert "No commits found" in str(excinfo)
+    assert "Could not find a valid revision" in str(excinfo)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -916,3 +916,15 @@ def test_changelog_with_customized_change_type_order(
         out = f.read()
 
     file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_empty_commit_list(mocker):
+    create_file_and_commit("feat: a new world")
+
+    # test changelog properly handles when no commits are found for the revision
+    mocker.patch("commitizen.git.get_commits", return_value=[])
+    testargs = ["cz", "changelog"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(NoCommitsFoundError):
+        cli.main()

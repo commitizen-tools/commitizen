@@ -5,7 +5,7 @@ from typing import List, Optional
 
 import pytest
 
-from commitizen import cmd, git
+from commitizen import cmd, exceptions, git
 from tests.utils import FakeCommand, create_file_and_commit
 
 
@@ -56,6 +56,16 @@ def test_git_message_with_empty_body():
     commit = git.GitCommit("test_rev", "Some Title", body="")
 
     assert commit.message == commit_title
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_get_log_as_str_list_empty():
+    """ensure an exception or empty list in an empty project"""
+    try:
+        gitlog = git._get_log_as_str_list(start=None, end="HEAD", args="")
+    except exceptions.GitCommandError:
+        return
+    assert len(gitlog) == 0, "list should be empty if no assert"
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
