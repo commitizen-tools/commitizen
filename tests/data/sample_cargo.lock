@@ -4,7 +4,7 @@ version = "1.2.3"
 
 [[package]]
 name = "there-i-fixed-it"
-version = "1.2.3"
+version = "1.2.3" # automatically bumped by Commitizen
 
 [[package]]
 name = "other-project"
