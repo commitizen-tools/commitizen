@@ -141,8 +141,7 @@ def update_version_in_files(
     """
     # TODO: separate check step and write step
     for location in files:
-        filepath, *regexes = location.split(":")
-        regex = regexes[0] if regexes else None
+        filepath, _, regex = location.partition(":")
 
         with open(filepath, "r") as f:
             version_file = f.read()
