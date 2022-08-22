@@ -4,7 +4,7 @@ tag_format = "v$version"
 version_files = [
   "pyproject.toml:version",
   "commitizen/__version__.py",
-  ".pre-commit-config.yaml:rev:.\\s+(?=[^\\n]+Commitizen)"
+  ".pre-commit-config.yaml:rev:.+Commitizen"
 ]
 
 [tool.black]
