@@ -1,4 +1,10 @@
 
+## v2.32.2 (2022-08-22)
+
+### Fix
+
+- **bump**: Support regexes containing colons
+
 ## v2.32.1 (2022-08-21)
 
 ### Fix
