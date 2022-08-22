@@ -2,7 +2,7 @@ import re
 from collections import OrderedDict
 from itertools import zip_longest
 from string import Template
-from typing import List, Optional, Union
+from typing import List, Optional, Tuple, Union
 
 from packaging.version import Version
 
@@ -167,7 +167,9 @@ def update_version_in_files(
             file.write("".join(version_file))
 
 
-def _bump_with_regex(version_file_contents, current_version, new_version, regex):
+def _bump_with_regex(
+    version_file_contents: str, current_version: str, new_version: str, regex: str
+) -> Tuple[bool, str]:
     current_version_found = False
     # Bumping versions that change the string length move the offset on the file contents as finditer keeps a
     # reference to the initial string that was used and calling search many times would lead in infinite loops
