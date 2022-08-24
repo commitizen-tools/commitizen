@@ -103,6 +103,7 @@ class Bump:
         is_yes: bool = self.arguments["yes"]
         increment: Optional[str] = self.arguments["increment"]
         prerelease: str = self.arguments["prerelease"]
+        devrelease: Optional[int] = self.arguments["devrelease"]
         is_files_only: Optional[bool] = self.arguments["files_only"]
         is_local_version: Optional[bool] = self.arguments["local_version"]
 
@@ -151,6 +152,7 @@ class Bump:
             current_version,
             increment,
             prerelease=prerelease,
+            devrelease=devrelease,
             is_local_version=is_local_version,
         )
 

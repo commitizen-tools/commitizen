@@ -69,6 +69,18 @@ def prerelease_generator(current_version: str, prerelease: Optional[str] = None)
     return pre_version
 
 
+def devrelease_generator(devrelease: int = None) -> str:
+    """Generate devrelease
+
+    The devrelease version should be passed directly and is not
+    inferred based on the previous version.
+    """
+    if devrelease is None:
+        return ""
+
+    return f"dev{devrelease}"
+
+
 def semver_generator(current_version: str, increment: str = None) -> str:
     version = Version(current_version)
     prev_release = list(version.release)
@@ -102,6 +114,7 @@ def generate_version(
     current_version: str,
     increment: str,
     prerelease: Optional[str] = None,
+    devrelease: Optional[int] = None,
     is_local_version: bool = False,
 ) -> Version:
     """Based on the given increment a proper semver will be generated.
@@ -117,17 +130,18 @@ def generate_version(
     """
     if is_local_version:
         version = Version(current_version)
+        dev_version = devrelease_generator(devrelease=devrelease)
         pre_version = prerelease_generator(str(version.local), prerelease=prerelease)
         semver = semver_generator(str(version.local), increment=increment)
 
-        return Version(f"{version.public}+{semver}{pre_version}")
+        return Version(f"{version.public}+{semver}{pre_version}{dev_version}")
     else:
+        dev_version = devrelease_generator(devrelease=devrelease)
         pre_version = prerelease_generator(current_version, prerelease=prerelease)
         semver = semver_generator(current_version, increment=increment)
 
         # TODO: post version
-        # TODO: dev version
-        return Version(f"{semver}{pre_version}")
+        return Version(f"{semver}{pre_version}{dev_version}")
 
 
 def update_version_in_files(

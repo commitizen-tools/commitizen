@@ -48,7 +48,7 @@ Some examples:
 2.0.1a
 ```
 
-`post` and `dev` releases are not supported yet.
+`post` releases are not supported yet.
 
 ## Usage
 
@@ -56,9 +56,10 @@ Some examples:
 $ cz bump --help
 usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
                [--no-verify] [--yes] [--tag-format TAG_FORMAT]
-               [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}]
-               [--increment {MAJOR,MINOR,PATCH}] [--check-consistency]
-               [--annotated-tag] [--gpg-sign] [--changelog-to-stdout] [--retry]
+               [--bump-message BUMP_MESSAGE] [--increment {MAJOR,MINOR,PATCH}]
+               [--prerelease {alpha,beta,rc}] [--devrelease {DEV}]
+               [--check-consistency] [--annotated-tag] [--gpg-sign]
+               [--changelog-to-stdout] [--retry]
 
 options:
   -h, --help            show this help message and exit
@@ -77,6 +78,7 @@ options:
                         when working with CI
   --prerelease {alpha,beta,rc}, -pr {alpha,beta,rc}
                         choose type of prerelease
+  --devrelease {DEV}    specify dev release
   --increment {MAJOR,MINOR,PATCH}
                         manually specify the desired increment
   --check-consistency, -cc
@@ -269,7 +271,7 @@ cz bump --tag-format="v$version"
 ```
 
 ```bash
-cz bump --tag-format="v$minor.$major.$patch$prerelease"
+cz bump --tag-format="v$minor.$major.$patch$prerelease.$devrelease"
 ```
 
 In your `pyproject.toml` or `.cz.toml`
@@ -283,13 +285,14 @@ The variables must be preceded by a `$` sign.
 
 Supported variables:
 
-| Variable      | Description                                |
-| ------------- | ------------------------------------------ |
-| `$version`    | full generated version                     |
-| `$major`      | MAJOR increment                            |
-| `$minor`      | MINOR increment                            |
-| `$patch`      | PATCH increment                            |
-| `$prerelease` | Prerelase (alpha, beta, release candidate) |
+| Variable      | Description                                 |
+| ------------- | --------------------------------------------|
+| `$version`    | full generated version                      |
+| `$major`      | MAJOR increment                             |
+| `$minor`      | MINOR increment                             |
+| `$patch`      | PATCH increment                             |
+| `$prerelease` | Prerelease (alpha, beta, release candidate) |
+| `$devrelease` | Development release                         |
 
 ---
 
