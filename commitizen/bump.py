@@ -158,7 +158,7 @@ def update_version_in_files(
 
         # Write the file out again
         with smart_open(filepath, "w") as file:
-            file.write("".join(version_file))
+            file.write(version_file)
 
 
 def _bump_with_regex(
