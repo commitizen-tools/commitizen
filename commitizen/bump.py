@@ -2,7 +2,7 @@ import re
 from collections import OrderedDict
 from itertools import zip_longest
 from string import Template
-from typing import List, Optional, Union
+from typing import List, Optional, Tuple, Union
 
 from packaging.version import Version
 
@@ -142,18 +142,12 @@ def update_version_in_files(
     # TODO: separate check step and write step
     for location in files:
         filepath, _, regex = location.partition(":")
+        if not regex:
+            regex = _version_to_regex(current_version)
 
-        with open(filepath, "r") as f:
-            version_file = f.read()
-
-        if regex:
-            current_version_found, version_file = _bump_with_regex(
-                version_file, current_version, new_version, regex
-            )
-        else:
-            current_version_regex = _version_to_regex(current_version)
-            current_version_found = bool(current_version_regex.search(version_file))
-            version_file = current_version_regex.sub(new_version, version_file)
+        current_version_found, version_file = _bump_with_regex(
+            filepath, current_version, new_version, regex
+        )
 
         if check_consistency and not current_version_found:
             raise CurrentVersionNotFoundError(
@@ -167,32 +161,26 @@ def update_version_in_files(
             file.write("".join(version_file))
 
 
-def _bump_with_regex(version_file_contents, current_version, new_version, regex):
+def _bump_with_regex(
+    version_filepath: str, current_version: str, new_version: str, regex: str
+) -> Tuple[bool, str]:
     current_version_found = False
-    # Bumping versions that change the string length move the offset on the file contents as finditer keeps a
-    # reference to the initial string that was used and calling search many times would lead in infinite loops
-    # e.g.: 1.1.9 -> 1.1.20
-    offset = 0
-    for match in re.finditer(regex, version_file_contents, re.MULTILINE):
-        left = version_file_contents[: match.end() + offset]
-        right = version_file_contents[match.end() + offset :]
-
-        line_break = right.find("\n")
-        middle = right[:line_break]
-        right = right[line_break:]
-
-        if current_version in middle:
-            offset += len(new_version) - len(current_version)
-            current_version_found = True
-            version_file_contents = (
-                left + middle.replace(current_version, new_version) + right
-            )
-    return current_version_found, version_file_contents
+    lines = []
+    pattern = re.compile(regex)
+    with open(version_filepath, "r") as f:
+        for line in f:
+            if pattern.search(line):
+                bumped_line = line.replace(current_version, new_version)
+                if bumped_line != line:
+                    current_version_found = True
+                lines.append(bumped_line)
+            else:
+                lines.append(line)
+    return current_version_found, "".join(lines)
 
 
-def _version_to_regex(version: str):
-    clean_regex = version.replace(".", r"\.").replace("+", r"\+")
-    return re.compile(f"{clean_regex}")
+def _version_to_regex(version: str) -> str:
+    return version.replace(".", r"\.").replace("+", r"\+")
 
 
 def normalize_tag(

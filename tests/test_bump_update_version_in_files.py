@@ -125,7 +125,7 @@ def test_partial_update_of_file(version_repeated_file, file_regression):
 def test_random_location(random_location_version_file, file_regression):
     old_version = "1.2.3"
     new_version = "2.0.0"
-    location = f"{random_location_version_file}:there-i-fixed-it.+\nversion"
+    location = f"{random_location_version_file}:version.+Commitizen"
 
     bump.update_version_in_files(old_version, new_version, [location])
     with open(random_location_version_file, "r") as f:
