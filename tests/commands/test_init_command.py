@@ -7,7 +7,7 @@ from pytest_mock import MockFixture
 
 from commitizen import commands
 from commitizen.__version__ import __version__
-from commitizen.exceptions import NoAnswersError
+from commitizen.exceptions import InitFailedError, NoAnswersError
 
 
 class FakeQuestion:
@@ -94,29 +94,35 @@ def test_init_without_choosing_tag(config, mocker: MockFixture, tmpdir):
             commands.Init(config)()
 
 
-class TestPreCommitCases:
-    @pytest.fixture(scope="function", params=["pyproject.toml", ".cz.json", ".cz.yaml"])
-    def default_choice(_, request, mocker: MockFixture):
-        mocker.patch(
-            "questionary.select",
-            side_effect=[
-                FakeQuestion(request.param),
-                FakeQuestion("cz_conventional_commits"),
-            ],
-        )
-        mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
-        mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
-        # Assume the `pre-commit` is installed
-        mocker.patch(
-            "commitizen.commands.init.Init._search_pre_commit",
-            return_value=True,
-        )
-        mocker.patch(
-            "commitizen.commands.init.Init._exec_install_pre_commit_hook",
-            return_value=True,
-        )
-        return request.param
+@pytest.fixture(scope="function")
+def pre_commit_installed(mocker: MockFixture):
+    # Assume the `pre-commit` is installed
+    mocker.patch(
+        "commitizen.commands.init.Init._search_pre_commit",
+        return_value=True,
+    )
+    mocker.patch(
+        "commitizen.commands.init.Init._exec_install_pre_commit_hook",
+        return_value=True,
+    )
 
+
+@pytest.fixture(scope="function", params=["pyproject.toml", ".cz.json", ".cz.yaml"])
+def default_choice(request, mocker: MockFixture):
+    mocker.patch(
+        "questionary.select",
+        side_effect=[
+            FakeQuestion(request.param),
+            FakeQuestion("cz_conventional_commits"),
+        ],
+    )
+    mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+    mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+    yield request.param
+
+
+@pytest.mark.usefixtures("pre_commit_installed")
+class TestPreCommitCases:
     def test_no_existing_pre_commit_conifg(_, default_choice, tmpdir, config):
         with tmpdir.as_cwd():
             commands.Init(config)()
@@ -211,3 +217,34 @@ class TestPreCommitCases:
 
             # check that config is not duplicated
             assert pre_commit_config_data == {"repos": [cz_hook_config]}
+
+
+class TestNoPreCommitInstalled:
+    def test_pre_commit_not_installed(
+        _, mocker: MockFixture, config, default_choice, tmpdir
+    ):
+        # Assume `pre-commit` is not installed
+        mocker.patch(
+            "commitizen.commands.init.Init._search_pre_commit",
+            return_value=False,
+        )
+        with tmpdir.as_cwd():
+            with pytest.raises(InitFailedError):
+                commands.Init(config)()
+
+    def test_pre_commit_exec_failed(
+        _, mocker: MockFixture, config, default_choice, tmpdir
+    ):
+        # Assume `pre-commit` is installed
+        mocker.patch(
+            "commitizen.commands.init.Init._search_pre_commit",
+            return_value=True,
+        )
+        # But pre-commit installation will fail
+        mocker.patch(
+            "commitizen.commands.init.Init._exec_install_pre_commit_hook",
+            return_value=False,
+        )
+        with tmpdir.as_cwd():
+            with pytest.raises(InitFailedError):
+                commands.Init(config)()
