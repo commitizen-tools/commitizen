@@ -63,6 +63,8 @@ def test_arg_debug(mocker: MockFixture):
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
     excepthook = sys.excepthook
+    # `sys.excepthook` is replaced by a `partial` in `cli.main`
+    # it's not a normal function
     assert isinstance(excepthook, partial)
     assert excepthook.keywords.get("debug") is True
 
