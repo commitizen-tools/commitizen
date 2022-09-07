@@ -1,4 +1,10 @@
 
+## v2.32.3 (2022-09-07)
+
+### Fix
+
+- **bump**: Search for version number line by line
+
 ## v2.32.2 (2022-08-22)
 
 ### Fix
