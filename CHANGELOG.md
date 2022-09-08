@@ -1,4 +1,10 @@
 
+## v2.32.4 (2022-09-08)
+
+### Refactor
+
+- **bump**: Remove a redundant join call
+
 ## v2.32.3 (2022-09-07)
 
 ### Fix
