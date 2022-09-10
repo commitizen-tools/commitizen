@@ -1,4 +1,10 @@
 
+## v2.32.5 (2022-09-10)
+
+### Fix
+
+- **command_changelog**: Fixed issue #561 cz bump could not find the latest version tag with custom tag_format
+
 ## v2.32.4 (2022-09-08)
 
 ### Refactor
