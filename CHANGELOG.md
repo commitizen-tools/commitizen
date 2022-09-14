@@ -1,4 +1,10 @@
 
+## v2.32.6 (2022-09-14)
+
+### Fix
+
+- **bump**: log git commit stderr and stdout during bump
+
 ## v2.32.5 (2022-09-10)
 
 ### Fix
