@@ -120,7 +120,7 @@ repos:
 After the configuration is added, you'll need to run:
 
 ```sh
-pre-commit install --hook-type commit-msg pre-push
+pre-commit install --hook-type commit-msg --hook-type pre-push
 ```
 
 If you aren't using both hooks, you needn't install both stages.
