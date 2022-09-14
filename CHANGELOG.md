@@ -1,4 +1,10 @@
 
+## v2.32.7 (2022-09-14)
+
+### Fix
+
+- **README.md**: fix pre-commit install command
+
 ## v2.32.6 (2022-09-14)
 
 ### Fix
