@@ -142,6 +142,11 @@ data = {
                         "choices": ["alpha", "beta", "rc"],
                     },
                     {
+                        "name": ["--devrelease", "-d"],
+                        "help": "specify non-negative integer for dev. release",
+                        "type": int,
+                    },
+                    {
                         "name": ["--increment"],
                         "help": "manually specify the desired increment",
                         "choices": ["MAJOR", "MINOR", "PATCH"],
