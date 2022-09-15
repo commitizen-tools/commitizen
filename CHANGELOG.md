@@ -1,4 +1,10 @@
 
+## v2.33.0 (2022-09-15)
+
+### Feat
+
+- add functionality for dev-releases
+
 ## v2.32.7 (2022-09-14)
 
 ### Fix
