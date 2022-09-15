@@ -1,5 +1,6 @@
 import inspect
 import sys
+from typing import Tuple
 from unittest.mock import MagicMock
 
 import pytest
@@ -528,3 +529,88 @@ def test_bump_with_changelog_to_stdout_dry_run_arg(mocker, capsys, changelog_pat
     assert out.startswith("#")
     assert "this should appear in stdout with dry-run enabled" in out
     assert "0.2.0" in out
+
+
+@pytest.mark.parametrize(
+    "version_filepath, version_regex, version_file_content",
+    [
+        pytest.param(
+            "pyproject.toml",
+            "pyproject.toml:^version",
+            """
+[tool.poetry]
+name = "my_package"
+version = "0.1.0"
+""",
+            id="version in pyproject.toml with regex",
+        ),
+        pytest.param(
+            "pyproject.toml",
+            "pyproject.toml",
+            """
+[tool.poetry]
+name = "my_package"
+version = "0.1.0"
+""",
+            id="version in pyproject.toml without regex",
+        ),
+        pytest.param(
+            "__init__.py",
+            "__init__.py:^__version__",
+            """
+'''This is a test file.'''
+__version__ = "0.1.0"
+""",
+            id="version in __init__.py with regex",
+        ),
+    ],
+)
+@pytest.mark.parametrize(
+    "cli_bump_changelog_args",
+    [
+        ("cz", "bump", "--changelog", "--yes"),
+        (
+            "cz",
+            "bump",
+            "--changelog",
+            "--changelog-to-stdout",
+            "--annotated",
+            "--check-consistency",
+            "--yes",
+        ),
+    ],
+    ids=lambda cmd_tuple: " ".join(cmd_tuple),
+)
+def test_bump_changelog_command_commits_untracked_changelog_and_version_files(
+    tmp_commitizen_project,
+    mocker,
+    cli_bump_changelog_args: Tuple[str, ...],
+    version_filepath: str,
+    version_regex: str,
+    version_file_content: str,
+):
+    """Ensure that changelog always gets committed, no matter what version file or cli options get passed.
+
+    Steps:
+     - Append the version file's name and regex commitizen configuration lines to `pyproject.toml`.
+     - Append to or create the version file.
+     - Add a commit of type fix to be eligible for a version bump.
+     - Call commitizen main cli and assert that the `CHANGELOG.md` and the version file were committed.
+    """
+
+    with tmp_commitizen_project.join("pyproject.toml").open(
+        mode="a"
+    ) as commitizen_config:
+        commitizen_config.write(f"version_files = [\n" f"'{version_regex}'\n]")
+
+    with tmp_commitizen_project.join(version_filepath).open(mode="a+") as version_file:
+        version_file.write(version_file_content)
+
+    create_file_and_commit("fix: some test commit")
+
+    mocker.patch.object(sys, "argv", cli_bump_changelog_args)
+    cli.main()
+
+    commit_file_names = git.get_filenames_in_commit()
+    assert "CHANGELOG.md" in commit_file_names
+    assert version_filepath in commit_file_names
