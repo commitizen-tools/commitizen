@@ -945,14 +945,15 @@
 <span class="m">2</span>.0.1a
 </code></pre></div>
 
-<p><code>post</code> and <code>dev</code> releases are not supported yet.</p>
+<p><code>post</code> releases are not supported yet.</p>
 <h2 id="usage">Usage</h2>
 <div class="codehilite"><pre><span></span><code>$ cz bump --help
 usage: cz bump <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--dry-run<span class="o">]</span> <span class="o">[</span>--files-only<span class="o">]</span> <span class="o">[</span>--local-version<span class="o">]</span> <span class="o">[</span>--changelog<span class="o">]</span>
                <span class="o">[</span>--no-verify<span class="o">]</span> <span class="o">[</span>--yes<span class="o">]</span> <span class="o">[</span>--tag-format TAG_FORMAT<span class="o">]</span>
-               <span class="o">[</span>--bump-message BUMP_MESSAGE<span class="o">]</span> <span class="o">[</span>--prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}]</span>
-               <span class="o">[</span>--increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span> <span class="o">[</span>--check-consistency<span class="o">]</span>
-               <span class="o">[</span>--annotated-tag<span class="o">]</span> <span class="o">[</span>--gpg-sign<span class="o">]</span> <span class="o">[</span>--changelog-to-stdout<span class="o">]</span> <span class="o">[</span>--retry<span class="o">]</span>
+               <span class="o">[</span>--bump-message BUMP_MESSAGE<span class="o">]</span> <span class="o">[</span>--increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span>
+               <span class="o">[</span>--prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}]</span> <span class="o">[</span>--devrelease <span class="o">{</span>DEV<span class="o">}]</span>
+               <span class="o">[</span>--check-consistency<span class="o">]</span> <span class="o">[</span>--annotated-tag<span class="o">]</span> <span class="o">[</span>--gpg-sign<span class="o">]</span>
+               <span class="o">[</span>--changelog-to-stdout<span class="o">]</span> <span class="o">[</span>--retry<span class="o">]</span>
 
 options:
   -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
@@ -971,6 +972,7 @@ options:
                         when working with CI
   --prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}</span>, -pr <span class="o">{</span>alpha,beta,rc<span class="o">}</span>
                         choose <span class="nb">type</span> of prerelease
+  --devrelease <span class="o">{</span>DEV<span class="o">}</span>    specify dev release
   --increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}</span>
                         manually specify the desired increment
   --check-consistency, -cc
@@ -1112,7 +1114,7 @@ on the list and then you can use the exit code:</p>
 <div class="codehilite"><pre><span></span><code>cz bump --tag-format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$version</span><span class="s2">&quot;</span>
 </code></pre></div>
 
-<div class="codehilite"><pre><span></span><code>cz bump --tag-format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$minor</span><span class="s2">.</span><span class="nv">$major</span><span class="s2">.</span><span class="nv">$patch$prerelease</span><span class="s2">&quot;</span>
+<div class="codehilite"><pre><span></span><code>cz bump --tag-format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$minor</span><span class="s2">.</span><span class="nv">$major</span><span class="s2">.</span><span class="nv">$patch$prerelease</span><span class="s2">.</span><span class="nv">$devrelease</span><span class="s2">&quot;</span>
 </code></pre></div>
 
 <p>In your <code>pyproject.toml</code> or <code>.cz.toml</code></p>
@@ -1148,7 +1150,11 @@ on the list and then you can use the exit code:</p>
 </tr>
 <tr>
 <td><code>$prerelease</code></td>
-<td>Prerelase (alpha, beta, release candidate)</td>
+<td>Prerelease (alpha, beta, release candidate)</td>
+</tr>
+<tr>
+<td><code>$devrelease</code></td>
+<td>Development release</td>
 </tr>
 </tbody>
 </table>
