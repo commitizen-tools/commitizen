@@ -205,7 +205,11 @@ class Bump:
                 },
             )
             changelog_cmd()
-            c = cmd.run(f"git add {changelog_cmd.file_name} {' '.join(version_files)}")
+            git_add_changelog_and_version_files_command = (
+                f"git add {changelog_cmd.file_name} "
+                f"{' '.join(file_name.partition(':')[0] for file_name in version_files)}"
+            )
+            c = cmd.run(git_add_changelog_and_version_files_command)
 
         # Do not perform operations over files or git.
         if dry_run:
@@ -228,7 +232,7 @@ class Bump:
             # Maybe pre-commit reformatted some files? Retry once
             logger.debug("1st git.commit error: %s", c.err)
             logger.info("1st commit attempt failed; retrying once")
-            cmd.run(f"git add {changelog_cmd.file_name} {' '.join(version_files)}")
+            cmd.run(git_add_changelog_and_version_files_command)
             c = git.commit(message, args=self._get_commit_args())
         if c.return_code != 0:
             raise BumpCommitFailedError(f'2nd git.commit error: "{c.err.strip()}"')

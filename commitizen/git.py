@@ -126,6 +126,20 @@ def get_commits(
     return git_commits
 
 
+def get_filenames_in_commit(git_reference: str = ""):
+    """Get the list of files that were committed in the requested git reference.
+
+    :param git_reference: a git reference as accepted by `git show`, default: the last commit
+
+    :returns: file names committed in the last commit by default or inside the passed git reference
+    """
+    c = cmd.run(f"git show --name-only --pretty=format: {git_reference}")
+    if c.return_code == 0:
+        return c.out.strip().split("\n")
+    else:
+        raise GitCommandError(c.err)
+
+
 def get_tags(dateformat: str = "%Y-%m-%d") -> List[GitTag]:
     inner_delimiter = "---inner_delimiter---"
     formatter = (
