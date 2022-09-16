@@ -1,4 +1,10 @@
 
+## v2.33.1 (2022-09-16)
+
+### Fix
+
+- **bump.py**: `CHANGELOG.md` gets git added and commited correctly
+
 ## v2.33.0 (2022-09-15)
 
 ### Feat
