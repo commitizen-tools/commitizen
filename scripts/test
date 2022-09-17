@@ -11,3 +11,4 @@ ${PREFIX}isort --check-only commitizen tests
 ${PREFIX}flake8 commitizen/ tests/
 ${PREFIX}mypy commitizen/ tests/
 ${PREFIX}pydocstyle --convention=google --add-ignore=D1,D415
+${PREFIX}commitizen check --rev-range origin/master..
