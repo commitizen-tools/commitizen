@@ -62,9 +62,13 @@ class Commit:
         return cz.message(answers)
 
     def __call__(self):
-        dry_run: bool = self.arguments.get("dry_run")
-
+        args = []
         allow_empty: bool = self.arguments.get("allow_empty")
+
+        if allow_empty:
+            args.append("--allow-empty")
+
+        dry_run: bool = self.arguments.get("dry_run")
 
         if git.is_staging_clean() and not (dry_run or allow_empty):
             raise NothingToCommitError("No files added to staging!")
@@ -84,9 +88,9 @@ class Commit:
         signoff: bool = self.arguments.get("signoff")
 
         if signoff:
-            c = git.commit(m, "-s")
-        else:
-            c = git.commit(m)
+            args.append("-s")
+
+        c = git.commit(m, *args)
 
         if c.return_code != 0:
             out.error(c.err)
