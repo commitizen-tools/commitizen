@@ -53,6 +53,26 @@ def test_commit_retry_fails_no_backup(config, mocker):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
+def test_commit_allow_empty(config, mocker):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "closes #21",
+        "footer": "",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", "", "", 0)
+    success_mock = mocker.patch("commitizen.out.success")
+
+    commands.Commit(config, {"allow_empty": True})()
+    success_mock.assert_called_once()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
 def test_commit_retry_works(config, mocker):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
