@@ -130,7 +130,7 @@ class Bump:
         if increment is None:
             increment = self.find_increment(commits)
 
-        # It may happen that there are commits, but they are not elegible
+        # It may happen that there are commits, but they are not eligible
         # for an increment, this generates a problem when using prerelease (#281)
         if (
             prerelease
@@ -179,7 +179,7 @@ class Bump:
         if increment is None and new_tag_version == current_tag_version:
             raise NoneIncrementExit(
                 "[NO_COMMITS_TO_BUMP]\n"
-                "The commits found are not elegible to be bumped"
+                "The commits found are not eligible to be bumped"
             )
 
         if self.changelog:
