@@ -64,7 +64,9 @@ class Commit:
     def __call__(self):
         dry_run: bool = self.arguments.get("dry_run")
 
-        if git.is_staging_clean() and not dry_run:
+        allow_empty: bool = self.arguments.get("allow_empty")
+
+        if git.is_staging_clean() and not (dry_run or allow_empty):
             raise NothingToCommitError("No files added to staging!")
 
         retry: bool = self.arguments.get("retry")

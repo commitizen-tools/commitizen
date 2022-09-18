@@ -38,7 +38,7 @@ def test_commit(config, mocker):
     success_mock = mocker.patch("commitizen.out.success")
 
     commands.Commit(config, {})()
-    success_mock.assert_called_once()
+   success_mock.assert_called_once()
 
 
 @pytest.mark.usefixtures("staging_is_clean")
