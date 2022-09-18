@@ -183,6 +183,13 @@ data = {
                         "default": False,
                         "help": "retry commit if it fails the 1st time",
                     },
+                    {
+                        "name": "manual_version",
+                        "type": str,
+                        "nargs": "?",
+                        "help": "bump to the given version (e.g: 1.5.3)",
+                        "metavar": "MANUAL_VERSION",
+                    },
                 ],
             },
             {

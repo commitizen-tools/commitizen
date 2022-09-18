@@ -28,6 +28,7 @@ class ExitCode(enum.IntEnum):
     NO_INCREMENT = 21
     UNRECOGNIZED_CHARACTERSET_ENCODING = 22
     GIT_COMMAND_ERROR = 23
+    INVALID_MANUAL_VERSION = 24
 
 
 class CommitizenException(Exception):
@@ -158,3 +159,7 @@ class CharacterSetDecodeError(CommitizenException):
 
 class GitCommandError(CommitizenException):
     exit_code = ExitCode.GIT_COMMAND_ERROR
+
+
+class InvalidManualVersion(CommitizenException):
+    exit_code = ExitCode.INVALID_MANUAL_VERSION

@@ -14,10 +14,12 @@ from commitizen.exceptions import (
     DryRunExit,
     ExitCode,
     ExpectedExit,
+    InvalidManualVersion,
     NoCommitsFoundError,
     NoneIncrementExit,
     NoPatternMapError,
     NotAGitProjectError,
+    NotAllowed,
     NoVersionSpecifiedError,
 )
 from tests.utils import create_file_and_commit
@@ -614,3 +616,67 @@ def test_bump_changelog_command_commits_untracked_changelog_and_version_files(
     commit_file_names = git.get_filenames_in_commit()
     assert "CHANGELOG.md" in commit_file_names
     assert version_filepath in commit_file_names
+
+
+@pytest.mark.parametrize(
+    "testargs",
+    [
+        ["cz", "bump", "--local-version", "1.2.3"],
+        ["cz", "bump", "--prerelease", "rc", "1.2.3"],
+        ["cz", "bump", "--devrelease", "0", "1.2.3"],
+        ["cz", "bump", "--devrelease", "1", "1.2.3"],
+        ["cz", "bump", "--increment", "PATCH", "1.2.3"],
+    ],
+)
+def test_bump_invalid_manual_args_raises_exception(mocker, testargs):
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.raises(NotAllowed):
+        cli.main()
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.parametrize(
+    "manual_version",
+    [
+        "noversion",
+        "1.2..3",
+    ],
+)
+def test_bump_invalid_manual_version_raises_exception(mocker, manual_version):
+    create_file_and_commit("feat: new file")
+
+    testargs = ["cz", "bump", "--yes", manual_version]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.raises(InvalidManualVersion) as excinfo:
+        cli.main()
+
+    expected_error_message = (
+        "[INVALID_MANUAL_VERSION]\n" f"Invalid manual version: '{manual_version}'"
+    )
+    assert expected_error_message in str(excinfo.value)
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.parametrize(
+    "manual_version",
+    [
+        "0.0.1",
+        "0.1.0rc2",
+        "0.1.0.dev2",
+        "0.1.0+1.0.0",
+        "0.1.0rc2.dev2+1.0.0",
+        "0.1.1",
+        "0.2.0",
+        "1.0.0",
+    ],
+)
+def test_bump_manual_version(mocker, manual_version):
+    create_file_and_commit("feat: new file")
+
+    testargs = ["cz", "bump", "--yes", manual_version]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    tag_exists = git.tag_exist(manual_version)
+    assert tag_exists is True

@@ -59,7 +59,10 @@ usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
                [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}]
                [--devrelease DEVRELEASE] [--increment {MAJOR,MINOR,PATCH}]
                [--check-consistency] [--annotated-tag] [--gpg-sign]
-               [--changelog-to-stdout] [--retry]
+               [--changelog-to-stdout] [--retry] [MANUAL_VERSION]
+
+positional arguments:
+  MANUAL_VERSION        bump to the given version (e.g: 1.5.3)
 
 options:
   -h, --help            show this help message and exit
