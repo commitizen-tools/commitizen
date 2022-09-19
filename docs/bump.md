@@ -56,10 +56,13 @@ Some examples:
 $ cz bump --help
 usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
                [--no-verify] [--yes] [--tag-format TAG_FORMAT]
-               [--bump-message BUMP_MESSAGE] [--increment {MAJOR,MINOR,PATCH}]
-               [--prerelease {alpha,beta,rc}] [--devrelease {DEV}]
+               [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}]
+               [--devrelease DEVRELEASE] [--increment {MAJOR,MINOR,PATCH}]
                [--check-consistency] [--annotated-tag] [--gpg-sign]
-               [--changelog-to-stdout] [--retry]
+               [--changelog-to-stdout] [--retry] [MANUAL_VERSION]
+
+positional arguments:
+  MANUAL_VERSION        bump to the given version (e.g: 1.5.3)
 
 options:
   -h, --help            show this help message and exit
@@ -78,14 +81,15 @@ options:
                         when working with CI
   --prerelease {alpha,beta,rc}, -pr {alpha,beta,rc}
                         choose type of prerelease
-  --devrelease {DEV}    specify dev release
+  --devrelease DEVRELEASE, -d DEVRELEASE
+                        specify non-negative integer for dev. release
   --increment {MAJOR,MINOR,PATCH}
                         manually specify the desired increment
   --check-consistency, -cc
                         check consistency among versions defined in commitizen
                         configuration and version_files
-  --gpg-sign, -s  create a signed tag instead of lightweight one or annotated tag
   --annotated-tag, -at  create annotated tag instead of lightweight one
+  --gpg-sign, -s        sign tag instead of lightweight one
   --changelog-to-stdout
                         Output changelog to the stdout
   --retry               retry commit if it fails the 1st time

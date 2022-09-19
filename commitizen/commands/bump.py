@@ -2,7 +2,7 @@ from logging import getLogger
 from typing import List, Optional
 
 import questionary
-from packaging.version import Version
+from packaging.version import InvalidVersion, Version
 
 from commitizen import bump, cmd, factory, git, out
 from commitizen.commands.changelog import Changelog
@@ -12,10 +12,12 @@ from commitizen.exceptions import (
     BumpTagFailedError,
     DryRunExit,
     ExpectedExit,
+    InvalidManualVersion,
     NoCommitsFoundError,
     NoneIncrementExit,
     NoPatternMapError,
     NotAGitProjectError,
+    NotAllowed,
     NoVersionSpecifiedError,
 )
 
@@ -102,10 +104,26 @@ class Bump:
         dry_run: bool = self.arguments["dry_run"]
         is_yes: bool = self.arguments["yes"]
         increment: Optional[str] = self.arguments["increment"]
-        prerelease: str = self.arguments["prerelease"]
+        prerelease: Optional[str] = self.arguments["prerelease"]
         devrelease: Optional[int] = self.arguments["devrelease"]
         is_files_only: Optional[bool] = self.arguments["files_only"]
         is_local_version: Optional[bool] = self.arguments["local_version"]
+        manual_version = self.arguments["manual_version"]
+
+        if manual_version:
+            if increment:
+                raise NotAllowed("--increment cannot be combined with MANUAL_VERSION")
+
+            if prerelease:
+                raise NotAllowed("--prerelease cannot be combined with MANUAL_VERSION")
+
+            if devrelease is not None:
+                raise NotAllowed("--devrelease cannot be combined with MANUAL_VERSION")
+
+            if is_local_version:
+                raise NotAllowed(
+                    "--local-version cannot be combined with MANUAL_VERSION"
+                )
 
         current_tag_version: str = bump.normalize_tag(
             current_version, tag_format=tag_format
@@ -127,34 +145,43 @@ class Bump:
         if not commits and not current_version_instance.is_prerelease:
             raise NoCommitsFoundError("[NO_COMMITS_FOUND]\n" "No new commits found.")
 
-        if increment is None:
-            increment = self.find_increment(commits)
+        if manual_version:
+            try:
+                new_version = Version(manual_version)
+            except InvalidVersion as exc:
+                raise InvalidManualVersion(
+                    "[INVALID_MANUAL_VERSION]\n"
+                    f"Invalid manual version: '{manual_version}'"
+                ) from exc
+        else:
+            if increment is None:
+                increment = self.find_increment(commits)
 
-        # It may happen that there are commits, but they are not elegible
-        # for an increment, this generates a problem when using prerelease (#281)
-        if (
-            prerelease
-            and increment is None
-            and not current_version_instance.is_prerelease
-        ):
-            raise NoCommitsFoundError(
-                "[NO_COMMITS_FOUND]\n"
-                "No commits found to generate a pre-release.\n"
-                "To avoid this error, manually specify the type of increment with `--increment`"
+            # It may happen that there are commits, but they are not eligible
+            # for an increment, this generates a problem when using prerelease (#281)
+            if (
+                prerelease
+                and increment is None
+                and not current_version_instance.is_prerelease
+            ):
+                raise NoCommitsFoundError(
+                    "[NO_COMMITS_FOUND]\n"
+                    "No commits found to generate a pre-release.\n"
+                    "To avoid this error, manually specify the type of increment with `--increment`"
+                )
+
+            # Increment is removed when current and next version
+            # are expected to be prereleases.
+            if prerelease and current_version_instance.is_prerelease:
+                increment = None
+
+            new_version = bump.generate_version(
+                current_version,
+                increment,
+                prerelease=prerelease,
+                devrelease=devrelease,
+                is_local_version=is_local_version,
             )
-
-        # Increment is removed when current and next version
-        # are expected to be prereleases.
-        if prerelease and current_version_instance.is_prerelease:
-            increment = None
-
-        new_version = bump.generate_version(
-            current_version,
-            increment,
-            prerelease=prerelease,
-            devrelease=devrelease,
-            is_local_version=is_local_version,
-        )
 
         new_tag_version = bump.normalize_tag(new_version, tag_format=tag_format)
         message = bump.create_commit_message(
@@ -162,11 +189,9 @@ class Bump:
         )
 
         # Report found information
-        information = (
-            f"{message}\n"
-            f"tag to create: {new_tag_version}\n"
-            f"increment detected: {increment}\n"
-        )
+        information = f"{message}\n" f"tag to create: {new_tag_version}\n"
+        if increment:
+            information += f"increment detected: {increment}\n"
 
         if self.changelog_to_stdout:
             # When the changelog goes to stdout, we want to send
@@ -179,7 +204,7 @@ class Bump:
         if increment is None and new_tag_version == current_tag_version:
             raise NoneIncrementExit(
                 "[NO_COMMITS_TO_BUMP]\n"
-                "The commits found are not elegible to be bumped"
+                "The commits found are not eligible to be bumped"
             )
 
         if self.changelog:
