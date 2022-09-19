@@ -11,7 +11,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.5.1">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.5.2">
     
     
       
@@ -19,7 +19,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.2e8b5541.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.9f9400aa.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
@@ -950,10 +950,13 @@
 <div class="codehilite"><pre><span></span><code>$ cz bump --help
 usage: cz bump <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--dry-run<span class="o">]</span> <span class="o">[</span>--files-only<span class="o">]</span> <span class="o">[</span>--local-version<span class="o">]</span> <span class="o">[</span>--changelog<span class="o">]</span>
                <span class="o">[</span>--no-verify<span class="o">]</span> <span class="o">[</span>--yes<span class="o">]</span> <span class="o">[</span>--tag-format TAG_FORMAT<span class="o">]</span>
-               <span class="o">[</span>--bump-message BUMP_MESSAGE<span class="o">]</span> <span class="o">[</span>--increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span>
-               <span class="o">[</span>--prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}]</span> <span class="o">[</span>--devrelease <span class="o">{</span>DEV<span class="o">}]</span>
+               <span class="o">[</span>--bump-message BUMP_MESSAGE<span class="o">]</span> <span class="o">[</span>--prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}]</span>
+               <span class="o">[</span>--devrelease DEVRELEASE<span class="o">]</span> <span class="o">[</span>--increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span>
                <span class="o">[</span>--check-consistency<span class="o">]</span> <span class="o">[</span>--annotated-tag<span class="o">]</span> <span class="o">[</span>--gpg-sign<span class="o">]</span>
-               <span class="o">[</span>--changelog-to-stdout<span class="o">]</span> <span class="o">[</span>--retry<span class="o">]</span>
+               <span class="o">[</span>--changelog-to-stdout<span class="o">]</span> <span class="o">[</span>--retry<span class="o">]</span> <span class="o">[</span>MANUAL_VERSION<span class="o">]</span>
+
+positional arguments:
+  MANUAL_VERSION        bump to the given version <span class="o">(</span>e.g: <span class="m">1</span>.5.3<span class="o">)</span>
 
 options:
   -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
@@ -972,14 +975,15 @@ options:
                         when working with CI
   --prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}</span>, -pr <span class="o">{</span>alpha,beta,rc<span class="o">}</span>
                         choose <span class="nb">type</span> of prerelease
-  --devrelease <span class="o">{</span>DEV<span class="o">}</span>    specify dev release
+  --devrelease DEVRELEASE, -d DEVRELEASE
+                        specify non-negative integer <span class="k">for</span> dev. release
   --increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}</span>
                         manually specify the desired increment
   --check-consistency, -cc
                         check consistency among versions defined <span class="k">in</span> commitizen
                         configuration and version_files
-  --gpg-sign, -s  create a signed tag instead of lightweight one or annotated tag
   --annotated-tag, -at  create annotated tag instead of lightweight one
+  --gpg-sign, -s        sign tag instead of lightweight one
   --changelog-to-stdout
                         Output changelog to the stdout
   --retry               retry commit <span class="k">if</span> it fails the 1st <span class="nb">time</span>
@@ -1308,7 +1312,7 @@ in a line containing the <code>version</code> substring.</p>
     <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.d691e9de.min.js"></script>
+      <script src="../assets/javascripts/bundle.39f04ddb.min.js"></script>
       
     
   </body>
