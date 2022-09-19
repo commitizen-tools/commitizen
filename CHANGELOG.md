@@ -1,4 +1,15 @@
 
+## v2.34.0 (2022-09-19)
+
+### Feat
+
+- **bump**: support optional manual version argument
+
+### Fix
+
+- **bump**: fix type hint
+- **bump**: fix typos
+
 ## v2.33.1 (2022-09-16)
 
 ### Fix
