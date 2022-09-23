@@ -1,6 +1,7 @@
 import pytest
 
 from commitizen import changelog, defaults, git
+from commitizen.config.base_config import BaseConfig
 from commitizen.cz.conventional_commits.conventional_commits import (
     ConventionalCommitsCz,
 )
@@ -844,8 +845,9 @@ def test_order_changelog_tree_raises():
 
 
 def test_render_changelog(gitcommits, tags, changelog_content):
-    parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    cz = ConventionalCommitsCz(BaseConfig())
+    parser = cz.commit_parser
+    changelog_pattern = cz.bump_pattern
     tree = changelog.generate_tree_from_commits(
         gitcommits, tags, parser, changelog_pattern
     )
@@ -854,9 +856,10 @@ def test_render_changelog(gitcommits, tags, changelog_content):
 
 
 def test_render_changelog_unreleased(gitcommits):
+    cz = ConventionalCommitsCz(BaseConfig())
     some_commits = gitcommits[:7]
-    parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    parser = cz.commit_parser
+    changelog_pattern = cz.bump_pattern
     tree = changelog.generate_tree_from_commits(
         some_commits, [], parser, changelog_pattern
     )
@@ -869,9 +872,10 @@ def test_render_changelog_tag_and_unreleased(gitcommits, tags):
     single_tag = [
         tag for tag in tags if tag.rev == "56c8a8da84e42b526bcbe130bd194306f7c7e813"
     ]
+    cz = ConventionalCommitsCz(BaseConfig())
 
-    parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    parser = cz.commit_parser
+    changelog_pattern = cz.bump_pattern
     tree = changelog.generate_tree_from_commits(
         some_commits, single_tag, parser, changelog_pattern
     )
@@ -882,10 +886,11 @@ def test_render_changelog_tag_and_unreleased(gitcommits, tags):
 
 
 def test_render_changelog_with_change_type(gitcommits, tags):
+    cz = ConventionalCommitsCz(BaseConfig())
     new_title = ":some-emoji: feature"
     change_type_map = {"feat": new_title}
-    parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    parser = cz.commit_parser
+    changelog_pattern = cz.bump_pattern
     tree = changelog.generate_tree_from_commits(
         gitcommits, tags, parser, changelog_pattern, change_type_map=change_type_map
     )
@@ -900,8 +905,9 @@ def test_render_changelog_with_changelog_message_builder_hook(gitcommits, tags):
         ] = f"{message['message']} [link](github.com/232323232) {commit.author} {commit.author_email}"
         return message
 
-    parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    cz = ConventionalCommitsCz(BaseConfig())
+    parser = cz.commit_parser
+    changelog_pattern = cz.bump_pattern
     tree = changelog.generate_tree_from_commits(
         gitcommits,
         tags,

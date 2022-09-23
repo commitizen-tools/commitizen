@@ -1,37 +1,14 @@
 from abc import ABCMeta, abstractmethod
-from typing import Callable, Dict, List, Optional, Tuple
+from typing import Callable, Dict, List, Optional
 
-from prompt_toolkit.styles import Style, merge_styles
+from prompt_toolkit.styles import Style
 
-from commitizen import git
+from commitizen import defaults, git
 from commitizen.config.base_config import BaseConfig
 from commitizen.defaults import Questions
 
 
 class BaseCommitizen(metaclass=ABCMeta):
-    bump_pattern: Optional[str] = None
-    bump_map: Optional[Dict[str, str]] = None
-    default_style_config: List[Tuple[str, str]] = [
-        ("qmark", "fg:#ff9d00 bold"),
-        ("question", "bold"),
-        ("answer", "fg:#ff9d00 bold"),
-        ("pointer", "fg:#ff9d00 bold"),
-        ("highlighted", "fg:#ff9d00 bold"),
-        ("selected", "fg:#cc5454"),
-        ("separator", "fg:#cc5454"),
-        ("instruction", ""),
-        ("text", ""),
-        ("disabled", "fg:#858585 italic"),
-    ]
-
-    # The whole subject will be parsed as message by default
-    # This allows supporting changelog for any rule system.
-    # It can be modified per rule
-    commit_parser: Optional[str] = r"(?P<message>.*)"
-    changelog_pattern: Optional[str] = r".*"
-    change_type_map: Optional[Dict[str, str]] = None
-    change_type_order: Optional[List[str]] = None
-
     # Executed per message parsed by the commitizen
     changelog_message_builder_hook: Optional[
         Callable[[Dict, git.GitCommit], Dict]
@@ -42,8 +19,28 @@ class BaseCommitizen(metaclass=ABCMeta):
 
     def __init__(self, config: BaseConfig):
         self.config = config
-        if not self.config.settings.get("style"):
-            self.config.settings.update({"style": BaseCommitizen.default_style_config})
+        self.style = Style(self.config.settings.get("style", defaults.style))
+        self.bump_pattern: Optional[str] = self.config.settings.get(
+            "bump_pattern", defaults.bump_pattern
+        )
+        self.bump_map: Optional[Dict[str, str]] = self.config.settings.get(
+            "bump_map", defaults.bump_map
+        )
+        self.change_type_order: Optional[List[str]] = self.config.settings.get(
+            "change_type_order", defaults.change_type_order
+        )
+        self.change_type_map: Optional[Dict[str, str]] = self.config.settings.get(
+            "change_type_map", defaults.change_type_map
+        )
+        self.commit_parser: Optional[str] = self.config.settings.get(
+            "commit_parser", defaults.commit_parser
+        )
+        self.changelog_pattern: Optional[str] = self.config.settings.get(
+            "changelog_pattern", defaults.changelog_pattern
+        )
+        self.version_parser = self.config.settings.get(
+            "version_parser", defaults.version_parser
+        )
 
     @abstractmethod
     def questions(self) -> Questions:
@@ -52,15 +49,6 @@ class BaseCommitizen(metaclass=ABCMeta):
     @abstractmethod
     def message(self, answers: dict) -> str:
         """Format your git message."""
-
-    @property
-    def style(self):
-        return merge_styles(
-            [
-                Style(BaseCommitizen.default_style_config),
-                Style(self.config.settings["style"]),
-            ]
-        )
 
     def example(self) -> Optional[str]:
         """Example of the commit message."""
