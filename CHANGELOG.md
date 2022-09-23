@@ -1,4 +1,10 @@
 
+## v2.35.0 (2022-09-23)
+
+### Feat
+
+- allow fixup! and squash! in commit messages
+
 ## v2.34.0 (2022-09-19)
 
 ### Feat
