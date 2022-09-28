@@ -1,5 +1,6 @@
 import json
 import os
+from typing import Any, Dict, List
 
 import pytest
 import yaml
@@ -22,7 +23,10 @@ pre_commit_config_filename = ".pre-commit-config.yaml"
 cz_hook_config = {
     "repo": "https://github.com/commitizen-tools/commitizen",
     "rev": f"v{__version__}",
-    "hooks": [{"id": "commitizen"}],
+    "hooks": [
+        {"id": "commitizen"},
+        {"id": "commitizen-branch", "stages": ["push"]},
+    ],
 }
 
 expected_config = (
@@ -51,7 +55,8 @@ def test_init_without_setup_pre_commit_hook(tmpdir, mocker: MockFixture, config)
     )
     mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
     mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
-    mocker.patch("questionary.confirm", return_value=FakeQuestion(False))
+    # Return None to skip hook installation
+    mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
 
     with tmpdir.as_cwd():
         commands.Init(config)()
@@ -118,7 +123,37 @@ def default_choice(request, mocker: MockFixture):
     )
     mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
     mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+    mocker.patch(
+        "questionary.checkbox",
+        return_value=FakeQuestion(["commit-msg", "pre-push"]),
+    )
     yield request.param
+
+
+def check_cz_config(config: str):
+    """
+    Cehck the content of commitizen config is as expected
+
+    Args:
+        config: The config path
+    """
+    with open(config, "r") as file:
+        if "json" in config:
+            assert json.load(file) == EXPECTED_DICT_CONFIG
+        elif "yaml" in config:
+            assert yaml.load(file, Loader=yaml.FullLoader) == EXPECTED_DICT_CONFIG
+        else:
+            config_data = file.read()
+            assert config_data == expected_config
+
+
+def check_pre_commit_config(expected: List[Dict[str, Any]]):
+    """
+    Check the content of pre-commit config is as expected
+    """
+    with open(pre_commit_config_filename, "r") as pre_commit_file:
+        pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
+    assert pre_commit_config_data == {"repos": expected}
 
 
 @pytest.mark.usefixtures("pre_commit_installed")
@@ -126,21 +161,8 @@ class TestPreCommitCases:
     def test_no_existing_pre_commit_conifg(_, default_choice, tmpdir, config):
         with tmpdir.as_cwd():
             commands.Init(config)()
-
-            with open(default_choice, "r") as file:
-                if "json" in default_choice:
-                    assert json.load(file) == EXPECTED_DICT_CONFIG
-                elif "yaml" in default_choice:
-                    assert (
-                        yaml.load(file, Loader=yaml.FullLoader) == EXPECTED_DICT_CONFIG
-                    )
-                else:
-                    config_data = file.read()
-                    assert config_data == expected_config
-
-            with open(pre_commit_config_filename, "r") as pre_commit_file:
-                pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
-            assert pre_commit_config_data == {"repos": [cz_hook_config]}
+            check_cz_config(default_choice)
+            check_pre_commit_config([cz_hook_config])
 
     def test_empty_pre_commit_config(_, default_choice, tmpdir, config):
         with tmpdir.as_cwd():
@@ -148,21 +170,8 @@ class TestPreCommitCases:
             p.write("")
 
             commands.Init(config)()
-
-            with open(default_choice, "r") as file:
-                if "json" in default_choice:
-                    assert json.load(file) == EXPECTED_DICT_CONFIG
-                elif "yaml" in default_choice:
-                    assert (
-                        yaml.load(file, Loader=yaml.FullLoader) == EXPECTED_DICT_CONFIG
-                    )
-                else:
-                    config_data = file.read()
-                    assert config_data == expected_config
-
-            with open(pre_commit_config_filename, "r") as pre_commit_file:
-                pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
-            assert pre_commit_config_data == {"repos": [cz_hook_config]}
+            check_cz_config(default_choice)
+            check_pre_commit_config([cz_hook_config])
 
     def test_pre_commit_config_without_cz_hook(_, default_choice, tmpdir, config):
         existing_hook_config = {
@@ -176,23 +185,8 @@ class TestPreCommitCases:
             p.write(yaml.safe_dump({"repos": [existing_hook_config]}))
 
             commands.Init(config)()
-
-            with open(default_choice, "r") as file:
-                if "json" in default_choice:
-                    assert json.load(file) == EXPECTED_DICT_CONFIG
-                elif "yaml" in default_choice:
-                    assert (
-                        yaml.load(file, Loader=yaml.FullLoader) == EXPECTED_DICT_CONFIG
-                    )
-                else:
-                    config_data = file.read()
-                    assert config_data == expected_config
-
-            with open(pre_commit_config_filename, "r") as pre_commit_file:
-                pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
-            assert pre_commit_config_data == {
-                "repos": [existing_hook_config, cz_hook_config]
-            }
+            check_cz_config(default_choice)
+            check_pre_commit_config([existing_hook_config, cz_hook_config])
 
     def test_cz_hook_exists_in_pre_commit_config(_, default_choice, tmpdir, config):
         with tmpdir.as_cwd():
@@ -200,23 +194,9 @@ class TestPreCommitCases:
             p.write(yaml.safe_dump({"repos": [cz_hook_config]}))
 
             commands.Init(config)()
-
-            with open(default_choice, "r") as file:
-                if "json" in default_choice:
-                    assert json.load(file) == EXPECTED_DICT_CONFIG
-                elif "yaml" in default_choice:
-                    assert (
-                        yaml.load(file, Loader=yaml.FullLoader) == EXPECTED_DICT_CONFIG
-                    )
-                else:
-                    config_data = file.read()
-                    assert config_data == expected_config
-
-            with open(pre_commit_config_filename, "r") as pre_commit_file:
-                pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
-
+            check_cz_config(default_choice)
             # check that config is not duplicated
-            assert pre_commit_config_data == {"repos": [cz_hook_config]}
+            check_pre_commit_config([cz_hook_config])
 
 
 class TestNoPreCommitInstalled:

@@ -1,6 +1,6 @@
 import os
 import shutil
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
 
 import questionary
 import yaml
@@ -42,8 +42,15 @@ class Init:
         values_to_add["tag_format"] = self._ask_tag_format(tag)
         self._update_config_file(values_to_add)
 
-        if questionary.confirm("Do you want to install pre-commit hook?").ask():
-            if not self._install_pre_commit_hook():
+        hook_types = questionary.checkbox(
+            "What types of pre-commit hook you want to install? (Leave blank if you don't want to install)",
+            choices=[
+                questionary.Choice("commit-msg", checked=True),
+                questionary.Choice("pre-push", checked=True),
+            ],
+        ).ask()
+        if hook_types:
+            if not self._install_pre_commit_hook(hook_types):
                 raise InitFailedError(
                     "Installation failed. See error outputs for more information."
                 )
@@ -116,8 +123,12 @@ class Init:
     def _search_pre_commit(self):
         return shutil.which("pre-commit") is not None
 
-    def _exec_install_pre_commit_hook(self):
-        cmd_str = "pre-commit install --hook-type commit-msg"
+    def _exec_install_pre_commit_hook(self, hook_types: List[str]):
+        if not hook_types:
+            raise ValueError("At least 1 hook type should be provided.")
+        cmd_str = "pre-commit install " + "".join(
+            f"--hook-type {ty}" for ty in hook_types
+        )
         c = cmd.run(cmd_str)
         if c.return_code != 0:
             out.error(f"Error running {cmd_str}. Outputs are attached below:")
@@ -126,12 +137,15 @@ class Init:
             return False
         return True
 
-    def _install_pre_commit_hook(self) -> bool:
+    def _install_pre_commit_hook(self, hook_types: Optional[List[str]] = None) -> bool:
         pre_commit_config_filename = ".pre-commit-config.yaml"
         cz_hook_config = {
             "repo": "https://github.com/commitizen-tools/commitizen",
             "rev": f"v{__version__}",
-            "hooks": [{"id": "commitizen"}],
+            "hooks": [
+                {"id": "commitizen"},
+                {"id": "commitizen-branch", "stages": ["push"]},
+            ],
         }
 
         config_data = {}
@@ -162,7 +176,9 @@ class Init:
             out.error("pre-commit is not installed in current environement.")
             return False
 
-        if not self._exec_install_pre_commit_hook():
+        if hook_types is None:
+            hook_types = ["commit-msg", "pre-push"]
+        if not self._exec_install_pre_commit_hook(hook_types):
             return False
 
         out.write("commitizen pre-commit hook is now installed in your '.git'\n")
