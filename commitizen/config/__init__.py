@@ -16,6 +16,7 @@ def read_cfg() -> BaseConfig:
     cfg_search_paths = [Path(".")]
     if git_project_root:
         cfg_search_paths.append(git_project_root)
+    cfg_search_paths.append(Path.home())
 
     cfg_paths = (
         path / Path(filename)
