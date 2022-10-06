@@ -26,6 +26,12 @@ def create_file_and_commit(message: str, filename: Optional[str] = None):
         raise exceptions.CommitError(c.err)
 
 
+def create_tag(tag: str):
+    c = git.tag(tag)
+    if c.return_code != 0:
+        raise exceptions.CommitError(c.err)
+
+
 def wait_for_tag():
     """Wait for tag.
 

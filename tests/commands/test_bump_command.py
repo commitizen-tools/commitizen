@@ -22,7 +22,7 @@ from commitizen.exceptions import (
     NotAllowed,
     NoVersionSpecifiedError,
 )
-from tests.utils import create_file_and_commit
+from tests.utils import create_file_and_commit, create_tag
 
 
 @pytest.mark.parametrize(
@@ -148,6 +148,31 @@ def test_bump_major_increment(commit_msg, mocker):
     cli.main()
 
     tag_exists = git.tag_exist("1.0.0")
+    assert tag_exists is True
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.parametrize(
+    "commit_msg",
+    (
+        "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported",
+        "feat!: new user interface\n\nBREAKING CHANGE: age is no longer supported",
+        "feat!: new user interface",
+        "feat(user): new user interface\n\nBREAKING CHANGE: age is no longer supported",
+        "feat(user)!: new user interface\n\nBREAKING CHANGE: age is no longer supported",
+        "feat(user)!: new user interface",
+        "BREAKING CHANGE: age is no longer supported",
+        "BREAKING-CHANGE: age is no longer supported",
+    ),
+)
+def test_bump_major_increment_major_version_zero(commit_msg, mocker):
+    create_file_and_commit(commit_msg)
+
+    testargs = ["cz", "bump", "--yes", "--major-version-zero"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
 
@@ -317,6 +342,34 @@ def test_bump_when_version_inconsistent_in_version_files(
 
     partial_expected_error_message = "Current version 0.1.0 is not found in"
     assert partial_expected_error_message in str(excinfo.value)
+
+
+def test_bump_major_version_zero_when_major_is_not_zero(mocker, tmp_commitizen_project):
+    tmp_version_file = tmp_commitizen_project.join("__version__.py")
+    tmp_version_file.write("1.0.0")
+    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_commitizen_cfg_file.write(
+        f"[tool.commitizen]\n"
+        'version="1.0.0"\n'
+        f'version_files = ["{str(tmp_version_file)}"]'
+    )
+    tmp_changelog_file = tmp_commitizen_project.join("CHANGELOG.md")
+    tmp_changelog_file.write("## v1.0.0")
+
+    create_file_and_commit("feat(user): new file")
+    create_tag("v1.0.0")
+    create_file_and_commit("feat(user)!: new file")
+
+    testargs = ["cz", "bump", "--yes", "--major-version-zero"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.raises(NotAllowed) as excinfo:
+        cli.main()
+
+    expected_error_message = (
+        "--major-version-zero is meaningless for current version 1.0.0"
+    )
+    assert expected_error_message in str(excinfo.value)
 
 
 def test_bump_files_only(mocker, tmp_commitizen_project):
@@ -680,3 +733,20 @@ def test_bump_manual_version(mocker, manual_version):
     cli.main()
     tag_exists = git.tag_exist(manual_version)
     assert tag_exists is True
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_manual_version_disallows_major_version_zero(mocker):
+    create_file_and_commit("feat: new file")
+
+    manual_version = "0.2.0"
+    testargs = ["cz", "bump", "--yes", "--major-version-zero", manual_version]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.raises(NotAllowed) as excinfo:
+        cli.main()
+
+    expected_error_message = (
+        "--major-version-zero cannot be combined with MANUAL_VERSION"
+    )
+    assert expected_error_message in str(excinfo.value)
