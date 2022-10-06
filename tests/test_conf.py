@@ -51,6 +51,7 @@ _settings = {
     "encoding": "utf-8",
     "major_version_zero": False,
     "encoding": "utf-8",
+    "major_version_zero": False,
 }
 
 _new_settings = {
@@ -69,6 +70,7 @@ _new_settings = {
     "encoding": "utf-8",
     "major_version_zero": False,
     "encoding": "utf-8",
+    "major_version_zero": False,
 }
 
 _read_settings = {
