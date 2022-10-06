@@ -5,7 +5,7 @@ from typing import List, Optional
 import questionary
 from packaging.version import InvalidVersion, Version
 
-from commitizen import bump, cmd, factory, git, out
+from commitizen import bump, cmd, defaults, factory, git, out
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
@@ -45,6 +45,7 @@ class Bump:
                     "bump_message",
                     "gpg_sign",
                     "annotated_tag",
+                    "major_version_zero",
                 ]
                 if arguments[key] is not None
             },
@@ -101,6 +102,7 @@ class Bump:
         tag_format: str = self.bump_settings["tag_format"]
         bump_commit_message: str = self.bump_settings["bump_message"]
         version_files: List[str] = self.bump_settings["version_files"]
+        major_version_zero: bool = self.bump_settings["major_version_zero"]
 
         dry_run: bool = self.arguments["dry_run"]
         is_yes: bool = self.arguments["yes"]
@@ -125,6 +127,20 @@ class Bump:
                 raise NotAllowed(
                     "--local-version cannot be combined with MANUAL_VERSION"
                 )
+
+            if major_version_zero:
+                raise NotAllowed(
+                    "--major-version-zero cannot be combined with MANUAL_VERSION"
+                )
+
+        if major_version_zero:
+            if not current_version.startswith("0."):
+                raise NotAllowed(
+                    f"--major-version-zero is meaningless for current version {current_version}"
+                )
+
+            # Update the bump map to ensure major version doesn't increment.
+            self.cz.bump_map = defaults.bump_map_major_version_zero
 
         current_tag_version: str = bump.normalize_tag(
             current_version, tag_format=tag_format

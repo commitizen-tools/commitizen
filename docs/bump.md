@@ -59,7 +59,8 @@ usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
                [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}]
                [--devrelease DEVRELEASE] [--increment {MAJOR,MINOR,PATCH}]
                [--check-consistency] [--annotated-tag] [--gpg-sign]
-               [--changelog-to-stdout] [--retry] [MANUAL_VERSION]
+               [--changelog-to-stdout] [--retry] [--major-version-zero]
+               [MANUAL_VERSION]
 
 positional arguments:
   MANUAL_VERSION        bump to the given version (e.g: 1.5.3)
@@ -93,6 +94,7 @@ options:
   --changelog-to-stdout
                         Output changelog to the stdout
   --retry               retry commit if it fails the 1st time
+  --major-version-zero  keep major version at zero, even for breaking changes
 ```
 
 ### `--files-only`
@@ -198,6 +200,18 @@ If you use tools like [pre-commit](https://pre-commit.com/), add this flag.
 It will retry the commit if it fails the 1st time.
 
 Useful to combine with code formatters, like [Prettier](https://prettier.io/).
+
+### `--major-version-zero`
+
+A project in its initial development should have a major version zero, and even breaking changes
+should not bump that major version from zero. This command ensures that behavior.
+
+If `--major-version-zero` is used for projects that have a version number greater than zero it fails.
+If used together with a manual version the command also fails.
+
+We recommend setting `major_version_zero = true` in your configuration file while a project
+is in its initial development. Remove that configuration using a breaking-change commit to bump
+your project’s major version to `v1.0.0` once your project has reached maturity.
 
 ## Avoid raising errors
 
@@ -369,6 +383,8 @@ When set to `true` commitizen will create annotated tags.
 
 ```toml
 [tool.commitizen]
+annotated_tag = true
+```
 
 ---
 
@@ -379,7 +395,20 @@ When set to `true` commitizen will create gpg signed tags.
 ```toml
 [tool.commitizen]
 gpg_sign = true
-annotated_tag = true
+```
+
+---
+
+### `major_version_zero`
+
+When set to `true` commitizen will keep the major version at zero.
+Useful during the initial development stage of your project.
+
+Defaults to: `false`
+
+```toml
+[tool.commitizen]
+major_version_zero = true
 ```
 
 ## Custom bump
