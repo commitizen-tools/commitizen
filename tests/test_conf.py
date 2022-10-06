@@ -49,6 +49,7 @@ _settings = {
     "update_changelog_on_bump": False,
     "use_shortcuts": False,
     "encoding": "utf-8",
+    "major_version_zero": False,
 }
 
 _new_settings = {
@@ -65,6 +66,7 @@ _new_settings = {
     "update_changelog_on_bump": False,
     "use_shortcuts": False,
     "encoding": "utf-8",
+    "major_version_zero": False,
 }
 
 _read_settings = {

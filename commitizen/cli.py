@@ -184,6 +184,12 @@ data = {
                         "help": "retry commit if it fails the 1st time",
                     },
                     {
+                        "name": ["--major-version-zero"],
+                        "action": "store_true",
+                        "default": None,
+                        "help": "keep major version at zero, even for breaking changes",
+                    },
+                    {
                         "name": "manual_version",
                         "type": str,
                         "nargs": "?",

@@ -40,6 +40,7 @@ class Settings(TypedDict, total=False):
     style: Optional[List[Tuple[str, str]]]
     customize: CzSettings
     encoding: str
+    major_version_zero: bool
 
 
 name: str = "cz_conventional_commits"
@@ -66,6 +67,7 @@ DEFAULT_SETTINGS: Settings = {
     "update_changelog_on_bump": False,
     "use_shortcuts": False,
     "encoding": "utf-8",
+    "major_version_zero": False,
 }
 
 MAJOR = "MAJOR"
@@ -77,6 +79,16 @@ bump_map = OrderedDict(
     (
         (r"^.+!$", MAJOR),
         (r"^BREAKING[\-\ ]CHANGE", MAJOR),
+        (r"^feat", MINOR),
+        (r"^fix", PATCH),
+        (r"^refactor", PATCH),
+        (r"^perf", PATCH),
+    )
+)
+bump_map_major_version_zero = OrderedDict(
+    (
+        (r"^.+!$", MINOR),
+        (r"^BREAKING[\-\ ]CHANGE", MINOR),
         (r"^feat", MINOR),
         (r"^fix", PATCH),
         (r"^refactor", PATCH),
