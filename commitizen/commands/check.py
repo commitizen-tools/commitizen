@@ -98,8 +98,35 @@ class Check:
         # Get commit messages from git log (--rev-range)
         return git.get_commits(end=self.rev_range)
 
-    def _filter_comments(self, msg: str) -> str:
-        lines = [line for line in msg.split("\n") if not line.startswith("#")]
+    @staticmethod
+    def _filter_comments(msg: str) -> str:
+        """Filter the commit message by removing comments.
+
+        When using `git commit --verbose`, we exclude the diff that is going to
+        generated, like the following example:
+
+        ```bash
+        ...
+        # ------------------------ >8 ------------------------
+        # Do not modify or remove the line above.
+        # Everything below it will be ignored.
+        diff --git a/... b/...
+        ...
+        ```
+
+        Args:
+            msg: The commit message to filter.
+
+        Returns:
+            The filtered commit message without comments.
+        """
+
+        lines = []
+        for line in msg.split("\n"):
+            if "# ------------------------ >8 ------------------------" in line:
+                break
+            if not line.startswith("#"):
+                lines.append(line)
         return "\n".join(lines)
 
     def validate_commit_message(self, commit_msg: str, pattern: str) -> bool:
