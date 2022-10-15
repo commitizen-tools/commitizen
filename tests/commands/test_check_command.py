@@ -349,3 +349,34 @@ def test_check_command_with_comment_in_messege_file(mocker, capsys):
     cli.main()
     out, _ = capsys.readouterr()
     assert "Commit validation: successful!" in out
+
+
+def test_check_conventional_commit_succeed_with_git_diff(mocker, capsys):
+    commit_msg = (
+        "feat: This is a test commit\n"
+        "# Please enter the commit message for your changes. Lines starting\n"
+        "# with '#' will be ignored, and an empty message aborts the commit.\n"
+        "#\n"
+        "# On branch ...\n"
+        "# Changes to be committed:\n"
+        "#	modified:  ...\n"
+        "#\n"
+        "# ------------------------ >8 ------------------------\n"
+        "# Do not modify or remove the line above.\n"
+        "# Everything below it will be ignored.\n"
+        "diff --git a/... b/...\n"
+        "index f1234c..1c5678 1234\n"
+        "--- a/...\n"
+        "+++ b/...\n"
+        "@@ -92,3 +92,4 @@ class Command(BaseCommand):\n"
+        '+            "this is a test"\n'
+    )
+    testargs = ["cz", "check", "--commit-msg-file", "some_file"]
+    mocker.patch.object(sys, "argv", testargs)
+    mocker.patch(
+        "commitizen.commands.check.open",
+        mocker.mock_open(read_data=commit_msg),
+    )
+    cli.main()
+    out, _ = capsys.readouterr()
+    assert "Commit validation: successful!" in out
