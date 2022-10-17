@@ -15,9 +15,9 @@ TESTING_FILE_PREFIX = "tests/data"
 def _copy_sample_file_to_tmpdir(
     tmpdir: LocalPath, source_filename: str, dest_filename: str
 ) -> str:
-    tmp_file = tmpdir.join(dest_filename)
-    copyfile(f"{TESTING_FILE_PREFIX}/{source_filename}", str(tmp_file))
-    return str(tmp_file)
+    tmp_file = str(tmpdir.join(dest_filename)).replace("\\", "/")
+    copyfile(f"{TESTING_FILE_PREFIX}/{source_filename}", tmp_file)
+    return tmp_file
 
 
 @pytest.fixture(scope="function")

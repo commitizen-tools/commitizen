@@ -1,9 +1,7 @@
-#!/bin/sh -e
+#!/usr/bin/env sh
+set -e
 
 export PREFIX="poetry run python -m "
-if [ -d 'venv' ] ; then
-    export PREFIX="venv/bin/"
-fi
 
 set -x
 

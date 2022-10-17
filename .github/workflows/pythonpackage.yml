@@ -27,6 +27,7 @@ jobs:
         git config --global user.email "action@github.com"
         git config --global user.name "GitHub Action"
         ./scripts/test
+      shell: bash
     - name: Upload coverage to Codecov
       if: runner.os == 'Linux'
       uses: codecov/codecov-action@v1.0.3

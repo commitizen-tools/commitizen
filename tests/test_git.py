@@ -206,7 +206,10 @@ def test_is_staging_clean_when_updating_file(tmp_commitizen_project):
 
         cmd.run("touch test_file")
         cmd.run("git add test_file")
-        cmd.run("git commit -m 'add test_file'")
+        if os.name == "nt":
+            cmd.run('git commit -m "add test_file"')
+        else:
+            cmd.run("git commit -m 'add test_file'")
         cmd.run("echo 'test' > test_file")
 
         assert git.is_staging_clean() is True

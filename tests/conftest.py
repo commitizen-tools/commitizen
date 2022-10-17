@@ -28,7 +28,7 @@ def tmp_commitizen_project(tmp_git_project):
 def _get_gpg_keyid(signer_mail):
     _new_key = cmd.run(f"gpg --list-secret-keys {signer_mail}")
     _m = re.search(
-        rf"[a-zA-Z0-9 \[\]-_]*{os.linesep}[ ]*([0-9A-Za-z]*){os.linesep}[{os.linesep}a-zA-Z0-9 \[\]-_<>@]*",
+        r"[a-zA-Z0-9 \[\]-_]*\n[ ]*([0-9A-Za-z]*)\n[\na-zA-Z0-9 \[\]-_<>@]*",
         _new_key.out,
     )
     return _m.group(1) if _m else None
@@ -42,7 +42,8 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
     # create a temporary GPGHOME to store a temporary keyring.
     # Home path must be less than 104 characters
     gpg_home = tempfile.TemporaryDirectory(suffix="_cz")
-    os.environ["GNUPGHOME"] = gpg_home.name  # tempdir = temp keyring
+    if os.name != "nt":
+        os.environ["GNUPGHOME"] = gpg_home.name  # tempdir = temp keyring
 
     # create a key (a keyring will be generated within GPUPGHOME)
     c = cmd.run(

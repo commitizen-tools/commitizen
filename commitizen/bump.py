@@ -1,3 +1,4 @@
+import os
 import re
 from collections import OrderedDict
 from itertools import zip_longest
@@ -155,7 +156,9 @@ def update_version_in_files(
     """
     # TODO: separate check step and write step
     for location in files:
-        filepath, _, regex = location.partition(":")
+        drive, tail = os.path.splitdrive(location)
+        path, _, regex = tail.partition(":")
+        filepath = drive + path
         if not regex:
             regex = _version_to_regex(current_version)
 
