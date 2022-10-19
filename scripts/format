@@ -1,8 +1,20 @@
-#!/usr/bin/env sh -e
+#!/usr/bin/env sh
+set -e
 
 export PREFIX="poetry run python -m "
+
 if [ -d 'venv' ] ; then
-    export PREFIX="venv/bin/"
+    case $(uname -s) in
+    Linux|FreeBSD|OpenBSD|NetBSD|Darwin)
+        export PREFIX="venv/bin/"
+        ;;
+    *MINGW*)
+        export PREFIX="venv/Scripts/"
+        ;;
+    *)
+        exit 1
+        ;;
+    esac
 fi
 
 set -x
