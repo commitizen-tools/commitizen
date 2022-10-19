@@ -1,4 +1,5 @@
-#!/usr/bin/env sh -e
+#!/usr/bin/env sh
+set -e
 
 export PREFIX='poetry run python -m '
 export REGEX='^(?![.]|venv).*'
