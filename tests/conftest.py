@@ -42,7 +42,8 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
     # create a temporary GPGHOME to store a temporary keyring.
     # Home path must be less than 104 characters
     gpg_home = tempfile.TemporaryDirectory(suffix="_cz")
-    os.environ["GNUPGHOME"] = gpg_home.name  # tempdir = temp keyring
+    # os.environ["GNUPGHOME"] = gpg_home.name  # tempdir = temp keyring
+    # os.environ["HOMEDIR"] = gpg_home.name
 
     # create a key (a keyring will be generated within GPUPGHOME)
     c = cmd.run(
