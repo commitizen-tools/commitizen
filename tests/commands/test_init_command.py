@@ -65,7 +65,7 @@ def test_init_without_setup_pre_commit_hook(tmpdir, mocker, config):
 
 def test_init_when_config_already_exists(config, capsys):
     # Set config path
-    path = "tests/pyproject.toml"
+    path = os.sep.join(["tests", "pyproject.toml"])
     config.add_path(path)
 
     commands.Init(config)()
