@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/usr/bin/env sh -e
 
 export PREFIX="poetry run python -m "
 if [ -d 'venv' ] ; then
