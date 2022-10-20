@@ -140,7 +140,7 @@ class Init:
         """Generate pre-commit command according to given hook types"""
         if not hook_types:
             raise ValueError("At least 1 hook type should be provided.")
-        cmd_str = "pre-commit install " + "".join(
+        cmd_str = "pre-commit install " + " ".join(
             f"--hook-type {ty}" for ty in hook_types
         )
         return cmd_str
