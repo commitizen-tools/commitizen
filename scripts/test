@@ -3,25 +3,10 @@ set -e
 
 export PREFIX="poetry run python -m "
 
-if [ -d 'venv' ] ; then
-    case $(uname -s) in
-    Linux|FreeBSD|OpenBSD|NetBSD|Darwin)
-        export PREFIX="venv/bin/"
-        ;;
-    *MINGW*)
-        export PREFIX="venv/Scripts/"
-        ;;
-    *)
-        echo "ERROR: Script 'test' encountered unsupported operating system $(uname -s)"
-        exit 1
-        ;;
-    esac
-fi
-
 ${PREFIX}pytest -n 3 --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen tests/
 ${PREFIX}black commitizen tests --check
 ${PREFIX}isort --check-only commitizen tests
 ${PREFIX}flake8 commitizen/ tests/
 ${PREFIX}mypy commitizen/ tests/
 ${PREFIX}pydocstyle --convention=google --add-ignore=D1,D415 --match-dir='^(?![.]|venv).*'
-${PREFIX}cz check --rev-range origin/master..
+${PREFIX}commitizen check --rev-range origin/master..

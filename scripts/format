@@ -3,20 +3,6 @@ set -e
 
 export PREFIX="poetry run python -m "
 
-if [ -d 'venv' ] ; then
-    case $(uname -s) in
-    Linux|FreeBSD|OpenBSD|NetBSD|Darwin)
-        export PREFIX="venv/bin/"
-        ;;
-    *MINGW*)
-        export PREFIX="venv/Scripts/"
-        ;;
-    *)
-        exit 1
-        ;;
-    esac
-fi
-
 set -x
 
 ${PREFIX}isort commitizen tests
