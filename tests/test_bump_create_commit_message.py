@@ -1,3 +1,4 @@
+import os
 import sys
 from pathlib import Path
 from textwrap import dedent
@@ -55,7 +56,10 @@ def test_bump_pre_commit_changelog(tmp_commitizen_project, mocker, freezer, retr
             """
         )
         cmd.run("git add -A")
-        cmd.run("git commit -m 'fix: _test'")
+        if os.name == "nt":
+            cmd.run('git commit -m "fix: _test"')
+        else:
+            cmd.run("git commit -m 'fix: _test'")
         cmd.run("pre-commit install")
         cli.main()
         # Pre-commit fixed last line adding extra indent and "\" char
@@ -93,7 +97,10 @@ def test_bump_pre_commit_changelog_fails_always(
             """
         )
         cmd.run("git add -A")
-        cmd.run("git commit -m 'feat: forbid changelogs'")
+        if os.name == "nt":
+            cmd.run('git commit -m "feat: forbid changelogs"')
+        else:
+            cmd.run("git commit -m 'feat: forbid changelogs'")
         cmd.run("pre-commit install")
         with pytest.raises(exceptions.BumpCommitFailedError):
             cli.main()
