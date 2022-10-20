@@ -12,6 +12,7 @@ if [ -d 'venv' ] ; then
         export PREFIX="venv/Scripts/"
         ;;
     *)
+        echo "ERROR: Script 'test' encountered unsupported operating system $(uname -s)"
         exit 1
         ;;
     esac
