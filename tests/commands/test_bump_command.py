@@ -302,9 +302,10 @@ def test_bump_when_version_inconsistent_in_version_files(
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_version_file.write("100.999.10000")
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
     tmp_commitizen_cfg_file.write(
         f"{tmp_commitizen_cfg_file.read()}\n"
-        f'version_files = ["{str(tmp_version_file)}"]'
+        f'version_files = ["{tmp_version_file_string}"]'
     )
 
     create_file_and_commit("feat: new file")
@@ -323,9 +324,10 @@ def test_bump_files_only(mocker, tmp_commitizen_project):
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_version_file.write("0.1.0")
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
     tmp_commitizen_cfg_file.write(
         f"{tmp_commitizen_cfg_file.read()}\n"
-        f'version_files = ["{str(tmp_version_file)}"]'
+        f'version_files = ["{tmp_version_file_string}"]'
     )
 
     create_file_and_commit("feat: new user interface")
@@ -355,10 +357,11 @@ def test_bump_local_version(mocker, tmp_commitizen_project):
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_version_file.write("4.5.1+0.1.0")
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
     tmp_commitizen_cfg_file.write(
         f"[tool.commitizen]\n"
         'version="4.5.1+0.1.0"\n'
-        f'version_files = ["{str(tmp_version_file)}"]'
+        f'version_files = ["{tmp_version_file_string}"]'
     )
 
     create_file_and_commit("feat: new user interface")
