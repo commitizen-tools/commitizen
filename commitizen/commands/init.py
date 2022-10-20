@@ -50,10 +50,10 @@ class Init:
             ],
         ).ask()
         if hook_types:
-            if not self._install_pre_commit_hook(hook_types):
-                raise InitFailedError(
-                    "Installation failed. See error outputs for more information."
-                )
+            try:
+                self._install_pre_commit_hook(hook_types)
+            except InitFailedError as e:
+                raise InitFailedError(f"Failed to install pre-commit hook.\n{e}")
 
         out.write("You can bump the version and create changelog running:\n")
         out.info("cz bump --changelog")
@@ -120,24 +120,32 @@ class Init:
                 tag_format = "$version"
         return tag_format
 
-    def _search_pre_commit(self):
+    def _search_pre_commit(self) -> bool:
+        """Check whether pre-commit is installed"""
         return shutil.which("pre-commit") is not None
 
     def _exec_install_pre_commit_hook(self, hook_types: List[str]):
+        cmd_str = self._gen_pre_commit_cmd(hook_types)
+        c = cmd.run(cmd_str)
+        if c.return_code != 0:
+            err_msg = (
+                f"Error running {cmd_str}."
+                "Outputs are attached below:\n"
+                f"stdout: {c.out}\n"
+                f"stderr: {c.err}"
+            )
+            raise InitFailedError(err_msg)
+
+    def _gen_pre_commit_cmd(self, hook_types: List[str]) -> str:
+        """Generate pre-commit command according to given hook types"""
         if not hook_types:
             raise ValueError("At least 1 hook type should be provided.")
         cmd_str = "pre-commit install " + "".join(
             f"--hook-type {ty}" for ty in hook_types
         )
-        c = cmd.run(cmd_str)
-        if c.return_code != 0:
-            out.error(f"Error running {cmd_str}. Outputs are attached below:")
-            out.error(f"stdout: {c.out}")
-            out.error(f"stderr: {c.err}")
-            return False
-        return True
+        return cmd_str
 
-    def _install_pre_commit_hook(self, hook_types: Optional[List[str]] = None) -> bool:
+    def _install_pre_commit_hook(self, hook_types: Optional[List[str]] = None):
         pre_commit_config_filename = ".pre-commit-config.yaml"
         cz_hook_config = {
             "repo": "https://github.com/commitizen-tools/commitizen",
@@ -173,16 +181,13 @@ class Init:
             yaml.safe_dump(config_data, stream=config_file)
 
         if not self._search_pre_commit():
-            out.error("pre-commit is not installed in current environement.")
-            return False
-
+            raise InitFailedError(
+                "pre-commit is not installed in current environement."
+            )
         if hook_types is None:
             hook_types = ["commit-msg", "pre-push"]
-        if not self._exec_install_pre_commit_hook(hook_types):
-            return False
-
+        self._exec_install_pre_commit_hook(hook_types)
         out.write("commitizen pre-commit hook is now installed in your '.git'\n")
-        return True
 
     def _update_config_file(self, values: Dict[str, Any]):
         for key, value in values.items():
