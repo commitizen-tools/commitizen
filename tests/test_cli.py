@@ -1,3 +1,4 @@
+import os
 import subprocess
 import sys
 
@@ -84,6 +85,10 @@ def test_commitizen_debug_excepthook(capsys):
     assert "NotAGitProjectError" in str(excinfo.traceback[0])
 
 
+@pytest.mark.skipif(
+    os.name == "nt",
+    reason="`argcomplete` does not support Git Bash on Windows.",
+)
 def test_argcomplete_activation():
     """
     This function is testing the one-time activation of argcomplete for
@@ -92,7 +97,7 @@ def test_argcomplete_activation():
     Equivalent to run:
     $ eval "$(register-python-argcomplete pytest)"
     """
-    output = subprocess.run(["register-python-argcomplete", "cz"])
+    output = subprocess.run(["py", "-m", "register-python-argcomplete", "cz"])
 
     assert output.returncode == 0
 
