@@ -106,9 +106,10 @@ def pre_commit_installed(mocker: MockFixture):
         "commitizen.commands.init.Init._search_pre_commit",
         return_value=True,
     )
+    # And installation success (i.e. no exception raised)
     mocker.patch(
         "commitizen.commands.init.Init._exec_install_pre_commit_hook",
-        return_value=True,
+        return_value=None,
     )
 
 
@@ -223,7 +224,7 @@ class TestNoPreCommitInstalled:
         # But pre-commit installation will fail
         mocker.patch(
             "commitizen.commands.init.Init._exec_install_pre_commit_hook",
-            return_value=False,
+            side_effect=InitFailedError("Mock init failed error."),
         )
         with tmpdir.as_cwd():
             with pytest.raises(InitFailedError):
