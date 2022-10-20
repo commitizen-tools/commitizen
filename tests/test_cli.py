@@ -97,7 +97,7 @@ def test_argcomplete_activation():
     Equivalent to run:
     $ eval "$(register-python-argcomplete pytest)"
     """
-    output = subprocess.run(["py", "-m", "register-python-argcomplete", "cz"])
+    output = subprocess.run(["register-python-argcomplete", "cz"])
 
     assert output.returncode == 0
 
