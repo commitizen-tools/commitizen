@@ -40,7 +40,7 @@ class Check:
             arg is not None
             for arg in (self.commit_msg_file, self.commit_msg, self.rev_range)
         )
-        if num_exclusive_args_provided == 0 and not os.isatty(0):
+        if num_exclusive_args_provided == 0 and not sys.stdin.isatty():
             self.commit_msg: Optional[str] = sys.stdin.read()
         elif num_exclusive_args_provided != 1:
             raise InvalidCommandArgumentError(
