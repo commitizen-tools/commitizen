@@ -1,3 +1,4 @@
+import os
 from logging import getLogger
 from typing import List, Optional
 
@@ -230,9 +231,15 @@ class Bump:
                 },
             )
             changelog_cmd()
+            file_names = []
+            for file_name in version_files:
+                drive, tail = os.path.splitdrive(file_name)
+                path, _, regex = tail.partition(":")
+                path = drive + path if path != "" else drive + regex
+                file_names.append(path)
             git_add_changelog_and_version_files_command = (
                 f"git add {changelog_cmd.file_name} "
-                f"{' '.join(file_name.partition(':')[0] for file_name in version_files)}"
+                f"{' '.join(name for name in file_names)}"
             )
             c = cmd.run(git_add_changelog_and_version_files_command)
 
