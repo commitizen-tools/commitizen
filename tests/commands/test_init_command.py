@@ -99,6 +99,12 @@ def test_init_without_choosing_tag(config, mocker: MockFixture, tmpdir):
             commands.Init(config)()
 
 
+def test_executed_pre_commit_command(config):
+    init = commands.Init(config)
+    expected_cmd = "pre-commit install --hook-type commit-msg --hook-type pre-push"
+    assert init._gen_pre_commit_cmd(["commit-msg", "pre-push"]) == expected_cmd
+
+
 @pytest.fixture(scope="function")
 def pre_commit_installed(mocker: MockFixture):
     # Assume the `pre-commit` is installed
