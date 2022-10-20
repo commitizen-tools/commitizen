@@ -1,12 +1,13 @@
 #!/usr/bin/env sh
 set -e
 
-export PREFIX="poetry run python -m "
+export PREFIX='poetry run python -m '
+export REGEX='^(?![.]|venv).*'
 
 ${PREFIX}pytest -n 3 --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen tests/
 ${PREFIX}black commitizen tests --check
 ${PREFIX}isort --check-only commitizen tests
 ${PREFIX}flake8 commitizen/ tests/
 ${PREFIX}mypy commitizen/ tests/
-${PREFIX}pydocstyle --convention=google --add-ignore=D1,D415 --match-dir="^(?![.]|venv).*"
+${PREFIX}pydocstyle --convention=google --add-ignore=D1,D415 --match-dir='"${REGEX}"'
 ${PREFIX}commitizen check --rev-range origin/master..
