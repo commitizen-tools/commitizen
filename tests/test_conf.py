@@ -52,6 +52,7 @@ _settings = {
     "major_version_zero": False,
     "encoding": "utf-8",
     "major_version_zero": False,
+    "encoding": "utf-8",
 }
 
 _new_settings = {
@@ -71,6 +72,7 @@ _new_settings = {
     "major_version_zero": False,
     "encoding": "utf-8",
     "major_version_zero": False,
+    "encoding": "utf-8",
 }
 
 _read_settings = {
@@ -143,8 +145,8 @@ class TestTomlConfig:
         toml_config = config.TomlConfig(data="", path=path)
         toml_config.init_empty_config_content()
 
-        with open(path, "r") as toml_file:
-            assert toml_file.read() == "[tool.commitizen]\n"
+        with open(path, "r", encoding="utf-8") as toml_file:
+            assert toml_file.read() == "[tool]\n[tool.commitizen]\n"
 
     def test_init_empty_config_content_with_existing_content(self, tmpdir):
         existing_content = "[tool.black]\n" "line-length = 88\n"
