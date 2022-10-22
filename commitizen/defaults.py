@@ -40,11 +40,7 @@ class Settings(TypedDict, total=False):
     style: Optional[List[Tuple[str, str]]]
     customize: CzSettings
     major_version_zero: bool
-<<<<<<< HEAD
     encoding: str
-    major_version_zero: bool
-=======
->>>>>>> 366081c (feat: add major-version-zero option to support initial package development)
 
 
 name: str = "cz_conventional_commits"
@@ -72,6 +68,7 @@ DEFAULT_SETTINGS: Settings = {
     "use_shortcuts": False,
     "encoding": "utf-8",
     "major_version_zero": False,
+    "encoding": "utf-8",
 }
 
 MAJOR = "MAJOR"
