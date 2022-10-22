@@ -43,6 +43,7 @@ class Settings(TypedDict, total=False):
     major_version_zero: bool
     encoding: str
     major_version_zero: bool
+    encoding: str
 
 
 name: str = "cz_conventional_commits"
@@ -72,6 +73,7 @@ DEFAULT_SETTINGS: Settings = {
     "major_version_zero": False,
     "encoding": "utf-8",
     "major_version_zero": False,
+    "encoding": "utf-8",
 }
 
 MAJOR = "MAJOR"
