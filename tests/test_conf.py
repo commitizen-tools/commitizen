@@ -50,6 +50,7 @@ _settings = {
     "use_shortcuts": False,
     "encoding": "utf-8",
     "major_version_zero": False,
+    "encoding": "utf-8",
 }
 
 _new_settings = {
@@ -67,6 +68,7 @@ _new_settings = {
     "use_shortcuts": False,
     "encoding": "utf-8",
     "major_version_zero": False,
+    "encoding": "utf-8",
 }
 
 _read_settings = {

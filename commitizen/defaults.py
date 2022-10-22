@@ -41,6 +41,7 @@ class Settings(TypedDict, total=False):
     customize: CzSettings
     encoding: str
     major_version_zero: bool
+    encoding: str
 
 
 name: str = "cz_conventional_commits"
@@ -68,6 +69,7 @@ DEFAULT_SETTINGS: Settings = {
     "use_shortcuts": False,
     "encoding": "utf-8",
     "major_version_zero": False,
+    "encoding": "utf-8",
 }
 
 MAJOR = "MAJOR"
