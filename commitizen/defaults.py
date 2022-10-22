@@ -70,6 +70,7 @@ DEFAULT_SETTINGS: Settings = {
     "major_version_zero": False,
     "encoding": "utf-8",
     "major_version_zero": False,
+    "encoding": "utf-8",
 }
 
 MAJOR = "MAJOR"
