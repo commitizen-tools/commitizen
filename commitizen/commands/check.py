@@ -33,6 +33,7 @@ class Check:
         self._valid_command_argument()
 
         self.config: BaseConfig = config
+        self.encoding = config.settings["encoding"]
         self.cz = factory.commiter_factory(self.config)
 
     def _valid_command_argument(self):
@@ -86,7 +87,7 @@ class Check:
         # Get commit message from file (--commit-msg-file)
         if self.commit_msg_file is not None:
             # Enter this branch if commit_msg_file is "".
-            with open(self.commit_msg_file, "r", encoding="utf-8") as commit_file:
+            with open(self.commit_msg_file, "r", encoding=self.encoding) as commit_file:
                 msg = commit_file.read()
         # Get commit message from command line (--message)
         elif self.commit_msg is not None:

@@ -73,7 +73,7 @@ class CustomizeCommitsCz(BaseCommitizen):
         info_path = self.custom_settings.get("info_path")
         info = self.custom_settings.get("info")
         if info_path:
-            with open(info_path, "r") as f:
+            with open(info_path, "r", encoding=self.config.settings["encoding"]) as f:
                 content = f.read()
             return content
         elif info:

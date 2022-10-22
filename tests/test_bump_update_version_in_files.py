@@ -102,11 +102,11 @@ def version_files(
 def test_update_version_in_files(version_files, file_regression):
     old_version = "1.2.3"
     new_version = "2.0.0"
-    bump.update_version_in_files(old_version, new_version, version_files)
+    bump.update_version_in_files(old_version, new_version, version_files, "utf-8")
 
     file_contents = ""
     for filepath in version_files:
-        with open(filepath, "r") as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             file_contents += f.read()
     file_regression.check(file_contents, extension=".txt")
 
@@ -117,8 +117,8 @@ def test_partial_update_of_file(version_repeated_file, file_regression):
     regex = "version"
     location = f"{version_repeated_file}:{regex}"
 
-    bump.update_version_in_files(old_version, new_version, [location])
-    with open(version_repeated_file, "r") as f:
+    bump.update_version_in_files(old_version, new_version, [location], "utf-8")
+    with open(version_repeated_file, "r", encoding="utf-8") as f:
         file_regression.check(f.read(), extension=".json")
 
 
@@ -127,7 +127,7 @@ def test_random_location(random_location_version_file, file_regression):
     new_version = "2.0.0"
     location = f"{random_location_version_file}:version.+Commitizen"
 
-    bump.update_version_in_files(old_version, new_version, [location])
+    bump.update_version_in_files(old_version, new_version, [location], "utf-8")
     with open(random_location_version_file, "r") as f:
         file_regression.check(f.read(), extension=".lock")
 
@@ -139,8 +139,8 @@ def test_duplicates_are_change_with_no_regex(
     new_version = "2.0.0"
     location = f"{random_location_version_file}:version"
 
-    bump.update_version_in_files(old_version, new_version, [location])
-    with open(random_location_version_file, "r") as f:
+    bump.update_version_in_files(old_version, new_version, [location], "utf-8")
+    with open(random_location_version_file, "r", encoding="utf-8") as f:
         file_regression.check(f.read(), extension=".lock")
 
 
@@ -151,7 +151,7 @@ def test_version_bump_increase_string_length(
     new_version = "1.2.10"
     location = f"{multiple_versions_increase_string}:version"
 
-    bump.update_version_in_files(old_version, new_version, [location])
+    bump.update_version_in_files(old_version, new_version, [location], "utf-8")
     with open(multiple_versions_increase_string, "r") as f:
         file_regression.check(f.read(), extension=".txt")
 
@@ -163,8 +163,8 @@ def test_version_bump_reduce_string_length(
     new_version = "2.0.0"
     location = f"{multiple_versions_reduce_string}:version"
 
-    bump.update_version_in_files(old_version, new_version, [location])
-    with open(multiple_versions_reduce_string, "r") as f:
+    bump.update_version_in_files(old_version, new_version, [location], "utf-8")
+    with open(multiple_versions_reduce_string, "r", encoding="utf-8") as f:
         file_regression.check(f.read(), extension=".txt")
 
 
@@ -180,7 +180,7 @@ def test_file_version_inconsistent_error(
     new_version = "2.0.0"
     with pytest.raises(CurrentVersionNotFoundError) as excinfo:
         bump.update_version_in_files(
-            old_version, new_version, version_files, check_consistency=True
+            old_version, new_version, version_files, "utf-8", check_consistency=True
         )
 
     expected_msg = (
@@ -191,13 +191,13 @@ def test_file_version_inconsistent_error(
     assert expected_msg in str(excinfo.value)
 
 
-def test_multiplt_versions_to_bump(
+def test_multiple_versions_to_bump(
     multiple_versions_to_update_poetry_lock, file_regression
 ):
     old_version = "1.2.9"
     new_version = "1.2.10"
     location = f"{multiple_versions_to_update_poetry_lock}:version"
 
-    bump.update_version_in_files(old_version, new_version, [location])
-    with open(multiple_versions_to_update_poetry_lock, "r") as f:
+    bump.update_version_in_files(old_version, new_version, [location], "utf-8")
+    with open(multiple_versions_to_update_poetry_lock, "r", encoding="utf-8") as f:
         file_regression.check(f.read(), extension=".toml")

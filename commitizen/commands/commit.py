@@ -27,6 +27,7 @@ class Commit:
             raise NotAGitProjectError()
 
         self.config: BaseConfig = config
+        self.encoding = config.settings["encoding"]
         self.cz = factory.commiter_factory(self.config)
         self.arguments = arguments
         self.temp_file: str = os.path.join(
@@ -40,7 +41,7 @@ class Commit:
             raise NoCommitBackupError()
 
         # Read commit message from backup
-        with open(self.temp_file, "r") as f:
+        with open(self.temp_file, "r", encoding=self.encoding) as f:
             return f.read().strip()
 
     def prompt_commit_questions(self) -> str:
@@ -90,7 +91,7 @@ class Commit:
             out.error(c.err)
 
             # Create commit backup
-            with smart_open(self.temp_file, "w") as f:
+            with smart_open(self.temp_file, "w", encoding=self.encoding) as f:
                 f.write(m)
 
             raise CommitError()

@@ -56,7 +56,7 @@ def test_init_without_setup_pre_commit_hook(tmpdir, mocker, config):
     with tmpdir.as_cwd():
         commands.Init(config)()
 
-        with open("pyproject.toml", "r") as toml_file:
+        with open("pyproject.toml", "r", encoding="utf-8") as toml_file:
             config_data = toml_file.read()
         assert config_data == expected_config
 
@@ -113,7 +113,7 @@ class TestPreCommitCases:
         with tmpdir.as_cwd():
             commands.Init(config)()
 
-            with open(default_choice, "r") as file:
+            with open(default_choice, "r", encoding="utf-8") as file:
                 if "json" in default_choice:
                     assert json.load(file) == EXPECTED_DICT_CONFIG
                 elif "yaml" in default_choice:
@@ -124,7 +124,9 @@ class TestPreCommitCases:
                     config_data = file.read()
                     assert config_data == expected_config
 
-            with open(pre_commit_config_filename, "r") as pre_commit_file:
+            with open(
+                pre_commit_config_filename, "r", encoding="utf-8"
+            ) as pre_commit_file:
                 pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
             assert pre_commit_config_data == {"repos": [cz_hook_config]}
 
@@ -135,7 +137,7 @@ class TestPreCommitCases:
 
             commands.Init(config)()
 
-            with open(default_choice, "r") as file:
+            with open(default_choice, "r", encoding="utf-8") as file:
                 if "json" in default_choice:
                     assert json.load(file) == EXPECTED_DICT_CONFIG
                 elif "yaml" in default_choice:
@@ -146,7 +148,9 @@ class TestPreCommitCases:
                     config_data = file.read()
                     assert config_data == expected_config
 
-            with open(pre_commit_config_filename, "r") as pre_commit_file:
+            with open(
+                pre_commit_config_filename, "r", encoding="utf-8"
+            ) as pre_commit_file:
                 pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
             assert pre_commit_config_data == {"repos": [cz_hook_config]}
 
@@ -163,7 +167,7 @@ class TestPreCommitCases:
 
             commands.Init(config)()
 
-            with open(default_choice, "r") as file:
+            with open(default_choice, "r", encoding="utf-8") as file:
                 if "json" in default_choice:
                     assert json.load(file) == EXPECTED_DICT_CONFIG
                 elif "yaml" in default_choice:
@@ -174,7 +178,9 @@ class TestPreCommitCases:
                     config_data = file.read()
                     assert config_data == expected_config
 
-            with open(pre_commit_config_filename, "r") as pre_commit_file:
+            with open(
+                pre_commit_config_filename, "r", encoding="utf-8"
+            ) as pre_commit_file:
                 pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
             assert pre_commit_config_data == {
                 "repos": [existing_hook_config, cz_hook_config]
@@ -187,7 +193,7 @@ class TestPreCommitCases:
 
             commands.Init(config)()
 
-            with open(default_choice, "r") as file:
+            with open(default_choice, "r", encoding="utf-8") as file:
                 if "json" in default_choice:
                     assert json.load(file) == EXPECTED_DICT_CONFIG
                 elif "yaml" in default_choice:
@@ -198,7 +204,9 @@ class TestPreCommitCases:
                     config_data = file.read()
                     assert config_data == expected_config
 
-            with open(pre_commit_config_filename, "r") as pre_commit_file:
+            with open(
+                pre_commit_config_filename, "r", encoding="utf-8"
+            ) as pre_commit_file:
                 pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
 
             # check that config is not duplicated

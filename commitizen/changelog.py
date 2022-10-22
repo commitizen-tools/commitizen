@@ -164,7 +164,7 @@ def parse_title_type_of_line(value: str) -> Optional[str]:
     return m.groupdict().get("title")
 
 
-def get_metadata(filepath: str) -> Dict:
+def get_metadata(filepath: str, encoding: str) -> Dict:
     unreleased_start: Optional[int] = None
     unreleased_end: Optional[int] = None
     unreleased_title: Optional[str] = None
@@ -178,7 +178,7 @@ def get_metadata(filepath: str) -> Dict:
             "latest_version_position": None,
         }
 
-    with open(filepath, "r") as changelog_file:
+    with open(filepath, "r", encoding=encoding) as changelog_file:
         for index, line in enumerate(changelog_file):
             line = line.strip().lower()
 

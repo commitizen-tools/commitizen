@@ -34,7 +34,7 @@ CATEGORIES = [
 ]
 
 
-def find_version_blocks(filepath: str) -> Generator:
+def find_version_blocks(filepath: str, encoding: str) -> Generator:
     """Find version block (version block: contains all the information about a version.)
 
     E.g:
@@ -51,7 +51,7 @@ def find_version_blocks(filepath: str) -> Generator:
 
     ```
     """
-    with open(filepath, "r") as f:
+    with open(filepath, "r", encoding=encoding) as f:
         block: list = []
         for line in f:
             line = line.strip("\n")
