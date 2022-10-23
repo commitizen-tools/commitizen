@@ -1,4 +1,5 @@
 import json
+import sys
 from pathlib import Path
 from typing import Union
 
@@ -45,6 +46,7 @@ class JsonConfig(BaseConfig):
         ```
         """
         doc = json.loads(data)
+
         try:
             self.settings.update(doc["commitizen"])
         except KeyError:
