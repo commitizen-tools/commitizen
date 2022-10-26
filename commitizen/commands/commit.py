@@ -99,6 +99,9 @@ class Commit:
 
         if signoff:
             c = git.commit(m, "-s")
+
+        if self.arguments.get("extra_cli_args"):
+            c = git.commit(m, extra_args=self.arguments.get("extra_cli_args"))
         else:
             c = git.commit(m)
 
