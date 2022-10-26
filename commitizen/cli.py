@@ -15,6 +15,7 @@ from commitizen.exceptions import (
     CommitizenException,
     ExitCode,
     ExpectedExit,
+    InvalidCommandArgumentError,
     NoCommandFoundError,
 )
 
@@ -441,7 +442,7 @@ def main():
 
     # This is for the command required constraint in 2.0
     try:
-        args = parser.parse_args()
+        args, unknown_args = parser.parse_known_args()
     except (TypeError, SystemExit) as e:
         # https://github.com/commitizen-tools/commitizen/issues/429
         # argparse raises TypeError when non exist command is provided on Python < 3.9
@@ -449,6 +450,24 @@ def main():
         if isinstance(e, TypeError) or (isinstance(e, SystemExit) and e.code == 2):
             raise NoCommandFoundError()
         raise e
+
+    arguments = vars(args)
+    if unknown_args:
+        # Raise error for extra-args without -- separation
+        if "--" not in unknown_args:
+            raise InvalidCommandArgumentError(
+                f"Invalid commitizen arguments were found: `{' '.join(unknown_args)}`. "
+                "Please use -- separator for extra git args"
+            )
+        # Raise error for extra-args before --
+        elif unknown_args[0] != "--":
+            pos = unknown_args.index("--")
+            raise InvalidCommandArgumentError(
+                f"Invalid commitizen arguments were found before -- separator: `{' '.join(unknown_args[:pos])}`. "
+            )
+        # TODO: treat case when extra-args and commitizen args are identical
+        extra_args = " ".join(unknown_args[1:])
+        arguments["extra_cli_args"] = extra_args
 
     if args.name:
         conf.update({"name": args.name})
@@ -465,7 +484,7 @@ def main():
         )
         sys.excepthook = no_raise_debug_excepthook
 
-    args.func(conf, vars(args))()
+    args.func(conf, arguments)()
 
 
 if __name__ == "__main__":
