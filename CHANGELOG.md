@@ -1,4 +1,10 @@
 
+## v2.37.0 (2022-10-28)
+
+### Feat
+
+- add major-version-zero option to support initial package development
+
 ## v2.36.0 (2022-10-28)
 
 ### Feat
