@@ -357,6 +357,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#-major-version-zero" class="md-nav__link">
+    --major-version-zero
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -435,6 +442,20 @@
           <li class="md-nav__item">
   <a href="#annotated_tag" class="md-nav__link">
     annotated_tag
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpg_sign" class="md-nav__link">
+    gpg_sign
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#major_version_zero" class="md-nav__link">
+    major_version_zero
   </a>
   
 </li>
@@ -777,6 +798,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#-major-version-zero" class="md-nav__link">
+    --major-version-zero
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -855,6 +883,20 @@
           <li class="md-nav__item">
   <a href="#annotated_tag" class="md-nav__link">
     annotated_tag
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gpg_sign" class="md-nav__link">
+    gpg_sign
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#major_version_zero" class="md-nav__link">
+    major_version_zero
   </a>
   
 </li>
@@ -953,7 +995,8 @@ usage: cz bump <span class="o">[</span>-h<span class="o">]</span> <span class="o
                <span class="o">[</span>--bump-message BUMP_MESSAGE<span class="o">]</span> <span class="o">[</span>--prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}]</span>
                <span class="o">[</span>--devrelease DEVRELEASE<span class="o">]</span> <span class="o">[</span>--increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span>
                <span class="o">[</span>--check-consistency<span class="o">]</span> <span class="o">[</span>--annotated-tag<span class="o">]</span> <span class="o">[</span>--gpg-sign<span class="o">]</span>
-               <span class="o">[</span>--changelog-to-stdout<span class="o">]</span> <span class="o">[</span>--retry<span class="o">]</span> <span class="o">[</span>MANUAL_VERSION<span class="o">]</span>
+               <span class="o">[</span>--changelog-to-stdout<span class="o">]</span> <span class="o">[</span>--retry<span class="o">]</span> <span class="o">[</span>--major-version-zero<span class="o">]</span>
+               <span class="o">[</span>MANUAL_VERSION<span class="o">]</span>
 
 positional arguments:
   MANUAL_VERSION        bump to the given version <span class="o">(</span>e.g: <span class="m">1</span>.5.3<span class="o">)</span>
@@ -987,6 +1030,7 @@ options:
   --changelog-to-stdout
                         Output changelog to the stdout
   --retry               retry commit <span class="k">if</span> it fails the 1st <span class="nb">time</span>
+  --major-version-zero  keep major version at zero, even <span class="k">for</span> breaking changes
 </code></pre></div>
 
 <h3 id="-files-only"><code>--files-only</code></h3>
@@ -1059,6 +1103,14 @@ It can be sent to an auditing system, or to create a Github Release.</p>
 <p>If you use tools like <a href="https://pre-commit.com/">pre-commit</a>, add this flag.
 It will retry the commit if it fails the 1st time.</p>
 <p>Useful to combine with code formatters, like <a href="https://prettier.io/">Prettier</a>.</p>
+<h3 id="-major-version-zero"><code>--major-version-zero</code></h3>
+<p>A project in its initial development should have a major version zero, and even breaking changes
+should not bump that major version from zero. This command ensures that behavior.</p>
+<p>If <code>--major-version-zero</code> is used for projects that have a version number greater than zero it fails.
+If used together with a manual version the command also fails.</p>
+<p>We recommend setting <code>major_version_zero = true</code> in your configuration file while a project
+is in its initial development. Remove that configuration using a breaking-change commit to bump
+your project’s major version to <code>v1.0.0</code> once your project has reached maturity.</p>
 <h2 id="avoid-raising-errors">Avoid raising errors</h2>
 <p>Some situations from commitizen rise an exit code different than 0.
 If the error code is different than 0, any CI or script running commitizen might be interrupted.</p>
@@ -1221,17 +1273,23 @@ in a line containing the <code>version</code> substring.</p>
 <h3 id="annotated_tag"><code>annotated_tag</code></h3>
 <p>When set to <code>true</code> commitizen will create annotated tags.</p>
 <div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
-
-<span class="err">---</span><span class="w"></span>
-
-<span class="c1">### `gpg_sign`</span><span class="w"></span>
-
-<span class="n">When</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="err">`</span><span class="n">true</span><span class="err">`</span><span class="w"> </span><span class="n">commitizen</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">create</span><span class="w"> </span><span class="n">gpg</span><span class="w"> </span><span class="n">signed</span><span class="w"> </span><span class="n">tags</span><span class="p">.</span><span class="w"></span>
-
-<span class="err">```</span><span class="n">toml</span><span class="w"></span>
-<span class="k">[tool.commitizen]</span><span class="w"></span>
-<span class="n">gpg_sign</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
 <span class="n">annotated_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+</code></pre></div>
+
+<hr />
+<h3 id="gpg_sign"><code>gpg_sign</code></h3>
+<p>When set to <code>true</code> commitizen will create gpg signed tags.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
+<span class="n">gpg_sign</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+</code></pre></div>
+
+<hr />
+<h3 id="major_version_zero"><code>major_version_zero</code></h3>
+<p>When set to <code>true</code> commitizen will keep the major version at zero.
+Useful during the initial development stage of your project.</p>
+<p>Defaults to: <code>false</code></p>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
+<span class="n">major_version_zero</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
 </code></pre></div>
 
 <h2 id="custom-bump">Custom bump</h2>
