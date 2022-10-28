@@ -1,4 +1,22 @@
 
+## v2.36.0 (2022-10-28)
+
+### Feat
+
+- **scripts**: remove `venv/bin/`
+- **scripts**: add error message to `test`
+
+### Fix
+
+- **scripts/test**: MinGW64 workaround
+- **scripts/test**: use double-quotes
+- **scripts**: pydocstyle and cz
+- **bump.py**: use `sys.stdin.isatty()`
+- **scripts**: use cross-platform POSIX
+- **scripts**: use portable shebang
+- **pythonpackage.yml**: undo indent reformatting
+- **pythonpackage.yml**: use `bash`
+
 ## v2.35.0 (2022-09-23)
 
 ### Feat
