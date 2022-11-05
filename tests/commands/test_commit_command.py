@@ -70,7 +70,7 @@ def test_commit_allow_empty(config, mocker):
 
     commands.Commit(config, {"allow_empty": True})()
 
-    commit_mock.assert_called_with('feat: user created\n\ncloses #21', "--allow-empty")
+    commit_mock.assert_called_with("feat: user created\n\ncloses #21", "--allow-empty")
     success_mock.assert_called_once()
 
 
