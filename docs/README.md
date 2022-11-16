@@ -59,7 +59,7 @@ pip install -U commitizen
 ```
 
 ```bash
-poetry add commitizen --dev
+poetry add commitizen --group dev
 ```
 
 ### macOS
