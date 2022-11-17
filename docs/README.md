@@ -58,8 +58,16 @@ You can add it to your local project using one of these:
 pip install -U commitizen
 ```
 
+for Poetry >= 1.2.0:
+
 ```bash
 poetry add commitizen --group dev
+```
+
+for Poetry < 1.2.0:
+
+```bash
+poetry add commitizen --dev
 ```
 
 ### macOS
