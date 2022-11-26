@@ -465,7 +465,6 @@ def main():
             raise InvalidCommandArgumentError(
                 f"Invalid commitizen arguments were found before -- separator: `{' '.join(unknown_args[:pos])}`. "
             )
-        # TODO: treat case when extra-args and commitizen args are identical
         extra_args = " ".join(unknown_args[1:])
         arguments["extra_cli_args"] = extra_args
 
