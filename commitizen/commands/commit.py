@@ -98,6 +98,7 @@ class Commit:
         )
 
         if signoff:
+            out.warn("signoff mechanic is deprecated, please use `cz commit -- -s` instead.")
             c = git.commit(m, "-s")
 
         if self.arguments.get("extra_cli_args"):
