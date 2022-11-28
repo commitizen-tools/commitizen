@@ -348,11 +348,12 @@ def test_bump_when_version_inconsistent_in_version_files(
 def test_bump_major_version_zero_when_major_is_not_zero(mocker, tmp_commitizen_project):
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_version_file.write("1.0.0")
+    tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
     tmp_commitizen_cfg_file.write(
         f"[tool.commitizen]\n"
         'version="1.0.0"\n'
-        f'version_files = ["{str(tmp_version_file)}"]'
+        f'version_files = ["{str(tmp_version_file_string)}"]'
     )
     tmp_changelog_file = tmp_commitizen_project.join("CHANGELOG.md")
     tmp_changelog_file.write("## v1.0.0")
