@@ -137,7 +137,7 @@ class Changelog:
                 )
                 start_rev = self._find_incremental_rev(latest_tag_version, tags)
 
-        if self.rev_range and self.tag_format:
+        if self.rev_range:
             start_rev, end_rev = changelog.get_oldest_and_newest_rev(
                 tags,
                 version=self.rev_range,
