@@ -1,4 +1,10 @@
 
+## v2.37.1 (2022-11-30)
+
+### Fix
+
+- **changelog**: allow rev range lookups without a tag format
+
 ## v2.37.0 (2022-10-28)
 
 ### Feat
