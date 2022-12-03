@@ -72,6 +72,7 @@ class ProjectInfo:
 class Init:
     def __init__(self, config: BaseConfig, *args):
         self.config: BaseConfig = config
+        self.encoding = config.settings["encoding"]
         self.cz = factory.commiter_factory(self.config)
         self.project_info = ProjectInfo()
 
@@ -324,7 +325,9 @@ class Init:
             # .pre-commit-config.yaml does not exist
             config_data["repos"] = [cz_hook_config]
         else:
-            with open(pre_commit_config_filename) as config_file:
+            with open(
+                pre_commit_config_filename, encoding=self.encoding
+            ) as config_file:
                 yaml_data = yaml.safe_load(config_file)
                 if yaml_data:
                     config_data = yaml_data
@@ -340,7 +343,9 @@ class Init:
                 # .pre-commit-config.yaml exists but there's no "repos" key
                 config_data["repos"] = [cz_hook_config]
 
-        with smart_open(pre_commit_config_filename, "w") as config_file:
+        with smart_open(
+            pre_commit_config_filename, "w", encoding=self.encoding
+        ) as config_file:
             yaml.safe_dump(config_data, stream=config_file)
 
         if not self.project_info.is_pre_commit_installed:

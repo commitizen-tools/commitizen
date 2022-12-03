@@ -11,6 +11,7 @@ from .base_config import BaseConfig
 class TomlConfig(BaseConfig):
     def __init__(self, *, data: bytes | str, path: Path | str):
         super(TomlConfig, self).__init__()
+        self.encoding = self.settings["encoding"]
         self.is_empty_config = False
         self._parse_setting(data)
         self.add_path(path)
@@ -26,7 +27,7 @@ class TomlConfig(BaseConfig):
             if parser.get("tool") is None:
                 parser["tool"] = table()
             parser["tool"]["commitizen"] = table()
-            output_toml_file.write(parser.as_string().encode("utf-8"))
+            output_toml_file.write(parser.as_string().encode(self.encoding))
 
     def set_key(self, key, value):
         """Set or update a key in the conf.
@@ -39,7 +40,7 @@ class TomlConfig(BaseConfig):
 
         parser["tool"]["commitizen"][key] = value
         with open(self.path, "wb") as f:
-            f.write(parser.as_string().encode("utf-8"))
+            f.write(parser.as_string().encode(self.encoding))
         return self
 
     def _parse_setting(self, data: bytes | str) -> None:

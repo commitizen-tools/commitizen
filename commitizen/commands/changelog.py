@@ -27,6 +27,7 @@ class Changelog:
             raise NotAGitProjectError()
 
         self.config: BaseConfig = config
+        self.encoding = self.config.settings["encoding"]
         self.cz = factory.commiter_factory(self.config)
 
         self.start_rev = args.get("start_rev") or self.config.settings.get(
@@ -100,9 +101,9 @@ class Changelog:
                 f"or the setting `changelog_file` in {self.config.path}"
             )
 
-        changelog_hook: Callable | None = self.cz.changelog_hook
-        with smart_open(self.file_name, "w") as changelog_file:
-            partial_changelog: str | None = None
+        changelog_hook: Optional[Callable] = self.cz.changelog_hook
+        with smart_open(self.file_name, "w", encoding=self.encoding) as changelog_file:
+            partial_changelog: Optional[str] = None
             if self.incremental:
                 new_lines = changelog.incremental_build(
                     changelog_out, lines, changelog_meta
@@ -141,7 +142,9 @@ class Changelog:
 
         end_rev = ""
         if self.incremental:
-            changelog_meta = changelog.get_metadata(self.file_name, self.scheme)
+            changelog_meta = changelog.get_metadata(
+                self.file_name, self.scheme, self.encoding
+            )
             latest_version = changelog_meta.get("latest_version")
             if latest_version:
                 latest_tag_version: str = bump.normalize_tag(
@@ -187,7 +190,7 @@ class Changelog:
 
         lines = []
         if self.incremental and os.path.isfile(self.file_name):
-            with open(self.file_name, "r") as changelog_file:
+            with open(self.file_name, "r", encoding=self.encoding) as changelog_file:
                 lines = changelog_file.readlines()
 
         self.write_changelog(changelog_out, lines, changelog_meta)
