@@ -39,9 +39,6 @@ class Settings(TypedDict, total=False):
     use_shortcuts: bool
     style: Optional[List[Tuple[str, str]]]
     customize: CzSettings
-    encoding: str
-    major_version_zero: bool
-    encoding: str
     major_version_zero: bool
     encoding: str
 
@@ -71,9 +68,6 @@ DEFAULT_SETTINGS: Settings = {
     "use_shortcuts": False,
     "encoding": "utf-8",
     "major_version_zero": False,
-    "encoding": "utf-8",
-    "major_version_zero": False,
-    "encoding": "utf-8",
 }
 
 MAJOR = "MAJOR"
