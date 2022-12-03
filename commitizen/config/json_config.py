@@ -12,12 +12,13 @@ from .base_config import BaseConfig
 class JsonConfig(BaseConfig):
     def __init__(self, *, data: bytes | str, path: Path | str):
         super(JsonConfig, self).__init__()
+        self.encoding = self.settings["encoding"]
         self.is_empty_config = False
         self.add_path(path)
         self._parse_setting(data)
 
     def init_empty_config_content(self):
-        with smart_open(self.path, "a") as json_file:
+        with smart_open(self.path, "a", encoding=self.encoding) as json_file:
             json.dump({"commitizen": {}}, json_file)
 
     def set_key(self, key, value):
@@ -30,7 +31,7 @@ class JsonConfig(BaseConfig):
             parser = json.load(f)
 
         parser["commitizen"][key] = value
-        with smart_open(self.path, "w") as f:
+        with smart_open(self.path, "w", encoding=self.encoding) as f:
             json.dump(parser, f, indent=2)
         return self
 

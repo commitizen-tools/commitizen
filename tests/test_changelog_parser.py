@@ -28,7 +28,7 @@ CHANGELOG_TEMPLATE = """
 @pytest.fixture
 def changelog_content() -> str:
     changelog_path = "tests/CHANGELOG_FOR_TEST.md"
-    with open(changelog_path, "r") as f:
+    with open(changelog_path, "r", encoding="utf-8") as f:
         return f.read()
 
 
@@ -38,7 +38,7 @@ def existing_changelog_file(tmpdir):
         changelog_path = os.path.join(os.getcwd(), "CHANGELOG.md")
         # changelog_path = "tests/CHANGELOG.md"
 
-        with open(changelog_path, "w") as f:
+        with open(changelog_path, "w", encoding="utf-8") as f:
             f.write(CHANGELOG_TEMPLATE)
 
         yield changelog_path
@@ -47,7 +47,7 @@ def existing_changelog_file(tmpdir):
 
 
 def test_read_changelog_blocks(existing_changelog_file):
-    blocks = changelog_parser.find_version_blocks(existing_changelog_file)
+    blocks = changelog_parser.find_version_blocks(existing_changelog_file, "utf-8")
     blocks = list(blocks)
     amount_of_blocks = len(blocks)
     assert amount_of_blocks == 2
@@ -127,7 +127,7 @@ def test_transform_change_type_fail():
 
 
 def test_generate_block_tree(existing_changelog_file):
-    blocks = changelog_parser.find_version_blocks(existing_changelog_file)
+    blocks = changelog_parser.find_version_blocks(existing_changelog_file, "utf-8")
     block = next(blocks)
     tree = changelog_parser.generate_block_tree(block)
     assert tree == {
@@ -157,7 +157,7 @@ def test_generate_block_tree(existing_changelog_file):
 
 
 def test_generate_full_tree(existing_changelog_file):
-    blocks = changelog_parser.find_version_blocks(existing_changelog_file)
+    blocks = changelog_parser.find_version_blocks(existing_changelog_file, "utf-8")
     tree = list(changelog_parser.generate_full_tree(blocks))
 
     assert tree == [

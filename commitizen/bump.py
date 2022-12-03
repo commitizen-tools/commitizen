@@ -8,7 +8,7 @@ from string import Template
 from commitizen.defaults import MAJOR, MINOR, PATCH, bump_message
 from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import GitCommit, smart_open
-from commitizen.version_schemes import DEFAULT_SCHEME, VersionScheme, Version
+from commitizen.version_schemes import DEFAULT_SCHEME, Version, VersionScheme
 
 
 def find_increment(
@@ -45,7 +45,12 @@ def find_increment(
 
 
 def update_version_in_files(
-    current_version: str, new_version: str, files: list[str], *, check_consistency=False
+    current_version: str,
+    new_version: str,
+    files: List[str],
+    encoding: str,
+    *,
+    check_consistency=False,
 ) -> None:
     """Change old version to the new one in every file given.
 
@@ -62,7 +67,11 @@ def update_version_in_files(
             regex = _version_to_regex(current_version)
 
         current_version_found, version_file = _bump_with_regex(
-            filepath, current_version, new_version, regex
+            filepath,
+            current_version,
+            new_version,
+            regex,
+            encoding,
         )
 
         if check_consistency and not current_version_found:
@@ -73,17 +82,21 @@ def update_version_in_files(
             )
 
         # Write the file out again
-        with smart_open(filepath, "w") as file:
+        with smart_open(filepath, "w", encoding=encoding) as file:
             file.write(version_file)
 
 
 def _bump_with_regex(
-    version_filepath: str, current_version: str, new_version: str, regex: str
-) -> tuple[bool, str]:
+    version_filepath: str,
+    current_version: str,
+    new_version: str,
+    regex: str,
+    encoding: str,
+) -> Tuple[bool, str]:
     current_version_found = False
     lines = []
     pattern = re.compile(regex)
-    with open(version_filepath, "r") as f:
+    with open(version_filepath, "r", encoding=encoding) as f:
         for line in f:
             if pattern.search(line):
                 bumped_line = line.replace(current_version, new_version)

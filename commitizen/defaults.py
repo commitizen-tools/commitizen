@@ -55,6 +55,7 @@ class Settings(TypedDict, total=False):
     pre_bump_hooks: list[str] | None
     post_bump_hooks: list[str] | None
     prerelease_offset: int
+    encoding: str
 
 
 name: str = "cz_conventional_commits"
@@ -66,6 +67,7 @@ config_files: list[str] = [
     ".cz.yaml",
     "cz.yaml",
 ]
+encoding: str = "utf-8"
 
 DEFAULT_SETTINGS: Settings = {
     "name": "cz_conventional_commits",
@@ -93,6 +95,7 @@ DEFAULT_SETTINGS: Settings = {
     "pre_bump_hooks": [],
     "post_bump_hooks": [],
     "prerelease_offset": 0,
+    "encoding": "utf-8",
 }
 
 MAJOR = "MAJOR"

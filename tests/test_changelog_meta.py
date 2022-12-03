@@ -44,7 +44,7 @@ CHANGELOG_D = """
 def changelog_a_file():
     changelog_path = "tests/CHANGELOG.md"
 
-    with open(changelog_path, "w") as f:
+    with open(changelog_path, "w", encoding="utf-8") as f:
         f.write(CHANGELOG_A)
 
     yield changelog_path
@@ -56,7 +56,7 @@ def changelog_a_file():
 def changelog_b_file():
     changelog_path = "tests/CHANGELOG.md"
 
-    with open(changelog_path, "w") as f:
+    with open(changelog_path, "w", encoding="utf-8") as f:
         f.write(CHANGELOG_B)
 
     yield changelog_path
@@ -68,7 +68,7 @@ def changelog_b_file():
 def changelog_c_file():
     changelog_path = "tests/CHANGELOG.md"
 
-    with open(changelog_path, "w") as f:
+    with open(changelog_path, "w", encoding="utf-8") as f:
         f.write(CHANGELOG_C)
 
     yield changelog_path
@@ -80,7 +80,7 @@ def changelog_c_file():
 def changelog_d_file():
     changelog_path = "tests/CHANGELOG.md"
 
-    with open(changelog_path, "w") as f:
+    with open(changelog_path, "w", encoding="utf-8") as f:
         f.write(CHANGELOG_D)
 
     yield changelog_path
@@ -126,7 +126,7 @@ def test_parse_title_type_of_line(line_from_changelog, output_title):
 
 
 def test_get_metadata_from_a(changelog_a_file):
-    meta = changelog.get_metadata(changelog_a_file)
+    meta = changelog.get_metadata(changelog_a_file, encoding="utf-8")
     assert meta == {
         "latest_version": "1.0.0",
         "latest_version_position": 10,
@@ -136,7 +136,7 @@ def test_get_metadata_from_a(changelog_a_file):
 
 
 def test_get_metadata_from_b(changelog_b_file):
-    meta = changelog.get_metadata(changelog_b_file)
+    meta = changelog.get_metadata(changelog_b_file, encoding="utf-8")
     assert meta == {
         "latest_version": "1.2.0",
         "latest_version_position": 3,
@@ -146,7 +146,7 @@ def test_get_metadata_from_b(changelog_b_file):
 
 
 def test_get_metadata_from_c(changelog_c_file):
-    meta = changelog.get_metadata(changelog_c_file)
+    meta = changelog.get_metadata(changelog_c_file, encoding="utf-8")
     assert meta == {
         "latest_version": "1.0.0",
         "latest_version_position": 3,
@@ -156,7 +156,7 @@ def test_get_metadata_from_c(changelog_c_file):
 
 
 def test_get_metadata_from_d(changelog_d_file):
-    meta = changelog.get_metadata(changelog_d_file)
+    meta = changelog.get_metadata(changelog_d_file, encoding="utf-8")
     assert meta == {
         "latest_version": None,
         "latest_version_position": None,

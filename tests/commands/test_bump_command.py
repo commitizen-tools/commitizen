@@ -227,7 +227,7 @@ def test_bump_command_prelease(mocker: MockFixture):
 def test_bump_on_git_with_hooks_no_verify_disabled(mocker: MockFixture):
     """Bump commit without --no-verify"""
     cmd.run("mkdir .git/hooks")
-    with open(".git/hooks/pre-commit", "w") as f:
+    with open(".git/hooks/pre-commit", "w", encoding="utf-8") as f:
         f.write("#!/usr/bin/env bash\n" 'echo "0.1.0"')
     cmd.run("chmod +x .git/hooks/pre-commit")
 
@@ -246,7 +246,7 @@ def test_bump_on_git_with_hooks_no_verify_disabled(mocker: MockFixture):
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_tag_exists_raises_exception(mocker: MockFixture):
     cmd.run("mkdir .git/hooks")
-    with open(".git/hooks/post-commit", "w") as f:
+    with open(".git/hooks/post-commit", "w", encoding="utf-8") as f:
         f.write("#!/usr/bin/env bash\n" "exit 9")
     cmd.run("chmod +x .git/hooks/post-commit")
 
@@ -265,7 +265,7 @@ def test_bump_tag_exists_raises_exception(mocker: MockFixture):
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_on_git_with_hooks_no_verify_enabled(mocker: MockFixture):
     cmd.run("mkdir .git/hooks")
-    with open(".git/hooks/pre-commit", "w") as f:
+    with open(".git/hooks/pre-commit", "w", encoding="utf-8") as f:
         f.write("#!/usr/bin/env bash\n" 'echo "0.1.0"')
     cmd.run("chmod +x .git/hooks/pre-commit")
 
@@ -406,10 +406,10 @@ def test_bump_files_only(mocker: MockFixture, tmp_commitizen_project):
     tag_exists = git.tag_exist("0.3.0")
     assert tag_exists is False
 
-    with open(tmp_version_file, "r") as f:
+    with open(tmp_version_file, "r", encoding="utf-8") as f:
         assert "0.3.0" in f.read()
 
-    with open(tmp_commitizen_cfg_file, "r") as f:
+    with open(tmp_commitizen_cfg_file, "r", encoding="utf-8") as f:
         assert "0.3.0" in f.read()
 
 
@@ -431,7 +431,7 @@ def test_bump_local_version(mocker: MockFixture, tmp_commitizen_project):
     tag_exists = git.tag_exist("4.5.1+0.2.0")
     assert tag_exists is True
 
-    with open(tmp_version_file, "r") as f:
+    with open(tmp_version_file, "r", encoding="utf-8") as f:
         assert "4.5.1+0.2.0" in f.read()
 
 
@@ -511,7 +511,7 @@ def test_bump_with_changelog_arg(mocker: MockFixture, changelog_path):
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
-    with open(changelog_path, "r") as f:
+    with open(changelog_path, "r", encoding="utf-8") as f:
         out = f.read()
     assert out.startswith("#")
     assert "0.2.0" in out
@@ -520,7 +520,7 @@ def test_bump_with_changelog_arg(mocker: MockFixture, changelog_path):
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_with_changelog_config(mocker: MockFixture, changelog_path, config_path):
     create_file_and_commit("feat(user): new file")
-    with open(config_path, "a") as fp:
+    with open(config_path, "a", encoding="utf-8") as fp:
         fp.write("update_changelog_on_bump = true\n")
 
     testargs = ["cz", "bump", "--yes"]
@@ -529,7 +529,7 @@ def test_bump_with_changelog_config(mocker: MockFixture, changelog_path, config_
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
-    with open(changelog_path, "r") as f:
+    with open(changelog_path, "r", encoding="utf-8") as f:
         out = f.read()
     assert out.startswith("#")
     assert "0.2.0" in out
@@ -572,7 +572,7 @@ def test_bump_with_changelog_to_stdout_arg(mocker: MockFixture, capsys, changelo
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
-    with open(changelog_path, "r") as f:
+    with open(changelog_path, "r", encoding="utf-8") as f:
         out = f.read()
     assert out.startswith("#")
     assert "0.2.0" in out
@@ -694,11 +694,14 @@ def test_bump_changelog_command_commits_untracked_changelog_and_version_files(
     """
 
     with tmp_commitizen_project.join("pyproject.toml").open(
-        mode="a"
+        mode="a",
+        encoding="utf-8",
     ) as commitizen_config:
         commitizen_config.write(f"version_files = [\n" f"'{version_regex}'\n]")
 
-    with tmp_commitizen_project.join(version_filepath).open(mode="a+") as version_file:
+    with tmp_commitizen_project.join(version_filepath).open(
+        mode="a+", encoding="utf-8"
+    ) as version_file:
         version_file.write(version_file_content)
 
     create_file_and_commit("fix: some test commit")

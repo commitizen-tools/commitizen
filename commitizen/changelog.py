@@ -227,7 +227,7 @@ def get_metadata(filepath: str, scheme: VersionScheme = Pep440) -> dict:
             "latest_version_position": None,
         }
 
-    with open(filepath, "r") as changelog_file:
+    with open(filepath, "r", encoding=encoding) as changelog_file:
         for index, line in enumerate(changelog_file):
             line = line.strip().lower()
 
