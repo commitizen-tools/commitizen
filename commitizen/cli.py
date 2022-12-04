@@ -244,6 +244,11 @@ data = {
                         "action": "store_true",
                     },
                     {
+                        "name": ["--annotated-tag-message", "-atm"],
+                        "help": "create annotated tag message",
+                        "type": str,
+                    },
+                    {
                         "name": ["--gpg-sign", "-s"],
                         "help": "sign tag instead of lightweight one",
                         "default": False,
