@@ -55,8 +55,8 @@ def get_current_branch() -> str:
     return c.out
 
 
-def create_tag(tag: str):
-    c = git.tag(tag)
+def create_tag(tag: str, message: str | None = None):
+    c = git.tag(tag, annotated=(message is not None), msg=message)
     if c.return_code != 0:
         raise exceptions.CommitError(c.err)
 
