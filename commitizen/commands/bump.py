@@ -50,6 +50,7 @@ class Bump:
                     "bump_message",
                     "gpg_sign",
                     "annotated_tag",
+                    "annotated_tag_message",
                     "major_version_zero",
                     "prerelease_offset",
                     "template",
@@ -366,6 +367,8 @@ class Bump:
             or bool(self.config.settings.get("gpg_sign", False)),
             annotated=self.bump_settings.get("annotated_tag", False)
             or bool(self.config.settings.get("annotated_tag", False)),
+            msg=self.bump_settings.get("annotated_tag_message", None),
+            # TODO: also get from self.config.settings?
         )
         if c.return_code != 0:
             raise BumpTagFailedError(c.err)
