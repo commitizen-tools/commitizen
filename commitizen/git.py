@@ -82,14 +82,16 @@ class GitTag(GitObject):
         return cls(name=name, rev=obj, date=date)
 
 
-def tag(tag: str, annotated: bool = False, signed: bool = False, msg: Optional[str] = None) -> cmd.Command:
+def tag(
+    tag: str, annotated: bool = False, signed: bool = False, msg: Optional[str] = None
+) -> cmd.Command:
     _opt = ""
     if annotated:
         _opt = f"-a {tag} -m"
     if signed:
         _opt = f"-s {tag} -m"
 
-    c = cmd.run(f"git tag {_opt} {tag if _opt == '' or msg is None else msg}")
+    c = cmd.run(f'git tag {_opt} "{tag if _opt == "" or msg is None else msg}"')
     return c
 
 
