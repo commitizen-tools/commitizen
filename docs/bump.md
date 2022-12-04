@@ -52,13 +52,10 @@ Some examples of pep440:
 
 ```bash
 $ cz bump --help
-usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
-               [--no-verify] [--yes] [--tag-format TAG_FORMAT]
-               [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}]
-               [--devrelease DEVRELEASE] [--increment {MAJOR,MINOR,PATCH}]
-               [--check-consistency] [--annotated-tag] [--gpg-sign]
-               [--changelog-to-stdout] [--git-output-to-stderr] [--retry] [--major-version-zero]
-               [--template TEMPLATE] [--extra EXTRA]
+usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog] [--no-verify] [--yes] [--tag-format TAG_FORMAT]
+               [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}] [--devrelease DEVRELEASE] [--increment {MAJOR,MINOR,PATCH}]
+               [--check-consistency] [--annotated-tag] [--gpg-sign] [--changelog-to-stdout] [--git-output-to-stderr] [--retry] [--major-version-zero]
+               [--prerelease-offset PRERELEASE_OFFSET] [--version-scheme {semver,pep440}] [--version-type {semver,pep440}]
                [MANUAL_VERSION]
 
 positional arguments:
@@ -70,15 +67,12 @@ options:
   --files-only          bump version in the files from the config
   --local-version       bump only the local version portion
   --changelog, -ch      generate the changelog for the newest version
-  --no-verify           this option bypasses the pre-commit and commit-msg
-                        hooks
+  --no-verify           this option bypasses the pre-commit and commit-msg hooks
   --yes                 accept automatically questions done
   --tag-format TAG_FORMAT
-                        the format used to tag the commit and read it, use it
-                        in existing projects, wrap around simple quotes
+                        the format used to tag the commit and read it, use it in existing projects, wrap around simple quotes
   --bump-message BUMP_MESSAGE
-                        template used to create the release commit, useful
-                        when working with CI
+                        template used to create the release commit, useful when working with CI
   --prerelease {alpha,beta,rc}, -pr {alpha,beta,rc}
                         choose type of prerelease
   --devrelease DEVRELEASE, -d DEVRELEASE
@@ -86,8 +80,7 @@ options:
   --increment {MAJOR,MINOR,PATCH}
                         manually specify the desired increment
   --check-consistency, -cc
-                        check consistency among versions defined in commitizen
-                        configuration and version_files
+                        check consistency among versions defined in commitizen configuration and version_files
   --annotated-tag, -at  create annotated tag instead of lightweight one
   --gpg-sign, -s        sign tag instead of lightweight one
   --changelog-to-stdout
@@ -96,14 +89,12 @@ options:
                         Redirect git output to stderr
   --retry               retry commit if it fails the 1st time
   --major-version-zero  keep major version at zero, even for breaking changes
-  --prerelease-offset   start pre-releases with this offset
-  --version-scheme {pep440,semver}
+  --prerelease-offset PRERELEASE_OFFSET
+                        start pre-releases with this offset
+  --version-scheme {semver,pep440}
                         choose version scheme
-
-  --template TEMPLATE, -t TEMPLATE
-                        changelog template file name (relative to the current working directory)
-  --extra EXTRA, -e EXTRA
-                        a changelog extra variable (in the form 'key=value')
+  --version-type {semver,pep440}
+                        Deprecated, use --version-scheme
 ```
 
 ### `--files-only`
@@ -183,6 +174,9 @@ If `--local-version` is used, it will bump only the local version `0.1.0` and ke
 ### `--annotated-tag`
 
 If `--annotated-tag` is used, commitizen will create annotated tags. Also available via configuration, in `pyproject.toml` or `.cz.toml`.
+
+### `--annotated-tag-message`
+If `--annotated-tag-message` is used, commitizen will create annotated tags with the given message.
 
 ### `--changelog-to-stdout`
 
