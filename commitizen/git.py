@@ -83,7 +83,7 @@ class GitTag(GitObject):
 
 
 def tag(
-    tag: str, annotated: bool = False, signed: bool = False, msg: Optional[str] = None
+    tag: str, annotated: bool = False, signed: bool = False, msg: str | None = None
 ) -> cmd.Command:
     _opt = ""
     if annotated:
@@ -198,6 +198,13 @@ def is_signed_tag(tag: str) -> bool:
 
 def get_latest_tag_name() -> str | None:
     c = cmd.run("git describe --abbrev=0 --tags")
+    if c.err:
+        return None
+    return c.out.strip()
+
+
+def get_tag_message(tag: str) -> str | None:
+    c = cmd.run(f"git tag -l --format='%(contents:subject)' {tag}")
     if c.err:
         return None
     return c.out.strip()
