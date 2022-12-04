@@ -366,7 +366,8 @@ class Bump:
             signed=self.bump_settings.get("gpg_sign", False)
             or bool(self.config.settings.get("gpg_sign", False)),
             annotated=self.bump_settings.get("annotated_tag", False)
-            or bool(self.config.settings.get("annotated_tag", False)),
+            or bool(self.config.settings.get("annotated_tag", False))
+            or self.bump_settings.get("annotated_tag_message", False),
             msg=self.bump_settings.get("annotated_tag_message", None),
             # TODO: also get from self.config.settings?
         )
