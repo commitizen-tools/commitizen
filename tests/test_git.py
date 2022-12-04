@@ -8,7 +8,7 @@ import pytest
 from commitizen import cmd, exceptions, git
 from pytest_mock import MockFixture
 
-from tests.utils import FakeCommand, create_file_and_commit
+from tests.utils import FakeCommand, create_file_and_commit, create_tag
 
 
 def test_git_object_eq():
@@ -239,3 +239,13 @@ def test_eoltypes_get_eol_for_open():
     assert git.EOLTypes.get_eol_for_open(git.EOLTypes.NATIVE) == os.linesep
     assert git.EOLTypes.get_eol_for_open(git.EOLTypes.LF) == "\n"
     assert git.EOLTypes.get_eol_for_open(git.EOLTypes.CRLF) == "\r\n"
+
+
+def test_create_tag_with_message(tmp_commitizen_project):
+    with tmp_commitizen_project.as_cwd():
+        create_file_and_commit("feat(test): test")
+        tag_name = "1.0"
+        tag_message = "test message"
+        create_tag(tag_name, tag_message)
+        assert git.get_latest_tag_name() == tag_name
+        assert git.get_tag_message(tag_name) == f"'{tag_message}'"
