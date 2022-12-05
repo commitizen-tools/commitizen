@@ -1,15 +1,18 @@
+from __future__ import annotations
+
 import importlib
 import pkgutil
 import warnings
-from typing import Dict, Iterable, Type
+from typing import Iterable, Optional
+
+import importlib_metadata as metadata
 
 from commitizen.cz.base import BaseCommitizen
-from commitizen.cz.conventional_commits import ConventionalCommitsCz
-from commitizen.cz.customize import CustomizeCommitsCz
-from commitizen.cz.jira import JiraSmartCz
 
 
-def discover_plugins(path: Iterable[str] = None) -> Dict[str, Type[BaseCommitizen]]:
+def discover_plugins(
+    path: Optional[Iterable[str]] = None,
+) -> dict[str, type[BaseCommitizen]]:
     """Discover commitizen plugins on the path
 
     Args:
@@ -19,21 +22,19 @@ def discover_plugins(path: Iterable[str] = None) -> Dict[str, Type[BaseCommitize
     Returns:
         Dict[str, Type[BaseCommitizen]]: Registry with found plugins
     """
-    plugins = {}
-    for _finder, name, _ispkg in pkgutil.iter_modules(path):
-        try:
-            if name.startswith("cz_"):
-                plugins[name] = importlib.import_module(name).discover_this
-        except AttributeError as e:
-            warnings.warn(UserWarning(e.args[0]))
-            continue
-    return plugins
+    for _, name, _ in pkgutil.iter_modules(path):
+        if name.startswith("cz_"):
+            mod = importlib.import_module(name)
+            if hasattr(mod, "discover_this"):
+                warnings.warn(
+                    UserWarning(
+                        f"Legacy plugin '{name}' has been ignored: please expose it the 'commitizen.plugin' entrypoint"
+                    )
+                )
+
+    return {
+        ep.name: ep.load() for ep in metadata.entry_points(group="commitizen.plugin")
+    }
 
 
-registry: Dict[str, Type[BaseCommitizen]] = {
-    "cz_conventional_commits": ConventionalCommitsCz,
-    "cz_jira": JiraSmartCz,
-    "cz_customize": CustomizeCommitsCz,
-}
-
-registry.update(discover_plugins())
+registry: dict[str, type[BaseCommitizen]] = discover_plugins()
