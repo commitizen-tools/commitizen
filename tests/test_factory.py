@@ -1,11 +1,24 @@
 import sys
+from textwrap import dedent
 
+import importlib_metadata as metadata
 import pytest
 
 from commitizen import BaseCommitizen, defaults, factory
 from commitizen.config import BaseConfig
 from commitizen.cz import discover_plugins
+from commitizen.cz.conventional_commits import ConventionalCommitsCz
+from commitizen.cz.customize import CustomizeCommitsCz
+from commitizen.cz.jira import JiraSmartCz
 from commitizen.exceptions import NoCommitizenFoundException
+
+
+class Plugin:
+    pass
+
+
+class OtherPlugin:
+    pass
 
 
 def test_factory():
@@ -24,17 +37,19 @@ def test_factory_fails():
     assert "The committer has not been found in the system." in str(excinfo)
 
 
-@pytest.mark.parametrize(
-    "module_content, plugin_name, expected_plugins",
-    [
-        ("", "cz_no_plugin", {}),
-    ],
-)
-def test_discover_plugins(module_content, plugin_name, expected_plugins, tmp_path):
-    no_plugin_folder = tmp_path / plugin_name
-    no_plugin_folder.mkdir()
-    init_file = no_plugin_folder / "__init__.py"
-    init_file.write_text(module_content)
+def test_discover_plugins(tmp_path):
+    legacy_plugin_folder = tmp_path / "cz_legacy"
+    legacy_plugin_folder.mkdir()
+    init_file = legacy_plugin_folder / "__init__.py"
+    init_file.write_text(
+        dedent(
+            """\
+    class Plugin: pass
+
+    discover_this = Plugin
+    """
+        )
+    )
 
     sys.path.append(tmp_path.as_posix())
     with pytest.warns(UserWarning) as record:
@@ -43,6 +58,36 @@ def test_discover_plugins(module_content, plugin_name, expected_plugins, tmp_pat
 
     assert (
         record[0].message.args[0]
-        == f"module '{plugin_name}' has no attribute 'discover_this'"
+        == "Legacy plugin 'cz_legacy' has been ignored: please expose it the 'commitizen.plugin' entrypoint"
     )
-    assert expected_plugins == discovered_plugins
+    assert "cz_legacy" not in discovered_plugins
+
+
+def test_discover_external_plugin(mocker):
+    ep_plugin = metadata.EntryPoint(
+        "test", "tests.test_factory:Plugin", "commitizen.plugin"
+    )
+    ep_other_plugin = metadata.EntryPoint(
+        "not-selected", "tests.test_factory::OtherPlugin", "commitizen.not_a_plugin"
+    )
+    eps = [ep_plugin, ep_other_plugin]
+
+    def mock_entrypoints(**kwargs):
+        group = kwargs.get("group")
+        return metadata.EntryPoints(ep for ep in eps if ep.group == group)
+
+    mocker.patch.object(metadata, "entry_points", side_effect=mock_entrypoints)
+
+    assert discover_plugins() == {"test": Plugin}
+
+
+def test_discover_internal_plugins():
+    expected = {
+        "cz_conventional_commits": ConventionalCommitsCz,
+        "cz_jira": JiraSmartCz,
+        "cz_customize": CustomizeCommitsCz,
+    }
+
+    discovered = discover_plugins()
+
+    assert set(expected.items()).issubset(set(discovered.items()))
