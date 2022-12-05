@@ -5,7 +5,7 @@ SVE: Semantic version at the end
 import pytest
 
 from commitizen import bump
-from commitizen.cz import ConventionalCommitsCz
+from commitizen.cz.conventional_commits import ConventionalCommitsCz
 from commitizen.git import GitCommit
 
 NONE_INCREMENT_CC = ["docs(README): motivation", "ci: added travis"]
