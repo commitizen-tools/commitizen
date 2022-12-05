@@ -68,6 +68,8 @@ pyyaml = ">=3.08"
 argcomplete = ">=1.12.1,<2.1"
 typing-extensions = "^4.0.1"
 charset-normalizer = ">=2.1.0,<3.1"
+# Use the Python 3.11 compatible API: https://github.com/python/importlib_metadata#compatibility
+importlib_metadata = { version = ">=4.13,<5"}
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.2"
@@ -96,6 +98,11 @@ pytest-xdist = "^3.1.0"
 [tool.poetry.scripts]
 cz = "commitizen.cli:main"
 git-cz = "commitizen.cli:main"
+
+[tool.poetry.plugins."commitizen.plugin"]
+cz_conventional_commits = "commitizen.cz.conventional_commits:ConventionalCommitsCz"
+cz_jira = "commitizen.cz.jira:JiraSmartCz"
+cz_customize = "commitizen.cz.customize:CustomizeCommitsCz"
 
 [tool.isort]
 profile = "black"
