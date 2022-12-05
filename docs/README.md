@@ -38,7 +38,7 @@ the version or a changelog.
 
 ## Requirements
 
-Python 3.6+
+Python 3.7+
 
 [Git][gitscm] `1.8.5.2`+
 
