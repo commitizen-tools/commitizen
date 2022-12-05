@@ -198,8 +198,7 @@ class Bump:
 
         # If user specified changelog_to_stdout, they probably want the
         # changelog to be generated as well, this is the most intuitive solution
-        if not self.changelog and self.changelog_to_stdout:
-            self.changelog = True
+        self.changelog = self.changelog or bool(self.changelog_to_stdout)
 
         # No commits, there is no need to create an empty tag.
         # Unless we previously had a prerelease.
