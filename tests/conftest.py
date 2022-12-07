@@ -1,11 +1,23 @@
 import os
 import re
 import tempfile
+from pathlib import Path
 
 import pytest
 
 from commitizen import cmd, defaults
 from commitizen.config import BaseConfig
+
+SIGNER = "GitHub Action"
+SIGNER_MAIL = "action@github.com"
+
+
+@pytest.fixture(autouse=True)
+def git_sandbox(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    """Ensure git commands are executed without the current user settings"""
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(tmp_path / "gitconfig"))
+    cmd.run(f"git config --global user.name {SIGNER}")
+    cmd.run(f"git config --global user.email {SIGNER_MAIL}")
 
 
 @pytest.fixture(scope="function")
@@ -36,9 +48,6 @@ def _get_gpg_keyid(signer_mail):
 
 @pytest.fixture(scope="function")
 def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
-    signer = "GitHub Action"
-    signer_mail = "action@github.com"
-
     # create a temporary GPGHOME to store a temporary keyring.
     # Home path must be less than 104 characters
     gpg_home = tempfile.TemporaryDirectory(suffix="_cz")
@@ -47,17 +56,15 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
 
     # create a key (a keyring will be generated within GPUPGHOME)
     c = cmd.run(
-        f"gpg --batch --yes --debug-quick-random --passphrase '' --quick-gen-key '{signer} {signer_mail}'"
+        f"gpg --batch --yes --debug-quick-random --passphrase '' --quick-gen-key '{SIGNER} {SIGNER_MAIL}'"
     )
     if c.return_code != 0:
         raise Exception(f"gpg keygen failed with err: '{c.err}'")
-    key_id = _get_gpg_keyid(signer_mail)
+    key_id = _get_gpg_keyid(SIGNER_MAIL)
     assert key_id
 
-    # configure git
+    # configure git to use gpg signing
     cmd.run("git config commit.gpgsign true")
-    cmd.run(f"git config user.name {signer}")
-    cmd.run(f"git config user.email {signer_mail}")
     cmd.run(f"git config user.signingkey {key_id}")
 
     yield tmp_commitizen_project
