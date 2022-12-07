@@ -72,15 +72,15 @@ charset-normalizer = ">=2.1.0,<3.1"
 [tool.poetry.dev-dependencies]
 ipython = "^7.2"
 # test
-pytest = "^7.0.0"
-pytest-cov = "^2.6"
-pytest-mock = "^2.0"
+pytest = "^7.2.0"
+pytest-cov = "^4.0"
+pytest-mock = "^3.10"
 codecov = "^2.0"
 pytest-regressions = "^2.4.0"
 pytest-freezer = "^0.4.6"
 # code formatter
-black = "^21.12b0"
-isort = "^5.7.0"
+black = "^22.10"
+isort = "^5.10.0"
 # linter
 flake8 = "^3.6"
 pre-commit = "^2.6.0"
@@ -91,7 +91,7 @@ types-termcolor = "^0.1.1"
 mkdocs = "^1.0"
 mkdocs-material = "^4.1"
 pydocstyle = "^5.0.2"
-pytest-xdist = "^2.5.0"
+pytest-xdist = "^3.1.0"
 
 [tool.poetry.scripts]
 cz = "commitizen.cli:main"
