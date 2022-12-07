@@ -2,6 +2,7 @@ import argparse
 import logging
 import sys
 from functools import partial
+from types import TracebackType
 from typing import List
 
 import argcomplete
@@ -330,21 +331,22 @@ original_excepthook = sys.excepthook
 
 
 def commitizen_excepthook(
-    type, value, tracekback, debug=False, no_raise: List[int] = None
+    type, value, traceback, debug=False, no_raise: List[int] = None
 ):
+    traceback = traceback if isinstance(traceback, TracebackType) else None
     if not no_raise:
         no_raise = []
     if isinstance(value, CommitizenException):
         if value.message:
             value.output_method(value.message)
         if debug:
-            original_excepthook(type, value, tracekback)
+            original_excepthook(type, value, traceback)
         exit_code = value.exit_code
         if exit_code in no_raise:
             exit_code = 0
         sys.exit(exit_code)
     else:
-        original_excepthook(type, value, tracekback)
+        original_excepthook(type, value, traceback)
 
 
 commitizen_debug_excepthook = partial(commitizen_excepthook, debug=True)
