@@ -2,6 +2,9 @@ import sys
 
 from termcolor import colored
 
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8")
+
 
 def write(value: str, *args) -> None:
     """Intended to be used when value is multiline."""
