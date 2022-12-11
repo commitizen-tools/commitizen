@@ -30,4 +30,7 @@ These exit codes can be found in `commitizen/exceptions.py::ExitCode`.
 | NotAllowed                  | 20        | `--incremental` cannot be combined with a `rev_range`                                                       |
 | NoneIncrementExit           | 21        | The commits found are not eligible to be bumped                                                             |
 | CharacterSetDecodeError     | 22        | The character encoding of the command output could not be determined                                        |
-| GitCommandError             | 23       | Unexpected failure while calling a git command                                                              |
+| GitCommandError             | 23        | Unexpected failure while calling a git command                                                              |
+| InvalidManualVersion        | 24        | Manually provided version is invalid                                                                        |
+| InitFailedError             | 25        | Failed to initialize pre-commit                                                                             |
+| VersionProviderUnknown      | 26        | `version_provider` setting is set to an unknown version provider indentifier                                |

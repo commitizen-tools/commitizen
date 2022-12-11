@@ -7,6 +7,7 @@
 | `name`                     | `str`  | `"cz_conventional_commits"` | Name of the committing rules to use                                                                                                                                                                                                                  |
 | `version`                  | `str`  | `None`                      | Current version. Example: "0.1.2"                                                                                                                                                                                                                    |
 | `version_files`            | `list` | `[ ]`                       | Files were the version will be updated. A pattern to match a line, can also be specified, separated by `:` [See more][version_files]                                                                                                                 |
+| `version_provider`         | `str`  | `commitizen`                | Version provider used to read and write version [See more](#version-providers) |
 | `tag_format`               | `str`  | `None`                      | Format for the git tag, useful for old projects, that use a convention like `"v1.2.1"`. [See more][tag_format]                                                                                                                                       |
 | `update_changelog_on_bump` | `bool` | `false`                     | Create changelog when running `cz bump`                                                                                                                                                                                                              |
 | `gpg_sign`                 | `bool` | `false`                     | Use gpg signed tags instead of lightweight tags.                                                                                                                                                                                                     |
@@ -110,6 +111,54 @@ commitizen:
       - ""
     - - disabled
       - fg:#858585 italic
+```
+
+## Version providers
+
+Commitizen can read and write version from different sources.
+By default, it use the `commitizen` one which is using the `version` field from the commitizen settings.
+But you can use any `commitizen.provider` entrypoint as value for `version_provider`.
+
+### Custom version provider
+
+You can add you own version provider by extending `VersionProvider` and exposing it on the `commitizen.provider` entrypoint.
+
+Here a quick example of a `my-provider` provider reading and writing version in a `VERSION` file.
+
+`my_provider.py`
+
+```python
+from pathlib import Path
+from commitizen.providers import VersionProvider
+
+
+class MyProvider(VersionProvider):
+    file = Path() / "VERSION"
+
+    def get_version(self) -> str:
+        return self.file.read_text()
+
+    def set_version(self, version: str):
+        self.file.write_text(version)
+
+```
+
+`setup.py`
+
+```python
+from setuptools import setup
+
+setup(
+    name='my-commitizen-provider',
+    version='0.1.0',
+    py_modules=['my_provider'],
+    install_requires=['commitizen'],
+    entry_points = {
+        'commitizen.provider': [
+            'my-provider = my_provider:MyProvider',
+        ]
+    }
+)
 ```
 
 [version_files]: bump.md#version_files
