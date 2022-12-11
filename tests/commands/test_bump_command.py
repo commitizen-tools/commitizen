@@ -833,3 +833,23 @@ def test_bump_manual_version_disallows_prerelease_offset(mocker):
         "--prerelease-offset cannot be combined with MANUAL_VERSION"
     )
     assert expected_error_message in str(excinfo.value)
+
+
+@pytest.mark.usefixtures("tmp_git_project")
+def test_bump_use_version_provider(mocker: MockFixture):
+    mock = mocker.MagicMock(name="provider")
+    mock.get_version.return_value = "0.0.0"
+    get_provider = mocker.patch(
+        "commitizen.commands.bump.get_provider", return_value=mock
+    )
+
+    create_file_and_commit("fix: fake commit")
+    testargs = ["cz", "bump", "--yes", "--changelog"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    cli.main()
+
+    assert git.tag_exist("0.0.1")
+    get_provider.assert_called_once()
+    mock.get_version.assert_called_once()
+    mock.set_version.assert_called_once_with("0.0.1")

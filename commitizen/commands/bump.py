@@ -21,6 +21,7 @@ from commitizen.exceptions import (
     NotAllowed,
     NoVersionSpecifiedError,
 )
+from commitizen.providers import get_provider
 
 logger = getLogger("commitizen")
 
@@ -94,13 +95,13 @@ class Bump:
 
     def __call__(self):  # noqa: C901
         """Steps executed to bump."""
+        provider = get_provider(self.config)
+        current_version: str = provider.get_version()
+
         try:
-            current_version_instance: Version = Version(self.bump_settings["version"])
+            current_version_instance: Version = Version(current_version)
         except TypeError:
             raise NoVersionSpecifiedError()
-
-        # Initialize values from sources (conf)
-        current_version: str = self.config.settings["version"]
 
         tag_format: str = self.bump_settings["tag_format"]
         bump_commit_message: str = self.bump_settings["bump_message"]
@@ -280,7 +281,7 @@ class Bump:
             check_consistency=self.check_consistency,
         )
 
-        self.config.set_key("version", str(new_version))
+        provider.set_version(str(new_version))
 
         if self.pre_bump_hooks:
             hooks.run(

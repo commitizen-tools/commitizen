@@ -103,6 +103,9 @@ cz_conventional_commits = "commitizen.cz.conventional_commits:ConventionalCommit
 cz_jira = "commitizen.cz.jira:JiraSmartCz"
 cz_customize = "commitizen.cz.customize:CustomizeCommitsCz"
 
+[tool.poetry.plugins."commitizen.provider"]
+commitizen = "commitizen.providers:CommitizenProvider"
+
 [tool.isort]
 profile = "black"
 known_first_party = ["commitizen", "tests"]

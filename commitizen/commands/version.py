@@ -4,6 +4,7 @@ import sys
 from commitizen import out
 from commitizen.__version__ import __version__
 from commitizen.config import BaseConfig
+from commitizen.providers import get_provider
 
 
 class Version:
@@ -21,14 +22,14 @@ class Version:
             out.write(f"Python Version: {self.python_version}")
             out.write(f"Operating System: {self.operating_system}")
         elif self.parameter.get("project"):
-            version = self.config.settings["version"]
+            version = get_provider(self.config).get_version()
             if version:
                 out.write(f"{version}")
             else:
                 out.error("No project information in this project.")
         elif self.parameter.get("verbose"):
             out.write(f"Installed Commitizen Version: {__version__}")
-            version = self.config.settings["version"]
+            version = get_provider(self.config).get_version()
             if version:
                 out.write(f"Project Version: {version}")
             else:

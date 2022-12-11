@@ -33,6 +33,7 @@ class Settings(TypedDict, total=False):
     name: str
     version: Optional[str]
     version_files: List[str]
+    version_provider: Optional[str]
     tag_format: Optional[str]
     bump_message: Optional[str]
     allow_abort: bool
@@ -63,6 +64,7 @@ DEFAULT_SETTINGS: Settings = {
     "name": "cz_conventional_commits",
     "version": None,
     "version_files": [],
+    "version_provider": "commitizen",
     "tag_format": None,  # example v$version
     "bump_message": None,  # bumped v$current_version to $new_version
     "allow_abort": False,

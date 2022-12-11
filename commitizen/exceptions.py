@@ -31,6 +31,7 @@ class ExitCode(enum.IntEnum):
     INVALID_MANUAL_VERSION = 24
     INIT_FAILED = 25
     RUN_HOOK_FAILED = 26
+    VERSION_PROVIDER_UNKNOWN = 27
 
 
 class CommitizenException(Exception):
@@ -173,3 +174,7 @@ class InitFailedError(CommitizenException):
 
 class RunHookError(CommitizenException):
     exit_code = ExitCode.RUN_HOOK_FAILED
+
+
+class VersionProviderUnknown(CommitizenException):
+    exit_code = ExitCode.VERSION_PROVIDER_UNKNOWN

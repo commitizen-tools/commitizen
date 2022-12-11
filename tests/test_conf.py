@@ -44,6 +44,7 @@ DICT_CONFIG = {
 _settings = {
     "name": "cz_jira",
     "version": "1.0.0",
+    "version_provider": "commitizen",
     "tag_format": None,
     "bump_message": None,
     "allow_abort": False,
@@ -63,6 +64,7 @@ _settings = {
 _new_settings = {
     "name": "cz_jira",
     "version": "2.0.0",
+    "version_provider": "commitizen",
     "tag_format": None,
     "bump_message": None,
     "allow_abort": False,
