@@ -1,4 +1,10 @@
 
+## v2.38.0 (2022-12-12)
+
+### Feat
+
+- **poetry**: relax packaging version
+
 ## v2.37.1 (2022-11-30)
 
 ### Fix
