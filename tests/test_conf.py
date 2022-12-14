@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 import json
 import os
 from pathlib import Path
+from typing import Any
 
 import pytest
 import yaml
@@ -42,7 +45,7 @@ DICT_CONFIG = {
 }
 
 
-_settings = {
+_settings: dict[str, Any] = {
     "name": "cz_jira",
     "version": "1.0.0",
     "version_provider": "commitizen",
@@ -65,9 +68,11 @@ _settings = {
     "prerelease_offset": 0,
     "encoding": "utf-8",
     "always_signoff": False,
+    "template": None,
+    "extras": {},
 }
 
-_new_settings = {
+_new_settings: dict[str, Any] = {
     "name": "cz_jira",
     "version": "2.0.0",
     "version_provider": "commitizen",
@@ -90,6 +95,8 @@ _new_settings = {
     "prerelease_offset": 0,
     "encoding": "utf-8",
     "always_signoff": False,
+    "template": None,
+    "extras": {},
 }
 
 _read_settings = {
