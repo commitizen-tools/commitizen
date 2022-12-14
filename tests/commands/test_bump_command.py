@@ -3,6 +3,8 @@ from __future__ import annotations
 import inspect
 import re
 import sys
+from pathlib import Path
+from textwrap import dedent
 from unittest.mock import MagicMock, call
 
 import pytest
@@ -10,6 +12,8 @@ from pytest_mock import MockFixture
 
 import commitizen.commands.bump as bump
 from commitizen import cli, cmd, git, hooks
+from commitizen.changelog import DEFAULT_TEMPLATE
+from commitizen.cz.base import BaseCommitizen
 from commitizen.exceptions import (
     BumpTagFailedError,
     CommitizenException,
@@ -1099,3 +1103,128 @@ def test_bump_command_version_scheme_priority_over_version_type(mocker: MockFixt
         cli.main()
 
     assert git.tag_exist("0.2.0a0")
+
+
+@pytest.mark.parametrize(
+    "arg,cfg,expected",
+    (
+        pytest.param("", "", "default", id="default"),
+        pytest.param("", "changelog.cfg", "from config", id="from-config"),
+        pytest.param(
+            "--template=changelog.cmd", "changelog.cfg", "from cmd", id="from-command"
+        ),
+    ),
+)
+def test_bump_template_option_precedance(
+    mocker: MockFixture,
+    tmp_commitizen_project: Path,
+    mock_plugin: BaseCommitizen,
+    arg: str,
+    cfg: str,
+    expected: str,
+):
+    project_root = Path(tmp_commitizen_project)
+    cfg_template = project_root / "changelog.cfg"
+    cmd_template = project_root / "changelog.cmd"
+    default_template = project_root / mock_plugin.template
+    changelog = project_root / "CHANGELOG.md"
+
+    cfg_template.write_text("from config")
+    cmd_template.write_text("from cmd")
+    default_template.write_text("default")
+
+    create_file_and_commit("feat: new file")
+
+    if cfg:
+        pyproject = project_root / "pyproject.toml"
+        pyproject.write_text(
+            dedent(
+                f"""\
+                [tool.commitizen]
+                version = "0.1.0"
+                template = "{cfg}"
+                """
+            )
+        )
+
+    testargs = ["cz", "bump", "--yes", "--changelog"]
+    if arg:
+        testargs.append(arg)
+    mocker.patch.object(sys, "argv", testargs + ["0.1.1"])
+    cli.main()
+
+    out = changelog.read_text()
+    assert out == expected
+
+
+def test_bump_template_extras_precedance(
+    mocker: MockFixture,
+    tmp_commitizen_project: Path,
+    mock_plugin: BaseCommitizen,
+):
+    project_root = Path(tmp_commitizen_project)
+    changelog_tpl = project_root / DEFAULT_TEMPLATE
+    changelog_tpl.write_text("{{first}} - {{second}} - {{third}}")
+
+    mock_plugin.template_extras = dict(
+        first="from-plugin", second="from-plugin", third="from-plugin"
+    )
+
+    pyproject = project_root / "pyproject.toml"
+    pyproject.write_text(
+        dedent(
+            """\
+            [tool.commitizen]
+            version = "0.1.0"
+            [tool.commitizen.extras]
+            first = "from-config"
+            second = "from-config"
+            """
+        )
+    )
+
+    create_file_and_commit("feat: new file")
+
+    testargs = [
+        "cz",
+        "bump",
+        "--yes",
+        "--changelog",
+        "--extra",
+        "first=from-command",
+        "0.1.1",
+    ]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    changelog = project_root / "CHANGELOG.md"
+    assert changelog.read_text() == "from-command - from-config - from-plugin"
+
+
+def test_bump_template_extra_quotes(
+    mocker: MockFixture,
+    tmp_commitizen_project: Path,
+):
+    project_root = Path(tmp_commitizen_project)
+    changelog_tpl = project_root / DEFAULT_TEMPLATE
+    changelog_tpl.write_text("{{first}} - {{second}} - {{third}}")
+
+    create_file_and_commit("feat: new file")
+
+    testargs = [
+        "cz",
+        "bump",
+        "--changelog",
+        "--yes",
+        "-e",
+        "first=no-quote",
+        "-e",
+        "second='single quotes'",
+        "-e",
+        'third="double quotes"',
+    ]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    changelog = project_root / "CHANGELOG.md"
+    assert changelog.read_text() == "no-quote - single quotes - double quotes"

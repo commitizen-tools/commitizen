@@ -65,6 +65,9 @@ class Changelog:
             "merge_prerelease"
         ) or self.config.settings.get("changelog_merge_prerelease")
 
+        self.template = args.get("template") or self.config.settings.get("template")
+        self.extras = args.get("extras") or {}
+
     def _find_incremental_rev(self, latest_version: str, tags: list[GitTag]) -> str:
         """Try to find the 'start_rev'.
 
@@ -183,7 +186,13 @@ class Changelog:
         )
         if self.change_type_order:
             tree = changelog.order_changelog_tree(tree, self.change_type_order)
-        changelog_out = changelog.render_changelog(tree)
+
+        extras = self.cz.template_extras.copy()
+        extras.update(self.config.settings["extras"])
+        extras.update(self.extras)
+        changelog_out = changelog.render_changelog(
+            tree, loader=self.cz.template_loader, template=self.template, **extras
+        )
         changelog_out = changelog_out.lstrip("\n")
 
         if self.dry_run:

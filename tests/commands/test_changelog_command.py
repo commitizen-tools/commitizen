@@ -1,13 +1,17 @@
 import itertools
 import sys
 from datetime import datetime
+from pathlib import Path
+from textwrap import dedent
 
 import pytest
 from dateutil import relativedelta
 from pytest_mock import MockFixture
 
 from commitizen import cli, git
+from commitizen.changelog import DEFAULT_TEMPLATE
 from commitizen.commands.changelog import Changelog
+from commitizen.cz.base import BaseCommitizen
 from commitizen.exceptions import (
     DryRunExit,
     NoCommitsFoundError,
@@ -1359,3 +1363,118 @@ def test_changelog_from_current_version_tag_with_nonversion_tag(
 - commit 1\n"
 
     write_patch.assert_called_with(full_changelog)
+
+
+@pytest.mark.parametrize(
+    "arg,cfg,expected",
+    (
+        pytest.param("", "", "default", id="default"),
+        pytest.param("", "changelog.cfg", "from config", id="from-config"),
+        pytest.param(
+            "--template=changelog.cmd", "changelog.cfg", "from cmd", id="from-command"
+        ),
+    ),
+)
+def test_changelog_template_option_precedance(
+    mocker: MockFixture,
+    tmp_commitizen_project: Path,
+    mock_plugin: BaseCommitizen,
+    arg: str,
+    cfg: str,
+    expected: str,
+):
+    project_root = Path(tmp_commitizen_project)
+    cfg_template = project_root / "changelog.cfg"
+    cmd_template = project_root / "changelog.cmd"
+    default_template = project_root / mock_plugin.template
+    changelog = project_root / "CHANGELOG.md"
+
+    cfg_template.write_text("from config")
+    cmd_template.write_text("from cmd")
+    default_template.write_text("default")
+
+    create_file_and_commit("feat: new file")
+
+    if cfg:
+        pyproject = project_root / "pyproject.toml"
+        pyproject.write_text(
+            dedent(
+                f"""\
+                [tool.commitizen]
+                version = "0.1.0"
+                template = "{cfg}"
+                """
+            )
+        )
+
+    testargs = ["cz", "changelog"]
+    if arg:
+        testargs.append(arg)
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    out = changelog.read_text()
+    assert out == expected
+
+
+def test_changelog_template_extras_precedance(
+    mocker: MockFixture,
+    tmp_commitizen_project: Path,
+    mock_plugin: BaseCommitizen,
+):
+    project_root = Path(tmp_commitizen_project)
+    changelog_tpl = project_root / mock_plugin.template
+    changelog_tpl.write_text("{{first}} - {{second}} - {{third}}")
+
+    mock_plugin.template_extras = dict(
+        first="from-plugin", second="from-plugin", third="from-plugin"
+    )
+
+    pyproject = project_root / "pyproject.toml"
+    pyproject.write_text(
+        dedent(
+            """\
+            [tool.commitizen]
+            version = "0.1.0"
+            [tool.commitizen.extras]
+            first = "from-config"
+            second = "from-config"
+            """
+        )
+    )
+
+    create_file_and_commit("feat: new file")
+
+    testargs = ["cz", "changelog", "--extra", "first=from-command"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    changelog = project_root / "CHANGELOG.md"
+    assert changelog.read_text() == "from-command - from-config - from-plugin"
+
+
+def test_changelog_template_extra_quotes(
+    mocker: MockFixture,
+    tmp_commitizen_project: Path,
+):
+    project_root = Path(tmp_commitizen_project)
+    changelog_tpl = project_root / DEFAULT_TEMPLATE
+    changelog_tpl.write_text("{{first}} - {{second}} - {{third}}")
+
+    create_file_and_commit("feat: new file")
+
+    testargs = [
+        "cz",
+        "changelog",
+        "-e",
+        "first=no-quote",
+        "-e",
+        "second='single quotes'",
+        "-e",
+        'third="double quotes"',
+    ]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    changelog = project_root / "CHANGELOG.md"
+    assert changelog.read_text() == "no-quote - single quotes - double quotes"

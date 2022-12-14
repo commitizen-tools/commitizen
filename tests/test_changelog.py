@@ -1,4 +1,7 @@
+from pathlib import Path
+
 import pytest
+from jinja2 import FileSystemLoader
 
 from commitizen import changelog, defaults, git
 from commitizen.cz.conventional_commits.conventional_commits import (
@@ -1145,6 +1148,91 @@ def test_render_changelog(gitcommits, tags, changelog_content):
     )
     result = changelog.render_changelog(tree)
     assert result == changelog_content
+
+
+def test_render_changelog_from_default_plugin_values(
+    gitcommits, tags, changelog_content
+):
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    loader = ConventionalCommitsCz.template_loader
+    template = ConventionalCommitsCz.template
+    tree = changelog.generate_tree_from_commits(
+        gitcommits, tags, parser, changelog_pattern
+    )
+    result = changelog.render_changelog(tree, loader=loader, template=template)
+    assert result == changelog_content
+
+
+def test_render_changelog_override_loader(gitcommits, tags, tmp_path: Path):
+    loader = FileSystemLoader(tmp_path)
+    tpl = "loader overridden"
+    (tmp_path / changelog.DEFAULT_TEMPLATE).write_text(tpl)
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    tree = changelog.generate_tree_from_commits(
+        gitcommits, tags, parser, changelog_pattern
+    )
+    result = changelog.render_changelog(tree, loader=loader)
+    assert result == tpl
+
+
+def test_render_changelog_override_template_from_cwd(gitcommits, tags, chdir: Path):
+    tpl = "overridden from cwd"
+    (chdir / changelog.DEFAULT_TEMPLATE).write_text(tpl)
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    tree = changelog.generate_tree_from_commits(
+        gitcommits, tags, parser, changelog_pattern
+    )
+    result = changelog.render_changelog(tree)
+    assert result == tpl
+
+
+def test_render_changelog_override_template_from_cwd_with_custom_name(
+    gitcommits, tags, chdir: Path
+):
+    tpl = "template overridden from cwd"
+    tpl_name = "tpl.j2"
+    (chdir / tpl_name).write_text(tpl)
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    tree = changelog.generate_tree_from_commits(
+        gitcommits, tags, parser, changelog_pattern
+    )
+    result = changelog.render_changelog(tree, template=tpl_name)
+    assert result == tpl
+
+
+def test_render_changelog_override_loader_and_template(
+    gitcommits, tags, tmp_path: Path
+):
+    loader = FileSystemLoader(tmp_path)
+    tpl = "loader and template overridden"
+    tpl_name = "tpl.j2"
+    (tmp_path / tpl_name).write_text(tpl)
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    tree = changelog.generate_tree_from_commits(
+        gitcommits, tags, parser, changelog_pattern
+    )
+    result = changelog.render_changelog(tree, loader=loader, template=tpl_name)
+    assert result == tpl
+
+
+def test_render_changelog_support_arbitrary_kwargs(gitcommits, tags, tmp_path: Path):
+    loader = FileSystemLoader(tmp_path)
+    tpl_name = "tpl.j2"
+    (tmp_path / tpl_name).write_text("{{ key }}")
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    tree = changelog.generate_tree_from_commits(
+        gitcommits, tags, parser, changelog_pattern
+    )
+    result = changelog.render_changelog(
+        tree, loader=loader, template=tpl_name, key="value"
+    )
+    assert result == "value"
 
 
 def test_render_changelog_unreleased(gitcommits):

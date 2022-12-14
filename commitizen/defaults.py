@@ -56,6 +56,8 @@ class Settings(TypedDict, total=False):
     post_bump_hooks: list[str] | None
     prerelease_offset: int
     encoding: str
+    template: str | None
+    extras: dict[str, Any]
 
 
 name: str = "cz_conventional_commits"
@@ -96,6 +98,8 @@ DEFAULT_SETTINGS: Settings = {
     "post_bump_hooks": [],
     "prerelease_offset": 0,
     "encoding": encoding,
+    "template": None,
+    "extras": {},
 }
 
 MAJOR = "MAJOR"
@@ -127,3 +131,4 @@ change_type_order = ["BREAKING CHANGE", "Feat", "Fix", "Refactor", "Perf"]
 bump_message = "bump: version $current_version → $new_version"
 
 commit_parser = r"^((?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?|\w+!):\s(?P<message>.*)?"  # noqa
+version_parser = r"(?P<version>([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?(\w+)?)"

@@ -58,6 +58,7 @@ usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
                [--devrelease DEVRELEASE] [--increment {MAJOR,MINOR,PATCH}]
                [--check-consistency] [--annotated-tag] [--gpg-sign]
                [--changelog-to-stdout] [--git-output-to-stderr] [--retry] [--major-version-zero]
+               [--template TEMPLATE] [--extra EXTRA]
                [MANUAL_VERSION]
 
 positional arguments:
@@ -99,6 +100,10 @@ options:
   --version-scheme {pep440,semver}
                         choose version scheme
 
+  --template TEMPLATE, -t TEMPLATE
+                        changelog template file name (relative to the current working directory)
+  --extra EXTRA, -e EXTRA
+                        a changelog extra variable (in the form 'key=value')
 ```
 
 ### `--files-only`
@@ -249,6 +254,21 @@ how the prereleases look.
 Can I transition from one to the other?
 
 Yes, you shouldn't have any issues.
+
+### `--template`
+
+Provides your own changelog jinja template.
+See [the template customization section](customization.md#customizing-the-changelog-template)
+
+### `--extra`
+
+Provides your own changelog extra variables by using the `extras` settings or the `--extra/-e` parameter.
+
+```bash
+cz bump --changelog --extra key=value -e short="quoted value"
+```
+
+See [the template customization section](customization.md#customizing-the-changelog-template).
 
 ## Avoid raising errors
 

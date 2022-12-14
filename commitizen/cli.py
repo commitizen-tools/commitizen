@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
+from copy import deepcopy
 from functools import partial
 from pathlib import Path
 from types import TracebackType
@@ -19,6 +20,51 @@ from commitizen.exceptions import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+class ParseKwargs(argparse.Action):
+    """
+    Parse arguments in the for `key=value`.
+
+    Quoted strings are automatically unquoted.
+    Can be submitted multiple times:
+
+    ex:
+        -k key=value -k double-quotes="value" -k single-quotes='value'
+
+        will result in
+
+        namespace["opt"] == {
+            "key": "value",
+            "double-quotes": "value",
+            "single-quotes": "value",
+        }
+    """
+
+    def __call__(self, parser, namespace, kwarg, option_string=None):
+        kwargs = getattr(namespace, self.dest, None) or {}
+        key, value = kwarg.split("=", 1)
+        kwargs[key] = value.strip("'\"")
+        setattr(namespace, self.dest, kwargs)
+
+
+tpl_arguments = (
+    {
+        "name": ["--template", "-t"],
+        "help": (
+            "changelog template file name "
+            "(relative to the current working directory)"
+        ),
+    },
+    {
+        "name": ["--extra", "-e"],
+        "action": ParseKwargs,
+        "dest": "extras",
+        "metavar": "EXTRA",
+        "help": "a changelog extra variable (in the form 'key=value')",
+    },
+)
+
 data = {
     "prog": "cz",
     "description": (
@@ -204,6 +250,7 @@ data = {
                         "default": None,
                         "help": "keep major version at zero, even for breaking changes",
                     },
+                    *deepcopy(tpl_arguments),
                     {
                         "name": ["--prerelease-offset"],
                         "type": int,
@@ -293,6 +340,7 @@ data = {
                         "default": None,
                         "choices": version_schemes.KNOWN_SCHEMES,
                     },
+                    *deepcopy(tpl_arguments),
                 ],
             },
             {
