@@ -166,7 +166,7 @@ Type: `int`
 
 Default: `0`
 
-In some circumstances, a prerelease cannot start with a 0, e.g. in an embedded project individual characters are encoded as bytes. This can be done by specifying an offset from which to start counting. [prerelease-offset] |
+In some circumstances, a prerelease cannot start with a 0, e.g. in an embedded project individual characters are encoded as bytes. This can be done by specifying an offset from which to start counting. [prerelease-offset]
 
 ### `pre_bump_hooks`
 
@@ -191,6 +191,22 @@ Type: `str`
 Default: `utf-8`
 
 Sets the character encoding to be used when parsing commit messages. [Read more][encoding]
+
+### `template`
+
+Type: `str`
+
+Default: `None` (provided by plugin)
+
+Provide custom changelog jinja template path relative to the current working directory. [Read more][template-customization]
+
+### `extras`
+
+Type: `dict[str, Any]`
+
+Default: `{}`
+
+Provide extra variables to the changelog template. [Read more][template-customization]
 
 ## Configuration file
 
@@ -364,5 +380,6 @@ setup(
 [additional-features]: https://github.com/tmbo/questionary#additional-features
 [customization]: customization.md
 [shortcuts]: customization.md#shortcut-keys
+[template-customization]: customization.md#customizing-the-changelog-template
 [annotated-tags-vs-lightweight]: https://stackoverflow.com/a/11514139/2047185
 [encoding]: tutorials/writing_commits.md#writing-commits

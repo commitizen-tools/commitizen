@@ -32,7 +32,13 @@ from collections import OrderedDict, defaultdict
 from datetime import date
 from typing import TYPE_CHECKING, Callable, Iterable, cast
 
-from jinja2 import Environment, PackageLoader
+from jinja2 import (
+    BaseLoader,
+    ChoiceLoader,
+    Environment,
+    FileSystemLoader,
+    PackageLoader,
+)
 
 from commitizen import out
 from commitizen.bump import normalize_tag
@@ -48,6 +54,8 @@ from commitizen.version_schemes import (
 
 if TYPE_CHECKING:
     from commitizen.version_schemes import VersionScheme
+
+DEFAULT_TEMPLATE = "keep_a_changelog_template.j2"
 
 
 def get_commit_tag(commit: GitCommit, tags: list[GitTag]) -> GitTag | None:
@@ -187,11 +195,18 @@ def order_changelog_tree(tree: Iterable, change_type_order: list[str]) -> Iterab
     return sorted_tree
 
 
-def render_changelog(tree: Iterable) -> str:
-    loader = PackageLoader("commitizen", "templates")
+def render_changelog(
+    tree: Iterable,
+    loader: BaseLoader | None = None,
+    template: str | None = None,
+    **kwargs,
+) -> str:
+    loader = ChoiceLoader(
+        [FileSystemLoader("."), loader or PackageLoader("commitizen", "templates")]
+    )
     env = Environment(loader=loader, trim_blocks=True)
-    jinja_template = env.get_template("keep_a_changelog_template.j2")
-    changelog: str = jinja_template.render(tree=tree)
+    jinja_template = env.get_template(template or DEFAULT_TEMPLATE)
+    changelog: str = jinja_template.render(tree=tree, **kwargs)
     return changelog
 
 
