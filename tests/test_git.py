@@ -248,4 +248,4 @@ def test_create_tag_with_message(tmp_commitizen_project):
         tag_message = "test message"
         create_tag(tag_name, tag_message)
         assert git.get_latest_tag_name() == tag_name
-        assert git.get_tag_message(tag_name) == f"'{tag_message}'"
+        assert git.get_tag_message(tag_name) == tag_message
