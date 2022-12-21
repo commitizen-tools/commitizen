@@ -89,12 +89,8 @@ def test_generate_version(test_input, expected):
     current_version = test_input[0]
     increment = test_input[1]
     prerelease = test_input[2]
-<<<<<<< HEAD
     prerelease_offset = test_input[3]
     devrelease = test_input[4]
-=======
-    devrelease = test_input[3]
->>>>>>> 4d4b9e8 (style: format code through black)
     assert (
         generate_version(
             current_version,
