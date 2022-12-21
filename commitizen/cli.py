@@ -66,6 +66,11 @@ data = {
                         "action": "store_true",
                         "help": "Sign off the commit",
                     },
+                    {
+                        "name": "--allow-empty",
+                        "action": "store_true",
+                        "help": "Allow to create commit on an empty staging",
+                    },
                 ],
             },
             {
