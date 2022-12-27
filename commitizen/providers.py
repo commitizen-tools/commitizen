@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import cast
+from pathlib import Path
+from typing import ClassVar, cast
 
 import importlib_metadata as metadata
+import tomlkit
 
 from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import VersionProviderUnknown
@@ -49,6 +51,75 @@ class CommitizenProvider(VersionProvider):
 
     def set_version(self, version: str):
         self.config.set_key("version", version)
+
+
+class FileProvider(VersionProvider):
+    """
+    Base class for file-based version providers
+    """
+
+    filename: ClassVar[str]
+
+    @property
+    def file(self) -> Path:
+        return Path() / self.filename
+
+
+class TomlProvider(FileProvider):
+    """
+    Base class for TOML-based version providers
+    """
+
+    def get_version(self) -> str:
+        document = tomlkit.parse(self.file.read_text())
+        return self.get(document)
+
+    def set_version(self, version: str):
+        document = tomlkit.parse(self.file.read_text())
+        self.set(document, version)
+        self.file.write_text(tomlkit.dumps(document))
+
+    def get(self, document: tomlkit.TOMLDocument) -> str:
+        return document["project"]["version"]  # type: ignore
+
+    def set(self, document: tomlkit.TOMLDocument, version: str):
+        document["project"]["version"] = version  # type: ignore
+
+
+class Pep621Provider(TomlProvider):
+    """
+    PEP-621 version management
+    """
+
+    filename = "pyproject.toml"
+
+
+class PoetryProvider(TomlProvider):
+    """
+    Poetry version management
+    """
+
+    filename = "pyproject.toml"
+
+    def get(self, pyproject: tomlkit.TOMLDocument) -> str:
+        return pyproject["tool"]["poetry"]["version"]  # type: ignore
+
+    def set(self, pyproject: tomlkit.TOMLDocument, version: str):
+        pyproject["tool"]["poetry"]["version"] = version  # type: ignore
+
+
+class CargoProvider(TomlProvider):
+    """
+    Cargo version management
+    """
+
+    filename = "Cargo.toml"
+
+    def get(self, document: tomlkit.TOMLDocument) -> str:
+        return document["package"]["version"]  # type: ignore
+
+    def set(self, document: tomlkit.TOMLDocument, version: str):
+        document["package"]["version"] = version  # type: ignore
 
 
 def get_provider(config: BaseConfig) -> VersionProvider:

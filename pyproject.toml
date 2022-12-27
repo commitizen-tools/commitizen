@@ -104,7 +104,10 @@ cz_jira = "commitizen.cz.jira:JiraSmartCz"
 cz_customize = "commitizen.cz.customize:CustomizeCommitsCz"
 
 [tool.poetry.plugins."commitizen.provider"]
+cargo = "commitizen.providers:CargoProvider"
 commitizen = "commitizen.providers:CommitizenProvider"
+pep621 = "commitizen.providers:Pep621Provider"
+poetry = "commitizen.providers:PoetryProvider"
 
 [tool.isort]
 profile = "black"
