@@ -119,6 +119,15 @@ Commitizen can read and write version from different sources.
 By default, it use the `commitizen` one which is using the `version` field from the commitizen settings.
 But you can use any `commitizen.provider` entrypoint as value for `version_provider`.
 
+Commitizen provides some version providers for some well known formats:
+
+| name | description |
+| ---- | ----------- |
+| `commitizen` | Default version provider: Fetch and set version in commitizen config. |
+| `pep621` | Get and set version from `pyproject.toml` `project.version` field |
+| `poetry` | Get and set version from `pyproject.toml` `tool.poetry.version` field |
+| `cargo` | Get and set version from `Cargo.toml` `project.version` field |
+
 ### Custom version provider
 
 You can add you own version provider by extending `VersionProvider` and exposing it on the `commitizen.provider` entrypoint.
