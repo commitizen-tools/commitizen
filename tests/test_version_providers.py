@@ -12,6 +12,8 @@ from commitizen.exceptions import VersionProviderUnknown
 from commitizen.providers import (
     CargoProvider,
     CommitizenProvider,
+    ComposerProvider,
+    NpmProvider,
     Pep621Provider,
     PoetryProvider,
     get_provider,
@@ -123,5 +125,63 @@ def test_cargo_provider(config: BaseConfig, chdir: Path):
         """\
         [package]
         version = "43.1"
+        """
+    )
+
+
+def test_npm_provider(config: BaseConfig, chdir: Path):
+    package_json = chdir / "package.json"
+    package_json.write_text(
+        dedent(
+            """\
+            {
+              "name": "whatever",
+              "version": "0.1.0"
+            }
+            """
+        )
+    )
+    config.settings["version_provider"] = "npm"
+
+    provider = get_provider(config)
+    assert isinstance(provider, NpmProvider)
+    assert provider.get_version() == "0.1.0"
+
+    provider.set_version("43.1")
+    assert package_json.read_text() == dedent(
+        """\
+        {
+          "name": "whatever",
+          "version": "43.1"
+        }
+        """
+    )
+
+
+def test_composer_provider(config: BaseConfig, chdir: Path):
+    composer_json = chdir / "composer.json"
+    composer_json.write_text(
+        dedent(
+            """\
+            {
+                "name": "whatever",
+                "version": "0.1.0"
+            }
+            """
+        )
+    )
+    config.settings["version_provider"] = "composer"
+
+    provider = get_provider(config)
+    assert isinstance(provider, ComposerProvider)
+    assert provider.get_version() == "0.1.0"
+
+    provider.set_version("43.1")
+    assert composer_json.read_text() == dedent(
+        """\
+        {
+            "name": "whatever",
+            "version": "43.1"
+        }
         """
     )

@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import json
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import ClassVar, cast
+from typing import Any, ClassVar, cast
 
 import importlib_metadata as metadata
 import tomlkit
@@ -120,6 +121,46 @@ class CargoProvider(TomlProvider):
 
     def set(self, document: tomlkit.TOMLDocument, version: str):
         document["package"]["version"] = version  # type: ignore
+
+
+class JsonProvider(FileProvider):
+    """
+    Base class for JSON-based version providers
+    """
+
+    indent: ClassVar[int] = 2
+
+    def get_version(self) -> str:
+        document = json.loads(self.file.read_text())
+        return self.get(document)
+
+    def set_version(self, version: str):
+        document = json.loads(self.file.read_text())
+        self.set(document, version)
+        self.file.write_text(json.dumps(document, indent=self.indent) + "\n")
+
+    def get(self, document: dict[str, Any]) -> str:
+        return document["version"]  # type: ignore
+
+    def set(self, document: dict[str, Any], version: str):
+        document["version"] = version
+
+
+class NpmProvider(JsonProvider):
+    """
+    npm package.json version management
+    """
+
+    filename = "package.json"
+
+
+class ComposerProvider(JsonProvider):
+    """
+    Composer version management
+    """
+
+    filename = "composer.json"
+    indent = 4
 
 
 def get_provider(config: BaseConfig) -> VersionProvider:

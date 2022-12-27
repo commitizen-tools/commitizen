@@ -127,6 +127,8 @@ Commitizen provides some version providers for some well known formats:
 | `pep621` | Get and set version from `pyproject.toml` `project.version` field |
 | `poetry` | Get and set version from `pyproject.toml` `tool.poetry.version` field |
 | `cargo` | Get and set version from `Cargo.toml` `project.version` field |
+| `npm` | Get and set version from `package.json` `project.version` field |
+| `composer` | Get and set version from `composer.json` `project.version` field |
 
 ### Custom version provider
 
