@@ -107,6 +107,8 @@ cz_customize = "commitizen.cz.customize:CustomizeCommitsCz"
 [tool.poetry.plugins."commitizen.provider"]
 cargo = "commitizen.providers:CargoProvider"
 commitizen = "commitizen.providers:CommitizenProvider"
+composer = "commitizen.providers:ComposerProvider"
+npm = "commitizen.providers:NpmProvider"
 pep621 = "commitizen.providers:Pep621Provider"
 poetry = "commitizen.providers:PoetryProvider"
 
