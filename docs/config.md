@@ -136,9 +136,7 @@ You can add you own version provider by extending `VersionProvider` and exposing
 
 Here a quick example of a `my-provider` provider reading and writing version in a `VERSION` file.
 
-`my_provider.py`
-
-```python
+```python title="my_provider.py"
 from pathlib import Path
 from commitizen.providers import VersionProvider
 
@@ -154,9 +152,7 @@ class MyProvider(VersionProvider):
 
 ```
 
-`setup.py`
-
-```python
+```python title="setup.py"
 from setuptools import setup
 
 setup(
