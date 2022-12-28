@@ -17,9 +17,10 @@ from commitizen.exceptions import (
 
 
 @pytest.fixture
-def staging_is_clean(mocker: MockFixture):
+def staging_is_clean(mocker: MockFixture, tmp_git_project):
     is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
     is_staging_clean_mock.return_value = False
+    return tmp_git_project
 
 
 @pytest.mark.usefixtures("staging_is_clean")
@@ -128,6 +129,7 @@ def test_commit_command_with_signoff_option(config, mocker: MockFixture):
     success_mock.assert_called_once()
 
 
+@pytest.mark.usefixtures("tmp_git_project")
 def test_commit_when_nothing_to_commit(config, mocker: MockFixture):
     is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
     is_staging_clean_mock.return_value = True

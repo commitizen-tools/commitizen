@@ -15,6 +15,12 @@ SIGNER_MAIL = "action@github.com"
 @pytest.fixture(autouse=True)
 def git_sandbox(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     """Ensure git commands are executed without the current user settings"""
+    # Clear any GIT_ prefixed environment variable
+    for var in os.environ:
+        if var.startswith("GIT_"):
+            monkeypatch.delenv(var)
+
+    # Define a dedicated temporary git config
     monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(tmp_path / "gitconfig"))
     cmd.run(f"git config --global user.name {SIGNER}")
     cmd.run(f"git config --global user.email {SIGNER_MAIL}")
@@ -30,11 +36,10 @@ def tmp_git_project(tmpdir):
 
 @pytest.fixture(scope="function")
 def tmp_commitizen_project(tmp_git_project):
-    with tmp_git_project.as_cwd():
-        tmp_commitizen_cfg_file = tmp_git_project.join("pyproject.toml")
-        tmp_commitizen_cfg_file.write("[tool.commitizen]\n" 'version="0.1.0"\n')
+    tmp_commitizen_cfg_file = tmp_git_project.join("pyproject.toml")
+    tmp_commitizen_cfg_file.write("[tool.commitizen]\n" 'version="0.1.0"\n')
 
-        yield tmp_git_project
+    yield tmp_git_project
 
 
 def _get_gpg_keyid(signer_mail):
