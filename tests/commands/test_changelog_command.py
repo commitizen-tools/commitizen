@@ -345,6 +345,7 @@ def test_changelog_without_revision(mocker: MockFixture, tmp_commitizen_project)
         cli.main()
 
 
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_incremental_with_revision(mocker):
     """combining incremental with a revision doesn't make sense"""
     testargs = ["cz", "changelog", "--incremental", "0.2.0"]
