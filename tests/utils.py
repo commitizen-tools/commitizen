@@ -17,7 +17,7 @@ def create_file_and_commit(message: str, filename: Optional[str] = None):
     if not filename:
         filename = str(uuid.uuid4())
 
-    Path(f"./{filename}").touch()
+    Path(filename).touch()
     c = cmd.run("git add .")
     if c.return_code != 0:
         raise exceptions.CommitError(c.err)

@@ -275,7 +275,8 @@ def test_bump_on_git_with_hooks_no_verify_enabled(mocker):
     assert tag_exists is True
 
 
-def test_bump_when_bumpping_is_not_support(mocker, tmp_commitizen_project):
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_when_bumpping_is_not_support(mocker):
     create_file_and_commit(
         "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported"
     )
@@ -429,7 +430,8 @@ def test_bump_local_version(mocker, tmp_commitizen_project):
         assert "4.5.1+0.2.0" in f.read()
 
 
-def test_bump_dry_run(mocker, capsys, tmp_commitizen_project):
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_dry_run(mocker, capsys):
     create_file_and_commit("feat: new file")
 
     testargs = ["cz", "bump", "--yes", "--dry-run"]
@@ -471,9 +473,7 @@ def test_none_increment_exit_is_exception():
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_none_increment_should_not_call_git_tag_and_error_code_is_not_zero(
-    mocker, tmp_commitizen_project
-):
+def test_none_increment_should_not_call_git_tag_and_error_code_is_not_zero(mocker):
     create_file_and_commit("test(test_get_all_droplets): fix bad comparison test")
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
@@ -528,9 +528,8 @@ def test_bump_with_changelog_config(mocker, changelog_path, config_path):
     assert "0.2.0" in out
 
 
-def test_prevent_prerelease_when_no_increment_detected(
-    mocker, capsys, tmp_commitizen_project
-):
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_prevent_prerelease_when_no_increment_detected(mocker, capsys):
     create_file_and_commit("feat: new file")
 
     testargs = ["cz", "bump", "--yes"]
@@ -685,6 +684,7 @@ def test_bump_changelog_command_commits_untracked_changelog_and_version_files(
         ["cz", "bump", "--increment", "PATCH", "1.2.3"],
     ],
 )
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_invalid_manual_args_raises_exception(mocker, testargs):
     mocker.patch.object(sys, "argv", testargs)
 

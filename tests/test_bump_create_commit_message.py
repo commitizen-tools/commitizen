@@ -1,4 +1,3 @@
-import os
 import sys
 from pathlib import Path
 from textwrap import dedent
@@ -28,7 +27,8 @@ def test_create_tag(test_input, expected):
 
 
 @pytest.mark.parametrize("retry", (True, False))
-def test_bump_pre_commit_changelog(tmp_commitizen_project, mocker, freezer, retry):
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_pre_commit_changelog(mocker, freezer, retry):
     freezer.move_to("2022-04-01")
     testargs = ["cz", "bump", "--changelog", "--yes"]
     if retry:
@@ -36,10 +36,10 @@ def test_bump_pre_commit_changelog(tmp_commitizen_project, mocker, freezer, retr
     else:
         pytest.xfail("it will fail because pre-commit will reformat CHANGELOG.md")
     mocker.patch.object(sys, "argv", testargs)
-    with tmp_commitizen_project.as_cwd():
-        # Configure prettier as a pre-commit hook
-        Path(".pre-commit-config.yaml").write_text(
-            """
+    # Configure prettier as a pre-commit hook
+    Path(".pre-commit-config.yaml").write_text(
+        dedent(
+            """\
             repos:
               - repo: https://github.com/pre-commit/mirrors-prettier
                 rev: v2.6.2
@@ -48,44 +48,43 @@ def test_bump_pre_commit_changelog(tmp_commitizen_project, mocker, freezer, retr
                   stages: [commit]
             """
         )
-        # Prettier inherits editorconfig
-        Path(".editorconfig").write_text(
-            """
+    )
+    # Prettier inherits editorconfig
+    Path(".editorconfig").write_text(
+        dedent(
+            """\
             [*]
             indent_size = 4
             """
         )
-        cmd.run("git add -A")
-        if os.name == "nt":
-            cmd.run('git commit -m "fix: _test"')
-        else:
-            cmd.run("git commit -m 'fix: _test'")
-        cmd.run("pre-commit install")
-        cli.main()
-        # Pre-commit fixed last line adding extra indent and "\" char
-        assert Path("CHANGELOG.md").read_text() == dedent(
-            """\
-            ## 0.1.1 (2022-04-01)
+    )
+    cmd.run("git add -A")
+    cmd.run('git commit -m "fix: _test"')
+    cmd.run("pre-commit install")
+    cli.main()
+    # Pre-commit fixed last line adding extra indent and "\" char
+    assert Path("CHANGELOG.md").read_text() == dedent(
+        """\
+        ## 0.1.1 (2022-04-01)
 
-            ### Fix
+        ### Fix
 
-            -   \\_test
-            """
-        )
+        -   \\_test
+        """
+    )
 
 
 @pytest.mark.parametrize("retry", (True, False))
-def test_bump_pre_commit_changelog_fails_always(
-    tmp_commitizen_project, mocker, freezer, retry
-):
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_pre_commit_changelog_fails_always(mocker, freezer, retry):
     freezer.move_to("2022-04-01")
     testargs = ["cz", "bump", "--changelog", "--yes"]
     if retry:
         testargs.append("--retry")
     mocker.patch.object(sys, "argv", testargs)
-    with tmp_commitizen_project.as_cwd():
-        Path(".pre-commit-config.yaml").write_text(
-            """
+    Path(".pre-commit-config.yaml").write_text(
+        dedent(
+            """\
             repos:
               - repo: local
                 hooks:
@@ -96,11 +95,9 @@ def test_bump_pre_commit_changelog_fails_always(
                   files: CHANGELOG.md
             """
         )
-        cmd.run("git add -A")
-        if os.name == "nt":
-            cmd.run('git commit -m "feat: forbid changelogs"')
-        else:
-            cmd.run("git commit -m 'feat: forbid changelogs'")
-        cmd.run("pre-commit install")
-        with pytest.raises(exceptions.BumpCommitFailedError):
-            cli.main()
+    )
+    cmd.run("git add -A")
+    cmd.run('git commit -m "feat: forbid changelogs"')
+    cmd.run("pre-commit install")
+    with pytest.raises(exceptions.BumpCommitFailedError):
+        cli.main()
