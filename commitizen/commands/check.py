@@ -1,15 +1,10 @@
 import os
-import re
 import sys
 from typing import Any, Dict, Optional
 
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
-from commitizen.exceptions import (
-    InvalidCommandArgumentError,
-    InvalidCommitMessageError,
-    NoCommitsFoundError,
-)
+from commitizen.exceptions import InvalidCommandArgumentError, NoCommitsFoundError
 
 
 class Check:
@@ -54,31 +49,13 @@ class Check:
         """Validate if commit messages follows the conventional pattern.
 
         Raises:
-            InvalidCommitMessageError: if the commit provided not follows the conventional pattern
+            InvalidCommitMessageError: if the provided commit does not follow the conventional pattern
         """
         commits = self._get_commits()
         if not commits:
             raise NoCommitsFoundError(f"No commit found with range: '{self.rev_range}'")
 
-        pattern = self.cz.schema_pattern()
-        ill_formated_commits = [
-            commit
-            for commit in commits
-            if not self.validate_commit_message(commit.message, pattern)
-        ]
-        displayed_msgs_content = "\n".join(
-            [
-                f'commit "{commit.rev}": "{commit.message}"'
-                for commit in ill_formated_commits
-            ]
-        )
-        if displayed_msgs_content:
-            raise InvalidCommitMessageError(
-                "commit validation: failed!\n"
-                "please enter a commit message in the commitizen format.\n"
-                f"{displayed_msgs_content}\n"
-                f"pattern: {pattern}"
-            )
+        self.cz.validate_commits(commits, self.allow_abort)
         out.success("Commit validation: successful!")
 
     def _get_commits(self):
@@ -128,16 +105,3 @@ class Check:
             if not line.startswith("#"):
                 lines.append(line)
         return "\n".join(lines)
-
-    def validate_commit_message(self, commit_msg: str, pattern: str) -> bool:
-        if not commit_msg:
-            return self.allow_abort
-        if (
-            commit_msg.startswith("Merge")
-            or commit_msg.startswith("Revert")
-            or commit_msg.startswith("Pull request")
-            or commit_msg.startswith("fixup!")
-            or commit_msg.startswith("squash!")
-        ):
-            return True
-        return bool(re.match(pattern, commit_msg))

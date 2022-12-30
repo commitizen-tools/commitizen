@@ -3,15 +3,19 @@ try:
 except ImportError:
     from string import Template  # type: ignore
 
+import re
 from typing import Optional
 
 from commitizen import defaults
 from commitizen.config import BaseConfig
 from commitizen.cz.base import BaseCommitizen
 from commitizen.defaults import Questions
-from commitizen.exceptions import MissingCzCustomizeConfigError
+from commitizen.exceptions import (
+    InvalidCommitMessageError,
+    MissingCzCustomizeConfigError,
+)
 
-__all__ = ["CustomizeCommitsCz"]
+__all__ = ["CustomizeCommitsCz", "CustomizeCommitValidationCz"]
 
 
 class CustomizeCommitsCz(BaseCommitizen):
@@ -79,3 +83,53 @@ class CustomizeCommitsCz(BaseCommitizen):
         elif info:
             return info
         return None
+
+
+class CustomizeCommitValidationCz(CustomizeCommitsCz):
+    def validate_commit(self, pattern, commit, allow_abort) -> bool:
+        """
+        Validates that a commit message doesn't contain certain tokens.
+        """
+        if not commit.message:
+            return allow_abort
+
+        invalid_tokens = ["Merge", "Revert", "Pull request", "fixup!", "squash!"]
+        for token in invalid_tokens:
+            if commit.message.startswith(token):
+                raise InvalidCommitMessageError(
+                    f"Commits may not start with the token {token}."
+                )
+
+        return re.match(pattern, commit.message)
+
+    def validate_commits(self, commits, allow_abort):
+        """
+        Validates a list of commits against the configured commit validation schema.
+        See the schema() and example() functions for examples.
+        """
+
+        pattern = self.schema_pattern()
+
+        displayed_msgs_content = []
+        for commit in commits:
+            message = ""
+            valid = False
+            try:
+                valid = self.validate_commit(pattern, commit, allow_abort)
+            except InvalidCommitMessageError as e:
+                message = e.message
+
+            if not valid:
+                displayed_msgs_content.append(
+                    f"commit {commit.rev}\n"
+                    f"Author: {commit.author} <{commit.author_email}>\n\n"
+                    f"{commit.message}\n\n"
+                    f"commit validation: failed! {message}\n"
+                )
+
+        if displayed_msgs_content:
+            displayed_msgs = "\n".join(displayed_msgs_content)
+            raise InvalidCommitMessageError(
+                f"{displayed_msgs}\n"
+                "Please enter a commit message in the commitizen format.\n"
+            )

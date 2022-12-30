@@ -1,3 +1,4 @@
+import re
 from abc import ABCMeta, abstractmethod
 from typing import Callable, Dict, List, Optional, Tuple
 
@@ -6,6 +7,7 @@ from prompt_toolkit.styles import Style, merge_styles
 from commitizen import git
 from commitizen.config.base_config import BaseConfig
 from commitizen.defaults import Questions
+from commitizen.exceptions import InvalidCommitMessageError
 
 
 class BaseCommitizen(metaclass=ABCMeta):
@@ -73,6 +75,47 @@ class BaseCommitizen(metaclass=ABCMeta):
     def schema_pattern(self) -> Optional[str]:
         """Regex matching the schema used for message validation."""
         raise NotImplementedError("Not Implemented yet")
+
+    def validate_commit_message(
+        self, commit: git.GitCommit, pattern: str, allow_abort: bool
+    ) -> bool:
+        if not commit.message:
+            return allow_abort
+        if (
+            commit.message.startswith("Merge")
+            or commit.message.startswith("Revert")
+            or commit.message.startswith("Pull request")
+            or commit.message.startswith("fixup!")
+            or commit.message.startswith("squash!")
+        ):
+            return True
+        return bool(re.match(pattern, commit.message))
+
+    def validate_commits(self, commits: List[git.GitCommit], allow_abort: bool):
+        """
+        Validate a commit. Invokes schema_pattern by default.
+        Raises:
+            InvalidCommitMessageError: if the provided commit does not follow the conventional pattern
+        """
+
+        pattern = self.schema_pattern()
+        assert pattern is not None
+
+        displayed_msgs_content = "\n".join(
+            [
+                f'commit "{commit.rev}": "{commit.message}"'
+                for commit in commits
+                if not self.validate_commit_message(commit, pattern, allow_abort)
+            ]
+        )
+
+        if displayed_msgs_content:
+            raise InvalidCommitMessageError(
+                "commit validation: failed!\n"
+                "please enter a commit message in the commitizen format.\n"
+                f"{displayed_msgs_content}\n"
+                f"pattern: {pattern}"
+            )
 
     def info(self) -> Optional[str]:
         """Information about the standardized commit message."""
