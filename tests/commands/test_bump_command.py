@@ -1,5 +1,8 @@
 import inspect
+import os
+import re
 import sys
+from pathlib import Path
 from typing import Tuple
 from unittest.mock import MagicMock
 
@@ -375,6 +378,32 @@ def test_bump_major_version_zero_when_major_is_not_zero(mocker, tmp_commitizen_p
         "--major-version-zero is meaningless for current version 1.0.0"
     )
     assert expected_error_message in str(excinfo.value)
+
+
+def test_bump_shallow_clone(
+    tmp_commitizen_project,
+    tmp_path: Path,
+    mocker: MockFixture,
+    capsys: pytest.CaptureFixture,
+):
+    # Set up repository with one released and one unreleased commit.
+    create_file_and_commit("feat: Add file for 0.1.0")
+    create_tag("0.1.0")
+    create_file_and_commit("feat: Add file for, but do not release 0.2.0")
+
+    # Shallow clone this local repository, so the release tag is missing.
+    cloned_repo = tmp_path / "cloned_repo"
+    # Use file:// URL, so Git does a shallow clone.
+    cmd.run(f"git clone --depth=1 file://{tmp_commitizen_project} {cloned_repo}")
+    os.chdir(cloned_repo)
+
+    # Bumping should work, but with a warning that we are pulling the tag from remote.
+    testargs = ["cz", "bump"]
+    mocker.patch.object(sys, "argv", testargs)
+    capsys.readouterr()  # Reset capsys fixture
+    cli.main()
+    stdout, _stderr = capsys.readouterr()
+    assert re.search("Could not find tag.*trying to fetch", stdout)
 
 
 def test_bump_files_only(mocker: MockFixture, tmp_commitizen_project):

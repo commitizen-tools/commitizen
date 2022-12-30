@@ -168,7 +168,22 @@ def get_tags(dateformat: str = "%Y-%m-%d") -> List[GitTag]:
 
 def tag_exist(tag: str) -> bool:
     c = cmd.run(f"git tag --list {tag}")
-    return tag in c.out
+    if tag in c.out:
+        return True
+
+    # In shallow clones (e.g. set up by Gitlab CI), the previous release tag might not
+    # be available locally, so try and fetch it.
+    if cmd.run("git rev-parse --is-shallow-repository").out.strip() == "true":
+        out.warn(
+            f"Could not find tag {tag} locally. Since this is a shallow clone, "
+            "trying to fetch it from all available remotes now."
+        )
+        for remote in cmd.run("git remote").out.strip().splitlines():
+            res = cmd.run(f"git fetch --depth=1 {remote} tag {tag}")
+            if res.return_code == 0:
+                return True
+
+    return False
 
 
 def is_signed_tag(tag: str) -> bool:
