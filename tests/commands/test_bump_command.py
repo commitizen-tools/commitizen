@@ -673,7 +673,7 @@ __version__ = "0.1.0"
             "bump",
             "--changelog",
             "--changelog-to-stdout",
-            "--annotated",
+            "--annotated-tag",
             "--check-consistency",
             "--yes",
         ),
