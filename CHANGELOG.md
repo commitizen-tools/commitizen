@@ -1,4 +1,19 @@
 
+## v2.39.0 (2022-12-31)
+
+### Feat
+
+- **init**: allow user to select which type of pre commit hooks to install
+
+### Fix
+
+- **init**: space between `--hook-type` options
+- **init**: report error when hook installation failed
+
+### Refactor
+
+- **init**: `_install_pre_commit_hook` raise error when failed
+
 ## v2.38.0 (2022-12-12)
 
 ### Feat
