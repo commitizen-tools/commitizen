@@ -1,4 +1,10 @@
 
+## v2.39.1 (2022-12-31)
+
+### Fix
+
+- filter git diff from commit message
+
 ## v2.39.0 (2022-12-31)
 
 ### Feat
