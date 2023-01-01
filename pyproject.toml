@@ -111,6 +111,7 @@ composer = "commitizen.providers:ComposerProvider"
 npm = "commitizen.providers:NpmProvider"
 pep621 = "commitizen.providers:Pep621Provider"
 poetry = "commitizen.providers:PoetryProvider"
+scm = "commitizen.providers:ScmProvider"
 
 [tool.isort]
 profile = "black"

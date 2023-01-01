@@ -1,15 +1,18 @@
 from __future__ import annotations
 
 import json
+import re
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, ClassVar, cast
+from typing import Any, Callable, ClassVar, Optional, cast
 
 import importlib_metadata as metadata
 import tomlkit
+from packaging.version import VERSION_PATTERN, Version
 
 from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import VersionProviderUnknown
+from commitizen.git import get_tags
 
 PROVIDER_ENTRYPOINT = "commitizen.provider"
 DEFAULT_PROVIDER = "commitizen"
@@ -161,6 +164,65 @@ class ComposerProvider(JsonProvider):
 
     filename = "composer.json"
     indent = 4
+
+
+class ScmProvider(VersionProvider):
+    """
+    A provider fetching the current/last version from the repository history
+
+    The version is fetched using `git describe` and is never set.
+
+    It is meant for `setuptools-scm` or any package manager `*-scm` provider.
+    """
+
+    TAG_FORMAT_REGEXS = {
+        "$version": r"(?P<version>.+)",
+        "$major": r"(?P<major>\d+)",
+        "$minor": r"(?P<minor>\d+)",
+        "$patch": r"(?P<patch>\d+)",
+        "$prerelease": r"(?P<prerelease>\w+\d+)?",
+        "$devrelease": r"(?P<devrelease>\.dev\d+)?",
+    }
+
+    def _tag_format_matcher(self) -> Callable[[str], Optional[str]]:
+        pattern = self.config.settings.get("tag_format") or VERSION_PATTERN
+        for var, tag_pattern in self.TAG_FORMAT_REGEXS.items():
+            pattern = pattern.replace(var, tag_pattern)
+
+        regex = re.compile(f"^{pattern}$", re.VERBOSE)
+
+        def matcher(tag: str) -> Optional[str]:
+            match = regex.match(tag)
+            if not match:
+                return None
+            groups = match.groupdict()
+            if "version" in groups:
+                return groups["version"]
+            elif "major" in groups:
+                return "".join(
+                    (
+                        groups["major"],
+                        f".{groups['minor']}" if groups.get("minor") else "",
+                        f".{groups['patch']}" if groups.get("patch") else "",
+                        groups["prerelease"] if groups.get("prerelease") else "",
+                        groups["devrelease"] if groups.get("devrelease") else "",
+                    )
+                )
+            elif pattern == VERSION_PATTERN:
+                return str(Version(tag))
+            return None
+
+        return matcher
+
+    def get_version(self) -> str:
+        matcher = self._tag_format_matcher()
+        return next(
+            (cast(str, matcher(t.name)) for t in get_tags() if matcher(t.name)), "0.0.0"
+        )
+
+    def set_version(self, version: str):
+        # Not necessary
+        pass
 
 
 def get_provider(config: BaseConfig) -> VersionProvider:
