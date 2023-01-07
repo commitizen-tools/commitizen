@@ -27,13 +27,14 @@ def _try_decode(bytes_: bytes) -> str:
             raise CharacterSetDecodeError() from e
 
 
-def run(cmd: str) -> Command:
+def run(cmd: str, env=None) -> Command:
     process = subprocess.Popen(
         cmd,
         shell=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         stdin=subprocess.PIPE,
+        env=env,
     )
     stdout, stderr = process.communicate()
     return_code = process.returncode

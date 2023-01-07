@@ -5,7 +5,7 @@ from typing import List, Optional
 import questionary
 from packaging.version import InvalidVersion, Version
 
-from commitizen import bump, cmd, defaults, factory, git, out
+from commitizen import bump, cmd, defaults, factory, git, hooks, out
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
@@ -58,6 +58,8 @@ class Bump:
         self.no_verify = arguments["no_verify"]
         self.check_consistency = arguments["check_consistency"]
         self.retry = arguments["retry"]
+        self.pre_bump_hooks = self.config.settings["pre_bump_hooks"]
+        self.post_bump_hooks = self.config.settings["post_bump_hooks"]
 
     def is_initial_tag(self, current_tag_version: str, is_yes: bool = False) -> bool:
         """Check if reading the whole git tree up to HEAD is needed."""
@@ -272,6 +274,20 @@ class Bump:
 
         self.config.set_key("version", str(new_version))
 
+        if self.pre_bump_hooks:
+            hooks.run(
+                self.pre_bump_hooks,
+                _env_prefix="CZ_PRE_",
+                is_initial=is_initial,
+                current_version=current_version,
+                current_tag_version=current_tag_version,
+                new_version=new_version.public,
+                new_tag_version=new_tag_version,
+                message=message,
+                increment=increment,
+                changelog_file_name=changelog_cmd.file_name if self.changelog else None,
+            )
+
         if is_files_only:
             raise ExpectedExit()
 
@@ -299,6 +315,20 @@ class Bump:
         )
         if c.return_code != 0:
             raise BumpTagFailedError(c.err)
+
+        if self.post_bump_hooks:
+            hooks.run(
+                self.post_bump_hooks,
+                _env_prefix="CZ_POST_",
+                was_initial=is_initial,
+                previous_version=current_version,
+                previous_tag_version=current_tag_version,
+                current_version=new_version.public,
+                current_tag_version=new_tag_version,
+                message=message,
+                increment=increment,
+                changelog_file_name=changelog_cmd.file_name if self.changelog else None,
+            )
 
         # TODO: For v3 output this only as diagnostic and remove this if
         if self.changelog_to_stdout:

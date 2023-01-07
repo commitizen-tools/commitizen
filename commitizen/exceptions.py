@@ -30,6 +30,7 @@ class ExitCode(enum.IntEnum):
     GIT_COMMAND_ERROR = 23
     INVALID_MANUAL_VERSION = 24
     INIT_FAILED = 25
+    RUN_HOOK_FAILED = 26
 
 
 class CommitizenException(Exception):
@@ -168,3 +169,7 @@ class InvalidManualVersion(CommitizenException):
 
 class InitFailedError(CommitizenException):
     exit_code = ExitCode.INIT_FAILED
+
+
+class RunHookError(CommitizenException):
+    exit_code = ExitCode.RUN_HOOK_FAILED
