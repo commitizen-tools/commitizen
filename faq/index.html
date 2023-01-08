@@ -10,8 +10,14 @@
       
       
       
+      
+        <link rel="prev" href="../tutorials/jenkins_pipeline/">
+      
+      
+        <link rel="next" href="../exit_codes/">
+      
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.2">
     
     
       
@@ -19,11 +25,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.975780f9.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.f56500e0.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
-        
       
       
 
@@ -54,7 +59,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="None" data-md-color-accent="None">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
   
     
     
@@ -666,13 +671,14 @@
                   
 
 
+
   <h1>FAQ</h1>
 
 <h2 id="support-for-pep621">Support for PEP621</h2>
 <p>PEP621 establishes a <code>[project]</code> definition inside <code>pyproject.toml</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">[project]</span><span class="w"></span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;spam&quot;</span><span class="w"></span>
-<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;2020.0.0&quot;</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="k">[project]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;spam&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;2020.0.0&quot;</span>
 </code></pre></div>
 
 <p>Commitizen <strong>won't</strong> use the <code>project.version</code> as a source of truth because it's a
@@ -681,13 +687,13 @@ tool aimed for any kind of project.</p>
 wouldn't we support other project files like <code>cargo.toml</code> or <code>package.json</code>?</p>
 <p>Instead of supporting all the different project files, you can use <code>version_files</code>
 inside <code>[tool.commitizen]</code>, and it will cheaply keep any of these project files in sync</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
-<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;2.5.1&quot;</span><span class="w"></span>
-<span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="s">&quot;pyproject.toml:^version&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s">&quot;cargo.toml:^version&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s">&quot;package.json:\&quot;version\&quot;:&quot;</span><span class="w"></span>
-<span class="p">]</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;2.5.1&quot;</span>
+<span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s">&quot;pyproject.toml:^version&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;cargo.toml:^version&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;package.json:\&quot;version\&quot;:&quot;</span>
+<span class="p">]</span>
 </code></pre></div>
 
 <h2 id="why-are-revert-and-chore-valid-types-in-the-check-pattern-of-cz-conventional_commits-but-not-types-we-can-select">Why are <code>revert</code> and <code>chore</code> valid types in the check pattern of cz conventional_commits but not types we can select?</h2>
@@ -696,14 +702,14 @@ However, you can create a customized <code>cz</code> with those extra types. (Se
 <p>See more discussion in issue <a href="https://github.com/commitizen-tools/commitizen/issues/142">#142</a> and <a href="https://github.com/commitizen-tools/commitizen/issues/36">#36</a></p>
 <h2 id="how-to-revert-a-bump">How to revert a bump?</h2>
 <p>If for any reason, the created tag and changelog were to be undone, this is the snippet:</p>
-<div class="codehilite"><pre><span></span><code>git tag --delete &lt;created_tag&gt;
-git reset HEAD~
-git reset --hard HEAD
+<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>tag<span class="w"> </span>--delete<span class="w"> </span>&lt;created_tag&gt;
+git<span class="w"> </span>reset<span class="w"> </span>HEAD~
+git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>HEAD
 </code></pre></div>
 
 <p>This will remove the last tag created, plus the commit containing the update to <code>.cz.toml</code> and the changelog generated for the version.</p>
 <p>In case the commit was pushed to the server you can remove it by running</p>
-<div class="codehilite"><pre><span></span><code>git push --delete origin &lt;created_tag&gt;
+<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>push<span class="w"> </span>--delete<span class="w"> </span>origin<span class="w"> </span>&lt;created_tag&gt;
 </code></pre></div>
 
 <h2 id="is-this-project-affiliated-with-the-commitizen-js-project">Is this project affiliated with the Commitizen JS project?</h2>
@@ -721,8 +727,8 @@ This one is written in python to make integration easier for python projects and
 <p>If you are using conventional commits in your git history, then you could swap one with the other in theory.</p>
 <p>Regarding the name, <a href="https://github.com/commitizen/cz-cli">cz-js</a> came first, they used the word commitizen first. When this project was created originally, the creator read "be a good commitizen", and thought it was just a cool word that made sense, and this would be a package that helps you be a good "commit citizen".</p>
 <h2 id="how-to-handle-revert-commits">How to handle revert commits?</h2>
-<div class="codehilite"><pre><span></span><code>git revert --no-commit &lt;SHA&gt;
-git commit -m <span class="s2">&quot;revert: foo bar&quot;</span>
+<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>revert<span class="w"> </span>--no-commit<span class="w"> </span>&lt;SHA&gt;
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;revert: foo bar&quot;</span>
 </code></pre></div>
 
 <h2 id="i-got-exception-winerror-995-the-io-operation-error">I got <code>Exception [WinError 995] The I/O operation ...</code> error</h2>
@@ -765,42 +771,6 @@ of writing, there are no plans to implement the feature (<a href="https://github
       
         <footer class="md-footer">
   
-    
-    <nav class="md-footer__inner md-grid" aria-label="Footer" >
-      
-        
-        <a href="../tutorials/jenkins_pipeline/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Jenkins pipeline" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              Jenkins pipeline
-            </div>
-          </div>
-        </a>
-      
-      
-        
-        <a href="../exit_codes/" class="md-footer__link md-footer__link--next" aria-label="Next: Exit Codes" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              Exit Codes
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
-          </div>
-        </a>
-      
-    </nav>
-  
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
@@ -822,12 +792,11 @@ of writing, there are no plans to implement the feature (<a href="https://github
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.12658920.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      <script src="../assets/javascripts/bundle.5cf534bf.min.js"></script>
       
-    
     
   </body>
 </html>

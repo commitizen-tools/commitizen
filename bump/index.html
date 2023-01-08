@@ -10,8 +10,14 @@
       
       
       
+      
+        <link rel="prev" href="../init/">
+      
+      
+        <link rel="next" href="../check/">
+      
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.2">
     
     
       
@@ -19,11 +25,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.975780f9.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.f56500e0.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
-        
       
       
 
@@ -54,7 +59,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="None" data-md-color-accent="None">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
   
     
     
@@ -928,6 +933,7 @@
                   
 
 
+
   <h1>Bump</h1>
 
 <p><img alt="Bump version" src="../images/bump.gif" /></p>
@@ -975,10 +981,10 @@
 <span class="m">0</span>.9.2
 <span class="m">0</span>.9.10
 <span class="m">0</span>.9.11
-<span class="m">1</span>.0.0a0  <span class="c1"># alpha</span>
+<span class="m">1</span>.0.0a0<span class="w">  </span><span class="c1"># alpha</span>
 <span class="m">1</span>.0.0a1
-<span class="m">1</span>.0.0b0  <span class="c1"># beta</span>
-<span class="m">1</span>.0.0rc0 <span class="c1"># release candidate</span>
+<span class="m">1</span>.0.0b0<span class="w">  </span><span class="c1"># beta</span>
+<span class="m">1</span>.0.0rc0<span class="w"> </span><span class="c1"># release candidate</span>
 <span class="m">1</span>.0.0rc1
 <span class="m">1</span>.0.0
 <span class="m">1</span>.0.1
@@ -989,73 +995,73 @@
 
 <p><code>post</code> releases are not supported yet.</p>
 <h2 id="usage">Usage</h2>
-<div class="codehilite"><pre><span></span><code>$ cz bump --help
-usage: cz bump <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--dry-run<span class="o">]</span> <span class="o">[</span>--files-only<span class="o">]</span> <span class="o">[</span>--local-version<span class="o">]</span> <span class="o">[</span>--changelog<span class="o">]</span>
-               <span class="o">[</span>--no-verify<span class="o">]</span> <span class="o">[</span>--yes<span class="o">]</span> <span class="o">[</span>--tag-format TAG_FORMAT<span class="o">]</span>
-               <span class="o">[</span>--bump-message BUMP_MESSAGE<span class="o">]</span> <span class="o">[</span>--prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}]</span>
-               <span class="o">[</span>--devrelease DEVRELEASE<span class="o">]</span> <span class="o">[</span>--increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span>
-               <span class="o">[</span>--check-consistency<span class="o">]</span> <span class="o">[</span>--annotated-tag<span class="o">]</span> <span class="o">[</span>--gpg-sign<span class="o">]</span>
-               <span class="o">[</span>--changelog-to-stdout<span class="o">]</span> <span class="o">[</span>--retry<span class="o">]</span> <span class="o">[</span>--major-version-zero<span class="o">]</span>
-               <span class="o">[</span>MANUAL_VERSION<span class="o">]</span>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>cz<span class="w"> </span>bump<span class="w"> </span>--help
+usage:<span class="w"> </span>cz<span class="w"> </span>bump<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>--dry-run<span class="o">]</span><span class="w"> </span><span class="o">[</span>--files-only<span class="o">]</span><span class="w"> </span><span class="o">[</span>--local-version<span class="o">]</span><span class="w"> </span><span class="o">[</span>--changelog<span class="o">]</span>
+<span class="w">               </span><span class="o">[</span>--no-verify<span class="o">]</span><span class="w"> </span><span class="o">[</span>--yes<span class="o">]</span><span class="w"> </span><span class="o">[</span>--tag-format<span class="w"> </span>TAG_FORMAT<span class="o">]</span>
+<span class="w">               </span><span class="o">[</span>--bump-message<span class="w"> </span>BUMP_MESSAGE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--prerelease<span class="w"> </span><span class="o">{</span>alpha,beta,rc<span class="o">}]</span>
+<span class="w">               </span><span class="o">[</span>--devrelease<span class="w"> </span>DEVRELEASE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--increment<span class="w"> </span><span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span>
+<span class="w">               </span><span class="o">[</span>--check-consistency<span class="o">]</span><span class="w"> </span><span class="o">[</span>--annotated-tag<span class="o">]</span><span class="w"> </span><span class="o">[</span>--gpg-sign<span class="o">]</span>
+<span class="w">               </span><span class="o">[</span>--changelog-to-stdout<span class="o">]</span><span class="w"> </span><span class="o">[</span>--retry<span class="o">]</span><span class="w"> </span><span class="o">[</span>--major-version-zero<span class="o">]</span>
+<span class="w">               </span><span class="o">[</span>MANUAL_VERSION<span class="o">]</span>
 
-positional arguments:
-  MANUAL_VERSION        bump to the given version <span class="o">(</span>e.g: <span class="m">1</span>.5.3<span class="o">)</span>
+positional<span class="w"> </span>arguments:
+<span class="w">  </span>MANUAL_VERSION<span class="w">        </span>bump<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>given<span class="w"> </span>version<span class="w"> </span><span class="o">(</span>e.g:<span class="w"> </span><span class="m">1</span>.5.3<span class="o">)</span>
 
 options:
-  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
-  --dry-run             show output to stdout, no commit, no modified files
-  --files-only          bump version <span class="k">in</span> the files from the config
-  --local-version       bump only the <span class="nb">local</span> version portion
-  --changelog, -ch      generate the changelog <span class="k">for</span> the newest version
-  --no-verify           this option bypasses the pre-commit and commit-msg
-                        hooks
-  --yes                 accept automatically questions <span class="k">done</span>
-  --tag-format TAG_FORMAT
-                        the format used to tag the commit and <span class="nb">read</span> it, use it
-                        <span class="k">in</span> existing projects, wrap around simple quotes
-  --bump-message BUMP_MESSAGE
-                        template used to create the release commit, useful
-                        when working with CI
-  --prerelease <span class="o">{</span>alpha,beta,rc<span class="o">}</span>, -pr <span class="o">{</span>alpha,beta,rc<span class="o">}</span>
-                        choose <span class="nb">type</span> of prerelease
-  --devrelease DEVRELEASE, -d DEVRELEASE
-                        specify non-negative integer <span class="k">for</span> dev. release
-  --increment <span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}</span>
-                        manually specify the desired increment
-  --check-consistency, -cc
-                        check consistency among versions defined <span class="k">in</span> commitizen
-                        configuration and version_files
-  --annotated-tag, -at  create annotated tag instead of lightweight one
-  --gpg-sign, -s        sign tag instead of lightweight one
-  --changelog-to-stdout
-                        Output changelog to the stdout
-  --retry               retry commit <span class="k">if</span> it fails the 1st <span class="nb">time</span>
-  --major-version-zero  keep major version at zero, even <span class="k">for</span> breaking changes
+<span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
+<span class="w">  </span>--dry-run<span class="w">             </span>show<span class="w"> </span>output<span class="w"> </span>to<span class="w"> </span>stdout,<span class="w"> </span>no<span class="w"> </span>commit,<span class="w"> </span>no<span class="w"> </span>modified<span class="w"> </span>files
+<span class="w">  </span>--files-only<span class="w">          </span>bump<span class="w"> </span>version<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>files<span class="w"> </span>from<span class="w"> </span>the<span class="w"> </span>config
+<span class="w">  </span>--local-version<span class="w">       </span>bump<span class="w"> </span>only<span class="w"> </span>the<span class="w"> </span><span class="nb">local</span><span class="w"> </span>version<span class="w"> </span>portion
+<span class="w">  </span>--changelog,<span class="w"> </span>-ch<span class="w">      </span>generate<span class="w"> </span>the<span class="w"> </span>changelog<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>newest<span class="w"> </span>version
+<span class="w">  </span>--no-verify<span class="w">           </span>this<span class="w"> </span>option<span class="w"> </span>bypasses<span class="w"> </span>the<span class="w"> </span>pre-commit<span class="w"> </span>and<span class="w"> </span>commit-msg
+<span class="w">                        </span>hooks
+<span class="w">  </span>--yes<span class="w">                 </span>accept<span class="w"> </span>automatically<span class="w"> </span>questions<span class="w"> </span><span class="k">done</span>
+<span class="w">  </span>--tag-format<span class="w"> </span>TAG_FORMAT
+<span class="w">                        </span>the<span class="w"> </span>format<span class="w"> </span>used<span class="w"> </span>to<span class="w"> </span>tag<span class="w"> </span>the<span class="w"> </span>commit<span class="w"> </span>and<span class="w"> </span><span class="nb">read</span><span class="w"> </span>it,<span class="w"> </span>use<span class="w"> </span>it
+<span class="w">                        </span><span class="k">in</span><span class="w"> </span>existing<span class="w"> </span>projects,<span class="w"> </span>wrap<span class="w"> </span>around<span class="w"> </span>simple<span class="w"> </span>quotes
+<span class="w">  </span>--bump-message<span class="w"> </span>BUMP_MESSAGE
+<span class="w">                        </span>template<span class="w"> </span>used<span class="w"> </span>to<span class="w"> </span>create<span class="w"> </span>the<span class="w"> </span>release<span class="w"> </span>commit,<span class="w"> </span>useful
+<span class="w">                        </span>when<span class="w"> </span>working<span class="w"> </span>with<span class="w"> </span>CI
+<span class="w">  </span>--prerelease<span class="w"> </span><span class="o">{</span>alpha,beta,rc<span class="o">}</span>,<span class="w"> </span>-pr<span class="w"> </span><span class="o">{</span>alpha,beta,rc<span class="o">}</span>
+<span class="w">                        </span>choose<span class="w"> </span><span class="nb">type</span><span class="w"> </span>of<span class="w"> </span>prerelease
+<span class="w">  </span>--devrelease<span class="w"> </span>DEVRELEASE,<span class="w"> </span>-d<span class="w"> </span>DEVRELEASE
+<span class="w">                        </span>specify<span class="w"> </span>non-negative<span class="w"> </span>integer<span class="w"> </span><span class="k">for</span><span class="w"> </span>dev.<span class="w"> </span>release
+<span class="w">  </span>--increment<span class="w"> </span><span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}</span>
+<span class="w">                        </span>manually<span class="w"> </span>specify<span class="w"> </span>the<span class="w"> </span>desired<span class="w"> </span>increment
+<span class="w">  </span>--check-consistency,<span class="w"> </span>-cc
+<span class="w">                        </span>check<span class="w"> </span>consistency<span class="w"> </span>among<span class="w"> </span>versions<span class="w"> </span>defined<span class="w"> </span><span class="k">in</span><span class="w"> </span>commitizen
+<span class="w">                        </span>configuration<span class="w"> </span>and<span class="w"> </span>version_files
+<span class="w">  </span>--annotated-tag,<span class="w"> </span>-at<span class="w">  </span>create<span class="w"> </span>annotated<span class="w"> </span>tag<span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span>lightweight<span class="w"> </span>one
+<span class="w">  </span>--gpg-sign,<span class="w"> </span>-s<span class="w">        </span>sign<span class="w"> </span>tag<span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span>lightweight<span class="w"> </span>one
+<span class="w">  </span>--changelog-to-stdout
+<span class="w">                        </span>Output<span class="w"> </span>changelog<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>stdout
+<span class="w">  </span>--retry<span class="w">               </span>retry<span class="w"> </span>commit<span class="w"> </span><span class="k">if</span><span class="w"> </span>it<span class="w"> </span>fails<span class="w"> </span>the<span class="w"> </span>1st<span class="w"> </span><span class="nb">time</span>
+<span class="w">  </span>--major-version-zero<span class="w">  </span>keep<span class="w"> </span>major<span class="w"> </span>version<span class="w"> </span>at<span class="w"> </span>zero,<span class="w"> </span>even<span class="w"> </span><span class="k">for</span><span class="w"> </span>breaking<span class="w"> </span>changes
 </code></pre></div>
 
 <h3 id="-files-only"><code>--files-only</code></h3>
 <p>Bumps the version in the files defined in <code>version_files</code> without creating a commit and tag on the git repository,</p>
-<div class="codehilite"><pre><span></span><code>cz bump --files-only
+<div class="codehilite"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--files-only
 </code></pre></div>
 
 <h3 id="-changelog"><code>--changelog</code></h3>
 <p>Generate a <strong>changelog</strong> along with the new version and tag when bumping.</p>
-<div class="codehilite"><pre><span></span><code>cz bump --changelog
+<div class="codehilite"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--changelog
 </code></pre></div>
 
 <h3 id="-check-consistency"><code>--check-consistency</code></h3>
 <p>Check whether the versions defined in <code>version_files</code> and the version in commitizen
 configuration are consistent before bumping version.</p>
-<div class="codehilite"><pre><span></span><code>cz bump --check-consistency
+<div class="codehilite"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--check-consistency
 </code></pre></div>
 
 <p>For example, if we have <code>pyproject.toml</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
-<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;1.21.0&quot;</span><span class="w"></span>
-<span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="s">&quot;src/__version__.py&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s">&quot;setup.py&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="p">]</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;1.21.0&quot;</span>
+<span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s">&quot;src/__version__.py&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;setup.py&quot;</span><span class="p">,</span>
+<span class="p">]</span>
 </code></pre></div>
 
 <p><code>src/__version__.py</code>,</p>
@@ -1075,12 +1081,12 @@ However, it will still update <code>pyproject.toml</code> and <code>src/__versio
 the version in <code>setup.py</code> to <code>1.21.0</code></p>
 <h3 id="-local-version"><code>--local-version</code></h3>
 <p>Bump the local portion of the version.</p>
-<div class="codehilite"><pre><span></span><code>cz bump --local-version
+<div class="codehilite"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--local-version
 </code></pre></div>
 
 <p>For example, if we have <code>pyproject.toml</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
-<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;5.3.5+0.1.0&quot;</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;5.3.5+0.1.0&quot;</span>
 </code></pre></div>
 
 <p>If <code>--local-version</code> is used, it will bump only the local version <code>0.1.0</code> and keep the public version <code>5.3.5</code> intact, bumping to the version <code>5.3.5+0.2.0</code>.</p>
@@ -1096,7 +1102,7 @@ explicit and use <code>--changelog</code> (or the setting <code>update_changelog
 <p>This command is useful to "transport" the newly created changelog.
 It can be sent to an auditing system, or to create a Github Release.</p>
 <p>Example:</p>
-<div class="codehilite"><pre><span></span><code>cz bump --changelog --changelog-to-stdout &gt; body.md
+<div class="codehilite"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--changelog<span class="w"> </span>--changelog-to-stdout<span class="w"> </span>&gt;<span class="w"> </span>body.md
 </code></pre></div>
 
 <h3 id="-retry"><code>--retry</code></h3>
@@ -1134,12 +1140,12 @@ tell commitizen to not raise them.</p>
 </table>
 <p>There are some situations where you don't want to get an error code when some
 commits do not match your rules, you just want those commits to be skipped.</p>
-<div class="codehilite"><pre><span></span><code>cz -nr <span class="m">21</span> bump
+<div class="codehilite"><pre><span></span><code>cz<span class="w"> </span>-nr<span class="w"> </span><span class="m">21</span><span class="w"> </span>bump
 </code></pre></div>
 
 <h3 id="easy-way">Easy way</h3>
 <p>Check which error code was raised by commitizen by running in the terminal</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">echo</span> <span class="nv">$?</span>
+<div class="codehilite"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span>
 </code></pre></div>
 
 <p>The output should be an integer like this</p>
@@ -1147,11 +1153,11 @@ commits do not match your rules, you just want those commits to be skipped.</p>
 </code></pre></div>
 
 <p>And then you can tell commitizen to ignore it:</p>
-<div class="codehilite"><pre><span></span><code>cz --no-raise <span class="m">3</span>
+<div class="codehilite"><pre><span></span><code>cz<span class="w"> </span>--no-raise<span class="w"> </span><span class="m">3</span>
 </code></pre></div>
 
 <p>You can tell commitizen to skip more than one if needed:</p>
-<div class="codehilite"><pre><span></span><code>cz --no-raise <span class="m">3</span>,4,5
+<div class="codehilite"><pre><span></span><code>cz<span class="w"> </span>--no-raise<span class="w"> </span><span class="m">3</span>,4,5
 </code></pre></div>
 
 <h3 id="longer-way">Longer way</h3>
@@ -1160,22 +1166,22 @@ to skip and why.</p>
 <p>Remember to document somewhere this, because you'll forget.</p>
 <p>For example if the system raises a <code>NoneIncrementExit</code> error, you look it up
 on the list and then you can use the exit code:</p>
-<div class="codehilite"><pre><span></span><code>cz -nr <span class="m">21</span> bump
+<div class="codehilite"><pre><span></span><code>cz<span class="w"> </span>-nr<span class="w"> </span><span class="m">21</span><span class="w"> </span>bump
 </code></pre></div>
 
 <h2 id="configuration">Configuration</h2>
 <h3 id="tag_format"><code>tag_format</code></h3>
 <p>It is used to read the format from the git tags, and also to generate the tags.</p>
 <p>Commitizen supports 2 types of formats, a simple and a more complex.</p>
-<div class="codehilite"><pre><span></span><code>cz bump --tag-format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$version</span><span class="s2">&quot;</span>
+<div class="codehilite"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--tag-format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$version</span><span class="s2">&quot;</span>
 </code></pre></div>
 
-<div class="codehilite"><pre><span></span><code>cz bump --tag-format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$minor</span><span class="s2">.</span><span class="nv">$major</span><span class="s2">.</span><span class="nv">$patch$prerelease</span><span class="s2">.</span><span class="nv">$devrelease</span><span class="s2">&quot;</span>
+<div class="codehilite"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--tag-format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$minor</span><span class="s2">.</span><span class="nv">$major</span><span class="s2">.</span><span class="nv">$patch$prerelease</span><span class="s2">.</span><span class="nv">$devrelease</span><span class="s2">&quot;</span>
 </code></pre></div>
 
 <p>In your <code>pyproject.toml</code> or <code>.cz.toml</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
-<span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;v$major.$minor.$patch$prerelease&quot;</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;v$major.$minor.$patch$prerelease&quot;</span>
 </code></pre></div>
 
 <p>The variables must be preceded by a <code>$</code> sign.</p>
@@ -1223,11 +1229,11 @@ regarding if the file is present or not in <code>version_files</code>.</p>
 <p>* Renamed from <code>files</code> to <code>version_files</code>.</p>
 <p>Some examples</p>
 <p><code>pyproject.toml</code> or <code>.cz.toml</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
-<span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="s">&quot;src/__version__.py&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s">&quot;setup.py:version&quot;</span><span class="w"></span>
-<span class="p">]</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s">&quot;src/__version__.py&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;setup.py:version&quot;</span>
+<span class="p">]</span>
 </code></pre></div>
 
 <p>In the example above, we can see the reference <code>"setup.py:version"</code>.
@@ -1257,30 +1263,30 @@ in a line containing the <code>version</code> substring.</p>
 </table>
 <p>Some examples</p>
 <p><code>pyproject.toml</code> or <code>.cz.toml</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
-<span class="n">bump_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;release $current_version → $new_version [skip-ci]&quot;</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">bump_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;release $current_version → $new_version [skip-ci]&quot;</span>
 </code></pre></div>
 
 <hr />
 <h3 id="update_changelog_on_bump"><code>update_changelog_on_bump</code></h3>
 <p>When set to <code>true</code> the changelog is always updated incrementally when running <code>cz bump</code>, so the user does not have to provide the <code>--changelog</code> flag every time.</p>
 <p>defaults to: <code>false</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
-<span class="n">update_changelog_on_bump</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">update_changelog_on_bump</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
 
 <hr />
 <h3 id="annotated_tag"><code>annotated_tag</code></h3>
 <p>When set to <code>true</code> commitizen will create annotated tags.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
-<span class="n">annotated_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">annotated_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
 
 <hr />
 <h3 id="gpg_sign"><code>gpg_sign</code></h3>
 <p>When set to <code>true</code> commitizen will create gpg signed tags.</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
-<span class="n">gpg_sign</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">gpg_sign</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
 
 <hr />
@@ -1288,8 +1294,8 @@ in a line containing the <code>version</code> substring.</p>
 <p>When set to <code>true</code> commitizen will keep the major version at zero.
 Useful during the initial development stage of your project.</p>
 <p>Defaults to: <code>false</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
-<span class="n">major_version_zero</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">major_version_zero</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
 
 <h2 id="custom-bump">Custom bump</h2>
@@ -1309,42 +1315,6 @@ Useful during the initial development stage of your project.</p>
       </main>
       
         <footer class="md-footer">
-  
-    
-    <nav class="md-footer__inner md-grid" aria-label="Footer" >
-      
-        
-        <a href="../init/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Init" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              Init
-            </div>
-          </div>
-        </a>
-      
-      
-        
-        <a href="../check/" class="md-footer__link md-footer__link--next" aria-label="Next: Check" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              Check
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
-          </div>
-        </a>
-      
-    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -1367,12 +1337,11 @@ Useful during the initial development stage of your project.</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.12658920.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      <script src="../assets/javascripts/bundle.5cf534bf.min.js"></script>
       
-    
     
   </body>
 </html>

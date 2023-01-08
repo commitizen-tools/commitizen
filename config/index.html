@@ -10,8 +10,14 @@
       
       
       
+      
+        <link rel="prev" href="../changelog/">
+      
+      
+        <link rel="next" href="../customization/">
+      
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.2">
     
     
       
@@ -19,11 +25,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.975780f9.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.f56500e0.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
-        
       
       
 
@@ -54,7 +59,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="None" data-md-color-accent="None">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
   
     
     
@@ -630,6 +635,7 @@
                   
 
 
+
 <h1 id="configuration">Configuration</h1>
 <h2 id="settings">Settings</h2>
 <table>
@@ -745,79 +751,79 @@
 For a <strong>python</strong> project, we recommend adding an entry to your <code>pyproject.toml</code>.
 You can also create a <code>.cz.toml</code> file at the root of your project folder.</p>
 <p>Example configuration:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span><span class="w"></span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;cz_conventional_commits&quot;</span><span class="w"></span>
-<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;0.1.0&quot;</span><span class="w"></span>
-<span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="s">&quot;src/__version__.py&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s">&quot;pyproject.toml:version&quot;</span><span class="w"></span>
-<span class="p">]</span><span class="w"></span>
-<span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s">&quot;qmark&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fg:#ff9d00 bold&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s">&quot;question&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;bold&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s">&quot;answer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fg:#ff9d00 bold&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s">&quot;pointer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fg:#ff9d00 bold&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s">&quot;highlighted&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fg:#ff9d00 bold&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s">&quot;selected&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fg:#cc5454&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s">&quot;separator&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fg:#cc5454&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s">&quot;instruction&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="p">[</span><span class="s">&quot;text&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="k">[&quot;disabled&quot;, &quot;fg:#858585 italic&quot;]</span><span class="w"></span>
-<span class="p">]</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;cz_conventional_commits&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;0.1.0&quot;</span>
+<span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s">&quot;src/__version__.py&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;pyproject.toml:version&quot;</span>
+<span class="p">]</span>
+<span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">[</span><span class="s">&quot;qmark&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fg:#ff9d00 bold&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s">&quot;question&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;bold&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s">&quot;answer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fg:#ff9d00 bold&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s">&quot;pointer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fg:#ff9d00 bold&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s">&quot;highlighted&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fg:#ff9d00 bold&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s">&quot;selected&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fg:#cc5454&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s">&quot;separator&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fg:#cc5454&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s">&quot;instruction&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="p">[</span><span class="s">&quot;text&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="k">[&quot;disabled&quot;, &quot;fg:#858585 italic&quot;]</span>
+<span class="p">]</span>
 </code></pre></div>
 
 <h2 id="czjson-or-czjson">.cz.json or cz.json</h2>
 <p>Commitizen has support for JSON configuration. Recommended for <code>NodeJS</code> projects.</p>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="nt">&quot;commitizen&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cz_conventional_commits&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;version_files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src/__version__.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;pyproject.toml:version&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;style&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="s2">&quot;qmark&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fg:#ff9d00 bold&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bold&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="s2">&quot;answer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fg:#ff9d00 bold&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="s2">&quot;pointer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fg:#ff9d00 bold&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="s2">&quot;highlighted&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fg:#ff9d00 bold&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="s2">&quot;selected&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fg:#cc5454&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="s2">&quot;separator&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fg:#cc5454&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="s2">&quot;instruction&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">],</span><span class="w"></span>
-<span class="w">      </span><span class="p">[</span><span class="s2">&quot;disabled&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fg:#858585 italic&quot;</span><span class="p">]</span><span class="w"></span>
-<span class="w">    </span><span class="p">]</span><span class="w"></span>
-<span class="w">  </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;commitizen&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cz_conventional_commits&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;version_files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src/__version__.py&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;pyproject.toml:version&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;style&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">[</span><span class="s2">&quot;qmark&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fg:#ff9d00 bold&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bold&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="s2">&quot;answer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fg:#ff9d00 bold&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="s2">&quot;pointer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fg:#ff9d00 bold&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="s2">&quot;highlighted&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fg:#ff9d00 bold&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="s2">&quot;selected&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fg:#cc5454&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="s2">&quot;separator&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fg:#cc5454&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="s2">&quot;instruction&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="s2">&quot;disabled&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fg:#858585 italic&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 
 <h2 id="czyaml-or-czyaml">.cz.yaml or cz.yaml</h2>
 <p>YAML configuration is supported by Commitizen. Recommended for <code>Go</code>, <code>ansible</code>, or even <code>helm</code> charts projects.</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">commitizen</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cz_conventional_commits</span><span class="w"></span>
-<span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1.0</span><span class="w"></span>
-<span class="w">  </span><span class="nt">version_files</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">src/__version__.py</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pyproject.toml:version</span><span class="w"></span>
-<span class="w">  </span><span class="nt">style</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qmark</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fg:#ff9d00 bold</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">question</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bold</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">answer</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fg:#ff9d00 bold</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pointer</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fg:#ff9d00 bold</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">highlighted</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fg:#ff9d00 bold</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">selected</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fg:#cc5454</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">separator</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fg:#cc5454</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">instruction</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disabled</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fg:#858585 italic</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="nt">commitizen</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cz_conventional_commits</span>
+<span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1.0</span>
+<span class="w">  </span><span class="nt">version_files</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">src/__version__.py</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pyproject.toml:version</span>
+<span class="w">  </span><span class="nt">style</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qmark</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fg:#ff9d00 bold</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">question</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bold</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">answer</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fg:#ff9d00 bold</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pointer</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fg:#ff9d00 bold</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">highlighted</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fg:#ff9d00 bold</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">selected</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fg:#cc5454</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">separator</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fg:#cc5454</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">instruction</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disabled</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fg:#858585 italic</span>
 </code></pre></div>
 
 
@@ -834,42 +840,6 @@ You can also create a <code>.cz.toml</code> file at the root of your project fol
       </main>
       
         <footer class="md-footer">
-  
-    
-    <nav class="md-footer__inner md-grid" aria-label="Footer" >
-      
-        
-        <a href="../changelog/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Changelog" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              Changelog
-            </div>
-          </div>
-        </a>
-      
-      
-        
-        <a href="../customization/" class="md-footer__link md-footer__link--next" aria-label="Next: Customization" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              Customization
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
-          </div>
-        </a>
-      
-    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -892,12 +862,11 @@ You can also create a <code>.cz.toml</code> file at the root of your project fol
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.12658920.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      <script src="../assets/javascripts/bundle.5cf534bf.min.js"></script>
       
-    
     
   </body>
 </html>

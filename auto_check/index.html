@@ -10,8 +10,10 @@
       
       
       
+      
+      
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.2">
     
     
       
@@ -19,11 +21,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.975780f9.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.f56500e0.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
-        
       
       
 
@@ -54,7 +55,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="None" data-md-color-accent="None">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
   
     
     
@@ -574,6 +575,7 @@
                   
 
 
+
 <h1 id="automatically-check-message-before-commit">Automatically check message before commit</h1>
 <h2 id="about">About</h2>
 <p>To automatically check a commit message prior to committing, you can use a <a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks">git hook</a>.</p>
@@ -583,24 +585,24 @@
 <ul>
 <li>Step 1: Install <a href="https://pre-commit.com/">pre-commit</a></li>
 </ul>
-<div class="codehilite"><pre><span></span><code>python -m pip install pre-commit
+<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>pre-commit
 </code></pre></div>
 
 <ul>
 <li>Step 2: Create <code>.pre-commit-config.yaml</code> at your root directory with the following content</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="nn">---</span><span class="w"></span>
-<span class="nt">repos</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/commitizen-tools/commitizen</span><span class="w"></span>
-<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.17.0</span><span class="w"></span>
-<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">commitizen</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="nn">---</span>
+<span class="nt">repos</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/commitizen-tools/commitizen</span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.17.0</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">commitizen</span>
 </code></pre></div>
 
 <ul>
 <li>Step 3: Install the configuration into git hook through <code>pre-commit</code></li>
 </ul>
-<div class="codehilite"><pre><span></span><code>pre-commit install --hook-type commit-msg
+<div class="codehilite"><pre><span></span><code>pre-commit<span class="w"> </span>install<span class="w"> </span>--hook-type<span class="w"> </span>commit-msg
 </code></pre></div>
 
 <h3 id="method-2-manually-add-git-hook">Method 2: Manually add git hook</h3>
@@ -608,15 +610,15 @@
 <p>The selected hook might be the file called commit-msg.</p>
 <p>This example shows how to use the check command inside of commit-msg.</p>
 <p>At the root of the project:</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">cd</span> .git/hooks
-touch commit-msg
-chmod +x commit-msg
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>.git/hooks
+touch<span class="w"> </span>commit-msg
+chmod<span class="w"> </span>+x<span class="w"> </span>commit-msg
 </code></pre></div>
 
 <p>Open the file and edit it:</p>
 <div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 <span class="nv">MSG_FILE</span><span class="o">=</span><span class="nv">$1</span>
-cz check --allow-abort --commit-msg-file <span class="nv">$MSG_FILE</span>
+cz<span class="w"> </span>check<span class="w"> </span>--allow-abort<span class="w"> </span>--commit-msg-file<span class="w"> </span><span class="nv">$MSG_FILE</span>
 </code></pre></div>
 
 <p>Where <code>$1</code> is the name of the temporary file that contains the current commit message. To be more explicit, the previous variable is stored in another variable called <code>$MSG_FILE</code>, for didactic purposes.</p>
@@ -661,12 +663,11 @@ If the commit message is invalid, it'll be rejected.</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.12658920.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      <script src="../assets/javascripts/bundle.5cf534bf.min.js"></script>
       
-    
     
   </body>
 </html>
