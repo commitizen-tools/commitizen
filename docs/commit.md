@@ -8,4 +8,4 @@ A commit can be signed off using `cz commit --signoff` or the shortcut `cz commi
 
 !!! note
     To maintain platform compatibility, the `commit` command disable ANSI escaping in its output.
-    In particular pre-commit hooks coloring will be deactivated.
+    In particular pre-commit hooks coloring will be deactivated as discussed in [commitizen-tools/commitizen#417](https://github.com/commitizen-tools/commitizen/issues/417).
