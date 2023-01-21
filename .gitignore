@@ -110,3 +110,6 @@ venv.bak/
 
 # build
 poetry.lock
+
+# macOSX
+.DS_Store
