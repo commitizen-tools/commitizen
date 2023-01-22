@@ -11,17 +11,17 @@
       
       
       
-        <link rel="prev" href="../tutorials/jenkins_pipeline/">
+        <link rel="prev" href="../init/">
       
       
-        <link rel="next" href="../exit_codes/">
+        <link rel="next" href="../bump/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
     
     
       
-        <title>FAQ - Commitizen</title>
+        <title>Commit - Commitizen</title>
       
     
     
@@ -69,7 +69,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#support-for-pep621" class="md-skip">
+        <a href="#about" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              FAQ
+              Commit
             
           </span>
         </div>
@@ -225,18 +225,20 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
       
       
       
-        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="false">
+        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="true">
           Commands
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -266,11 +268,48 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../commit/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Commit
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Commit
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#about" class="md-nav__link">
+    About
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -451,90 +490,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          FAQ
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
         FAQ
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#support-for-pep621" class="md-nav__link">
-    Support for PEP621
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-are-revert-and-chore-valid-types-in-the-check-pattern-of-cz-conventional_commits-but-not-types-we-can-select" class="md-nav__link">
-    Why are revert and chore valid types in the check pattern of cz conventional_commits but not types we can select?
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-revert-a-bump" class="md-nav__link">
-    How to revert a bump?
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#is-this-project-affiliated-with-the-commitizen-js-project" class="md-nav__link">
-    Is this project affiliated with the Commitizen JS project?
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-handle-revert-commits" class="md-nav__link">
-    How to handle revert commits?
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#i-got-exception-winerror-995-the-io-operation-error" class="md-nav__link">
-    I got Exception [WinError 995] The I/O operation ... error
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-does-commitizen-not-support-calver" class="md-nav__link">
-    Why does commitizen not support CalVer?
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -624,50 +584,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#support-for-pep621" class="md-nav__link">
-    Support for PEP621
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-are-revert-and-chore-valid-types-in-the-check-pattern-of-cz-conventional_commits-but-not-types-we-can-select" class="md-nav__link">
-    Why are revert and chore valid types in the check pattern of cz conventional_commits but not types we can select?
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-revert-a-bump" class="md-nav__link">
-    How to revert a bump?
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#is-this-project-affiliated-with-the-commitizen-js-project" class="md-nav__link">
-    Is this project affiliated with the Commitizen JS project?
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-handle-revert-commits" class="md-nav__link">
-    How to handle revert commits?
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#i-got-exception-winerror-995-the-io-operation-error" class="md-nav__link">
-    I got Exception [WinError 995] The I/O operation ... error
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-does-commitizen-not-support-calver" class="md-nav__link">
-    Why does commitizen not support CalVer?
+  <a href="#about" class="md-nav__link">
+    About
   </a>
   
 </li>
@@ -688,89 +606,17 @@
 
 
 
-  <h1>FAQ</h1>
+  <h1>Commit</h1>
 
-<h2 id="support-for-pep621">Support for PEP621</h2>
-<p>PEP621 establishes a <code>[project]</code> definition inside <code>pyproject.toml</code></p>
-<div class="codehilite"><pre><span></span><code><span class="k">[project]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;spam&quot;</span>
-<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;2020.0.0&quot;</span>
-</code></pre></div>
-
-<p>Commitizen <strong>won't</strong> use the <code>project.version</code> as a source of truth because it's a
-tool aimed for any kind of project.</p>
-<p>If we were to use it, it would increase the complexity of the tool. Also why
-wouldn't we support other project files like <code>cargo.toml</code> or <code>package.json</code>?</p>
-<p>Instead of supporting all the different project files, you can use <code>version_files</code>
-inside <code>[tool.commitizen]</code>, and it will cheaply keep any of these project files in sync</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[tool.commitizen]</span>
-<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;2.5.1&quot;</span>
-<span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s">&quot;pyproject.toml:^version&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s">&quot;cargo.toml:^version&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s">&quot;package.json:\&quot;version\&quot;:&quot;</span>
-<span class="p">]</span>
-</code></pre></div>
-
-<h2 id="why-are-revert-and-chore-valid-types-in-the-check-pattern-of-cz-conventional_commits-but-not-types-we-can-select">Why are <code>revert</code> and <code>chore</code> valid types in the check pattern of cz conventional_commits but not types we can select?</h2>
-<p><code>revert</code> and <code>chore</code> are added to the "pattern" in <code>cz check</code> in order to prevent backward errors, but officially they are not part of conventional commits, we are using the latest <a href="https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type">types from Angular</a> (they used to but were removed).
-However, you can create a customized <code>cz</code> with those extra types. (See <a href="../customization/">Customization</a>).</p>
-<p>See more discussion in issue <a href="https://github.com/commitizen-tools/commitizen/issues/142">#142</a> and <a href="https://github.com/commitizen-tools/commitizen/issues/36">#36</a></p>
-<h2 id="how-to-revert-a-bump">How to revert a bump?</h2>
-<p>If for any reason, the created tag and changelog were to be undone, this is the snippet:</p>
-<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>tag<span class="w"> </span>--delete<span class="w"> </span>&lt;created_tag&gt;
-git<span class="w"> </span>reset<span class="w"> </span>HEAD~
-git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>HEAD
-</code></pre></div>
-
-<p>This will remove the last tag created, plus the commit containing the update to <code>.cz.toml</code> and the changelog generated for the version.</p>
-<p>In case the commit was pushed to the server you can remove it by running</p>
-<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>push<span class="w"> </span>--delete<span class="w"> </span>origin<span class="w"> </span>&lt;created_tag&gt;
-</code></pre></div>
-
-<h2 id="is-this-project-affiliated-with-the-commitizen-js-project">Is this project affiliated with the Commitizen JS project?</h2>
-<p>It is not affiliated.</p>
-<p>Both are used for similar purposes, parsing commits, generating changelog and version we presume.
-This one is written in python to make integration easier for python projects and the other serves the JS packages.</p>
-<p>They differ a bit in design, not sure if cz-js does any of this, but these are some of the stuff you can do with this repo (python's commitizen):</p>
-<ul>
-<li>create custom rules, version bumps and changelog generation, by default we use the popular conventional commits (I think cz-js allows this).</li>
-<li>single package, install one thing and it will work (cz-js is a monorepo, but you have to install different dependencies AFAIK)</li>
-<li>pre-commit integration</li>
-<li>works on any language project, as long as you create the <code>.cz.toml</code> file.</li>
-</ul>
-<p>Where do they cross paths?</p>
-<p>If you are using conventional commits in your git history, then you could swap one with the other in theory.</p>
-<p>Regarding the name, <a href="https://github.com/commitizen/cz-cli">cz-js</a> came first, they used the word commitizen first. When this project was created originally, the creator read "be a good commitizen", and thought it was just a cool word that made sense, and this would be a package that helps you be a good "commit citizen".</p>
-<h2 id="how-to-handle-revert-commits">How to handle revert commits?</h2>
-<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>revert<span class="w"> </span>--no-commit<span class="w"> </span>&lt;SHA&gt;
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;revert: foo bar&quot;</span>
-</code></pre></div>
-
-<h2 id="i-got-exception-winerror-995-the-io-operation-error">I got <code>Exception [WinError 995] The I/O operation ...</code> error</h2>
-<p>This error was caused by a Python bug on Windows. It's been fixed by <a href="https://github.com/python/cpython/pull/22017">this PR</a>, and according to Python's changelog, <a href="https://docs.python.org/3.8/whatsnew/changelog.html#python-3-8-6-release-candidate-1">3.8.6rc1</a> and <a href="https://docs.python.org/3.9/whatsnew/changelog.html#python-3-9-0-release-candidate-2">3.9.0rc2</a> should be the accurate versions first contain this fix. In conclusion, upgrade your Python version might solve this issue.</p>
-<p>More discussion can be found in issue <a href="https://github.com/commitizen-tools/commitizen/issues/318">#318</a>.</p>
-<h2 id="why-does-commitizen-not-support-calver">Why does commitizen not support CalVer?</h2>
-<p><code>commitizen</code> could support CalVer alongside SemVer, but in practice implementing CalVer
-creates numerous edge cases that are difficult to maintain (<a href="https://github.com/commitizen-tools/commitizen/pull/385">#385</a>) and more generally
-mixing the two version schemes may not be a good idea. If CalVer or other custom
-versioning scheme is needed, <code>commitizen</code> could still be used to standardize commits
-and create changelogs, but a separate package should be used for version increments.</p>
-<p>Mixing CalVer and SemVer is generally not recommended because each versioning scheme
-serves a different purposes. Diverging from either specification can be confusing to
-users and cause errors with third party tools that don't expect the non-standard format.</p>
-<p>In the future, <code>commitizen</code> may support some implementation of CalVer, but at the time
-of writing, there are no plans to implement the feature (<a href="https://github.com/commitizen-tools/commitizen/issues/173">#173</a>).</p>
-<p>If you would like to learn more about both schemes, there are plenty of good resources:</p>
-<ul>
-<li><a href="https://sedimental.org/calver.html">Announcing CalVer</a></li>
-<li><a href="https://stripe.com/blog/api-versioning">API Versioning from Stripe</a></li>
-<li><a href="https://github.com/pypa/pip/issues/5645#issuecomment-407192448">Discussion about pip's use of CalVer</a></li>
-<li><a href="https://code.erpenbeck.io/git/2021/12/16/git-version-numbering/">Git Version Numbering</a></li>
-<li><a href="https://mikestaszel.com/2021/04/03/semver-vs-calver-and-why-i-use-both/">SemVer vs. CalVer and Why I Use Both</a> (but not at the same time)</li>
-<li><a href="https://hynek.me/articles/semver-will-not-save-you/">Semver Will Not Save You</a></li>
-<li><a href="https://snarky.ca/why-i-dont-like-semver/">Why I Don't Like SemVer</a></li>
-</ul>
+<p><img alt="Using commitizen cli" src="../images/demo.gif" /></p>
+<h2 id="about">About</h2>
+<p>In your terminal run <code>cz commit</code> or the shortcut <code>cz c</code> to generate a guided git commit.</p>
+<p>A commit can be signed off using <code>cz commit --signoff</code> or the shortcut <code>cz commit -s</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To maintain platform compatibility, the <code>commit</code> command disable ANSI escaping in its output.
+In particular pre-commit hooks coloring will be deactivated as discussed in <a href="https://github.com/commitizen-tools/commitizen/issues/417">commitizen-tools/commitizen#417</a>.</p>
+</div>
 
 
 
