@@ -1,4 +1,10 @@
 
+## v2.40.0 (2023-01-23)
+
+### Feat
+
+- **yaml_config**: add explicit_start for yaml output
+
 ## v2.39.1 (2022-12-31)
 
 ### Fix
