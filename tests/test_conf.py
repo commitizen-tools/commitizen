@@ -160,3 +160,13 @@ class TestJsonConfig:
 
         with open(path, "r") as json_file:
             assert json.load(json_file) == {"commitizen": {}}
+
+
+class TestYamlConfig:
+    def test_init_empty_config_content(self, tmpdir):
+        path = tmpdir.mkdir("commitizen").join(".cz.yaml")
+        yaml_config = config.YAMLConfig(data="{}", path=path)
+        yaml_config.init_empty_config_content()
+
+        with open(path, "r") as yaml_file:
+            assert yaml.safe_load(yaml_file) == {"commitizen": {}}
