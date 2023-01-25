@@ -38,6 +38,7 @@ from jinja2 import (
     Environment,
     FileSystemLoader,
     PackageLoader,
+    Template,
 )
 
 from commitizen import out
@@ -195,17 +196,26 @@ def order_changelog_tree(tree: Iterable, change_type_order: list[str]) -> Iterab
     return sorted_tree
 
 
+def get_changelog_template(
+    loader: BaseLoader | None = None, template: str | None = None
+) -> Template:
+    loader = ChoiceLoader(
+        [
+            FileSystemLoader("."),
+            loader or PackageLoader("commitizen", "templates"),
+        ]
+    )
+    env = Environment(loader=loader, trim_blocks=True)
+    return env.get_template(template or DEFAULT_TEMPLATE)
+
+
 def render_changelog(
     tree: Iterable,
     loader: BaseLoader | None = None,
     template: str | None = None,
     **kwargs,
 ) -> str:
-    loader = ChoiceLoader(
-        [FileSystemLoader("."), loader or PackageLoader("commitizen", "templates")]
-    )
-    env = Environment(loader=loader, trim_blocks=True)
-    jinja_template = env.get_template(template or DEFAULT_TEMPLATE)
+    jinja_template = get_changelog_template(loader, template or DEFAULT_TEMPLATE)
     changelog: str = jinja_template.render(tree=tree, **kwargs)
     return changelog
 

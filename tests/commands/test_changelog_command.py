@@ -6,8 +6,10 @@ from textwrap import dedent
 
 import pytest
 from dateutil import relativedelta
+from jinja2 import FileSystemLoader
 from pytest_mock import MockFixture
 
+from commitizen import __file__ as commitizen_init
 from commitizen import cli, git
 from commitizen.changelog import DEFAULT_TEMPLATE
 from commitizen.commands.changelog import Changelog
@@ -1478,3 +1480,44 @@ def test_changelog_template_extra_quotes(
 
     changelog = project_root / "CHANGELOG.md"
     assert changelog.read_text() == "no-quote - single quotes - double quotes"
+
+
+def test_export_changelog_template_from_default(
+    mocker: MockFixture,
+    tmp_commitizen_project: Path,
+):
+    project_root = Path(tmp_commitizen_project)
+    target = project_root / "changelog.jinja"
+    src = Path(commitizen_init).parent / "templates" / DEFAULT_TEMPLATE
+
+    args = ["cz", "changelog", "--export-template", str(target)]
+
+    mocker.patch.object(sys, "argv", args)
+    cli.main()
+
+    assert target.exists()
+    assert target.read_text() == src.read_text()
+
+
+def test_export_changelog_template_from_plugin(
+    mocker: MockFixture,
+    tmp_commitizen_project: Path,
+    mock_plugin: BaseCommitizen,
+    tmp_path: Path,
+):
+    project_root = Path(tmp_commitizen_project)
+    target = project_root / "changelog.jinja"
+    filename = "template.jinja"
+    src = tmp_path / filename
+    tpl = "I am a custom template"
+    src.write_text(tpl)
+    mock_plugin.template_loader = FileSystemLoader(tmp_path)
+    mock_plugin.template = filename
+
+    args = ["cz", "changelog", "--export-template", str(target)]
+
+    mocker.patch.object(sys, "argv", args)
+    cli.main()
+
+    assert target.exists()
+    assert target.read_text() == tpl
