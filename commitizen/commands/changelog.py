@@ -3,9 +3,11 @@ from __future__ import annotations
 import os.path
 from difflib import SequenceMatcher
 from operator import itemgetter
+from pathlib import Path
 from typing import Callable
 
 from commitizen import bump, changelog, defaults, factory, git, out
+
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
     DryRunExit,
@@ -65,8 +67,13 @@ class Changelog:
             "merge_prerelease"
         ) or self.config.settings.get("changelog_merge_prerelease")
 
-        self.template = args.get("template") or self.config.settings.get("template")
+        self.template = (
+            args.get("template")
+            or self.config.settings.get("template")
+            or self.cz.template
+        )
         self.extras = args.get("extras") or {}
+        self.export_template_to = args.get("export_template")
 
     def _find_incremental_rev(self, latest_version: str, tags: list[GitTag]) -> str:
         """Try to find the 'start_rev'.
@@ -118,6 +125,11 @@ class Changelog:
                 changelog_out = changelog_hook(changelog_out, partial_changelog)
             changelog_file.write(changelog_out)
 
+    def export_template(self):
+        tpl = changelog.get_changelog_template(self.cz.template_loader, self.template)
+        src = Path(tpl.filename)
+        Path(self.export_template_to).write_text(src.read_text())
+
     def __call__(self):
         commit_parser = self.cz.commit_parser
         changelog_pattern = self.cz.changelog_pattern
@@ -129,6 +141,9 @@ class Changelog:
             Callable
         ) = self.cz.changelog_message_builder_hook
         merge_prerelease = self.merge_prerelease
+
+        if self.export_template_to:
+            return self.export_template()
 
         if not changelog_pattern or not commit_parser:
             raise NoPatternMapError(

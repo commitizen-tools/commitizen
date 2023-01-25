@@ -340,6 +340,11 @@ data = {
                         "default": None,
                         "choices": version_schemes.KNOWN_SCHEMES,
                     },
+                    {
+                        "name": "--export-template",
+                        "default": None,
+                        "help": "Export the changelog template into this file instead of rendering it",
+                    },
                     *deepcopy(tpl_arguments),
                 ],
             },
