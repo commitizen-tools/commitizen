@@ -190,6 +190,12 @@ data = {
                         "help": "keep major version at zero, even for breaking changes",
                     },
                     {
+                        "name": ["--prerelease-offset"],
+                        "type": int,
+                        "default": None,
+                        "help": "start pre-releases with this offset",
+                    },
+                    {
                         "name": "manual_version",
                         "type": str,
                         "nargs": "?",
