@@ -45,7 +45,9 @@ def find_increment(
     return increment
 
 
-def prerelease_generator(current_version: str, prerelease: Optional[str] = None) -> str:
+def prerelease_generator(
+    current_version: str, prerelease: Optional[str] = None, offset: int = 0
+) -> str:
     """Generate prerelease
 
     X.YaN   # Alpha release
@@ -65,7 +67,7 @@ def prerelease_generator(current_version: str, prerelease: Optional[str] = None)
         prev_prerelease: int = version.pre[1]
         new_prerelease_number = prev_prerelease + 1
     else:
-        new_prerelease_number = 0
+        new_prerelease_number = offset
     pre_version = f"{prerelease}{new_prerelease_number}"
     return pre_version
 
@@ -115,6 +117,7 @@ def generate_version(
     current_version: str,
     increment: str,
     prerelease: Optional[str] = None,
+    prerelease_offset: int = 0,
     devrelease: Optional[int] = None,
     is_local_version: bool = False,
 ) -> Version:
@@ -132,13 +135,17 @@ def generate_version(
     if is_local_version:
         version = Version(current_version)
         dev_version = devrelease_generator(devrelease=devrelease)
-        pre_version = prerelease_generator(str(version.local), prerelease=prerelease)
+        pre_version = prerelease_generator(
+            str(version.local), prerelease=prerelease, offset=prerelease_offset
+        )
         semver = semver_generator(str(version.local), increment=increment)
 
         return Version(f"{version.public}+{semver}{pre_version}{dev_version}")
     else:
         dev_version = devrelease_generator(devrelease=devrelease)
-        pre_version = prerelease_generator(current_version, prerelease=prerelease)
+        pre_version = prerelease_generator(
+            current_version, prerelease=prerelease, offset=prerelease_offset
+        )
         semver = semver_generator(current_version, increment=increment)
 
         # TODO: post version

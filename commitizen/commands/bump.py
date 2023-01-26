@@ -46,6 +46,7 @@ class Bump:
                     "gpg_sign",
                     "annotated_tag",
                     "major_version_zero",
+                    "prerelease_offset",
                 ]
                 if arguments[key] is not None
             },
@@ -105,6 +106,7 @@ class Bump:
         bump_commit_message: str = self.bump_settings["bump_message"]
         version_files: List[str] = self.bump_settings["version_files"]
         major_version_zero: bool = self.bump_settings["major_version_zero"]
+        prerelease_offset: int = self.bump_settings["prerelease_offset"]
 
         dry_run: bool = self.arguments["dry_run"]
         is_yes: bool = self.arguments["yes"]
@@ -133,6 +135,11 @@ class Bump:
             if major_version_zero:
                 raise NotAllowed(
                     "--major-version-zero cannot be combined with MANUAL_VERSION"
+                )
+
+            if prerelease_offset:
+                raise NotAllowed(
+                    "--prerelease-offset cannot be combined with MANUAL_VERSION"
                 )
 
         if major_version_zero:
@@ -198,6 +205,7 @@ class Bump:
                 current_version,
                 increment,
                 prerelease=prerelease,
+                prerelease_offset=prerelease_offset,
                 devrelease=devrelease,
                 is_local_version=is_local_version,
             )

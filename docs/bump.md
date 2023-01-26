@@ -95,6 +95,7 @@ options:
                         Output changelog to the stdout
   --retry               retry commit if it fails the 1st time
   --major-version-zero  keep major version at zero, even for breaking changes
+  --prerelease-offset   start pre-releases with this offset
 ```
 
 ### `--files-only`
@@ -304,7 +305,7 @@ The variables must be preceded by a `$` sign.
 Supported variables:
 
 | Variable      | Description                                 |
-| ------------- | --------------------------------------------|
+| ------------- | ------------------------------------------- |
 | `$version`    | full generated version                      |
 | `$major`      | MAJOR increment                             |
 | `$minor`      | MINOR increment                             |
@@ -464,6 +465,15 @@ release. During execution of the script, some environment variables are availabl
 post_bump_hooks = [
   "scripts/slack_notification.sh"
 ]
+### `prerelease_offset`
+
+Offset with which to start counting prereleses.
+
+Defaults to: `0`
+
+```toml
+[tool.commitizen]
+prerelease_offset = 1
 ```
 
 ## Custom bump
