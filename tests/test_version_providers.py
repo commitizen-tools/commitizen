@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 from textwrap import dedent
-from typing import TYPE_CHECKING, Iterator, Optional
+from typing import TYPE_CHECKING, Iterator, Optional, Type
 
 import pytest
 
@@ -17,6 +17,7 @@ from commitizen.providers import (
     Pep621Provider,
     PoetryProvider,
     ScmProvider,
+    VersionProvider,
     get_provider,
 )
 from tests.utils import create_file_and_commit, create_tag
@@ -56,137 +57,101 @@ def test_commitizen_provider(config: BaseConfig, mocker: MockerFixture):
     mock.assert_called_once_with("version", "43.1")
 
 
-def test_pep621_provider(config: BaseConfig, chdir: Path):
-    pyproject_toml = chdir / "pyproject.toml"
-    pyproject_toml.write_text(
-        dedent(
-            """\
-            [project]
-            version = "0.1.0"
-            """
-        )
-    )
-
-    provider = Pep621Provider(config)
-
-    assert provider.get_version() == "0.1.0"
-
-    provider.set_version("43.1")
-
-    assert pyproject_toml.read_text() == dedent(
+FILE_PROVIDERS = dict(
+    pep621=(
+        "pyproject.toml",
+        Pep621Provider,
         """\
         [project]
-        version = "43.1"
-        """
-    )
-
-
-def test_poetry_provider(config: BaseConfig, chdir: Path):
-    pyproject_toml = chdir / "pyproject.toml"
-    pyproject_toml.write_text(
-        dedent(
-            """\
-            [tool.poetry]
-            version = "0.1.0"
-            """
-        )
-    )
-    config.settings["version_provider"] = "poetry"
-
-    provider = get_provider(config)
-    assert isinstance(provider, PoetryProvider)
-    assert provider.get_version() == "0.1.0"
-
-    provider.set_version("43.1")
-    assert pyproject_toml.read_text() == dedent(
+        version = "0.1.0"
+        """,
+        """\
+        [project]
+        version = "42.1"
+        """,
+    ),
+    poetry=(
+        "pyproject.toml",
+        PoetryProvider,
         """\
         [tool.poetry]
-        version = "43.1"
-        """
-    )
-
-
-def test_cargo_provider(config: BaseConfig, chdir: Path):
-    cargo_toml = chdir / "Cargo.toml"
-    cargo_toml.write_text(
-        dedent(
-            """\
-            [package]
-            version = "0.1.0"
-            """
-        )
-    )
-    config.settings["version_provider"] = "cargo"
-
-    provider = get_provider(config)
-    assert isinstance(provider, CargoProvider)
-    assert provider.get_version() == "0.1.0"
-
-    provider.set_version("43.1")
-    assert cargo_toml.read_text() == dedent(
+        version = "0.1.0"
+        """,
+        """\
+        [tool.poetry]
+        version = "42.1"
+        """,
+    ),
+    cargo=(
+        "Cargo.toml",
+        CargoProvider,
         """\
         [package]
-        version = "43.1"
-        """
-    )
-
-
-def test_npm_provider(config: BaseConfig, chdir: Path):
-    package_json = chdir / "package.json"
-    package_json.write_text(
-        dedent(
-            """\
-            {
-              "name": "whatever",
-              "version": "0.1.0"
-            }
-            """
-        )
-    )
-    config.settings["version_provider"] = "npm"
-
-    provider = get_provider(config)
-    assert isinstance(provider, NpmProvider)
-    assert provider.get_version() == "0.1.0"
-
-    provider.set_version("43.1")
-    assert package_json.read_text() == dedent(
+        version = "0.1.0"
+        """,
+        """\
+        [package]
+        version = "42.1"
+        """,
+    ),
+    npm=(
+        "package.json",
+        NpmProvider,
         """\
         {
           "name": "whatever",
-          "version": "43.1"
+          "version": "0.1.0"
         }
-        """
-    )
-
-
-def test_composer_provider(config: BaseConfig, chdir: Path):
-    composer_json = chdir / "composer.json"
-    composer_json.write_text(
-        dedent(
-            """\
-            {
-                "name": "whatever",
-                "version": "0.1.0"
-            }
-            """
-        )
-    )
-    config.settings["version_provider"] = "composer"
-
-    provider = get_provider(config)
-    assert isinstance(provider, ComposerProvider)
-    assert provider.get_version() == "0.1.0"
-
-    provider.set_version("43.1")
-    assert composer_json.read_text() == dedent(
+        """,
+        """\
+        {
+          "name": "whatever",
+          "version": "42.1"
+        }
+        """,
+    ),
+    composer=(
+        "composer.json",
+        ComposerProvider,
         """\
         {
             "name": "whatever",
-            "version": "43.1"
+            "version": "0.1.0"
         }
-        """
-    )
+        """,
+        """\
+        {
+            "name": "whatever",
+            "version": "42.1"
+        }
+        """,
+    ),
+)
+
+
+@pytest.mark.parametrize(
+    "id,filename,cls,content,expected",
+    (pytest.param(id, *FILE_PROVIDERS[id], id=id) for id in FILE_PROVIDERS),
+)
+def test_file_providers(
+    config: BaseConfig,
+    chdir: Path,
+    id: str,
+    filename: str,
+    cls: Type[VersionProvider],
+    content: str,
+    expected: str,
+):
+    file = chdir / filename
+    file.write_text(dedent(content))
+    config.settings["version_provider"] = id
+
+    provider = get_provider(config)
+    assert isinstance(provider, cls)
+    assert provider.get_version() == "0.1.0"
+
+    provider.set_version("42.1")
+    assert file.read_text() == dedent(expected)
 
 
 @pytest.mark.parametrize(

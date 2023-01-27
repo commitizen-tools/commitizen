@@ -93,7 +93,12 @@ def test_version_use_version_provider(
 
     commands.Version(
         config,
-        {"report": False, "project": project, "commitizen": False, "verbose": True},
+        {
+            "report": False,
+            "project": project,
+            "commitizen": False,
+            "verbose": not project,
+        },
     )()
     captured = capsys.readouterr()
 
