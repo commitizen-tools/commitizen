@@ -31,7 +31,7 @@ class Commit:
         self.arguments = arguments
         self.temp_file: str = os.path.join(
             tempfile.gettempdir(),
-            "cz.commit{user}.backup".format(user=os.environ.get("USER", "")),
+            f"cz.commit{os.environ.get('USER', '')}.backup",
         )
 
     def read_backup_message(self) -> str:

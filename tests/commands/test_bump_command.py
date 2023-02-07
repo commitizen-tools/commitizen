@@ -6,7 +6,7 @@ from unittest.mock import MagicMock
 import pytest
 from pytest_mock import MockFixture
 
-import commitizen.commands.bump as bump
+from commitizen.commands import bump
 from commitizen import cli, cmd, git
 from commitizen.exceptions import (
     BumpTagFailedError,

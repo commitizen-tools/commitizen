@@ -20,7 +20,7 @@ class CustomizeCommitsCz(BaseCommitizen):
     change_type_order = defaults.change_type_order
 
     def __init__(self, config: BaseConfig):
-        super(CustomizeCommitsCz, self).__init__(config)
+        super().__init__(config)
 
         if "customize" not in self.config.settings:
             raise MissingCzCustomizeConfigError()
