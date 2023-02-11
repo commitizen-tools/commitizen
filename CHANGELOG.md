@@ -1,4 +1,22 @@
 
+## v2.42.0 (2023-02-11)
+
+### Feat
+
+- **bump**: support prereleases with start offset
+
+## v2.41.0 (2023-02-08)
+
+### Feat
+
+- **bump**: added support for running arbitrary hooks during bump
+
+## v2.40.0 (2023-01-23)
+
+### Feat
+
+- **yaml_config**: add explicit_start for yaml output
+
 ## v2.39.1 (2022-12-31)
 
 ### Fix

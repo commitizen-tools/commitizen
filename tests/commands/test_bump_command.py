@@ -1,13 +1,13 @@
 import inspect
 import sys
 from typing import Tuple
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, call
 
 import pytest
 from pytest_mock import MockFixture
 
 import commitizen.commands.bump as bump
-from commitizen import cli, cmd, git
+from commitizen import cli, cmd, git, hooks
 from commitizen.exceptions import (
     BumpTagFailedError,
     CommitizenException,
@@ -757,5 +757,77 @@ def test_bump_manual_version_disallows_major_version_zero(mocker):
 
     expected_error_message = (
         "--major-version-zero cannot be combined with MANUAL_VERSION"
+    )
+    assert expected_error_message in str(excinfo.value)
+
+
+@pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
+def test_bump_with_pre_bump_hooks(
+    commit_msg, mocker: MockFixture, tmp_commitizen_project
+):
+    pre_bump_hook = "scripts/pre_bump_hook.sh"
+    post_bump_hook = "scripts/post_bump_hook.sh"
+
+    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_commitizen_cfg_file.write(
+        f"{tmp_commitizen_cfg_file.read()}\n"
+        f'pre_bump_hooks = ["{pre_bump_hook}"]\n'
+        f'post_bump_hooks = ["{post_bump_hook}"]\n'
+    )
+
+    run_mock = mocker.Mock()
+    mocker.patch.object(hooks, "run", run_mock)
+
+    create_file_and_commit(commit_msg)
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    tag_exists = git.tag_exist("0.2.0")
+    assert tag_exists is True
+
+    run_mock.assert_has_calls(
+        [
+            call(
+                [pre_bump_hook],
+                _env_prefix="CZ_PRE_",
+                is_initial=True,
+                current_version="0.1.0",
+                current_tag_version="0.1.0",
+                new_version="0.2.0",
+                new_tag_version="0.2.0",
+                message="bump: version 0.1.0 → 0.2.0",
+                increment="MINOR",
+                changelog_file_name=None,
+            ),
+            call(
+                [post_bump_hook],
+                _env_prefix="CZ_POST_",
+                was_initial=True,
+                previous_version="0.1.0",
+                previous_tag_version="0.1.0",
+                current_version="0.2.0",
+                current_tag_version="0.2.0",
+                message="bump: version 0.1.0 → 0.2.0",
+                increment="MINOR",
+                changelog_file_name=None,
+            ),
+        ]
+    )
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_manual_version_disallows_prerelease_offset(mocker):
+    create_file_and_commit("feat: new file")
+
+    manual_version = "0.2.0"
+    testargs = ["cz", "bump", "--yes", "--prerelease-offset", "42", manual_version]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.raises(NotAllowed) as excinfo:
+        cli.main()
+
+    expected_error_message = (
+        "--prerelease-offset cannot be combined with MANUAL_VERSION"
     )
     assert expected_error_message in str(excinfo.value)

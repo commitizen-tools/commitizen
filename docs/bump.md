@@ -95,6 +95,7 @@ options:
                         Output changelog to the stdout
   --retry               retry commit if it fails the 1st time
   --major-version-zero  keep major version at zero, even for breaking changes
+  --prerelease-offset   start pre-releases with this offset
 ```
 
 ### `--files-only`
@@ -304,7 +305,7 @@ The variables must be preceded by a `$` sign.
 Supported variables:
 
 | Variable      | Description                                 |
-| ------------- | --------------------------------------------|
+| ------------- | ------------------------------------------- |
 | `$version`    | full generated version                      |
 | `$major`      | MAJOR increment                             |
 | `$minor`      | MINOR increment                             |
@@ -409,6 +410,70 @@ Defaults to: `false`
 ```toml
 [tool.commitizen]
 major_version_zero = true
+```
+
+---
+
+### `pre_bump_hooks`
+
+A list of optional commands that will run right _after_ updating `version_files`
+and _before_ actual committing and tagging the release.
+
+Useful when you need to generate documentation based on the new version. During
+execution of the script, some environment variables are available:
+
+| Variable                     | Description                                                |
+| ---------------------------- | ---------------------------------------------------------- |
+| `CZ_PRE_IS_INITIAL`          | `True` when this is the initial release, `False` otherwise |
+| `CZ_PRE_CURRENT_VERSION`     | Current version, before the bump                           |
+| `CZ_PRE_CURRENT_TAG_VERSION` | Current version tag, before the bump                       |
+| `CZ_PRE_NEW_VERSION`         | New version, after the bump                                |
+| `CZ_PRE_NEW_TAG_VERSION`     | New version tag, after the bump                            |
+| `CZ_PRE_MESSAGE`             | Commit message of the bump                                 |
+| `CZ_PRE_INCREMENT`           | Whether this is a `MAJOR`, `MINOR` or `PATH` release       |
+| `CZ_PRE_CHANGELOG_FILE_NAME` | Path to the changelog file, if available                   |
+
+```toml
+[tool.commitizen]
+pre_bump_hooks = [
+  "scripts/generate_documentation.sh"
+]
+```
+
+---
+
+### `post_bump_hooks`
+
+A list of optional commands that will run right _after_ committing and tagging the release.
+
+Useful when you need to send notifications about a release, or further automate deploying the
+release. During execution of the script, some environment variables are available:
+
+| Variable                       | Description                                                 |
+| ------------------------------ | ----------------------------------------------------------- |
+| `CZ_POST_WAS_INITIAL`          | `True` when this was the initial release, `False` otherwise |
+| `CZ_POST_PREVIOUS_VERSION`     | Previous version, before the bump                           |
+| `CZ_POST_PREVIOUS_TAG_VERSION` | Previous version tag, before the bump                       |
+| `CZ_POST_CURRENT_VERSION`      | Current version, after the bump                             |
+| `CZ_POST_CURRENT_TAG_VERSION`  | Current version tag, after the bump                         |
+| `CZ_POST_MESSAGE`              | Commit message of the bump                                  |
+| `CZ_POST_INCREMENT`            | Whether this wass a `MAJOR`, `MINOR` or `PATH` release      |
+| `CZ_POST_CHANGELOG_FILE_NAME`  | Path to the changelog file, if available                    |
+
+```toml
+[tool.commitizen]
+post_bump_hooks = [
+  "scripts/slack_notification.sh"
+]
+### `prerelease_offset`
+
+Offset with which to start counting prereleses.
+
+Defaults to: `0`
+
+```toml
+[tool.commitizen]
+prerelease_offset = 1
 ```
 
 ## Custom bump

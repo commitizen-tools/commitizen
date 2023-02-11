@@ -5,7 +5,7 @@ from typing import List, Optional
 import questionary
 from packaging.version import InvalidVersion, Version
 
-from commitizen import bump, cmd, defaults, factory, git, out
+from commitizen import bump, cmd, defaults, factory, git, hooks, out
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
@@ -46,6 +46,7 @@ class Bump:
                     "gpg_sign",
                     "annotated_tag",
                     "major_version_zero",
+                    "prerelease_offset",
                 ]
                 if arguments[key] is not None
             },
@@ -58,6 +59,8 @@ class Bump:
         self.no_verify = arguments["no_verify"]
         self.check_consistency = arguments["check_consistency"]
         self.retry = arguments["retry"]
+        self.pre_bump_hooks = self.config.settings["pre_bump_hooks"]
+        self.post_bump_hooks = self.config.settings["post_bump_hooks"]
 
     def is_initial_tag(self, current_tag_version: str, is_yes: bool = False) -> bool:
         """Check if reading the whole git tree up to HEAD is needed."""
@@ -103,6 +106,7 @@ class Bump:
         bump_commit_message: str = self.bump_settings["bump_message"]
         version_files: List[str] = self.bump_settings["version_files"]
         major_version_zero: bool = self.bump_settings["major_version_zero"]
+        prerelease_offset: int = self.bump_settings["prerelease_offset"]
 
         dry_run: bool = self.arguments["dry_run"]
         is_yes: bool = self.arguments["yes"]
@@ -131,6 +135,11 @@ class Bump:
             if major_version_zero:
                 raise NotAllowed(
                     "--major-version-zero cannot be combined with MANUAL_VERSION"
+                )
+
+            if prerelease_offset:
+                raise NotAllowed(
+                    "--prerelease-offset cannot be combined with MANUAL_VERSION"
                 )
 
         if major_version_zero:
@@ -196,6 +205,7 @@ class Bump:
                 current_version,
                 increment,
                 prerelease=prerelease,
+                prerelease_offset=prerelease_offset,
                 devrelease=devrelease,
                 is_local_version=is_local_version,
             )
@@ -272,6 +282,20 @@ class Bump:
 
         self.config.set_key("version", str(new_version))
 
+        if self.pre_bump_hooks:
+            hooks.run(
+                self.pre_bump_hooks,
+                _env_prefix="CZ_PRE_",
+                is_initial=is_initial,
+                current_version=current_version,
+                current_tag_version=current_tag_version,
+                new_version=new_version.public,
+                new_tag_version=new_tag_version,
+                message=message,
+                increment=increment,
+                changelog_file_name=changelog_cmd.file_name if self.changelog else None,
+            )
+
         if is_files_only:
             raise ExpectedExit()
 
@@ -299,6 +323,20 @@ class Bump:
         )
         if c.return_code != 0:
             raise BumpTagFailedError(c.err)
+
+        if self.post_bump_hooks:
+            hooks.run(
+                self.post_bump_hooks,
+                _env_prefix="CZ_POST_",
+                was_initial=is_initial,
+                previous_version=current_version,
+                previous_tag_version=current_tag_version,
+                current_version=new_version.public,
+                current_tag_version=new_tag_version,
+                message=message,
+                increment=increment,
+                changelog_file_name=changelog_cmd.file_name if self.changelog else None,
+            )
 
         # TODO: For v3 output this only as diagnostic and remove this if
         if self.changelog_to_stdout:

@@ -17,7 +17,7 @@ class YAMLConfig(BaseConfig):
 
     def init_empty_config_content(self):
         with smart_open(self.path, "a") as json_file:
-            yaml.dump({"commitizen": {}}, json_file)
+            yaml.dump({"commitizen": {}}, json_file, explicit_start=True)
 
     def _parse_setting(self, data: Union[bytes, str]) -> None:
         """We expect to have a section in cz.yaml looking like
@@ -44,6 +44,6 @@ class YAMLConfig(BaseConfig):
 
         parser["commitizen"][key] = value
         with smart_open(self.path, "w") as yaml_file:
-            yaml.dump(parser, yaml_file)
+            yaml.dump(parser, yaml_file, explicit_start=True)
 
         return self

@@ -12,6 +12,7 @@ nav:
     - Introduction: 'README.md'
     - Commands:
         - Init: 'init.md'
+        - Commit: 'commit.md'
         - Bump: 'bump.md'
         - Check: 'check.md'
         - Changelog: 'changelog.md'

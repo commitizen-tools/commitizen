@@ -40,6 +40,9 @@ class Settings(TypedDict, total=False):
     style: Optional[List[Tuple[str, str]]]
     customize: CzSettings
     major_version_zero: bool
+    pre_bump_hooks: Optional[List[str]]
+    post_bump_hooks: Optional[List[str]]
+    prerelease_offset: int
 
 
 name: str = "cz_conventional_commits"
@@ -65,6 +68,9 @@ DEFAULT_SETTINGS: Settings = {
     "update_changelog_on_bump": False,
     "use_shortcuts": False,
     "major_version_zero": False,
+    "pre_bump_hooks": [],
+    "post_bump_hooks": [],
+    "prerelease_offset": 0,
 }
 
 MAJOR = "MAJOR"

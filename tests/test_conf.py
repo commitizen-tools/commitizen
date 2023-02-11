@@ -19,6 +19,10 @@ style = [
     ["pointer", "reverse"],
     ["question", "underline"]
 ]
+pre_bump_hooks = [
+    "scripts/generate_documentation.sh"
+]
+post_bump_hooks = ["scripts/slack_notification.sh"]
 
 [tool.black]
 line-length = 88
@@ -31,6 +35,8 @@ DICT_CONFIG = {
         "version": "1.0.0",
         "version_files": ["commitizen/__version__.py", "pyproject.toml"],
         "style": [["pointer", "reverse"], ["question", "underline"]],
+        "pre_bump_hooks": ["scripts/generate_documentation.sh"],
+        "post_bump_hooks": ["scripts/slack_notification.sh"],
     }
 }
 
@@ -49,6 +55,9 @@ _settings = {
     "update_changelog_on_bump": False,
     "use_shortcuts": False,
     "major_version_zero": False,
+    "pre_bump_hooks": ["scripts/generate_documentation.sh"],
+    "post_bump_hooks": ["scripts/slack_notification.sh"],
+    "prerelease_offset": 0,
 }
 
 _new_settings = {
@@ -65,6 +74,9 @@ _new_settings = {
     "update_changelog_on_bump": False,
     "use_shortcuts": False,
     "major_version_zero": False,
+    "pre_bump_hooks": ["scripts/generate_documentation.sh"],
+    "post_bump_hooks": ["scripts/slack_notification.sh"],
+    "prerelease_offset": 0,
 }
 
 _read_settings = {
@@ -73,6 +85,8 @@ _read_settings = {
     "version_files": ["commitizen/__version__.py", "pyproject.toml"],
     "style": [["pointer", "reverse"], ["question", "underline"]],
     "changelog_file": "CHANGELOG.md",
+    "pre_bump_hooks": ["scripts/generate_documentation.sh"],
+    "post_bump_hooks": ["scripts/slack_notification.sh"],
 }
 
 
@@ -160,3 +174,13 @@ class TestJsonConfig:
 
         with open(path, "r") as json_file:
             assert json.load(json_file) == {"commitizen": {}}
+
+
+class TestYamlConfig:
+    def test_init_empty_config_content(self, tmpdir):
+        path = tmpdir.mkdir("commitizen").join(".cz.yaml")
+        yaml_config = config.YAMLConfig(data="{}", path=path)
+        yaml_config.init_empty_config_content()
+
+        with open(path, "r") as yaml_file:
+            assert yaml.safe_load(yaml_file) == {"commitizen": {}}
