@@ -17,7 +17,7 @@
         <link rel="next" href="../check/">
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.11">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.12">
     
     
       
@@ -1081,6 +1081,7 @@ options:
 <span class="w">                        </span>Output<span class="w"> </span>changelog<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>stdout
 <span class="w">  </span>--retry<span class="w">               </span>retry<span class="w"> </span>commit<span class="w"> </span><span class="k">if</span><span class="w"> </span>it<span class="w"> </span>fails<span class="w"> </span>the<span class="w"> </span>1st<span class="w"> </span><span class="nb">time</span>
 <span class="w">  </span>--major-version-zero<span class="w">  </span>keep<span class="w"> </span>major<span class="w"> </span>version<span class="w"> </span>at<span class="w"> </span>zero,<span class="w"> </span>even<span class="w"> </span><span class="k">for</span><span class="w"> </span>breaking<span class="w"> </span>changes
+<span class="w">  </span>--prerelease-offset<span class="w">   </span>start<span class="w"> </span>pre-releases<span class="w"> </span>with<span class="w"> </span>this<span class="w"> </span>offset
 </code></pre></div>
 
 <h3 id="-files-only"><code>--files-only</code></h3>
@@ -1447,6 +1448,15 @@ release. During execution of the script, some environment variables are availabl
 <span class="n">post_bump_hooks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">  </span><span class="s">&quot;scripts/slack_notification.sh&quot;</span>
 <span class="p">]</span>
+<span class="c1">### `prerelease_offset`</span>
+
+<span class="n">Offset</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="n">counting</span><span class="w"> </span><span class="n">prereleses</span><span class="p">.</span>
+
+<span class="n">Defaults</span><span class="w"> </span><span class="n">to</span><span class="p">:</span><span class="w"> </span><span class="err">`</span><span class="mi">0</span><span class="err">`</span>
+
+<span class="err">```</span><span class="n">toml</span>
+<span class="k">[tool.commitizen]</span>
+<span class="n">prerelease_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
 </code></pre></div>
 
 <h2 id="custom-bump">Custom bump</h2>
@@ -1491,7 +1501,7 @@ release. During execution of the script, some environment variables are availabl
     <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.db81ec45.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.6df46069.min.js"></script>
+      <script src="../assets/javascripts/bundle.4b2c34cd.min.js"></script>
       
     
   </body>
