@@ -1,4 +1,10 @@
 
+## v2.42.0 (2023-02-11)
+
+### Feat
+
+- **bump**: support prereleases with start offset
+
 ## v2.41.0 (2023-02-08)
 
 ### Feat
