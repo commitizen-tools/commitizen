@@ -535,6 +535,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#install-before-contributing" class="md-nav__link">
+    Install before contributing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#before-making-a-pull-request" class="md-nav__link">
     Before making a pull request
   </a>
@@ -596,6 +603,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#install-before-contributing" class="md-nav__link">
+    Install before contributing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#before-making-a-pull-request" class="md-nav__link">
     Before making a pull request
   </a>
@@ -624,12 +638,17 @@
 <p>First of all, thank you for taking the time to contribute! 🎉</p>
 <p>When contributing to <a href="https://github.com/commitizen-tools/commitizen">commitizen</a>, please first create an <a href="https://github.com/commitizen-tools/commitizen/issues">issue</a> to discuss the change you wish to make before making a change.</p>
 <p>If you're a first-time contributor, you can check the issues with <a href="https://github.com/commitizen-tools/commitizen/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22">good first issue</a> tag.</p>
+<h2 id="install-before-contributing">Install before contributing</h2>
+<ol>
+<li>Install <a href="https://python-poetry.org/">poetry</a>, installation <a href="https://python-poetry.org/docs/#installing-with-the-official-installer">pages</a></li>
+<li>Install <a href="https://gnupg.org">gpg</a>, installation <a href="https://gnupg.org/documentation/manuals/gnupg/Installation.html#Installation">pages</a>. For Mac users, you could try <a href="https://brew.sh/">homebrew</a>.</li>
+</ol>
 <h2 id="before-making-a-pull-request">Before making a pull request</h2>
 <ol>
 <li>Fork <a href="https://github.com/commitizen-tools/commitizen">the repository</a>.</li>
 <li>Clone the repository from your GitHub.</li>
 <li>Setup development environment through <a href="https://python-poetry.org/">poetry</a> (<code>poetry install</code>).</li>
-<li>Setup <a href="https://pre-commit.com/">pre-commit</a> hook (<code>pre-commit install -t pre-commit -t pre-push -t commit-msg</code>)</li>
+<li>Setup <a href="https://pre-commit.com/">pre-commit</a> hook (<code>poetry run pre-commit install -t pre-commit -t pre-push -t commit-msg</code>)</li>
 <li>Check out a new branch and add your modification.</li>
 <li>Add test cases for all your changes.
    (We use <a href="https://codecov.io/">CodeCov</a> to ensure our test coverage does not drop.)</li>
