@@ -325,6 +325,13 @@ data = {
                         "default": False,
                         "help": "allow empty commit messages, which typically abort a commit",
                     },
+                    {
+                        "name": ["--allowed-prefixes"],
+                        "nargs": "*",
+                        "help": "allowed commit message prefixes. "
+                        "If the message starts by one of these prefixes, "
+                        "the message won't be checked against the regex",
+                    },
                 ],
             },
             {

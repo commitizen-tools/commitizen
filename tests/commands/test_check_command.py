@@ -312,6 +312,39 @@ def test_check_command_override_allow_abort_config(config, mocker: MockFixture):
         error_mock.assert_called_once()
 
 
+def test_check_command_with_allowed_prefixes_arg(config, mocker: MockFixture):
+    success_mock = mocker.patch("commitizen.out.success")
+    check_cmd = commands.Check(
+        config=config,
+        arguments={"message": "custom! test", "allowed_prefixes": ["custom!"]},
+    )
+
+    check_cmd()
+    success_mock.assert_called_once()
+
+
+def test_check_command_with_allowed_prefixes_config(config, mocker: MockFixture):
+    success_mock = mocker.patch("commitizen.out.success")
+    config.settings["allowed_prefixes"] = ["custom!"]
+    check_cmd = commands.Check(config=config, arguments={"message": "custom! test"})
+
+    check_cmd()
+    success_mock.assert_called_once()
+
+
+def test_check_command_override_allowed_prefixes_config(config, mocker: MockFixture):
+    error_mock = mocker.patch("commitizen.out.error")
+    config.settings["allow_abort"] = ["fixup!"]
+    check_cmd = commands.Check(
+        config=config,
+        arguments={"message": "fixup! test", "allowed_prefixes": ["custom!"]},
+    )
+
+    with pytest.raises(InvalidCommitMessageError):
+        check_cmd()
+        error_mock.assert_called_once()
+
+
 def test_check_command_with_pipe_message(mocker: MockFixture, capsys):
     testargs = ["cz", "check"]
     mocker.patch.object(sys, "argv", testargs)

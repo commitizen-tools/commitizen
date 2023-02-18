@@ -42,6 +42,7 @@ class Settings(TypedDict, total=False):
     tag_format: str | None
     bump_message: str | None
     allow_abort: bool
+    allowed_prefixes: List[str]
     changelog_file: str
     changelog_incremental: bool
     changelog_start_rev: str | None
@@ -75,6 +76,13 @@ DEFAULT_SETTINGS: Settings = {
     "tag_format": None,  # example v$version
     "bump_message": None,  # bumped v$current_version to $new_version
     "allow_abort": False,
+    "allowed_prefixes": [
+        "Merge",
+        "Revert",
+        "Pull request",
+        "fixup!",
+        "squash!",
+    ],
     "changelog_file": "CHANGELOG.md",
     "changelog_incremental": False,
     "changelog_start_rev": None,

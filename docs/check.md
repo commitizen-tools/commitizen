@@ -64,3 +64,12 @@ cz check --message MESSAGE --allow-abort
 
 Empty commit messages typically instruct Git to abort a commit, so you can pass `--allow-abort` to
 permit them. Since `git commit` accepts an `--allow-empty-message` flag (primarily for wrapper scripts), you may wish to disallow such commits in CI. `--allow-abort` may be used in conjunction with any of the other options.
+
+### Allowed Prefixes
+
+If the commit message starts by some specific prefixes, `cz check` returns `True` without checkign the regex.
+By default, the the following prefixes are allowed: `Merge`, `Revert`, `Pull Request`, `fixup!` and `squash!`.
+
+```bash
+cz check --message MESSAGE --allowed-prefixes 'Merge' 'Revert' 'Custom Prefix'
+```
