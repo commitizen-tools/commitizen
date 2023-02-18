@@ -82,6 +82,12 @@ Default: `false`
 
 Disallow empty commit messages, useful in ci. [Read more][allow_abort]
 
+### `allowed_prefixes`
+
+Type: `list`
+Default: `[ "Merge", "Revert", "Pull request", "fixup!", "squash!"]`
+Allow some prefixes and do not try to match the regex when checking the message [Read more][allowed_prefixes]
+
 ### `changelog_file`
 
 Type: `str`
@@ -346,6 +352,7 @@ setup(
 [version_type]: bump.md#version_type
 [pre_bump_hooks]: bump.md#pre_bump_hooks
 [post_bump_hooks]: bump.md#post_bump_hooks
+[allowed_prefixes]: check.md#allowed-prefixes
 [additional-features]: https://github.com/tmbo/questionary#additional-features
 [customization]: customization.md
 [shortcuts]: customization.md#shortcut-keys

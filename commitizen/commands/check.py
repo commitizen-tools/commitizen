@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import re
 import sys
-from typing import Any
+from typing import Any, List
 
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
@@ -30,6 +30,15 @@ class Check:
         self.rev_range: str | None = arguments.get("rev_range")
         self.allow_abort: bool = bool(
             arguments.get("allow_abort", config.settings["allow_abort"])
+        )
+
+        # we need to distinguish between None and [], which is a valid value
+
+        allowed_prefixes = arguments.get("allowed_prefixes")
+        self.allowed_prefixes: List[str] = (
+            allowed_prefixes
+            if allowed_prefixes is not None
+            else config.settings["allowed_prefixes"]
         )
 
         self._valid_command_argument()
@@ -134,12 +143,7 @@ class Check:
     def validate_commit_message(self, commit_msg: str, pattern: str) -> bool:
         if not commit_msg:
             return self.allow_abort
-        if (
-            commit_msg.startswith("Merge")
-            or commit_msg.startswith("Revert")
-            or commit_msg.startswith("Pull request")
-            or commit_msg.startswith("fixup!")
-            or commit_msg.startswith("squash!")
-        ):
+
+        if any(map(commit_msg.startswith, self.allowed_prefixes)):
             return True
         return bool(re.match(pattern, commit_msg))
