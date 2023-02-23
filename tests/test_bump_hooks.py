@@ -1,3 +1,4 @@
+import os
 from unittest.mock import call
 
 import pytest
@@ -17,7 +18,10 @@ def test_run(mocker: MockFixture):
     hooks.run(bump_hooks)
 
     cmd_run_mock.assert_has_calls(
-        [call("pre_bump_hook", env={}), call("pre_bump_hook_1", env={})]
+        [
+            call("pre_bump_hook", env=dict(os.environ)),
+            call("pre_bump_hook_1", env=dict(os.environ)),
+        ]
     )
 
 
