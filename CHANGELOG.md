@@ -1,4 +1,10 @@
 
+## v2.42.1 (2023-02-25)
+
+### Fix
+
+- **bump**: fixed environment variables in bump hooks
+
 ## v2.42.0 (2023-02-11)
 
 ### Feat
