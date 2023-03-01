@@ -144,9 +144,7 @@ class Changelog:
                 tag_format=self.tag_format,
             )
 
-        commits = git.get_commits(
-            start=start_rev, end=end_rev, args="--author-date-order"
-        )
+        commits = git.get_commits(start=start_rev, end=end_rev, args="--topo-order")
         if not commits:
             raise NoCommitsFoundError("No commits found")
 

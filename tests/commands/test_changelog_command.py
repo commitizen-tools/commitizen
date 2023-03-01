@@ -13,7 +13,14 @@ from commitizen.exceptions import (
     NotAGitProjectError,
     NotAllowed,
 )
-from tests.utils import create_file_and_commit, wait_for_tag
+from tests.utils import (
+    create_branch,
+    create_file_and_commit,
+    get_current_branch,
+    merge_branch,
+    switch_branch,
+    wait_for_tag,
+)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -264,6 +271,75 @@ def test_changelog_hook_customize(mocker: MockFixture, config_customize):
     full_changelog = (
         "## Unreleased\n\n### Refactor\n\n- is in changelog\n\n### Feat\n\n- new file\n"
     )
+
+    changelog_hook_mock.assert_called_with(full_changelog, full_changelog)
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_with_non_linear_merges_commit_order(
+    mocker: MockFixture, config_customize
+):
+    """Test that commits merged non-linearly are correctly ordered in the changelog
+
+    A typical scenario is having two branches from main like so:
+    * feat: I will be merged first - (2023-03-01 11:35:51 +0100) |  (branchB)
+    | * feat: I will be merged second - (2023-03-01 11:35:22 +0100) |  (branchA)
+    |/
+    * feat: initial commit - (2023-03-01 11:34:54 +0100) |  (HEAD -> main)
+
+    And merging them, for example in the reverse order they were created on would give the following:
+    *   Merge branch 'branchA' - (2023-03-01 11:42:59 +0100) |  (HEAD -> main)
+    |\
+    | * feat: I will be merged second - (2023-03-01 11:35:22 +0100) |  (branchA)
+    * | feat: I will be merged first - (2023-03-01 11:35:51 +0100) |  (branchB)
+    |/
+    * feat: initial commit - (2023-03-01 11:34:54 +0100) |
+
+    In this case we want the changelog to reflect the topological order of commits,
+    i.e. the order in which they were merged into the main branch
+
+    So the above example should result in the following:
+    ## Unreleased
+
+    ### Feat
+    - I will be merged second
+    - I will be merged first
+    - initial commit
+    """
+    changelog_hook_mock = mocker.Mock()
+    changelog_hook_mock.return_value = "cool changelog hook"
+
+    create_file_and_commit("feat: initial commit")
+
+    main_branch = get_current_branch()
+
+    create_branch("branchA")
+    create_branch("branchB")
+
+    switch_branch("branchA")
+    create_file_and_commit("feat: I will be merged second")
+
+    switch_branch("branchB")
+    create_file_and_commit("feat: I will be merged first")
+
+    # Note we merge branches opposite order than author_date
+    switch_branch(main_branch)
+    merge_branch("branchB")
+    merge_branch("branchA")
+
+    changelog = Changelog(
+        config_customize,
+        {"unreleased_version": None, "incremental": True, "dry_run": False},
+    )
+    mocker.patch.object(changelog.cz, "changelog_hook", changelog_hook_mock)
+    changelog()
+    full_changelog = "\
+## Unreleased\n\n\
+\
+### Feat\n\n\
+- I will be merged second\n\
+- I will be merged first\n\
+- initial commit\n"
 
     changelog_hook_mock.assert_called_with(full_changelog, full_changelog)
 
