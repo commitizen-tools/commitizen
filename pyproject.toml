@@ -68,7 +68,7 @@ packaging = ">=19"
 tomlkit = ">=0.5.3,<1.0.0"
 jinja2 = ">=2.10.3"
 pyyaml = ">=3.08"
-argcomplete = ">=1.12.1,<2.1"
+argcomplete = ">=1.12.1,<2.2"
 typing-extensions = "^4.0.1"
 charset-normalizer = ">=2.1.0,<3.1"
 
