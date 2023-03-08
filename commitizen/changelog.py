@@ -90,10 +90,12 @@ def generate_tree_from_commits(
     pat = re.compile(changelog_pattern)
     map_pat = re.compile(commit_parser, re.MULTILINE)
     body_map_pat = re.compile(commit_parser, re.MULTILINE | re.DOTALL)
+    current_tag: Optional[GitTag] = None
 
     # Check if the latest commit is not tagged
-    latest_commit = commits[0]
-    current_tag: Optional[GitTag] = get_commit_tag(latest_commit, tags)
+    if commits:
+        latest_commit = commits[0]
+        current_tag = get_commit_tag(latest_commit, tags)
 
     current_tag_name: str = unreleased_version or "Unreleased"
     current_tag_date: str = ""

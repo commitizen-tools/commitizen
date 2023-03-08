@@ -3,6 +3,8 @@ from difflib import SequenceMatcher
 from operator import itemgetter
 from typing import Callable, Dict, List, Optional
 
+from packaging.version import parse
+
 from commitizen import bump, changelog, defaults, factory, git, out, version_types
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
@@ -36,6 +38,13 @@ class Changelog:
             "changelog_incremental"
         )
         self.dry_run = args["dry_run"]
+
+        self.current_version = (
+            args.get("current_version") or self.config.settings.get("version") or ""
+        )
+        self.current_version_instance = (
+            parse(self.current_version) if self.current_version else None
+        )
         self.unreleased_version = args["unreleased_version"]
         self.change_type_map = (
             self.config.settings.get("change_type_map") or self.cz.change_type_map
@@ -155,7 +164,10 @@ class Changelog:
             )
 
         commits = git.get_commits(start=start_rev, end=end_rev, args="--topo-order")
-        if not commits:
+        if not commits and (
+            self.current_version_instance is None
+            or not self.current_version_instance.is_prerelease
+        ):
             raise NoCommitsFoundError("No commits found")
 
         tree = changelog.generate_tree_from_commits(

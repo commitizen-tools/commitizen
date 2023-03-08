@@ -1083,6 +1083,17 @@ def test_generate_tree_from_commits(gitcommits, tags, merge_prereleases):
         assert tuple(tree) == COMMITS_TREE
 
 
+def test_generate_tree_from_commits_with_no_commits(tags):
+    gitcommits = []
+    parser = defaults.commit_parser
+    changelog_pattern = defaults.bump_pattern
+    tree = changelog.generate_tree_from_commits(
+        gitcommits, tags, parser, changelog_pattern
+    )
+
+    assert tuple(tree) == ({"changes": {}, "date": "", "version": "Unreleased"},)
+
+
 @pytest.mark.parametrize(
     "change_type_order, expected_reordering",
     (
