@@ -81,7 +81,7 @@ types-termcolor = "^1.1.0"
 # documentation
 mkdocs = "^1.0"
 mkdocs-material = "^4.1"
-pydocstyle = "^5.0.2"
+pydocstyle = "^6.3.0"
 pytest-xdist = "^2.5.0"
 
 [tool.poetry.scripts]

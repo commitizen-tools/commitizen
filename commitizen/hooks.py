@@ -25,8 +25,7 @@ def run(hooks, _env_prefix="CZ_", **env):
 
 
 def _format_env(prefix: str, env: dict[str, str]) -> dict[str, str]:
-    """_format_env() prefixes all given environment variables with the given
-    prefix so it can be passed directly to cmd.run()."""
+    """Prefixes given env variables so they can be passed directly to cmd.run()."""
     penv = dict(os.environ)
     for name, value in env.items():
         name = prefix + name.upper()

@@ -120,7 +120,6 @@ class Check:
         Returns:
             The filtered commit message without comments.
         """
-
         lines = []
         for line in msg.split("\n"):
             if "# ------------------------ >8 ------------------------" in line:
