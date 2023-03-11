@@ -91,16 +91,13 @@ def test_generate_version(test_input, expected):
     prerelease = test_input[2]
     prerelease_offset = test_input[3]
     devrelease = test_input[4]
-    assert (
-        generate_version(
-            current_version,
-            increment=increment,
-            prerelease=prerelease,
-            prerelease_offset=prerelease_offset,
-            devrelease=devrelease,
-        )
-        == Version(expected)
-    )
+    assert generate_version(
+        current_version,
+        increment=increment,
+        prerelease=prerelease,
+        prerelease_offset=prerelease_offset,
+        devrelease=devrelease,
+    ) == Version(expected)
 
 
 @pytest.mark.parametrize(
@@ -114,14 +111,11 @@ def test_generate_version_local(test_input, expected):
     prerelease_offset = test_input[3]
     devrelease = test_input[4]
     is_local_version = True
-    assert (
-        generate_version(
-            current_version,
-            increment=increment,
-            prerelease=prerelease,
-            prerelease_offset=prerelease_offset,
-            devrelease=devrelease,
-            is_local_version=is_local_version,
-        )
-        == Version(expected)
-    )
+    assert generate_version(
+        current_version,
+        increment=increment,
+        prerelease=prerelease,
+        prerelease_offset=prerelease_offset,
+        devrelease=devrelease,
+        is_local_version=is_local_version,
+    ) == Version(expected)

@@ -70,7 +70,7 @@ codecov = "^2.0"
 pytest-regressions = "^2.4.0"
 pytest-freezer = "^0.4.6"
 # code formatter
-black = "^21.12b0"
+black = "^22.8.0"
 isort = "^5.7.0"
 # linter
 flake8 = "^3.6"
