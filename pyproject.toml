@@ -65,7 +65,7 @@ ipython = "^7.2"
 # test
 pytest = "^7.0.1"
 pytest-cov = "^4.0.0"
-pytest-mock = "^2.0"
+pytest-mock = "^3.6.1"
 codecov = "^2.0"
 pytest-regressions = "^2.4.0"
 pytest-freezer = "^0.4.6"
