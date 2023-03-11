@@ -71,7 +71,7 @@ pytest-regressions = "^2.4.0"
 pytest-freezer = "^0.4.6"
 # code formatter
 black = "^22.8.0"
-isort = "^5.7.0"
+isort = "^5.10.1"
 # linter
 flake8 = "^3.6"
 pre-commit = "^2.17.0"
