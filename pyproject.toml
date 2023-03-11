@@ -61,7 +61,7 @@ typing-extensions = { version = "^4.0.1", python = "<3.8" }
 charset-normalizer = ">=2.1.0,<4"
 
 [tool.poetry.dev-dependencies]
-ipython = "^7.2"
+ipython = "^7.16.2"
 # test
 pytest = "^7.0.1"
 pytest-cov = "^4.0.0"
