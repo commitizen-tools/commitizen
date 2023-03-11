@@ -3,7 +3,7 @@ default_stages:
   - push
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.1.0
+    rev: v4.4.0
     hooks:
       - id: check-vcs-permalinks
       - id: end-of-file-fixer
