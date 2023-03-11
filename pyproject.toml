@@ -73,7 +73,7 @@ pytest-freezer = "^0.4.6"
 black = "^22.8.0"
 isort = "^5.10.1"
 # linter
-flake8 = "^3.6"
+flake8 = "^3.9.2"
 pre-commit = "^2.17.0"
 mypy = "^0.971"
 types-PyYAML = "^5.4.3"
