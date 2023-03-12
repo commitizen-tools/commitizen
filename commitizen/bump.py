@@ -3,7 +3,7 @@ import re
 from collections import OrderedDict
 from itertools import zip_longest
 from string import Template
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Type, Union
 
 from packaging.version import Version
 
@@ -120,6 +120,7 @@ def generate_version(
     prerelease_offset: int = 0,
     devrelease: Optional[int] = None,
     is_local_version: bool = False,
+    version_provider_cls: Optional[Type[Version]] = None,
 ) -> Version:
     """Based on the given increment a proper semver will be generated.
 
@@ -132,15 +133,18 @@ def generate_version(
         MINOR 1.0.0 -> 1.1.0
         MAJOR 1.0.0 -> 2.0.0
     """
+    version_provider_cls = version_provider_cls or Version
     if is_local_version:
-        version = Version(current_version)
+        version = version_provider_cls(current_version)
         dev_version = devrelease_generator(devrelease=devrelease)
         pre_version = prerelease_generator(
             str(version.local), prerelease=prerelease, offset=prerelease_offset
         )
         semver = semver_generator(str(version.local), increment=increment)
 
-        return Version(f"{version.public}+{semver}{pre_version}{dev_version}")
+        return version_provider_cls(
+            f"{version.public}+{semver}{pre_version}{dev_version}"
+        )
     else:
         dev_version = devrelease_generator(devrelease=devrelease)
         pre_version = prerelease_generator(
@@ -149,7 +153,7 @@ def generate_version(
         semver = semver_generator(current_version, increment=increment)
 
         # TODO: post version
-        return Version(f"{semver}{pre_version}{dev_version}")
+        return version_provider_cls(f"{semver}{pre_version}{dev_version}")
 
 
 def update_version_in_files(
@@ -208,7 +212,9 @@ def _version_to_regex(version: str) -> str:
 
 
 def normalize_tag(
-    version: Union[Version, str], tag_format: Optional[str] = None
+    version: Union[Version, str],
+    tag_format: Optional[str] = None,
+    version_provider_cls: Optional[Type[Version]] = None,
 ) -> str:
     """The tag and the software version might be different.
 
@@ -221,8 +227,9 @@ def normalize_tag(
     | ver1.0.0 | 1.0.0 |
     | ver1.0.0.a0 | 1.0.0a0 |
     """
+    version_provider_cls = version_provider_cls or Version
     if isinstance(version, str):
-        version = Version(version)
+        version = version_provider_cls(version)
 
     if not tag_format:
         return str(version)
