@@ -1,5 +1,7 @@
 import os
 import re
+import sys
+import typing
 from collections import OrderedDict
 from itertools import zip_longest
 from string import Template
@@ -10,7 +12,12 @@ from packaging.version import Version
 from commitizen.defaults import MAJOR, MINOR, PATCH, bump_message
 from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import GitCommit, smart_open
-from commitizen.version_types import VersionProtocol
+
+if sys.version_info >= (3, 8):
+    from commitizen.version_types import VersionProtocol
+else:
+    # workaround mypy issue for 3.7 python
+    VersionProtocol = typing.Any
 
 
 def find_increment(
@@ -134,7 +141,8 @@ def generate_version(
         MINOR 1.0.0 -> 1.1.0
         MAJOR 1.0.0 -> 2.0.0
     """
-    version_type_cls = version_type_cls or Version
+    if version_type_cls is None:
+        version_type_cls = Version
     if is_local_version:
         version = version_type_cls(current_version)
         dev_version = devrelease_generator(devrelease=devrelease)
@@ -226,7 +234,8 @@ def normalize_tag(
     | ver1.0.0 | 1.0.0 |
     | ver1.0.0.a0 | 1.0.0a0 |
     """
-    version_type_cls = version_type_cls or Version
+    if version_type_cls is None:
+        version_type_cls = Version
     if isinstance(version, str):
         version = version_type_cls(version)
 
