@@ -10,6 +10,7 @@ from packaging.version import Version
 from commitizen.defaults import MAJOR, MINOR, PATCH, bump_message
 from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import GitCommit, smart_open
+from commitizen.version_types import VersionProtocol
 
 
 def find_increment(
@@ -120,8 +121,8 @@ def generate_version(
     prerelease_offset: int = 0,
     devrelease: Optional[int] = None,
     is_local_version: bool = False,
-    version_type_cls: Optional[Type[Version]] = None,
-) -> Version:
+    version_type_cls: Optional[Type[VersionProtocol]] = None,
+) -> VersionProtocol:
     """Based on the given increment a proper semver will be generated.
 
     For now the rules and versioning scheme is based on
@@ -210,9 +211,9 @@ def _version_to_regex(version: str) -> str:
 
 
 def normalize_tag(
-    version: Union[Version, str],
+    version: Union[VersionProtocol, str],
     tag_format: Optional[str] = None,
-    version_type_cls: Optional[Type[Version]] = None,
+    version_type_cls: Optional[Type[VersionProtocol]] = None,
 ) -> str:
     """The tag and the software version might be different.
 

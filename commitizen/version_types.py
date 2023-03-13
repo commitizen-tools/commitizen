@@ -1,33 +1,94 @@
+import sys
+import typing
+
+if sys.version_info >= (3, 8):
+    from typing import Protocol as _Protocol
+else:
+    _Protocol = object
+
 from packaging.version import Version
 
 
-class SemVerVersion(Version):
+class VersionProtocol(_Protocol):
+    def __init__(self, _version: typing.Union[Version, str]):
+        raise NotImplementedError("must be implemented")
+
+    def __str__(self) -> str:
+        raise NotImplementedError("must be implemented")
+
+    @property
+    def release(self) -> typing.Tuple[int, ...]:
+        raise NotImplementedError("must be implemented")
+
+    @property
+    def is_prerelease(self) -> bool:
+        raise NotImplementedError("must be implemented")
+
+    @property
+    def pre(self) -> typing.Optional[typing.Tuple[str, int]]:
+        raise NotImplementedError("must be implemented")
+
+    @property
+    def local(self) -> typing.Optional[str]:
+        raise NotImplementedError("must be implemented")
+
+    @property
+    def public(self) -> str:
+        raise NotImplementedError("must be implemented")
+
+
+class SemVerVersion(VersionProtocol):
+    def __init__(self, version: str):
+        self._version = Version(version)
+
+    @property
+    def release(self) -> typing.Tuple[int, ...]:
+        return self._version.release
+
+    @property
+    def is_prerelease(self) -> bool:
+        return self._version.is_prerelease
+
+    @property
+    def pre(self) -> typing.Optional[typing.Tuple[str, int]]:
+        return self._version.pre
+
+    @property
+    def local(self) -> typing.Optional[str]:
+        return self._version.local
+
+    @property
+    def public(self) -> str:
+        return self._version.public
+
     def __str__(self) -> str:
         parts = []
 
+        version = self._version
+
         # Epoch
-        if self.epoch != 0:
-            parts.append(f"{self.epoch}!")
+        if version.epoch != 0:
+            parts.append(f"{version.epoch}!")
 
         # Release segment
-        parts.append(".".join(str(x) for x in self.release))
+        parts.append(".".join(str(x) for x in version.release))
 
         # Pre-release
-        if self.pre is not None:
-            pre = "".join(str(x) for x in self.pre)
+        if version.pre is not None:
+            pre = "".join(str(x) for x in version.pre)
             parts.append(f"-{pre}")
 
         # Post-release
-        if self.post is not None:
-            parts.append(f"-post{self.post}")
+        if version.post is not None:
+            parts.append(f"-post{version.post}")
 
         # Development release
-        if self.dev is not None:
-            parts.append(f"-dev{self.dev}")
+        if version.dev is not None:
+            parts.append(f"-dev{version.dev}")
 
         # Local version segment
-        if self.local is not None:
-            parts.append(f"+{self.local}")
+        if version.local is not None:
+            parts.append(f"+{version.local}")
 
         return "".join(parts)
 
