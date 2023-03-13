@@ -1152,3 +1152,60 @@ def test_empty_commit_list(mocker):
     mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(NoCommitsFoundError):
         cli.main()
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
+def test_changelog_prerelease_rev_with_use_version_type_semver(
+    mocker: MockFixture, capsys, config_path, changelog_path, file_regression
+):
+    mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
+
+    with open(config_path, "a") as f:
+        f.write('tag_format = "$version"\n' 'version_type = "semver"')
+
+    # create commit and tag
+    create_file_and_commit("feat: new file")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    wait_for_tag()
+
+    create_file_and_commit("feat: after 0.2.0")
+    create_file_and_commit("feat: another feature")
+
+    testargs = ["cz", "bump", "--yes", "--prerelease", "alpha"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    capsys.readouterr()
+    wait_for_tag()
+
+    tag_exists = git.tag_exist("0.3.0-a0")
+    assert tag_exists is True
+
+    testargs = ["cz", "changelog", "0.3.0-a0", "--dry-run"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(DryRunExit):
+        cli.main()
+
+    out, _ = capsys.readouterr()
+
+    file_regression.check(out, extension=".md")
+
+    testargs = ["cz", "bump", "--yes", "--prerelease", "alpha"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    capsys.readouterr()
+    wait_for_tag()
+
+    tag_exists = git.tag_exist("0.3.0-a1")
+    assert tag_exists is True
+
+    testargs = ["cz", "changelog", "0.3.0-a1", "--dry-run"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(DryRunExit):
+        cli.main()
+
+    out, _ = capsys.readouterr()
+
+    assert out == "## 0.3.0-a1 (2022-02-13)\n\n"
