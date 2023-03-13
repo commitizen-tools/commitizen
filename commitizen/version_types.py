@@ -32,7 +32,7 @@ class SemVerVersion(Version):
         return "".join(parts)
 
 
-providers = {
-    "pep": Version,
+types = {
+    "pep440": Version,
     "semver": SemVerVersion,
 }

@@ -876,7 +876,7 @@ def test_bump_command_prelease_version_provider_via_cli(
         "--prerelease",
         "alpha",
         "--yes",
-        "--version-provider",
+        "--version-type",
         "semver",
     ]
     mocker.patch.object(sys, "argv", testargs)
@@ -906,7 +906,7 @@ def test_bump_command_prelease_version_provider_via_cli(
         assert "0.2.0" in f.read()
 
 
-def test_bump_command_prelease_version_provider_via_config(
+def test_bump_command_prelease_version_type_via_config(
     tmp_commitizen_project, mocker: MockFixture
 ):
     # PRERELEASE
@@ -917,7 +917,7 @@ def test_bump_command_prelease_version_provider_via_config(
     tmp_commitizen_cfg_file.write(
         f"{tmp_commitizen_cfg_file.read()}\n"
         f'version_files = ["{tmp_version_file_string}"]\n'
-        f'version_provider = "semver"'
+        f'version_type = "semver"'
     )
 
     create_file_and_commit("feat: new user interface")
@@ -963,7 +963,7 @@ def test_bump_command_prelease_version_provider_via_config(
         assert "0.2.0" in f.read()
 
 
-def test_bump_command_prelease_version_provider_check_old_tags(
+def test_bump_command_prelease_version_type_check_old_tags(
     tmp_commitizen_project, mocker: MockFixture
 ):
     # PRERELEASE
@@ -975,7 +975,7 @@ def test_bump_command_prelease_version_provider_check_old_tags(
         f"{tmp_commitizen_cfg_file.read()}\n"
         f'version_files = ["{tmp_version_file_string}"]\n'
         f'tag_format = "v$version"\n'
-        f'version_provider = "semver"\n'
+        f'version_type = "semver"\n'
     )
     create_file_and_commit("feat: new user interface")
 

@@ -8,7 +8,7 @@ from typing import List
 import argcomplete
 from decli import cli
 
-from commitizen import commands, config, out, version_providers
+from commitizen import commands, config, out, version_types
 from commitizen.exceptions import (
     CommitizenException,
     ExitCode,
@@ -204,10 +204,10 @@ data = {
                         "metavar": "MANUAL_VERSION",
                     },
                     {
-                        "name": ["--version-provider"],
-                        "help": "choose version provider",
+                        "name": ["--version-type"],
+                        "help": "choose version type",
                         "default": None,
-                        "choices": version_providers.providers,
+                        "choices": version_types.types,
                     },
                 ],
             },

@@ -3,7 +3,7 @@ import itertools
 import pytest
 
 from commitizen.bump import generate_version
-from commitizen.version_providers import SemVerVersion
+from commitizen.version_types import SemVerVersion
 
 simple_flow = [
     (("0.1.0", "PATCH", None, 0, None), "0.1.1"),
@@ -81,7 +81,7 @@ tdd_cases = [
     "test_input,expected",
     itertools.chain(tdd_cases, weird_cases, simple_flow, unexpected_cases),
 )
-def test_generate_version_provider(test_input, expected):
+def test_generate_version_type(test_input, expected):
     current_version = test_input[0]
     increment = test_input[1]
     prerelease = test_input[2]
@@ -95,7 +95,7 @@ def test_generate_version_provider(test_input, expected):
                 prerelease=prerelease,
                 prerelease_offset=prerelease_offset,
                 devrelease=devrelease,
-                version_provider_cls=SemVerVersion,
+                version_type_cls=SemVerVersion,
             )
         )
         == expected
