@@ -219,7 +219,7 @@ def _version_to_regex(version: str) -> str:
 
 def normalize_tag(
     version: Union[VersionProtocol, str],
-    tag_format: Optional[str] = None,
+    tag_format: str,
     version_type_cls: Optional[Type[VersionProtocol]] = None,
 ) -> str:
     """The tag and the software version might be different.
@@ -237,9 +237,6 @@ def normalize_tag(
         version_type_cls = Version
     if isinstance(version, str):
         version = version_type_cls(version)
-
-    if not tag_format:
-        return str(version)
 
     major, minor, patch = version.release
     prerelease = ""

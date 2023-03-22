@@ -35,7 +35,7 @@ class Settings(TypedDict, total=False):
     version: Optional[str]
     version_files: List[str]
     version_provider: Optional[str]
-    tag_format: Optional[str]
+    tag_format: str
     bump_message: Optional[str]
     allow_abort: bool
     changelog_file: str
@@ -68,7 +68,7 @@ DEFAULT_SETTINGS: Settings = {
     "version": None,
     "version_files": [],
     "version_provider": "commitizen",
-    "tag_format": None,  # example v$version
+    "tag_format": "$version",  # example v$version
     "bump_message": None,  # bumped v$current_version to $new_version
     "allow_abort": False,
     "changelog_file": "CHANGELOG.md",

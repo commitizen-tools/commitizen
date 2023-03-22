@@ -7,6 +7,7 @@ from packaging.version import parse
 
 from commitizen import bump, changelog, defaults, factory, git, out, version_types
 from commitizen.config import BaseConfig
+from commitizen.defaults import DEFAULT_SETTINGS
 from commitizen.exceptions import (
     DryRunExit,
     NoCommitsFoundError,
@@ -55,8 +56,8 @@ class Changelog:
             or defaults.change_type_order
         )
         self.rev_range = args.get("rev_range")
-        self.tag_format = args.get("tag_format") or self.config.settings.get(
-            "tag_format"
+        self.tag_format: str = args.get("tag_format") or self.config.settings.get(
+            "tag_format", DEFAULT_SETTINGS["tag_format"]
         )
         self.merge_prerelease = args.get(
             "merge_prerelease"

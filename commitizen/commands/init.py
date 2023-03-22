@@ -10,7 +10,7 @@ from commitizen import cmd, factory, out
 from commitizen.__version__ import __version__
 from commitizen.config import BaseConfig, JsonConfig, TomlConfig, YAMLConfig
 from commitizen.cz import registry
-from commitizen.defaults import config_files
+from commitizen.defaults import DEFAULT_SETTINGS, config_files
 from commitizen.exceptions import InitFailedError, NoAnswersError
 from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
 from commitizen.version_types import VERSION_TYPES
@@ -203,14 +203,15 @@ class Init:
                 f'Is "{tag_format}" the correct tag format?', style=self.cz.style
             ).unsafe_ask()
 
+        default_format = DEFAULT_SETTINGS["tag_format"]
         if not is_correct_format:
             tag_format = questionary.text(
-                'Please enter the correct version format: (default: "$version")',
+                f'Please enter the correct version format: (default: "{default_format}")',
                 style=self.cz.style,
             ).unsafe_ask()
 
             if not tag_format:
-                tag_format = "$version"
+                tag_format = default_format
         return tag_format
 
     def _ask_version_provider(self) -> str:
