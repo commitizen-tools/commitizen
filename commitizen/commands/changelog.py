@@ -5,7 +5,7 @@ from typing import Callable, Dict, List, Optional
 
 from packaging.version import parse
 
-from commitizen import bump, changelog, defaults, factory, git, out, version_types
+from commitizen import changelog, defaults, factory, git, out, version_types
 from commitizen.config import BaseConfig
 from commitizen.defaults import DEFAULT_SETTINGS
 from commitizen.exceptions import (
@@ -17,6 +17,7 @@ from commitizen.exceptions import (
     NotAllowed,
 )
 from commitizen.git import GitTag, smart_open
+from commitizen.tags import tag_from_version
 
 
 class Changelog:
@@ -149,7 +150,7 @@ class Changelog:
             changelog_meta = changelog.get_metadata(self.file_name)
             latest_version = changelog_meta.get("latest_version")
             if latest_version:
-                latest_tag_version: str = bump.normalize_tag(
+                latest_tag_version: str = tag_from_version(
                     latest_version,
                     tag_format=self.tag_format,
                     version_type_cls=self.version_type,

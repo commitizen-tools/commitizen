@@ -22,6 +22,7 @@ from commitizen.exceptions import (
     NoVersionSpecifiedError,
 )
 from commitizen.providers import get_provider
+from commitizen.tags import tag_from_version
 
 logger = getLogger("commitizen")
 
@@ -161,7 +162,7 @@ class Bump:
                     f"--major-version-zero is meaningless for current version {current_version}"
                 )
 
-        current_tag_version: str = bump.normalize_tag(
+        current_tag_version: str = tag_from_version(
             current_version,
             tag_format=tag_format,
             version_type_cls=self.version_type,
@@ -223,7 +224,7 @@ class Bump:
                 version_type_cls=self.version_type,
             )
 
-        new_tag_version = bump.normalize_tag(
+        new_tag_version = tag_from_version(
             new_version,
             tag_format=tag_format,
             version_type_cls=self.version_type,

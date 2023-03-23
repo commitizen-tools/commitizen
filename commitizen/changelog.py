@@ -37,9 +37,9 @@ from jinja2 import Environment, PackageLoader
 from packaging.version import InvalidVersion, Version
 
 from commitizen import defaults
-from commitizen.bump import normalize_tag
 from commitizen.exceptions import InvalidConfigurationError, NoCommitsFoundError
 from commitizen.git import GitCommit, GitTag
+from commitizen.tags import tag_from_version
 
 if sys.version_info >= (3, 8):
     from commitizen.version_types import VersionProtocol
@@ -341,13 +341,13 @@ def get_oldest_and_newest_rev(
     except ValueError:
         newest = version
 
-    newest_tag = normalize_tag(
+    newest_tag = tag_from_version(
         newest, tag_format=tag_format, version_type_cls=version_type_cls
     )
 
     oldest_tag = None
     if oldest:
-        oldest_tag = normalize_tag(
+        oldest_tag = tag_from_version(
             oldest, tag_format=tag_format, version_type_cls=version_type_cls
         )
 

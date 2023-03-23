@@ -1,7 +1,7 @@
 import pytest
 from packaging.version import Version
 
-from commitizen import bump
+from commitizen.tags import tag_from_version
 
 conversion = [
     (("1.2.3", "v$version"), "v1.2.3"),
@@ -17,7 +17,7 @@ conversion = [
 
 
 @pytest.mark.parametrize("test_input,expected", conversion)
-def test_create_tag(test_input, expected):
+def test_tag_from_version(test_input, expected):
     version, format = test_input
-    new_tag = bump.normalize_tag(Version(version), format)
+    new_tag = tag_from_version(Version(version), format)
     assert new_tag == expected
