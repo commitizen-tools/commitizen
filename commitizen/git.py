@@ -1,4 +1,5 @@
 import os
+import re
 from enum import Enum
 from os import linesep
 from pathlib import Path
@@ -140,7 +141,7 @@ def get_filenames_in_commit(git_reference: str = ""):
         raise GitCommandError(c.err)
 
 
-def get_tags(dateformat: str = "%Y-%m-%d") -> List[GitTag]:
+def get_tags(dateformat: str = "%Y-%m-%d", *, pattern: re.Pattern) -> List[GitTag]:
     inner_delimiter = "---inner_delimiter---"
     formatter = (
         f'"%(refname:lstrip=2){inner_delimiter}'
@@ -163,7 +164,9 @@ def get_tags(dateformat: str = "%Y-%m-%d") -> List[GitTag]:
         for line in c.out.split("\n")[:-1]
     ]
 
-    return git_tags
+    filtered_git_tags = [t for t in git_tags if pattern.fullmatch(t.name)]
+
+    return filtered_git_tags
 
 
 def tag_exist(tag: str) -> bool:

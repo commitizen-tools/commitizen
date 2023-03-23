@@ -1,6 +1,8 @@
 import itertools
 import sys
 from datetime import datetime
+from typing import List
+from unittest.mock import patch
 
 import pytest
 from pytest_mock import MockFixture
@@ -1271,3 +1273,53 @@ def test_changelog_prerelease_rev_with_use_version_type_semver(
     out, _ = capsys.readouterr()
 
     file_regression.check(out, extension=".second-prerelease.md")
+
+
+@pytest.mark.parametrize(
+    "config_file, expected_versions",
+    [
+        pytest.param("", ["Unreleased"], id="v-prefix-not-configured"),
+        pytest.param(
+            'tag_format = "v$version"',
+            ["v1.1.0", "v1.1.0-beta", "v1.0.0"],
+            id="v-prefix-configured-as-tag-format",
+        ),
+        pytest.param(
+            'tag_format = "v$version"\n' + 'tag_regex = ".*"',
+            ["v1.1.0", "custom-tag", "v1.1.0-beta", "v1.0.0"],
+            id="tag-regex-matches-all-tags",
+        ),
+        pytest.param(
+            'tag_format = "v$version"\n' + r'tag_regex = "v[0-9\\.]*"',
+            ["v1.1.0", "v1.0.0"],
+            id="tag-regex-excludes-pre-releases",
+        ),
+    ],
+)
+def test_changelog_tag_regex(
+    config_path, changelog_path, config_file: str, expected_versions: List[str]
+):
+    with open(config_path, "a") as f:
+        f.write(config_file)
+
+    # Create 4 tags with one valid feature each
+    create_file_and_commit("feat: initial")
+    git.tag("v1.0.0")
+    create_file_and_commit("feat: add 1")
+    git.tag("v1.1.0-beta")
+    create_file_and_commit("feat: add 2")
+    git.tag("custom-tag")
+    create_file_and_commit("feat: add 3")
+    git.tag("v1.1.0")
+
+    # call CLI
+    with patch.object(sys, "argv", ["cz", "changelog"]):
+        cli.main()
+
+    # open CLI output
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    headings = [line for line in out.splitlines() if line.startswith("## ")]
+    changelog_versions = [heading[3:].split()[0] for heading in headings]
+    assert changelog_versions == expected_versions

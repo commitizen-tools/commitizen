@@ -186,6 +186,28 @@ cz changelog --merge-prerelease
 changelog_merge_prerelease = true
 ```
 
+### `tag-regex`
+
+This value can be set in the `toml` file with the key `tag_regex` under `tools.commitizen`.
+
+`tag_regex` is the regex pattern that selects tags to include in the changelog.
+By default, the changelog will capture all git tags matching the `tag_format`, including pre-releases.
+
+Example use-cases:
+
+- Exclude pre-releases from the changelog
+- Include existing tags that do not follow `tag_format` in the changelog
+
+```bash
+cz changelog --tag-regex="[0-9]*\\.[0-9]*\\.[0-9]"
+```
+
+```toml
+[tools.commitizen]
+# ...
+tag_regex = "[0-9]*\\.[0-9]*\\.[0-9]"
+```
+
 ## Hooks
 
 Supported hook methods:

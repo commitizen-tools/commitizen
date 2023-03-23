@@ -42,6 +42,14 @@ Default: `$version`
 
 Format for the git tag, useful for old projects, that use a convention like `"v1.2.1"`. [Read more][tag_format]
 
+### `tag_regex`
+
+Type: `str`
+
+Default: Based on `tag_format`
+
+Tags must match this to be included in the changelog (e.g. `"([0-9.])*"` to exclude pre-releases). [Read more][tag_regex]
+
 ### `update_changelog_on_bump`
 
 Type: `bool`
@@ -339,6 +347,7 @@ setup(
 
 [version_files]: bump.md#version_files
 [tag_format]: bump.md#tag_format
+[tag_regex]: changelog.md#tag_regex
 [bump_message]: bump.md#bump_message
 [major-version-zero]: bump.md#-major-version-zero
 [prerelease-offset]: bump.md#-prerelease_offset

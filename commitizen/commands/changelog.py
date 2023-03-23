@@ -1,4 +1,5 @@
 import os.path
+import re
 from difflib import SequenceMatcher
 from operator import itemgetter
 from typing import Callable, Dict, List, Optional
@@ -17,7 +18,7 @@ from commitizen.exceptions import (
     NotAllowed,
 )
 from commitizen.git import GitTag, smart_open
-from commitizen.tags import tag_from_version
+from commitizen.tags import make_tag_pattern, tag_from_version
 
 
 class Changelog:
@@ -66,6 +67,11 @@ class Changelog:
 
         version_type = self.config.settings.get("version_type")
         self.version_type = version_type and version_types.VERSION_TYPES[version_type]
+
+        tag_regex = args.get("tag_regex") or self.config.settings.get("tag_regex")
+        if not tag_regex:
+            tag_regex = make_tag_pattern(self.tag_format)
+        self.tag_pattern = re.compile(str(tag_regex), re.VERBOSE | re.IGNORECASE)
 
     def _find_incremental_rev(self, latest_version: str, tags: List[GitTag]) -> str:
         """Try to find the 'start_rev'.
@@ -140,7 +146,7 @@ class Changelog:
         # Don't continue if no `file_name` specified.
         assert self.file_name
 
-        tags = git.get_tags()
+        tags = git.get_tags(pattern=self.tag_pattern)
         if not tags:
             tags = []
 

@@ -1,8 +1,8 @@
 import argparse
 import logging
 import sys
-from pathlib import Path
 from functools import partial
+from pathlib import Path
 from types import TracebackType
 from typing import List
 
@@ -272,6 +272,13 @@ data = {
                         "help": (
                             "collect all changes from prereleases into next non-prerelease. "
                             "If not set, it will include prereleases in the changelog"
+                        ),
+                    },
+                    {
+                        "name": "--tag-regex",
+                        "help": (
+                            "regex match for tags represented "
+                            "within the changelog. default: '.*'"
                         ),
                     },
                 ],

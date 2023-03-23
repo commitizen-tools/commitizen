@@ -1,5 +1,6 @@
 import inspect
 import os
+import re
 import shutil
 from typing import List, Optional
 
@@ -7,6 +8,7 @@ import pytest
 from pytest_mock import MockFixture
 
 from commitizen import cmd, exceptions, git
+from commitizen.tags import make_tag_pattern
 from tests.utils import FakeCommand, create_file_and_commit
 
 
@@ -28,7 +30,7 @@ def test_get_tags(mocker: MockFixture):
     )
     mocker.patch("commitizen.cmd.run", return_value=FakeCommand(out=tag_str))
 
-    git_tags = git.get_tags()
+    git_tags = git.get_tags(pattern=re.compile(r"v[0-9\.]+"))
     latest_git_tag = git_tags[0]
     assert latest_git_tag.rev == "333"
     assert latest_git_tag.name == "v1.0.0"
@@ -37,7 +39,60 @@ def test_get_tags(mocker: MockFixture):
     mocker.patch(
         "commitizen.cmd.run", return_value=FakeCommand(out="", err="No tag available")
     )
-    assert git.get_tags() == []
+    assert git.get_tags(pattern=re.compile(r"v[0-9\.]+")) == []
+
+
+@pytest.mark.parametrize(
+    "pattern, expected_tags",
+    [
+        pytest.param(
+            make_tag_pattern(tag_format="$version"),
+            [],  # No versions with normal 1.2.3 pattern
+            id="default-tag-format",
+        ),
+        pytest.param(
+            make_tag_pattern(tag_format="$major-$minor-$patch$prerelease"),
+            ["1-0-0", "1-0-0alpha2"],
+            id="tag-format-with-hyphens",
+        ),
+        pytest.param(
+            r"[0-9]+\-[0-9]+\-[0-9]+",
+            ["1-0-0"],
+            id="tag-regex-with-hyphens-that-excludes-alpha",
+        ),
+        pytest.param(
+            make_tag_pattern(tag_format="v$version"),
+            ["v0.5.0", "v0.0.1-pre"],
+            id="tag-format-with-v-prefix",
+        ),
+        pytest.param(
+            make_tag_pattern(tag_format="custom-prefix-$version"),
+            ["custom-prefix-0.0.1"],
+            id="tag-format-with-custom-prefix",
+        ),
+        pytest.param(
+            ".*",
+            ["1-0-0", "1-0-0alpha2", "v0.5.0", "v0.0.1-pre", "custom-prefix-0.0.1"],
+            id="custom-tag-regex-to-include-all-tags",
+        ),
+    ],
+)
+def test_get_tags_filtering(
+    mocker: MockFixture, pattern: str, expected_tags: List[str]
+):
+    tag_str = (
+        "1-0-0---inner_delimiter---333---inner_delimiter---2020-01-20---inner_delimiter---\n"
+        "1-0-0alpha2---inner_delimiter---333---inner_delimiter---2020-01-20---inner_delimiter---\n"
+        "v0.5.0---inner_delimiter---222---inner_delimiter---2020-01-17---inner_delimiter---\n"
+        "v0.0.1-pre---inner_delimiter---111---inner_delimiter---2020-01-17---inner_delimiter---\n"
+        "custom-prefix-0.0.1---inner_delimiter---111---inner_delimiter---2020-01-17---inner_delimiter---\n"
+        "custom-non-release-tag"
+    )
+    mocker.patch("commitizen.cmd.run", return_value=FakeCommand(out=tag_str))
+
+    git_tags = git.get_tags(pattern=re.compile(pattern, flags=re.VERBOSE))
+    actual_name_list = [t.name for t in git_tags]
+    assert actual_name_list == expected_tags
 
 
 def test_get_tag_names(mocker: MockFixture):
