@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from commitizen import changelog, defaults, git
@@ -495,7 +497,7 @@ def tags() -> list:
 
 @pytest.fixture
 def changelog_content() -> str:
-    changelog_path = "tests/CHANGELOG_FOR_TEST.md"
+    changelog_path = Path(__file__).parent / "CHANGELOG_FOR_TEST.md"
     with open(changelog_path, "r") as f:
         return f.read()
 
