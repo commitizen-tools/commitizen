@@ -317,6 +317,46 @@ cz -n cz_strange bump
 
 [convcomms]: https://github.com/commitizen-tools/commitizen/blob/master/commitizen/cz/conventional_commits/conventional_commits.py
 
+### Custom Commit Validation
+
+The default implementation of `validate_commits` will call `validate_commit` for each commit passed as input to the `check` command, and evaluate
+it against the `schema_pattern` regular expression. You can override those 3 functions on `BaseCommitizen` for different levels of flexibility.
+
+```python
+import re
+from commitizen.cz.base import BaseCommitizen
+from commitizen.git import GitCommit
+
+class StrangeCommitizen(BaseCommitizen):
+    def schema_pattern(self) -> Optional[str]:
+        # collect the different prefix options into a regex
+        choices = ["feat", "fix", "chore", "bump"]
+        prefixes_regex = r"|".join(choices)
+
+        return (
+            f"({prefixes_regex})" # different prefixes
+            "(\(\S+\))?!?:(\s.*)" # scope & subject body
+        )
+
+    def validate_commit(self, pattern: str, commit: GitCommit, allow_abort: bool) -> bool:
+        return allow_abort if not re.match(pattern, commit.message) else True
+    
+    def validate_commits(self, commits: List[GitCommit], allow_abort: bool):
+        pattern = self.schema_pattern()
+        invalid_commits = "\n".join([
+            (
+                f'"{commit.rev}": "{commit.message}"\n'
+                "commit validation failed!"
+            )
+            for commit in commits
+            if not self.validate_commit(pattern, commit, allow_abort)
+        ])
+        
+        if invalid_commits:
+            raise InvalidCommitMessageError(invalid_commits)
+
+```
+
 ### Custom changelog generator
 
 The changelog generator should just work in a very basic manner without touching anything.

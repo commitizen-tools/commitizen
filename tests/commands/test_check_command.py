@@ -128,6 +128,46 @@ def test_check_conventional_commit_succeeds(mocker: MockFixture, capsys):
     assert "Commit validation: successful!" in out
 
 
+def test_check_custom_validation_succeeds(mocker, capsys, config_customize):
+    testargs = [
+        "cz",
+        "-n",
+        "cz_custom_validation",
+        "check",
+        "--commit-msg-file",
+        "some_file",
+    ]
+    mocker.patch.object(sys, "argv", testargs)
+    mocker.patch(
+        "commitizen.commands.check.open",
+        mocker.mock_open(read_data="fix(scope): some commit message"),
+    )
+    mocker.patch("commitizen.config.read_cfg", return_value=config_customize)
+    cli.main()
+    out, _ = capsys.readouterr()
+    assert "Commit validation: successful!" in out
+
+
+def test_check_custom_validation_fails(mocker, config_customize):
+    testargs = [
+        "cz",
+        "-n",
+        "cz_custom_validation",
+        "check",
+        "--commit-msg-file",
+        "some_file",
+    ]
+    mocker.patch.object(sys, "argv", testargs)
+    mocker.patch(
+        "commitizen.commands.check.open",
+        mocker.mock_open(read_data="fixup! fix(scope): some commit message"),
+    )
+    mocker.patch("commitizen.config.read_cfg", return_value=config_customize)
+    with pytest.raises(InvalidCommitMessageError) as excinfo:
+        cli.main()
+    assert "commit validation: failed!" in str(excinfo.value)
+
+
 @pytest.mark.parametrize(
     "commit_msg",
     (
@@ -332,7 +372,7 @@ def test_check_command_with_pipe_message_and_failed(mocker: MockFixture):
     assert "commit validation: failed!" in str(excinfo.value)
 
 
-def test_check_command_with_comment_in_messege_file(mocker: MockFixture, capsys):
+def test_check_command_with_comment_in_message_file(mocker: MockFixture, capsys):
     testargs = ["cz", "check", "--commit-msg-file", "some_file"]
     mocker.patch.object(sys, "argv", testargs)
     mocker.patch(

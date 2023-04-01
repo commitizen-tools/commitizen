@@ -5,7 +5,7 @@ from typing import Dict, Iterable, Type
 
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.conventional_commits import ConventionalCommitsCz
-from commitizen.cz.customize import CustomizeCommitsCz
+from commitizen.cz.customize import CustomizeCommitsCz, CustomizeCommitValidationCz
 from commitizen.cz.jira import JiraSmartCz
 
 
@@ -34,6 +34,7 @@ registry: Dict[str, Type[BaseCommitizen]] = {
     "cz_conventional_commits": ConventionalCommitsCz,
     "cz_jira": JiraSmartCz,
     "cz_customize": CustomizeCommitsCz,
+    "cz_custom_validation": CustomizeCommitValidationCz,
 }
 
 registry.update(discover_plugins())

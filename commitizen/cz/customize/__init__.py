@@ -1,1 +1,1 @@
-from .customize import CustomizeCommitsCz  # noqa
+from .customize import CustomizeCommitsCz, CustomizeCommitValidationCz  # noqa
