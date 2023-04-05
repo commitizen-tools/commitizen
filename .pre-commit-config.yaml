@@ -41,6 +41,6 @@ repos:
         name: linter and test
         language: system
         pass_filenames: false
-        stage: push
+        stages: [push]
         entry: ./scripts/test
         types: [python]
