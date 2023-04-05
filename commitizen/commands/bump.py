@@ -116,6 +116,7 @@ class Bump:
         is_files_only: Optional[bool] = self.arguments["files_only"]
         is_local_version: Optional[bool] = self.arguments["local_version"]
         manual_version = self.arguments["manual_version"]
+        is_empty: Optional[bool] = self.arguments["empty"]
 
         if manual_version:
             if increment:
@@ -168,7 +169,7 @@ class Bump:
 
         # No commits, there is no need to create an empty tag.
         # Unless we previously had a prerelease.
-        if not commits and not current_version_instance.is_prerelease:
+        if not commits and not current_version_instance.is_prerelease and not is_empty:
             raise NoCommitsFoundError("[NO_COMMITS_FOUND]\n" "No new commits found.")
 
         if manual_version:
@@ -200,6 +201,10 @@ class Bump:
             # are expected to be prereleases.
             if prerelease and current_version_instance.is_prerelease:
                 increment = None
+
+            # we create an empty PATCH increment for empty tag
+            if increment is None and is_empty:
+                increment = "PATCH"
 
             new_version = bump.generate_version(
                 current_version,

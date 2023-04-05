@@ -202,6 +202,12 @@ data = {
                         "help": "bump to the given version (e.g: 1.5.3)",
                         "metavar": "MANUAL_VERSION",
                     },
+                    {
+                        "name": ["--empty"],
+                        "default": False,
+                        "help": "bump tags without new commits",
+                        "action": "store_true",
+                    }
                 ],
             },
             {
