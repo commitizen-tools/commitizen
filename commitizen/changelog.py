@@ -57,7 +57,7 @@ from commitizen.version_schemes import (
 if TYPE_CHECKING:
     from commitizen.version_schemes import VersionScheme
 
-DEFAULT_TEMPLATE = "keep_a_changelog_template.j2"
+DEFAULT_TEMPLATE = "CHANGELOG.md.j2"
 
 
 def get_commit_tag(commit: GitCommit, tags: list[GitTag]) -> GitTag | None:
