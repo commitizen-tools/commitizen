@@ -52,6 +52,7 @@ class Bump:
                     "major_version_zero",
                     "prerelease_offset",
                     "template",
+                    "file_name",
                 ]
                 if arguments[key] is not None
             },
@@ -79,6 +80,9 @@ class Bump:
             self.config, arguments["version_scheme"] or deprecated_version_type
         )
         self.template = arguments["template"] or self.config.settings.get("template")
+        self.file_name = arguments["file_name"] or self.config.settings.get(
+            "changelog_file"
+        )
         self.extras = arguments["extras"]
 
     def is_initial_tag(self, current_tag_version: str, is_yes: bool = False) -> bool:
@@ -278,6 +282,7 @@ class Bump:
                     "dry_run": dry_run,
                     "template": self.template,
                     "extras": self.extras,
+                    "file_name": self.file_name,
                 },
             )
             changelog_cmd()
