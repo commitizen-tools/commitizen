@@ -252,6 +252,10 @@ data = {
                     },
                     *deepcopy(tpl_arguments),
                     {
+                        "name": "--file-name",
+                        "help": "file name of changelog (default: 'CHANGELOG.md')",
+                    },
+                    {
                         "name": ["--prerelease-offset"],
                         "type": int,
                         "default": None,
