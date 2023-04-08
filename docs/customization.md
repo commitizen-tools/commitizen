@@ -442,7 +442,7 @@ Commitizen gives you the possibility to provide your own changelog template, by:
     - as `--template` parameter to both `bump` and `changelog` commands
 - either by providing a template with the same name as the default template
 
-By default, the template used is the `keep_a_changelog_template.j2` file from the commitizen repository.
+By default, the template used is the `CHANGELOG.md.j2` file from the commitizen repository.
 
 ### Providing a template with your customization class
 
@@ -450,7 +450,7 @@ There is 3 parameters available to change the template rendering from your custo
 
 | Parameter         | Type   | Default | Description                                                                                           |
 | ----------------- | ------ | ------- | ----------------------------------------------------------------------------------------------------- |
-| `template`        | `str`  | `None`  | Provide your own template name (default to `keep_a_changelog_template.j2`)                            |
+| `template`        | `str`  | `None`  | Provide your own template name (default to `CHANGELOG.md.j2`)                            |
 | `template_loader` | `str`  | `None`  | Override the default template loader (so you can provide template from you customization class)       |
 | `template_extras` | `dict` | `None`  | Provide some extra template parameters                                                                |
 
@@ -477,7 +477,7 @@ This snippet will:
 
 Users can provides their own template from their current working directory (your project root) by:
 
-- providing a template with the same name (`keep_a_changelog_template.j2` unless overridden by your custom class)
+- providing a template with the same name (`CHANGELOG.md.j2` unless overridden by your custom class)
 - setting your template path as `template` configuration
 - giving your template path as `--template` parameter to `bump` and `changelog` commands
 
