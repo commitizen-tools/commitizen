@@ -40,6 +40,7 @@ class Settings(TypedDict, total=False):
     changelog_file: str
     changelog_incremental: bool
     changelog_start_rev: Optional[str]
+    changelog_merge_prerelease: bool
     update_changelog_on_bump: bool
     use_shortcuts: bool
     style: Optional[List[Tuple[str, str]]]
@@ -71,6 +72,7 @@ DEFAULT_SETTINGS: Settings = {
     "changelog_file": "CHANGELOG.md",
     "changelog_incremental": False,
     "changelog_start_rev": None,
+    "changelog_merge_prerelease": False,
     "update_changelog_on_bump": False,
     "use_shortcuts": False,
     "major_version_zero": False,

@@ -32,6 +32,7 @@ from datetime import date
 from typing import Callable, Dict, Iterable, List, Optional, Tuple
 
 from jinja2 import Environment, PackageLoader
+from packaging.version import InvalidVersion, Version
 
 from commitizen import defaults
 from commitizen.bump import normalize_tag
@@ -43,6 +44,31 @@ def get_commit_tag(commit: GitCommit, tags: List[GitTag]) -> Optional[GitTag]:
     return next((tag for tag in tags if tag.rev == commit.rev), None)
 
 
+def get_version(tag: GitTag) -> Optional[Version]:
+    version = None
+    try:
+        version = Version(tag.name)
+    except InvalidVersion:
+        pass
+    return version
+
+
+def tag_included_in_changelog(
+    tag: GitTag, used_tags: List, merge_prerelease: bool
+) -> bool:
+    if tag in used_tags:
+        return False
+
+    version = get_version(tag)
+    if version is None:
+        return False
+
+    if merge_prerelease and version.is_prerelease:
+        return False
+
+    return True
+
+
 def generate_tree_from_commits(
     commits: List[GitCommit],
     tags: List[GitTag],
@@ -51,6 +77,7 @@ def generate_tree_from_commits(
     unreleased_version: Optional[str] = None,
     change_type_map: Optional[Dict[str, str]] = None,
     changelog_message_builder_hook: Optional[Callable] = None,
+    merge_prerelease: bool = False,
 ) -> Iterable[Dict]:
     pat = re.compile(changelog_pattern)
     map_pat = re.compile(commit_parser, re.MULTILINE)
@@ -73,15 +100,15 @@ def generate_tree_from_commits(
     for commit in commits:
         commit_tag = get_commit_tag(commit, tags)
 
-        if commit_tag is not None and commit_tag not in used_tags:
+        if commit_tag is not None and tag_included_in_changelog(
+            commit_tag, used_tags, merge_prerelease
+        ):
             used_tags.append(commit_tag)
             yield {
                 "version": current_tag_name,
                 "date": current_tag_date,
                 "changes": changes,
             }
-            # TODO: Check if tag matches the version pattern, otherwise skip it.
-            # This in order to prevent tags that are not versions.
             current_tag_name = commit_tag.name
             current_tag_date = commit_tag.date
             changes = defaultdict(list)
