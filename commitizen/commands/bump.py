@@ -65,7 +65,7 @@ class Bump:
         version_type = arguments["version_type"] or self.config.settings.get(
             "version_type"
         )
-        self.version_type = version_type and version_types.types[version_type]
+        self.version_type = version_type and version_types.VERSION_TYPES[version_type]
 
     def is_initial_tag(self, current_tag_version: str, is_yes: bool = False) -> bool:
         """Check if reading the whole git tree up to HEAD is needed."""

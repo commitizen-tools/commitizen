@@ -855,20 +855,12 @@ def test_bump_use_version_provider(mocker: MockFixture):
     mock.set_version.assert_called_once_with("0.0.1")
 
 
-def test_bump_command_prelease_version_provider_via_cli(
-    tmp_commitizen_project, mocker: MockFixture
+def test_bump_command_prelease_version_type_via_cli(
+    tmp_commitizen_project_initial, mocker: MockFixture
 ):
-    # PRERELEASE
+    tmp_commitizen_project = tmp_commitizen_project_initial()
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
-    tmp_version_file.write("0.1.0")
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
-    tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
-    tmp_commitizen_cfg_file.write(
-        f"{tmp_commitizen_cfg_file.read()}\n"
-        f'version_files = ["{tmp_version_file_string}"]'
-    )
-
-    create_file_and_commit("feat: new user interface")
 
     testargs = [
         "cz",
@@ -885,11 +877,9 @@ def test_bump_command_prelease_version_provider_via_cli(
     tag_exists = git.tag_exist("0.2.0-a0")
     assert tag_exists is True
 
-    with open(tmp_version_file, "r") as f:
-        assert "0.2.0-a0" in f.read()
-
-    with open(tmp_commitizen_cfg_file, "r") as f:
-        assert "0.2.0-a0" in f.read()
+    for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
+        with open(version_file, "r") as f:
+            assert "0.2.0-a0" in f.read()
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
     testargs = ["cz", "bump", "--yes"]
@@ -899,28 +889,19 @@ def test_bump_command_prelease_version_provider_via_cli(
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
-    with open(tmp_version_file, "r") as f:
-        assert "0.2.0" in f.read()
-
-    with open(tmp_commitizen_cfg_file, "r") as f:
-        assert "0.2.0" in f.read()
+    for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
+        with open(version_file, "r") as f:
+            assert "0.2.0" in f.read()
 
 
 def test_bump_command_prelease_version_type_via_config(
-    tmp_commitizen_project, mocker: MockFixture
+    tmp_commitizen_project_initial, mocker: MockFixture
 ):
-    # PRERELEASE
-    tmp_version_file = tmp_commitizen_project.join("__version__.py")
-    tmp_version_file.write("0.1.0")
-    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
-    tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
-    tmp_commitizen_cfg_file.write(
-        f"{tmp_commitizen_cfg_file.read()}\n"
-        f'version_files = ["{tmp_version_file_string}"]\n'
-        f'version_type = "semver"'
+    tmp_commitizen_project = tmp_commitizen_project_initial(
+        config_extra='version_type = "semver"\n',
     )
-
-    create_file_and_commit("feat: new user interface")
+    tmp_version_file = tmp_commitizen_project.join("__version__.py")
+    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
 
     testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
@@ -929,11 +910,9 @@ def test_bump_command_prelease_version_type_via_config(
     tag_exists = git.tag_exist("0.2.0-a0")
     assert tag_exists is True
 
-    with open(tmp_version_file, "r") as f:
-        assert "0.2.0-a0" in f.read()
-
-    with open(tmp_commitizen_cfg_file, "r") as f:
-        assert "0.2.0-a0" in f.read()
+    for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
+        with open(version_file, "r") as f:
+            assert "0.2.0-a0" in f.read()
 
     testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
@@ -942,11 +921,9 @@ def test_bump_command_prelease_version_type_via_config(
     tag_exists = git.tag_exist("0.2.0-a1")
     assert tag_exists is True
 
-    with open(tmp_version_file, "r") as f:
-        assert "0.2.0-a1" in f.read()
-
-    with open(tmp_commitizen_cfg_file, "r") as f:
-        assert "0.2.0-a1" in f.read()
+    for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
+        with open(version_file, "r") as f:
+            assert "0.2.0-a1" in f.read()
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
     testargs = ["cz", "bump", "--yes"]
@@ -956,28 +933,19 @@ def test_bump_command_prelease_version_type_via_config(
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
-    with open(tmp_version_file, "r") as f:
-        assert "0.2.0" in f.read()
-
-    with open(tmp_commitizen_cfg_file, "r") as f:
-        assert "0.2.0" in f.read()
+    for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
+        with open(version_file, "r") as f:
+            assert "0.2.0" in f.read()
 
 
 def test_bump_command_prelease_version_type_check_old_tags(
-    tmp_commitizen_project, mocker: MockFixture
+    tmp_commitizen_project_initial, mocker: MockFixture
 ):
-    # PRERELEASE
-    tmp_version_file = tmp_commitizen_project.join("__version__.py")
-    tmp_version_file.write("0.1.0")
-    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
-    tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
-    tmp_commitizen_cfg_file.write(
-        f"{tmp_commitizen_cfg_file.read()}\n"
-        f'version_files = ["{tmp_version_file_string}"]\n'
-        f'tag_format = "v$version"\n'
-        f'version_type = "semver"\n'
+    tmp_commitizen_project = tmp_commitizen_project_initial(
+        config_extra=('tag_format = "v$version"\nversion_type = "semver"\n'),
     )
-    create_file_and_commit("feat: new user interface")
+    tmp_version_file = tmp_commitizen_project.join("__version__.py")
+    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
 
     testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
@@ -986,11 +954,9 @@ def test_bump_command_prelease_version_type_check_old_tags(
     tag_exists = git.tag_exist("v0.2.0-a0")
     assert tag_exists is True
 
-    with open(tmp_version_file, "r") as f:
-        assert "0.2.0-a0" in f.read()
-
-    with open(tmp_commitizen_cfg_file, "r") as f:
-        assert "0.2.0-a0" in f.read()
+    for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
+        with open(version_file, "r") as f:
+            assert "0.2.0-a0" in f.read()
 
     testargs = ["cz", "bump", "--prerelease", "alpha"]
     mocker.patch.object(sys, "argv", testargs)
@@ -999,11 +965,9 @@ def test_bump_command_prelease_version_type_check_old_tags(
     tag_exists = git.tag_exist("v0.2.0-a1")
     assert tag_exists is True
 
-    with open(tmp_version_file, "r") as f:
-        assert "0.2.0-a1" in f.read()
-
-    with open(tmp_commitizen_cfg_file, "r") as f:
-        assert "0.2.0-a1" in f.read()
+    for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
+        with open(version_file, "r") as f:
+            assert "0.2.0-a1" in f.read()
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
     testargs = ["cz", "bump"]
@@ -1013,8 +977,6 @@ def test_bump_command_prelease_version_type_check_old_tags(
     tag_exists = git.tag_exist("v0.2.0")
     assert tag_exists is True
 
-    with open(tmp_version_file, "r") as f:
-        assert "0.2.0" in f.read()
-
-    with open(tmp_commitizen_cfg_file, "r") as f:
-        assert "0.2.0" in f.read()
+    for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
+        with open(version_file, "r") as f:
+            assert "0.2.0" in f.read()

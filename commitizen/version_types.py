@@ -1,5 +1,5 @@
 import sys
-import typing
+from typing import Optional, Tuple, Union
 
 if sys.version_info >= (3, 8):
     from typing import Protocol as _Protocol
@@ -10,14 +10,14 @@ from packaging.version import Version
 
 
 class VersionProtocol(_Protocol):
-    def __init__(self, _version: typing.Union[Version, str]):
+    def __init__(self, _version: Union[Version, str]):
         raise NotImplementedError("must be implemented")
 
     def __str__(self) -> str:
         raise NotImplementedError("must be implemented")
 
     @property
-    def release(self) -> typing.Tuple[int, ...]:
+    def release(self) -> Tuple[int, ...]:
         raise NotImplementedError("must be implemented")
 
     @property
@@ -25,11 +25,11 @@ class VersionProtocol(_Protocol):
         raise NotImplementedError("must be implemented")
 
     @property
-    def pre(self) -> typing.Optional[typing.Tuple[str, int]]:
+    def pre(self) -> Optional[Tuple[str, int]]:
         raise NotImplementedError("must be implemented")
 
     @property
-    def local(self) -> typing.Optional[str]:
+    def local(self) -> Optional[str]:
         raise NotImplementedError("must be implemented")
 
     @property
@@ -42,7 +42,7 @@ class SemVerVersion(VersionProtocol):
         self._version = Version(version)
 
     @property
-    def release(self) -> typing.Tuple[int, ...]:
+    def release(self) -> Tuple[int, ...]:
         return self._version.release
 
     @property
@@ -50,11 +50,11 @@ class SemVerVersion(VersionProtocol):
         return self._version.is_prerelease
 
     @property
-    def pre(self) -> typing.Optional[typing.Tuple[str, int]]:
+    def pre(self) -> Optional[Tuple[str, int]]:
         return self._version.pre
 
     @property
-    def local(self) -> typing.Optional[str]:
+    def local(self) -> Optional[str]:
         return self._version.local
 
     @property
@@ -74,7 +74,7 @@ class SemVerVersion(VersionProtocol):
         parts.append(".".join(str(x) for x in version.release))
 
         # Pre-release
-        if version.pre is not None:
+        if version.pre:
             pre = "".join(str(x) for x in version.pre)
             parts.append(f"-{pre}")
 
@@ -87,13 +87,13 @@ class SemVerVersion(VersionProtocol):
             parts.append(f"-dev{version.dev}")
 
         # Local version segment
-        if version.local is not None:
+        if version.local:
             parts.append(f"+{version.local}")
 
         return "".join(parts)
 
 
-types = {
+VERSION_TYPES = {
     "pep440": Version,
     "semver": SemVerVersion,
 }

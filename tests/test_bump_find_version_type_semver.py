@@ -78,7 +78,7 @@ tdd_cases = [
 
 
 @pytest.mark.parametrize(
-    "test_input,expected",
+    "test_input, expected",
     itertools.chain(tdd_cases, weird_cases, simple_flow, unexpected_cases),
 )
 def test_generate_version_type(test_input, expected):

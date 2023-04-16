@@ -23,7 +23,7 @@
 | `use_shortcuts`            | `bool` | `false`                     | If enabled, commitizen will show keyboard shortcuts when selecting from a list. Define a `key` for each of your choices to set the key. [See more][shortcuts]                                                                                        |
 | `major_version_zero`       | `bool` | `false`                     | When true, breaking changes on a `0.x` will remain as a `0.x` version. On `false`, a breaking change will bump a `0.x` version to `1.0`. [major-version-zero]                                                                                        |
 | `prerelease_offset`        | `int`  | `0`                         | In special cases it may be necessary that a prerelease cannot start with a 0, e.g. in an embedded project the individual characters are encoded in bytes. This can be done by specifying an offset from which to start counting. [prerelease-offset] |
-| `version_type`             | `str`  | `pep440`                    | Select a version type from the following options [`pep440`, `semver`]. Useful for non python projects. [See more][version_type]                                                                                                                      |
+| `version_type`             | `str`  | `pep440`                    | Select a version type from the following options [`pep440`, `semver`]. Useful for non-python projects. [See more][version_type]                                                                                                                      |
 
 ## pyproject.toml or .cz.toml
 

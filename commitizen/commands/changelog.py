@@ -54,7 +54,7 @@ class Changelog:
         ) or self.config.settings.get("changelog_merge_prerelease")
 
         version_type = self.config.settings.get("version_type")
-        self.version_type = version_type and version_types.types[version_type]
+        self.version_type = version_type and version_types.VERSION_TYPES[version_type]
 
     def _find_incremental_rev(self, latest_version: str, tags: List[GitTag]) -> str:
         """Try to find the 'start_rev'.

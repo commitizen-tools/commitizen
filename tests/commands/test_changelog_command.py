@@ -1208,4 +1208,4 @@ def test_changelog_prerelease_rev_with_use_version_type_semver(
 
     out, _ = capsys.readouterr()
 
-    assert out == "## 0.3.0-a1 (2022-02-13)\n\n"
+    file_regression.check(out, extension=".second-prerelease.md")

@@ -207,7 +207,7 @@ data = {
                         "name": ["--version-type"],
                         "help": "choose version type",
                         "default": None,
-                        "choices": version_types.types,
+                        "choices": version_types.VERSION_TYPES,
                     },
                 ],
             },
