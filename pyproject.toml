@@ -77,7 +77,6 @@ ipython = "^7.2"
 pytest = "^7.2.0"
 pytest-cov = "^4.0"
 pytest-mock = "^3.10"
-codecov = "^2.0"
 pytest-regressions = "^2.4.0"
 pytest-freezer = "^0.4.6"
 # code formatter

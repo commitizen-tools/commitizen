@@ -538,6 +538,40 @@ def test_changelog_config_flag_increment(
     file_regression.check(out, extension=".md")
 
 
+@pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_config_flag_merge_prerelease(
+    mocker: MockFixture, changelog_path, config_path, file_regression, test_input
+):
+    with open(config_path, "a") as f:
+        f.write("changelog_merge_prerelease = true\n")
+
+    create_file_and_commit("irrelevant commit")
+    mocker.patch("commitizen.git.GitTag.date", "1970-01-01")
+    git.tag("1.0.0")
+
+    create_file_and_commit("feat: add new output")
+    create_file_and_commit("fix: output glitch")
+
+    testargs = ["cz", "bump", "--prerelease", test_input, "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("fix: mama gotta work")
+    create_file_and_commit("feat: add more stuff")
+    create_file_and_commit("Merge into master")
+
+    testargs = ["cz", "changelog"]
+
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
+
+
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_config_start_rev_option(
     mocker: MockFixture, capsys, config_path, file_regression
@@ -616,6 +650,79 @@ def test_changelog_incremental_with_release_candidate_version(
     create_file_and_commit("Merge into master")
 
     testargs = ["cz", "changelog", "--incremental"]
+
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_release_candidate_version_with_merge_prerelease(
+    mocker: MockFixture, changelog_path, file_regression, test_input
+):
+    """Fix #357"""
+    with open(changelog_path, "w") as f:
+        f.write(KEEP_A_CHANGELOG)
+    create_file_and_commit("irrelevant commit")
+    mocker.patch("commitizen.git.GitTag.date", "1970-01-01")
+    git.tag("1.0.0")
+
+    create_file_and_commit("feat: add new output")
+    create_file_and_commit("fix: output glitch")
+
+    testargs = ["cz", "bump", "--prerelease", test_input, "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("fix: mama gotta work")
+    create_file_and_commit("feat: add more stuff")
+    create_file_and_commit("Merge into master")
+
+    testargs = ["cz", "changelog", "--merge-prerelease"]
+
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_incremental_with_merge_prerelease(
+    mocker: MockFixture, changelog_path, file_regression, test_input
+):
+    """Fix #357"""
+    with open(changelog_path, "w") as f:
+        f.write(KEEP_A_CHANGELOG)
+    create_file_and_commit("irrelevant commit")
+    mocker.patch("commitizen.git.GitTag.date", "1970-01-01")
+    git.tag("1.0.0")
+
+    create_file_and_commit("feat: add new output")
+
+    testargs = ["cz", "bump", "--prerelease", test_input, "--yes", "--changelog"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("fix: output glitch")
+
+    testargs = ["cz", "bump", "--prerelease", test_input, "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("fix: mama gotta work")
+    create_file_and_commit("feat: add more stuff")
+    create_file_and_commit("Merge into master")
+
+    testargs = ["cz", "changelog", "--merge-prerelease", "--incremental"]
 
     mocker.patch.object(sys, "argv", testargs)
     cli.main()

@@ -49,6 +49,9 @@ class Changelog:
         self.tag_format = args.get("tag_format") or self.config.settings.get(
             "tag_format"
         )
+        self.merge_prerelease = args.get(
+            "merge_prerelease"
+        ) or self.config.settings.get("changelog_merge_prerelease")
 
     def _find_incremental_rev(self, latest_version: str, tags: List[GitTag]) -> str:
         """Try to find the 'start_rev'.
@@ -110,6 +113,7 @@ class Changelog:
         changelog_message_builder_hook: Optional[
             Callable
         ] = self.cz.changelog_message_builder_hook
+        merge_prerelease = self.merge_prerelease
 
         if not changelog_pattern or not commit_parser:
             raise NoPatternMapError(
@@ -156,6 +160,7 @@ class Changelog:
             unreleased_version,
             change_type_map=change_type_map,
             changelog_message_builder_hook=changelog_message_builder_hook,
+            merge_prerelease=merge_prerelease,
         )
         if self.change_type_order:
             tree = changelog.order_changelog_tree(tree, self.change_type_order)
