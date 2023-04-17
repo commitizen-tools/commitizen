@@ -90,7 +90,7 @@ types-PyYAML = "^5.4.3"
 types-termcolor = "^0.1.1"
 # documentation
 mkdocs = "^1.0"
-mkdocs-material = "^8.5.11"
+mkdocs-material = "^9.1.6"
 pydocstyle = "^5.0.2"
 pytest-xdist = "^3.1.0"
 
