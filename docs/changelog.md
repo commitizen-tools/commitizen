@@ -41,13 +41,13 @@ cz ch
 #### Get the changelog for the given version
 
 ```bash
-cz changelog 0.3.0
+cz changelog 0.3.0 --dry-run
 ```
 
 #### Get the changelog for the given version range
 
 ```bash
-cz changelog 0.3.0..0.4.0
+cz changelog 0.3.0..0.4.0 --dry-run
 ```
 
 ## Constrains
@@ -173,7 +173,7 @@ Collects changes from prereleases into the next non-prerelease. This means that 
 cz changelog --merge-prerelease
 ```
 
-```toml 
+```toml
 [tools.commitizen]
 # ...
 changelog_merge_prerelease = true
