@@ -696,6 +696,7 @@ def test_changelog_release_candidate_version_with_merge_prerelease(
 
 @pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2023-04-16")
 def test_changelog_incremental_with_merge_prerelease(
     mocker: MockFixture, changelog_path, file_regression, test_input
 ):
