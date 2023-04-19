@@ -20,6 +20,7 @@ nav:
     - Customization: 'customization.md'
     - Tutorials:
         - Writing commits: 'tutorials/writing_commits.md'
+        - Auto check commits: 'tutorials/auto_check.md'
         - GitLab CI: 'tutorials/gitlab_ci.md'
         - Github Actions: 'tutorials/github_actions.md'
         - Jenkins pipeline: 'tutorials/jenkins_pipeline.md'

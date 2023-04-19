@@ -1,19 +1,22 @@
 # Automatically check message before commit
 
 ## About
+
 To automatically check a commit message prior to committing, you can use a [git hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks).
 
 ## How to
+
 There are two common methods for installing the hook:
+
 ### Method 1: Add git hook through [pre-commit](https://pre-commit.com/)
 
-* Step 1: Install [pre-commit](https://pre-commit.com/)
+- Step 1: Install [pre-commit](https://pre-commit.com/)
 
 ```sh
 python -m pip install pre-commit
 ```
 
-* Step 2: Create `.pre-commit-config.yaml` at your root directory with the following content
+- Step 2: Create `.pre-commit-config.yaml` at your root directory with the following content
 
 ```yaml
 ---
@@ -24,13 +27,14 @@ repos:
       - id: commitizen
 ```
 
-* Step 3: Install the configuration into git hook through `pre-commit`
+- Step 3: Install the configuration into git hook through `pre-commit`
 
 ```bash
 pre-commit install --hook-type commit-msg
 ```
 
 ### Method 2: Manually add git hook
+
 The command might be included inside of a Git hook (inside of `.git/hooks/` at the root of the project).
 
 The selected hook might be the file called commit-msg.
