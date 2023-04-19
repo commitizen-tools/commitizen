@@ -44,34 +44,43 @@ classifiers = [
     "Intended Audience :: Developers",
     "Natural Language :: English",
     "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: Implementation :: CPython",
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6.2"
+python = "^3.7"
 questionary = "^1.4.0"
 decli = "^0.5.2"
 colorama = "^0.4.1"
-termcolor = ">=1.1,<3"
+termcolor = ">= 1.1, < 3"
 packaging = ">=19"
 tomlkit = ">=0.5.3,<1.0.0"
 jinja2 = ">=2.10.3"
 pyyaml = ">=3.08"
-argcomplete = ">=1.12.1,<2.2"
-typing-extensions = { version = "^4.0.1", python = "<3.8" }
-charset-normalizer = ">=2.1.0,<4"
+argcomplete = ">=1.12.1,<2.1"
+typing-extensions = "^4.0.1"
+charset-normalizer = ">=2.1.0,<3.1"
+# Use the Python 3.11 compatible API: https://github.com/python/importlib_metadata#compatibility
+importlib_metadata = { version = ">=4.13,<5"}
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.2"
 # test
-pytest = "^7.0.0"
-pytest-cov = "^2.6"
-pytest-mock = "^2.0"
-codecov = "^2.0"
+pytest = "^7.2.0"
+pytest-cov = "^4.0"
+pytest-mock = "^3.10"
 pytest-regressions = "^2.4.0"
 pytest-freezer = "^0.4.6"
 # code formatter
-black = "^21.12b0"
-isort = "^5.7.0"
+black = "^22.10"
+isort = "^5.10.0"
 # linter
 flake8 = "^3.6"
 pre-commit = "^2.6.0"
@@ -80,13 +89,27 @@ types-PyYAML = "^5.4.3"
 types-termcolor = "^0.1.1"
 # documentation
 mkdocs = "^1.0"
-mkdocs-material = "^4.1"
+mkdocs-material = "^8.5.11"
 pydocstyle = "^5.0.2"
-pytest-xdist = "^2.5.0"
+pytest-xdist = "^3.1.0"
 
 [tool.poetry.scripts]
 cz = "commitizen.cli:main"
 git-cz = "commitizen.cli:main"
+
+[tool.poetry.plugins."commitizen.plugin"]
+cz_conventional_commits = "commitizen.cz.conventional_commits:ConventionalCommitsCz"
+cz_jira = "commitizen.cz.jira:JiraSmartCz"
+cz_customize = "commitizen.cz.customize:CustomizeCommitsCz"
+
+[tool.poetry.plugins."commitizen.provider"]
+cargo = "commitizen.providers:CargoProvider"
+commitizen = "commitizen.providers:CommitizenProvider"
+composer = "commitizen.providers:ComposerProvider"
+npm = "commitizen.providers:NpmProvider"
+pep621 = "commitizen.providers:Pep621Provider"
+poetry = "commitizen.providers:PoetryProvider"
+scm = "commitizen.providers:ScmProvider"
 
 [tool.isort]
 profile = "black"

@@ -2,12 +2,13 @@ import argparse
 import logging
 import sys
 from functools import partial
+from types import TracebackType
 from typing import List
 
 import argcomplete
 from decli import cli
 
-from commitizen import commands, config, out
+from commitizen import commands, config, out, version_types
 from commitizen.exceptions import (
     CommitizenException,
     ExitCode,
@@ -207,7 +208,13 @@ data = {
                         "default": False,
                         "help": "bump tags without new commits",
                         "action": "store_true",
-                    }
+                    },
+                    {
+                        "name": ["--version-type"],
+                        "help": "choose version type",
+                        "default": None,
+                        "choices": version_types.VERSION_TYPES,
+                    },
                 ],
             },
             {
@@ -253,8 +260,17 @@ data = {
                         "name": "--start-rev",
                         "default": None,
                         "help": (
-                            "start rev of the changelog."
+                            "start rev of the changelog. "
                             "If not set, it will generate changelog from the start"
+                        ),
+                    },
+                    {
+                        "name": "--merge-prerelease",
+                        "action": "store_true",
+                        "default": False,
+                        "help": (
+                            "collect all changes from prereleases into next non-prerelease. "
+                            "If not set, it will include prereleases in the changelog"
                         ),
                     },
                 ],
@@ -336,21 +352,22 @@ original_excepthook = sys.excepthook
 
 
 def commitizen_excepthook(
-    type, value, tracekback, debug=False, no_raise: List[int] = None
+    type, value, traceback, debug=False, no_raise: List[int] = None
 ):
+    traceback = traceback if isinstance(traceback, TracebackType) else None
     if not no_raise:
         no_raise = []
     if isinstance(value, CommitizenException):
         if value.message:
             value.output_method(value.message)
         if debug:
-            original_excepthook(type, value, tracekback)
+            original_excepthook(type, value, traceback)
         exit_code = value.exit_code
         if exit_code in no_raise:
             exit_code = 0
         sys.exit(exit_code)
     else:
-        original_excepthook(type, value, tracekback)
+        original_excepthook(type, value, traceback)
 
 
 commitizen_debug_excepthook = partial(commitizen_excepthook, debug=True)

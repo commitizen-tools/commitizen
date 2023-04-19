@@ -1,8 +1,12 @@
 import platform
 import sys
 
+import pytest
+from pytest_mock import MockerFixture
+
 from commitizen import commands
 from commitizen.__version__ import __version__
+from commitizen.config.base_config import BaseConfig
 
 
 def test_version_for_showing_project_version(config, capsys):
@@ -70,3 +74,35 @@ def test_version_for_showing_commitizen_system_info(config, capsys):
     assert f"Commitizen Version: {__version__}" in captured.out
     assert f"Python Version: {sys.version}" in captured.out
     assert f"Operating System: {platform.system()}" in captured.out
+
+
+@pytest.mark.parametrize("project", (True, False))
+@pytest.mark.usefixtures("tmp_git_project")
+def test_version_use_version_provider(
+    mocker: MockerFixture,
+    config: BaseConfig,
+    capsys: pytest.CaptureFixture,
+    project: bool,
+):
+    version = "0.0.0"
+    mock = mocker.MagicMock(name="provider")
+    mock.get_version.return_value = version
+    get_provider = mocker.patch(
+        "commitizen.commands.version.get_provider", return_value=mock
+    )
+
+    commands.Version(
+        config,
+        {
+            "report": False,
+            "project": project,
+            "commitizen": False,
+            "verbose": not project,
+        },
+    )()
+    captured = capsys.readouterr()
+
+    assert version in captured.out
+    get_provider.assert_called_once()
+    mock.get_version.assert_called_once()
+    mock.set_version.assert_not_called()

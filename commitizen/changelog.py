@@ -27,20 +27,54 @@ Extra:
 
 import os
 import re
+import sys
+import typing
 from collections import OrderedDict, defaultdict
 from datetime import date
-from typing import Callable, Dict, Iterable, List, Optional, Tuple
+from typing import Callable, Dict, Iterable, List, Optional, Tuple, Type
 
 from jinja2 import Environment, PackageLoader
+from packaging.version import InvalidVersion, Version
 
 from commitizen import defaults
 from commitizen.bump import normalize_tag
 from commitizen.exceptions import InvalidConfigurationError, NoCommitsFoundError
 from commitizen.git import GitCommit, GitTag
 
+if sys.version_info >= (3, 8):
+    from commitizen.version_types import VersionProtocol
+else:
+    # workaround mypy issue for 3.7 python
+    VersionProtocol = typing.Any
+
 
 def get_commit_tag(commit: GitCommit, tags: List[GitTag]) -> Optional[GitTag]:
     return next((tag for tag in tags if tag.rev == commit.rev), None)
+
+
+def get_version(tag: GitTag) -> Optional[Version]:
+    version = None
+    try:
+        version = Version(tag.name)
+    except InvalidVersion:
+        pass
+    return version
+
+
+def tag_included_in_changelog(
+    tag: GitTag, used_tags: List, merge_prerelease: bool
+) -> bool:
+    if tag in used_tags:
+        return False
+
+    version = get_version(tag)
+    if version is None:
+        return False
+
+    if merge_prerelease and version.is_prerelease:
+        return False
+
+    return True
 
 
 def generate_tree_from_commits(
@@ -51,6 +85,7 @@ def generate_tree_from_commits(
     unreleased_version: Optional[str] = None,
     change_type_map: Optional[Dict[str, str]] = None,
     changelog_message_builder_hook: Optional[Callable] = None,
+    merge_prerelease: bool = False,
 ) -> Iterable[Dict]:
     pat = re.compile(changelog_pattern)
     map_pat = re.compile(commit_parser, re.MULTILINE)
@@ -73,15 +108,15 @@ def generate_tree_from_commits(
     for commit in commits:
         commit_tag = get_commit_tag(commit, tags)
 
-        if commit_tag is not None and commit_tag not in used_tags:
+        if commit_tag is not None and tag_included_in_changelog(
+            commit_tag, used_tags, merge_prerelease
+        ):
             used_tags.append(commit_tag)
             yield {
                 "version": current_tag_name,
                 "date": current_tag_date,
                 "changes": changes,
             }
-            # TODO: Check if tag matches the version pattern, otherwise skip it.
-            # This in order to prevent tags that are not versions.
             current_tag_name = commit_tag.name
             current_tag_date = commit_tag.date
             changes = defaultdict(list)
@@ -286,7 +321,10 @@ def get_smart_tag_range(
 
 
 def get_oldest_and_newest_rev(
-    tags: List[GitTag], version: str, tag_format: str
+    tags: List[GitTag],
+    version: str,
+    tag_format: str,
+    version_type_cls: Optional[Type[VersionProtocol]] = None,
 ) -> Tuple[Optional[str], Optional[str]]:
     """Find the tags for the given version.
 
@@ -301,11 +339,15 @@ def get_oldest_and_newest_rev(
     except ValueError:
         newest = version
 
-    newest_tag = normalize_tag(newest, tag_format=tag_format)
+    newest_tag = normalize_tag(
+        newest, tag_format=tag_format, version_type_cls=version_type_cls
+    )
 
     oldest_tag = None
     if oldest:
-        oldest_tag = normalize_tag(oldest, tag_format=tag_format)
+        oldest_tag = normalize_tag(
+            oldest, tag_format=tag_format, version_type_cls=version_type_cls
+        )
 
     tags_range = get_smart_tag_range(tags, newest=newest_tag, oldest=oldest_tag)
     if not tags_range:

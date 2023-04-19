@@ -17,13 +17,38 @@ def create_file_and_commit(message: str, filename: Optional[str] = None):
     if not filename:
         filename = str(uuid.uuid4())
 
-    Path(f"./{filename}").touch()
+    Path(filename).touch()
     c = cmd.run("git add .")
     if c.return_code != 0:
         raise exceptions.CommitError(c.err)
     c = git.commit(message)
     if c.return_code != 0:
         raise exceptions.CommitError(c.err)
+
+
+def create_branch(name: str):
+    c = cmd.run(f"git branch {name}")
+    if c.return_code != 0:
+        raise exceptions.GitCommandError(c.err)
+
+
+def switch_branch(branch: str):
+    c = cmd.run(f"git switch {branch}")
+    if c.return_code != 0:
+        raise exceptions.GitCommandError(c.err)
+
+
+def merge_branch(branch: str):
+    c = cmd.run(f"git merge {branch}")
+    if c.return_code != 0:
+        raise exceptions.GitCommandError(c.err)
+
+
+def get_current_branch() -> str:
+    c = cmd.run("git rev-parse --abbrev-ref HEAD")
+    if c.return_code != 0:
+        raise exceptions.GitCommandError(c.err)
+    return c.out
 
 
 def create_tag(tag: str):

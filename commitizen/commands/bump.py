@@ -5,7 +5,7 @@ from typing import List, Optional
 import questionary
 from packaging.version import InvalidVersion, Version
 
-from commitizen import bump, cmd, defaults, factory, git, hooks, out
+from commitizen import bump, cmd, defaults, factory, git, hooks, out, version_types
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
@@ -21,6 +21,7 @@ from commitizen.exceptions import (
     NotAllowed,
     NoVersionSpecifiedError,
 )
+from commitizen.providers import get_provider
 
 logger = getLogger("commitizen")
 
@@ -61,6 +62,10 @@ class Bump:
         self.retry = arguments["retry"]
         self.pre_bump_hooks = self.config.settings["pre_bump_hooks"]
         self.post_bump_hooks = self.config.settings["post_bump_hooks"]
+        version_type = arguments["version_type"] or self.config.settings.get(
+            "version_type"
+        )
+        self.version_type = version_type and version_types.VERSION_TYPES[version_type]
 
     def is_initial_tag(self, current_tag_version: str, is_yes: bool = False) -> bool:
         """Check if reading the whole git tree up to HEAD is needed."""
@@ -94,13 +99,13 @@ class Bump:
 
     def __call__(self):  # noqa: C901
         """Steps executed to bump."""
+        provider = get_provider(self.config)
+        current_version: str = provider.get_version()
+
         try:
-            current_version_instance: Version = Version(self.bump_settings["version"])
+            current_version_instance: Version = Version(current_version)
         except TypeError:
             raise NoVersionSpecifiedError()
-
-        # Initialize values from sources (conf)
-        current_version: str = self.config.settings["version"]
 
         tag_format: str = self.bump_settings["tag_format"]
         bump_commit_message: str = self.bump_settings["bump_message"]
@@ -153,7 +158,9 @@ class Bump:
             self.cz.bump_map = defaults.bump_map_major_version_zero
 
         current_tag_version: str = bump.normalize_tag(
-            current_version, tag_format=tag_format
+            current_version,
+            tag_format=tag_format,
+            version_type_cls=self.version_type,
         )
 
         is_initial = self.is_initial_tag(current_tag_version, is_yes)
@@ -213,9 +220,14 @@ class Bump:
                 prerelease_offset=prerelease_offset,
                 devrelease=devrelease,
                 is_local_version=is_local_version,
+                version_type_cls=self.version_type,
             )
 
-        new_tag_version = bump.normalize_tag(new_version, tag_format=tag_format)
+        new_tag_version = bump.normalize_tag(
+            new_version,
+            tag_format=tag_format,
+            version_type_cls=self.version_type,
+        )
         message = bump.create_commit_message(
             current_version, new_version, bump_commit_message
         )
@@ -285,7 +297,7 @@ class Bump:
             check_consistency=self.check_consistency,
         )
 
-        self.config.set_key("version", str(new_version))
+        provider.set_version(str(new_version))
 
         if self.pre_bump_hooks:
             hooks.run(
