@@ -9,7 +9,11 @@ Just like *conventional commit* format, but the scope has been restricted to a
 JIRA issue format, i.e. `project-issueNumber`. This standardises scopes in a
 meaningful way.
 
-It can be installed with `pip install conventional-JIRA`.
+### Installation
+
+```sh
+pip install conventional-JIRA
+```
 
 ### [GitHub JIRA Conventional](https://pypi.org/project/cz-github-jira-conventional/)
 
@@ -18,11 +22,32 @@ This plugin extends the commitizen tools by:
 - creating links to GitHub commits in the CHANGELOG.md
 - creating links to JIRA issues in the CHANGELOG.md
 
-It can be installed with `cz-github-jira-conventional`.
+### Installation
+
+```sh
+pip install cz-github-jira-conventional
+```
 
 For installation instructions (configuration and pre-commit) please visit https://github.com/apheris/cz-github-jira-conventional
 
-### [Commitizen emoji](https://pypi.org/project/commitizen-emoji/)
+### [cz-emoji](https://github.com/adam-grant-hendry/cz-emoji)
+
+*conventional commit* format, but with emojis
+
+### Installation
+
+```sh
+pip install cz-emoji
+```
+
+### Usage
+
+```sh
+cz --name cz_emoji commit
+```
+
+
+### [Commitizen emoji](https://pypi.org/project/commitizen-emoji/) (Unmaintained)
 
 Just like *conventional commit* format, but with emojis and optionally time spent and related tasks.
 

@@ -17,7 +17,7 @@ pipeline {
     stage('Bump version') {
       when {
         beforeAgent true
-        branch 'master'
+        expression { env.BRANCH_IS_PRIMARY }
         not {
           changelog '^bump:.+'
         }
