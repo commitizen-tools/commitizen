@@ -96,6 +96,9 @@ options:
   --retry               retry commit if it fails the 1st time
   --major-version-zero  keep major version at zero, even for breaking changes
   --prerelease-offset   start pre-releases with this offset
+  --version-type {pep440,semver}
+                        choose version type
+
 ```
 
 ### `--files-only`
@@ -474,6 +477,26 @@ Defaults to: `0`
 ```toml
 [tool.commitizen]
 prerelease_offset = 1
+```
+
+### `version_type`
+
+Choose version type
+
+* `pep440` - default version type.
+    - prerelease - `1.0.1a0`
+    - devrelease - `1.0.1dev0`
+    - dev and pre - `1.0.1a0.dev0`
+* `semver` - semver compatibly type. Added "-" delimiter
+    - prerelease - `1.0.1-a0`
+    - devrelease - `1.0.1-dev0`
+    - dev and pre - `1.0.1-a0-dev0`
+
+Defaults to: `pep440`
+
+```toml
+[tool.commitizen]
+version_type = "semver"
 ```
 
 ## Custom bump

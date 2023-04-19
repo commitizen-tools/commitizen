@@ -27,9 +27,11 @@ Extra:
 
 import os
 import re
+import sys
+import typing
 from collections import OrderedDict, defaultdict
 from datetime import date
-from typing import Callable, Dict, Iterable, List, Optional, Tuple
+from typing import Callable, Dict, Iterable, List, Optional, Tuple, Type
 
 from jinja2 import Environment, PackageLoader
 from packaging.version import InvalidVersion, Version
@@ -38,6 +40,12 @@ from commitizen import defaults
 from commitizen.bump import normalize_tag
 from commitizen.exceptions import InvalidConfigurationError, NoCommitsFoundError
 from commitizen.git import GitCommit, GitTag
+
+if sys.version_info >= (3, 8):
+    from commitizen.version_types import VersionProtocol
+else:
+    # workaround mypy issue for 3.7 python
+    VersionProtocol = typing.Any
 
 
 def get_commit_tag(commit: GitCommit, tags: List[GitTag]) -> Optional[GitTag]:
@@ -313,7 +321,10 @@ def get_smart_tag_range(
 
 
 def get_oldest_and_newest_rev(
-    tags: List[GitTag], version: str, tag_format: str
+    tags: List[GitTag],
+    version: str,
+    tag_format: str,
+    version_type_cls: Optional[Type[VersionProtocol]] = None,
 ) -> Tuple[Optional[str], Optional[str]]:
     """Find the tags for the given version.
 
@@ -328,11 +339,15 @@ def get_oldest_and_newest_rev(
     except ValueError:
         newest = version
 
-    newest_tag = normalize_tag(newest, tag_format=tag_format)
+    newest_tag = normalize_tag(
+        newest, tag_format=tag_format, version_type_cls=version_type_cls
+    )
 
     oldest_tag = None
     if oldest:
-        oldest_tag = normalize_tag(oldest, tag_format=tag_format)
+        oldest_tag = normalize_tag(
+            oldest, tag_format=tag_format, version_type_cls=version_type_cls
+        )
 
     tags_range = get_smart_tag_range(tags, newest=newest_tag, oldest=oldest_tag)
     if not tags_range:

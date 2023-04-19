@@ -5,7 +5,7 @@ from typing import List, Optional
 import questionary
 from packaging.version import InvalidVersion, Version
 
-from commitizen import bump, cmd, defaults, factory, git, hooks, out
+from commitizen import bump, cmd, defaults, factory, git, hooks, out, version_types
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
@@ -62,6 +62,10 @@ class Bump:
         self.retry = arguments["retry"]
         self.pre_bump_hooks = self.config.settings["pre_bump_hooks"]
         self.post_bump_hooks = self.config.settings["post_bump_hooks"]
+        version_type = arguments["version_type"] or self.config.settings.get(
+            "version_type"
+        )
+        self.version_type = version_type and version_types.VERSION_TYPES[version_type]
 
     def is_initial_tag(self, current_tag_version: str, is_yes: bool = False) -> bool:
         """Check if reading the whole git tree up to HEAD is needed."""
@@ -153,7 +157,9 @@ class Bump:
             self.cz.bump_map = defaults.bump_map_major_version_zero
 
         current_tag_version: str = bump.normalize_tag(
-            current_version, tag_format=tag_format
+            current_version,
+            tag_format=tag_format,
+            version_type_cls=self.version_type,
         )
 
         is_initial = self.is_initial_tag(current_tag_version, is_yes)
@@ -209,9 +215,14 @@ class Bump:
                 prerelease_offset=prerelease_offset,
                 devrelease=devrelease,
                 is_local_version=is_local_version,
+                version_type_cls=self.version_type,
             )
 
-        new_tag_version = bump.normalize_tag(new_version, tag_format=tag_format)
+        new_tag_version = bump.normalize_tag(
+            new_version,
+            tag_format=tag_format,
+            version_type_cls=self.version_type,
+        )
         message = bump.create_commit_message(
             current_version, new_version, bump_commit_message
         )

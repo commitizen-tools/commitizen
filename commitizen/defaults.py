@@ -49,6 +49,7 @@ class Settings(TypedDict, total=False):
     pre_bump_hooks: Optional[List[str]]
     post_bump_hooks: Optional[List[str]]
     prerelease_offset: int
+    version_type: Optional[str]
 
 
 name: str = "cz_conventional_commits"
@@ -79,6 +80,7 @@ DEFAULT_SETTINGS: Settings = {
     "pre_bump_hooks": [],
     "post_bump_hooks": [],
     "prerelease_offset": 0,
+    "version_type": None,
 }
 
 MAJOR = "MAJOR"
