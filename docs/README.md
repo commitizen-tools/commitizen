@@ -17,24 +17,26 @@
 
 ## About
 
-Commitizen is a tool designed for teams.
+Commitizen is release management tool designed for teams.
 
-Its main purpose is to define a standard way of committing rules
-and communicating it (using the cli provided by commitizen).
+Commitizen assumes your team uses a standard way of commiting rules
+and from that foundation, it can bump your project's version, create
+the changelog, and update files.
 
-The reasoning behind it is that it is easier to read, and enforces writing
+By default, commitizen uses [conventional commits][conventional_commits], but you
+can build your own set of rules, using different rules.
+
+Using a standarized set of rules to write commits makes commits easier to read, and enforces writing
 descriptive commits.
 
-Besides that, having a convention on your commits makes it possible to
-parse them and use them for something else, like generating automatically
-the version or a changelog.
-
-### Commitizen features
+### Features
 
 - Command-line utility to create commits with your rules. Defaults: [Conventional commits][conventional_commits]
-- Display information about your commit rules (commands: schema, example, info)
 - Bump version automatically using [semantic versioning][semver] based on the commits. [Read More](./bump.md)
 - Generate a changelog using [Keep a changelog][keepchangelog]
+- Update your project's version files automatically
+- Display information about your commit rules (commands: schema, example, info)
+- Create your own set of rules and publish them to pip. Read more on [Customization](./customization.md)
 
 ## Requirements
 
@@ -44,10 +46,10 @@ Python 3.7+
 
 ## Installation
 
-Global installation
+To make commitizen available in your system
 
 ```bash
-sudo pip3 install -U Commitizen
+pip install --user -U Commitizen
 ```
 
 ### Python project
@@ -72,7 +74,7 @@ poetry add commitizen --dev
 
 ### macOS
 
-On macOS, it can also be installed via [homebrew](https://formulae.brew.sh/formula/commitizen):
+via [homebrew](https://formulae.brew.sh/formula/commitizen):
 
 ```bash
 brew install commitizen
@@ -108,7 +110,7 @@ or the shortcut
 cz commit -s
 ```
 
-### Integrating with Pre-commit
+### Integration with Pre-commit
 
 Commitizen can lint your commit message for you with `cz check`.
 
