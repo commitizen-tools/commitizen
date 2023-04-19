@@ -23,9 +23,14 @@ def git_sandbox(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
             monkeypatch.delenv(var)
 
     # Define a dedicated temporary git config
-    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(tmp_path / "gitconfig"))
-    cmd.run(f"git config --global user.name {SIGNER}")
-    cmd.run(f"git config --global user.email {SIGNER_MAIL}")
+    gitconfig = tmp_path / ".git" / "config"
+    if not gitconfig.parent.exists():
+        gitconfig.parent.mkdir()
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(gitconfig))
+    r = cmd.run(f"git config --file {gitconfig} user.name {SIGNER}")
+    assert r.return_code == 0, r.err
+    r = cmd.run(f"git config --file {gitconfig} user.email {SIGNER_MAIL}")
+    assert r.return_code == 0, r.err
 
 
 @pytest.fixture(scope="function")
