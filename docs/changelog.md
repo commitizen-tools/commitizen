@@ -2,6 +2,13 @@
 
 This command will generate a changelog following the committing rules established.
 
+To create the changelog automatically on bump, add the setting [update_changelog_on_bump](./bump.md#update_changelog_on_bump)
+
+```toml
+[tool.commitizen]
+update_changelog_on_bump = true
+```
+
 ## Usage
 
 ```bash
