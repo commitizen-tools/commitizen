@@ -3,7 +3,7 @@ from difflib import SequenceMatcher
 from operator import itemgetter
 from typing import Callable, Dict, List, Optional
 
-from commitizen import bump, changelog, defaults, factory, git, out
+from commitizen import bump, changelog, defaults, factory, git, out, version_types
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
     DryRunExit,
@@ -52,6 +52,9 @@ class Changelog:
         self.merge_prerelease = args.get(
             "merge_prerelease"
         ) or self.config.settings.get("changelog_merge_prerelease")
+
+        version_type = self.config.settings.get("version_type")
+        self.version_type = version_type and version_types.VERSION_TYPES[version_type]
 
     def _find_incremental_rev(self, latest_version: str, tags: List[GitTag]) -> str:
         """Try to find the 'start_rev'.
@@ -137,7 +140,9 @@ class Changelog:
             latest_version = changelog_meta.get("latest_version")
             if latest_version:
                 latest_tag_version: str = bump.normalize_tag(
-                    latest_version, tag_format=self.tag_format
+                    latest_version,
+                    tag_format=self.tag_format,
+                    version_type_cls=self.version_type,
                 )
                 start_rev = self._find_incremental_rev(latest_tag_version, tags)
 
@@ -146,6 +151,7 @@ class Changelog:
                 tags,
                 version=self.rev_range,
                 tag_format=self.tag_format,
+                version_type_cls=self.version_type,
             )
 
         commits = git.get_commits(start=start_rev, end=end_rev, args="--topo-order")
