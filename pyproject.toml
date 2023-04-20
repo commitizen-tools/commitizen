@@ -7,27 +7,6 @@ version_files = [
   ".pre-commit-config.yaml:rev:.+Commitizen"
 ]
 
-[tool.black]
-line-length = 88
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-  # The following are specific to Black, you probably don't want those.
-  | blib2to3
-  | tests/data
-  | profiling
-)/
-'''
-
 [tool.poetry]
 name = "commitizen"
 version = "2.42.1"
@@ -80,9 +59,8 @@ pytest-regressions = "^2.4.0"
 pytest-freezer = "^0.4.6"
 # code formatter
 black = "^22.10"
-isort = "^5.10.0"
 # linter
-flake8 = "^3.6"
+ruff = "^0.0.262"
 pre-commit = "^2.6.0"
 mypy = "^0.931"
 types-PyYAML = "^5.4.3"
@@ -111,10 +89,6 @@ pep621 = "commitizen.providers:Pep621Provider"
 poetry = "commitizen.providers:PoetryProvider"
 scm = "commitizen.providers:ScmProvider"
 
-[tool.isort]
-profile = "black"
-known_first_party = ["commitizen", "tests"]
-
 [tool.coverage]
     [tool.coverage.report]
     show_missing = true
@@ -137,6 +111,7 @@ known_first_party = ["commitizen", "tests"]
     omit = [
         'env/*',
         'venv/*',
+        '.venv/*',
         '*/virtualenv/*',
         '*/virtualenvs/*',
         '*/tests/*'
@@ -145,3 +120,30 @@ known_first_party = ["commitizen", "tests"]
 [build-system]
 requires = ["poetry_core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = "--strict-markers"
+
+[tool.ruff]
+line-length = 88
+ignore = [
+    "E501",
+    "D1",
+    "D415",
+]
+
+[tool.ruff.isort]
+known-first-party = ["commitizen", "tests"]
+
+[tool.ruff.pydocstyle]
+convention = "google"
+
+[tool.mypy]
+files = "commitizen"
+ignore_missing_imports = true
+disallow_untyped_decorators = true
+disallow_subclassing_any = true
+warn_return_any = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_unused_configs = true
