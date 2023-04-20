@@ -70,7 +70,7 @@ charset-normalizer = ">=2.1.0,<4"
 # Use the Python 3.11 compatible API: https://github.com/python/importlib_metadata#compatibility
 importlib_metadata = { version = ">=4.13,<5"}
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 ipython = "^7.2"
 # test
 pytest = "^7.2.0"
