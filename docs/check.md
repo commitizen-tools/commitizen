@@ -54,7 +54,7 @@ $ cz check --commit-msg-file COMMIT_MSG_FILE
 ```
 
 In this option, COMMIT_MSG_FILE is the path of the temporal file that contains the commit message.
-This argument can be useful when cooperating with git hook, please check [Automatically check message before commit](auto_check.md) for more information about how to use this argument with git hook.
+This argument can be useful when cooperating with git hook, please check [Automatically check message before commit](./tutorials/auto_check.md) for more information about how to use this argument with git hook.
 
 ### Allow Abort
 

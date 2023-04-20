@@ -487,11 +487,13 @@ release. During execution of the script, some environment variables are availabl
 | `CZ_POST_INCREMENT`            | Whether this wass a `MAJOR`, `MINOR` or `PATH` release      |
 | `CZ_POST_CHANGELOG_FILE_NAME`  | Path to the changelog file, if available                    |
 
-````toml
+```toml
 [tool.commitizen]
 post_bump_hooks = [
   "scripts/slack_notification.sh"
 ]
+```
+
 ### `prerelease_offset`
 
 Offset with which to start counting prereleses.
@@ -501,7 +503,7 @@ Defaults to: `0`
 ```toml
 [tool.commitizen]
 prerelease_offset = 1
-````
+```
 
 ### `version_type`
 
