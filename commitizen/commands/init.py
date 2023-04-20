@@ -15,6 +15,7 @@ from commitizen.exceptions import InitFailedError, NoAnswersError
 from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
 from commitizen.version_types import VERSION_TYPES
 
+
 class ProjectInfo:
     """Discover information about the current folder."""
 
@@ -66,6 +67,7 @@ class ProjectInfo:
     @property
     def is_pre_commit_installed(self) -> bool:
         return shutil.which("pre-commit") is not None
+
 
 class Init:
     def __init__(self, config: BaseConfig, *args):
