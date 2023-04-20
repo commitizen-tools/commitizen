@@ -31,6 +31,7 @@ def git_sandbox(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     assert r.return_code == 0, r.err
     r = cmd.run(f"git config --file {gitconfig} user.email {SIGNER_MAIL}")
     assert r.return_code == 0, r.err
+    cmd.run("git config --global init.defaultBranch master")
 
 
 @pytest.fixture(scope="function")
