@@ -18,6 +18,9 @@ class FakeQuestion:
     def ask(self):
         return self.expected_return
 
+    def unsafe_ask(self):
+        return self.expected_return
+
 
 pre_commit_config_filename = ".pre-commit-config.yaml"
 cz_hook_config = {
@@ -32,15 +35,21 @@ cz_hook_config = {
 expected_config = (
     "[tool.commitizen]\n"
     'name = "cz_conventional_commits"\n'
-    'version = "0.0.1"\n'
     'tag_format = "$version"\n'
+    'version_type = "semver"\n'
+    'version = "0.0.1"\n'
+    "update_changelog_on_bump = true\n"
+    "major_version_zero = true\n"
 )
 
 EXPECTED_DICT_CONFIG = {
     "commitizen": {
         "name": "cz_conventional_commits",
-        "version": "0.0.1",
         "tag_format": "$version",
+        "version_type": "semver",
+        "version": "0.0.1",
+        "update_changelog_on_bump": True,
+        "major_version_zero": True,
     }
 }
 
@@ -51,6 +60,8 @@ def test_init_without_setup_pre_commit_hook(tmpdir, mocker: MockFixture, config)
         side_effect=[
             FakeQuestion("pyproject.toml"),
             FakeQuestion("cz_conventional_commits"),
+            FakeQuestion("commitizen"),
+            FakeQuestion("semver"),
         ],
     )
     mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
@@ -88,6 +99,7 @@ def test_init_without_choosing_tag(config, mocker: MockFixture, tmpdir):
         side_effect=[
             FakeQuestion("pyproject.toml"),
             FakeQuestion("cz_conventional_commits"),
+            FakeQuestion("commitizen"),
             FakeQuestion(""),
         ],
     )
@@ -109,7 +121,7 @@ def test_executed_pre_commit_command(config):
 def pre_commit_installed(mocker: MockFixture):
     # Assume the `pre-commit` is installed
     mocker.patch(
-        "commitizen.commands.init.Init._search_pre_commit",
+        "commitizen.commands.init.ProjectInfo.is_pre_commit_installed",
         return_value=True,
     )
     # And installation success (i.e. no exception raised)
@@ -126,6 +138,8 @@ def default_choice(request, mocker: MockFixture):
         side_effect=[
             FakeQuestion(request.param),
             FakeQuestion("cz_conventional_commits"),
+            FakeQuestion("commitizen"),
+            FakeQuestion("semver"),
         ],
     )
     mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
@@ -212,7 +226,7 @@ class TestNoPreCommitInstalled:
     ):
         # Assume `pre-commit` is not installed
         mocker.patch(
-            "commitizen.commands.init.Init._search_pre_commit",
+            "commitizen.commands.init.ProjectInfo.is_pre_commit_installed",
             return_value=False,
         )
         with tmpdir.as_cwd():
@@ -224,7 +238,7 @@ class TestNoPreCommitInstalled:
     ):
         # Assume `pre-commit` is installed
         mocker.patch(
-            "commitizen.commands.init.Init._search_pre_commit",
+            "commitizen.commands.init.ProjectInfo.is_pre_commit_installed",
             return_value=True,
         )
         # But pre-commit installation will fail
