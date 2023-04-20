@@ -94,6 +94,6 @@ class SemVerVersion(VersionProtocol):
 
 
 VERSION_TYPES = {
-    "pep440": Version,
     "semver": SemVerVersion,
+    "pep440": Version,
 }
