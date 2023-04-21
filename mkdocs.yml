@@ -10,6 +10,7 @@ edit_uri: ""
 
 nav:
     - Introduction: 'README.md'
+    - Getting Started: 'getting_started.md'
     - Commands:
         - Init: 'init.md'
         - Commit: 'commit.md'
