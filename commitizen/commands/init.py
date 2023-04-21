@@ -269,7 +269,7 @@ class Init:
         if version.major > 0:
             return False
         major_version_zero: bool = questionary.confirm(
-            "Keep the major version in zero during breaking changes",
+            "Keep major version zero (0.x) during breaking changes",
             default=True,
             auto_enter=True,
         ).unsafe_ask()
