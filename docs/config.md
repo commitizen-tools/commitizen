@@ -43,6 +43,7 @@ version_files = [
     "src/__version__.py",
     "pyproject.toml:version"
 ]
+update_changelog_on_bump = true
 style = [
     ["qmark", "fg:#ff9d00 bold"],
     ["question", "bold"],
