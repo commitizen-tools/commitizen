@@ -67,8 +67,8 @@ mypy = "^0.931"
 types-PyYAML = "^5.4.3"
 types-termcolor = "^0.1.1"
 # documentation
-mkdocs = "^1.0"
-mkdocs-material = "^8.5.11"
+mkdocs = "^1.4.2"
+mkdocs-material = "^9.1.6"
 
 
 [tool.poetry.scripts]
