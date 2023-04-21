@@ -39,3 +39,5 @@ markdown_extensions:
   - extra
   - pymdownx.highlight
   - pymdownx.superfences
+  - toc:
+      permalink: true
