@@ -24,9 +24,9 @@ and from that foundation, it can bump your project's version, create
 the changelog, and update files.
 
 By default, commitizen uses [conventional commits][conventional_commits], but you
-can build your own set of rules, using different rules.
+can build your own set of rules, and publish them.
 
-Using a standarized set of rules to write commits makes commits easier to read, and enforces writing
+Using a standarized set of rules to write commits, makes commits easier to read, and enforces writing
 descriptive commits.
 
 ### Features
@@ -40,7 +40,7 @@ descriptive commits.
 
 ## Requirements
 
-Python 3.7+
+[Python](https://www.python.org/downloads/) 3.7+
 
 [Git][gitscm] `1.8.5.2`+
 
@@ -82,71 +82,19 @@ brew install commitizen
 
 ## Usage
 
-### Committing
+Most of the time this is the only command you'll run:
 
-Run in your terminal
+```sh
+cz bump
+```
 
-```bash
+On top of that, you can use commitizen to assist you with the creation of commits:
+
+```sh
 cz commit
 ```
 
-or the shortcut
-
-```bash
-cz c
-```
-
-#### Sign off the commit
-
-Run in the terminal
-
-```bash
-cz commit --signoff
-```
-
-or the shortcut
-
-```bash
-cz commit -s
-```
-
-### Integration with Pre-commit
-
-Commitizen can lint your commit message for you with `cz check`.
-
-You can integrate this in your [pre-commit](https://pre-commit.com/) config with:
-
-```yaml
----
-repos:
-  - repo: https://github.com/commitizen-tools/commitizen
-    rev: master
-    hooks:
-      - id: commitizen
-      - id: commitizen-branch
-        stages: [push]
-```
-
-After the configuration is added, you'll need to run:
-
-```sh
-pre-commit install --hook-type commit-msg --hook-type pre-push
-```
-
-If you aren't using both hooks, you needn't install both stages.
-
-| Hook              | Recommended Stage |
-| ----------------- | ----------------- |
-| commitizen        | commit-msg        |
-| commitizen-branch | pre-push          |
-
-Note that pre-commit discourages using `master` as a revision, and the above command will print a warning. You should replace the `master` revision with the [latest tag](https://github.com/commitizen-tools/commitizen/tags). This can be done automatically with:
-
-```sh
-pre-commit autoupdate
-```
-
-Read more about the `check` command [here](check.md).
+Read more in the section [Getting Started](./getting_started.md).
 
 ### Help
 
