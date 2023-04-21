@@ -51,13 +51,14 @@ charset-normalizer = ">=2.1.0,<3.1"
 importlib_metadata = { version = ">=4.13,<5"}
 
 [tool.poetry.group.dev.dependencies]
-ipython = "^7.2"
+ipython = "^7.34"
 # test
 pytest = "^7.2.0"
 pytest-cov = "^4.0"
 pytest-mock = "^3.10"
 pytest-regressions = "^2.4.0"
 pytest-freezer = "^0.4.6"
+pytest-xdist = "^3.1.0"
 # code formatter
 black = "^22.10"
 # linter
@@ -69,8 +70,7 @@ types-termcolor = "^0.1.1"
 # documentation
 mkdocs = "^1.0"
 mkdocs-material = "^8.5.11"
-pydocstyle = "^5.0.2"
-pytest-xdist = "^3.1.0"
+
 
 [tool.poetry.scripts]
 cz = "commitizen.cli:main"
