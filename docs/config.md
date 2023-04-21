@@ -2,32 +2,185 @@
 
 ## Settings
 
-| Variable                     | Type        | Default                     | Description                                                                                                                                                                                                                   |
-| ---------------------------- | ----------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`                       | `str`       | `"cz_conventional_commits"` | Name of the committing rules to use                                                                                                                                                                                           |
-| `version`                    | `str`       | `None`                      | Current version. Example: "0.1.2"                                                                                                                                                                                             |
-| `version_files`              | `list`      | `[ ]`                       | Files were the version will be updated. A pattern to match a line, can also be specified, separated by `:` [Read more][version_files]                                                                                         |
-| `version_provider`           | `str`       | `commitizen`                | Version provider used to read and write version [Read more](#version-providers)                                                                                                                                               |
-| `tag_format`                 | `str`       | `None`                      | Format for the git tag, useful for old projects, that use a convention like `"v1.2.1"`. [Read more][tag_format]                                                                                                               |
-| `update_changelog_on_bump`   | `bool`      | `false`                     | Create changelog when running `cz bump`                                                                                                                                                                                       |
-| `gpg_sign`                   | `bool`      | `false`                     | Use gpg signed tags instead of lightweight tags.                                                                                                                                                                              |
-| `annotated_tag`              | `bool`      | `false`                     | Use annotated tags instead of lightweight tags. [See difference][annotated-tags-vs-lightweight]                                                                                                                               |
-| `bump_message`               | `str`       | `None`                      | Create custom commit message, useful to skip ci. [Read more][bump_message]                                                                                                                                                    |
-| `allow_abort`                | `bool`      | `false`                     | Disallow empty commit messages, useful in ci. [Read more][allow_abort]                                                                                                                                                        |
-| `changelog_file`             | `str`       | `CHANGELOG.md`              | filename of exported changelog                                                                                                                                                                                                |
-| `changelog_incremental`      | `bool`      | `false`                     | Update changelog with the missing versions. This is good if you don't want to replace previous versions in the file. Note: when doing `cz bump --changelog` this is automatically set to `true`                               |
-| `changelog_start_rev`        | `str`       | `None`                      | Start from a given git rev to generate the changelog                                                                                                                                                                          |
-| `changelog_merge_prerelease` | `bool`      | `false`                     | Collect all changes of prerelease versions into the next non-prerelease version when creating the changelog.                                                                                                                  |
-| `style`                      | `list`      | see above                   | Style for the prompts (It will merge this value with default style.) [See More (Styling your prompts with your favorite colors)][additional-features]                                                                         |
-| `customize`                  | `dict`      | `None`                      | **This is only supported when config through `toml`.** Custom rules for committing and bumping. [Read more][customization]                                                                                                    |
-| `use_shortcuts`              | `bool`      | `false`                     | If enabled, commitizen will show keyboard shortcuts when selecting from a list. Define a `key` for each of your choices to set the key. [Read more][shortcuts]                                                                |
-| `major_version_zero`         | `bool`      | `false`                     | When true, breaking changes on a `0.x` will remain as a `0.x` version. On `false`, a breaking change will bump a `0.x` version to `1.0`. [major-version-zero]                                                                 |
-| `prerelease_offset`          | `int`       | `0`                         | In some circumstances, a prerelease cannot start with a 0, e.g. in an embedded project individual characters are encoded as bytes. This can be done by specifying an offset from which to start counting. [prerelease-offset] |
-| `version_type`               | `str`       | `pep440`                    | Select a version type from the following options [`pep440`, `semver`]. Useful for non-python projects. [Read more][version_type]                                                                                              |
-| `pre_bump_hooks`             | `list[str]` | `[]`                        | Calls the hook scripts **before** bumping version. [Read more][pre_bump_hooks]                                                                                                                                                |
-| `post_bump_hooks`            | `list[str]` | `[]`                        | Calls the hook scripts **after** bumping the version. [Read more][post_bump_hooks]                                                                                                                                            |
+### `name`
 
-## pyproject.toml or .cz.toml
+Type: `str`
+
+Default: `"cz_conventional_commits"`
+
+Name of the committing rules to use
+
+### `version`
+
+Type: `str`
+
+Default: `None`
+
+Current version. Example: "0.1.2". Required if you use `provider = "commitizen"`.
+
+### `version_files`
+
+Type: `list`
+
+Default: `[ ]`
+
+Files were the version will be updated. A pattern to match a line, can also be specified, separated by `:` [Read more][version_files]
+
+### `version_provider`
+
+Type: `str`
+
+Default: `commitizen`
+
+Version provider used to read and write version [Read more](#version-providers)
+
+### `tag_format`
+
+Type: `str`
+
+Default: `None`
+
+Format for the git tag, useful for old projects, that use a convention like `"v1.2.1"`. [Read more][tag_format]
+
+### `update_changelog_on_bump`
+
+Type: `bool`
+
+Default: `false`
+
+Create changelog when running `cz bump`
+
+### `gpg_sign`
+
+Type: `bool`
+
+Default: `false`
+
+Use gpg signed tags instead of lightweight tags.
+
+### `annotated_tag`
+
+Type: `bool`
+
+Default: `false`
+
+Use annotated tags instead of lightweight tags. [See difference][annotated-tags-vs-lightweight]
+
+### `bump_message`
+
+Type: `str`
+
+Default: `None`
+
+Create custom commit message, useful to skip ci. [Read more][bump_message]
+
+### `allow_abort`
+
+Type: `bool`
+
+Default: `false`
+
+Disallow empty commit messages, useful in ci. [Read more][allow_abort]
+
+### `changelog_file`
+
+Type: `str`
+
+Default: `CHANGELOG.md`
+
+filename of exported changelog
+
+### `changelog_incremental`
+
+Type: `bool`
+
+Default: `false`
+
+Update changelog with the missing versions. This is good if you don't want to replace previous versions in the file. Note: when doing `cz bump --changelog` this is automatically set to `true`
+
+### `changelog_start_rev`
+
+Type: `str`
+
+Default: `None`
+
+Start from a given git rev to generate the changelog
+
+### `changelog_merge_prerelease`
+
+Type: `bool`
+
+Default: `false`
+
+Collect all changes of prerelease versions into the next non-prerelease version when creating the changelog.
+
+### `style`
+
+Type: `list`
+
+see above
+
+Style for the prompts (It will merge this value with default style.) [See More (Styling your prompts with your favorite colors)][additional-features]
+
+### `customize`
+
+Type: `dict`
+
+Default: `None`
+
+**This is only supported when config through `toml`.** Custom rules for committing and bumping. [Read more][customization]
+
+### `use_shortcuts`
+
+Type: `bool`
+
+Default: `false`
+
+If enabled, commitizen will show keyboard shortcuts when selecting from a list. Define a `key` for each of your choices to set the key. [Read more][shortcuts]
+
+### `major_version_zero`
+
+Type: `bool`
+
+Default: `false`
+
+When true, breaking changes on a `0.x` will remain as a `0.x` version. On `false`, a breaking change will bump a `0.x` version to `1.0`. [major-version-zero]
+
+### `prerelease_offset`
+
+Type: `int`
+
+Default: `0`
+
+In some circumstances, a prerelease cannot start with a 0, e.g. in an embedded project individual characters are encoded as bytes. This can be done by specifying an offset from which to start counting. [prerelease-offset] |
+
+### `version_type`
+
+Type: `str`
+
+Default: `pep440`
+
+Select a version type from the following options [`pep440`, `semver`]. Useful for non-python projects. [Read more][version_type]
+
+### `pre_bump_hooks`
+
+Type: `list[str]`
+
+Default: `[]`
+
+Calls the hook scripts **before** bumping version. [Read more][pre_bump_hooks]
+
+### `post_bump_hooks`
+
+Type: `list[str]`
+
+Default: `[]`
+
+Calls the hook scripts **after** bumping the version. [Read more][post_bump_hooks]
+
+## Configuration file
+
+### pyproject.toml or .cz.toml
 
 Default and recommended configuration format for a project.
 For a **python** project, we recommend adding an entry to your `pyproject.toml`.
@@ -58,7 +211,7 @@ style = [
 ]
 ```
 
-## .cz.json or cz.json
+### .cz.json or cz.json
 
 Commitizen has support for JSON configuration. Recommended for `NodeJS` projects.
 
@@ -84,7 +237,7 @@ Commitizen has support for JSON configuration. Recommended for `NodeJS` projects
 }
 ```
 
-## .cz.yaml or cz.yaml
+### .cz.yaml or cz.yaml
 
 YAML configuration is supported by Commitizen. Recommended for `Go`, `ansible`, or even `helm` charts projects.
 
