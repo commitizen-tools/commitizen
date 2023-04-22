@@ -50,8 +50,8 @@ class Settings(TypedDict, total=False):
 
 name: str = "cz_conventional_commits"
 config_files: List[str] = [
-    ".cz.toml",
     "pyproject.toml",
+    ".cz.toml",
     ".cz.json",
     "cz.json",
     ".cz.yaml",

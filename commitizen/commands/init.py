@@ -66,7 +66,7 @@ class ProjectInfo:
 
     @property
     def is_pre_commit_installed(self) -> bool:
-        return shutil.which("pre-commit") is not None
+        return not shutil.which("pre-commit")
 
 
 class Init:
