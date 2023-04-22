@@ -8,11 +8,11 @@ from typing import Any, Callable, ClassVar, cast
 
 import importlib_metadata as metadata
 import tomlkit
-from packaging.version import VERSION_PATTERN, Version
 
 from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import VersionProviderUnknown
 from commitizen.git import get_tags
+from commitizen.version_schemes import get_version_scheme
 
 PROVIDER_ENTRYPOINT = "commitizen.provider"
 DEFAULT_PROVIDER = "commitizen"
@@ -35,14 +35,12 @@ class VersionProvider(ABC):
         """
         Get the current version
         """
-        ...
 
     @abstractmethod
     def set_version(self, version: str):
         """
         Set the new current version
         """
-        ...
 
 
 class CommitizenProvider(VersionProvider):
@@ -185,7 +183,10 @@ class ScmProvider(VersionProvider):
     }
 
     def _tag_format_matcher(self) -> Callable[[str], str | None]:
-        pattern = self.config.settings.get("tag_format") or VERSION_PATTERN
+        version_scheme = get_version_scheme(self.config)
+        pattern = (
+            self.config.settings.get("tag_format") or version_scheme.parser.pattern
+        )
         for var, tag_pattern in self.TAG_FORMAT_REGEXS.items():
             pattern = pattern.replace(var, tag_pattern)
 
@@ -208,8 +209,8 @@ class ScmProvider(VersionProvider):
                         groups["devrelease"] if groups.get("devrelease") else "",
                     )
                 )
-            elif pattern == VERSION_PATTERN:
-                return str(Version(tag))
+            elif pattern == version_scheme.parser.pattern:
+                return str(version_scheme(tag))
             return None
 
         return matcher

@@ -13,8 +13,7 @@ from commitizen.cz import registry
 from commitizen.defaults import config_files
 from commitizen.exceptions import InitFailedError, NoAnswersError
 from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
-from commitizen.version_types import VERSION_TYPES
-from packaging.version import Version
+from commitizen.version_schemes import KNOWN_SCHEMES, Version, get_version_scheme
 
 
 class ProjectInfo:
@@ -96,9 +95,9 @@ class Init:
             cz_name = self._ask_name()  # select
             version_provider = self._ask_version_provider()  # select
             tag = self._ask_tag()  # confirm & select
-            version = Version(tag)
+            version_scheme = self._ask_version_scheme()  # select
+            version = get_version_scheme(self.config, version_scheme)(tag)
             tag_format = self._ask_tag_format(tag)  # confirm & text
-            version_type = self._ask_version_type()  # select
             update_changelog_on_bump = self._ask_update_changelog_on_bump()  # confirm
             major_version_zero = self._ask_major_version_zero(version)  # confirm
         except KeyboardInterrupt:
@@ -114,7 +113,7 @@ class Init:
         values_to_add = {}
         values_to_add["name"] = cz_name
         values_to_add["tag_format"] = tag_format
-        values_to_add["version_type"] = version_type
+        values_to_add["version_scheme"] = version_scheme
 
         if version_provider == "commitizen":
             values_to_add["version"] = version.public
@@ -253,19 +252,19 @@ class Init:
         ).unsafe_ask()
         return version_provider
 
-    def _ask_version_type(self) -> str:
-        """Ask for setting: version_type"""
+    def _ask_version_scheme(self) -> str:
+        """Ask for setting: version_scheme"""
         default = "semver"
         if self.project_info.is_python:
             default = "pep440"
 
-        version_type: str = questionary.select(
-            "Choose version type scheme: ",
-            choices=[*VERSION_TYPES],
+        scheme: str = questionary.select(
+            "Choose version scheme: ",
+            choices=list(KNOWN_SCHEMES),
             style=self.cz.style,
             default=default,
         ).unsafe_ask()
-        return version_type
+        return scheme
 
     def _ask_major_version_zero(self, version: Version) -> bool:
         """Ask for setting: major_version_zero"""

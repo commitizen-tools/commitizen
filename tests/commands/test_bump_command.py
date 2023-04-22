@@ -856,7 +856,7 @@ def test_bump_use_version_provider(mocker: MockFixture):
     mock.set_version.assert_called_once_with("0.0.1")
 
 
-def test_bump_command_prelease_version_type_via_cli(
+def test_bump_command_prelease_scheme_via_cli(
     tmp_commitizen_project_initial, mocker: MockFixture
 ):
     tmp_commitizen_project = tmp_commitizen_project_initial()
@@ -869,7 +869,7 @@ def test_bump_command_prelease_version_type_via_cli(
         "--prerelease",
         "alpha",
         "--yes",
-        "--version-type",
+        "--version-scheme",
         "semver",
     ]
     mocker.patch.object(sys, "argv", testargs)
@@ -895,11 +895,11 @@ def test_bump_command_prelease_version_type_via_cli(
             assert "0.2.0" in f.read()
 
 
-def test_bump_command_prelease_version_type_via_config(
+def test_bump_command_prelease_scheme_via_config(
     tmp_commitizen_project_initial, mocker: MockFixture
 ):
     tmp_commitizen_project = tmp_commitizen_project_initial(
-        config_extra='version_type = "semver"\n',
+        config_extra='version_scheme = "semver"\n',
     )
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
@@ -939,11 +939,11 @@ def test_bump_command_prelease_version_type_via_config(
             assert "0.2.0" in f.read()
 
 
-def test_bump_command_prelease_version_type_check_old_tags(
+def test_bump_command_prelease_scheme_check_old_tags(
     tmp_commitizen_project_initial, mocker: MockFixture
 ):
     tmp_commitizen_project = tmp_commitizen_project_initial(
-        config_extra=('tag_format = "v$version"\nversion_type = "semver"\n'),
+        config_extra=('tag_format = "v$version"\nversion_scheme = "semver"\n'),
     )
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
@@ -1025,3 +1025,45 @@ def test_bump_with_major_version_zero_with_plugin(
 
     tag_exists = git.tag_exist(expected_tag)
     assert tag_exists is True
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_command_version_type_deprecation(mocker: MockFixture):
+    create_file_and_commit("feat: check deprecation on --version-type")
+
+    testargs = [
+        "cz",
+        "bump",
+        "--prerelease",
+        "alpha",
+        "--yes",
+        "--version-type",
+        "semver",
+    ]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.warns(DeprecationWarning):
+        cli.main()
+
+    assert git.tag_exist("0.2.0-a0")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_command_version_scheme_priority_over_version_type(mocker: MockFixture):
+    create_file_and_commit("feat: check deprecation on --version-type")
+
+    testargs = [
+        "cz",
+        "bump",
+        "--prerelease",
+        "alpha",
+        "--yes",
+        "--version-type",
+        "semver",
+        "--version-scheme",
+        "pep440",
+    ]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.warns(DeprecationWarning):
+        cli.main()
+
+    assert git.tag_exist("0.2.0a0")

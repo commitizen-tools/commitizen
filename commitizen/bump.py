@@ -2,23 +2,13 @@ from __future__ import annotations
 
 import os
 import re
-import sys
-import typing
 from collections import OrderedDict
-from itertools import zip_longest
 from string import Template
 
-from packaging.version import Version
-
-from commitizen.defaults import MAJOR, MINOR, PATCH, bump_message
+from commitizen.defaults import bump_message
 from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import GitCommit, smart_open
-
-if sys.version_info >= (3, 8):
-    from commitizen.version_types import VersionProtocol
-else:
-    # workaround mypy issue for 3.7 python
-    VersionProtocol = typing.Any
+from commitizen.version_schemes import DEFAULT_SCHEME, VersionScheme, Version
 
 
 def find_increment(
@@ -52,115 +42,6 @@ def find_increment(
                     increment = new_increment
 
     return increment
-
-
-def prerelease_generator(
-    current_version: str, prerelease: str | None = None, offset: int = 0
-) -> str:
-    """Generate prerelease
-
-    X.YaN   # Alpha release
-    X.YbN   # Beta release
-    X.YrcN  # Release Candidate
-    X.Y  # Final
-
-    This function might return something like 'alpha1'
-    but it will be handled by Version.
-    """
-    if not prerelease:
-        return ""
-
-    version = Version(current_version)
-    # version.pre is needed for mypy check
-    if version.is_prerelease and version.pre and prerelease.startswith(version.pre[0]):
-        prev_prerelease: int = version.pre[1]
-        new_prerelease_number = prev_prerelease + 1
-    else:
-        new_prerelease_number = offset
-    pre_version = f"{prerelease}{new_prerelease_number}"
-    return pre_version
-
-
-def devrelease_generator(devrelease: int = None) -> str:
-    """Generate devrelease
-
-    The devrelease version should be passed directly and is not
-    inferred based on the previous version.
-    """
-    if devrelease is None:
-        return ""
-
-    return f"dev{devrelease}"
-
-
-def semver_generator(current_version: str, increment: str = None) -> str:
-    version = Version(current_version)
-    prev_release = list(version.release)
-    increments = [MAJOR, MINOR, PATCH]
-    increments_version = dict(zip_longest(increments, prev_release, fillvalue=0))
-
-    # This flag means that current version
-    # must remove its prerelease tag,
-    # so it doesn't matter the increment.
-    # Example: 1.0.0a0 with PATCH/MINOR -> 1.0.0
-    if not version.is_prerelease:
-        if increment == MAJOR:
-            increments_version[MAJOR] += 1
-            increments_version[MINOR] = 0
-            increments_version[PATCH] = 0
-        elif increment == MINOR:
-            increments_version[MINOR] += 1
-            increments_version[PATCH] = 0
-        elif increment == PATCH:
-            increments_version[PATCH] += 1
-
-    return str(
-        f"{increments_version['MAJOR']}."
-        f"{increments_version['MINOR']}."
-        f"{increments_version['PATCH']}"
-    )
-
-
-def generate_version(
-    current_version: str,
-    increment: str,
-    prerelease: str | None = None,
-    prerelease_offset: int = 0,
-    devrelease: int | None = None,
-    is_local_version: bool = False,
-    version_type_cls: type[VersionProtocol] | None = None,
-) -> VersionProtocol:
-    """Based on the given increment a proper semver will be generated.
-
-    For now the rules and versioning scheme is based on
-    python's PEP 0440.
-    More info: https://www.python.org/dev/peps/pep-0440/
-
-    Example:
-        PATCH 1.0.0 -> 1.0.1
-        MINOR 1.0.0 -> 1.1.0
-        MAJOR 1.0.0 -> 2.0.0
-    """
-    if version_type_cls is None:
-        version_type_cls = Version
-    if is_local_version:
-        version = version_type_cls(current_version)
-        dev_version = devrelease_generator(devrelease=devrelease)
-        pre_version = prerelease_generator(
-            str(version.local), prerelease=prerelease, offset=prerelease_offset
-        )
-        semver = semver_generator(str(version.local), increment=increment)
-
-        return version_type_cls(f"{version.public}+{semver}{pre_version}{dev_version}")
-    else:
-        dev_version = devrelease_generator(devrelease=devrelease)
-        pre_version = prerelease_generator(
-            current_version, prerelease=prerelease, offset=prerelease_offset
-        )
-        semver = semver_generator(current_version, increment=increment)
-
-        # TODO: post version
-        return version_type_cls(f"{semver}{pre_version}{dev_version}")
 
 
 def update_version_in_files(
@@ -219,9 +100,9 @@ def _version_to_regex(version: str) -> str:
 
 
 def normalize_tag(
-    version: VersionProtocol | str,
+    version: Version | str,
     tag_format: str | None = None,
-    version_type_cls: type[VersionProtocol] | None = None,
+    scheme: VersionScheme | None = None,
 ) -> str:
     """The tag and the software version might be different.
 
@@ -234,19 +115,14 @@ def normalize_tag(
     | ver1.0.0 | 1.0.0 |
     | ver1.0.0.a0 | 1.0.0a0 |
     """
-    if version_type_cls is None:
-        version_type_cls = Version
-    if isinstance(version, str):
-        version = version_type_cls(version)
+    scheme = scheme or DEFAULT_SCHEME
+    version = scheme(version) if isinstance(version, str) else version
 
     if not tag_format:
         return str(version)
 
     major, minor, patch = version.release
-    prerelease = ""
-    # version.pre is needed for mypy check
-    if version.is_prerelease and version.pre:
-        prerelease = f"{version.pre[0]}{version.pre[1]}"
+    prerelease = version.prerelease or ""
 
     t = Template(tag_format)
     return t.safe_substitute(
@@ -257,7 +133,7 @@ def normalize_tag(
 def create_commit_message(
     current_version: Version | str,
     new_version: Version | str,
-    message_template: str = None,
+    message_template: str | None = None,
 ) -> str:
     if message_template is None:
         message_template = bump_message

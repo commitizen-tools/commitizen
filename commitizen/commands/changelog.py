@@ -5,7 +5,7 @@ from difflib import SequenceMatcher
 from operator import itemgetter
 from typing import Callable
 
-from commitizen import bump, changelog, defaults, factory, git, out, version_types
+from commitizen import bump, changelog, defaults, factory, git, out
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
     DryRunExit,
@@ -16,7 +16,7 @@ from commitizen.exceptions import (
     NotAllowed,
 )
 from commitizen.git import GitTag, smart_open
-from packaging.version import parse
+from commitizen.version_schemes import get_version_scheme
 
 
 class Changelog:
@@ -40,12 +40,13 @@ class Changelog:
         )
         self.dry_run = args["dry_run"]
 
-        self.current_version = (
-            args.get("current_version") or self.config.settings.get("version") or ""
+        self.scheme = get_version_scheme(self.config, args.get("version_scheme"))
+
+        current_version = (
+            args.get("current_version", config.settings.get("version")) or ""
         )
-        self.current_version_instance = (
-            parse(self.current_version) if self.current_version else None
-        )
+        self.current_version = self.scheme(current_version) if current_version else None
+
         self.unreleased_version = args["unreleased_version"]
         self.change_type_map = (
             self.config.settings.get("change_type_map") or self.cz.change_type_map
@@ -62,9 +63,6 @@ class Changelog:
         self.merge_prerelease = args.get(
             "merge_prerelease"
         ) or self.config.settings.get("changelog_merge_prerelease")
-
-        version_type = self.config.settings.get("version_type")
-        self.version_type = version_type and version_types.VERSION_TYPES[version_type]
 
     def _find_incremental_rev(self, latest_version: str, tags: list[GitTag]) -> str:
         """Try to find the 'start_rev'.
@@ -146,13 +144,13 @@ class Changelog:
         end_rev = ""
 
         if self.incremental:
-            changelog_meta = changelog.get_metadata(self.file_name)
+            changelog_meta = changelog.get_metadata(self.file_name, self.scheme)
             latest_version = changelog_meta.get("latest_version")
             if latest_version:
                 latest_tag_version: str = bump.normalize_tag(
                     latest_version,
                     tag_format=self.tag_format,
-                    version_type_cls=self.version_type,
+                    scheme=self.scheme,
                 )
                 start_rev = self._find_incremental_rev(latest_tag_version, tags)
 
@@ -161,13 +159,12 @@ class Changelog:
                 tags,
                 version=self.rev_range,
                 tag_format=self.tag_format,
-                version_type_cls=self.version_type,
+                scheme=self.scheme,
             )
 
         commits = git.get_commits(start=start_rev, end=end_rev, args="--topo-order")
         if not commits and (
-            self.current_version_instance is None
-            or not self.current_version_instance.is_prerelease
+            self.current_version is None or not self.current_version.is_prerelease
         ):
             raise NoCommitsFoundError("No commits found")
 
@@ -180,6 +177,7 @@ class Changelog:
             change_type_map=change_type_map,
             changelog_message_builder_hook=changelog_message_builder_hook,
             merge_prerelease=merge_prerelease,
+            scheme=self.scheme,
         )
         if self.change_type_order:
             tree = changelog.order_changelog_tree(tree, self.change_type_order)

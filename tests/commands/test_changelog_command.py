@@ -1214,13 +1214,13 @@ def test_empty_commit_list(mocker):
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
-def test_changelog_prerelease_rev_with_use_version_type_semver(
+def test_changelog_prerelease_rev_with_use_scheme_semver(
     mocker: MockFixture, capsys, config_path, changelog_path, file_regression
 ):
     mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
 
     with open(config_path, "a") as f:
-        f.write('tag_format = "$version"\n' 'version_type = "semver"')
+        f.write('tag_format = "$version"\n' 'version_scheme = "semver"')
 
     # create commit and tag
     create_file_and_commit("feat: new file")

@@ -34,6 +34,14 @@ Default: `commitizen`
 
 Version provider used to read and write version [Read more](#version-providers)
 
+### `version_scheme`
+
+Type: `str`
+
+Default: `pep440`
+
+Select a version scheme from the following options [`pep440`, `semver`]. Useful for non-python projects. [Read more][version-scheme]
+
 ### `tag_format`
 
 Type: `str`
@@ -153,14 +161,6 @@ Type: `int`
 Default: `0`
 
 In some circumstances, a prerelease cannot start with a 0, e.g. in an embedded project individual characters are encoded as bytes. This can be done by specifying an offset from which to start counting. [prerelease-offset] |
-
-### `version_type`
-
-Type: `str`
-
-Default: `pep440`
-
-Select a version type from the following options [`pep440`, `semver`]. Useful for non-python projects. [Read more][version_type]
 
 ### `pre_bump_hooks`
 
@@ -343,7 +343,7 @@ setup(
 [major-version-zero]: bump.md#-major-version-zero
 [prerelease-offset]: bump.md#-prerelease_offset
 [allow_abort]: check.md#allow-abort
-[version_type]: bump.md#version_type
+[version-scheme]: bump.md#version-scheme
 [pre_bump_hooks]: bump.md#pre_bump_hooks
 [post_bump_hooks]: bump.md#post_bump_hooks
 [additional-features]: https://github.com/tmbo/questionary#additional-features

@@ -3,7 +3,6 @@ from pathlib import Path
 from textwrap import dedent
 
 import pytest
-from packaging.version import Version
 from pytest_mock import MockFixture
 
 from commitizen import bump, cli, cmd, exceptions
@@ -21,9 +20,7 @@ conversion = [
 @pytest.mark.parametrize("test_input,expected", conversion)
 def test_create_tag(test_input, expected):
     current_version, new_version, message_template = test_input
-    new_tag = bump.create_commit_message(
-        Version(current_version), Version(new_version), message_template
-    )
+    new_tag = bump.create_commit_message(current_version, new_version, message_template)
     assert new_tag == expected
 
 

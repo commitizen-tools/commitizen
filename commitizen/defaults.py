@@ -37,6 +37,8 @@ class Settings(TypedDict, total=False):
     version: str | None
     version_files: list[str]
     version_provider: str | None
+    version_scheme: str | None
+    version_type: str | None
     tag_format: str | None
     bump_message: str | None
     allow_abort: bool
@@ -52,7 +54,6 @@ class Settings(TypedDict, total=False):
     pre_bump_hooks: list[str] | None
     post_bump_hooks: list[str] | None
     prerelease_offset: int
-    version_type: str | None
 
 
 name: str = "cz_conventional_commits"
@@ -70,6 +71,7 @@ DEFAULT_SETTINGS: Settings = {
     "version": None,
     "version_files": [],
     "version_provider": "commitizen",
+    "version_scheme": None,
     "tag_format": None,  # example v$version
     "bump_message": None,  # bumped v$current_version to $new_version
     "allow_abort": False,
@@ -83,7 +85,6 @@ DEFAULT_SETTINGS: Settings = {
     "pre_bump_hooks": [],
     "post_bump_hooks": [],
     "prerelease_offset": 0,
-    "version_type": None,
 }
 
 MAJOR = "MAJOR"
@@ -115,4 +116,3 @@ change_type_order = ["BREAKING CHANGE", "Feat", "Fix", "Refactor", "Perf"]
 bump_message = "bump: version $current_version → $new_version"
 
 commit_parser = r"^((?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?|\w+!):\s(?P<message>.*)?"  # noqa
-version_parser = r"(?P<version>([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?(\w+)?)"

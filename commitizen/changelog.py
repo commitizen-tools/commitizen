@@ -24,53 +24,41 @@ Extra:
 - [x] hook after changelog is generated (api calls)
 - [x] add support for change_type maps
 """
-
 from __future__ import annotations
 
 import os
 import re
-import sys
-import typing
 from collections import OrderedDict, defaultdict
 from datetime import date
-from typing import Callable, Iterable
+from typing import TYPE_CHECKING, Callable, Iterable, cast
 
 from jinja2 import Environment, PackageLoader
-from packaging.version import InvalidVersion, Version
 
-from commitizen import defaults
 from commitizen.bump import normalize_tag
 from commitizen.exceptions import InvalidConfigurationError, NoCommitsFoundError
 from commitizen.git import GitCommit, GitTag
+from commitizen.version_schemes import DEFAULT_SCHEME, Pep440, InvalidVersion
 
-if sys.version_info >= (3, 8):
-    from commitizen.version_types import VersionProtocol
-else:
-    # workaround mypy issue for 3.7 python
-    VersionProtocol = typing.Any
+if TYPE_CHECKING:
+    from commitizen.version_schemes import VersionScheme
 
 
 def get_commit_tag(commit: GitCommit, tags: list[GitTag]) -> GitTag | None:
     return next((tag for tag in tags if tag.rev == commit.rev), None)
 
 
-def get_version(tag: GitTag) -> Version | None:
-    version = None
-    try:
-        version = Version(tag.name)
-    except InvalidVersion:
-        pass
-    return version
-
-
 def tag_included_in_changelog(
-    tag: GitTag, used_tags: list, merge_prerelease: bool
+    tag: GitTag,
+    used_tags: list,
+    merge_prerelease: bool,
+    scheme: VersionScheme = DEFAULT_SCHEME,
 ) -> bool:
     if tag in used_tags:
         return False
 
-    version = get_version(tag)
-    if version is None:
+    try:
+        version = scheme(tag.name)
+    except InvalidVersion:
         return False
 
     if merge_prerelease and version.is_prerelease:
@@ -88,6 +76,7 @@ def generate_tree_from_commits(
     change_type_map: dict[str, str] | None = None,
     changelog_message_builder_hook: Callable | None = None,
     merge_prerelease: bool = False,
+    scheme: VersionScheme = DEFAULT_SCHEME,
 ) -> Iterable[dict]:
     pat = re.compile(changelog_pattern)
     map_pat = re.compile(commit_parser, re.MULTILINE)
@@ -113,7 +102,7 @@ def generate_tree_from_commits(
         commit_tag = get_commit_tag(commit, tags)
 
         if commit_tag is not None and tag_included_in_changelog(
-            commit_tag, used_tags, merge_prerelease
+            commit_tag, used_tags, merge_prerelease, scheme=scheme
         ):
             used_tags.append(commit_tag)
             yield {
@@ -186,13 +175,15 @@ def render_changelog(tree: Iterable) -> str:
     return changelog
 
 
-def parse_version_from_markdown(value: str) -> str | None:
+def parse_version_from_markdown(
+    value: str, scheme: VersionScheme = Pep440
+) -> str | None:
     if not value.startswith("#"):
         return None
-    m = re.search(defaults.version_parser, value)
+    m = scheme.parser.search(value)
     if not m:
         return None
-    return m.groupdict().get("version")
+    return cast(str, m.group("version"))
 
 
 def parse_title_type_of_line(value: str) -> str | None:
@@ -203,7 +194,7 @@ def parse_title_type_of_line(value: str) -> str | None:
     return m.groupdict().get("title")
 
 
-def get_metadata(filepath: str) -> dict:
+def get_metadata(filepath: str, scheme: VersionScheme = Pep440) -> dict:
     unreleased_start: int | None = None
     unreleased_end: int | None = None
     unreleased_title: str | None = None
@@ -236,7 +227,7 @@ def get_metadata(filepath: str) -> dict:
                 unreleased_end = index
 
             # Try to find the latest release done
-            version = parse_version_from_markdown(line)
+            version = parse_version_from_markdown(line, scheme)
             if version:
                 latest_version = version
                 latest_version_position = index
@@ -328,7 +319,7 @@ def get_oldest_and_newest_rev(
     tags: list[GitTag],
     version: str,
     tag_format: str,
-    version_type_cls: type[VersionProtocol] | None = None,
+    scheme: VersionScheme | None = None,
 ) -> tuple[str | None, str | None]:
     """Find the tags for the given version.
 
@@ -343,15 +334,11 @@ def get_oldest_and_newest_rev(
     except ValueError:
         newest = version
 
-    newest_tag = normalize_tag(
-        newest, tag_format=tag_format, version_type_cls=version_type_cls
-    )
+    newest_tag = normalize_tag(newest, tag_format=tag_format, scheme=scheme)
 
     oldest_tag = None
     if oldest:
-        oldest_tag = normalize_tag(
-            oldest, tag_format=tag_format, version_type_cls=version_type_cls
-        )
+        oldest_tag = normalize_tag(oldest, tag_format=tag_format, scheme=scheme)
 
     tags_range = get_smart_tag_range(tags, newest=newest_tag, oldest=oldest_tag)
     if not tags_range:

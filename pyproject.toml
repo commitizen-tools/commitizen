@@ -89,6 +89,10 @@ pep621 = "commitizen.providers:Pep621Provider"
 poetry = "commitizen.providers:PoetryProvider"
 scm = "commitizen.providers:ScmProvider"
 
+[tool.poetry.plugins."commitizen.scheme"]
+pep440 = "commitizen.version_schemes:Pep440"
+semver = "commitizen.version_schemes:SemVer"
+
 [tool.coverage]
     [tool.coverage.report]
     show_missing = true

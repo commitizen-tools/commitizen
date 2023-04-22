@@ -20,10 +20,10 @@ This means `MAJOR.MINOR.PATCH`
 | `MINOR`   | New features                | `feat`                  |
 | `PATCH`   | Fixes                       | `fix` + everything else |
 
-[PEP 0440][pep440] is the default, you can switch by using the setting `version_type` or the cli:
+[PEP 0440][pep440] is the default, you can switch by using the setting `version_scheme` or the cli:
 
 ```sh
-cz bump --version-type semver
+cz bump --version-scheme semver
 ```
 
 Some examples of pep440:
@@ -94,8 +94,8 @@ options:
   --retry               retry commit if it fails the 1st time
   --major-version-zero  keep major version at zero, even for breaking changes
   --prerelease-offset   start pre-releases with this offset
-  --version-type {pep440,semver}
-                        choose version type
+  --version-scheme {pep440,semver}
+                        choose version scheme
 
 ```
 
@@ -215,7 +215,7 @@ We recommend setting `major_version_zero = true` in your configuration file whil
 is in its initial development. Remove that configuration using a breaking-change commit to bump
 your project’s major version to `v1.0.0` once your project has reached maturity.
 
-### `--version-type`
+### `--version-scheme`
 
 Choose the version format, options: `pep440`, `semver`.
 
@@ -225,12 +225,12 @@ Recommended for python: `pep440`
 
 Recommended for other: `semver`
 
-You can also set this in the [configuration](#version_type) with `version_type = "semver"`.
+You can also set this in the [configuration](#version_scheme) with `version_scheme = "semver"`.
 
 [pep440][pep440] and [semver][semver] are quite similar, their difference lies in
 how the prereleases look.
 
-| types          | pep440         | semver          |
+| schemes        | pep440         | semver          |
 | -------------- | -------------- | --------------- |
 | non-prerelease | `0.1.0`        | `0.1.0`         |
 | prerelease     | `0.3.1a0`      | `0.3.1-a0`      |
@@ -505,11 +505,11 @@ Defaults to: `0`
 prerelease_offset = 1
 ```
 
-### `version_type`
+### `version_scheme`
 
-Choose version type
+Choose version scheme
 
-| types          | pep440         | semver          |
+| schemes        | pep440         | semver          |
 | -------------- | -------------- | --------------- |
 | non-prerelease | `0.1.0`        | `0.1.0`         |
 | prerelease     | `0.3.1a0`      | `0.3.1-a0`      |
@@ -522,7 +522,7 @@ Defaults to: `pep440`
 
 ```toml
 [tool.commitizen]
-version_type = "semver"
+version_scheme = "semver"
 ```
 
 ## Custom bump
