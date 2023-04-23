@@ -26,8 +26,8 @@ jobs:
       run: |
         python -m mkdocs build
     - name: Push doc to Github Page
-      uses: peaceiris/actions-gh-pages@v2
+      uses: peaceiris/actions-gh-pages@v3
       env:
-        PERSONAL_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        PUBLISH_BRANCH: gh-pages
-        PUBLISH_DIR: ./site
+        personal_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        publish_branch: gh-pages
+        publish_dir: ./site
