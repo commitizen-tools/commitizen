@@ -115,7 +115,6 @@ def test_changelog_replacing_unreleased_using_incremental(
 def test_changelog_is_persisted_using_incremental(
     mocker: MockFixture, capsys, changelog_path, file_regression
 ):
-
     create_file_and_commit("feat: add new output")
     create_file_and_commit("fix: output glitch")
     create_file_and_commit("Merge into master")
@@ -519,7 +518,6 @@ def test_breaking_change_content_v1_multiline(
 def test_changelog_config_flag_increment(
     mocker: MockFixture, changelog_path, config_path, file_regression
 ):
-
     with open(config_path, "a") as f:
         f.write("changelog_incremental = true\n")
     with open(changelog_path, "a") as f:
@@ -576,7 +574,6 @@ def test_changelog_config_flag_merge_prerelease(
 def test_changelog_config_start_rev_option(
     mocker: MockFixture, capsys, config_path, file_regression
 ):
-
     # create commit and tag
     create_file_and_commit("feat: new file")
     testargs = ["cz", "bump", "--yes"]
@@ -738,7 +735,6 @@ def test_changelog_incremental_with_merge_prerelease(
 def test_changelog_with_filename_as_empty_string(
     mocker: MockFixture, changelog_path, config_path
 ):
-
     with open(config_path, "a") as f:
         f.write("changelog_file = true\n")
 

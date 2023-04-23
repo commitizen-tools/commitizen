@@ -223,7 +223,6 @@ def test_check_command_with_invalid_argument(config):
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_check_command_with_empty_range(config, mocker: MockFixture):
-
     # must initialize git with a commit
     create_file_and_commit("feat: initial")
 
