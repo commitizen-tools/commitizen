@@ -40,9 +40,11 @@ descriptive commits.
 
 ## Requirements
 
-[Python](https://www.python.org/downloads/) 3.7+
+[Python](https://www.python.org/downloads/) `3.7+`
 
-[Git][gitscm] `1.8.5.2`+
+[Poetry](https://python-poetry.org/docs/) `1.2.0+`
+
+[Git][gitscm] `1.8.5.2+`
 
 ## Installation
 
