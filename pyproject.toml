@@ -58,9 +58,9 @@ pytest-cov = "^4.0"
 pytest-mock = "^3.10"
 pytest-regressions = "^2.4.0"
 pytest-freezer = "^0.4.6"
-pytest-xdist = "^3.1.0"
+pytest-xdist = "^3.2.1"
 # code formatter
-black = "^22.10"
+black = "^23.3.0"
 # linter
 ruff = "^0.0.262"
 pre-commit = "^2.6.0"
