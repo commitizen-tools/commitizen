@@ -3,7 +3,7 @@ from difflib import SequenceMatcher
 from operator import itemgetter
 from typing import Callable, Dict, List, Optional
 
-from commitizen import bump, changelog, defaults, factory, git, out
+from commitizen import bump, changelog, defaults, factory, git, out, version_types
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
     DryRunExit,
@@ -49,6 +49,12 @@ class Changelog:
         self.tag_format = args.get("tag_format") or self.config.settings.get(
             "tag_format"
         )
+        self.merge_prerelease = args.get(
+            "merge_prerelease"
+        ) or self.config.settings.get("changelog_merge_prerelease")
+
+        version_type = self.config.settings.get("version_type")
+        self.version_type = version_type and version_types.VERSION_TYPES[version_type]
 
     def _find_incremental_rev(self, latest_version: str, tags: List[GitTag]) -> str:
         """Try to find the 'start_rev'.
@@ -110,6 +116,7 @@ class Changelog:
         changelog_message_builder_hook: Optional[
             Callable
         ] = self.cz.changelog_message_builder_hook
+        merge_prerelease = self.merge_prerelease
 
         if not changelog_pattern or not commit_parser:
             raise NoPatternMapError(
@@ -133,7 +140,9 @@ class Changelog:
             latest_version = changelog_meta.get("latest_version")
             if latest_version:
                 latest_tag_version: str = bump.normalize_tag(
-                    latest_version, tag_format=self.tag_format
+                    latest_version,
+                    tag_format=self.tag_format,
+                    version_type_cls=self.version_type,
                 )
                 start_rev = self._find_incremental_rev(latest_tag_version, tags)
 
@@ -142,11 +151,10 @@ class Changelog:
                 tags,
                 version=self.rev_range,
                 tag_format=self.tag_format,
+                version_type_cls=self.version_type,
             )
 
-        commits = git.get_commits(
-            start=start_rev, end=end_rev, args="--author-date-order"
-        )
+        commits = git.get_commits(start=start_rev, end=end_rev, args="--topo-order")
         if not commits:
             raise NoCommitsFoundError("No commits found")
 
@@ -158,6 +166,7 @@ class Changelog:
             unreleased_version,
             change_type_map=change_type_map,
             changelog_message_builder_hook=changelog_message_builder_hook,
+            merge_prerelease=merge_prerelease,
         )
         if self.change_type_order:
             tree = changelog.order_changelog_tree(tree, self.change_type_order)

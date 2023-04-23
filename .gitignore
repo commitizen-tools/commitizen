@@ -108,8 +108,8 @@ venv.bak/
 .vscode/
 *.bak
 
-# build
-poetry.lock
-
 # macOSX
 .DS_Store
+
+# ruff
+.ruff_cache

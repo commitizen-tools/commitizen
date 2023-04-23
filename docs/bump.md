@@ -2,15 +2,15 @@
 
 ## About
 
-The version is bumped **automatically** based on the commits.
+`cz bump` **automatically** increases the version, based on the commits.
 
-The commits should follow the rules of the committer to be parsed correctly.
+The commits should follow the rules established by the committer in order to be parsed correctly.
 
-It is possible to specify a **prerelease** (alpha, beta, release candidate) version.
+**prerelease** versions are supported (alpha, beta, release candidate).
 
 The version can also be **manually** bumped.
 
-The version format follows [semantic versioning][semver].
+The version format follows [PEP 0440][pep440] and [semantic versioning][semver].
 
 This means `MAJOR.MINOR.PATCH`
 
@@ -20,15 +20,13 @@ This means `MAJOR.MINOR.PATCH`
 | `MINOR`   | New features                | `feat`                  |
 | `PATCH`   | Fixes                       | `fix` + everything else |
 
-Prereleases are supported following python's [PEP 0440][pep440]
+[PEP 0440][pep440] is the default, you can switch by using the setting `version_type` or the cli:
 
-The scheme of this format is
-
-```bash
-[N!]N(.N)*[{a|b|rc}N][.postN][.devN]
+```sh
+cz bump --version-type semver
 ```
 
-Some examples:
+Some examples of pep440:
 
 ```bash
 0.9.0
@@ -96,6 +94,9 @@ options:
   --retry               retry commit if it fails the 1st time
   --major-version-zero  keep major version at zero, even for breaking changes
   --prerelease-offset   start pre-releases with this offset
+  --version-type {pep440,semver}
+                        choose version type
+
 ```
 
 ### `--files-only`
@@ -214,12 +215,38 @@ We recommend setting `major_version_zero = true` in your configuration file whil
 is in its initial development. Remove that configuration using a breaking-change commit to bump
 your project’s major version to `v1.0.0` once your project has reached maturity.
 
+### `--version-type`
+
+Choose the version format, options: `pep440`, `semver`.
+
+Default: `pep440`
+
+Recommended for python: `pep440`
+
+Recommended for other: `semver`
+
+You can also set this in the [configuration](#version_type) with `version_type = "semver"`.
+
+[pep440][pep440] and [semver][semver] are quite similar, their difference lies in
+how the prereleases look.
+
+| types          | pep440         | semver          |
+| -------------- | -------------- | --------------- |
+| non-prerelease | `0.1.0`        | `0.1.0`         |
+| prerelease     | `0.3.1a0`      | `0.3.1-a0`      |
+| devrelease     | `0.1.1.dev1`   | `0.1.1-dev1`    |
+| dev and pre    | `1.0.0a3.dev1` | `1.0.0-a3-dev1` |
+
+Can I transition from one to the other?
+
+Yes, you shouldn't have any issues.
+
 ## Avoid raising errors
 
-Some situations from commitizen rise an exit code different than 0.
+Some situations from commitizen raise an exit code different than 0.
 If the error code is different than 0, any CI or script running commitizen might be interrupted.
 
-If you have special use case, where you don't want one of this error codes to be raised, you can
+If you have a special use case, where you don't want to raise one of this error codes, you can
 tell commitizen to not raise them.
 
 ### Recommended use case
@@ -465,6 +492,8 @@ release. During execution of the script, some environment variables are availabl
 post_bump_hooks = [
   "scripts/slack_notification.sh"
 ]
+```
+
 ### `prerelease_offset`
 
 Offset with which to start counting prereleses.
@@ -474,6 +503,26 @@ Defaults to: `0`
 ```toml
 [tool.commitizen]
 prerelease_offset = 1
+```
+
+### `version_type`
+
+Choose version type
+
+| types          | pep440         | semver          |
+| -------------- | -------------- | --------------- |
+| non-prerelease | `0.1.0`        | `0.1.0`         |
+| prerelease     | `0.3.1a0`      | `0.3.1-a0`      |
+| devrelease     | `0.1.1.dev1`   | `0.1.1-dev1`    |
+| dev and pre    | `1.0.0a3.dev1` | `1.0.0-a3-dev1` |
+
+Options: `sever`, `pep440`
+
+Defaults to: `pep440`
+
+```toml
+[tool.commitizen]
+version_type = "semver"
 ```
 
 ## Custom bump

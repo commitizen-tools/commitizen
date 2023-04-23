@@ -1,12 +1,14 @@
 # Check
 
 ## About
+
 This feature checks whether the commit message follows the given committing rules. And comment in git message will be ignored.
 
 If you want to setup an automatic check before every git commit, please refer to
-[Automatically check message before commit](auto_check.md).
+[Automatically check message before commit](./tutorials/auto_check.md).
 
 ## Usage
+
 There are three mutually exclusive ways to use `cz check`:
 
 - with `--rev-range` to check a range of pre-existing commits
@@ -14,6 +16,7 @@ There are three mutually exclusive ways to use `cz check`:
 - or with `--commit-msg-file` to read the commit message from a file
 
 ### Git Rev Range
+
 If you'd like to check a commit's message after it has already been created, then you can specify the range of commits to check with `--rev-range REV_RANGE`.
 
 ```bash
@@ -25,7 +28,9 @@ For example, if you'd like to check all commits on a branch, you can use `--rev-
 For more info on how git commit ranges work, you can check the [git documentation](https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection#_commit_ranges).
 
 ### Commit Message
+
 There are two ways you can provide your plain message and check it.
+
 #### Method 1: use -m or --message
 
 ```bash
@@ -49,7 +54,7 @@ $ cz check --commit-msg-file COMMIT_MSG_FILE
 ```
 
 In this option, COMMIT_MSG_FILE is the path of the temporal file that contains the commit message.
-This argument can be useful when cooperating with git hook, please check [Automatically check message before commit](auto_check.md) for more information about how to use this argument with git hook.
+This argument can be useful when cooperating with git hook, please check [Automatically check message before commit](./tutorials/auto_check.md) for more information about how to use this argument with git hook.
 
 ### Allow Abort
 

@@ -190,8 +190,8 @@ The basic steps are:
 
 1. Inheriting from `BaseCommitizen`
 2. Give a name to your rules.
-3. Expose the class at the end of your file assigning it to `discover_this`
-4. Create a python package starting with `cz_` using `setup.py`, `poetry`, etc
+3. Create a python package using `setup.py`, `poetry`, etc
+4. Expose the class as a `commitizen.plugin` entrypoint
 
 Check an [example](convcomms) on how to configure `BaseCommitizen`.
 
@@ -201,11 +201,13 @@ You can also automate the steps above through [cookiecutter](https://cookiecutte
 cookiecutter gh:commitizen-tools/commitizen_cz_template
 ```
 
-See [commitizen_cz_template](https://github.com/commitizen-tools/commitizen_cz_template) for detail.
+See [commitizen_cz_template](https://github.com/commitizen-tools/commitizen_cz_template) for details.
+
+Once you publish your rules, you can send us a PR to the [Third-party section](./third-party-commitizen.md).
 
 ### Custom commit rules
 
-Create a file starting with `cz_`, for example `cz_jira.py`. This prefix is used to detect the plug-in. Same method [flask uses]
+Create a Python module, for example `cz_jira.py`.
 
 Inherit from `BaseCommitizen`, and you must define `questions` and `message`. The others are optional.
 
@@ -257,8 +259,6 @@ class JiraCz(BaseCommitizen):
         """
         return 'We use this because is useful'
 
-
-discover_this = JiraCz  # used by the plug-in system
 ```
 
 The next file required is `setup.py` modified from flask version.
@@ -272,7 +272,12 @@ setup(
     py_modules=['cz_jira'],
     license='MIT',
     long_description='this is a long description',
-    install_requires=['commitizen']
+    install_requires=['commitizen'],
+    entry_points = {
+        'commitizen.plugin': [
+            'cz_jira = cz_jira:JiraCz'
+        ]
+    }
 )
 ```
 
@@ -286,8 +291,6 @@ And that's it. You can install it without uploading to pypi by simply
 doing `pip install .`
 
 If you feel like it should be part of this repo, create a PR.
-
-[flask uses]: http://flask.pocoo.org/docs/0.12/extensiondev/
 
 ### Custom bump rules
 
@@ -381,3 +384,56 @@ from commitizen.cz.exception import CzException
 class NoSubjectProvidedException(CzException):
     ...
 ```
+
+### Migrating from legacy plugin format
+
+Commitizen migrated to a new plugin format relying on `importlib.metadata.EntryPoint`.
+Migration should be straight-forward for legacy plugins:
+
+- Remove the `discover_this` line from you plugin module
+- Expose the plugin class under as a `commitizen.plugin` entrypoint.
+
+The name of the plugin is now determined by the name of the entrypoint.
+
+#### Example
+
+If you were having a `CzPlugin` class in a `cz_plugin.py` module like this:
+
+```python
+from commitizen.cz.base import BaseCommitizen
+
+class PluginCz(BaseCommitizen):
+    ...
+
+discover_this = PluginCz
+```
+
+Then remove the `discover_this` line:
+
+```python
+from commitizen.cz.base import BaseCommitizen
+
+class PluginCz(BaseCommitizen):
+    ...
+```
+
+and expose the class as entrypoint in you setuptools:
+
+```python
+from setuptools import setup
+
+setup(
+    name='MyPlugin',
+    version='0.1.0',
+    py_modules=['cz_plugin'],
+    ...
+    entry_points = {
+        'commitizen.plugin': [
+            'plugin = cz_plugin:PluginCz'
+        ]
+    }
+    ...
+)
+```
+
+Then your plugin will be available under the name `plugin`.

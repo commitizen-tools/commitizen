@@ -2,32 +2,55 @@ site_name: Commitizen
 site_description: commit rules, semantic version, conventional commits
 
 theme:
-    name: 'material'
+  name: "material"
+  palette:
+    - primary: 'deep purple'
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
 
 repo_name: commitizen-tools/commitizen
 repo_url: https://github.com/commitizen-tools/commitizen
 edit_uri: ""
 
 nav:
-    - Introduction: 'README.md'
-    - Commands:
-        - Init: 'init.md'
-        - Commit: 'commit.md'
-        - Bump: 'bump.md'
-        - Check: 'check.md'
-        - Changelog: 'changelog.md'
-    - Configuration: 'config.md'
-    - Customization: 'customization.md'
-    - Tutorials:
-        - Writing commits: 'tutorials/writing_commits.md'
-        - GitLab CI: 'tutorials/gitlab_ci.md'
-        - Github Actions: 'tutorials/github_actions.md'
-        - Jenkins pipeline: 'tutorials/jenkins_pipeline.md'
-    - FAQ: 'faq.md'
-    - Exit Codes: 'exit_codes.md'
-    - Third-Party Commitizen Templates: 'third-party-commitizen.md'
-    - Contributing: 'contributing.md'
-    - Resources: 'external_links.md'
+  - Introduction: "README.md"
+  - Getting Started: "getting_started.md"
+  - Commands:
+      - Init: "init.md"
+      - Commit: "commit.md"
+      - Bump: "bump.md"
+      - Check: "check.md"
+      - Changelog: "changelog.md"
+  - Configuration: "config.md"
+  - Customization: "customization.md"
+  - Tutorials:
+      - Writing commits: "tutorials/writing_commits.md"
+      - Auto check commits: "tutorials/auto_check.md"
+      - GitLab CI: "tutorials/gitlab_ci.md"
+      - Github Actions: "tutorials/github_actions.md"
+      - Jenkins pipeline: "tutorials/jenkins_pipeline.md"
+  - FAQ: "faq.md"
+  - Exit Codes: "exit_codes.md"
+  - Third-Party Commitizen Templates: "third-party-commitizen.md"
+  - Contributing: "contributing.md"
+  - Resources: "external_links.md"
 
 markdown_extensions:
   - markdown.extensions.codehilite:
@@ -35,3 +58,7 @@ markdown_extensions:
   - admonition
   - codehilite
   - extra
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - toc:
+      permalink: true

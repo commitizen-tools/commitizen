@@ -33,12 +33,14 @@ class Settings(TypedDict, total=False):
     name: str
     version: Optional[str]
     version_files: List[str]
+    version_provider: Optional[str]
     tag_format: Optional[str]
     bump_message: Optional[str]
     allow_abort: bool
     changelog_file: str
     changelog_incremental: bool
     changelog_start_rev: Optional[str]
+    changelog_merge_prerelease: bool
     update_changelog_on_bump: bool
     use_shortcuts: bool
     style: Optional[List[Tuple[str, str]]]
@@ -47,6 +49,7 @@ class Settings(TypedDict, total=False):
     pre_bump_hooks: Optional[List[str]]
     post_bump_hooks: Optional[List[str]]
     prerelease_offset: int
+    version_type: Optional[str]
 
 
 name: str = "cz_conventional_commits"
@@ -63,18 +66,21 @@ DEFAULT_SETTINGS: Settings = {
     "name": "cz_conventional_commits",
     "version": None,
     "version_files": [],
+    "version_provider": "commitizen",
     "tag_format": None,  # example v$version
     "bump_message": None,  # bumped v$current_version to $new_version
     "allow_abort": False,
     "changelog_file": "CHANGELOG.md",
     "changelog_incremental": False,
     "changelog_start_rev": None,
+    "changelog_merge_prerelease": False,
     "update_changelog_on_bump": False,
     "use_shortcuts": False,
     "major_version_zero": False,
     "pre_bump_hooks": [],
     "post_bump_hooks": [],
     "prerelease_offset": 0,
+    "version_type": None,
 }
 
 MAJOR = "MAJOR"

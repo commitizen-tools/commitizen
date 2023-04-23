@@ -17,37 +17,41 @@
 
 ## About
 
-Commitizen is a tool designed for teams.
+Commitizen is release management tool designed for teams.
 
-Its main purpose is to define a standard way of committing rules
-and communicating it (using the cli provided by commitizen).
+Commitizen assumes your team uses a standard way of commiting rules
+and from that foundation, it can bump your project's version, create
+the changelog, and update files.
 
-The reasoning behind it is that it is easier to read, and enforces writing
+By default, commitizen uses [conventional commits][conventional_commits], but you
+can build your own set of rules, and publish them.
+
+Using a standarized set of rules to write commits, makes commits easier to read, and enforces writing
 descriptive commits.
 
-Besides that, having a convention on your commits makes it possible to
-parse them and use them for something else, like generating automatically
-the version or a changelog.
-
-### Commitizen features
+### Features
 
 - Command-line utility to create commits with your rules. Defaults: [Conventional commits][conventional_commits]
-- Display information about your commit rules (commands: schema, example, info)
 - Bump version automatically using [semantic versioning][semver] based on the commits. [Read More](./bump.md)
 - Generate a changelog using [Keep a changelog][keepchangelog]
+- Update your project's version files automatically
+- Display information about your commit rules (commands: schema, example, info)
+- Create your own set of rules and publish them to pip. Read more on [Customization](./customization.md)
 
 ## Requirements
 
-Python 3.6+
+[Python](https://www.python.org/downloads/) `3.7+`
 
-[Git][gitscm] `1.8.5.2`+
+[Poetry](https://python-poetry.org/docs/) `1.2.0+`
+
+[Git][gitscm] `1.8.5.2+`
 
 ## Installation
 
-Global installation
+To make commitizen available in your system
 
 ```bash
-sudo pip3 install -U Commitizen
+pip install --user -U Commitizen
 ```
 
 ### Python project
@@ -72,7 +76,7 @@ poetry add commitizen --dev
 
 ### macOS
 
-On macOS, it can also be installed via [homebrew](https://formulae.brew.sh/formula/commitizen):
+via [homebrew](https://formulae.brew.sh/formula/commitizen):
 
 ```bash
 brew install commitizen
@@ -80,71 +84,19 @@ brew install commitizen
 
 ## Usage
 
-### Committing
+Most of the time this is the only command you'll run:
 
-Run in your terminal
+```sh
+cz bump
+```
 
-```bash
+On top of that, you can use commitizen to assist you with the creation of commits:
+
+```sh
 cz commit
 ```
 
-or the shortcut
-
-```bash
-cz c
-```
-
-#### Sign off the commit
-
-Run in the terminal
-
-```bash
-cz commit --signoff
-```
-
-or the shortcut
-
-```bash
-cz commit -s
-```
-
-### Integrating with Pre-commit
-
-Commitizen can lint your commit message for you with `cz check`.
-
-You can integrate this in your [pre-commit](https://pre-commit.com/) config with:
-
-```yaml
----
-repos:
-  - repo: https://github.com/commitizen-tools/commitizen
-    rev: master
-    hooks:
-      - id: commitizen
-      - id: commitizen-branch
-        stages: [push]
-```
-
-After the configuration is added, you'll need to run:
-
-```sh
-pre-commit install --hook-type commit-msg --hook-type pre-push
-```
-
-If you aren't using both hooks, you needn't install both stages.
-
-| Hook              | Recommended Stage |
-| ----------------- | ----------------- |
-| commitizen        | commit-msg        |
-| commitizen-branch | pre-push          |
-
-Note that pre-commit discourages using `master` as a revision, and the above command will print a warning. You should replace the `master` revision with the [latest tag](https://github.com/commitizen-tools/commitizen/tags). This can be done automatically with:
-
-```sh
-pre-commit autoupdate
-```
-
-Read more about the `check` command [here](check.md).
+Read more in the section [Getting Started](./getting_started.md).
 
 ### Help
 

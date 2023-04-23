@@ -1,7 +1,7 @@
+from pathlib import Path
 from shutil import copyfile
 
 import pytest
-from py._path.local import LocalPath
 
 from commitizen import bump
 from commitizen.exceptions import CurrentVersionNotFoundError
@@ -13,9 +13,9 @@ TESTING_FILE_PREFIX = "tests/data"
 
 
 def _copy_sample_file_to_tmpdir(
-    tmpdir: LocalPath, source_filename: str, dest_filename: str
-) -> str:
-    tmp_file = str(tmpdir.join(dest_filename)).replace("\\", "/")
+    tmp_path: Path, source_filename: str, dest_filename: str
+) -> Path:
+    tmp_file = tmp_path / dest_filename
     copyfile(f"{TESTING_FILE_PREFIX}/{source_filename}", tmp_file)
     return tmp_file
 

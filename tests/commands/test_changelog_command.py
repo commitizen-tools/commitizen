@@ -13,7 +13,14 @@ from commitizen.exceptions import (
     NotAGitProjectError,
     NotAllowed,
 )
-from tests.utils import create_file_and_commit, wait_for_tag
+from tests.utils import (
+    create_branch,
+    create_file_and_commit,
+    get_current_branch,
+    merge_branch,
+    switch_branch,
+    wait_for_tag,
+)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -269,6 +276,75 @@ def test_changelog_hook_customize(mocker: MockFixture, config_customize):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_with_non_linear_merges_commit_order(
+    mocker: MockFixture, config_customize
+):
+    """Test that commits merged non-linearly are correctly ordered in the changelog
+
+    A typical scenario is having two branches from main like so:
+    * feat: I will be merged first - (2023-03-01 11:35:51 +0100) |  (branchB)
+    | * feat: I will be merged second - (2023-03-01 11:35:22 +0100) |  (branchA)
+    |/
+    * feat: initial commit - (2023-03-01 11:34:54 +0100) |  (HEAD -> main)
+
+    And merging them, for example in the reverse order they were created on would give the following:
+    *   Merge branch 'branchA' - (2023-03-01 11:42:59 +0100) |  (HEAD -> main)
+    |\
+    | * feat: I will be merged second - (2023-03-01 11:35:22 +0100) |  (branchA)
+    * | feat: I will be merged first - (2023-03-01 11:35:51 +0100) |  (branchB)
+    |/
+    * feat: initial commit - (2023-03-01 11:34:54 +0100) |
+
+    In this case we want the changelog to reflect the topological order of commits,
+    i.e. the order in which they were merged into the main branch
+
+    So the above example should result in the following:
+    ## Unreleased
+
+    ### Feat
+    - I will be merged second
+    - I will be merged first
+    - initial commit
+    """
+    changelog_hook_mock = mocker.Mock()
+    changelog_hook_mock.return_value = "cool changelog hook"
+
+    create_file_and_commit("feat: initial commit")
+
+    main_branch = get_current_branch()
+
+    create_branch("branchA")
+    create_branch("branchB")
+
+    switch_branch("branchA")
+    create_file_and_commit("feat: I will be merged second")
+
+    switch_branch("branchB")
+    create_file_and_commit("feat: I will be merged first")
+
+    # Note we merge branches opposite order than author_date
+    switch_branch(main_branch)
+    merge_branch("branchB")
+    merge_branch("branchA")
+
+    changelog = Changelog(
+        config_customize,
+        {"unreleased_version": None, "incremental": True, "dry_run": False},
+    )
+    mocker.patch.object(changelog.cz, "changelog_hook", changelog_hook_mock)
+    changelog()
+    full_changelog = "\
+## Unreleased\n\n\
+\
+### Feat\n\n\
+- I will be merged second\n\
+- I will be merged first\n\
+- initial commit\n"
+
+    changelog_hook_mock.assert_called_with(full_changelog, full_changelog)
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_multiple_incremental_do_not_add_new_lines(
     mocker: MockFixture, capsys, changelog_path, file_regression
 ):
@@ -345,6 +421,7 @@ def test_changelog_without_revision(mocker: MockFixture, tmp_commitizen_project)
         cli.main()
 
 
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_incremental_with_revision(mocker):
     """combining incremental with a revision doesn't make sense"""
     testargs = ["cz", "changelog", "--incremental", "0.2.0"]
@@ -461,6 +538,40 @@ def test_changelog_config_flag_increment(
     file_regression.check(out, extension=".md")
 
 
+@pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_config_flag_merge_prerelease(
+    mocker: MockFixture, changelog_path, config_path, file_regression, test_input
+):
+    with open(config_path, "a") as f:
+        f.write("changelog_merge_prerelease = true\n")
+
+    create_file_and_commit("irrelevant commit")
+    mocker.patch("commitizen.git.GitTag.date", "1970-01-01")
+    git.tag("1.0.0")
+
+    create_file_and_commit("feat: add new output")
+    create_file_and_commit("fix: output glitch")
+
+    testargs = ["cz", "bump", "--prerelease", test_input, "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("fix: mama gotta work")
+    create_file_and_commit("feat: add more stuff")
+    create_file_and_commit("Merge into master")
+
+    testargs = ["cz", "changelog"]
+
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
+
+
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_config_start_rev_option(
     mocker: MockFixture, capsys, config_path, file_regression
@@ -539,6 +650,80 @@ def test_changelog_incremental_with_release_candidate_version(
     create_file_and_commit("Merge into master")
 
     testargs = ["cz", "changelog", "--incremental"]
+
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_release_candidate_version_with_merge_prerelease(
+    mocker: MockFixture, changelog_path, file_regression, test_input
+):
+    """Fix #357"""
+    with open(changelog_path, "w") as f:
+        f.write(KEEP_A_CHANGELOG)
+    create_file_and_commit("irrelevant commit")
+    mocker.patch("commitizen.git.GitTag.date", "1970-01-01")
+    git.tag("1.0.0")
+
+    create_file_and_commit("feat: add new output")
+    create_file_and_commit("fix: output glitch")
+
+    testargs = ["cz", "bump", "--prerelease", test_input, "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("fix: mama gotta work")
+    create_file_and_commit("feat: add more stuff")
+    create_file_and_commit("Merge into master")
+
+    testargs = ["cz", "changelog", "--merge-prerelease"]
+
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2023-04-16")
+def test_changelog_incremental_with_merge_prerelease(
+    mocker: MockFixture, changelog_path, file_regression, test_input
+):
+    """Fix #357"""
+    with open(changelog_path, "w") as f:
+        f.write(KEEP_A_CHANGELOG)
+    create_file_and_commit("irrelevant commit")
+    mocker.patch("commitizen.git.GitTag.date", "1970-01-01")
+    git.tag("1.0.0")
+
+    create_file_and_commit("feat: add new output")
+
+    testargs = ["cz", "bump", "--prerelease", test_input, "--yes", "--changelog"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("fix: output glitch")
+
+    testargs = ["cz", "bump", "--prerelease", test_input, "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("fix: mama gotta work")
+    create_file_and_commit("feat: add more stuff")
+    create_file_and_commit("Merge into master")
+
+    testargs = ["cz", "changelog", "--merge-prerelease", "--incremental"]
 
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
@@ -968,3 +1153,60 @@ def test_empty_commit_list(mocker):
     mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(NoCommitsFoundError):
         cli.main()
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
+def test_changelog_prerelease_rev_with_use_version_type_semver(
+    mocker: MockFixture, capsys, config_path, changelog_path, file_regression
+):
+    mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
+
+    with open(config_path, "a") as f:
+        f.write('tag_format = "$version"\n' 'version_type = "semver"')
+
+    # create commit and tag
+    create_file_and_commit("feat: new file")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    wait_for_tag()
+
+    create_file_and_commit("feat: after 0.2.0")
+    create_file_and_commit("feat: another feature")
+
+    testargs = ["cz", "bump", "--yes", "--prerelease", "alpha"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    capsys.readouterr()
+    wait_for_tag()
+
+    tag_exists = git.tag_exist("0.3.0-a0")
+    assert tag_exists is True
+
+    testargs = ["cz", "changelog", "0.3.0-a0", "--dry-run"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(DryRunExit):
+        cli.main()
+
+    out, _ = capsys.readouterr()
+
+    file_regression.check(out, extension=".md")
+
+    testargs = ["cz", "bump", "--yes", "--prerelease", "alpha"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    capsys.readouterr()
+    wait_for_tag()
+
+    tag_exists = git.tag_exist("0.3.0-a1")
+    assert tag_exists is True
+
+    testargs = ["cz", "changelog", "0.3.0-a1", "--dry-run"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(DryRunExit):
+        cli.main()
+
+    out, _ = capsys.readouterr()
+
+    file_regression.check(out, extension=".second-prerelease.md")

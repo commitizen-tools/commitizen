@@ -44,6 +44,7 @@ DICT_CONFIG = {
 _settings = {
     "name": "cz_jira",
     "version": "1.0.0",
+    "version_provider": "commitizen",
     "tag_format": None,
     "bump_message": None,
     "allow_abort": False,
@@ -52,17 +53,20 @@ _settings = {
     "changelog_file": "CHANGELOG.md",
     "changelog_incremental": False,
     "changelog_start_rev": None,
+    "changelog_merge_prerelease": False,
     "update_changelog_on_bump": False,
     "use_shortcuts": False,
     "major_version_zero": False,
     "pre_bump_hooks": ["scripts/generate_documentation.sh"],
     "post_bump_hooks": ["scripts/slack_notification.sh"],
     "prerelease_offset": 0,
+    "version_type": None,
 }
 
 _new_settings = {
     "name": "cz_jira",
     "version": "2.0.0",
+    "version_provider": "commitizen",
     "tag_format": None,
     "bump_message": None,
     "allow_abort": False,
@@ -71,12 +75,14 @@ _new_settings = {
     "changelog_file": "CHANGELOG.md",
     "changelog_incremental": False,
     "changelog_start_rev": None,
+    "changelog_merge_prerelease": False,
     "update_changelog_on_bump": False,
     "use_shortcuts": False,
     "major_version_zero": False,
     "pre_bump_hooks": ["scripts/generate_documentation.sh"],
     "post_bump_hooks": ["scripts/slack_notification.sh"],
     "prerelease_offset": 0,
+    "version_type": None,
 }
 
 _read_settings = {

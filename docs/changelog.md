@@ -2,6 +2,13 @@
 
 This command will generate a changelog following the committing rules established.
 
+To create the changelog automatically on bump, add the setting [update_changelog_on_bump](./bump.md#update_changelog_on_bump)
+
+```toml
+[tool.commitizen]
+update_changelog_on_bump = true
+```
+
 ## Usage
 
 ```bash
@@ -21,7 +28,9 @@ optional arguments:
                         set the value for the new version (use the tag value), instead of using unreleased
   --incremental         generates changelog from last created version, useful if the changelog has been manually modified
   --start-rev START_REV
-                        start rev of the changelog.If not set, it will generate changelog from the start
+                        start rev of the changelog. If not set, it will generate changelog from the start
+  --merge-prerelease
+                        collect all changes from prereleases into next non-prerelease. If not set, it will include prereleases in the changelog
 ```
 
 ### Examples
@@ -39,13 +48,13 @@ cz ch
 #### Get the changelog for the given version
 
 ```bash
-cz changelog 0.3.0
+cz changelog 0.3.0 --dry-run
 ```
 
 #### Get the changelog for the given version range
 
 ```bash
-cz changelog 0.3.0..0.4.0
+cz changelog 0.3.0..0.4.0 --dry-run
 ```
 
 ## Constrains
@@ -159,6 +168,22 @@ cz changelog --start-rev="v0.2.0"
 [tools.commitizen]
 # ...
 changelog_start_rev = "v0.2.0"
+```
+
+### merge-prerelease
+
+This flag can be set in the `toml` file with the key `changelog_merge_prerelease` under `tools.commitizen`
+
+Collects changes from prereleases into the next non-prerelease. This means that if you have a prerelease version, and then a normal release, the changelog will show the prerelease changes as part of the changes of the normal release. If not set, it will include prereleases in the changelog.
+
+```bash
+cz changelog --merge-prerelease
+```
+
+```toml
+[tools.commitizen]
+# ...
+changelog_merge_prerelease = true
 ```
 
 ## Hooks
