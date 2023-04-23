@@ -11,17 +11,17 @@
       
       
       
-        <link rel="prev" href="../bump/">
+        <link rel="prev" href="..">
       
       
-        <link rel="next" href="../changelog/">
+        <link rel="next" href="../init/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.7">
     
     
       
-        <title>Check - Commitizen</title>
+        <title>Getting Started - Commitizen</title>
       
     
     
@@ -73,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#check" class="md-skip">
+        <a href="#initialize-commitizen" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Check
+              Getting Started
             
           </span>
         </div>
@@ -271,11 +271,102 @@
 
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../getting_started/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Getting Started
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#initialize-commitizen" class="md-nav__link">
+    Initialize commitizen
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bump-version" class="md-nav__link">
+    Bump version
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#committing" class="md-nav__link">
+    Committing
+  </a>
+  
+    <nav class="md-nav" aria-label="Committing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sign-off-the-commit" class="md-nav__link">
+    Sign off the commit
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-project-version" class="md-nav__link">
+    Get project version
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-with-pre-commit" class="md-nav__link">
+    Integration with Pre-commit
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -286,16 +377,14 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
       
       
       
@@ -304,7 +393,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_3">
           <span class="md-nav__icon md-icon"></span>
           Commands
@@ -357,113 +446,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Check
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../check/" class="md-nav__link">
         Check
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#about" class="md-nav__link">
-    About
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    Usage
-  </a>
-  
-    <nav class="md-nav" aria-label="Usage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#git-rev-range" class="md-nav__link">
-    Git Rev Range
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#commit-message" class="md-nav__link">
-    Commit Message
-  </a>
-  
-    <nav class="md-nav" aria-label="Commit Message">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#method-1-use-m-or-message" class="md-nav__link">
-    Method 1: use -m or --message
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#method-2-use-pipe-to-pipe-it-to-cz-check" class="md-nav__link">
-    Method 2: use pipe to pipe it to cz check
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#commit-message-file" class="md-nav__link">
-    Commit Message File
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#allow-abort" class="md-nav__link">
-    Allow Abort
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -716,8 +703,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -726,8 +711,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#about" class="md-nav__link">
-    About
+  <a href="#initialize-commitizen" class="md-nav__link">
+    Initialize commitizen
   </a>
   
 </li>
@@ -741,30 +726,23 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#git-rev-range" class="md-nav__link">
-    Git Rev Range
+  <a href="#bump-version" class="md-nav__link">
+    Bump version
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#commit-message" class="md-nav__link">
-    Commit Message
+  <a href="#committing" class="md-nav__link">
+    Committing
   </a>
   
-    <nav class="md-nav" aria-label="Commit Message">
+    <nav class="md-nav" aria-label="Committing">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#method-1-use-m-or-message" class="md-nav__link">
-    Method 1: use -m or --message
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#method-2-use-pipe-to-pipe-it-to-cz-check" class="md-nav__link">
-    Method 2: use pipe to pipe it to cz check
+  <a href="#sign-off-the-commit" class="md-nav__link">
+    Sign off the commit
   </a>
   
 </li>
@@ -775,15 +753,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#commit-message-file" class="md-nav__link">
-    Commit Message File
+  <a href="#get-project-version" class="md-nav__link">
+    Get project version
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#allow-abort" class="md-nav__link">
-    Allow Abort
+  <a href="#integration-with-pre-commit" class="md-nav__link">
+    Integration with Pre-commit
   </a>
   
 </li>
@@ -808,44 +786,91 @@
                   
 
 
-<h1 id="check">Check<a class="headerlink" href="#check" title="Permanent link">&para;</a></h1>
-<h2 id="about">About<a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
-<p>This feature checks whether the commit message follows the given committing rules. And comment in git message will be ignored.</p>
-<p>If you want to setup an automatic check before every git commit, please refer to
-<a href="../tutorials/auto_check/">Automatically check message before commit</a>.</p>
+  <h1>Getting Started</h1>
+
+<h2 id="initialize-commitizen">Initialize commitizen<a class="headerlink" href="#initialize-commitizen" title="Permanent link">&para;</a></h2>
+<p>If it's your first time, you'll need to create a commitizen configuration file.</p>
+<p>The assistant utility will help you set up everything</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>init
+</code></pre></div>
+<p>Alternatively, create a file <code>.cz.toml</code> in your project's directory.</p>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;0.1.0&quot;</span>
+<span class="n">update_changelog_on_bump</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</code></pre></div>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
-<p>There are three mutually exclusive ways to use <code>cz check</code>:</p>
-<ul>
-<li>with <code>--rev-range</code> to check a range of pre-existing commits</li>
-<li>with <code>--message</code> or by piping the message to it to check a given string</li>
-<li>or with <code>--commit-msg-file</code> to read the commit message from a file</li>
-</ul>
-<h3 id="git-rev-range">Git Rev Range<a class="headerlink" href="#git-rev-range" title="Permanent link">&para;</a></h3>
-<p>If you'd like to check a commit's message after it has already been created, then you can specify the range of commits to check with <code>--rev-range REV_RANGE</code>.</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cz<span class="w"> </span>check<span class="w"> </span>--rev-range<span class="w"> </span>REV_RANGE
+<h3 id="bump-version">Bump version<a class="headerlink" href="#bump-version" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>bump
 </code></pre></div>
-<p>For example, if you'd like to check all commits on a branch, you can use <code>--rev-range master..HEAD</code>. Or, if you'd like to check all commits starting from when you first implemented commit message linting, you can use <code>--rev-range &lt;first_commit_sha&gt;..HEAD</code>.</p>
-<p>For more info on how git commit ranges work, you can check the <a href="https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection#_commit_ranges">git documentation</a>.</p>
-<h3 id="commit-message">Commit Message<a class="headerlink" href="#commit-message" title="Permanent link">&para;</a></h3>
-<p>There are two ways you can provide your plain message and check it.</p>
-<h4 id="method-1-use-m-or-message">Method 1: use -m or --message<a class="headerlink" href="#method-1-use-m-or-message" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cz<span class="w"> </span>check<span class="w"> </span>--message<span class="w"> </span>MESSAGE
+<p>This command will bump your project's version, and it will create a tag.</p>
+<p>Because of the setting <code>update_changelog_on_bump</code>, bump will also create the <strong>changelog</strong>.
+You can also <a href="../bump/#version_files">update files</a>.
+You can configure the <a href="../bump/#version-type">version type</a> and <a href="../config/#version-providers">version provider</a>.</p>
+<p>There are many more options available, please read the docs for the <a href="../bump/">bump command</a>.</p>
+<h3 id="committing">Committing<a class="headerlink" href="#committing" title="Permanent link">&para;</a></h3>
+<p>Run in your terminal</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>commit
 </code></pre></div>
-<p>In this option, MESSAGE is the commit message to be checked.</p>
-<h4 id="method-2-use-pipe-to-pipe-it-to-cz-check">Method 2: use pipe to pipe it to <code>cz check</code><a class="headerlink" href="#method-2-use-pipe-to-pipe-it-to-cz-check" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span>MESSAGE<span class="w"> </span><span class="p">|</span><span class="w"> </span>cz<span class="w"> </span>check
+<p>or the shortcut</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>c
 </code></pre></div>
-<p>In this option, MESSAGE is piped to cz check and would be checked.</p>
-<h3 id="commit-message-file">Commit Message File<a class="headerlink" href="#commit-message-file" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cz<span class="w"> </span>check<span class="w"> </span>--commit-msg-file<span class="w"> </span>COMMIT_MSG_FILE
+<h4 id="sign-off-the-commit">Sign off the commit<a class="headerlink" href="#sign-off-the-commit" title="Permanent link">&para;</a></h4>
+<p>Run in the terminal</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>commit<span class="w"> </span>--signoff
 </code></pre></div>
-<p>In this option, COMMIT_MSG_FILE is the path of the temporal file that contains the commit message.
-This argument can be useful when cooperating with git hook, please check <a href="../tutorials/auto_check/">Automatically check message before commit</a> for more information about how to use this argument with git hook.</p>
-<h3 id="allow-abort">Allow Abort<a class="headerlink" href="#allow-abort" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>check<span class="w"> </span>--message<span class="w"> </span>MESSAGE<span class="w"> </span>--allow-abort
+<p>or the shortcut</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>commit<span class="w"> </span>-s
 </code></pre></div>
-<p>Empty commit messages typically instruct Git to abort a commit, so you can pass <code>--allow-abort</code> to
-permit them. Since <code>git commit</code> accepts an <code>--allow-empty-message</code> flag (primarily for wrapper scripts), you may wish to disallow such commits in CI. <code>--allow-abort</code> may be used in conjunction with any of the other options.</p>
+<h3 id="get-project-version">Get project version<a class="headerlink" href="#get-project-version" title="Permanent link">&para;</a></h3>
+<p>Running <code>cz version</code> will return the version of commitizen, but if you want
+your project's version you can run:</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>version<span class="w"> </span>-p
+</code></pre></div>
+<p>This can be useful in many situations, where otherwise, you would require a way
+to parse the version of your project. Maybe it's simple if you use a <code>VERSION</code> file,
+but once you start working with many different projects, it becomes tricky.</p>
+<p>A common example is, when you need to send to slack, the changes for the version that you
+just created:</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>changelog<span class="w"> </span>--dry-run<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>cz<span class="w"> </span>version<span class="w"> </span>-p<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+<h3 id="integration-with-pre-commit">Integration with Pre-commit<a class="headerlink" href="#integration-with-pre-commit" title="Permanent link">&para;</a></h3>
+<p>Commitizen can lint your commit message for you with <code>cz check</code>.</p>
+<p>You can integrate this in your <a href="https://pre-commit.com/">pre-commit</a> config with:</p>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="nt">repos</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/commitizen-tools/commitizen</span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">master</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">commitizen</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">commitizen-branch</span>
+<span class="w">        </span><span class="nt">stages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">push</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<p>After the configuration is added, you'll need to run:</p>
+<div class="highlight"><pre><span></span><code>pre-commit<span class="w"> </span>install<span class="w"> </span>--hook-type<span class="w"> </span>commit-msg<span class="w"> </span>--hook-type<span class="w"> </span>pre-push
+</code></pre></div>
+<p>If you aren't using both hooks, you needn't install both stages.</p>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>Recommended Stage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>commitizen</td>
+<td>commit-msg</td>
+</tr>
+<tr>
+<td>commitizen-branch</td>
+<td>pre-push</td>
+</tr>
+</tbody>
+</table>
+<p>Note that pre-commit discourages using <code>master</code> as a revision, and the above command will print a warning. You should replace the <code>master</code> revision with the <a href="https://github.com/commitizen-tools/commitizen/tags">latest tag</a>. This can be done automatically with:</p>
+<div class="highlight"><pre><span></span><code>pre-commit<span class="w"> </span>autoupdate
+</code></pre></div>
+<p>Read more about the <code>check</code> command <a href="../check/">here</a>.</p>
 
 
 
