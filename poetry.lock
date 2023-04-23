@@ -14,22 +14,21 @@ files = [
 
 [[package]]
 name = "argcomplete"
-version = "2.1.2"
+version = "3.0.6"
 description = "Bash tab completion for argparse"
 category = "main"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "argcomplete-2.1.2-py3-none-any.whl", hash = "sha256:4ba9cdaa28c361d251edce884cd50b4b1215d65cdc881bd204426cdde9f52731"},
-    {file = "argcomplete-2.1.2.tar.gz", hash = "sha256:fc82ef070c607b1559b5c720529d63b54d9dcf2dcfc2632b10e6372314a34457"},
+    {file = "argcomplete-3.0.6-py3-none-any.whl", hash = "sha256:798f28e11dc141f415879497599316a8a9126672a883064b851597a0d94be8a9"},
+    {file = "argcomplete-3.0.6.tar.gz", hash = "sha256:9fe49c66ba963b81b64025f74bfbd0275619a6bde1c7370654dc365d4ecc9a0b"},
 ]
 
 [package.dependencies]
-importlib-metadata = {version = ">=0.23,<6", markers = "python_version == \"3.7\""}
+importlib-metadata = {version = ">=0.23,<7", markers = "python_version == \"3.7\""}
 
 [package.extras]
-lint = ["flake8", "mypy"]
-test = ["coverage", "flake8", "mypy", "pexpect", "wheel"]
+test = ["coverage", "mypy", "pexpect", "ruff", "wheel"]
 
 [[package]]
 name = "backcall"
@@ -1599,4 +1598,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "ee6d7cb4d36c4f9312dcba8818bbdd1426f5c2b04ddf92687835fa99fd3f3a4e"
+content-hash = "f85c312b8da45408e78e463496840bcb3d770ee5731a2aada55c56bcae86e547"
