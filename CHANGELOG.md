@@ -1,4 +1,30 @@
 
+## v3.0.0 (2023-04-23)
+
+### BREAKING CHANGE
+
+- Plugins are now exposed as `commitizen.plugin` entrypoints
+
+### Feat
+
+- **init**: add new settings
+- add semver support through version provider new api (#686)
+- **changelog**: add merge_prereleases flag
+- **providers**: add a `scm` version provider
+- **providers**: add support for some JSON-based version providers (NPM, Composer)
+- **providers**: add support for some TOML-based versions (PEP621, Poetry, Cargo)
+- **providers**: add a `commitizen.provider` endpoint for alternative versions providers
+- **plugins**: Switch to an importlib.metadata.EntryPoint-based plugin loading
+
+### Fix
+
+- **init**: welcome message
+- small corrections and clean up
+- major version zero message
+- update dependencies
+- **commands/changelog**: use topological order for commit ordering
+- **excepthook**: ensure traceback can only be a `TracebackType` or `None`
+
 ## v2.42.1 (2023-02-25)
 
 ### Fix
