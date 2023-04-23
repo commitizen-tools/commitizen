@@ -1,4 +1,14 @@
 
+## v3.0.1 (2023-04-23)
+
+### Fix
+
+- typo in hook
+
+### Refactor
+
+- set default_install_hook_types
+
 ## v3.0.0 (2023-04-23)
 
 ### BREAKING CHANGE
