@@ -181,9 +181,7 @@ class Init:
             yaml.safe_dump(config_data, stream=config_file)
 
         if not self._search_pre_commit():
-            raise InitFailedError(
-                "pre-commit is not installed in current environment."
-            )
+            raise InitFailedError("pre-commit is not installed in current environment.")
         if hook_types is None:
             hook_types = ["commit-msg", "pre-push"]
         self._exec_install_pre_commit_hook(hook_types)
