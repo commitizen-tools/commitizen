@@ -82,10 +82,12 @@ class Init:
 
         out.info("Welcome to commitizen!\n")
         out.line(
-            "The prompts will ask you different questions " "to configure your project."
+            "Answer the questions to configure your project.\n"
+            "For further configuration visit:\n"
+            "\n"
+            "https://commitizen-tools.github.io/commitizen/config/"
+            "\n"
         )
-        out.line("For further configuration visit:")
-        out.line("\n\thttps://commitizen-tools.github.io/commitizen/config/\n")
 
         # Collect information
         try:
