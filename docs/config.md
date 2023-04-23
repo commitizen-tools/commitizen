@@ -88,7 +88,7 @@ Type: `str`
 
 Default: `CHANGELOG.md`
 
-filename of exported changelog
+Filename of exported changelog
 
 ### `changelog_incremental`
 
