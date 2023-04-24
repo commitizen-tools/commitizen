@@ -58,10 +58,7 @@ pytest-mock = "^3.10"
 pytest-regressions = "^2.4.0"
 pytest-freezer = "^0.4.6"
 pytest-xdist = "^3.1.0"
-# code formatter
-black = "^22.10"
 # linter
-ruff = "^0.0.262"
 pre-commit = "^2.18.0"
 mypy = "^0.931"
 types-PyYAML = "^5.4.3"

@@ -1,9 +1,0 @@
-#!/usr/bin/env sh
-set -e
-
-export PREFIX="poetry run python -m "
-
-set -x
-
-${PREFIX}ruff commitizen tests --fix
-${PREFIX}black commitizen tests
