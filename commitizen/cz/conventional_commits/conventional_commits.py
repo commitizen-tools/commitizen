@@ -107,6 +107,14 @@ class ConventionalCommitsCz(BaseCommitizen):
                         ),
                         "key": "c",
                     },
+                    {
+                        "value": "chore",
+                        "name": (
+                            "chore: Changes to the build process or auxiliary tools and "
+                            "libraries such as documentation generation"
+                        ),
+                        "key": "h",
+                    },
                 ],
             },
             {
