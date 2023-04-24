@@ -342,6 +342,12 @@ data = {
                         "help": "Add additional build-metadata to the version-number",
                         "default": None,
                     },
+                    {
+                        "name": ["--empty"],
+                        "default": False,
+                        "help": "bump tags without new commits",
+                        "action": "store_true",
+                    },
                 ],
             },
             {
