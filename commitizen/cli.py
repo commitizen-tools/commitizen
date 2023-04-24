@@ -371,6 +371,12 @@ data = {
                         "help": "Determine the next version and write to stdout",
                         "default": False,
                     },
+                    {
+                        "name": ["--empty"],
+                        "default": False,
+                        "help": "bump tags without new commits",
+                        "action": "store_true",
+                    },
                 ],
             },
             {
