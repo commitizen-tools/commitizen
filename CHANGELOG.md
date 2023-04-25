@@ -1,4 +1,10 @@
 
+## v3.1.0 (2023-04-25)
+
+### Feat
+
+- make `major_version_zero` customizable by third parties
+
 ## v3.0.1 (2023-04-23)
 
 ### Fix
