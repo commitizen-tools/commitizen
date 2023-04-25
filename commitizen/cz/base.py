@@ -11,6 +11,7 @@ from commitizen.defaults import Questions
 class BaseCommitizen(metaclass=ABCMeta):
     bump_pattern: Optional[str] = None
     bump_map: Optional[Dict[str, str]] = None
+    bump_map_major_version_zero: Optional[Dict[str, str]] = None
     default_style_config: List[Tuple[str, str]] = [
         ("qmark", "fg:#ff9d00 bold"),
         ("question", "bold"),

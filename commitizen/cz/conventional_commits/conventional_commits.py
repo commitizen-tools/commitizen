@@ -30,6 +30,7 @@ def parse_subject(text):
 class ConventionalCommitsCz(BaseCommitizen):
     bump_pattern = defaults.bump_pattern
     bump_map = defaults.bump_map
+    bump_map_major_version_zero = defaults.bump_map_major_version_zero
     commit_parser = defaults.commit_parser
     version_parser = defaults.version_parser
     change_type_map = {

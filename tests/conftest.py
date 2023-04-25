@@ -143,11 +143,11 @@ class SemverCommitizen(BaseCommitizen):
         "minor": "MINOR",
         "patch": "PATCH",
     }
-    # bump_map_major_version_zero = {
-    #     "major": "MINOR",
-    #     "minor": "MINOR",
-    #     "patch": "PATCH",
-    # }
+    bump_map_major_version_zero = {
+        "major": "MINOR",
+        "minor": "MINOR",
+        "patch": "PATCH",
+    }
     changelog_pattern = r"^(patch|minor|major)"
     commit_parser = r"^(?P<change_type>patch|minor|major)(?:\((?P<scope>[^()\r\n]*)\)|\()?:?\s(?P<message>.+)"  # noqa
     change_type_map = {
