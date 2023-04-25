@@ -5,7 +5,7 @@ from typing import List, Optional
 import questionary
 from packaging.version import InvalidVersion, Version
 
-from commitizen import bump, cmd, defaults, factory, git, hooks, out, version_types
+from commitizen import bump, cmd, factory, git, hooks, out, version_types
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
@@ -86,8 +86,16 @@ class Bump:
         return is_initial
 
     def find_increment(self, commits: List[git.GitCommit]) -> Optional[str]:
+        # Update the bump map to ensure major version doesn't increment.
+        is_major_version_zero: bool = self.bump_settings["major_version_zero"]
+        # self.cz.bump_map = defaults.bump_map_major_version_zero
+        bump_map = (
+            self.cz.bump_map_major_version_zero
+            if is_major_version_zero
+            else self.cz.bump_map
+        )
         bump_pattern = self.cz.bump_pattern
-        bump_map = self.cz.bump_map
+
         if not bump_map or not bump_pattern:
             raise NoPatternMapError(
                 f"'{self.config.settings['name']}' rule does not support bump"
@@ -152,9 +160,6 @@ class Bump:
                 raise NotAllowed(
                     f"--major-version-zero is meaningless for current version {current_version}"
                 )
-
-            # Update the bump map to ensure major version doesn't increment.
-            self.cz.bump_map = defaults.bump_map_major_version_zero
 
         current_tag_version: str = bump.normalize_tag(
             current_version,

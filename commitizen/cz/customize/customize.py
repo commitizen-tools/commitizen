@@ -17,6 +17,7 @@ __all__ = ["CustomizeCommitsCz"]
 class CustomizeCommitsCz(BaseCommitizen):
     bump_pattern = defaults.bump_pattern
     bump_map = defaults.bump_map
+    bump_map_major_version_zero = defaults.bump_map_major_version_zero
     change_type_order = defaults.change_type_order
 
     def __init__(self, config: BaseConfig):
@@ -33,6 +34,12 @@ class CustomizeCommitsCz(BaseCommitizen):
         custom_bump_map = self.custom_settings.get("bump_map")
         if custom_bump_map:
             self.bump_map = custom_bump_map
+
+        custom_bump_map_major_version_zero = self.custom_settings.get(
+            "bump_map_major_version_zero"
+        )
+        if custom_bump_map_major_version_zero:
+            self.bump_map_major_version_zero = custom_bump_map_major_version_zero
 
         custom_change_type_order = self.custom_settings.get("change_type_order")
         if custom_change_type_order:
