@@ -980,3 +980,47 @@ def test_bump_command_prelease_version_type_check_old_tags(
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
         with open(version_file, "r") as f:
             assert "0.2.0" in f.read()
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.usefixtures("use_cz_semver")
+@pytest.mark.parametrize(
+    "message, expected_tag",
+    [
+        ("minor: add users", "0.2.0"),
+        ("patch: bug affecting users", "0.1.1"),
+        ("major: bug affecting users", "1.0.0"),
+    ],
+)
+def test_bump_with_plugin(mocker: MockFixture, message: str, expected_tag: str):
+    create_file_and_commit(message)
+
+    testargs = ["cz", "--name", "cz_semver", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    tag_exists = git.tag_exist(expected_tag)
+    assert tag_exists is True
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.usefixtures("use_cz_semver")
+@pytest.mark.parametrize(
+    "message, expected_tag",
+    [
+        ("minor: add users", "0.2.0"),
+        ("patch: bug affecting users", "0.1.1"),
+        ("major: bug affecting users", "0.2.0"),
+    ],
+)
+def test_bump_with_major_version_zero_with_plugin(
+    mocker: MockFixture, message: str, expected_tag: str
+):
+    create_file_and_commit(message)
+
+    testargs = ["cz", "--name", "cz_semver", "bump", "--yes", "--major-version-zero"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    tag_exists = git.tag_exist(expected_tag)
+    assert tag_exists is True

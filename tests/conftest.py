@@ -8,6 +8,8 @@ import pytest
 
 from commitizen import cmd, defaults
 from commitizen.config import BaseConfig
+from commitizen.cz.base import BaseCommitizen
+from commitizen.cz import registry
 from tests.utils import create_file_and_commit
 
 SIGNER = "GitHub Action"
@@ -122,3 +124,78 @@ def config():
 @pytest.fixture()
 def config_path() -> str:
     return os.path.join(os.getcwd(), "pyproject.toml")
+
+
+class SemverCommitizen(BaseCommitizen):
+    """A minimal cz rules used to test changelog and bump.
+
+    Samples:
+    ```
+    minor(users): add email to user
+    major: removed user profile
+    patch(deps): updated dependency for security
+    ```
+    """
+
+    bump_pattern = r"^(patch|minor|major)"
+    bump_map = {
+        "major": "MAJOR",
+        "minor": "MINOR",
+        "patch": "PATCH",
+    }
+    # bump_map_major_version_zero = {
+    #     "major": "MINOR",
+    #     "minor": "MINOR",
+    #     "patch": "PATCH",
+    # }
+    changelog_pattern = r"^(patch|minor|major)"
+    commit_parser = r"^(?P<change_type>patch|minor|major)(?:\((?P<scope>[^()\r\n]*)\)|\()?:?\s(?P<message>.+)"  # noqa
+    change_type_map = {
+        "major": "Breaking Changes",
+        "minor": "Features",
+        "patch": "Bugs",
+    }
+
+    def questions(self) -> list:
+        return [
+            {
+                "type": "list",
+                "name": "prefix",
+                "message": "Select the type of change you are committing",
+                "choices": [
+                    {
+                        "value": "patch",
+                        "name": "patch: a bug fix",
+                        "key": "p",
+                    },
+                    {
+                        "value": "minor",
+                        "name": "minor: a new feature, non-breaking",
+                        "key": "m",
+                    },
+                    {
+                        "value": "major",
+                        "name": "major: a breaking change",
+                        "key": "b",
+                    },
+                ],
+            },
+            {
+                "type": "input",
+                "name": "subject",
+                "message": (
+                    "Write a short and imperative summary of the code changes: (lower case and no period)\n"
+                ),
+            },
+        ]
+
+    def message(self, answers: dict) -> str:
+        prefix = answers["prefix"]
+        subject = answers.get("subject", "default message").trim()
+        return f"{prefix}: {subject}"
+
+
+@pytest.fixture()
+def use_cz_semver(mocker):
+    new_cz = {**registry, "cz_semver": SemverCommitizen}
+    mocker.patch.dict("commitizen.cz.registry", new_cz)
