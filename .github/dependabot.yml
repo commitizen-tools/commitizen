@@ -21,4 +21,5 @@ updates:
       - dependencies
     commit-message:
       prefix: "build(poetry)"
+      prefix-development:: "build(poetry-dev)"
       include: "scope"
