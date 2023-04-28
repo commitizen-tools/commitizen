@@ -63,9 +63,14 @@ data = {
                         "help": "show output to stdout, no commit, no modified files",
                     },
                     {
+                        "name": "--write-message-to-file",
+                        "metavar": "FILE_PATH",
+                        "help": "write message to file before commiting (can be combined with --dry-run)",
+                    },
+                    {
                         "name": ["-s", "--signoff"],
                         "action": "store_true",
-                        "help": "Sign off the commit",
+                        "help": "sign off the commit",
                     },
                 ],
             },

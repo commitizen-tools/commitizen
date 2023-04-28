@@ -14,6 +14,7 @@ from commitizen.exceptions import (
     NoAnswersError,
     NoCommitBackupError,
     NotAGitProjectError,
+    NotAllowed,
     NothingToCommitError,
 )
 from commitizen.git import smart_open
@@ -63,9 +64,17 @@ class Commit:
 
     def __call__(self):
         dry_run: bool = self.arguments.get("dry_run")
+        write_message_to_file = self.arguments.get("write_message_to_file")
 
         if git.is_staging_clean() and not dry_run:
             raise NothingToCommitError("No files added to staging!")
+
+        if write_message_to_file is not None:
+            if not isinstance(write_message_to_file, str):
+                raise NotAllowed(
+                    "Commit message file name is broken.\n"
+                    "Check the flag `--write-message-to-file` in the terminal"
+                )
 
         retry: bool = self.arguments.get("retry")
 
@@ -75,6 +84,10 @@ class Commit:
             m = self.prompt_commit_questions()
 
         out.info(f"\n{m}\n")
+
+        if write_message_to_file:
+            with smart_open(write_message_to_file, "w") as file:
+                file.write(m)
 
         if dry_run:
             raise DryRunExit()
