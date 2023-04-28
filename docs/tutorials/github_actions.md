@@ -29,7 +29,7 @@ jobs:
     name: "Bump version and create changelog with commitizen"
     steps:
       - name: Check out
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
           fetch-depth: 0
@@ -94,14 +94,21 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Set up Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: "3.x"
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-in-project: true
+          virtualenvs-create: true
       - name: Install dependencies
         run: |
-          python -m pip install --pre -U poetry
           poetry --version
           poetry install
       - name: Build and publish
@@ -112,7 +119,7 @@ jobs:
           ./scripts/publish
 ```
 
-Notice that we are calling a bash script in `./scripts/publish`, you should configure it with your tools (twine, poetry, etc.). Check [commitizen example](https://github.com/commitizen-tools/commitizen/blob/master/scripts/publish)
+Notice that we are using poetry, and we are calling a bash script in `./scripts/publish`. You should configure the action, and the publish with your tools (twine, poetry, etc.). Check [commitizen example](https://github.com/commitizen-tools/commitizen/blob/master/scripts/publish)
 You can also use [pypa/gh-action-pypi-publish](https://github.com/pypa/gh-action-pypi-publish) to publish your package.
 
 Push the changes and that's it.
