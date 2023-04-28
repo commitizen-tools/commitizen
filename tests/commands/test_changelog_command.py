@@ -1,3 +1,4 @@
+import itertools
 import sys
 from datetime import datetime
 
@@ -651,6 +652,36 @@ def test_changelog_incremental_with_release_candidate_version(
 
     testargs = ["cz", "changelog", "--incremental"]
 
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.parametrize(
+    "from_pre,to_pre", itertools.product(["alpha", "beta", "rc"], repeat=2)
+)
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2021-06-11")
+def test_changelog_incremental_with_prerelease_version_to_prerelease_version(
+    mocker: MockFixture, changelog_path, file_regression, from_pre, to_pre
+):
+    with open(changelog_path, "w") as f:
+        f.write(KEEP_A_CHANGELOG)
+    create_file_and_commit("irrelevant commit")
+    git.tag("1.0.0", annotated=True)
+
+    create_file_and_commit("feat: add new output")
+    create_file_and_commit("fix: output glitch")
+
+    testargs = ["cz", "bump", "--changelog", "--prerelease", from_pre, "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    testargs = ["cz", "bump", "--changelog", "--prerelease", to_pre, "--yes"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
