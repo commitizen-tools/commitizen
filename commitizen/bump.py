@@ -23,7 +23,6 @@ else:
 def find_increment(
     commits: List[GitCommit], regex: str, increments_map: Union[dict, OrderedDict]
 ) -> Optional[str]:
-
     if isinstance(increments_map, dict):
         increments_map = OrderedDict(increments_map)
 
@@ -35,8 +34,9 @@ def find_increment(
     for commit in commits:
         for message in commit.message.split("\n"):
             result = select_pattern.search(message)
+
             if result:
-                found_keyword = result.group(0)
+                found_keyword = result.group(1)
                 new_increment = None
                 for match_pattern in increments_map.keys():
                     if re.match(match_pattern, found_keyword):
@@ -44,7 +44,7 @@ def find_increment(
                         break
 
                 if increment == "MAJOR":
-                    continue
+                    break
                 elif increment == "MINOR" and new_increment == "MAJOR":
                     increment = new_increment
                 elif increment == "PATCH" or increment is None:
@@ -103,7 +103,6 @@ def semver_generator(current_version: str, increment: str = None) -> str:
     # so it doesn't matter the increment.
     # Example: 1.0.0a0 with PATCH/MINOR -> 1.0.0
     if not version.is_prerelease:
-
         if increment == MAJOR:
             increments_version[MAJOR] += 1
             increments_version[MINOR] = 0
