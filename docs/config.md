@@ -292,6 +292,13 @@ Commitizen provides some version providers for some well known formats:
 !!! note
 The `scm` provider is meant to be used with `setuptools-scm` or any packager `*-scm` plugin.
 
+An example in your `.cz.toml` would look like this:
+
+```toml
+[tool.commitizen]
+version_provider = "pep621"
+```
+
 ### Custom version provider
 
 You can add you own version provider by extending `VersionProvider` and exposing it on the `commitizen.provider` entrypoint.
