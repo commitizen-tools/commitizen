@@ -91,7 +91,7 @@ auto-bump:
     - git config --global user.email "${CI_EMAIL}" && git config --global user.name "${CI_USERNAME}"
     - 'exists=`git show-ref refs/heads/master` && if [ -n "$exists" ]; then git branch -D master; fi'
     - git checkout -b master
-    - cz bump # execute auto bump and push to master
+    - cz bump --yes # execute auto bump and push to master
     - git push origin master:$CI_COMMIT_REF_NAME
     - TAG=$(head -n 1 VERSION) # get the new software version and save into artifacts
     - echo "#!/bin/sh" >> variables
