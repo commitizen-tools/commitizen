@@ -1,4 +1,10 @@
 
+## v3.1.1 (2023-04-28)
+
+### Fix
+
+- bump changelog for prerelease without commits
+
 ## v3.1.0 (2023-04-25)
 
 ### Feat
