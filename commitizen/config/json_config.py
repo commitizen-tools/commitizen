@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 from typing import Union
+from commitizen.exceptions import InvalidConfigurationError
 
 from commitizen.git import smart_open
 
@@ -11,8 +12,8 @@ class JsonConfig(BaseConfig):
     def __init__(self, *, data: Union[bytes, str], path: Union[Path, str]):
         super(JsonConfig, self).__init__()
         self.is_empty_config = False
-        self._parse_setting(data)
         self.add_path(path)
+        self._parse_setting(data)
 
     def init_empty_config_content(self):
         with smart_open(self.path, "a") as json_file:
@@ -43,7 +44,11 @@ class JsonConfig(BaseConfig):
         }
         ```
         """
-        doc = json.loads(data)
+        try:
+            doc = json.loads(data)
+        except json.JSONDecodeError:
+            raise InvalidConfigurationError(f"Failed to parse {self.path}")
+
         try:
             self.settings.update(doc["commitizen"])
         except KeyError:
