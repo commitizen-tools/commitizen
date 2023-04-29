@@ -130,16 +130,15 @@ def test_commit_command_with_write_message_to_file_option(
     commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
     success_mock = mocker.patch("commitizen.out.success")
 
-    commands.Commit(config, {"write_message_to_file": str(tmp_file)})()
+    commands.Commit(config, {"write_message_to_file": tmp_file})()
     success_mock.assert_called_once()
     assert tmp_file.exists()
     assert tmp_file.read_text() == "feat: user created"
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-@pytest.mark.parametrize("message_file", [True, False, 0, 1])
 def test_commit_command_with_invalid_write_message_to_file_option(
-    config, message_file, mocker: MockFixture
+    config, tmp_path, mocker: MockFixture
 ):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
@@ -152,8 +151,7 @@ def test_commit_command_with_invalid_write_message_to_file_option(
     }
 
     with pytest.raises(NotAllowed):
-        print(isinstance(message_file, str))
-        commit_cmd = commands.Commit(config, {"write_message_to_file": message_file})
+        commit_cmd = commands.Commit(config, {"write_message_to_file": tmp_path})
         commit_cmd()
 
 
