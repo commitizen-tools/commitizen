@@ -11,7 +11,6 @@ from pytest_mock import MockFixture
 
 from commitizen import __file__ as commitizen_init
 from commitizen import cli, git
-from commitizen.changelog import DEFAULT_TEMPLATE
 from commitizen.commands.changelog import Changelog
 from commitizen.cz.base import BaseCommitizen
 from commitizen.exceptions import (
@@ -72,35 +71,33 @@ def test_changelog_with_different_cz(mocker: MockFixture, capsys, file_regressio
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_from_start(
-    mocker: MockFixture, capsys, changelog_path, file_regression
-):
+def test_changelog_from_start(mocker: MockFixture, capsys, plugin, file_regression):
     create_file_and_commit("feat: new file")
     create_file_and_commit("refactor: is in changelog")
     create_file_and_commit("Merge into master")
 
-    testargs = ["cz", "changelog"]
+    testargs = ["cz", "changelog"] + plugin.cli_args
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(plugin.changelog_file, "r") as f:
         out = f.read()
-    file_regression.check(out, extension=".md")
+    file_regression.check(out, extension=plugin.extension)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_replacing_unreleased_using_incremental(
-    mocker: MockFixture, capsys, changelog_path, file_regression
+    mocker: MockFixture, capsys, plugin, file_regression
 ):
     create_file_and_commit("feat: add new output")
     create_file_and_commit("fix: output glitch")
     create_file_and_commit("Merge into master")
 
-    testargs = ["cz", "changelog"]
+    testargs = ["cz", "changelog"] + plugin.cli_args
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    testargs = ["cz", "bump", "--yes"]
+    testargs = ["cz", "bump", "--yes"] + plugin.cli_args
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
@@ -108,16 +105,16 @@ def test_changelog_replacing_unreleased_using_incremental(
     create_file_and_commit("feat: add more stuff")
     create_file_and_commit("Merge into master")
 
-    testargs = ["cz", "changelog", "--incremental"]
+    testargs = ["cz", "changelog", "--incremental"] + plugin.cli_args
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(plugin.changelog_file, "r") as f:
         out = f.read().replace(
             datetime.strftime(datetime.now(), "%Y-%m-%d"), "2022-08-14"
         )
 
-    file_regression.check(out, extension=".md")
+    file_regression.check(out, extension=plugin.extension)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -1451,16 +1448,17 @@ def test_changelog_template_extras_precedance(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    changelog = project_root / "CHANGELOG.md"
+    changelog = project_root / mock_plugin.changelog_file
     assert changelog.read_text() == "from-command - from-config - from-plugin"
 
 
 def test_changelog_template_extra_quotes(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
+    mock_plugin: BaseCommitizen,
 ):
     project_root = Path(tmp_commitizen_project)
-    changelog_tpl = project_root / DEFAULT_TEMPLATE
+    changelog_tpl = project_root / mock_plugin.template
     changelog_tpl.write_text("{{first}} - {{second}} - {{third}}")
 
     create_file_and_commit("feat: new file")
@@ -1478,17 +1476,18 @@ def test_changelog_template_extra_quotes(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    changelog = project_root / "CHANGELOG.md"
+    changelog = project_root / mock_plugin.changelog_file
     assert changelog.read_text() == "no-quote - single quotes - double quotes"
 
 
 def test_export_changelog_template_from_default(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
+    mock_plugin: BaseCommitizen,
 ):
     project_root = Path(tmp_commitizen_project)
     target = project_root / "changelog.jinja"
-    src = Path(commitizen_init).parent / "templates" / DEFAULT_TEMPLATE
+    src = Path(commitizen_init).parent / "templates" / mock_plugin.template
 
     args = ["cz", "changelog", "--export-template", str(target)]
 
@@ -1507,12 +1506,10 @@ def test_export_changelog_template_from_plugin(
 ):
     project_root = Path(tmp_commitizen_project)
     target = project_root / "changelog.jinja"
-    filename = "template.jinja"
-    src = tmp_path / filename
+    src = tmp_path / mock_plugin.template
     tpl = "I am a custom template"
     src.write_text(tpl)
     mock_plugin.template_loader = FileSystemLoader(tmp_path)
-    mock_plugin.template = filename
 
     args = ["cz", "changelog", "--export-template", str(target)]
 

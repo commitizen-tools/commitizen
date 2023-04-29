@@ -79,9 +79,15 @@ class Bump:
         self.scheme = get_version_scheme(
             self.config, arguments["version_scheme"] or deprecated_version_type
         )
-        self.template = arguments["template"] or self.config.settings.get("template")
-        self.file_name = arguments["file_name"] or self.config.settings.get(
-            "changelog_file"
+        self.template = (
+            arguments["template"]
+            or self.config.settings.get("template")
+            or self.cz.template
+        )
+        self.file_name = (
+            arguments["file_name"]
+            or self.config.settings.get("changelog_file")
+            or self.cz.changelog_file
         )
         self.extras = arguments["extras"]
 
@@ -268,6 +274,8 @@ class Bump:
                     self.config,
                     {
                         "unreleased_version": new_tag_version,
+                        "template": self.template,
+                        "extras": self.extras,
                         "incremental": True,
                         "dry_run": True,
                     },

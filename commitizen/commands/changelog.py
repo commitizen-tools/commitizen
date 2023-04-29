@@ -35,8 +35,10 @@ class Changelog:
         self.start_rev = args.get("start_rev") or self.config.settings.get(
             "changelog_start_rev"
         )
-        self.file_name = args.get("file_name") or self.config.settings.get(
-            "changelog_file"
+        self.file_name = (
+            args.get("file_name")
+            or self.config.settings.get("changelog_file")
+            or self.cz.changelog_file
         )
         self.incremental = args["incremental"] or self.config.settings.get(
             "changelog_incremental"
@@ -102,7 +104,7 @@ class Changelog:
         return start_rev
 
     def write_changelog(
-        self, changelog_out: str, lines: list[str], changelog_meta: dict
+        self, changelog_out: str, lines: list[str], changelog_meta: changelog.Metadata
     ):
         if not isinstance(self.file_name, str):
             raise NotAllowed(
@@ -135,11 +137,11 @@ class Changelog:
         changelog_pattern = self.cz.changelog_pattern
         start_rev = self.start_rev
         unreleased_version = self.unreleased_version
-        changelog_meta: dict = {}
+        changelog_meta = changelog.Metadata()
         change_type_map: dict | None = self.change_type_map
-        changelog_message_builder_hook: None | (
-            Callable
-        ) = self.cz.changelog_message_builder_hook
+        changelog_message_builder_hook: Callable | None = (
+            self.cz.changelog_message_builder_hook
+        )
         merge_prerelease = self.merge_prerelease
 
         if self.export_template_to:
@@ -160,15 +162,10 @@ class Changelog:
 
         end_rev = ""
         if self.incremental:
-            changelog_meta = changelog.get_metadata(
-                self.file_name,
-                self.scheme,
-                encoding=self.encoding,
-            )
-            latest_version = changelog_meta.get("latest_version")
-            if latest_version:
+            changelog_meta = self.cz.get_metadata(self.file_name)
+            if changelog_meta.latest_version:
                 latest_tag_version: str = bump.normalize_tag(
-                    latest_version,
+                    changelog_meta.latest_version,
                     tag_format=self.tag_format,
                     scheme=self.scheme,
                 )

@@ -1142,11 +1142,13 @@ def test_order_changelog_tree_raises():
 
 def test_render_changelog(gitcommits, tags, changelog_content):
     parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    template = f"{ConventionalCommitsCz.changelog_file}.{defaults.TEMPLATE_EXTENSION}"
     tree = changelog.generate_tree_from_commits(
         gitcommits, tags, parser, changelog_pattern
     )
-    result = changelog.render_changelog(tree)
+    result = changelog.render_changelog(tree, loader, template)
     assert result == changelog_content
 
 
@@ -1154,38 +1156,41 @@ def test_render_changelog_from_default_plugin_values(
     gitcommits, tags, changelog_content
 ):
     parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
     loader = ConventionalCommitsCz.template_loader
-    template = ConventionalCommitsCz.template
+    template = f"{ConventionalCommitsCz.changelog_file}.{defaults.TEMPLATE_EXTENSION}"
     tree = changelog.generate_tree_from_commits(
         gitcommits, tags, parser, changelog_pattern
     )
-    result = changelog.render_changelog(tree, loader=loader, template=template)
+    result = changelog.render_changelog(tree, loader, template)
     assert result == changelog_content
 
 
 def test_render_changelog_override_loader(gitcommits, tags, tmp_path: Path):
     loader = FileSystemLoader(tmp_path)
+    template = f"{ConventionalCommitsCz.changelog_file}.{defaults.TEMPLATE_EXTENSION}"
     tpl = "loader overridden"
-    (tmp_path / changelog.DEFAULT_TEMPLATE).write_text(tpl)
+    (tmp_path / template).write_text(tpl)
     parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
     tree = changelog.generate_tree_from_commits(
         gitcommits, tags, parser, changelog_pattern
     )
-    result = changelog.render_changelog(tree, loader=loader)
+    result = changelog.render_changelog(tree, loader, template)
     assert result == tpl
 
 
 def test_render_changelog_override_template_from_cwd(gitcommits, tags, chdir: Path):
     tpl = "overridden from cwd"
-    (chdir / changelog.DEFAULT_TEMPLATE).write_text(tpl)
+    template = f"{ConventionalCommitsCz.changelog_file}.{defaults.TEMPLATE_EXTENSION}"
+    (chdir / template).write_text(tpl)
     parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
     tree = changelog.generate_tree_from_commits(
         gitcommits, tags, parser, changelog_pattern
     )
-    result = changelog.render_changelog(tree)
+    result = changelog.render_changelog(tree, loader, template)
     assert result == tpl
 
 
@@ -1196,11 +1201,12 @@ def test_render_changelog_override_template_from_cwd_with_custom_name(
     tpl_name = "tpl.j2"
     (chdir / tpl_name).write_text(tpl)
     parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
     tree = changelog.generate_tree_from_commits(
         gitcommits, tags, parser, changelog_pattern
     )
-    result = changelog.render_changelog(tree, template=tpl_name)
+    result = changelog.render_changelog(tree, loader, tpl_name)
     assert result == tpl
 
 
@@ -1216,7 +1222,7 @@ def test_render_changelog_override_loader_and_template(
     tree = changelog.generate_tree_from_commits(
         gitcommits, tags, parser, changelog_pattern
     )
-    result = changelog.render_changelog(tree, loader=loader, template=tpl_name)
+    result = changelog.render_changelog(tree, loader, tpl_name)
     assert result == tpl
 
 
@@ -1225,24 +1231,24 @@ def test_render_changelog_support_arbitrary_kwargs(gitcommits, tags, tmp_path: P
     tpl_name = "tpl.j2"
     (tmp_path / tpl_name).write_text("{{ key }}")
     parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
     tree = changelog.generate_tree_from_commits(
         gitcommits, tags, parser, changelog_pattern
     )
-    result = changelog.render_changelog(
-        tree, loader=loader, template=tpl_name, key="value"
-    )
+    result = changelog.render_changelog(tree, loader, tpl_name, key="value")
     assert result == "value"
 
 
 def test_render_changelog_unreleased(gitcommits):
     some_commits = gitcommits[:7]
     parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    template = f"{ConventionalCommitsCz.changelog_file}.{defaults.TEMPLATE_EXTENSION}"
     tree = changelog.generate_tree_from_commits(
         some_commits, [], parser, changelog_pattern
     )
-    result = changelog.render_changelog(tree)
+    result = changelog.render_changelog(tree, loader, template)
     assert "Unreleased" in result
 
 
@@ -1253,11 +1259,13 @@ def test_render_changelog_tag_and_unreleased(gitcommits, tags):
     ]
 
     parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    template = f"{ConventionalCommitsCz.changelog_file}.{defaults.TEMPLATE_EXTENSION}"
     tree = changelog.generate_tree_from_commits(
         some_commits, single_tag, parser, changelog_pattern
     )
-    result = changelog.render_changelog(tree)
+    result = changelog.render_changelog(tree, loader, template)
 
     assert "Unreleased" in result
     assert "## v1.1.1" in result
@@ -1267,11 +1275,13 @@ def test_render_changelog_with_change_type(gitcommits, tags):
     new_title = ":some-emoji: feature"
     change_type_map = {"feat": new_title}
     parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    template = f"{ConventionalCommitsCz.changelog_file}.{defaults.TEMPLATE_EXTENSION}"
     tree = changelog.generate_tree_from_commits(
         gitcommits, tags, parser, changelog_pattern, change_type_map=change_type_map
     )
-    result = changelog.render_changelog(tree)
+    result = changelog.render_changelog(tree, loader, template)
     assert new_title in result
 
 
@@ -1283,7 +1293,9 @@ def test_render_changelog_with_changelog_message_builder_hook(gitcommits, tags):
         return message
 
     parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    template = f"{ConventionalCommitsCz.changelog_file}.{defaults.TEMPLATE_EXTENSION}"
     tree = changelog.generate_tree_from_commits(
         gitcommits,
         tags,
@@ -1291,7 +1303,7 @@ def test_render_changelog_with_changelog_message_builder_hook(gitcommits, tags):
         changelog_pattern,
         changelog_message_builder_hook=changelog_message_builder_hook,
     )
-    result = changelog.render_changelog(tree)
+    result = changelog.render_changelog(tree, loader, template)
 
     assert "[link](github.com/232323232) Commitizen author@cz.dev" in result
 

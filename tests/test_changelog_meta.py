@@ -1,8 +1,13 @@
+from __future__ import annotations
+
 import os
+from typing import TYPE_CHECKING
 
 import pytest
 
-from commitizen import changelog
+
+if TYPE_CHECKING:
+    from tests.conftest import MockPlugin
 
 CHANGELOG_A = """
 # Changelog
@@ -107,8 +112,10 @@ VERSIONS_EXAMPLES = [
 
 
 @pytest.mark.parametrize("line_from_changelog,output_version", VERSIONS_EXAMPLES)
-def test_changelog_detect_version(line_from_changelog, output_version):
-    version = changelog.parse_version_from_markdown(line_from_changelog)
+def test_changelog_detect_version(
+    line_from_changelog, output_version, mock_plugin: MockPlugin
+):
+    version = mock_plugin.parse_version_from_changelog(line_from_changelog)
     assert version == output_version
 
 
@@ -120,14 +127,16 @@ TITLES_EXAMPLES = [
 
 
 @pytest.mark.parametrize("line_from_changelog,output_title", TITLES_EXAMPLES)
-def test_parse_title_type_of_line(line_from_changelog, output_title):
-    title = changelog.parse_title_type_of_line(line_from_changelog)
+def test_parse_title_type_of_line(
+    line_from_changelog, output_title, mock_plugin: MockPlugin
+):
+    title = mock_plugin.parse_title_type_of_line(line_from_changelog)
     assert title == output_title
 
 
-def test_get_metadata_from_a(changelog_a_file):
-    meta = changelog.get_metadata(changelog_a_file, encoding="utf-8")
-    assert meta == {
+def test_get_metadata_from_a(changelog_a_file, mock_plugin: MockPlugin):
+    meta = mock_plugin.get_metadata(changelog_a_file)
+    assert meta.__dict__ == {
         "latest_version": "1.0.0",
         "latest_version_position": 10,
         "unreleased_end": 10,
@@ -135,9 +144,9 @@ def test_get_metadata_from_a(changelog_a_file):
     }
 
 
-def test_get_metadata_from_b(changelog_b_file):
-    meta = changelog.get_metadata(changelog_b_file, encoding="utf-8")
-    assert meta == {
+def test_get_metadata_from_b(changelog_b_file, mock_plugin: MockPlugin):
+    meta = mock_plugin.get_metadata(changelog_b_file)
+    assert meta.__dict__ == {
         "latest_version": "1.2.0",
         "latest_version_position": 3,
         "unreleased_end": 3,
@@ -145,9 +154,9 @@ def test_get_metadata_from_b(changelog_b_file):
     }
 
 
-def test_get_metadata_from_c(changelog_c_file):
-    meta = changelog.get_metadata(changelog_c_file, encoding="utf-8")
-    assert meta == {
+def test_get_metadata_from_c(changelog_c_file, mock_plugin: MockPlugin):
+    meta = mock_plugin.get_metadata(changelog_c_file)
+    assert meta.__dict__ == {
         "latest_version": "1.0.0",
         "latest_version_position": 3,
         "unreleased_end": 3,
@@ -155,9 +164,9 @@ def test_get_metadata_from_c(changelog_c_file):
     }
 
 
-def test_get_metadata_from_d(changelog_d_file):
-    meta = changelog.get_metadata(changelog_d_file, encoding="utf-8")
-    assert meta == {
+def test_get_metadata_from_d(changelog_d_file, mock_plugin: MockPlugin):
+    meta = mock_plugin.get_metadata(changelog_d_file)
+    assert meta.__dict__ == {
         "latest_version": None,
         "latest_version_position": None,
         "unreleased_end": 2,

@@ -12,7 +12,6 @@ from pytest_mock import MockFixture
 
 import commitizen.commands.bump as bump
 from commitizen import cli, cmd, git, hooks
-from commitizen.changelog import DEFAULT_TEMPLATE
 from commitizen.cz.base import BaseCommitizen
 from commitizen.exceptions import (
     BumpTagFailedError,
@@ -1106,7 +1105,7 @@ def test_bump_command_version_scheme_priority_over_version_type(mocker: MockFixt
 
 
 @pytest.mark.parametrize(
-    "arg,cfg,expected",
+    "arg, cfg, expected",
     (
         pytest.param("", "", "default", id="default"),
         pytest.param("", "changelog.cfg", "from config", id="from-config"),
@@ -1127,7 +1126,7 @@ def test_bump_template_option_precedance(
     cfg_template = project_root / "changelog.cfg"
     cmd_template = project_root / "changelog.cmd"
     default_template = project_root / mock_plugin.template
-    changelog = project_root / "CHANGELOG.md"
+    changelog = project_root / mock_plugin.changelog_file
 
     cfg_template.write_text("from config")
     cmd_template.write_text("from cmd")
@@ -1163,7 +1162,7 @@ def test_bump_template_extras_precedance(
     mock_plugin: BaseCommitizen,
 ):
     project_root = Path(tmp_commitizen_project)
-    changelog_tpl = project_root / DEFAULT_TEMPLATE
+    changelog_tpl = project_root / mock_plugin.template
     changelog_tpl.write_text("{{first}} - {{second}} - {{third}}")
 
     mock_plugin.template_extras = dict(
@@ -1197,16 +1196,17 @@ def test_bump_template_extras_precedance(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    changelog = project_root / "CHANGELOG.md"
+    changelog = project_root / mock_plugin.changelog_file
     assert changelog.read_text() == "from-command - from-config - from-plugin"
 
 
 def test_bump_template_extra_quotes(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
+    mock_plugin: BaseCommitizen,
 ):
     project_root = Path(tmp_commitizen_project)
-    changelog_tpl = project_root / DEFAULT_TEMPLATE
+    changelog_tpl = project_root / mock_plugin.template
     changelog_tpl.write_text("{{first}} - {{second}} - {{third}}")
 
     create_file_and_commit("feat: new file")
@@ -1222,9 +1222,10 @@ def test_bump_template_extra_quotes(
         "second='single quotes'",
         "-e",
         'third="double quotes"',
+        "0.1.1",
     ]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    changelog = project_root / "CHANGELOG.md"
+    changelog = project_root / mock_plugin.changelog_file
     assert changelog.read_text() == "no-quote - single quotes - double quotes"

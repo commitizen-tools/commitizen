@@ -1,4 +1,6 @@
 import os
+from pathlib import Path
+from typing import NamedTuple
 
 import pytest
 
@@ -41,6 +43,47 @@ def config_customize():
     }"""
     _config = JsonConfig(data=json_string, path="not_exist.json")
     return _config
+
+
+class Plugin(NamedTuple):
+    name: str
+    extension: str
+
+    @property
+    def changelog_file(self) -> str:
+        return f"CHANGELOG{self.extension}"
+
+    @property
+    def template(self) -> str:
+        return f"CHANGELOG{self.extension}.j2"
+
+    @property
+    def cli_args(self):
+        return ["--file-name", self.changelog_file, "--template", self.template]
+
+
+TESTED_PLUGINS = {
+    "Markdown": Plugin("cz_conventional_commits", ".md"),
+    "Textile": Plugin("conventional_commits_textile", ".textile"),
+    "AsciiDoc": Plugin("conventional_commits_asciidoc", ".adoc"),
+    "RestructuredText": Plugin("conventional_commits_restructuredtext", ".rst"),
+}
+
+
+@pytest.fixture(
+    params=[pytest.param(plugin, id=id) for id, plugin in TESTED_PLUGINS.items()]
+)
+def plugin(
+    config: BaseConfig,
+    request: pytest.FixtureRequest,
+    tmp_commitizen_project: Path,
+) -> Plugin:
+    plugin: Plugin = request.param
+    config.settings["name"] = plugin.name
+    config.settings["changelog_file"] = plugin.changelog_file
+    with (tmp_commitizen_project / "pyproject.toml").open("a") as cfg:
+        cfg.write(f'name="{plugin.name}"')
+    return plugin
 
 
 @pytest.fixture()

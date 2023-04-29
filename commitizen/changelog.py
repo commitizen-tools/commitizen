@@ -26,38 +26,44 @@ Extra:
 """
 from __future__ import annotations
 
-import os
 import re
 from collections import OrderedDict, defaultdict
+from dataclasses import dataclass
 from datetime import date
-from typing import TYPE_CHECKING, Callable, Iterable, Type, cast
+from typing import TYPE_CHECKING, Callable, Iterable, Type
 
 from jinja2 import (
     BaseLoader,
     ChoiceLoader,
     Environment,
     FileSystemLoader,
-    PackageLoader,
     Template,
 )
 from packaging.version import InvalidVersion
 
 from commitizen import out
 from commitizen.bump import normalize_tag
-from commitizen.defaults import encoding
 from commitizen.exceptions import InvalidConfigurationError, NoCommitsFoundError
 from commitizen.git import GitCommit, GitTag
 from commitizen.version_schemes import (
     DEFAULT_SCHEME,
     BaseVersion,
-    InvalidVersion,
-    Pep440,
 )
 
 if TYPE_CHECKING:
     from commitizen.version_schemes import VersionScheme
 
-DEFAULT_TEMPLATE = "CHANGELOG.md.j2"
+
+@dataclass
+class Metadata:
+    """
+    Metadata extracted from the changelog pproduced by a plugin
+    """
+
+    unreleased_start: int | None = None
+    unreleased_end: int | None = None
+    latest_version: str | None = None
+    latest_version_position: int | None = None
 
 
 def get_commit_tag(commit: GitCommit, tags: list[GitTag]) -> GitTag | None:
@@ -197,100 +203,31 @@ def order_changelog_tree(tree: Iterable, change_type_order: list[str]) -> Iterab
     return sorted_tree
 
 
-def get_changelog_template(
-    loader: BaseLoader | None = None, template: str | None = None
-) -> Template:
+def get_changelog_template(loader: BaseLoader, template: str) -> Template:
     loader = ChoiceLoader(
         [
             FileSystemLoader("."),
-            loader or PackageLoader("commitizen", "templates"),
+            loader,
         ]
     )
     env = Environment(loader=loader, trim_blocks=True)
-    return env.get_template(template or DEFAULT_TEMPLATE)
+    return env.get_template(template)
 
 
 def render_changelog(
     tree: Iterable,
-    loader: BaseLoader | None = None,
-    template: str | None = None,
+    loader: BaseLoader,
+    template: str,
     **kwargs,
 ) -> str:
-    jinja_template = get_changelog_template(loader, template or DEFAULT_TEMPLATE)
+    jinja_template = get_changelog_template(loader, template)
     changelog: str = jinja_template.render(tree=tree, **kwargs)
     return changelog
 
 
-def parse_version_from_markdown(
-    value: str, scheme: VersionScheme = Pep440
-) -> str | None:
-    if not value.startswith("#"):
-        return None
-    m = scheme.parser.search(value)
-    if not m:
-        return None
-    return cast(str, m.group("version"))
-
-
-def parse_title_type_of_line(value: str) -> str | None:
-    md_title_parser = r"^(?P<title>#+)"
-    m = re.search(md_title_parser, value)
-    if not m:
-        return None
-    return m.groupdict().get("title")
-
-
-def get_metadata(
-    filepath: str, scheme: VersionScheme = Pep440, encoding: str = encoding
-) -> dict:
-    unreleased_start: int | None = None
-    unreleased_end: int | None = None
-    unreleased_title: str | None = None
-    latest_version: str | None = None
-    latest_version_position: int | None = None
-    if not os.path.isfile(filepath):
-        return {
-            "unreleased_start": None,
-            "unreleased_end": None,
-            "latest_version": None,
-            "latest_version_position": None,
-        }
-
-    with open(filepath, "r", encoding=encoding) as changelog_file:
-        for index, line in enumerate(changelog_file):
-            line = line.strip().lower()
-
-            unreleased: str | None = None
-            if "unreleased" in line:
-                unreleased = parse_title_type_of_line(line)
-            # Try to find beginning and end lines of the unreleased block
-            if unreleased:
-                unreleased_start = index
-                unreleased_title = unreleased
-                continue
-            elif (
-                isinstance(unreleased_title, str)
-                and parse_title_type_of_line(line) == unreleased_title
-            ):
-                unreleased_end = index
-
-            # Try to find the latest release done
-            version = parse_version_from_markdown(line, scheme)
-            if version:
-                latest_version = version
-                latest_version_position = index
-                break  # there's no need for more info
-        if unreleased_start is not None and unreleased_end is None:
-            unreleased_end = index
-    return {
-        "unreleased_start": unreleased_start,
-        "unreleased_end": unreleased_end,
-        "latest_version": latest_version,
-        "latest_version_position": latest_version_position,
-    }
-
-
-def incremental_build(new_content: str, lines: list[str], metadata: dict) -> list[str]:
+def incremental_build(
+    new_content: str, lines: list[str], metadata: Metadata
+) -> list[str]:
     """Takes the original lines and updates with new_content.
 
     The metadata governs how to remove the old unreleased section and where to place the
@@ -304,9 +241,9 @@ def incremental_build(new_content: str, lines: list[str], metadata: dict) -> lis
     Returns:
         Updated lines
     """
-    unreleased_start = metadata.get("unreleased_start")
-    unreleased_end = metadata.get("unreleased_end")
-    latest_version_position = metadata.get("latest_version_position")
+    unreleased_start = metadata.unreleased_start
+    unreleased_end = metadata.unreleased_end
+    latest_version_position = metadata.latest_version_position
     skip = False
     output_lines: list[str] = []
     for index, line in enumerate(lines):
