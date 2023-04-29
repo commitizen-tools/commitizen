@@ -57,6 +57,7 @@ _settings: dict[str, Any] = {
     "version_files": ["commitizen/__version__.py", "pyproject.toml"],
     "style": [["pointer", "reverse"], ["question", "underline"]],
     "changelog_file": "CHANGELOG.md",
+    "changelog_format": None,
     "changelog_incremental": False,
     "changelog_start_rev": None,
     "changelog_merge_prerelease": False,
@@ -84,6 +85,7 @@ _new_settings: dict[str, Any] = {
     "version_files": ["commitizen/__version__.py", "pyproject.toml"],
     "style": [["pointer", "reverse"], ["question", "underline"]],
     "changelog_file": "CHANGELOG.md",
+    "changelog_format": None,
     "changelog_incremental": False,
     "changelog_start_rev": None,
     "changelog_merge_prerelease": False,
@@ -97,16 +99,6 @@ _new_settings: dict[str, Any] = {
     "always_signoff": False,
     "template": None,
     "extras": {},
-}
-
-_read_settings = {
-    "name": "cz_jira",
-    "version": "1.0.0",
-    "version_files": ["commitizen/__version__.py", "pyproject.toml"],
-    "style": [["pointer", "reverse"], ["question", "underline"]],
-    "changelog_file": "CHANGELOG.md",
-    "pre_bump_hooks": ["scripts/generate_documentation.sh"],
-    "post_bump_hooks": ["scripts/slack_notification.sh"],
 }
 
 

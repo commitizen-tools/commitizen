@@ -104,6 +104,14 @@ Default: `CHANGELOG.md`
 
 Filename of exported changelog
 
+### `changelog_format`
+
+Type: `str`
+
+Default: None
+
+Format used to parse and generate the changelog, If not specified, guessed from [`changelog_file`](#changelog_file).
+
 ### `changelog_incremental`
 
 Type: `bool`

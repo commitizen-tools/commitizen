@@ -33,6 +33,7 @@ class ExitCode(enum.IntEnum):
     RUN_HOOK_FAILED = 26
     VERSION_PROVIDER_UNKNOWN = 27
     VERSION_SCHEME_UNKNOWN = 28
+    CHANGELOG_FORMAT_UNKNOWN = 29
 
 
 class CommitizenException(Exception):
@@ -183,3 +184,8 @@ class VersionProviderUnknown(CommitizenException):
 
 class VersionSchemeUnknown(CommitizenException):
     exit_code = ExitCode.VERSION_SCHEME_UNKNOWN
+
+
+class ChangelogFormatUnknown(CommitizenException):
+    exit_code = ExitCode.CHANGELOG_FORMAT_UNKNOWN
+    message = "Unknown changelog format identifier"
