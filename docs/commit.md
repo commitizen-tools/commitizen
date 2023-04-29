@@ -8,7 +8,8 @@ A commit can be signed off using `cz commit --signoff` or the shortcut `cz commi
 
 You can run `cz commit --write-message-to-file COMMIT_MSG_FILE` to additionally save the
 generated message to a file. This can be combined with the `--dry-run` flag to only
-write the message to a file and not modify files and create a commit.
+write the message to a file and not modify files and create a commit. A possible use
+case for this is to [automatically prepare a commit message](./tutorials/auto_prepare_commit_message.md).
 
 !!! note
     To maintain platform compatibility, the `commit` command disable ANSI escaping in its output.
