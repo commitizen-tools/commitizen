@@ -82,6 +82,12 @@ cz_conventional_commits = "commitizen.cz.conventional_commits:ConventionalCommit
 cz_jira = "commitizen.cz.jira:JiraSmartCz"
 cz_customize = "commitizen.cz.customize:CustomizeCommitsCz"
 
+[tool.poetry.plugins."commitizen.changelog_format"]
+markdown = "commitizen.changelog_formats.markdown:Markdown"
+asciidoc = "commitizen.changelog_formats.asciidoc:AsciiDoc"
+textile = "commitizen.changelog_formats.textile:Textile"
+restructuredtext = "commitizen.changelog_formats.restructuredtext:RestructuredText"
+
 [tool.poetry.plugins."commitizen.provider"]
 cargo = "commitizen.providers:CargoProvider"
 commitizen = "commitizen.providers:CommitizenProvider"

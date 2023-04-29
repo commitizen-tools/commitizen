@@ -40,6 +40,7 @@ class Settings(TypedDict, total=False):
     allow_abort: bool
     allowed_prefixes: list[str]
     changelog_file: str
+    changelog_format: str | None
     changelog_incremental: bool
     changelog_start_rev: str | None
     changelog_merge_prerelease: bool
@@ -52,6 +53,7 @@ class Settings(TypedDict, total=False):
     post_bump_hooks: list[str] | None
     prerelease_offset: int
     encoding: str
+    always_signoff: bool
     template: str | None
     extras: dict[str, Any]
 
@@ -84,6 +86,7 @@ DEFAULT_SETTINGS: Settings = {
         "squash!",
     ],
     "changelog_file": "CHANGELOG.md",
+    "changelog_format": None,  # default guessed from changelog_file
     "changelog_incremental": False,
     "changelog_start_rev": None,
     "changelog_merge_prerelease": False,
@@ -95,13 +98,15 @@ DEFAULT_SETTINGS: Settings = {
     "prerelease_offset": 0,
     "encoding": encoding,
     "always_signoff": False,
-    "template": None,
+    "template": None,  # default provided by plugin
     "extras": {},
 }
 
 MAJOR = "MAJOR"
 MINOR = "MINOR"
 PATCH = "PATCH"
+
+CHANGELOG_FORMAT = "markdown"
 
 bump_pattern = r"^((BREAKING[\-\ ]CHANGE|\w+)(\(.+\))?!?):"
 bump_map = OrderedDict(
@@ -128,4 +133,3 @@ change_type_order = ["BREAKING CHANGE", "Feat", "Fix", "Refactor", "Perf"]
 bump_message = "bump: version $current_version → $new_version"
 
 commit_parser = r"^((?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?|\w+!):\s(?P<message>.*)?"  # noqa
-version_parser = r"(?P<version>([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?(\w+)?)"

@@ -13,6 +13,10 @@ from commitizen import cmd, defaults
 from commitizen.config import BaseConfig
 from commitizen.cz import registry
 from commitizen.cz.base import BaseCommitizen
+from commitizen.changelog_formats import (
+    ChangelogFormat,
+    get_changelog_format,
+)
 from tests.utils import create_file_and_commit
 
 SIGNER = "GitHub Action"
@@ -225,3 +229,27 @@ def mock_plugin(mocker: MockerFixture, config: BaseConfig) -> BaseCommitizen:
     mock = MockPlugin(config)
     mocker.patch("commitizen.factory.commiter_factory", return_value=mock)
     return mock
+
+
+SUPPORTED_FORMATS = ("markdown", "textile", "asciidoc", "restructuredtext")
+
+
+@pytest.fixture(params=SUPPORTED_FORMATS)
+def changelog_format(
+    config: BaseConfig, request: pytest.FixtureRequest
+) -> ChangelogFormat:
+    """For tests relying on formats specifics"""
+    format: str = request.param
+    config.settings["changelog_format"] = format
+    if "tmp_commitizen_project" in request.fixturenames:
+        tmp_commitizen_project = request.getfixturevalue("tmp_commitizen_project")
+        pyproject = tmp_commitizen_project / "pyproject.toml"
+        pyproject.write(f"{pyproject.read()}\n" f'changelog_format = "{format}"\n')
+    return get_changelog_format(config)
+
+
+@pytest.fixture
+def any_changelog_format(config: BaseConfig) -> ChangelogFormat:
+    """For test not relying on formats specifics, use the default"""
+    config.settings["changelog_format"] = defaults.CHANGELOG_FORMAT
+    return get_changelog_format(config)
