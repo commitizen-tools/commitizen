@@ -69,12 +69,8 @@ class Commit:
         if git.is_staging_clean() and not dry_run:
             raise NothingToCommitError("No files added to staging!")
 
-        if write_message_to_file is not None:
-            if not isinstance(write_message_to_file, str):
-                raise NotAllowed(
-                    "Commit message file name is broken.\n"
-                    "Check the flag `--write-message-to-file` in the terminal"
-                )
+        if write_message_to_file is not None and write_message_to_file.is_dir():
+            raise NotAllowed(f"{write_message_to_file} is a directory")
 
         retry: bool = self.arguments.get("retry")
 

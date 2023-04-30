@@ -1,6 +1,7 @@
 import argparse
 import logging
 import sys
+from pathlib import Path
 from functools import partial
 from types import TracebackType
 from typing import List
@@ -64,6 +65,7 @@ data = {
                     },
                     {
                         "name": "--write-message-to-file",
+                        "type": Path,
                         "metavar": "FILE_PATH",
                         "help": "write message to file before commiting (can be combined with --dry-run)",
                     },
