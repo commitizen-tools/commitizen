@@ -1,6 +1,7 @@
 import argparse
 import logging
 import sys
+from pathlib import Path
 from functools import partial
 from types import TracebackType
 from typing import List
@@ -63,9 +64,15 @@ data = {
                         "help": "show output to stdout, no commit, no modified files",
                     },
                     {
+                        "name": "--write-message-to-file",
+                        "type": Path,
+                        "metavar": "FILE_PATH",
+                        "help": "write message to file before commiting (can be combined with --dry-run)",
+                    },
+                    {
                         "name": ["-s", "--signoff"],
                         "action": "store_true",
-                        "help": "Sign off the commit",
+                        "help": "sign off the commit",
                     },
                 ],
             },

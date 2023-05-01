@@ -12,6 +12,7 @@ from commitizen.exceptions import (
     NoAnswersError,
     NoCommitBackupError,
     NotAGitProjectError,
+    NotAllowed,
     NothingToCommitError,
 )
 
@@ -106,6 +107,51 @@ def test_commit_command_with_dry_run_option(config, mocker: MockFixture):
 
     with pytest.raises(DryRunExit):
         commit_cmd = commands.Commit(config, {"dry_run": True})
+        commit_cmd()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_with_write_message_to_file_option(
+    config, tmp_path, mocker: MockFixture
+):
+    tmp_file = tmp_path / "message"
+
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "",
+        "footer": "",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
+    success_mock = mocker.patch("commitizen.out.success")
+
+    commands.Commit(config, {"write_message_to_file": tmp_file})()
+    success_mock.assert_called_once()
+    assert tmp_file.exists()
+    assert tmp_file.read_text() == "feat: user created"
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_with_invalid_write_message_to_file_option(
+    config, tmp_path, mocker: MockFixture
+):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "",
+        "footer": "",
+    }
+
+    with pytest.raises(NotAllowed):
+        commit_cmd = commands.Commit(config, {"write_message_to_file": tmp_path})
         commit_cmd()
 
 
