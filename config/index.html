@@ -1330,6 +1330,10 @@ But you can use any <code>commitizen.provider</code> entrypoint as value for <co
 <p class="admonition-title">Note</p>
 </div>
 <p>The <code>scm</code> provider is meant to be used with <code>setuptools-scm</code> or any packager <code>*-scm</code> plugin.</p>
+<p>An example in your <code>.cz.toml</code> would look like this:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;pep621&quot;</span>
+</code></pre></div>
 <h3 id="custom-version-provider">Custom version provider<a class="headerlink" href="#custom-version-provider" title="Permanent link">&para;</a></h3>
 <p>You can add you own version provider by extending <code>VersionProvider</code> and exposing it on the <code>commitizen.provider</code> entrypoint.</p>
 <p>Here a quick example of a <code>my-provider</code> provider reading and writing version in a <code>VERSION</code> file.</p>
