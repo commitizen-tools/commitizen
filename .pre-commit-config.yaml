@@ -20,7 +20,7 @@ repos:
       - id: no-commit-to-branch
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.1.1 # automatically updated by Commitizen
+    rev: v3.2.0 # automatically updated by Commitizen
     hooks:
       - id: commitizen
       - id: commitizen-branch

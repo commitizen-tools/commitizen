@@ -1,4 +1,24 @@
 
+## v3.2.0 (2023-05-01)
+
+### Feat
+
+- **hooks**: add prepare-commit-msg and post-commit hooks
+- **commit**: add --write-message-to-file option
+
+### Fix
+
+- **bump**: better match for change_type when finding increment
+- **changelog**: breaking change on additional types for conventional commits
+- **bump**: breaking changes on additional types for conventional commits
+- improve errors message when empty .cz.json found
+- **init**: poetry detection
+- bump decli which is type hinted
+
+### Refactor
+
+- **commit**: change type of write_message_to_file to path
+
 ## v3.1.1 (2023-04-28)
 
 ### Fix
