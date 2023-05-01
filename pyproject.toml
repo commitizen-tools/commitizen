@@ -110,7 +110,8 @@ semver = "commitizen.version_schemes:SemVer"
 
         # Don't complain if non-runnable code isn't run:
         'if 0:',
-        'if __name__ == .__main__.:'
+        'if __name__ == .__main__.:',
+        'if TYPE_CHECKING:',
     ]
     omit = [
         'env/*',
@@ -150,3 +151,7 @@ warn_return_any = true
 warn_redundant_casts = true
 warn_unused_ignores = true
 warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = "py.*"  # Legacy pytest dependencies
+ignore_missing_imports = true
