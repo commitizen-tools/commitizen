@@ -8,7 +8,12 @@ from commitizen import bump
 from commitizen.cz.conventional_commits import ConventionalCommitsCz
 from commitizen.git import GitCommit
 
-NONE_INCREMENT_CC = ["docs(README): motivation", "ci: added travis"]
+NONE_INCREMENT_CC = [
+    "docs(README): motivation",
+    "ci: added travis",
+    "performance. Remove or disable the reimplemented linters",
+    "refactor that how this line starts",
+]
 
 PATCH_INCREMENTS_CC = [
     "fix(setup.py): future is now required for every python version",
@@ -19,6 +24,8 @@ MINOR_INCREMENTS_CC = [
     "feat(cli): added version",
     "docs(README): motivation",
     "fix(setup.py): future is now required for every python version",
+    "perf: app is much faster",
+    "refactor: app is much faster",
 ]
 
 MAJOR_INCREMENTS_BREAKING_CHANGE_CC = [
@@ -37,6 +44,16 @@ MAJOR_INCREMENTS_BREAKING_CHANGE_ALT_CC = [
 
 MAJOR_INCREMENTS_EXCLAMATION_CC = [
     "feat(cli)!: added version",
+    "docs(README): motivation",
+    "fix(setup.py): future is now required for every python version",
+]
+
+MAJOR_INCREMENTS_EXCLAMATION_CC_SAMPLE_2 = [
+    "feat(pipeline)!: some text with breaking change"
+]
+
+MAJOR_INCREMENTS_EXCLAMATION_OTHER_TYPE_CC = [
+    "chore!: drop support for Python 3.9",
     "docs(README): motivation",
     "fix(setup.py): future is now required for every python version",
 ]
@@ -67,7 +84,9 @@ semantic_version_map = {"MAJOR": "MAJOR", "MINOR": "MINOR", "PATCH": "PATCH"}
         (MINOR_INCREMENTS_CC, "MINOR"),
         (MAJOR_INCREMENTS_BREAKING_CHANGE_CC, "MAJOR"),
         (MAJOR_INCREMENTS_BREAKING_CHANGE_ALT_CC, "MAJOR"),
+        (MAJOR_INCREMENTS_EXCLAMATION_OTHER_TYPE_CC, "MAJOR"),
         (MAJOR_INCREMENTS_EXCLAMATION_CC, "MAJOR"),
+        (MAJOR_INCREMENTS_EXCLAMATION_CC_SAMPLE_2, "MAJOR"),
         (NONE_INCREMENT_CC, None),
     ),
 )

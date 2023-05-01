@@ -517,6 +517,36 @@ def test_breaking_change_content_v1_multiline(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+def test_breaking_change_content_v1_with_exclamation_mark(
+    mocker: MockFixture, capsys, file_regression
+):
+    commit_message = "chore!: drop support for py36"
+    create_file_and_commit(commit_message)
+    testargs = ["cz", "changelog", "--dry-run"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(DryRunExit):
+        cli.main()
+    out, _ = capsys.readouterr()
+
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_breaking_change_content_v1_with_exclamation_mark_feat(
+    mocker: MockFixture, capsys, file_regression
+):
+    commit_message = "feat(pipeline)!: some text with breaking change"
+    create_file_and_commit(commit_message)
+    testargs = ["cz", "changelog", "--dry-run"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(DryRunExit):
+        cli.main()
+    out, _ = capsys.readouterr()
+
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_config_flag_increment(
     mocker: MockFixture, changelog_path, config_path, file_regression
 ):
