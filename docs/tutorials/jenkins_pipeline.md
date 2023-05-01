@@ -37,7 +37,8 @@ pipeline {
 def useCz(String authorName = 'Jenkins CI Server', String authorEmail = 'your-jenkins@email.com', String image =  'registry.hub.docker.com/commitizen/commitizen:latest', Closure body) {
     docker
     .image(image)
-    .inside("-u 0 -v $WORKSPACE:/workspace -w /workspace -e GIT_AUTHOR_NAME='${authorName}' -e GIT_AUTHOR_EMAIL='${authorEmail}'") {
+    .inside("-u 0 -v $WORKSPACE:/workspace -w /workspace -e GIT_AUTHOR_NAME='${authorName}' -e GIT_AUTHOR_EMAIL='${authorEmail}' -entrypoint='/bin/sh'") {
+        sh 'git config --global --add safe.directory "*"'
         sh "git config --global user.email '${authorName}'"
         sh "git config --global user.name '${authorEmail}'"
         body()
