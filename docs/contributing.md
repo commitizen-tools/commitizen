@@ -8,7 +8,7 @@ If you're a first-time contributor, you can check the issues with [good first is
 
 ## Install before contributing
 
-1. Install [poetry](https://python-poetry.org/), installation [pages](https://python-poetry.org/docs/#installing-with-the-official-installer)
+1. Install [poetry](https://python-poetry.org/) `1.2.0+`, installation [pages](https://python-poetry.org/docs/#installing-with-the-official-installer)
 2. Install [gpg](https://gnupg.org), installation [pages](https://gnupg.org/documentation/manuals/gnupg/Installation.html#Installation). For Mac users, you could try [homebrew](https://brew.sh/).
 
 ## Before making a pull request

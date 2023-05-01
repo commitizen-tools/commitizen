@@ -36,7 +36,7 @@ class ProjectInfo:
         if not self.has_pyproject:
             return False
         with open("pyproject.toml") as f:
-            return "tool.poetry.version" in f.read()
+            return "[tool.poetry]" in f.read()
 
     @property
     def is_python(self) -> bool:
