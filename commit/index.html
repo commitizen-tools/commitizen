@@ -519,6 +519,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../tutorials/auto_prepare_commit_message/" class="md-nav__link">
+        Auto prepare commit message
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../tutorials/gitlab_ci/" class="md-nav__link">
         GitLab CI
       </a>
@@ -688,6 +702,10 @@
 <h2 id="about">About<a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
 <p>In your terminal run <code>cz commit</code> or the shortcut <code>cz c</code> to generate a guided git commit.</p>
 <p>A commit can be signed off using <code>cz commit --signoff</code> or the shortcut <code>cz commit -s</code>.</p>
+<p>You can run <code>cz commit --write-message-to-file COMMIT_MSG_FILE</code> to additionally save the
+generated message to a file. This can be combined with the <code>--dry-run</code> flag to only
+write the message to a file and not modify files and create a commit. A possible use
+case for this is to <a href="../tutorials/auto_prepare_commit_message/">automatically prepare a commit message</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>To maintain platform compatibility, the <code>commit</code> command disable ANSI escaping in its output.

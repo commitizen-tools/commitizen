@@ -11,24 +11,24 @@
       
       
       
-        <link rel="prev" href="../bump/">
+        <link rel="prev" href="../auto_check/">
       
       
-        <link rel="next" href="../changelog/">
+        <link rel="next" href="../gitlab_ci/">
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.8">
     
     
       
-        <title>Check - Commitizen</title>
+        <title>Auto prepare commit message - Commitizen</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.ded33207.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ded33207.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.a0c5b2b5.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.a0c5b2b5.min.css">
       
       
 
@@ -44,7 +44,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -73,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#check" class="md-skip">
+        <a href="#automatically-prepare-message-before-commit" class="md-skip">
           Skip to content
         </a>
       
@@ -89,7 +89,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Commitizen" class="md-header__button md-logo" aria-label="Commitizen" data-md-component="logo">
+    <a href="../.." title="Commitizen" class="md-header__button md-logo" aria-label="Commitizen" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -108,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Check
+              Auto prepare commit message
             
           </span>
         </div>
@@ -229,7 +229,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Commitizen" class="md-nav__button md-logo" aria-label="Commitizen" data-md-component="logo">
+    <a href="../.." title="Commitizen" class="md-nav__button md-logo" aria-label="Commitizen" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -260,7 +260,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -275,8 +275,143 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting_started/" class="md-nav__link">
+      <a href="../../getting_started/" class="md-nav__link">
         Getting Started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          Commands
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Commands
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../init/" class="md-nav__link">
+        Init
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commit/" class="md-nav__link">
+        Commit
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bump/" class="md-nav__link">
+        Bump
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../check/" class="md-nav__link">
+        Check
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../config/" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../customization/" class="md-nav__link">
+        Customization
       </a>
     </li>
   
@@ -297,19 +432,19 @@
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
       
       
       
-        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-          Commands
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          Tutorials
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-        <label class="md-nav__title" for="__nav_3">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_6">
           <span class="md-nav__icon md-icon"></span>
-          Commands
+          Tutorials
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -319,8 +454,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../init/" class="md-nav__link">
-        Init
+      <a href="../writing_commits/" class="md-nav__link">
+        Writing commits
       </a>
     </li>
   
@@ -333,22 +468,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../commit/" class="md-nav__link">
-        Commit
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../bump/" class="md-nav__link">
-        Bump
+      <a href="../auto_check/" class="md-nav__link">
+        Auto check commits
       </a>
     </li>
   
@@ -371,12 +492,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Check
+          Auto prepare commit message
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Check
+        Auto prepare commit message
       </a>
       
         
@@ -402,63 +523,16 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    Usage
-  </a>
-  
-    <nav class="md-nav" aria-label="Usage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#git-rev-range" class="md-nav__link">
-    Git Rev Range
+  <a href="#installation" class="md-nav__link">
+    Installation
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#commit-message" class="md-nav__link">
-    Commit Message
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    Features
   </a>
-  
-    <nav class="md-nav" aria-label="Commit Message">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#method-1-use-m-or-message" class="md-nav__link">
-    Method 1: use -m or --message
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#method-2-use-pipe-to-pipe-it-to-cz-check" class="md-nav__link">
-    Method 2: use pipe to pipe it to cz check
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#commit-message-file" class="md-nav__link">
-    Commit Message File
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#allow-abort" class="md-nav__link">
-    Allow Abort
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -477,128 +551,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../changelog/" class="md-nav__link">
-        Changelog
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../config/" class="md-nav__link">
-        Configuration
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../customization/" class="md-nav__link">
-        Customization
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
-      
-      
-      
-        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
-          Tutorials
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-        <label class="md-nav__title" for="__nav_6">
-          <span class="md-nav__icon md-icon"></span>
-          Tutorials
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/writing_commits/" class="md-nav__link">
-        Writing commits
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/auto_check/" class="md-nav__link">
-        Auto check commits
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/auto_prepare_commit_message/" class="md-nav__link">
-        Auto prepare commit message
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/gitlab_ci/" class="md-nav__link">
+      <a href="../gitlab_ci/" class="md-nav__link">
         GitLab CI
       </a>
     </li>
@@ -612,7 +565,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/github_actions/" class="md-nav__link">
+      <a href="../github_actions/" class="md-nav__link">
         Github Actions
       </a>
     </li>
@@ -626,7 +579,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/jenkins_pipeline/" class="md-nav__link">
+      <a href="../jenkins_pipeline/" class="md-nav__link">
         Jenkins pipeline
       </a>
     </li>
@@ -648,7 +601,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../faq/" class="md-nav__link">
+      <a href="../../faq/" class="md-nav__link">
         FAQ
       </a>
     </li>
@@ -663,7 +616,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../exit_codes/" class="md-nav__link">
+      <a href="../../exit_codes/" class="md-nav__link">
         Exit Codes
       </a>
     </li>
@@ -678,7 +631,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../third-party-commitizen/" class="md-nav__link">
+      <a href="../../third-party-commitizen/" class="md-nav__link">
         Third-Party Commitizen Templates
       </a>
     </li>
@@ -693,7 +646,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributing/" class="md-nav__link">
+      <a href="../../contributing/" class="md-nav__link">
         Contributing
       </a>
     </li>
@@ -708,7 +661,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../external_links/" class="md-nav__link">
+      <a href="../../external_links/" class="md-nav__link">
         Resources
       </a>
     </li>
@@ -749,63 +702,16 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    Usage
-  </a>
-  
-    <nav class="md-nav" aria-label="Usage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#git-rev-range" class="md-nav__link">
-    Git Rev Range
+  <a href="#installation" class="md-nav__link">
+    Installation
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#commit-message" class="md-nav__link">
-    Commit Message
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    Features
   </a>
-  
-    <nav class="md-nav" aria-label="Commit Message">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#method-1-use-m-or-message" class="md-nav__link">
-    Method 1: use -m or --message
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#method-2-use-pipe-to-pipe-it-to-cz-check" class="md-nav__link">
-    Method 2: use pipe to pipe it to cz check
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#commit-message-file" class="md-nav__link">
-    Commit Message File
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#allow-abort" class="md-nav__link">
-    Allow Abort
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -824,44 +730,42 @@
                   
 
 
-<h1 id="check">Check<a class="headerlink" href="#check" title="Permanent link">&para;</a></h1>
+<h1 id="automatically-prepare-message-before-commit">Automatically prepare message before commit<a class="headerlink" href="#automatically-prepare-message-before-commit" title="Permanent link">&para;</a></h1>
 <h2 id="about">About<a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
-<p>This feature checks whether the commit message follows the given committing rules. And comment in git message will be ignored.</p>
-<p>If you want to setup an automatic check before every git commit, please refer to
-<a href="../tutorials/auto_check/">Automatically check message before commit</a>.</p>
-<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
-<p>There are three mutually exclusive ways to use <code>cz check</code>:</p>
+<p>It can be desirable to use commitizen for all types of commits (i.e. regular, merge,
+squash) so that the complete git history adheres to the commit message convention
+without ever having to call <code>cz commit</code>.</p>
+<p>To automatically prepare a commit message prior to committing, you can
+use a <a href="prepare-commit-msg-docs">prepare-commit-msg Git hook</a>:</p>
+<blockquote>
+<p>This hook is invoked by git-commit right after preparing the
+default log message, and before the editor is started.</p>
+</blockquote>
+<p>To automatically perform arbitrary cleanup steps after a succesful commit you can use a
+<a href="https://git-scm.com/docs/githooks#_post_commit">post-commit Git hook</a>:</p>
+<blockquote>
+<p>This hook is invoked by git-commit. It takes no parameters, and is invoked after a
+commit is made.</p>
+</blockquote>
+<p>A combination of these two hooks allows for enforcing the usage of commitizen so that
+whenever a commit is about to be created, commitizen is used for creating the commit
+message. Running <code>git commit</code> or <code>git commit -m "..."</code> for example, would trigger
+commitizen and use the generated commit message for the commit.</p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<p>Copy the hooks from <a href="https://github.com/commitizen-tools/hooks">here</a> into the <code>.git/hooks</code> folder and make them
+  executable by running the following commands from the root of your Git repository:</p>
+<div class="highlight"><pre><span></span><code>wget<span class="w"> </span>-o<span class="w"> </span>.git/hooks/prepare-commit-msg<span class="w"> </span>https://github.com/commitizen-tools/hooks/prepare-commit-msg.py
+chmod<span class="w"> </span>+x<span class="w"> </span>.git/hooks/prepare-commit-msg
+wget<span class="w"> </span>-o<span class="w"> </span>.git/hooks/post-commit<span class="w"> </span>https://github.com/commitizen-tools/hooks/post-commit.py
+chmod<span class="w"> </span>+x<span class="w"> </span>.git/hooks/post-commit
+</code></pre></div>
+<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
 <ul>
-<li>with <code>--rev-range</code> to check a range of pre-existing commits</li>
-<li>with <code>--message</code> or by piping the message to it to check a given string</li>
-<li>or with <code>--commit-msg-file</code> to read the commit message from a file</li>
+<li>Commits can be created using both <code>cz commit</code> and the regular <code>git commit</code></li>
+<li>The hooks automatically create a backup of the commit message that can be reused if
+  the commit failed</li>
+<li>The commit message backup can also be used via <code>cz commit --retry</code></li>
 </ul>
-<h3 id="git-rev-range">Git Rev Range<a class="headerlink" href="#git-rev-range" title="Permanent link">&para;</a></h3>
-<p>If you'd like to check a commit's message after it has already been created, then you can specify the range of commits to check with <code>--rev-range REV_RANGE</code>.</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cz<span class="w"> </span>check<span class="w"> </span>--rev-range<span class="w"> </span>REV_RANGE
-</code></pre></div>
-<p>For example, if you'd like to check all commits on a branch, you can use <code>--rev-range master..HEAD</code>. Or, if you'd like to check all commits starting from when you first implemented commit message linting, you can use <code>--rev-range &lt;first_commit_sha&gt;..HEAD</code>.</p>
-<p>For more info on how git commit ranges work, you can check the <a href="https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection#_commit_ranges">git documentation</a>.</p>
-<h3 id="commit-message">Commit Message<a class="headerlink" href="#commit-message" title="Permanent link">&para;</a></h3>
-<p>There are two ways you can provide your plain message and check it.</p>
-<h4 id="method-1-use-m-or-message">Method 1: use -m or --message<a class="headerlink" href="#method-1-use-m-or-message" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cz<span class="w"> </span>check<span class="w"> </span>--message<span class="w"> </span>MESSAGE
-</code></pre></div>
-<p>In this option, MESSAGE is the commit message to be checked.</p>
-<h4 id="method-2-use-pipe-to-pipe-it-to-cz-check">Method 2: use pipe to pipe it to <code>cz check</code><a class="headerlink" href="#method-2-use-pipe-to-pipe-it-to-cz-check" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span>MESSAGE<span class="w"> </span><span class="p">|</span><span class="w"> </span>cz<span class="w"> </span>check
-</code></pre></div>
-<p>In this option, MESSAGE is piped to cz check and would be checked.</p>
-<h3 id="commit-message-file">Commit Message File<a class="headerlink" href="#commit-message-file" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cz<span class="w"> </span>check<span class="w"> </span>--commit-msg-file<span class="w"> </span>COMMIT_MSG_FILE
-</code></pre></div>
-<p>In this option, COMMIT_MSG_FILE is the path of the temporal file that contains the commit message.
-This argument can be useful when cooperating with git hook, please check <a href="../tutorials/auto_check/">Automatically check message before commit</a> for more information about how to use this argument with git hook.</p>
-<h3 id="allow-abort">Allow Abort<a class="headerlink" href="#allow-abort" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>check<span class="w"> </span>--message<span class="w"> </span>MESSAGE<span class="w"> </span>--allow-abort
-</code></pre></div>
-<p>Empty commit messages typically instruct Git to abort a commit, so you can pass <code>--allow-abort</code> to
-permit them. Since <code>git commit</code> accepts an <code>--allow-empty-message</code> flag (primarily for wrapper scripts), you may wish to disallow such commits in CI. <code>--allow-abort</code> may be used in conjunction with any of the other options.</p>
 
 
 
@@ -899,10 +803,10 @@ permit them. Since <code>git commit</code> accepts an <code>--allow-empty-messag
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.51198bba.min.js"></script>
+      <script src="../../assets/javascripts/bundle.51198bba.min.js"></script>
       
     
   </body>
