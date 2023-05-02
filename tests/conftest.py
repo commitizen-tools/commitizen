@@ -122,7 +122,7 @@ def config():
 
 
 @pytest.fixture()
-def config_path() -> str:
+def config_path(tmp_commitizen_project) -> str:
     return os.path.join(os.getcwd(), "pyproject.toml")
 
 
