@@ -65,7 +65,7 @@ ruff = "^0.0.262"
 pre-commit = "^2.18.0"
 mypy = "^0.931"
 types-PyYAML = "^5.4.3"
-types-termcolor = "^0.1.1"
+types-termcolor = ">=0.1.1,<1.2.0"
 # documentation
 mkdocs = "^1.4.2"
 mkdocs-material = "^9.1.6"
