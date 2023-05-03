@@ -1,4 +1,10 @@
 
+## v3.2.1 (2023-05-03)
+
+### Fix
+
+- add support for importlib_metadata 6
+
 ## v3.2.0 (2023-05-01)
 
 ### Feat
