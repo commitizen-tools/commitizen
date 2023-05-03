@@ -57,7 +57,7 @@ usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
                [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}]
                [--devrelease DEVRELEASE] [--increment {MAJOR,MINOR,PATCH}]
                [--check-consistency] [--annotated-tag] [--gpg-sign]
-               [--changelog-to-stdout] [--retry] [--major-version-zero]
+               [--changelog-to-stdout] [--git-output-to-stderr] [--retry] [--major-version-zero]
                [MANUAL_VERSION]
 
 positional arguments:
@@ -91,6 +91,8 @@ options:
   --gpg-sign, -s        sign tag instead of lightweight one
   --changelog-to-stdout
                         Output changelog to the stdout
+  --git-output-to-stderr
+                        Redirect git output to stderr
   --retry               retry commit if it fails the 1st time
   --major-version-zero  keep major version at zero, even for breaking changes
   --prerelease-offset   start pre-releases with this offset
@@ -195,6 +197,13 @@ Example:
 ```bash
 cz bump --changelog --changelog-to-stdout > body.md
 ```
+
+### `--git-output-to-stderr`
+
+If `--git-output-to-stderr` is used, git commands output is redirected to stderr.
+
+This command is useful when used with `--changelog-to-stdout` and piping the output to a file,
+and you don't want the `git commit` output polluting  the stdout.
 
 ### `--retry`
 

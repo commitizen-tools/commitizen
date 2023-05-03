@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import inspect
+import re
 import sys
 from unittest.mock import MagicMock, call
 
@@ -595,6 +596,34 @@ def test_bump_with_changelog_to_stdout_dry_run_arg(
     assert out.startswith("#")
     assert "this should appear in stdout with dry-run enabled" in out
     assert "0.2.0" in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_without_git_to_stdout_arg(mocker: MockFixture, capsys, changelog_path):
+    create_file_and_commit("feat(user): this should appear in stdout")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    out, _ = capsys.readouterr()
+
+    assert (
+        re.search(r"^\[master \w+] bump: version 0.1.0 → 0.2.0", out, re.MULTILINE)
+        is not None
+    )
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_with_git_to_stdout_arg(mocker: MockFixture, capsys, changelog_path):
+    create_file_and_commit("feat(user): this should appear in stdout")
+    testargs = ["cz", "bump", "--yes", "--git-output-to-stderr"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    out, _ = capsys.readouterr()
+
+    assert (
+        re.search(r"^\[master \w+] bump: version 0.1.0 → 0.2.0", out, re.MULTILINE)
+        is None
+    )
 
 
 @pytest.mark.parametrize(
