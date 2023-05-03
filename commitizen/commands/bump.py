@@ -57,6 +57,7 @@ class Bump:
             "update_changelog_on_bump"
         )
         self.changelog_to_stdout = arguments["changelog_to_stdout"]
+        self.git_output_to_stderr = arguments["git_output_to_stderr"]
         self.no_verify = arguments["no_verify"]
         self.check_consistency = arguments["check_consistency"]
         self.retry = arguments["retry"]
@@ -327,9 +328,15 @@ class Bump:
             raise BumpCommitFailedError(f'2nd git.commit error: "{c.err.strip()}"')
 
         if c.out:
-            out.write(c.out)
+            if self.git_output_to_stderr:
+                out.diagnostic(c.out)
+            else:
+                out.write(c.out)
         if c.err:
-            out.write(c.err)
+            if self.git_output_to_stderr:
+                out.diagnostic(c.err)
+            else:
+                out.write(c.err)
 
         c = git.tag(
             new_tag_version,

@@ -186,6 +186,12 @@ data = {
                         "help": "Output changelog to the stdout",
                     },
                     {
+                        "name": ["--git-output-to-stderr"],
+                        "action": "store_true",
+                        "default": False,
+                        "help": "Redirect git output to stderr",
+                    },
+                    {
                         "name": ["--retry"],
                         "action": "store_true",
                         "default": False,
