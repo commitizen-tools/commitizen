@@ -82,9 +82,12 @@ git-cz = "commitizen.cli:main"
 cz_conventional_commits = "commitizen.cz.conventional_commits:ConventionalCommitsCz"
 cz_jira = "commitizen.cz.jira:JiraSmartCz"
 cz_customize = "commitizen.cz.customize:CustomizeCommitsCz"
-conventional_commits_asciidoc = "commitizen.cz.conventional_commits:ConventionalCommitsAsciiDoc"
-conventional_commits_textile = "commitizen.cz.conventional_commits:ConventionalCommitsTextile"
-conventional_commits_restructuredtext = "commitizen.cz.conventional_commits:ConventionalCommitsRst"
+
+[tool.poetry.plugins."commitizen.format"]
+markdown = "commitizen.formats.markdown:Markdown"
+asciidoc = "commitizen.formats.asciidoc:AsciiDoc"
+textile = "commitizen.formats.textile:Textile"
+restructuredtext = "commitizen.formats.restructuredtext:RestructuredText"
 
 [tool.poetry.plugins."commitizen.provider"]
 cargo = "commitizen.providers:CargoProvider"

@@ -57,7 +57,7 @@ if TYPE_CHECKING:
 @dataclass
 class Metadata:
     """
-    Metadata extracted from the changelog pproduced by a plugin
+    Metadata extracted from the changelog produced by a plugin
     """
 
     unreleased_start: int | None = None

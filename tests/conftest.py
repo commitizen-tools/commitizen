@@ -13,6 +13,7 @@ from commitizen import cmd, defaults
 from commitizen.config import BaseConfig
 from commitizen.cz import registry
 from commitizen.cz.base import BaseCommitizen
+from commitizen.formats import DEFAULT_FORMAT, Format, get_format
 from tests.utils import create_file_and_commit
 
 SIGNER = "GitHub Action"
@@ -225,3 +226,25 @@ def mock_plugin(mocker: MockerFixture, config: BaseConfig) -> BaseCommitizen:
     mock = MockPlugin(config)
     mocker.patch("commitizen.factory.commiter_factory", return_value=mock)
     return mock
+
+
+SUPPORTED_FORMATS = ("markdown", "textile", "asciidoc", "restructuredtext")
+
+
+@pytest.fixture(params=SUPPORTED_FORMATS)
+def format(config: BaseConfig, request: pytest.FixtureRequest) -> Format:
+    """For tests relying on formats specifics"""
+    format: str = request.param
+    config.settings["format"] = format
+    if "tmp_commitizen_project" in request.fixturenames:
+        tmp_commitizen_project = request.getfixturevalue("tmp_commitizen_project")
+        pyproject = tmp_commitizen_project / "pyproject.toml"
+        pyproject.write(f"{pyproject.read()}\n" f'format = "{format}"\n')
+    return get_format(config)
+
+
+@pytest.fixture
+def any_format(config: BaseConfig) -> Format:
+    """For test not relying on formats specifics, use the default"""
+    config.settings["format"] = DEFAULT_FORMAT
+    return get_format(config)

@@ -43,7 +43,7 @@ class Settings(TypedDict, total=False):
     bump_message: str | None
     allow_abort: bool
     allowed_prefixes: list[str]
-    changelog_file: str | None
+    changelog_file: str
     changelog_incremental: bool
     changelog_start_rev: str | None
     changelog_merge_prerelease: bool
@@ -56,6 +56,7 @@ class Settings(TypedDict, total=False):
     post_bump_hooks: list[str] | None
     prerelease_offset: int
     encoding: str
+    format: str | None
     template: str | None
     extras: dict[str, Any]
 
@@ -87,7 +88,7 @@ DEFAULT_SETTINGS: Settings = {
         "fixup!",
         "squash!",
     ],
-    "changelog_file": None,  # default provided by plugin
+    "changelog_file": "CHANGELOG.md",
     "changelog_incremental": False,
     "changelog_start_rev": None,
     "changelog_merge_prerelease": False,
@@ -98,6 +99,7 @@ DEFAULT_SETTINGS: Settings = {
     "post_bump_hooks": [],
     "prerelease_offset": 0,
     "encoding": encoding,
+    "format": None,  # default guessed from changelog_file
     "template": None,  # default provided by plugin
     "extras": {},
 }
@@ -105,7 +107,6 @@ DEFAULT_SETTINGS: Settings = {
 MAJOR = "MAJOR"
 MINOR = "MINOR"
 PATCH = "PATCH"
-TEMPLATE_EXTENSION = "j2"
 
 bump_pattern = r"^(((BREAKING[\-\ ]CHANGE|feat|fix|refactor|perf)(\(.+\))?(!)?)|\w+!):"
 bump_map = OrderedDict(

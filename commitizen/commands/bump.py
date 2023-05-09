@@ -22,6 +22,7 @@ from commitizen.exceptions import (
     NotAllowed,
     NoVersionSpecifiedError,
 )
+from commitizen.formats import get_format
 from commitizen.providers import get_provider
 from commitizen.version_schemes import InvalidVersion, get_version_scheme
 
@@ -79,15 +80,15 @@ class Bump:
         self.scheme = get_version_scheme(
             self.config, arguments["version_scheme"] or deprecated_version_type
         )
+        self.file_name = arguments["file_name"] or self.config.settings.get(
+            "changelog_file"
+        )
+        self.format = get_format(self.config, self.file_name)
+
         self.template = (
             arguments["template"]
             or self.config.settings.get("template")
-            or self.cz.template
-        )
-        self.file_name = (
-            arguments["file_name"]
-            or self.config.settings.get("changelog_file")
-            or self.cz.changelog_file
+            or self.format.template
         )
         self.extras = arguments["extras"]
 

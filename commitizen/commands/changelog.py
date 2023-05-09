@@ -17,6 +17,7 @@ from commitizen.exceptions import (
     NotAGitProjectError,
     NotAllowed,
 )
+from commitizen.formats import get_format
 from commitizen.git import GitTag, smart_open
 from commitizen.version_schemes import get_version_scheme
 
@@ -35,11 +36,17 @@ class Changelog:
         self.start_rev = args.get("start_rev") or self.config.settings.get(
             "changelog_start_rev"
         )
-        self.file_name = (
-            args.get("file_name")
-            or self.config.settings.get("changelog_file")
-            or self.cz.changelog_file
+        self.file_name = args.get("file_name") or self.config.settings.get(
+            "changelog_file"
         )
+        if not isinstance(self.file_name, str):
+            raise NotAllowed(
+                "Changelog file name is broken.\n"
+                "Check the flag `--file-name` in the terminal "
+                f"or the setting `changelog_file` in {self.config.path}"
+            )
+        self.format = get_format(self.config, self.file_name)
+
         self.incremental = args["incremental"] or self.config.settings.get(
             "changelog_incremental"
         )
@@ -72,7 +79,7 @@ class Changelog:
         self.template = (
             args.get("template")
             or self.config.settings.get("template")
-            or self.cz.template
+            or self.format.template
         )
         self.extras = args.get("extras") or {}
         self.export_template_to = args.get("export_template")
@@ -106,13 +113,6 @@ class Changelog:
     def write_changelog(
         self, changelog_out: str, lines: list[str], changelog_meta: changelog.Metadata
     ):
-        if not isinstance(self.file_name, str):
-            raise NotAllowed(
-                "Changelog file name is broken.\n"
-                "Check the flag `--file-name` in the terminal "
-                f"or the setting `changelog_file` in {self.config.path}"
-            )
-
         changelog_hook: Callable | None = self.cz.changelog_hook
         with smart_open(self.file_name, "w", encoding=self.encoding) as changelog_file:
             partial_changelog: str | None = None
@@ -162,7 +162,7 @@ class Changelog:
 
         end_rev = ""
         if self.incremental:
-            changelog_meta = self.cz.get_metadata(self.file_name)
+            changelog_meta = self.format.get_metadata(self.file_name)
             if changelog_meta.latest_version:
                 latest_tag_version: str = bump.normalize_tag(
                     changelog_meta.latest_version,

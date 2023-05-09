@@ -55,7 +55,7 @@ _settings: dict[str, Any] = {
     "allowed_prefixes": ["Merge", "Revert", "Pull request", "fixup!", "squash!"],
     "version_files": ["commitizen/__version__.py", "pyproject.toml"],
     "style": [["pointer", "reverse"], ["question", "underline"]],
-    "changelog_file": None,
+    "changelog_file": "CHANGELOG.md",
     "changelog_incremental": False,
     "changelog_start_rev": None,
     "changelog_merge_prerelease": False,
@@ -66,6 +66,7 @@ _settings: dict[str, Any] = {
     "post_bump_hooks": ["scripts/slack_notification.sh"],
     "prerelease_offset": 0,
     "encoding": "utf-8",
+    "format": None,
     "template": None,
     "extras": {},
 }
@@ -81,7 +82,7 @@ _new_settings: dict[str, Any] = {
     "allowed_prefixes": ["Merge", "Revert", "Pull request", "fixup!", "squash!"],
     "version_files": ["commitizen/__version__.py", "pyproject.toml"],
     "style": [["pointer", "reverse"], ["question", "underline"]],
-    "changelog_file": None,
+    "changelog_file": "CHANGELOG.md",
     "changelog_incremental": False,
     "changelog_start_rev": None,
     "changelog_merge_prerelease": False,
@@ -92,19 +93,10 @@ _new_settings: dict[str, Any] = {
     "post_bump_hooks": ["scripts/slack_notification.sh"],
     "prerelease_offset": 0,
     "encoding": "utf-8",
+    "format": None,
     "template": None,
     "extras": {},
 }
-
-# _read_settings = {
-#     "name": "cz_jira",
-#     "version": "1.0.0",
-#     "version_files": ["commitizen/__version__.py", "pyproject.toml"],
-#     "style": [["pointer", "reverse"], ["question", "underline"]],
-#     "changelog_file": "CHANGELOG.md",
-#     "pre_bump_hooks": ["scripts/generate_documentation.sh"],
-#     "post_bump_hooks": ["scripts/slack_notification.sh"],
-# }
 
 
 @pytest.fixture

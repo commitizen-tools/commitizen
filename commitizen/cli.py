@@ -7,6 +7,7 @@ from copy import deepcopy
 from functools import partial
 from pathlib import Path
 from types import TracebackType
+from typing import Any, Sequence
 
 import argcomplete
 from decli import cli
@@ -16,6 +17,7 @@ from commitizen.exceptions import (
     CommitizenException,
     ExitCode,
     ExpectedExit,
+    InvalidCommandArgumentError,
     NoCommandFoundError,
 )
 
@@ -41,9 +43,25 @@ class ParseKwargs(argparse.Action):
         }
     """
 
-    def __call__(self, parser, namespace, kwarg, option_string=None):
+    def __call__(
+        self,
+        parser: argparse.ArgumentParser,
+        namespace: argparse.Namespace,
+        kwarg: str | Sequence[Any] | None,
+        option_string: str | None = None,
+    ):
+        if not isinstance(kwarg, str):
+            return
+        if "=" not in kwarg:
+            raise InvalidCommandArgumentError(
+                f"Option {option_string} expect a key=value format"
+            )
         kwargs = getattr(namespace, self.dest, None) or {}
         key, value = kwarg.split("=", 1)
+        if not key:
+            raise InvalidCommandArgumentError(
+                f"Option {option_string} expect a key=value format"
+            )
         kwargs[key] = value.strip("'\"")
         setattr(namespace, self.dest, kwargs)
 
