@@ -1,4 +1,10 @@
 
+## v3.2.2 (2023-05-11)
+
+### Fix
+
+- **init**: fix is_pre_commit_installed method
+
 ## v3.2.1 (2023-05-03)
 
 ### Fix
