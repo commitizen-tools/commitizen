@@ -28,14 +28,20 @@ repos:
           - post-commit
           - push
 
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: "v0.0.262"
+    hooks:
+      - id: ruff
+        stages: [commit]
+
+  - repo: "https://github.com/psf/black"
+    rev: "23.3.0"
+    hooks:
+      - id: black
+        stages: [commit]
+
   - repo: local
     hooks:
-      - id: format
-        name: format
-        language: system
-        pass_filenames: false
-        entry: ./scripts/format
-        types: [python]
 
       - id: linter and test
         name: linter and test

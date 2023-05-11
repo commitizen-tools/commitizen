@@ -74,7 +74,6 @@ class GitTag(GitObject):
 
     @classmethod
     def from_line(cls, line: str, inner_delimiter: str) -> "GitTag":
-
         name, objectname, date, obj = line.split(inner_delimiter)
         if not obj:
             obj = objectname
