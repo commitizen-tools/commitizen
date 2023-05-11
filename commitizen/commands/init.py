@@ -4,8 +4,6 @@ from typing import Any, Dict, List, Optional
 
 import questionary
 import yaml
-from packaging.version import Version
-
 from commitizen import cmd, factory, out
 from commitizen.__version__ import __version__
 from commitizen.config import BaseConfig, JsonConfig, TomlConfig, YAMLConfig
@@ -14,6 +12,7 @@ from commitizen.defaults import config_files
 from commitizen.exceptions import InitFailedError, NoAnswersError
 from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
 from commitizen.version_types import VERSION_TYPES
+from packaging.version import Version
 
 
 class ProjectInfo:
@@ -66,7 +65,7 @@ class ProjectInfo:
 
     @property
     def is_pre_commit_installed(self) -> bool:
-        return not shutil.which("pre-commit")
+        return bool(shutil.which("pre-commit"))
 
 
 class Init:
