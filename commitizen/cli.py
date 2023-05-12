@@ -216,6 +216,12 @@ data = {
                         "default": None,
                         "choices": version_types.VERSION_TYPES,
                     },
+                    {
+                        "name": ["--empty"],
+                        "default": False,
+                        "help": "bump tags without new commits",
+                        "action": "store_true",
+                    },
                 ],
             },
             {
