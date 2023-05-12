@@ -8,8 +8,8 @@ import pytest
 
 from commitizen import cmd, defaults
 from commitizen.config import BaseConfig
-from commitizen.cz.base import BaseCommitizen
 from commitizen.cz import registry
+from commitizen.cz.base import BaseCommitizen
 from tests.utils import create_file_and_commit
 
 SIGNER = "GitHub Action"
@@ -122,7 +122,7 @@ def config():
 
 
 @pytest.fixture()
-def config_path() -> str:
+def config_path(tmp_commitizen_project) -> str:
     return os.path.join(os.getcwd(), "pyproject.toml")
 
 

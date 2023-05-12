@@ -44,10 +44,5 @@ def config_customize():
 
 
 @pytest.fixture()
-def changelog_path() -> str:
+def changelog_path(tmp_commitizen_project) -> str:
     return os.path.join(os.getcwd(), "CHANGELOG.md")
-
-
-@pytest.fixture()
-def config_path() -> str:
-    return os.path.join(os.getcwd(), "pyproject.toml")

@@ -534,6 +534,24 @@ def test_bump_with_changelog_config(mocker: MockFixture, changelog_path, config_
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_with_changelog_excludes_custom_tags(mocker: MockFixture, changelog_path):
+    create_file_and_commit("feat(user): new file")
+    git.tag("custom-tag")
+    create_file_and_commit("feat(user): Another new file")
+    testargs = ["cz", "bump", "--yes", "--changelog"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    tag_exists = git.tag_exist("0.2.0")
+    assert tag_exists is True
+
+    with open(changelog_path, "r") as f:
+        out = f.read()
+    assert out.startswith("#")
+    assert "## 0.2.0" in out
+    assert "custom-tag" not in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_prevent_prerelease_when_no_increment_detected(mocker: MockFixture, capsys):
     create_file_and_commit("feat: new file")
 

@@ -1,5 +1,4 @@
 import json
-import os
 from pathlib import Path
 
 import pytest
@@ -41,11 +40,11 @@ DICT_CONFIG = {
 }
 
 
-_settings = {
+_read_settings = {
     "name": "cz_jira",
     "version": "1.0.0",
     "version_provider": "commitizen",
-    "tag_format": None,
+    "tag_format": "$version",
     "bump_message": None,
     "allow_abort": False,
     "version_files": ["commitizen/__version__.py", "pyproject.toml"],
@@ -67,7 +66,7 @@ _new_settings = {
     "name": "cz_jira",
     "version": "2.0.0",
     "version_provider": "commitizen",
-    "tag_format": None,
+    "tag_format": "$version",
     "bump_message": None,
     "allow_abort": False,
     "version_files": ["commitizen/__version__.py", "pyproject.toml"],
@@ -83,16 +82,6 @@ _new_settings = {
     "post_bump_hooks": ["scripts/slack_notification.sh"],
     "prerelease_offset": 0,
     "version_type": None,
-}
-
-_read_settings = {
-    "name": "cz_jira",
-    "version": "1.0.0",
-    "version_files": ["commitizen/__version__.py", "pyproject.toml"],
-    "style": [["pointer", "reverse"], ["question", "underline"]],
-    "changelog_file": "CHANGELOG.md",
-    "pre_bump_hooks": ["scripts/generate_documentation.sh"],
-    "post_bump_hooks": ["scripts/slack_notification.sh"],
 }
 
 
@@ -111,7 +100,7 @@ def config_files_manager(request, tmpdir):
 
 
 def test_find_git_project_root(tmpdir):
-    assert git.find_git_project_root() == Path(os.getcwd())
+    assert git.find_git_project_root() == Path(__file__).parent.parent
 
     with tmpdir.as_cwd() as _:
         assert git.find_git_project_root() is None
@@ -133,7 +122,7 @@ class TestReadCfg:
     )
     def test_load_conf(_, config_files_manager):
         cfg = config.read_cfg()
-        assert cfg.settings == _settings
+        assert cfg.settings == _read_settings
 
     def test_conf_returns_default_when_no_files(_, tmpdir):
         with tmpdir.as_cwd():
@@ -148,7 +137,7 @@ class TestReadCfg:
             p.write(PYPROJECT)
 
             cfg = config.read_cfg()
-            assert cfg.settings == _settings
+            assert cfg.settings == _read_settings
 
 
 class TestTomlConfig:
