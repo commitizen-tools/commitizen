@@ -7,7 +7,9 @@ import pytest
 from pytest_mock import MockFixture
 
 from commitizen import cli
-from commitizen.exceptions import ExpectedExit, NoCommandFoundError, NotAGitProjectError
+from commitizen.exceptions import (
+    ExpectedExit, NoCommandFoundError, NotAGitProjectError, InvalidCommandArgumentError, NothingToCommitError
+)
 
 
 def test_sysexit_no_argv(mocker: MockFixture, capsys):
@@ -149,3 +151,19 @@ def test_parse_no_raise_mix_invalid_arg_is_skipped():
     input_str = "NO_COMMITIZEN_FOUND,2,nothing,4"
     result = cli.parse_no_raise(input_str)
     assert result == [1, 2, 4]
+
+
+def test_unknown_args_raises(mocker: MockFixture):
+    testargs = ["cz", "c", "-this_arg_is_not_supported"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(InvalidCommandArgumentError) as excinfo:
+        cli.main()
+    assert "Invalid commitizen arguments were found" in str(excinfo.value)
+
+
+def test_unknown_args_before_double_dash_raises(mocker: MockFixture):
+    testargs = ["cz", "c", "-this_arg_is_not_supported", "--"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(InvalidCommandArgumentError) as excinfo:
+        cli.main()
+    assert "Invalid commitizen arguments were found before -- separator" in str(excinfo.value)
