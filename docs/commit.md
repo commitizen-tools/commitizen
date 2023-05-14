@@ -4,28 +4,26 @@
 
 In your terminal run `cz commit` or the shortcut `cz c` to generate a guided git commit.
 
-A commit can be signed off using `cz commit --signoff` or the shortcut `cz commit -s`.
-
 You can run `cz commit --write-message-to-file COMMIT_MSG_FILE` to additionally save the
 generated message to a file. This can be combined with the `--dry-run` flag to only
 write the message to a file and not modify files and create a commit. A possible use
 case for this is to [automatically prepare a commit message](./tutorials/auto_prepare_commit_message.md).
 
+
 !!! note
-    To maintain platform compatibility, the `commit` command disables ANSI escaping in its output.
-    In particular, pre-commit hooks coloring will be deactivated as discussed in [commitizen-tools/commitizen#417](https://github.com/commitizen-tools/commitizen/issues/417).
+    To maintain platform compatibility, the `commit` command disable ANSI escaping in its output.
+    In particular pre-commit hooks coloring will be deactivated as discussed in [commitizen-tools/commitizen#417](https://github.com/commitizen-tools/commitizen/issues/417).
 
-## Configuration
 
-### `always_signoff`
+### git options
 
-When set to `true`, each commit message created by `cz commit` will be signed off.
-
-Defaults to: `false`.
-
-In your `pyproject.toml` or `.cz.toml`:
-
-```toml
-[tool.commitizen]
-always_signoff = true
+`git` command options that are not implemented by commitizen can be use via the `--` syntax for the `commit` command.
+The syntax separates commitizen arguments from `git commit` arguments by a double dash. This is the resulting syntax:
 ```
+cz commit -commitizen-args -- -git-cli-args
+```
+For example, using the `-S` option on `git commit` to sign a commit is now commitizen compatible: `cz c -- -S`
+
+!!! note
+    Deprecation warning: A commit can be signed off using `cz commit --signoff` or the shortcut `cz commit -s`.
+    This syntax is now deprecated in favor of the new `cz commit -- -s` syntax.
