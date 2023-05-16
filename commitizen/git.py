@@ -92,11 +92,22 @@ def tag(tag: str, annotated: bool = False, signed: bool = False) -> cmd.Command:
     return c
 
 
-def commit(message: str, args: str = "") -> cmd.Command:
+def commit(
+    message: str, args: str = "", committer_date: str | None = None
+) -> cmd.Command:
     f = NamedTemporaryFile("wb", delete=False)
     f.write(message.encode("utf-8"))
     f.close()
-    c = cmd.run(f"git commit {args} -F {f.name}")
+
+    command = f"git commit {args} -F {f.name}"
+
+    if committer_date and os.name == "nt":  # pragma: no cover
+        # Using `cmd /v /c "{command}"` sets environment variables only for that command
+        command = f'cmd /v /c "set GIT_COMMITTER_DATE={committer_date}&& {command}"'
+    elif committer_date:
+        command = f"GIT_COMMITTER_DATE={committer_date} {command}"
+
+    c = cmd.run(command)
     os.unlink(f.name)
     return c
 

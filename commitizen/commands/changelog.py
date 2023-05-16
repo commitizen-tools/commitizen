@@ -137,7 +137,7 @@ class Changelog:
         # Don't continue if no `file_name` specified.
         assert self.file_name
 
-        tags = git.get_tags()
+        tags = changelog.get_version_tags(self.scheme, git.get_tags())
         if not tags:
             tags = []
 
