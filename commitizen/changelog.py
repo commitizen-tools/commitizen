@@ -30,14 +30,20 @@ import os
 import re
 from collections import OrderedDict, defaultdict
 from datetime import date
-from typing import TYPE_CHECKING, Callable, Iterable, cast
+from typing import TYPE_CHECKING, Callable, Iterable, Type, cast
 
 from jinja2 import Environment, PackageLoader
 
+from commitizen import out
 from commitizen.bump import normalize_tag
 from commitizen.exceptions import InvalidConfigurationError, NoCommitsFoundError
 from commitizen.git import GitCommit, GitTag
-from commitizen.version_schemes import DEFAULT_SCHEME, Pep440, InvalidVersion
+from commitizen.version_schemes import (
+    DEFAULT_SCHEME,
+    BaseVersion,
+    InvalidVersion,
+    Pep440,
+)
 
 if TYPE_CHECKING:
     from commitizen.version_schemes import VersionScheme
@@ -65,6 +71,19 @@ def tag_included_in_changelog(
         return False
 
     return True
+
+
+def get_version_tags(scheme: Type[BaseVersion], tags: list[GitTag]) -> list[GitTag]:
+    valid_tags: list[GitTag] = []
+    for tag in tags:
+        try:
+            scheme(tag.name)
+        except InvalidVersion:
+            out.warn(f"InvalidVersion {tag}")
+        else:
+            valid_tags.append(tag)
+
+    return valid_tags
 
 
 def generate_tree_from_commits(

@@ -4,6 +4,7 @@ from datetime import datetime
 
 import pytest
 from pytest_mock import MockFixture
+from dateutil import relativedelta
 
 from commitizen import cli, git
 from commitizen.commands.changelog import Changelog
@@ -17,6 +18,7 @@ from commitizen.exceptions import (
 from tests.utils import (
     create_branch,
     create_file_and_commit,
+    create_tag,
     get_current_branch,
     merge_branch,
     switch_branch,
@@ -1267,3 +1269,88 @@ def test_changelog_prerelease_rev_with_use_scheme_semver(
     out, _ = capsys.readouterr()
 
     file_regression.check(out, extension=".second-prerelease.md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_uses_version_tags_for_header(mocker: MockFixture, config):
+    """Tests that changelog headers always use version tags even if there are non-version tags
+
+    This tests a scenario fixed in this commit:
+    The first header was using a non-version tag and outputting "## 0-not-a-version" instead of "## 1.0.0"""
+    create_file_and_commit("feat: commit in 1.0.0")
+    create_tag("0-not-a-version")
+    create_tag("1.0.0")
+    create_tag("also-not-a-version")
+
+    write_patch = mocker.patch("commitizen.commands.changelog.out.write")
+
+    changelog = Changelog(
+        config, {"dry_run": True, "incremental": True, "unreleased_version": None}
+    )
+
+    with pytest.raises(DryRunExit):
+        changelog()
+
+    assert write_patch.call_args[0][0].startswith("## 1.0.0")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_from_current_version_tag_with_nonversion_tag(
+    mocker: MockFixture, config
+):
+    """Tests that changelog generation for a single version works even if
+    there is a non-version tag in the list of tags
+
+    This tests a scenario which is fixed in this commit:
+    You have a commit in between two versions (1.0.0..2.0.0) which is tagged with a non-version tag (not-a-version).
+    In this case commitizen should disregard the non-version tag when determining the rev-range & generating the changelog.
+    """
+    create_file_and_commit(
+        "feat: initial commit",
+        committer_date=(
+            datetime.now() - relativedelta.relativedelta(seconds=3)
+        ).isoformat(),
+    )
+    create_tag("1.0.0")
+
+    create_file_and_commit(
+        "feat: commit 1",
+        committer_date=(
+            datetime.now() - relativedelta.relativedelta(seconds=2)
+        ).isoformat(),
+    )
+    create_tag("1-not-a-version")
+
+    create_file_and_commit(
+        "feat: commit 2",
+        committer_date=(
+            datetime.now() - relativedelta.relativedelta(seconds=1)
+        ).isoformat(),
+    )
+
+    create_file_and_commit("bump: version 1.0.0 → 2.0.0")
+    create_tag("2.0.0")
+
+    mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
+    write_patch = mocker.patch("commitizen.commands.changelog.out.write")
+
+    changelog = Changelog(
+        config,
+        {
+            "dry_run": True,
+            "incremental": False,
+            "unreleased_version": None,
+            "rev_range": "2.0.0",
+        },
+    )
+
+    with pytest.raises(DryRunExit):
+        changelog()
+
+    full_changelog = "\
+## 2.0.0 (2022-02-13)\n\n\
+### Feat\n\n\
+- commit 2\n\
+- commit 1\n"
+
+    write_patch.assert_called_with(full_changelog)

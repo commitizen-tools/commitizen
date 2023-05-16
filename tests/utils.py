@@ -3,6 +3,7 @@ from __future__ import annotations
 import time
 import uuid
 from pathlib import Path
+from deprecated import deprecated
 
 from commitizen import cmd, exceptions, git
 
@@ -14,7 +15,9 @@ class FakeCommand:
         self.return_code = return_code
 
 
-def create_file_and_commit(message: str, filename: str | None = None):
+def create_file_and_commit(
+    message: str, filename: str | None = None, committer_date: str | None = None
+):
     if not filename:
         filename = str(uuid.uuid4())
 
@@ -22,7 +25,7 @@ def create_file_and_commit(message: str, filename: str | None = None):
     c = cmd.run("git add .")
     if c.return_code != 0:
         raise exceptions.CommitError(c.err)
-    c = git.commit(message)
+    c = git.commit(message, committer_date=committer_date)
     if c.return_code != 0:
         raise exceptions.CommitError(c.err)
 
@@ -58,8 +61,16 @@ def create_tag(tag: str):
         raise exceptions.CommitError(c.err)
 
 
+@deprecated(
+    reason="\n\
+Prefer using `create_file_and_commit(filename, committer_date={your_date})` to influence the order of tags.\n\
+This is because lightweight tags (like the ones created here) use the commit's creatordate which we can specify \
+with the GIT_COMMITTER_DATE flag, instead of waiting entire seconds during tests."
+)
 def wait_for_tag():
-    """Wait for tag.
+    """Deprecated -- use `create_file_and_commit(filename, committer_date={your_date})` to order tags instead
+
+    Wait for tag.
 
     The resolution of timestamps is 1 second, so we need to wait
     to create another tag unfortunately.
