@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 import os
 import re
 import sys
-from typing import Any, Dict, Optional
+from typing import Any
 
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
@@ -15,7 +17,7 @@ from commitizen.exceptions import (
 class Check:
     """Check if the current commit msg matches the commitizen format."""
 
-    def __init__(self, config: BaseConfig, arguments: Dict[str, Any], cwd=os.getcwd()):
+    def __init__(self, config: BaseConfig, arguments: dict[str, Any], cwd=os.getcwd()):
         """Initial check command.
 
         Args:
@@ -23,9 +25,9 @@ class Check:
             arguments: All the flags provided by the user
             cwd: Current work directory
         """
-        self.commit_msg_file: Optional[str] = arguments.get("commit_msg_file")
-        self.commit_msg: Optional[str] = arguments.get("message")
-        self.rev_range: Optional[str] = arguments.get("rev_range")
+        self.commit_msg_file: str | None = arguments.get("commit_msg_file")
+        self.commit_msg: str | None = arguments.get("message")
+        self.rev_range: str | None = arguments.get("rev_range")
         self.allow_abort: bool = bool(
             arguments.get("allow_abort", config.settings["allow_abort"])
         )
@@ -41,7 +43,7 @@ class Check:
             for arg in (self.commit_msg_file, self.commit_msg, self.rev_range)
         )
         if num_exclusive_args_provided == 0 and not sys.stdin.isatty():
-            self.commit_msg: Optional[str] = sys.stdin.read()
+            self.commit_msg: str | None = sys.stdin.read()
         elif num_exclusive_args_provided != 1:
             raise InvalidCommandArgumentError(
                 (

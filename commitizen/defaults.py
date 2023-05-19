@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 import pathlib
 import sys
 from collections import OrderedDict
-from typing import Any, Dict, Iterable, List, MutableMapping, Optional, Tuple, Union
+from typing import Any, Iterable, MutableMapping
 
 if sys.version_info < (3, 8):
     from typing_extensions import TypedDict
@@ -14,47 +16,47 @@ Questions = Iterable[MutableMapping[str, Any]]
 
 class CzSettings(TypedDict, total=False):
     bump_pattern: str
-    bump_map: "OrderedDict[str, str]"
-    bump_map_major_version_zero: "OrderedDict[str, str]"
-    change_type_order: List[str]
+    bump_map: OrderedDict[str, str]
+    bump_map_major_version_zero: OrderedDict[str, str]
+    change_type_order: list[str]
 
     questions: Questions
-    example: Optional[str]
-    schema_pattern: Optional[str]
-    schema: Optional[str]
-    info_path: Union[str, pathlib.Path]
+    example: str | None
+    schema_pattern: str | None
+    schema: str | None
+    info_path: str | pathlib.Path
     info: str
     message_template: str
-    commit_parser: Optional[str]
-    changelog_pattern: Optional[str]
-    change_type_map: Optional[Dict[str, str]]
+    commit_parser: str | None
+    changelog_pattern: str | None
+    change_type_map: dict[str, str] | None
 
 
 class Settings(TypedDict, total=False):
     name: str
-    version: Optional[str]
-    version_files: List[str]
-    version_provider: Optional[str]
-    tag_format: Optional[str]
-    bump_message: Optional[str]
+    version: str | None
+    version_files: list[str]
+    version_provider: str | None
+    tag_format: str | None
+    bump_message: str | None
     allow_abort: bool
     changelog_file: str
     changelog_incremental: bool
-    changelog_start_rev: Optional[str]
+    changelog_start_rev: str | None
     changelog_merge_prerelease: bool
     update_changelog_on_bump: bool
     use_shortcuts: bool
-    style: Optional[List[Tuple[str, str]]]
+    style: list[tuple[str, str]] | None
     customize: CzSettings
     major_version_zero: bool
-    pre_bump_hooks: Optional[List[str]]
-    post_bump_hooks: Optional[List[str]]
+    pre_bump_hooks: list[str] | None
+    post_bump_hooks: list[str] | None
     prerelease_offset: int
-    version_type: Optional[str]
+    version_type: str | None
 
 
 name: str = "cz_conventional_commits"
-config_files: List[str] = [
+config_files: list[str] = [
     "pyproject.toml",
     ".cz.toml",
     ".cz.json",

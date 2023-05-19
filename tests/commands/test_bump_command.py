@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import inspect
 import sys
-from typing import Tuple
 from unittest.mock import MagicMock, call
 
 import pytest
@@ -649,7 +650,7 @@ __version__ = "0.1.0"
 def test_bump_changelog_command_commits_untracked_changelog_and_version_files(
     tmp_commitizen_project,
     mocker,
-    cli_bump_changelog_args: Tuple[str, ...],
+    cli_bump_changelog_args: tuple[str, ...],
     version_filepath: str,
     version_regex: str,
     version_file_content: str,

@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from pathlib import Path
-from typing import Union
 
 import yaml
 
@@ -9,7 +10,7 @@ from .base_config import BaseConfig
 
 
 class YAMLConfig(BaseConfig):
-    def __init__(self, *, data: Union[bytes, str], path: Union[Path, str]):
+    def __init__(self, *, data: bytes | str, path: Path | str):
         super(YAMLConfig, self).__init__()
         self.is_empty_config = False
         self._parse_setting(data)
@@ -19,7 +20,7 @@ class YAMLConfig(BaseConfig):
         with smart_open(self.path, "a") as json_file:
             yaml.dump({"commitizen": {}}, json_file, explicit_start=True)
 
-    def _parse_setting(self, data: Union[bytes, str]) -> None:
+    def _parse_setting(self, data: bytes | str) -> None:
         """We expect to have a section in cz.yaml looking like
 
         ```

@@ -7,9 +7,11 @@
 2. Build a dict (tree) of that particular version
 3. Transform tree into markdown again
 """
+from __future__ import annotations
+
 import re
 from collections import defaultdict
-from typing import Dict, Generator, Iterable, List
+from typing import Generator, Iterable
 
 MD_VERSION_RE = r"^##\s(?P<version>[a-zA-Z0-9.+]+)\s?\(?(?P<date>[0-9-]+)?\)?"
 MD_CHANGE_TYPE_RE = r"^###\s(?P<change_type>[a-zA-Z0-9.+\s]+)"
@@ -67,21 +69,21 @@ def find_version_blocks(filepath: str) -> Generator:
         yield block
 
 
-def parse_md_version(md_version: str) -> Dict:
+def parse_md_version(md_version: str) -> dict:
     m = md_version_c.match(md_version)
     if not m:
         return {}
     return m.groupdict()
 
 
-def parse_md_change_type(md_change_type: str) -> Dict:
+def parse_md_change_type(md_change_type: str) -> dict:
     m = md_change_type_c.match(md_change_type)
     if not m:
         return {}
     return m.groupdict()
 
 
-def parse_md_message(md_message: str) -> Dict:
+def parse_md_message(md_message: str) -> dict:
     m = md_message_c.match(md_message)
     if not m:
         return {}
@@ -99,10 +101,10 @@ def transform_change_type(change_type: str) -> str:
         raise ValueError(f"Could not match a change_type with {change_type}")
 
 
-def generate_block_tree(block: List[str]) -> Dict:
+def generate_block_tree(block: list[str]) -> dict:
     # tree: Dict = {"commits": []}
-    changes: Dict = defaultdict(list)
-    tree: Dict = {"changes": changes}
+    changes: dict = defaultdict(list)
+    tree: dict = {"changes": changes}
 
     change_type = None
     for line in block:
@@ -126,6 +128,6 @@ def generate_block_tree(block: List[str]) -> Dict:
     return tree
 
 
-def generate_full_tree(blocks: Iterable) -> Iterable[Dict]:
+def generate_full_tree(blocks: Iterable) -> Iterable[dict]:
     for block in blocks:
         yield generate_block_tree(block)

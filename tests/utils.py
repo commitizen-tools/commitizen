@@ -1,7 +1,8 @@
+from __future__ import annotations
+
 import time
 import uuid
 from pathlib import Path
-from typing import Optional
 
 from commitizen import cmd, exceptions, git
 
@@ -13,7 +14,7 @@ class FakeCommand:
         self.return_code = return_code
 
 
-def create_file_and_commit(message: str, filename: Optional[str] = None):
+def create_file_and_commit(message: str, filename: str | None = None):
     if not filename:
         filename = str(uuid.uuid4())
 

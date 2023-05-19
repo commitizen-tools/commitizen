@@ -1,9 +1,10 @@
+from __future__ import annotations
+
 import os
 from enum import Enum
 from os import linesep
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import List, Optional
 
 from commitizen import cmd, out
 from commitizen.exceptions import GitCommandError
@@ -73,8 +74,7 @@ class GitTag(GitObject):
         return self._date
 
     @classmethod
-    def from_line(cls, line: str, inner_delimiter: str) -> "GitTag":
-
+    def from_line(cls, line: str, inner_delimiter: str) -> GitTag:
         name, objectname, date, obj = line.split(inner_delimiter)
         if not obj:
             obj = objectname
@@ -102,11 +102,11 @@ def commit(message: str, args: str = "") -> cmd.Command:
 
 
 def get_commits(
-    start: Optional[str] = None,
+    start: str | None = None,
     end: str = "HEAD",
     *,
     args: str = "",
-) -> List[GitCommit]:
+) -> list[GitCommit]:
     """Get the commits between start and end."""
     git_log_entries = _get_log_as_str_list(start, end, args)
     git_commits = []
@@ -140,7 +140,7 @@ def get_filenames_in_commit(git_reference: str = ""):
         raise GitCommandError(c.err)
 
 
-def get_tags(dateformat: str = "%Y-%m-%d") -> List[GitTag]:
+def get_tags(dateformat: str = "%Y-%m-%d") -> list[GitTag]:
     inner_delimiter = "---inner_delimiter---"
     formatter = (
         f'"%(refname:lstrip=2){inner_delimiter}'
@@ -175,21 +175,21 @@ def is_signed_tag(tag: str) -> bool:
     return cmd.run(f"git tag -v {tag}").return_code == 0
 
 
-def get_latest_tag_name() -> Optional[str]:
+def get_latest_tag_name() -> str | None:
     c = cmd.run("git describe --abbrev=0 --tags")
     if c.err:
         return None
     return c.out.strip()
 
 
-def get_tag_names() -> List[Optional[str]]:
+def get_tag_names() -> list[str | None]:
     c = cmd.run("git tag --list")
     if c.err:
         return []
     return [tag.strip() for tag in c.out.split("\n") if tag.strip()]
 
 
-def find_git_project_root() -> Optional[Path]:
+def find_git_project_root() -> Path | None:
     c = cmd.run("git rev-parse --show-toplevel")
     if not c.err:
         return Path(c.out.strip())
@@ -237,7 +237,7 @@ def smart_open(*args, **kargs):
     return open(*args, newline=get_eol_style().get_eol_for_open(), **kargs)
 
 
-def _get_log_as_str_list(start: Optional[str], end: str, args: str) -> List[str]:
+def _get_log_as_str_list(start: str | None, end: str, args: str) -> list[str]:
     """Get string representation of each log entry"""
     delimiter = "----------commit-delimiter----------"
     log_format: str = "%H%n%s%n%an%n%ae%n%b"

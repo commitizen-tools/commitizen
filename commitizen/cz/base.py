@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from abc import ABCMeta, abstractmethod
-from typing import Callable, Dict, List, Optional, Tuple
+from typing import Callable
 
 from prompt_toolkit.styles import Style, merge_styles
 
@@ -9,10 +11,10 @@ from commitizen.defaults import Questions
 
 
 class BaseCommitizen(metaclass=ABCMeta):
-    bump_pattern: Optional[str] = None
-    bump_map: Optional[Dict[str, str]] = None
-    bump_map_major_version_zero: Optional[Dict[str, str]] = None
-    default_style_config: List[Tuple[str, str]] = [
+    bump_pattern: str | None = None
+    bump_map: dict[str, str] | None = None
+    bump_map_major_version_zero: dict[str, str] | None = None
+    default_style_config: list[tuple[str, str]] = [
         ("qmark", "fg:#ff9d00 bold"),
         ("question", "bold"),
         ("answer", "fg:#ff9d00 bold"),
@@ -28,18 +30,18 @@ class BaseCommitizen(metaclass=ABCMeta):
     # The whole subject will be parsed as message by default
     # This allows supporting changelog for any rule system.
     # It can be modified per rule
-    commit_parser: Optional[str] = r"(?P<message>.*)"
-    changelog_pattern: Optional[str] = r".*"
-    change_type_map: Optional[Dict[str, str]] = None
-    change_type_order: Optional[List[str]] = None
+    commit_parser: str | None = r"(?P<message>.*)"
+    changelog_pattern: str | None = r".*"
+    change_type_map: dict[str, str] | None = None
+    change_type_order: list[str] | None = None
 
     # Executed per message parsed by the commitizen
-    changelog_message_builder_hook: Optional[
-        Callable[[Dict, git.GitCommit], Dict]
-    ] = None
+    changelog_message_builder_hook: None | (
+        Callable[[dict, git.GitCommit], dict]
+    ) = None
 
     # Executed only at the end of the changelog generation
-    changelog_hook: Optional[Callable[[str, Optional[str]], str]] = None
+    changelog_hook: Callable[[str, str | None], str] | None = None
 
     def __init__(self, config: BaseConfig):
         self.config = config
@@ -63,19 +65,19 @@ class BaseCommitizen(metaclass=ABCMeta):
             ]
         )
 
-    def example(self) -> Optional[str]:
+    def example(self) -> str | None:
         """Example of the commit message."""
         raise NotImplementedError("Not Implemented yet")
 
-    def schema(self) -> Optional[str]:
+    def schema(self) -> str | None:
         """Schema definition of the commit message."""
         raise NotImplementedError("Not Implemented yet")
 
-    def schema_pattern(self) -> Optional[str]:
+    def schema_pattern(self) -> str | None:
         """Regex matching the schema used for message validation."""
         raise NotImplementedError("Not Implemented yet")
 
-    def info(self) -> Optional[str]:
+    def info(self) -> str | None:
         """Information about the standardized commit message."""
         raise NotImplementedError("Not Implemented yet")
 

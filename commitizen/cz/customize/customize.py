@@ -1,9 +1,10 @@
+from __future__ import annotations
+
 try:
     from jinja2 import Template
 except ImportError:
     from string import Template  # type: ignore
 
-from typing import Optional
 
 from commitizen import defaults
 from commitizen.config import BaseConfig
@@ -67,16 +68,16 @@ class CustomizeCommitsCz(BaseCommitizen):
         else:
             return message_template.render(**answers)
 
-    def example(self) -> Optional[str]:
+    def example(self) -> str | None:
         return self.custom_settings.get("example")
 
-    def schema_pattern(self) -> Optional[str]:
+    def schema_pattern(self) -> str | None:
         return self.custom_settings.get("schema_pattern")
 
-    def schema(self) -> Optional[str]:
+    def schema(self) -> str | None:
         return self.custom_settings.get("schema")
 
-    def info(self) -> Optional[str]:
+    def info(self) -> str | None:
         info_path = self.custom_settings.get("info_path")
         info = self.custom_settings.get("info")
         if info_path:
