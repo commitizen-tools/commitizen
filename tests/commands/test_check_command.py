@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import sys
 from io import StringIO
-from typing import List
 
 import pytest
 from pytest_mock import MockFixture
@@ -52,7 +53,7 @@ COMMIT_LOG = [
 ]
 
 
-def _build_fake_git_commits(commit_msgs: List[str]) -> List[git.GitCommit]:
+def _build_fake_git_commits(commit_msgs: list[str]) -> list[git.GitCommit]:
     return [git.GitCommit("test_rev", commit_msg) for commit_msg in commit_msgs]
 
 
@@ -223,7 +224,6 @@ def test_check_command_with_invalid_argument(config):
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_check_command_with_empty_range(config, mocker: MockFixture):
-
     # must initialize git with a commit
     create_file_and_commit("feat: initial")
 

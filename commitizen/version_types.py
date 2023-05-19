@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import sys
-from typing import Optional, Tuple, Union
 
 if sys.version_info >= (3, 8):
     from typing import Protocol as _Protocol
@@ -10,14 +11,14 @@ from packaging.version import Version
 
 
 class VersionProtocol(_Protocol):
-    def __init__(self, _version: Union[Version, str]):
+    def __init__(self, _version: Version | str):
         raise NotImplementedError("must be implemented")
 
     def __str__(self) -> str:
         raise NotImplementedError("must be implemented")
 
     @property
-    def release(self) -> Tuple[int, ...]:
+    def release(self) -> tuple[int, ...]:
         raise NotImplementedError("must be implemented")
 
     @property
@@ -25,11 +26,11 @@ class VersionProtocol(_Protocol):
         raise NotImplementedError("must be implemented")
 
     @property
-    def pre(self) -> Optional[Tuple[str, int]]:
+    def pre(self) -> tuple[str, int] | None:
         raise NotImplementedError("must be implemented")
 
     @property
-    def local(self) -> Optional[str]:
+    def local(self) -> str | None:
         raise NotImplementedError("must be implemented")
 
     @property
@@ -42,7 +43,7 @@ class SemVerVersion(VersionProtocol):
         self._version = Version(version)
 
     @property
-    def release(self) -> Tuple[int, ...]:
+    def release(self) -> tuple[int, ...]:
         return self._version.release
 
     @property
@@ -50,11 +51,11 @@ class SemVerVersion(VersionProtocol):
         return self._version.is_prerelease
 
     @property
-    def pre(self) -> Optional[Tuple[str, int]]:
+    def pre(self) -> tuple[str, int] | None:
         return self._version.pre
 
     @property
-    def local(self) -> Optional[str]:
+    def local(self) -> str | None:
         return self._version.local
 
     @property

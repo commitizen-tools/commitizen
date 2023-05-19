@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import json
 from pathlib import Path
-from typing import Union
 from commitizen.exceptions import InvalidConfigurationError
 
 from commitizen.git import smart_open
@@ -9,7 +10,7 @@ from .base_config import BaseConfig
 
 
 class JsonConfig(BaseConfig):
-    def __init__(self, *, data: Union[bytes, str], path: Union[Path, str]):
+    def __init__(self, *, data: bytes | str, path: Path | str):
         super(JsonConfig, self).__init__()
         self.is_empty_config = False
         self.add_path(path)
@@ -33,7 +34,7 @@ class JsonConfig(BaseConfig):
             json.dump(parser, f, indent=2)
         return self
 
-    def _parse_setting(self, data: Union[bytes, str]) -> None:
+    def _parse_setting(self, data: bytes | str) -> None:
         """We expect to have a section in .cz.json looking like
 
         ```

@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import os
 import shutil
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import questionary
 import yaml
@@ -54,10 +56,10 @@ class ProjectInfo:
         return os.path.isfile("composer.json")
 
     @property
-    def latest_tag(self) -> Optional[str]:
+    def latest_tag(self) -> str | None:
         return get_latest_tag_name()
 
-    def tags(self) -> Optional[List]:
+    def tags(self) -> list | None:
         """Not a property, only use if necessary"""
         if self.latest_tag is None:
             return None
@@ -285,7 +287,7 @@ class Init:
         ).unsafe_ask()
         return update_changelog_on_bump
 
-    def _exec_install_pre_commit_hook(self, hook_types: List[str]):
+    def _exec_install_pre_commit_hook(self, hook_types: list[str]):
         cmd_str = self._gen_pre_commit_cmd(hook_types)
         c = cmd.run(cmd_str)
         if c.return_code != 0:
@@ -297,7 +299,7 @@ class Init:
             )
             raise InitFailedError(err_msg)
 
-    def _gen_pre_commit_cmd(self, hook_types: List[str]) -> str:
+    def _gen_pre_commit_cmd(self, hook_types: list[str]) -> str:
         """Generate pre-commit command according to given hook types"""
         if not hook_types:
             raise ValueError("At least 1 hook type should be provided.")
@@ -306,7 +308,7 @@ class Init:
         )
         return cmd_str
 
-    def _install_pre_commit_hook(self, hook_types: Optional[List[str]] = None):
+    def _install_pre_commit_hook(self, hook_types: list[str] | None = None):
         pre_commit_config_filename = ".pre-commit-config.yaml"
         cz_hook_config = {
             "repo": "https://github.com/commitizen-tools/commitizen",
@@ -348,6 +350,6 @@ class Init:
         self._exec_install_pre_commit_hook(hook_types)
         out.write("commitizen pre-commit hook is now installed in your '.git'\n")
 
-    def _update_config_file(self, values: Dict[str, Any]):
+    def _update_config_file(self, values: dict[str, Any]):
         for key, value in values.items():
             self.config.set_key(key, value)

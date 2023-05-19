@@ -4,7 +4,7 @@ import json
 import re
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Callable, ClassVar, Optional, cast
+from typing import Any, Callable, ClassVar, cast
 
 import importlib_metadata as metadata
 import tomlkit
@@ -184,14 +184,14 @@ class ScmProvider(VersionProvider):
         "$devrelease": r"(?P<devrelease>\.dev\d+)?",
     }
 
-    def _tag_format_matcher(self) -> Callable[[str], Optional[str]]:
+    def _tag_format_matcher(self) -> Callable[[str], str | None]:
         pattern = self.config.settings.get("tag_format") or VERSION_PATTERN
         for var, tag_pattern in self.TAG_FORMAT_REGEXS.items():
             pattern = pattern.replace(var, tag_pattern)
 
         regex = re.compile(f"^{pattern}$", re.VERBOSE)
 
-        def matcher(tag: str) -> Optional[str]:
+        def matcher(tag: str) -> str | None:
             match = regex.match(tag)
             if not match:
                 return None

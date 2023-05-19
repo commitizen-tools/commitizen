@@ -3,7 +3,7 @@ from __future__ import annotations
 import importlib
 import pkgutil
 import warnings
-from typing import Iterable, Optional
+from typing import Iterable
 
 import importlib_metadata as metadata
 
@@ -11,7 +11,7 @@ from commitizen.cz.base import BaseCommitizen
 
 
 def discover_plugins(
-    path: Optional[Iterable[str]] = None,
+    path: Iterable[str] | None = None,
 ) -> dict[str, type[BaseCommitizen]]:
     """Discover commitizen plugins on the path
 

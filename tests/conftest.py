@@ -1,8 +1,9 @@
+from __future__ import annotations
+
 import os
 import re
 import tempfile
 from pathlib import Path
-from typing import Optional
 
 import pytest
 
@@ -55,7 +56,7 @@ def tmp_commitizen_project(tmp_git_project):
 @pytest.fixture(scope="function")
 def tmp_commitizen_project_initial(tmp_git_project):
     def _initial(
-        config_extra: Optional[str] = None,
+        config_extra: str | None = None,
         version="0.1.0",
         initial_commit="feat: new user interface",
     ):

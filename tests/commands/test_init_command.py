@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import json
 import os
-from typing import Any, Dict, List
+from typing import Any
 
 import pytest
 import yaml
@@ -168,7 +170,7 @@ def check_cz_config(config: str):
             assert config_data == expected_config
 
 
-def check_pre_commit_config(expected: List[Dict[str, Any]]):
+def check_pre_commit_config(expected: list[dict[str, Any]]):
     """
     Check the content of pre-commit config is as expected
     """

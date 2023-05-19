@@ -1,10 +1,9 @@
+from __future__ import annotations
+
 import os
 from logging import getLogger
-from typing import List, Optional
 
 import questionary
-from packaging.version import InvalidVersion, Version
-
 from commitizen import bump, cmd, factory, git, hooks, out, version_types
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
@@ -22,6 +21,7 @@ from commitizen.exceptions import (
     NoVersionSpecifiedError,
 )
 from commitizen.providers import get_provider
+from packaging.version import InvalidVersion, Version
 
 logger = getLogger("commitizen")
 
@@ -85,7 +85,7 @@ class Bump:
                 is_initial = questionary.confirm("Is this the first tag created?").ask()
         return is_initial
 
-    def find_increment(self, commits: List[git.GitCommit]) -> Optional[str]:
+    def find_increment(self, commits: list[git.GitCommit]) -> str | None:
         # Update the bump map to ensure major version doesn't increment.
         is_major_version_zero: bool = self.bump_settings["major_version_zero"]
         # self.cz.bump_map = defaults.bump_map_major_version_zero
@@ -117,17 +117,17 @@ class Bump:
 
         tag_format: str = self.bump_settings["tag_format"]
         bump_commit_message: str = self.bump_settings["bump_message"]
-        version_files: List[str] = self.bump_settings["version_files"]
+        version_files: list[str] = self.bump_settings["version_files"]
         major_version_zero: bool = self.bump_settings["major_version_zero"]
         prerelease_offset: int = self.bump_settings["prerelease_offset"]
 
         dry_run: bool = self.arguments["dry_run"]
         is_yes: bool = self.arguments["yes"]
-        increment: Optional[str] = self.arguments["increment"]
-        prerelease: Optional[str] = self.arguments["prerelease"]
-        devrelease: Optional[int] = self.arguments["devrelease"]
-        is_files_only: Optional[bool] = self.arguments["files_only"]
-        is_local_version: Optional[bool] = self.arguments["local_version"]
+        increment: str | None = self.arguments["increment"]
+        prerelease: str | None = self.arguments["prerelease"]
+        devrelease: int | None = self.arguments["devrelease"]
+        is_files_only: bool | None = self.arguments["files_only"]
+        is_local_version: bool | None = self.arguments["local_version"]
         manual_version = self.arguments["manual_version"]
 
         if manual_version:

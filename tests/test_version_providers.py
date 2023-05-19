@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 from textwrap import dedent
-from typing import TYPE_CHECKING, Iterator, Optional, Type
+from typing import TYPE_CHECKING, Iterator
 
 import pytest
 
@@ -138,7 +138,7 @@ def test_file_providers(
     chdir: Path,
     id: str,
     filename: str,
-    cls: Type[VersionProvider],
+    cls: type[VersionProvider],
     content: str,
     expected: str,
 ):
@@ -173,7 +173,7 @@ def test_file_providers(
 )
 @pytest.mark.usefixtures("tmp_git_project")
 def test_scm_provider(
-    config: BaseConfig, tag_format: Optional[str], tag: str, version: str
+    config: BaseConfig, tag_format: str | None, tag: str, version: str
 ):
     create_file_and_commit("test: fake commit")
     create_tag(tag)

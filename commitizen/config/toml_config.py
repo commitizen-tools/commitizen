@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import os
 from pathlib import Path
-from typing import Union
 
 from tomlkit import exceptions, parse, table
 
@@ -8,7 +9,7 @@ from .base_config import BaseConfig
 
 
 class TomlConfig(BaseConfig):
-    def __init__(self, *, data: Union[bytes, str], path: Union[Path, str]):
+    def __init__(self, *, data: bytes | str, path: Path | str):
         super(TomlConfig, self).__init__()
         self.is_empty_config = False
         self._parse_setting(data)
@@ -41,7 +42,7 @@ class TomlConfig(BaseConfig):
             f.write(parser.as_string().encode("utf-8"))
         return self
 
-    def _parse_setting(self, data: Union[bytes, str]) -> None:
+    def _parse_setting(self, data: bytes | str) -> None:
         """We expect to have a section in pyproject looking like
 
         ```

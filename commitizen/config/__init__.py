@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from pathlib import Path
-from typing import Union
 
 from commitizen import defaults, git
 
@@ -26,7 +27,7 @@ def read_cfg() -> BaseConfig:
         if not filename.exists():
             continue
 
-        _conf: Union[TomlConfig, JsonConfig, YAMLConfig]
+        _conf: TomlConfig | JsonConfig | YAMLConfig
 
         with open(filename, "rb") as f:
             data: bytes = f.read()

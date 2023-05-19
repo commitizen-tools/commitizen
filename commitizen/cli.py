@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 import argparse
 import logging
 import sys
 from pathlib import Path
 from functools import partial
 from types import TracebackType
-from typing import List
 
 import argcomplete
 from decli import cli
@@ -353,7 +354,7 @@ original_excepthook = sys.excepthook
 
 
 def commitizen_excepthook(
-    type, value, traceback, debug=False, no_raise: List[int] = None
+    type, value, traceback, debug=False, no_raise: list[int] = None
 ):
     traceback = traceback if isinstance(traceback, TracebackType) else None
     if not no_raise:
@@ -376,13 +377,13 @@ commitizen_debug_excepthook = partial(commitizen_excepthook, debug=True)
 sys.excepthook = commitizen_excepthook
 
 
-def parse_no_raise(comma_separated_no_raise: str) -> List[int]:
+def parse_no_raise(comma_separated_no_raise: str) -> list[int]:
     """Convert the given string to exit codes.
 
     Receives digits and strings and outputs the parsed integer which
     represents the exit code found in exceptions.
     """
-    no_raise_items: List[str] = comma_separated_no_raise.split(",")
+    no_raise_items: list[str] = comma_separated_no_raise.split(",")
     no_raise_codes = []
     for item in no_raise_items:
         if item.isdecimal():

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 import re
 import sys
@@ -5,7 +7,6 @@ import typing
 from collections import OrderedDict
 from itertools import zip_longest
 from string import Template
-from typing import List, Optional, Tuple, Type, Union
 
 from packaging.version import Version
 
@@ -21,15 +22,15 @@ else:
 
 
 def find_increment(
-    commits: List[GitCommit], regex: str, increments_map: Union[dict, OrderedDict]
-) -> Optional[str]:
+    commits: list[GitCommit], regex: str, increments_map: dict | OrderedDict
+) -> str | None:
     if isinstance(increments_map, dict):
         increments_map = OrderedDict(increments_map)
 
     # Most important cases are major and minor.
     # Everything else will be considered patch.
     select_pattern = re.compile(regex)
-    increment: Optional[str] = None
+    increment: str | None = None
 
     for commit in commits:
         for message in commit.message.split("\n"):
@@ -54,7 +55,7 @@ def find_increment(
 
 
 def prerelease_generator(
-    current_version: str, prerelease: Optional[str] = None, offset: int = 0
+    current_version: str, prerelease: str | None = None, offset: int = 0
 ) -> str:
     """Generate prerelease
 
@@ -123,11 +124,11 @@ def semver_generator(current_version: str, increment: str = None) -> str:
 def generate_version(
     current_version: str,
     increment: str,
-    prerelease: Optional[str] = None,
+    prerelease: str | None = None,
     prerelease_offset: int = 0,
-    devrelease: Optional[int] = None,
+    devrelease: int | None = None,
     is_local_version: bool = False,
-    version_type_cls: Optional[Type[VersionProtocol]] = None,
+    version_type_cls: type[VersionProtocol] | None = None,
 ) -> VersionProtocol:
     """Based on the given increment a proper semver will be generated.
 
@@ -163,7 +164,7 @@ def generate_version(
 
 
 def update_version_in_files(
-    current_version: str, new_version: str, files: List[str], *, check_consistency=False
+    current_version: str, new_version: str, files: list[str], *, check_consistency=False
 ) -> None:
     """Change old version to the new one in every file given.
 
@@ -197,7 +198,7 @@ def update_version_in_files(
 
 def _bump_with_regex(
     version_filepath: str, current_version: str, new_version: str, regex: str
-) -> Tuple[bool, str]:
+) -> tuple[bool, str]:
     current_version_found = False
     lines = []
     pattern = re.compile(regex)
@@ -218,9 +219,9 @@ def _version_to_regex(version: str) -> str:
 
 
 def normalize_tag(
-    version: Union[VersionProtocol, str],
-    tag_format: Optional[str] = None,
-    version_type_cls: Optional[Type[VersionProtocol]] = None,
+    version: VersionProtocol | str,
+    tag_format: str | None = None,
+    version_type_cls: type[VersionProtocol] | None = None,
 ) -> str:
     """The tag and the software version might be different.
 
@@ -254,8 +255,8 @@ def normalize_tag(
 
 
 def create_commit_message(
-    current_version: Union[Version, str],
-    new_version: Union[Version, str],
+    current_version: Version | str,
+    new_version: Version | str,
     message_template: str = None,
 ) -> str:
     if message_template is None:

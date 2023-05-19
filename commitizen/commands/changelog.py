@@ -1,9 +1,9 @@
+from __future__ import annotations
+
 import os.path
 from difflib import SequenceMatcher
 from operator import itemgetter
-from typing import Callable, Dict, List, Optional
-
-from packaging.version import parse
+from typing import Callable
 
 from commitizen import bump, changelog, defaults, factory, git, out, version_types
 from commitizen.config import BaseConfig
@@ -16,6 +16,7 @@ from commitizen.exceptions import (
     NotAllowed,
 )
 from commitizen.git import GitTag, smart_open
+from packaging.version import parse
 
 
 class Changelog:
@@ -65,7 +66,7 @@ class Changelog:
         version_type = self.config.settings.get("version_type")
         self.version_type = version_type and version_types.VERSION_TYPES[version_type]
 
-    def _find_incremental_rev(self, latest_version: str, tags: List[GitTag]) -> str:
+    def _find_incremental_rev(self, latest_version: str, tags: list[GitTag]) -> str:
         """Try to find the 'start_rev'.
 
         We use a similarity approach. We know how to parse the version from the markdown
@@ -92,7 +93,7 @@ class Changelog:
         return start_rev
 
     def write_changelog(
-        self, changelog_out: str, lines: List[str], changelog_meta: Dict
+        self, changelog_out: str, lines: list[str], changelog_meta: dict
     ):
         if not isinstance(self.file_name, str):
             raise NotAllowed(
@@ -101,9 +102,9 @@ class Changelog:
                 f"or the setting `changelog_file` in {self.config.path}"
             )
 
-        changelog_hook: Optional[Callable] = self.cz.changelog_hook
+        changelog_hook: Callable | None = self.cz.changelog_hook
         with smart_open(self.file_name, "w") as changelog_file:
-            partial_changelog: Optional[str] = None
+            partial_changelog: str | None = None
             if self.incremental:
                 new_lines = changelog.incremental_build(
                     changelog_out, lines, changelog_meta
@@ -120,11 +121,11 @@ class Changelog:
         changelog_pattern = self.cz.changelog_pattern
         start_rev = self.start_rev
         unreleased_version = self.unreleased_version
-        changelog_meta: Dict = {}
-        change_type_map: Optional[Dict] = self.change_type_map
-        changelog_message_builder_hook: Optional[
+        changelog_meta: dict = {}
+        change_type_map: dict | None = self.change_type_map
+        changelog_message_builder_hook: None | (
             Callable
-        ] = self.cz.changelog_message_builder_hook
+        ) = self.cz.changelog_message_builder_hook
         merge_prerelease = self.merge_prerelease
 
         if not changelog_pattern or not commit_parser:

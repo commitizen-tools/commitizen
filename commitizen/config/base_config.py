@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from pathlib import Path
-from typing import Optional, Union
 
 from commitizen.defaults import DEFAULT_SETTINGS, Settings
 
@@ -7,14 +8,14 @@ from commitizen.defaults import DEFAULT_SETTINGS, Settings
 class BaseConfig:
     def __init__(self):
         self._settings: Settings = DEFAULT_SETTINGS.copy()
-        self._path: Optional[Path] = None
+        self._path: Path | None = None
 
     @property
     def settings(self) -> Settings:
         return self._settings
 
     @property
-    def path(self) -> Optional[Path]:
+    def path(self) -> Path | None:
         return self._path
 
     def set_key(self, key, value):
@@ -28,8 +29,8 @@ class BaseConfig:
     def update(self, data: Settings) -> None:
         self._settings.update(data)
 
-    def add_path(self, path: Union[str, Path]) -> None:
+    def add_path(self, path: str | Path) -> None:
         self._path = Path(path)
 
-    def _parse_setting(self, data: Union[bytes, str]) -> None:
+    def _parse_setting(self, data: bytes | str) -> None:
         raise NotImplementedError()
