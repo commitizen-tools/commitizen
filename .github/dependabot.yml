@@ -9,7 +9,7 @@ updates:
     labels:
       - dependencies
     commit-message:
-      prefix: "ci(actions)"
+      prefix: "ci"
       include: "scope"
   -
     # Maintain python dependencies
@@ -20,6 +20,5 @@ updates:
     labels:
       - dependencies
     commit-message:
-      prefix: "build(poetry)"
-      prefix-development:: "build(poetry-dev)"
+      prefix: "build"
       include: "scope"
