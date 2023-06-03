@@ -68,7 +68,7 @@ data = {
                         "name": "--write-message-to-file",
                         "type": Path,
                         "metavar": "FILE_PATH",
-                        "help": "write message to file before commiting (can be combined with --dry-run)",
+                        "help": "write message to file before committing (can be combined with --dry-run)",
                     },
                     {
                         "name": ["-s", "--signoff"],

@@ -155,7 +155,7 @@ def default_choice(request, mocker: MockFixture):
 
 def check_cz_config(config: str):
     """
-    Cehck the content of commitizen config is as expected
+    Check the content of commitizen config is as expected
 
     Args:
         config: The config path

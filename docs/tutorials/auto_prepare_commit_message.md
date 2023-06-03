@@ -12,7 +12,7 @@ use a [prepare-commit-msg Git hook](prepare-commit-msg-docs):
 > This hook is invoked by git-commit right after preparing the
 > default log message, and before the editor is started.
 
-To automatically perform arbitrary cleanup steps after a succesful commit you can use a
+To automatically perform arbitrary cleanup steps after a successful commit you can use a
 [post-commit Git hook][post-commit-docs]:
 
 > This hook is invoked by git-commit. It takes no parameters, and is invoked after a

@@ -42,7 +42,7 @@ COMMIT_LOG = [
     "docs(check): fix pre-commit setup",
     "bump: version 1.16.1 → 1.16.2",
     "Merge pull request #135 from Lee-W/fix-pre-commit-hook\n\nFix pre commit hook",
-    "docs(check): enforce cz check only whem committing",
+    "docs(check): enforce cz check only when committing",
     (
         'Revert "fix(pre-commit): set pre-commit check stage to commit-msg"\n\n'
         "This reverts commit afc70133e4a81344928561fbf3bb20738dfc8a0b."

@@ -1,11 +1,11 @@
 from commitizen.cz import exceptions
 
 
-def required_validator(ans, msg=None):
-    if not ans:
+def required_validator(answer, msg=None):
+    if not answer:
         raise exceptions.AnswerRequiredError(msg)
-    return ans
+    return answer
 
 
-def multiple_line_breaker(ans, sep="|"):
-    return "\n".join(line.strip() for line in ans.split(sep) if line)
+def multiple_line_breaker(answer, sep="|"):
+    return "\n".join(line.strip() for line in answer.split(sep) if line)

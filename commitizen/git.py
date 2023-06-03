@@ -216,7 +216,7 @@ def get_eol_style() -> EOLTypes:
     # We enumerate the EOL types of the response of
     # `git config core.eol`, and map it to our enumration EOLTypes.
     #
-    # It is just like the varient of the "match" syntax.
+    # It is just like the variant of the "match" syntax.
     map = {
         "lf": EOLTypes.LF,
         "crlf": EOLTypes.CRLF,

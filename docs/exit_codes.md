@@ -33,4 +33,4 @@ These exit codes can be found in `commitizen/exceptions.py::ExitCode`.
 | GitCommandError             | 23        | Unexpected failure while calling a git command                                                              |
 | InvalidManualVersion        | 24        | Manually provided version is invalid                                                                        |
 | InitFailedError             | 25        | Failed to initialize pre-commit                                                                             |
-| VersionProviderUnknown      | 26        | `version_provider` setting is set to an unknown version provider indentifier                                |
+| VersionProviderUnknown      | 26        | `version_provider` setting is set to an unknown version provider identifier                                |
