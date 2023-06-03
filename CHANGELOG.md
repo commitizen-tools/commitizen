@@ -181,7 +181,7 @@
 
 ### Fix
 
-- **bump.py**: `CHANGELOG.md` gets git added and commited correctly
+- **bump.py**: `CHANGELOG.md` gets git added and committed correctly
 
 ## v2.33.0 (2022-09-15)
 
@@ -420,8 +420,8 @@
 
 ### Fix
 
-- **bump**: raise non zero error code when there's no elegible commit to bump
-- **bump**: raise non zero error code when there's no elegible commit to bump
+- **bump**: raise non zero error code when there's no eligible commit to bump
+- **bump**: raise non zero error code when there's no eligible commit to bump
 
 ## v2.20.3 (2021-12-20)
 
@@ -471,7 +471,7 @@
 
 ### Fix
 
-- **commit**: correct the stage checker before commiting
+- **commit**: correct the stage checker before committing
 
 ## v2.18.0 (2021-08-13)
 
@@ -546,7 +546,7 @@
 
 ### Fix
 
-- **bump**: replace all occurances that match regex
+- **bump**: replace all occurrences that match regex
 - **wip**: add test for current breaking change
 
 ## v2.17.1 (2021-04-08)
@@ -792,7 +792,7 @@
 ### BREAKING CHANGE
 
 - setup.cfg, .cz and .cz.cfg are no longer supported
-- Use "cz verion" instead
+- Use "cz version" instead
 - "cz --debug" will no longer work
 
 ## v1.25.0 (2020-07-26)
@@ -961,7 +961,7 @@
 
 - **commands/changelog**: make changelog_file an option in config
 - **commands/changelog**: exit when there is no commit exists
-- **commands/changlog**: add --start-rev argument to `cz changelog`
+- **commands/changelog**: add --start-rev argument to `cz changelog`
 - **changelog**: generate changelog based on git log
 - **commands/changelog**: generate changelog_tree from all past commits
 - **cz/conventinal_commits**: add changelog_map, changelog_pattern and implement process_commit
@@ -1062,7 +1062,7 @@
 - **cmd**: reimplement how cmd is run
 - **git**: Use GitCommit, GitTag object to store commit and git information
 - **git**: make arguments other then start and end in get_commit keyword arguments
-- **git**: Change get_commits into returning commits instead of lines of messsages
+- **git**: Change get_commits into returning commits instead of lines of messages
 
 ### Feat
 
@@ -1162,7 +1162,7 @@
 
 - **config**: handle empty config file
 - **config**: fix load global_conf even if it doesn't exist
-- **config/ini_config**: replase outdated _parse_ini_settings with _parse_settings
+- **config/ini_config**: replace outdated _parse_ini_settings with _parse_settings
 
 ## v1.10.1 (2019-12-10)
 
@@ -1207,16 +1207,16 @@
 ### Refactor
 
 - **config**: remove has_pyproject which is no longer used
-- **cz/customize**: make jinja2 a custom requirement. if not installed use string.Tempalte instead
+- **cz/customize**: make jinja2 a custom requirement. if not installed use string.Template instead
 - **cz/utils**: rename filters as utils
 - **cli**: add back --version and remove subcommand required constraint
 
 ### Fix
 
-- commit dry-run doesnt require staging to be clean
+- commit dry-run doesn't require staging to be clean
 - correct typo to spell "convention"
 - removing folder in windows throwing a PermissionError
-- **scripts**: add back the delelte poetry prefix
+- **scripts**: add back the delete poetry prefix
 - **test_cli**: testing the version command
 
 ## v1.8.0 (2019-11-12)
@@ -1327,7 +1327,7 @@
 - update given files with new version
 - **config**: new set key, used to set version to cfg
 - support for pyproject.toml
-- first semantic version bump implementaiton
+- first semantic version bump implementation
 
 ### Fix
 
@@ -1386,11 +1386,11 @@
 
 ### Refactor
 
-- **conventionalCommit**: moved fitlers to questions instead of message
+- **conventionalCommit**: moved filters to questions instead of message
 
 ### Fix
 
-- **manifest**: inluded missing files
+- **manifest**: included missing files
 
 ## v0.9.5 (2018-08-24)
 
@@ -1408,7 +1408,7 @@
 
 ### Feat
 
-- **commiter**: conventional commit is a bit more intelligent now
+- **committer**: conventional commit is a bit more intelligent now
 
 ## v0.9.2 (2017-11-11)
 

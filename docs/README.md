@@ -19,14 +19,14 @@
 
 Commitizen is release management tool designed for teams.
 
-Commitizen assumes your team uses a standard way of commiting rules
+Commitizen assumes your team uses a standard way of committing rules
 and from that foundation, it can bump your project's version, create
 the changelog, and update files.
 
 By default, commitizen uses [conventional commits][conventional_commits], but you
 can build your own set of rules, and publish them.
 
-Using a standarized set of rules to write commits, makes commits easier to read, and enforces writing
+Using a standardized set of rules to write commits, makes commits easier to read, and enforces writing
 descriptive commits.
 
 ### Features

@@ -192,7 +192,7 @@ class ConventionalCommitsCz(BaseCommitizen):
 
     def schema_pattern(self) -> str:
         PATTERN = (
-            r"(?s)"  # To explictly make . match new line
+            r"(?s)"  # To explicitly make . match new line
             r"(build|ci|docs|feat|fix|perf|refactor|style|test|chore|revert|bump)"  # type
             r"(\(\S+\))?!?:"  # scope
             r"( [^\n\r]+)"  # subject
