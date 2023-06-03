@@ -34,6 +34,15 @@ repos:
       - id: blacken-docs
         additional_dependencies: [black==22.10]
 
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.4
+    hooks:
+      - id: codespell
+        name: Run codespell to check for common misspellings in files
+        language: python
+        types: [text]
+        args: ["--write-changes", "--ignore-words-list", "asend"]
+
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.2.2 # automatically updated by Commitizen
     hooks:
