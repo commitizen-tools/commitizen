@@ -8,8 +8,13 @@ default_stages:
   - push
 
 repos:
+  - repo: meta
+    hooks:
+      - id: check-hooks-apply
+      - id: check-useless-excludes
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.1.0
+    rev: v4.4.0
     hooks:
       - id: check-vcs-permalinks
       - id: end-of-file-fixer
@@ -18,6 +23,16 @@ repos:
         args: [--markdown-linebreak-ext=md]
       - id: debug-statements
       - id: no-commit-to-branch
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-yaml
+      - id: detect-private-key
+
+  - repo: https://github.com/asottile/blacken-docs
+    rev: 1.13.0
+    hooks:
+      - id: blacken-docs
+        additional_dependencies: [black==22.10]
 
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.2.2 # automatically updated by Commitizen
