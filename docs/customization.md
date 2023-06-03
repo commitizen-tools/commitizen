@@ -215,50 +215,42 @@ Inherit from `BaseCommitizen`, and you must define `questions` and `message`. Th
 from commitizen.cz.base import BaseCommitizen
 from commitizen.defaults import Questions
 
+
 class JiraCz(BaseCommitizen):
     # Questions = Iterable[MutableMapping[str, Any]]
     # It expects a list with dictionaries.
     def questions(self) -> Questions:
         """Questions regarding the commit message."""
         questions = [
-            {
-                'type': 'input',
-                'name': 'title',
-                'message': 'Commit title'
-            },
-            {
-                'type': 'input',
-                'name': 'issue',
-                'message': 'Jira Issue number:'
-            },
+            {"type": "input", "name": "title", "message": "Commit title"},
+            {"type": "input", "name": "issue", "message": "Jira Issue number:"},
         ]
         return questions
 
     def message(self, answers: dict) -> str:
         """Generate the message with the given answers."""
-        return '{0} (#{1})'.format(answers['title'], answers['issue'])
+        return "{0} (#{1})".format(answers["title"], answers["issue"])
 
     def example(self) -> str:
         """Provide an example to help understand the style (OPTIONAL)
 
         Used by `cz example`.
         """
-        return 'Problem with user (#321)'
+        return "Problem with user (#321)"
 
     def schema(self) -> str:
         """Show the schema used (OPTIONAL)
 
         Used by `cz schema`.
         """
-        return '<title> (<issue>)'
+        return "<title> (<issue>)"
 
     def info(self) -> str:
         """Explanation of the commit rules. (OPTIONAL)
 
         Used by `cz info`.
         """
-        return 'We use this because is useful'
-
+        return "We use this because is useful"
 ```
 
 The next file required is `setup.py` modified from flask version.
@@ -267,17 +259,13 @@ The next file required is `setup.py` modified from flask version.
 from setuptools import setup
 
 setup(
-    name='JiraCommitizen',
-    version='0.1.0',
-    py_modules=['cz_jira'],
-    license='MIT',
-    long_description='this is a long description',
-    install_requires=['commitizen'],
-    entry_points = {
-        'commitizen.plugin': [
-            'cz_jira = cz_jira:JiraCz'
-        ]
-    }
+    name="JiraCommitizen",
+    version="0.1.0",
+    py_modules=["cz_jira"],
+    license="MIT",
+    long_description="this is a long description",
+    install_requires=["commitizen"],
+    entry_points={"commitizen.plugin": ["cz_jira = cz_jira:JiraCz"]},
 )
 ```
 
@@ -338,6 +326,7 @@ from commitizen.cz.base import BaseCommitizen
 import chat
 import compliance
 
+
 class StrangeCommitizen(BaseCommitizen):
     changelog_pattern = r"^(break|new|fix|hotfix)"
     commit_parser = r"^(?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?:\s(?P<message>.*)?"
@@ -345,16 +334,22 @@ class StrangeCommitizen(BaseCommitizen):
         "feat": "Features",
         "fix": "Bug Fixes",
         "refactor": "Code Refactor",
-        "perf": "Performance improvements"
+        "perf": "Performance improvements",
     }
 
-    def changelog_message_builder_hook(self, parsed_message: dict, commit: git.GitCommit) -> dict:
+    def changelog_message_builder_hook(
+        self, parsed_message: dict, commit: git.GitCommit
+    ) -> dict:
         rev = commit.rev
         m = parsed_message["message"]
-        parsed_message["message"] = f"{m} {rev} [{commit.author}]({commit.author_email})"
+        parsed_message[
+            "message"
+        ] = f"{m} {rev} [{commit.author}]({commit.author_email})"
         return parsed_message
 
-    def changelog_hook(self, full_changelog: str, partial_changelog: Optional[str]) -> str:
+    def changelog_hook(
+        self, full_changelog: str, partial_changelog: Optional[str]
+    ) -> str:
         """Executed at the end of the changelog generation
 
         full_changelog: it's the output about to being written into the file
@@ -368,7 +363,7 @@ class StrangeCommitizen(BaseCommitizen):
             chat.room("#committers").notify(partial_changelog)
         if full_changelog:
             compliance.send(full_changelog)
-        full_changelog.replace(' fix ', ' **fix** ')
+        full_changelog.replace(" fix ", " **fix** ")
         return full_changelog
 ```
 
@@ -380,6 +375,7 @@ If you want `commitizen` to catch your exception and print the message, you'll h
 
 ```python
 from commitizen.cz.exception import CzException
+
 
 class NoSubjectProvidedException(CzException):
     ...
@@ -402,8 +398,10 @@ If you were having a `CzPlugin` class in a `cz_plugin.py` module like this:
 ```python
 from commitizen.cz.base import BaseCommitizen
 
+
 class PluginCz(BaseCommitizen):
     ...
+
 
 discover_this = PluginCz
 ```
@@ -412,6 +410,7 @@ Then remove the `discover_this` line:
 
 ```python
 from commitizen.cz.base import BaseCommitizen
+
 
 class PluginCz(BaseCommitizen):
     ...
@@ -423,16 +422,11 @@ and expose the class as entrypoint in you setuptools:
 from setuptools import setup
 
 setup(
-    name='MyPlugin',
-    version='0.1.0',
-    py_modules=['cz_plugin'],
-    ...
-    entry_points = {
-        'commitizen.plugin': [
-            'plugin = cz_plugin:PluginCz'
-        ]
-    }
-    ...
+    name="MyPlugin",
+    version="0.1.0",
+    py_modules=["cz_plugin"],
+    entry_points={"commitizen.plugin": ["plugin = cz_plugin:PluginCz"]},
+    ...,
 )
 ```
 
