@@ -57,8 +57,9 @@ def test_commitizen_provider(config: BaseConfig, mocker: MockerFixture):
     mock.assert_called_once_with("version", "43.1")
 
 
-FILE_PROVIDERS = dict(
-    pep621=(
+FILE_PROVIDERS = [
+    (
+        "pep621",
         "pyproject.toml",
         Pep621Provider,
         """\
@@ -70,7 +71,8 @@ FILE_PROVIDERS = dict(
         version = "42.1"
         """,
     ),
-    poetry=(
+    (
+        "poetry",
         "pyproject.toml",
         PoetryProvider,
         """\
@@ -82,7 +84,21 @@ FILE_PROVIDERS = dict(
         version = "42.1"
         """,
     ),
-    cargo=(
+    (
+        "cargo",
+        "Cargo.toml",
+        CargoProvider,
+        """\
+        [workspace.package]
+        version = "0.1.0"
+        """,
+        """\
+        [workspace.package]
+        version = "42.1"
+        """,
+    ),
+    (
+        "cargo",
         "Cargo.toml",
         CargoProvider,
         """\
@@ -94,7 +110,8 @@ FILE_PROVIDERS = dict(
         version = "42.1"
         """,
     ),
-    npm=(
+    (
+        "npm",
         "package.json",
         NpmProvider,
         """\
@@ -110,7 +127,8 @@ FILE_PROVIDERS = dict(
         }
         """,
     ),
-    composer=(
+    (
+        "composer",
         "composer.json",
         ComposerProvider,
         """\
@@ -126,12 +144,12 @@ FILE_PROVIDERS = dict(
         }
         """,
     ),
-)
+]
 
 
 @pytest.mark.parametrize(
     "id,filename,cls,content,expected",
-    (pytest.param(id, *FILE_PROVIDERS[id], id=id) for id in FILE_PROVIDERS),
+    FILE_PROVIDERS,
 )
 def test_file_providers(
     config: BaseConfig,
