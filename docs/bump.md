@@ -144,9 +144,9 @@ __version__ = "1.21.0"
 and `setup.py`.
 
 ```python
-...
-    version="1.0.5"
-...
+from setuptools import setup
+
+setup(..., version="1.0.5", ...)
 ```
 
 If `--check-consistency` is used, commitizen will check whether the current version in `pyproject.toml`
