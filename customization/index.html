@@ -17,7 +17,7 @@
         <link rel="next" href="../tutorials/writing_commits/">
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.11">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
     
     
       
@@ -25,10 +25,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.85bb2934.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.26e3688c.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.a6bdf11c.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ecc896b0.min.css">
       
       
 
@@ -1035,7 +1035,7 @@ We have two different ways to do so.</p>
 <td><code>questions</code></td>
 <td><code>Questions</code></td>
 <td><code>None</code></td>
-<td>Questions regarding the commit message. Detailed below. The type <code>Questions</code> is an alias to <code>Iterable[MutableMapping[str, Any]]</code> which is definied in <code>commitizen.defaults</code>. It expects a list of dictionaries.</td>
+<td>Questions regarding the commit message. Detailed below. The type <code>Questions</code> is an alias to <code>Iterable[MutableMapping[str, Any]]</code> which is defined in <code>commitizen.defaults</code>. It expects a list of dictionaries.</td>
 </tr>
 <tr>
 <td><code>message_template</code></td>
@@ -1190,65 +1190,54 @@ To specify keyboard shortcuts for your custom choices, provide the shortcut usin
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">commitizen.cz.base</span> <span class="kn">import</span> <span class="n">BaseCommitizen</span>
 <span class="kn">from</span> <span class="nn">commitizen.defaults</span> <span class="kn">import</span> <span class="n">Questions</span>
 
+
 <span class="k">class</span> <span class="nc">JiraCz</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
     <span class="c1"># Questions = Iterable[MutableMapping[str, Any]]</span>
     <span class="c1"># It expects a list with dictionaries.</span>
     <span class="k">def</span> <span class="nf">questions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Questions</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Questions regarding the commit message.&quot;&quot;&quot;</span>
         <span class="n">questions</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;input&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;Commit title&#39;</span>
-            <span class="p">},</span>
-            <span class="p">{</span>
-                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;input&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;issue&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;Jira Issue number:&#39;</span>
-            <span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Commit title&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;issue&quot;</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Jira Issue number:&quot;</span><span class="p">},</span>
         <span class="p">]</span>
         <span class="k">return</span> <span class="n">questions</span>
 
     <span class="k">def</span> <span class="nf">message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">answers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the message with the given answers.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> (#</span><span class="si">{1}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">answers</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span> <span class="n">answers</span><span class="p">[</span><span class="s1">&#39;issue&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> (#</span><span class="si">{1}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">answers</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">],</span> <span class="n">answers</span><span class="p">[</span><span class="s2">&quot;issue&quot;</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Provide an example to help understand the style (OPTIONAL)</span>
 
 <span class="sd">        Used by `cz example`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s1">&#39;Problem with user (#321)&#39;</span>
+        <span class="k">return</span> <span class="s2">&quot;Problem with user (#321)&quot;</span>
 
     <span class="k">def</span> <span class="nf">schema</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Show the schema used (OPTIONAL)</span>
 
 <span class="sd">        Used by `cz schema`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s1">&#39;&lt;title&gt; (&lt;issue&gt;)&#39;</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;title&gt; (&lt;issue&gt;)&quot;</span>
 
     <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Explanation of the commit rules. (OPTIONAL)</span>
 
 <span class="sd">        Used by `cz info`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s1">&#39;We use this because is useful&#39;</span>
+        <span class="k">return</span> <span class="s2">&quot;We use this because is useful&quot;</span>
 </code></pre></div>
 <p>The next file required is <code>setup.py</code> modified from flask version.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span>
 
 <span class="n">setup</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;JiraCommitizen&#39;</span><span class="p">,</span>
-    <span class="n">version</span><span class="o">=</span><span class="s1">&#39;0.1.0&#39;</span><span class="p">,</span>
-    <span class="n">py_modules</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cz_jira&#39;</span><span class="p">],</span>
-    <span class="n">license</span><span class="o">=</span><span class="s1">&#39;MIT&#39;</span><span class="p">,</span>
-    <span class="n">long_description</span><span class="o">=</span><span class="s1">&#39;this is a long description&#39;</span><span class="p">,</span>
-    <span class="n">install_requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;commitizen&#39;</span><span class="p">],</span>
-    <span class="n">entry_points</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;commitizen.plugin&#39;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s1">&#39;cz_jira = cz_jira:JiraCz&#39;</span>
-        <span class="p">]</span>
-    <span class="p">}</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;JiraCommitizen&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
+    <span class="n">py_modules</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cz_jira&quot;</span><span class="p">],</span>
+    <span class="n">license</span><span class="o">=</span><span class="s2">&quot;MIT&quot;</span><span class="p">,</span>
+    <span class="n">long_description</span><span class="o">=</span><span class="s2">&quot;this is a long description&quot;</span><span class="p">,</span>
+    <span class="n">install_requires</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;commitizen&quot;</span><span class="p">],</span>
+    <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;commitizen.plugin&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;cz_jira = cz_jira:JiraCz&quot;</span><span class="p">]},</span>
 <span class="p">)</span>
 </code></pre></div>
 <p>So in the end, we would have</p>
@@ -1346,6 +1335,7 @@ You can customize it of course, and this are the variables you need to add to yo
 <span class="kn">import</span> <span class="nn">chat</span>
 <span class="kn">import</span> <span class="nn">compliance</span>
 
+
 <span class="k">class</span> <span class="nc">StrangeCommitizen</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
     <span class="n">changelog_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^(break|new|fix|hotfix)&quot;</span>
     <span class="n">commit_parser</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^(?P&lt;change_type&gt;feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P&lt;scope&gt;[^()\r\n]*)\)|\()?(?P&lt;breaking&gt;!)?:\s(?P&lt;message&gt;.*)?&quot;</span>
@@ -1353,16 +1343,22 @@ You can customize it of course, and this are the variables you need to add to yo
         <span class="s2">&quot;feat&quot;</span><span class="p">:</span> <span class="s2">&quot;Features&quot;</span><span class="p">,</span>
         <span class="s2">&quot;fix&quot;</span><span class="p">:</span> <span class="s2">&quot;Bug Fixes&quot;</span><span class="p">,</span>
         <span class="s2">&quot;refactor&quot;</span><span class="p">:</span> <span class="s2">&quot;Code Refactor&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;perf&quot;</span><span class="p">:</span> <span class="s2">&quot;Performance improvements&quot;</span>
+        <span class="s2">&quot;perf&quot;</span><span class="p">:</span> <span class="s2">&quot;Performance improvements&quot;</span><span class="p">,</span>
     <span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">changelog_message_builder_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed_message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">commit</span><span class="p">:</span> <span class="n">git</span><span class="o">.</span><span class="n">GitCommit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">changelog_message_builder_hook</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">parsed_message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">commit</span><span class="p">:</span> <span class="n">git</span><span class="o">.</span><span class="n">GitCommit</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">rev</span> <span class="o">=</span> <span class="n">commit</span><span class="o">.</span><span class="n">rev</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">parsed_message</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span>
-        <span class="n">parsed_message</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">rev</span><span class="si">}</span><span class="s2"> [</span><span class="si">{</span><span class="n">commit</span><span class="o">.</span><span class="n">author</span><span class="si">}</span><span class="s2">](</span><span class="si">{</span><span class="n">commit</span><span class="o">.</span><span class="n">author_email</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="n">parsed_message</span><span class="p">[</span>
+            <span class="s2">&quot;message&quot;</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">rev</span><span class="si">}</span><span class="s2"> [</span><span class="si">{</span><span class="n">commit</span><span class="o">.</span><span class="n">author</span><span class="si">}</span><span class="s2">](</span><span class="si">{</span><span class="n">commit</span><span class="o">.</span><span class="n">author_email</span><span class="si">}</span><span class="s2">)&quot;</span>
         <span class="k">return</span> <span class="n">parsed_message</span>
 
-    <span class="k">def</span> <span class="nf">changelog_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full_changelog</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">partial_changelog</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">changelog_hook</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">full_changelog</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">partial_changelog</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Executed at the end of the changelog generation</span>
 
 <span class="sd">        full_changelog: it&#39;s the output about to being written into the file</span>
@@ -1376,12 +1372,13 @@ You can customize it of course, and this are the variables you need to add to yo
             <span class="n">chat</span><span class="o">.</span><span class="n">room</span><span class="p">(</span><span class="s2">&quot;#committers&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">partial_changelog</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">full_changelog</span><span class="p">:</span>
             <span class="n">compliance</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">full_changelog</span><span class="p">)</span>
-        <span class="n">full_changelog</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; fix &#39;</span><span class="p">,</span> <span class="s1">&#39; **fix** &#39;</span><span class="p">)</span>
+        <span class="n">full_changelog</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; fix &quot;</span><span class="p">,</span> <span class="s2">&quot; **fix** &quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">full_changelog</span>
 </code></pre></div>
 <h3 id="raise-customize-exception">Raise Customize Exception<a class="headerlink" href="#raise-customize-exception" title="Permanent link">&para;</a></h3>
 <p>If you want <code>commitizen</code> to catch your exception and print the message, you'll have to inherit <code>CzException</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">commitizen.cz.exception</span> <span class="kn">import</span> <span class="n">CzException</span>
+
 
 <span class="k">class</span> <span class="nc">NoSubjectProvidedException</span><span class="p">(</span><span class="n">CzException</span><span class="p">):</span>
     <span class="o">...</span>
@@ -1398,13 +1395,16 @@ Migration should be straight-forward for legacy plugins:</p>
 <p>If you were having a <code>CzPlugin</code> class in a <code>cz_plugin.py</code> module like this:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">commitizen.cz.base</span> <span class="kn">import</span> <span class="n">BaseCommitizen</span>
 
+
 <span class="k">class</span> <span class="nc">PluginCz</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
     <span class="o">...</span>
+
 
 <span class="n">discover_this</span> <span class="o">=</span> <span class="n">PluginCz</span>
 </code></pre></div>
 <p>Then remove the <code>discover_this</code> line:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">commitizen.cz.base</span> <span class="kn">import</span> <span class="n">BaseCommitizen</span>
+
 
 <span class="k">class</span> <span class="nc">PluginCz</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
     <span class="o">...</span>
@@ -1413,16 +1413,11 @@ Migration should be straight-forward for legacy plugins:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span>
 
 <span class="n">setup</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;MyPlugin&#39;</span><span class="p">,</span>
-    <span class="n">version</span><span class="o">=</span><span class="s1">&#39;0.1.0&#39;</span><span class="p">,</span>
-    <span class="n">py_modules</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cz_plugin&#39;</span><span class="p">],</span>
-    <span class="o">...</span>
-    <span class="n">entry_points</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;commitizen.plugin&#39;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s1">&#39;plugin = cz_plugin:PluginCz&#39;</span>
-        <span class="p">]</span>
-    <span class="p">}</span>
-    <span class="o">...</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;MyPlugin&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
+    <span class="n">py_modules</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cz_plugin&quot;</span><span class="p">],</span>
+    <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;commitizen.plugin&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;plugin = cz_plugin:PluginCz&quot;</span><span class="p">]},</span>
+    <span class="o">...</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
 <p>Then your plugin will be available under the name <code>plugin</code>.</p>
@@ -1466,7 +1461,7 @@ Migration should be straight-forward for legacy plugins:</p>
     <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.fac441b0.min.js"></script>
+      <script src="../assets/javascripts/bundle.b4d07000.min.js"></script>
       
     
   </body>
