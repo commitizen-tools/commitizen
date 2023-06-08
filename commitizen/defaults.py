@@ -42,7 +42,7 @@ class Settings(TypedDict, total=False):
     tag_format: str | None
     bump_message: str | None
     allow_abort: bool
-    allowed_prefixes: List[str]
+    allowed_prefixes: list[str]
     changelog_file: str
     changelog_incremental: bool
     changelog_start_rev: str | None
