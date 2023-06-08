@@ -3,8 +3,8 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
-from pathlib import Path
 from functools import partial
+from pathlib import Path
 from types import TracebackType
 
 import argcomplete
@@ -361,7 +361,7 @@ original_excepthook = sys.excepthook
 
 
 def commitizen_excepthook(
-    type, value, traceback, debug=False, no_raise: list[int] = None
+    type, value, traceback, debug=False, no_raise: list[int] | None = None
 ):
     traceback = traceback if isinstance(traceback, TracebackType) else None
     if not no_raise:
