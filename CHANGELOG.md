@@ -1,4 +1,10 @@
 
+## v3.3.0 (2023-06-13)
+
+### Feat
+
+- add support for cargo workspaces
+
 ## v3.2.2 (2023-05-11)
 
 ### Fix
