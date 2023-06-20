@@ -38,7 +38,7 @@ expected_config = (
     "[tool.commitizen]\n"
     'name = "cz_conventional_commits"\n'
     'tag_format = "$version"\n'
-    'version_type = "semver"\n'
+    'version_scheme = "semver"\n'
     'version = "0.0.1"\n'
     "update_changelog_on_bump = true\n"
     "major_version_zero = true\n"
@@ -48,7 +48,7 @@ EXPECTED_DICT_CONFIG = {
     "commitizen": {
         "name": "cz_conventional_commits",
         "tag_format": "$version",
-        "version_type": "semver",
+        "version_scheme": "semver",
         "version": "0.0.1",
         "update_changelog_on_bump": True,
         "major_version_zero": True,

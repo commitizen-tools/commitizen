@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import os
 from logging import getLogger
+import warnings
 
 import questionary
-from commitizen import bump, cmd, factory, git, hooks, out, version_types
+
+from commitizen import bump, cmd, factory, git, hooks, out
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
@@ -21,7 +23,7 @@ from commitizen.exceptions import (
     NoVersionSpecifiedError,
 )
 from commitizen.providers import get_provider
-from packaging.version import InvalidVersion, Version
+from commitizen.version_schemes import get_version_scheme, InvalidVersion
 
 logger = getLogger("commitizen")
 
@@ -62,10 +64,17 @@ class Bump:
         self.retry = arguments["retry"]
         self.pre_bump_hooks = self.config.settings["pre_bump_hooks"]
         self.post_bump_hooks = self.config.settings["post_bump_hooks"]
-        version_type = arguments["version_type"] or self.config.settings.get(
-            "version_type"
+        deprecated_version_type = arguments.get("version_type")
+        if deprecated_version_type:
+            warnings.warn(
+                DeprecationWarning(
+                    "`--version-type` parameter is deprecated and will be removed in commitizen 4. "
+                    "Please use `--version-scheme` instead"
+                )
+            )
+        self.scheme = get_version_scheme(
+            self.config, arguments["version_scheme"] or deprecated_version_type
         )
-        self.version_type = version_type and version_types.VERSION_TYPES[version_type]
 
     def is_initial_tag(self, current_tag_version: str, is_yes: bool = False) -> bool:
         """Check if reading the whole git tree up to HEAD is needed."""
@@ -108,10 +117,9 @@ class Bump:
     def __call__(self):  # noqa: C901
         """Steps executed to bump."""
         provider = get_provider(self.config)
-        current_version: str = provider.get_version()
 
         try:
-            current_version_instance: Version = Version(current_version)
+            current_version = self.scheme(provider.get_version())
         except TypeError:
             raise NoVersionSpecifiedError()
 
@@ -156,7 +164,7 @@ class Bump:
                 )
 
         if major_version_zero:
-            if not current_version.startswith("0."):
+            if not current_version.release[0] == 0:
                 raise NotAllowed(
                     f"--major-version-zero is meaningless for current version {current_version}"
                 )
@@ -164,7 +172,7 @@ class Bump:
         current_tag_version: str = bump.normalize_tag(
             current_version,
             tag_format=tag_format,
-            version_type_cls=self.version_type,
+            scheme=self.scheme,
         )
 
         is_initial = self.is_initial_tag(current_tag_version, is_yes)
@@ -180,12 +188,12 @@ class Bump:
 
         # No commits, there is no need to create an empty tag.
         # Unless we previously had a prerelease.
-        if not commits and not current_version_instance.is_prerelease:
+        if not commits and not current_version.is_prerelease:
             raise NoCommitsFoundError("[NO_COMMITS_FOUND]\n" "No new commits found.")
 
         if manual_version:
             try:
-                new_version = Version(manual_version)
+                new_version = self.scheme(manual_version)
             except InvalidVersion as exc:
                 raise InvalidManualVersion(
                     "[INVALID_MANUAL_VERSION]\n"
@@ -197,11 +205,7 @@ class Bump:
 
             # It may happen that there are commits, but they are not eligible
             # for an increment, this generates a problem when using prerelease (#281)
-            if (
-                prerelease
-                and increment is None
-                and not current_version_instance.is_prerelease
-            ):
+            if prerelease and increment is None and not current_version.is_prerelease:
                 raise NoCommitsFoundError(
                     "[NO_COMMITS_FOUND]\n"
                     "No commits found to generate a pre-release.\n"
@@ -210,23 +214,21 @@ class Bump:
 
             # Increment is removed when current and next version
             # are expected to be prereleases.
-            if prerelease and current_version_instance.is_prerelease:
+            if prerelease and current_version.is_prerelease:
                 increment = None
 
-            new_version = bump.generate_version(
-                current_version,
+            new_version = current_version.bump(
                 increment,
                 prerelease=prerelease,
                 prerelease_offset=prerelease_offset,
                 devrelease=devrelease,
                 is_local_version=is_local_version,
-                version_type_cls=self.version_type,
             )
 
         new_tag_version = bump.normalize_tag(
             new_version,
             tag_format=tag_format,
-            version_type_cls=self.version_type,
+            scheme=self.scheme,
         )
         message = bump.create_commit_message(
             current_version, new_version, bump_commit_message
@@ -291,7 +293,7 @@ class Bump:
             raise DryRunExit()
 
         bump.update_version_in_files(
-            current_version,
+            str(current_version),
             str(new_version),
             version_files,
             check_consistency=self.check_consistency,
@@ -304,7 +306,7 @@ class Bump:
                 self.pre_bump_hooks,
                 _env_prefix="CZ_PRE_",
                 is_initial=is_initial,
-                current_version=current_version,
+                current_version=str(current_version),
                 current_tag_version=current_tag_version,
                 new_version=new_version.public,
                 new_tag_version=new_tag_version,
@@ -346,7 +348,7 @@ class Bump:
                 self.post_bump_hooks,
                 _env_prefix="CZ_POST_",
                 was_initial=is_initial,
-                previous_version=current_version,
+                previous_version=str(current_version),
                 previous_tag_version=current_tag_version,
                 current_version=new_version.public,
                 current_tag_version=new_tag_version,

@@ -2,8 +2,7 @@ import itertools
 
 import pytest
 
-from commitizen.bump import generate_version
-from commitizen.version_types import SemVerVersion
+from commitizen.version_schemes import SemVer, VersionProtocol
 
 simple_flow = [
     (("0.1.0", "PATCH", None, 0, None), "0.1.1"),
@@ -37,6 +36,12 @@ simple_flow = [
     (("1.1.0", "MINOR", None, 0, None), "1.2.0"),
     (("1.2.0", "PATCH", None, 0, None), "1.2.1"),
     (("1.2.1", "MAJOR", None, 0, None), "2.0.0"),
+]
+
+local_versions = [
+    (("4.5.0+0.1.0", "PATCH", None, 0, None), "4.5.0+0.1.1"),
+    (("4.5.0+0.1.1", "MINOR", None, 0, None), "4.5.0+0.2.0"),
+    (("4.5.0+0.2.0", "MAJOR", None, 0, None), "4.5.0+1.0.0"),
 ]
 
 # this cases should be handled gracefully
@@ -81,7 +86,7 @@ tdd_cases = [
     "test_input, expected",
     itertools.chain(tdd_cases, weird_cases, simple_flow, unexpected_cases),
 )
-def test_generate_version_type(test_input, expected):
+def test_bump_semver_version(test_input, expected):
     current_version = test_input[0]
     increment = test_input[1]
     prerelease = test_input[2]
@@ -89,14 +94,43 @@ def test_generate_version_type(test_input, expected):
     devrelease = test_input[4]
     assert (
         str(
-            generate_version(
-                current_version,
+            SemVer(current_version).bump(
                 increment=increment,
                 prerelease=prerelease,
                 prerelease_offset=prerelease_offset,
                 devrelease=devrelease,
-                version_type_cls=SemVerVersion,
             )
         )
         == expected
     )
+
+
+@pytest.mark.parametrize("test_input,expected", local_versions)
+def test_bump_semver_version_local(test_input, expected):
+    current_version = test_input[0]
+    increment = test_input[1]
+    prerelease = test_input[2]
+    prerelease_offset = test_input[3]
+    devrelease = test_input[4]
+    is_local_version = True
+    assert (
+        str(
+            SemVer(current_version).bump(
+                increment=increment,
+                prerelease=prerelease,
+                prerelease_offset=prerelease_offset,
+                devrelease=devrelease,
+                is_local_version=is_local_version,
+            )
+        )
+        == expected
+    )
+
+
+def test_semver_scheme_property():
+    version = SemVer("0.0.1")
+    assert version.scheme is SemVer
+
+
+def test_semver_implement_version_protocol():
+    assert isinstance(SemVer("0.0.1"), VersionProtocol)

@@ -32,7 +32,6 @@ class ConventionalCommitsCz(BaseCommitizen):
     bump_map = defaults.bump_map
     bump_map_major_version_zero = defaults.bump_map_major_version_zero
     commit_parser = defaults.commit_parser
-    version_parser = defaults.version_parser
     change_type_map = {
         "feat": "Feat",
         "fix": "Fix",

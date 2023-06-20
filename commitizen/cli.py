@@ -10,7 +10,7 @@ from types import TracebackType
 import argcomplete
 from decli import cli
 
-from commitizen import commands, config, out, version_types
+from commitizen import commands, config, out, version_schemes
 from commitizen.exceptions import (
     CommitizenException,
     ExitCode,
@@ -205,17 +205,23 @@ data = {
                         "help": "start pre-releases with this offset",
                     },
                     {
+                        "name": ["--version-scheme"],
+                        "help": "choose version scheme",
+                        "default": None,
+                        "choices": version_schemes.KNOWN_SCHEMES,
+                    },
+                    {
+                        "name": ["--version-type"],
+                        "help": "Deprecated, use --version-scheme",
+                        "default": None,
+                        "choices": version_schemes.KNOWN_SCHEMES,
+                    },
+                    {
                         "name": "manual_version",
                         "type": str,
                         "nargs": "?",
                         "help": "bump to the given version (e.g: 1.5.3)",
                         "metavar": "MANUAL_VERSION",
-                    },
-                    {
-                        "name": ["--version-type"],
-                        "help": "choose version type",
-                        "default": None,
-                        "choices": version_types.VERSION_TYPES,
                     },
                 ],
             },
@@ -274,6 +280,12 @@ data = {
                             "collect all changes from prereleases into next non-prerelease. "
                             "If not set, it will include prereleases in the changelog"
                         ),
+                    },
+                    {
+                        "name": ["--version-scheme"],
+                        "help": "choose version scheme",
+                        "default": None,
+                        "choices": version_schemes.KNOWN_SCHEMES,
                     },
                 ],
             },
@@ -354,7 +366,7 @@ original_excepthook = sys.excepthook
 
 
 def commitizen_excepthook(
-    type, value, traceback, debug=False, no_raise: list[int] = None
+    type, value, traceback, debug=False, no_raise: list[int] | None = None
 ):
     traceback = traceback if isinstance(traceback, TracebackType) else None
     if not no_raise:

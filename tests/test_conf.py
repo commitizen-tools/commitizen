@@ -45,6 +45,7 @@ _settings = {
     "name": "cz_jira",
     "version": "1.0.0",
     "version_provider": "commitizen",
+    "version_scheme": None,
     "tag_format": None,
     "bump_message": None,
     "allow_abort": False,
@@ -60,13 +61,13 @@ _settings = {
     "pre_bump_hooks": ["scripts/generate_documentation.sh"],
     "post_bump_hooks": ["scripts/slack_notification.sh"],
     "prerelease_offset": 0,
-    "version_type": None,
 }
 
 _new_settings = {
     "name": "cz_jira",
     "version": "2.0.0",
     "version_provider": "commitizen",
+    "version_scheme": None,
     "tag_format": None,
     "bump_message": None,
     "allow_abort": False,
@@ -82,7 +83,6 @@ _new_settings = {
     "pre_bump_hooks": ["scripts/generate_documentation.sh"],
     "post_bump_hooks": ["scripts/slack_notification.sh"],
     "prerelease_offset": 0,
-    "version_type": None,
 }
 
 _read_settings = {

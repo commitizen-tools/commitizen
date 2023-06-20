@@ -89,6 +89,10 @@ pep621 = "commitizen.providers:Pep621Provider"
 poetry = "commitizen.providers:PoetryProvider"
 scm = "commitizen.providers:ScmProvider"
 
+[tool.poetry.plugins."commitizen.scheme"]
+pep440 = "commitizen.version_schemes:Pep440"
+semver = "commitizen.version_schemes:SemVer"
+
 [tool.coverage]
     [tool.coverage.report]
     show_missing = true
@@ -106,7 +110,8 @@ scm = "commitizen.providers:ScmProvider"
 
         # Don't complain if non-runnable code isn't run:
         'if 0:',
-        'if __name__ == .__main__.:'
+        'if __name__ == .__main__.:',
+        'if TYPE_CHECKING:',
     ]
     omit = [
         'env/*',
@@ -146,3 +151,7 @@ warn_return_any = true
 warn_redundant_casts = true
 warn_unused_ignores = true
 warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = "py.*"  # Legacy pytest dependencies
+ignore_missing_imports = true

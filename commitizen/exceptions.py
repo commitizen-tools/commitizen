@@ -32,6 +32,7 @@ class ExitCode(enum.IntEnum):
     INIT_FAILED = 25
     RUN_HOOK_FAILED = 26
     VERSION_PROVIDER_UNKNOWN = 27
+    VERSION_SCHEME_UNKNOWN = 28
 
 
 class CommitizenException(Exception):
@@ -178,3 +179,7 @@ class RunHookError(CommitizenException):
 
 class VersionProviderUnknown(CommitizenException):
     exit_code = ExitCode.VERSION_PROVIDER_UNKNOWN
+
+
+class VersionSchemeUnknown(CommitizenException):
+    exit_code = ExitCode.VERSION_SCHEME_UNKNOWN

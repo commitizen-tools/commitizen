@@ -1,9 +1,7 @@
 import itertools
 
 import pytest
-from packaging.version import Version
-
-from commitizen.bump import generate_version
+from commitizen.version_schemes import Pep440, VersionProtocol
 
 simple_flow = [
     (("0.1.0", "PATCH", None, 0, None), "0.1.1"),
@@ -85,37 +83,51 @@ tdd_cases = [
     "test_input,expected",
     itertools.chain(tdd_cases, weird_cases, simple_flow, unexpected_cases),
 )
-def test_generate_version(test_input, expected):
+def test_bump_pep440_version(test_input, expected):
     current_version = test_input[0]
     increment = test_input[1]
     prerelease = test_input[2]
     prerelease_offset = test_input[3]
     devrelease = test_input[4]
-    assert generate_version(
-        current_version,
-        increment=increment,
-        prerelease=prerelease,
-        prerelease_offset=prerelease_offset,
-        devrelease=devrelease,
-    ) == Version(expected)
+    assert (
+        str(
+            Pep440(current_version).bump(
+                increment=increment,
+                prerelease=prerelease,
+                prerelease_offset=prerelease_offset,
+                devrelease=devrelease,
+            )
+        )
+        == expected
+    )
 
 
-@pytest.mark.parametrize(
-    "test_input,expected",
-    itertools.chain(local_versions),
-)
-def test_generate_version_local(test_input, expected):
+@pytest.mark.parametrize("test_input,expected", local_versions)
+def test_bump_pep440_version_local(test_input, expected):
     current_version = test_input[0]
     increment = test_input[1]
     prerelease = test_input[2]
     prerelease_offset = test_input[3]
     devrelease = test_input[4]
     is_local_version = True
-    assert generate_version(
-        current_version,
-        increment=increment,
-        prerelease=prerelease,
-        prerelease_offset=prerelease_offset,
-        devrelease=devrelease,
-        is_local_version=is_local_version,
-    ) == Version(expected)
+    assert (
+        str(
+            Pep440(current_version).bump(
+                increment=increment,
+                prerelease=prerelease,
+                prerelease_offset=prerelease_offset,
+                devrelease=devrelease,
+                is_local_version=is_local_version,
+            )
+        )
+        == expected
+    )
+
+
+def test_pep440_scheme_property():
+    version = Pep440("0.0.1")
+    assert version.scheme is Pep440
+
+
+def test_pep440_implement_version_protocol():
+    assert isinstance(Pep440("0.0.1"), VersionProtocol)
