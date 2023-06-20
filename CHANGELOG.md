@@ -1,4 +1,10 @@
 
+## v3.4.0 (2023-06-20)
+
+### Feat
+
+- **version-schemes**: expose `version_schemes` as a `commitizen.scheme` endpoint.
+
 ## v3.3.0 (2023-06-13)
 
 ### Feat
