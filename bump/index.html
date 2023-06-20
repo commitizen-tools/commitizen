@@ -17,7 +17,7 @@
         <link rel="next" href="../check/">
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.16">
     
     
       
@@ -448,8 +448,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#-version-type" class="md-nav__link">
-    --version-type
+  <a href="#-version-scheme" class="md-nav__link">
+    --version-scheme
   </a>
   
 </li>
@@ -572,8 +572,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#version_type" class="md-nav__link">
-    version_type
+  <a href="#version_scheme" class="md-nav__link">
+    version_scheme
   </a>
   
 </li>
@@ -953,8 +953,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#-version-type" class="md-nav__link">
-    --version-type
+  <a href="#-version-scheme" class="md-nav__link">
+    --version-scheme
   </a>
   
 </li>
@@ -1077,8 +1077,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#version_type" class="md-nav__link">
-    version_type
+  <a href="#version_scheme" class="md-nav__link">
+    version_scheme
   </a>
   
 </li>
@@ -1146,8 +1146,8 @@
 </tr>
 </tbody>
 </table>
-<p><a href="https://www.python.org/dev/peps/pep-0440/">PEP 0440</a> is the default, you can switch by using the setting <code>version_type</code> or the cli:</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--version-type<span class="w"> </span>semver
+<p><a href="https://www.python.org/dev/peps/pep-0440/">PEP 0440</a> is the default, you can switch by using the setting <code>version_scheme</code> or the cli:</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--version-scheme<span class="w"> </span>semver
 </code></pre></div>
 <p>Some examples of pep440:</p>
 <div class="highlight"><pre><span></span><code><span class="m">0</span>.9.0
@@ -1211,8 +1211,8 @@ options:
 <span class="w">  </span>--retry<span class="w">               </span>retry<span class="w"> </span>commit<span class="w"> </span><span class="k">if</span><span class="w"> </span>it<span class="w"> </span>fails<span class="w"> </span>the<span class="w"> </span>1st<span class="w"> </span><span class="nb">time</span>
 <span class="w">  </span>--major-version-zero<span class="w">  </span>keep<span class="w"> </span>major<span class="w"> </span>version<span class="w"> </span>at<span class="w"> </span>zero,<span class="w"> </span>even<span class="w"> </span><span class="k">for</span><span class="w"> </span>breaking<span class="w"> </span>changes
 <span class="w">  </span>--prerelease-offset<span class="w">   </span>start<span class="w"> </span>pre-releases<span class="w"> </span>with<span class="w"> </span>this<span class="w"> </span>offset
-<span class="w">  </span>--version-type<span class="w"> </span><span class="o">{</span>pep440,semver<span class="o">}</span>
-<span class="w">                        </span>choose<span class="w"> </span>version<span class="w"> </span><span class="nb">type</span>
+<span class="w">  </span>--version-scheme<span class="w"> </span><span class="o">{</span>pep440,semver<span class="o">}</span>
+<span class="w">                        </span>choose<span class="w"> </span>version<span class="w"> </span>scheme
 </code></pre></div>
 <h3 id="-files-only"><code>--files-only</code><a class="headerlink" href="#-files-only" title="Permanent link">&para;</a></h3>
 <p>Bumps the version in the files defined in <code>version_files</code> without creating a commit and tag on the git repository,</p>
@@ -1283,18 +1283,18 @@ If used together with a manual version the command also fails.</p>
 <p>We recommend setting <code>major_version_zero = true</code> in your configuration file while a project
 is in its initial development. Remove that configuration using a breaking-change commit to bump
 your project’s major version to <code>v1.0.0</code> once your project has reached maturity.</p>
-<h3 id="-version-type"><code>--version-type</code><a class="headerlink" href="#-version-type" title="Permanent link">&para;</a></h3>
+<h3 id="-version-scheme"><code>--version-scheme</code><a class="headerlink" href="#-version-scheme" title="Permanent link">&para;</a></h3>
 <p>Choose the version format, options: <code>pep440</code>, <code>semver</code>.</p>
 <p>Default: <code>pep440</code></p>
 <p>Recommended for python: <code>pep440</code></p>
 <p>Recommended for other: <code>semver</code></p>
-<p>You can also set this in the <a href="#version_type">configuration</a> with <code>version_type = "semver"</code>.</p>
+<p>You can also set this in the <a href="#version_scheme">configuration</a> with <code>version_scheme = "semver"</code>.</p>
 <p><a href="https://www.python.org/dev/peps/pep-0440/">pep440</a> and <a href="https://semver.org/">semver</a> are quite similar, their difference lies in
 how the prereleases look.</p>
 <table>
 <thead>
 <tr>
-<th>types</th>
+<th>schemes</th>
 <th>pep440</th>
 <th>semver</th>
 </tr>
@@ -1601,12 +1601,12 @@ release. During execution of the script, some environment variables are availabl
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">prerelease_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
 </code></pre></div>
-<h3 id="version_type"><code>version_type</code><a class="headerlink" href="#version_type" title="Permanent link">&para;</a></h3>
-<p>Choose version type</p>
+<h3 id="version_scheme"><code>version_scheme</code><a class="headerlink" href="#version_scheme" title="Permanent link">&para;</a></h3>
+<p>Choose version scheme</p>
 <table>
 <thead>
 <tr>
-<th>types</th>
+<th>schemes</th>
 <th>pep440</th>
 <th>semver</th>
 </tr>
@@ -1637,7 +1637,7 @@ release. During execution of the script, some environment variables are availabl
 <p>Options: <code>sever</code>, <code>pep440</code></p>
 <p>Defaults to: <code>pep440</code></p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
-<span class="n">version_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;semver&quot;</span>
+<span class="n">version_scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;semver&quot;</span>
 </code></pre></div>
 <h2 id="custom-bump">Custom bump<a class="headerlink" href="#custom-bump" title="Permanent link">&para;</a></h2>
 <p>Read the <a href="../customization/">customizing section</a>.</p>
@@ -1681,7 +1681,7 @@ release. During execution of the script, some environment variables are availabl
     <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.b4d07000.min.js"></script>
+      <script src="../assets/javascripts/bundle.a51614de.min.js"></script>
       
     
   </body>
