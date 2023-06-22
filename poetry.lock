@@ -972,13 +972,13 @@ pytest = ">=5.0"
 
 [[package]]
 name = "pytest-freezer"
-version = "0.4.6"
+version = "0.4.8"
 description = "Pytest plugin providing a fixture interface for spulec/freezegun"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">= 3.6"
 files = [
-    {file = "pytest_freezer-0.4.6-py3-none-any.whl", hash = "sha256:ca549c30a7e12bc7b242978b6fa0bb91e73cd1bd7d5b2bb658f0f9d7f1694cac"},
-    {file = "pytest_freezer-0.4.6.tar.gz", hash = "sha256:8e88cd571d3ba10dd9e0cc09897eb01c32a37bef5ca4ff7c4ea8598c91aa6d96"},
+    {file = "pytest_freezer-0.4.8-py3-none-any.whl", hash = "sha256:644ce7ddb8ba52b92a1df0a80a699bad2b93514c55cf92e9f2517b68ebe74814"},
+    {file = "pytest_freezer-0.4.8.tar.gz", hash = "sha256:8ee2f724b3ff3540523fa355958a22e6f4c1c819928b78a7a183ae4248ce6ee6"},
 ]
 
 [package.dependencies]
