@@ -61,7 +61,7 @@ pytest-xdist = "^3.1.0"
 # code formatter
 black = "^22.10"
 # linter
-ruff = "^0.0.262"
+ruff = ">=0.0.262,<0.0.275"
 pre-commit = "^2.18.0"
 mypy = "^0.931"
 types-PyYAML = "^5.4.3"
