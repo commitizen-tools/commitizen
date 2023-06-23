@@ -63,7 +63,7 @@ black = "^22.10"
 # linter
 ruff = "^0.0.262"
 pre-commit = "^2.18.0"
-mypy = "^0.931"
+mypy = "^1.4"
 types-PyYAML = "^5.4.3"
 types-termcolor = "^0.1.1"
 # documentation
