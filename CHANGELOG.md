@@ -1,4 +1,10 @@
 
+## v3.4.1 (2023-06-23)
+
+### Fix
+
+- **veresion_schemes**: import missing Self for python 3.11
+
 ## v3.4.0 (2023-06-20)
 
 ### Feat
