@@ -29,6 +29,8 @@ if TYPE_CHECKING:
     # Self is Python 3.11+ but backported in typing-extensions
     if sys.version_info < (3, 11):
         from typing_extensions import Self
+    else:
+        from typing import Self
 
 
 DEFAULT_VERSION_PARSER = r"v?(?P<version>([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?(\w+)?)"
