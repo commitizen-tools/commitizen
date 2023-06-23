@@ -3,9 +3,6 @@ import sys
 from datetime import datetime
 
 import pytest
-from pytest_mock import MockFixture
-from dateutil import relativedelta
-
 from commitizen import cli, git
 from commitizen.commands.changelog import Changelog
 from commitizen.exceptions import (
@@ -15,6 +12,8 @@ from commitizen.exceptions import (
     NotAGitProjectError,
     NotAllowed,
 )
+from dateutil import relativedelta
+from pytest_mock import MockFixture
 from tests.utils import (
     create_branch,
     create_file_and_commit,
@@ -1291,7 +1290,11 @@ def test_changelog_uses_version_tags_for_header(mocker: MockFixture, config):
     with pytest.raises(DryRunExit):
         changelog()
 
-    assert write_patch.call_args[0][0].startswith("## 1.0.0")
+    changelog_output = write_patch.call_args[0][0]
+
+    assert changelog_output.startswith("## 1.0.0")
+    assert "0-no-a-version" not in changelog_output
+    assert "also-not-a-version" not in changelog_output
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
