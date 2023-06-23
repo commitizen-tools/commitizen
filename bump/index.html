@@ -434,6 +434,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#-git-output-to-stderr" class="md-nav__link">
+    --git-output-to-stderr
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#-retry" class="md-nav__link">
     --retry
   </a>
@@ -939,6 +946,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#-git-output-to-stderr" class="md-nav__link">
+    --git-output-to-stderr
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#-retry" class="md-nav__link">
     --retry
   </a>
@@ -1174,7 +1188,7 @@ usage:<span class="w"> </span>cz<span class="w"> </span>bump<span class="w"> </s
 <span class="w">               </span><span class="o">[</span>--bump-message<span class="w"> </span>BUMP_MESSAGE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--prerelease<span class="w"> </span><span class="o">{</span>alpha,beta,rc<span class="o">}]</span>
 <span class="w">               </span><span class="o">[</span>--devrelease<span class="w"> </span>DEVRELEASE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--increment<span class="w"> </span><span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span>
 <span class="w">               </span><span class="o">[</span>--check-consistency<span class="o">]</span><span class="w"> </span><span class="o">[</span>--annotated-tag<span class="o">]</span><span class="w"> </span><span class="o">[</span>--gpg-sign<span class="o">]</span>
-<span class="w">               </span><span class="o">[</span>--changelog-to-stdout<span class="o">]</span><span class="w"> </span><span class="o">[</span>--retry<span class="o">]</span><span class="w"> </span><span class="o">[</span>--major-version-zero<span class="o">]</span>
+<span class="w">               </span><span class="o">[</span>--changelog-to-stdout<span class="o">]</span><span class="w"> </span><span class="o">[</span>--git-output-to-stderr<span class="o">]</span><span class="w"> </span><span class="o">[</span>--retry<span class="o">]</span><span class="w"> </span><span class="o">[</span>--major-version-zero<span class="o">]</span>
 <span class="w">               </span><span class="o">[</span>MANUAL_VERSION<span class="o">]</span>
 
 positional<span class="w"> </span>arguments:
@@ -1208,6 +1222,8 @@ options:
 <span class="w">  </span>--gpg-sign,<span class="w"> </span>-s<span class="w">        </span>sign<span class="w"> </span>tag<span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span>lightweight<span class="w"> </span>one
 <span class="w">  </span>--changelog-to-stdout
 <span class="w">                        </span>Output<span class="w"> </span>changelog<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>stdout
+<span class="w">  </span>--git-output-to-stderr
+<span class="w">                        </span>Redirect<span class="w"> </span>git<span class="w"> </span>output<span class="w"> </span>to<span class="w"> </span>stderr
 <span class="w">  </span>--retry<span class="w">               </span>retry<span class="w"> </span>commit<span class="w"> </span><span class="k">if</span><span class="w"> </span>it<span class="w"> </span>fails<span class="w"> </span>the<span class="w"> </span>1st<span class="w"> </span><span class="nb">time</span>
 <span class="w">  </span>--major-version-zero<span class="w">  </span>keep<span class="w"> </span>major<span class="w"> </span>version<span class="w"> </span>at<span class="w"> </span>zero,<span class="w"> </span>even<span class="w"> </span><span class="k">for</span><span class="w"> </span>breaking<span class="w"> </span>changes
 <span class="w">  </span>--prerelease-offset<span class="w">   </span>start<span class="w"> </span>pre-releases<span class="w"> </span>with<span class="w"> </span>this<span class="w"> </span>offset
@@ -1271,6 +1287,10 @@ It can be sent to an auditing system, or to create a Github Release.</p>
 <p>Example:</p>
 <div class="highlight"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--changelog<span class="w"> </span>--changelog-to-stdout<span class="w"> </span>&gt;<span class="w"> </span>body.md
 </code></pre></div>
+<h3 id="-git-output-to-stderr"><code>--git-output-to-stderr</code><a class="headerlink" href="#-git-output-to-stderr" title="Permanent link">&para;</a></h3>
+<p>If <code>--git-output-to-stderr</code> is used, git commands output is redirected to stderr.</p>
+<p>This command is useful when used with <code>--changelog-to-stdout</code> and piping the output to a file,
+and you don't want the <code>git commit</code> output polluting  the stdout.</p>
 <h3 id="-retry"><code>--retry</code><a class="headerlink" href="#-retry" title="Permanent link">&para;</a></h3>
 <p>If you use tools like <a href="https://pre-commit.com/">pre-commit</a>, add this flag.
 It will retry the commit if it fails the 1st time.</p>
