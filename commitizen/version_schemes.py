@@ -1,18 +1,18 @@
 from __future__ import annotations
 
-from itertools import zip_longest
 import re
 import sys
-
-from typing import TYPE_CHECKING, ClassVar, Type, cast
 import warnings
-from commitizen.config.base_config import BaseConfig
-from commitizen.exceptions import VersionSchemeUnknown
+from itertools import zip_longest
+from typing import TYPE_CHECKING, ClassVar, Type, cast
 
 import importlib_metadata as metadata
-from packaging.version import Version as _BaseVersion
 from packaging.version import InvalidVersion  # noqa: F401: Rexpose the common exception
+from packaging.version import Version as _BaseVersion
+
+from commitizen.config.base_config import BaseConfig
 from commitizen.defaults import MAJOR, MINOR, PATCH
+from commitizen.exceptions import VersionSchemeUnknown
 
 if sys.version_info >= (3, 8):
     from typing import Protocol, runtime_checkable
@@ -103,7 +103,7 @@ class VersionProtocol(Protocol):
         prerelease_offset: int = 0,
         devrelease: int | None = None,
         is_local_version: bool = False,
-    ) -> Self:  # type: ignore
+    ) -> Self:
         """
         Based on the given increment, generate the next bumped version according to the version scheme
         """
@@ -198,7 +198,7 @@ class BaseVersion(_BaseVersion):
         prerelease_offset: int = 0,
         devrelease: int | None = None,
         is_local_version: bool = False,
-    ) -> Self:  # type: ignore
+    ) -> Self:
         """Based on the given increment a proper semver will be generated.
 
         For now the rules and versioning scheme is based on
@@ -213,13 +213,13 @@ class BaseVersion(_BaseVersion):
 
         if self.local and is_local_version:
             local_version = self.scheme(self.local).bump(increment)
-            return self.scheme(f"{self.public}+{local_version}")
+            return self.scheme(f"{self.public}+{local_version}")  # type: ignore
         else:
             base = self.increment_base(increment)
             dev_version = self.generate_devrelease(devrelease)
             pre_version = self.generate_prerelease(prerelease, offset=prerelease_offset)
             # TODO: post version
-            return self.scheme(f"{base}{pre_version}{dev_version}")
+            return self.scheme(f"{base}{pre_version}{dev_version}")  # type: ignore
 
 
 class Pep440(BaseVersion):
