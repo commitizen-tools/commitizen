@@ -1,4 +1,10 @@
 
+## v3.5.0 (2023-06-23)
+
+### Feat
+
+- Add option in bump command to redirect git output to stderr
+
 ## v3.4.1 (2023-06-23)
 
 ### Fix
