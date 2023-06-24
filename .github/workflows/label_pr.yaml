@@ -1,0 +1,12 @@
+name: "Label Pull Request"
+on:
+- pull_request_target
+
+jobs:
+  label-pr:
+    permissions:
+      contents: read
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/labeler@v4
