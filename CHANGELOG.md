@@ -1,4 +1,10 @@
 
+## v3.5.1 (2023-06-24)
+
+### Fix
+
+- only use version tags when generating a changelog
+
 ## v3.5.0 (2023-06-23)
 
 ### Feat

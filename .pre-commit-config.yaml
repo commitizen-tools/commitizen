@@ -44,7 +44,7 @@ repos:
         args: ["--write-changes", "--ignore-words-list", "asend"]
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.5.0 # automatically updated by Commitizen
+    rev: v3.5.1 # automatically updated by Commitizen
     hooks:
       - id: commitizen
       - id: commitizen-branch
