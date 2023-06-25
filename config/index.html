@@ -514,6 +514,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#allowed_prefixes" class="md-nav__link">
+    allowed_prefixes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#changelog_file" class="md-nav__link">
     changelog_file
   </a>
@@ -978,6 +985,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#allowed_prefixes" class="md-nav__link">
+    allowed_prefixes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#changelog_file" class="md-nav__link">
     changelog_file
   </a>
@@ -1174,6 +1188,10 @@
 <p>Type: <code>bool</code></p>
 <p>Default: <code>false</code></p>
 <p>Disallow empty commit messages, useful in ci. <a href="../check/#allow-abort">Read more</a></p>
+<h3 id="allowed_prefixes"><code>allowed_prefixes</code><a class="headerlink" href="#allowed_prefixes" title="Permanent link">&para;</a></h3>
+<p>Type: <code>list</code>
+Default: <code>[ "Merge", "Revert", "Pull request", "fixup!", "squash!"]</code>
+Allow some prefixes and do not try to match the regex when checking the message <a href="../check/#allowed-prefixes">Read more</a></p>
 <h3 id="changelog_file"><code>changelog_file</code><a class="headerlink" href="#changelog_file" title="Permanent link">&para;</a></h3>
 <p>Type: <code>str</code></p>
 <p>Default: <code>CHANGELOG.md</code></p>

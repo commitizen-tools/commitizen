@@ -457,6 +457,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#allowed-prefixes" class="md-nav__link">
+    Allowed Prefixes
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -804,6 +811,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#allowed-prefixes" class="md-nav__link">
+    Allowed Prefixes
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -862,6 +876,11 @@ This argument can be useful when cooperating with git hook, please check <a href
 </code></pre></div>
 <p>Empty commit messages typically instruct Git to abort a commit, so you can pass <code>--allow-abort</code> to
 permit them. Since <code>git commit</code> accepts an <code>--allow-empty-message</code> flag (primarily for wrapper scripts), you may wish to disallow such commits in CI. <code>--allow-abort</code> may be used in conjunction with any of the other options.</p>
+<h3 id="allowed-prefixes">Allowed Prefixes<a class="headerlink" href="#allowed-prefixes" title="Permanent link">&para;</a></h3>
+<p>If the commit message starts by some specific prefixes, <code>cz check</code> returns <code>True</code> without checkign the regex.
+By default, the the following prefixes are allowed: <code>Merge</code>, <code>Revert</code>, <code>Pull Request</code>, <code>fixup!</code> and <code>squash!</code>.</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>check<span class="w"> </span>--message<span class="w"> </span>MESSAGE<span class="w"> </span>--allowed-prefixes<span class="w"> </span><span class="s1">&#39;Merge&#39;</span><span class="w"> </span><span class="s1">&#39;Revert&#39;</span><span class="w"> </span><span class="s1">&#39;Custom Prefix&#39;</span>
+</code></pre></div>
 
 
 
