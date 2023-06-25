@@ -1,4 +1,10 @@
 
+## v3.5.2 (2023-06-25)
+
+### Fix
+
+- **typing**: no_raise is declared as optional
+
 ## v3.5.1 (2023-06-24)
 
 ### Fix
