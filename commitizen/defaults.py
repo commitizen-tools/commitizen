@@ -104,7 +104,7 @@ MAJOR = "MAJOR"
 MINOR = "MINOR"
 PATCH = "PATCH"
 
-bump_pattern = r"^(((BREAKING[\-\ ]CHANGE|feat|fix|refactor|perf)(\(.+\))?(!)?)|\w+!):"
+bump_pattern = r"^((BREAKING[\-\ ]CHANGE|\w+)(\(.+\))?!?):"
 bump_map = OrderedDict(
     (
         (r"^.+!$", MAJOR),
