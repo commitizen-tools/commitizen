@@ -10,6 +10,8 @@ from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import GitCommit, smart_open
 from commitizen.version_schemes import DEFAULT_SCHEME, Version, VersionScheme
 
+VERSION_TYPES = [None, PATCH, MINOR, MAJOR]
+
 
 def find_increment(
     commits: list[GitCommit], regex: str, increments_map: dict | OrderedDict
@@ -34,12 +36,11 @@ def find_increment(
                         new_increment = increments_map[match_pattern]
                         break
 
+                if VERSION_TYPES.index(increment) < VERSION_TYPES.index(new_increment):
+                    increment = new_increment
+
                 if increment == MAJOR:
                     break
-                elif increment == MINOR and new_increment == MAJOR:
-                    increment = new_increment
-                elif increment == PATCH or increment is None:
-                    increment = new_increment
 
     return increment
 
