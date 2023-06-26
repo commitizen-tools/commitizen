@@ -58,6 +58,12 @@ MAJOR_INCREMENTS_EXCLAMATION_OTHER_TYPE_CC = [
     "fix(setup.py): future is now required for every python version",
 ]
 
+MAJOR_INCREMENTS_EXCLAMATION_OTHER_TYPE_WITH_SCOPE_CC = [
+    "chore(deps)!: drop support for Python 3.9",
+    "docs(README): motivation",
+    "fix(setup.py): future is now required for every python version",
+]
+
 PATCH_INCREMENTS_SVE = ["readme motivation PATCH", "fix setup.py PATCH"]
 
 MINOR_INCREMENTS_SVE = [
@@ -85,6 +91,7 @@ semantic_version_map = {"MAJOR": "MAJOR", "MINOR": "MINOR", "PATCH": "PATCH"}
         (MAJOR_INCREMENTS_BREAKING_CHANGE_CC, "MAJOR"),
         (MAJOR_INCREMENTS_BREAKING_CHANGE_ALT_CC, "MAJOR"),
         (MAJOR_INCREMENTS_EXCLAMATION_OTHER_TYPE_CC, "MAJOR"),
+        (MAJOR_INCREMENTS_EXCLAMATION_OTHER_TYPE_WITH_SCOPE_CC, "MAJOR"),
         (MAJOR_INCREMENTS_EXCLAMATION_CC, "MAJOR"),
         (MAJOR_INCREMENTS_EXCLAMATION_CC_SAMPLE_2, "MAJOR"),
         (NONE_INCREMENT_CC, None),
