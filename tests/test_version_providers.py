@@ -175,17 +175,17 @@ def test_file_providers(
 @pytest.mark.parametrize(
     "tag_format,tag,expected_version",
     (
-        # If tag_format is None, version_scheme.parser is used.
+        # If tag_format is None or $version, version_scheme.parser is used.
         # Its DEFAULT_VERSION_PARSER allows a v prefix, but matches PEP440 otherwise.
         (None, "0.1.0", "0.1.0"),
         (None, "v0.1.0", "0.1.0"),
         (None, "no-match-because-version-scheme-is-strict", "0.0.0"),
-        # If tag_format is not None, TAG_FORMAT_REGEXS are used, which are much more
-        # lenient.
-        ("$version", "match-TAG_FORMAT_REGEXS", "match-TAG_FORMAT_REGEXS"),
+        ("$version", "no-match-because-version-scheme-is-strict", "0.0.0"),
         ("$version", "0.1.0", "0.1.0"),
         ("$version", "v0.1.0", "0.1.0"),
-        ("$version", "v-0.1.0", "0.1.0"),
+        ("$version", "v-0.1.0", "0.0.0"),
+        # If tag_format is not None or $version, TAG_FORMAT_REGEXS are used, which are
+        # much more lenient but require a v prefix.
         ("v$version", "v0.1.0", "0.1.0"),
         ("v$version", "no-match-because-no-v-prefix", "0.0.0"),
         ("v$version", "v-match-TAG_FORMAT_REGEXS", "-match-TAG_FORMAT_REGEXS"),
