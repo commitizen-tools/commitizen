@@ -39,7 +39,7 @@ class Settings(TypedDict, total=False):
     version_provider: str | None
     version_scheme: str | None
     version_type: str | None
-    tag_format: str | None
+    tag_format: str
     bump_message: str | None
     allow_abort: bool
     allowed_prefixes: list[str]
@@ -73,7 +73,7 @@ DEFAULT_SETTINGS: Settings = {
     "version_files": [],
     "version_provider": "commitizen",
     "version_scheme": None,
-    "tag_format": None,  # example v$version
+    "tag_format": "$version",  # example v$version
     "bump_message": None,  # bumped v$current_version to $new_version
     "allow_abort": False,
     "allowed_prefixes": [
