@@ -317,7 +317,17 @@ cz -nr 21 bump
 
 ### `tag_format`
 
-It is used to read the format from the git tags, and also to generate the tags.
+`tag_format` and `version_scheme` are combined to make Git tag names from versions.
+
+These are used in:
+
+* `cz bump`: Find previous release tag (exact match) and generate new tag.
+* Find previous release tags in `cz changelog`.
+  * If `--incremental`: Using latest version found in the changelog, scan existing Git tags with 89\% similarity match. 
+  * `--rev-range` is converted to Git tag names with `tag_format` before searching Git history.
+* If the `scm` `version_provider` is used, it uses different regexes to find the previous version tags:
+  * If no `tag_format` is set: `VersionProtocol.parser` (allows `v` prefix)
+  * If `tag_format` is set: Custom regex similar to SemVer (not as lenient as PEP440 e.g. on dev-releases)
 
 Commitizen supports 2 types of formats, a simple and a more complex.
 

@@ -173,11 +173,22 @@ def test_file_providers(
 
 
 @pytest.mark.parametrize(
-    "tag_format,tag,version",
+    "tag_format,tag,expected_version",
     (
+        # If tag_format is None, version_scheme.parser is used.
+        # Its DEFAULT_VERSION_PARSER allows a v prefix, but matches PEP440 otherwise.
         (None, "0.1.0", "0.1.0"),
         (None, "v0.1.0", "0.1.0"),
+        (None, "no-match-because-version-scheme-is-strict", "0.0.0"),
+        # If tag_format is not None, TAG_FORMAT_REGEXS are used, which are much more
+        # lenient.
+        ("$version", "match-TAG_FORMAT_REGEXS", "match-TAG_FORMAT_REGEXS"),
+        ("$version", "0.1.0", "0.1.0"),
+        ("$version", "v0.1.0", "0.1.0"),
+        ("$version", "v-0.1.0", "0.1.0"),
         ("v$version", "v0.1.0", "0.1.0"),
+        ("v$version", "no-match-because-no-v-prefix", "0.0.0"),
+        ("v$version", "v-match-TAG_FORMAT_REGEXS", "-match-TAG_FORMAT_REGEXS"),
         ("version-$version", "version-0.1.0", "0.1.0"),
         ("version-$version", "version-0.1", "0.1"),
         ("version-$version", "version-0.1.0rc1", "0.1.0rc1"),
@@ -191,7 +202,7 @@ def test_file_providers(
 )
 @pytest.mark.usefixtures("tmp_git_project")
 def test_scm_provider(
-    config: BaseConfig, tag_format: str | None, tag: str, version: str
+    config: BaseConfig, tag_format: str | None, tag: str, expected_version: str
 ):
     create_file_and_commit("test: fake commit")
     create_tag(tag)
@@ -203,23 +214,11 @@ def test_scm_provider(
 
     provider = get_provider(config)
     assert isinstance(provider, ScmProvider)
-    assert provider.get_version() == version
+    actual_version = provider.get_version()
+    assert actual_version == expected_version
 
     # Should not fail on set_version()
     provider.set_version("43.1")
-
-
-@pytest.mark.usefixtures("tmp_git_project")
-def test_scm_provider_default_without_matching_tag(config: BaseConfig):
-    create_file_and_commit("test: fake commit")
-    create_tag("should-not-match")
-    create_file_and_commit("test: fake commit")
-
-    config.settings["version_provider"] = "scm"
-
-    provider = get_provider(config)
-    assert isinstance(provider, ScmProvider)
-    assert provider.get_version() == "0.0.0"
 
 
 @pytest.mark.usefixtures("tmp_git_project")
