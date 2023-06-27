@@ -175,11 +175,8 @@ def test_file_providers(
 @pytest.mark.parametrize(
     "tag_format,tag,expected_version",
     (
-        # If tag_format is None or $version, version_scheme.parser is used.
+        # If tag_format is $version (the default), version_scheme.parser is used.
         # Its DEFAULT_VERSION_PARSER allows a v prefix, but matches PEP440 otherwise.
-        (None, "0.1.0", "0.1.0"),
-        (None, "v0.1.0", "0.1.0"),
-        (None, "no-match-because-version-scheme-is-strict", "0.0.0"),
         ("$version", "no-match-because-version-scheme-is-strict", "0.0.0"),
         ("$version", "0.1.0", "0.1.0"),
         ("$version", "v0.1.0", "0.1.0"),
@@ -202,7 +199,7 @@ def test_file_providers(
 )
 @pytest.mark.usefixtures("tmp_git_project")
 def test_scm_provider(
-    config: BaseConfig, tag_format: str | None, tag: str, expected_version: str
+    config: BaseConfig, tag_format: str, tag: str, expected_version: str
 ):
     create_file_and_commit("test: fake commit")
     create_tag(tag)

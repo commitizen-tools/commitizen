@@ -326,7 +326,7 @@ These are used in:
   * If `--incremental`: Using latest version found in the changelog, scan existing Git tags with 89\% similarity match. 
   * `--rev-range` is converted to Git tag names with `tag_format` before searching Git history.
 * If the `scm` `version_provider` is used, it uses different regexes to find the previous version tags:
-  * If `tag_format` is unset or set to `$version`: `VersionProtocol.parser` (allows `v` prefix)
+  * If `tag_format` is set to `$version` (default): `VersionProtocol.parser` (allows `v` prefix)
   * If `tag_format` is set: Custom regex similar to SemVer (not as lenient as PEP440 e.g. on dev-releases)
 
 Commitizen supports 2 types of formats, a simple and a more complex.
@@ -346,7 +346,7 @@ In your `pyproject.toml` or `.cz.toml`
 tag_format = "v$major.$minor.$patch$prerelease"
 ```
 
-The variables must be preceded by a `$` sign.
+The variables must be preceded by a `$` sign. Default is `$version`.
 
 Supported variables:
 

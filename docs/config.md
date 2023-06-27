@@ -46,7 +46,7 @@ Select a version scheme from the following options [`pep440`, `semver`]. Useful 
 
 Type: `str`
 
-Default: `None`
+Default: `$version`
 
 Format for the git tag, useful for old projects, that use a convention like `"v1.2.1"`. [Read more][tag_format]
 

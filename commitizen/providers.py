@@ -195,8 +195,8 @@ class ScmProvider(VersionProvider):
 
     def _tag_format_matcher(self) -> Callable[[str], str | None]:
         version_scheme = get_version_scheme(self.config)
-        pattern = self.config.settings.get("tag_format")
-        if pattern in (None, "$version"):
+        pattern = self.config.settings["tag_format"]
+        if pattern == "$version":
             pattern = version_scheme.parser.pattern
         for var, tag_pattern in self.TAG_FORMAT_REGEXS.items():
             pattern = pattern.replace(var, tag_pattern)
