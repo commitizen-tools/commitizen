@@ -213,7 +213,9 @@ def parse_title_type_of_line(value: str) -> str | None:
     return m.groupdict().get("title")
 
 
-def get_metadata(filepath: str, scheme: VersionScheme = Pep440) -> dict:
+def get_metadata(
+    filepath: str, scheme: VersionScheme = Pep440, encoding: str = "utf-8"
+) -> dict:
     unreleased_start: int | None = None
     unreleased_end: int | None = None
     unreleased_title: str | None = None
@@ -227,7 +229,7 @@ def get_metadata(filepath: str, scheme: VersionScheme = Pep440) -> dict:
             "latest_version_position": None,
         }
 
-    with open(filepath, "r") as changelog_file:
+    with open(filepath, "r", encoding=encoding) as changelog_file:
         for index, line in enumerate(changelog_file):
             line = line.strip().lower()
 
