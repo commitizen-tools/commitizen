@@ -9,7 +9,7 @@ class BaseConfig:
     def __init__(self):
         self._settings: Settings = DEFAULT_SETTINGS.copy()
         self.encoding = self.settings["encoding"]
-        self._path: Optional[Path] = None
+        self._path: Path | None = None
 
     @property
     def settings(self) -> Settings:

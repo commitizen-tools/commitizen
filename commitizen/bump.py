@@ -47,7 +47,7 @@ def find_increment(
 def update_version_in_files(
     current_version: str,
     new_version: str,
-    files: List[str],
+    files: list[str],
     encoding: str,
     *,
     check_consistency=False,
@@ -92,7 +92,7 @@ def _bump_with_regex(
     new_version: str,
     regex: str,
     encoding: str,
-) -> Tuple[bool, str]:
+) -> tuple[bool, str]:
     current_version_found = False
     lines = []
     pattern = re.compile(regex)
