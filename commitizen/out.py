@@ -3,7 +3,8 @@ import sys
 from termcolor import colored
 
 if sys.platform == "win32":
-    sys.stdout.reconfigure(encoding="utf-8")
+    # See: https://github.com/python/typeshed/issues/3049
+    sys.stdout.reconfigure(encoding="utf-8")  # type: ignore
 
 
 def write(value: str, *args) -> None:

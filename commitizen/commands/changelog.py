@@ -101,9 +101,9 @@ class Changelog:
                 f"or the setting `changelog_file` in {self.config.path}"
             )
 
-        changelog_hook: Optional[Callable] = self.cz.changelog_hook
+        changelog_hook: Callable | None = self.cz.changelog_hook
         with smart_open(self.file_name, "w", encoding=self.encoding) as changelog_file:
-            partial_changelog: Optional[str] = None
+            partial_changelog: str | None = None
             if self.incremental:
                 new_lines = changelog.incremental_build(
                     changelog_out, lines, changelog_meta
@@ -143,7 +143,9 @@ class Changelog:
         end_rev = ""
         if self.incremental:
             changelog_meta = changelog.get_metadata(
-                self.file_name, self.scheme, self.encoding
+                self.file_name,
+                self.scheme,
+                self.encoding,
             )
             latest_version = changelog_meta.get("latest_version")
             if latest_version:
