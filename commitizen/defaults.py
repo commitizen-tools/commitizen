@@ -70,7 +70,7 @@ config_files: list[str] = [
 encoding: str = "utf-8"
 
 DEFAULT_SETTINGS: Settings = {
-    "name": "cz_conventional_commits",
+    "name": name,
     "version": None,
     "version_files": [],
     "version_provider": "commitizen",
@@ -95,7 +95,7 @@ DEFAULT_SETTINGS: Settings = {
     "pre_bump_hooks": [],
     "post_bump_hooks": [],
     "prerelease_offset": 0,
-    "encoding": "utf-8",
+    "encoding": encoding,
 }
 
 MAJOR = "MAJOR"
