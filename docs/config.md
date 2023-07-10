@@ -184,6 +184,14 @@ Default: `[]`
 
 Calls the hook scripts **after** bumping the version. [Read more][post_bump_hooks]
 
+### `encoding`
+
+Type: `str`
+
+Default: `utf-8`
+
+Sets the character encoding to be used when parsing commit messages. [Read more][encoding]
+
 ## Configuration file
 
 ### pyproject.toml or .cz.toml
@@ -357,3 +365,4 @@ setup(
 [customization]: customization.md
 [shortcuts]: customization.md#shortcut-keys
 [annotated-tags-vs-lightweight]: https://stackoverflow.com/a/11514139/2047185
+[encoding]: tutorials/writing_commits.md#writing-commits

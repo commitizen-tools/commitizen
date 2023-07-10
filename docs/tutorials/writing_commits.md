@@ -23,6 +23,8 @@ Now to the important part, when writing commits, it's important to think about:
 You may think this is trivial, but it's not. It's important for the reader to
 understand what happened.
 
+Emojis may be added as well (e.g. see [cz-emoji][cz_emoji]), which requires the `utf-8`, or equivalent, character encoding to support unicode characters. By default, `commitizen` uses the `utf-8` character encoding, but a different encoding may be set through the `encoding` [configuration option][configuration].
+
 ### Recommendations
 
 - **Keep the message short**: Makes the list of commits more readable (~50 chars).
@@ -40,3 +42,5 @@ understand what happened.
 
 [customization]: ../customization.md
 [conventional_commits]: https://www.conventionalcommits.org
+[cz_emoji]: https://commitizen-tools.github.io/commitizen/third-party-commitizen/#cz-emoji
+[configuration]: ../config.md#encoding
