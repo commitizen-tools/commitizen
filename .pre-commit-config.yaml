@@ -26,6 +26,7 @@ repos:
       - id: check-merge-conflict
       - id: check-toml
       - id: check-yaml
+        args: ['--unsafe']  # for mkdocs.yml
       - id: detect-private-key
 
   - repo: https://github.com/asottile/blacken-docs

@@ -28,4 +28,81 @@ If you're a first-time contributor, you can check the issues with [good first is
 10. If your changes are about documentation. Run `poetry run mkdocs serve` to serve documentation locally and check whether there is any warning or error.
 11. Send a [pull request](https://github.com/commitizen-tools/commitizen/pulls) 🙏
 
+## Use of GitHub Labels
+
+* good-first-issue *(issue only)*
+* help-wanted
+* issue-status: needs-triage *(issue only)* **(default label for issues)**
+* issue-status: wont-fix
+* issue-status: wont-implement
+* issue-status: duplicate
+* issue-status: invalid
+* issue-status: wait-for-response
+* issue-status: wait-for-implementation
+* issue-status: pr-created
+* pr-status: wait-for-review **(default label for PRs)**
+* pr-status: reviewing
+* pr-status: wait-for-modification
+* pr-status: wait-for-response
+* pr-status: ready-to-merge
+* needs: test-case *(pr only)*
+* needs: documentation *(pr only)*
+* type: feature
+* type: bug
+* type: documentation
+* type: refactor
+* type: question *(issue only)*
+* os: Windows
+* os: Linux
+* os: macOS
+
+
+### Issue life cycle
+
+```mermaid
+graph TD
+    input[/issue created/] -->
+    needs-triage
+    needs-triage --triage--> close(wont-implement, wont-fix, duplicate, invalid)
+
+    needs-triage --triage--> wait-for-implementation
+    needs-triage --triage--> wait-for-response
+
+    wait-for-response --response--> needs-triage
+
+    wait-for-implementation --PR-created--> pr-created --PR-merged--> output[/close/]
+
+    close --> output[/close/]
+```
+
+### Pull request life cycle
+
+```mermaid
+flowchart TD
+    input[/pull request created/] -->
+    wait-for-review
+    --start reviewing -->
+    reviewing
+    --finish review -->
+    reviewed{approved}
+
+    reviewed --Y-->
+    wait-for-merge -->
+    output[/merge/]
+
+    reviewed --n-->
+    require-more-information{require more information}
+
+    require-more-information --y-->
+    wait-for-response
+    --response-->
+    require-more-information
+
+    require-more-information --n-->
+    wait-for-modification
+    --modification-received-->
+    review
+```
+
+
 [conventional-commmits]: https://www.conventionalcommits.org/
