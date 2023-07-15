@@ -1,4 +1,14 @@
 
+## v3.5.3 (2023-07-15)
+
+### Fix
+
+- Treat $version the same as unset tag_format in ScmProvider
+
+### Refactor
+
+- Make tag_format properly default to $version
+
 ## v3.5.2 (2023-06-25)
 
 ### Fix
