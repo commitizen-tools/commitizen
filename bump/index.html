@@ -1392,7 +1392,17 @@ on the list and then you can use the exit code:</p>
 </code></pre></div>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <h3 id="tag_format"><code>tag_format</code><a class="headerlink" href="#tag_format" title="Permanent link">&para;</a></h3>
-<p>It is used to read the format from the git tags, and also to generate the tags.</p>
+<p><code>tag_format</code> and <code>version_scheme</code> are combined to make Git tag names from versions.</p>
+<p>These are used in:</p>
+<ul>
+<li><code>cz bump</code>: Find previous release tag (exact match) and generate new tag.</li>
+<li>Find previous release tags in <code>cz changelog</code>.</li>
+<li>If <code>--incremental</code>: Using latest version found in the changelog, scan existing Git tags with 89\% similarity match. </li>
+<li><code>--rev-range</code> is converted to Git tag names with <code>tag_format</code> before searching Git history.</li>
+<li>If the <code>scm</code> <code>version_provider</code> is used, it uses different regexes to find the previous version tags:</li>
+<li>If <code>tag_format</code> is set to <code>$version</code> (default): <code>VersionProtocol.parser</code> (allows <code>v</code> prefix)</li>
+<li>If <code>tag_format</code> is set: Custom regex similar to SemVer (not as lenient as PEP440 e.g. on dev-releases)</li>
+</ul>
 <p>Commitizen supports 2 types of formats, a simple and a more complex.</p>
 <div class="highlight"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--tag-format<span class="o">=</span><span class="s2">&quot;v</span><span class="nv">$version</span><span class="s2">&quot;</span>
 </code></pre></div>
@@ -1402,7 +1412,7 @@ on the list and then you can use the exit code:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;v$major.$minor.$patch$prerelease&quot;</span>
 </code></pre></div>
-<p>The variables must be preceded by a <code>$</code> sign.</p>
+<p>The variables must be preceded by a <code>$</code> sign. Default is <code>$version</code>.</p>
 <p>Supported variables:</p>
 <table>
 <thead>
