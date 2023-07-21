@@ -1420,13 +1420,13 @@ files = [
 
 [[package]]
 name = "types-deprecated"
-version = "1.2.9.2"
+version = "1.2.9.3"
 description = "Typing stubs for Deprecated"
 optional = false
 python-versions = "*"
 files = [
-    {file = "types-Deprecated-1.2.9.2.tar.gz", hash = "sha256:91616fd6745f8bf2d457fbbbefd14cde43838e9f00a04b5a0eae4fc1f7bbc697"},
-    {file = "types_Deprecated-1.2.9.2-py3-none-any.whl", hash = "sha256:327783e137353b0ef9cf47a8cd4b1c0b8ae72f6554eb25820783c6a81a3d556f"},
+    {file = "types-Deprecated-1.2.9.3.tar.gz", hash = "sha256:ef87327adf3e3c4a4c7d8e06e58f6476710d3466ecfb53c49efb080804a70ef3"},
+    {file = "types_Deprecated-1.2.9.3-py3-none-any.whl", hash = "sha256:24da9210763e5e1b3d0d4f6f8bba9ad3bb6af3fe7f6815fc37e3ede4681704f5"},
 ]
 
 [[package]]
