@@ -83,7 +83,7 @@ class Commit:
         out.info(f"\n{m}\n")
 
         if write_message_to_file:
-            with smart_open(write_message_to_file, "w") as file:
+            with smart_open(write_message_to_file, "w", encoding=self.encoding) as file:
                 file.write(m)
 
         if dry_run:
