@@ -5,7 +5,7 @@ import re
 from collections import OrderedDict
 from string import Template
 
-from commitizen.defaults import MAJOR, MINOR, PATCH, bump_message
+from commitizen.defaults import MAJOR, MINOR, PATCH, bump_message, encoding
 from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import GitCommit, smart_open
 from commitizen.version_schemes import DEFAULT_SCHEME, Version, VersionScheme
@@ -48,9 +48,9 @@ def update_version_in_files(
     current_version: str,
     new_version: str,
     files: list[str],
-    encoding: str,
     *,
     check_consistency=False,
+    encoding: str = encoding,
 ) -> None:
     """Change old version to the new one in every file given.
 
@@ -71,7 +71,7 @@ def update_version_in_files(
             current_version,
             new_version,
             regex,
-            encoding,
+            encoding=encoding,
         )
 
         if check_consistency and not current_version_found:
@@ -91,7 +91,7 @@ def _bump_with_regex(
     current_version: str,
     new_version: str,
     regex: str,
-    encoding: str,
+    encoding: str = encoding,
 ) -> tuple[bool, str]:
     current_version_found = False
     lines = []

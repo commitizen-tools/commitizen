@@ -145,7 +145,7 @@ class Changelog:
             changelog_meta = changelog.get_metadata(
                 self.file_name,
                 self.scheme,
-                self.encoding,
+                encoding=self.encoding,
             )
             latest_version = changelog_meta.get("latest_version")
             if latest_version:

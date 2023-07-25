@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import os
-from logging import getLogger
 import warnings
+from logging import getLogger
 
 import questionary
 
@@ -23,7 +23,7 @@ from commitizen.exceptions import (
     NoVersionSpecifiedError,
 )
 from commitizen.providers import get_provider
-from commitizen.version_schemes import get_version_scheme, InvalidVersion
+from commitizen.version_schemes import InvalidVersion, get_version_scheme
 
 logger = getLogger("commitizen")
 
@@ -298,8 +298,8 @@ class Bump:
             str(current_version),
             str(new_version),
             version_files,
-            self.encoding,
             check_consistency=self.check_consistency,
+            encoding=self.encoding,
         )
 
         provider.set_version(str(new_version))

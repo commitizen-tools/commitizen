@@ -13,6 +13,8 @@ import re
 from collections import defaultdict
 from typing import Generator, Iterable
 
+from commitizen.defaults import encoding
+
 MD_VERSION_RE = r"^##\s(?P<version>[a-zA-Z0-9.+]+)\s?\(?(?P<date>[0-9-]+)?\)?"
 MD_CHANGE_TYPE_RE = r"^###\s(?P<change_type>[a-zA-Z0-9.+\s]+)"
 MD_MESSAGE_RE = (
@@ -36,7 +38,7 @@ CATEGORIES = [
 ]
 
 
-def find_version_blocks(filepath: str, encoding: str) -> Generator:
+def find_version_blocks(filepath: str, encoding: str = encoding) -> Generator:
     """Find version block (version block: contains all the information about a version.)
 
     E.g:

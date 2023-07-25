@@ -36,6 +36,7 @@ from jinja2 import Environment, PackageLoader
 
 from commitizen import out
 from commitizen.bump import normalize_tag
+from commitizen.defaults import encoding
 from commitizen.exceptions import InvalidConfigurationError, NoCommitsFoundError
 from commitizen.git import GitCommit, GitTag
 from commitizen.version_schemes import (
@@ -214,7 +215,7 @@ def parse_title_type_of_line(value: str) -> str | None:
 
 
 def get_metadata(
-    filepath: str, scheme: VersionScheme = Pep440, encoding: str = "utf-8"
+    filepath: str, scheme: VersionScheme = Pep440, encoding: str = encoding
 ) -> dict:
     unreleased_start: int | None = None
     unreleased_end: int | None = None

@@ -47,7 +47,9 @@ def existing_changelog_file(tmpdir):
 
 
 def test_read_changelog_blocks(existing_changelog_file):
-    blocks = changelog_parser.find_version_blocks(existing_changelog_file, "utf-8")
+    blocks = changelog_parser.find_version_blocks(
+        existing_changelog_file, encoding="utf-8"
+    )
     blocks = list(blocks)
     amount_of_blocks = len(blocks)
     assert amount_of_blocks == 2
@@ -127,7 +129,9 @@ def test_transform_change_type_fail():
 
 
 def test_generate_block_tree(existing_changelog_file):
-    blocks = changelog_parser.find_version_blocks(existing_changelog_file, "utf-8")
+    blocks = changelog_parser.find_version_blocks(
+        existing_changelog_file, encoding="utf-8"
+    )
     block = next(blocks)
     tree = changelog_parser.generate_block_tree(block)
     assert tree == {
@@ -157,7 +161,9 @@ def test_generate_block_tree(existing_changelog_file):
 
 
 def test_generate_full_tree(existing_changelog_file):
-    blocks = changelog_parser.find_version_blocks(existing_changelog_file, "utf-8")
+    blocks = changelog_parser.find_version_blocks(
+        existing_changelog_file, encoding="utf-8"
+    )
     tree = list(changelog_parser.generate_full_tree(blocks))
 
     assert tree == [
