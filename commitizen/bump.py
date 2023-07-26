@@ -5,7 +5,7 @@ import re
 from collections import OrderedDict
 from string import Template
 
-from commitizen.defaults import bump_message
+from commitizen.defaults import MAJOR, MINOR, PATCH, bump_message
 from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import GitCommit, smart_open
 from commitizen.version_schemes import DEFAULT_SCHEME, VersionScheme, Version
@@ -34,11 +34,11 @@ def find_increment(
                         new_increment = increments_map[match_pattern]
                         break
 
-                if increment == "MAJOR":
+                if increment == MAJOR:
                     break
-                elif increment == "MINOR" and new_increment == "MAJOR":
+                elif increment == MINOR and new_increment == MAJOR:
                     increment = new_increment
-                elif increment == "PATCH" or increment is None:
+                elif increment == PATCH or increment is None:
                     increment = new_increment
 
     return increment
