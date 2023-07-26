@@ -191,7 +191,7 @@ class BaseVersion(_BaseVersion):
             elif increment == PATCH:
                 base[PATCH] += 1
 
-        return f"{base['MAJOR']}.{base['MINOR']}.{base['PATCH']}"
+        return f"{base[MAJOR]}.{base[MINOR]}.{base[PATCH]}"
 
     def bump(
         self,
