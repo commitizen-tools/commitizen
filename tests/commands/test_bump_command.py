@@ -228,6 +228,42 @@ def test_bump_command_prelease(mocker: MockFixture):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_command_prelease_increment(mocker: MockFixture):
+    # FINAL RELEASE
+    create_file_and_commit("fix: location")
+
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    assert git.tag_exist("0.1.1")
+
+    # PRERELEASE
+    create_file_and_commit("fix: location")
+
+    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    assert git.tag_exist("0.1.2a0")
+
+    create_file_and_commit("feat: location")
+
+    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    assert git.tag_exist("0.2.0a0")
+
+    create_file_and_commit("feat!: breaking")
+
+    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    assert git.tag_exist("1.0.0a0")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_on_git_with_hooks_no_verify_disabled(mocker: MockFixture):
     """Bump commit without --no-verify"""
     cmd.run("mkdir .git/hooks")

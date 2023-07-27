@@ -100,6 +100,7 @@ class VersionProtocol(Protocol):
         prerelease_offset: int = 0,
         devrelease: int | None = None,
         is_local_version: bool = False,
+        force_bump: bool = False,
     ) -> Self:
         """
         Based on the given increment, generate the next bumped version according to the version scheme
@@ -166,7 +167,9 @@ class BaseVersion(_BaseVersion):
 
         return f"dev{devrelease}"
 
-    def increment_base(self, increment: str | None = None) -> str:
+    def increment_base(
+        self, increment: str | None = None, force_bump: bool = False
+    ) -> str:
         prev_release = list(self.release)
         increments = [MAJOR, MINOR, PATCH]
         base = dict(zip_longest(increments, prev_release, fillvalue=0))
@@ -175,7 +178,7 @@ class BaseVersion(_BaseVersion):
         # must remove its prerelease tag,
         # so it doesn't matter the increment.
         # Example: 1.0.0a0 with PATCH/MINOR -> 1.0.0
-        if not self.is_prerelease:
+        if not self.is_prerelease or force_bump:
             if increment == MAJOR:
                 base[MAJOR] += 1
                 base[MINOR] = 0
@@ -195,6 +198,7 @@ class BaseVersion(_BaseVersion):
         prerelease_offset: int = 0,
         devrelease: int | None = None,
         is_local_version: bool = False,
+        force_bump: bool = False,
     ) -> Self:
         """Based on the given increment a proper semver will be generated.
 
@@ -212,9 +216,21 @@ class BaseVersion(_BaseVersion):
             local_version = self.scheme(self.local).bump(increment)
             return self.scheme(f"{self.public}+{local_version}")  # type: ignore
         else:
-            base = self.increment_base(increment)
+            base = self.increment_base(increment, force_bump)
             dev_version = self.generate_devrelease(devrelease)
-            pre_version = self.generate_prerelease(prerelease, offset=prerelease_offset)
+            release = list(self.release)
+            if len(release) < 3:
+                release += [0] * (3 - len(release))
+            current_semver = ".".join(str(part) for part in release)
+            if base == current_semver:
+                pre_version = self.generate_prerelease(
+                    prerelease, offset=prerelease_offset
+                )
+            else:
+                base_version = cast(BaseVersion, self.scheme(base))
+                pre_version = base_version.generate_prerelease(
+                    prerelease, offset=prerelease_offset
+                )
             # TODO: post version
             return self.scheme(f"{base}{pre_version}{dev_version}")  # type: ignore
 
