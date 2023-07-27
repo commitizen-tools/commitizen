@@ -215,8 +215,20 @@ def test_bump_command_prelease(mocker: MockFixture):
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    tag_exists = git.tag_exist("0.2.0a0")
-    assert tag_exists is True
+    assert git.tag_exist("0.2.0a0")
+
+    testargs = ["cz", "bump", "--prerelease", "rc", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    assert git.tag_exist("0.2.0rc0")
+
+    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    assert not git.tag_exist("0.2.0a1")
+    assert git.tag_exist("0.2.0rc1")
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
     testargs = ["cz", "bump"]

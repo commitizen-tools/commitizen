@@ -46,8 +46,8 @@ local_versions = [
 
 # this cases should be handled gracefully
 unexpected_cases = [
-    (("0.1.1rc0", None, "alpha", 0, None), "0.1.1-a0"),
-    (("0.1.1b1", None, "alpha", 0, None), "0.1.1-a0"),
+    (("0.1.1rc0", None, "alpha", 0, None), "0.1.1-rc1"),
+    (("0.1.1b1", None, "alpha", 0, None), "0.1.1-b2"),
 ]
 
 weird_cases = [

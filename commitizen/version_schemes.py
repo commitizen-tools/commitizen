@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, ClassVar, Protocol, Type, cast, runtime_checka
 import importlib_metadata as metadata
 from packaging.version import InvalidVersion  # noqa: F401: Rexpose the common exception
 from packaging.version import Version as _BaseVersion
+from packaging.version import _parse_letter_version
 
 from commitizen.config.base_config import BaseConfig
 from commitizen.defaults import MAJOR, MINOR, PATCH
@@ -143,10 +144,21 @@ class BaseVersion(_BaseVersion):
         This function might return something like 'alpha1'
         but it will be handled by Version.
         """
+
+        pre_order = ["a", "b", "rc"]
+
         if not prerelease:
             return ""
 
         # version.pre is needed for mypy check
+
+        if self.is_prerelease and self.pre:
+            letter_version = _parse_letter_version(prerelease, offset)
+            if letter_version:
+                current_index = pre_order.index(self.pre[0])
+                new_index = pre_order.index(letter_version[0])
+                prerelease = pre_order[max(current_index, new_index)]
+
         if self.is_prerelease and self.pre and prerelease.startswith(self.pre[0]):
             prev_prerelease: int = self.pre[1]
             new_prerelease_number = prev_prerelease + 1
