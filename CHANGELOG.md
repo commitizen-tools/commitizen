@@ -1,4 +1,10 @@
 
+## v3.5.4 (2023-07-29)
+
+### Refactor
+
+- replace SemVer type literals by respective constants
+
 ## v3.5.3 (2023-07-15)
 
 ### Fix
