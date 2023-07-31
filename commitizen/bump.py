@@ -49,7 +49,7 @@ def update_version_in_files(
     new_version: str,
     files: list[str],
     *,
-    check_consistency=False,
+    check_consistency: bool = False,
     encoding: str = encoding,
 ) -> None:
     """Change old version to the new one in every file given.
