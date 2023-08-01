@@ -1,4 +1,22 @@
 
+## v3.6.0 (2023-08-01)
+
+### Feat
+
+- **changelog.py**: add encoding to get_metadata
+- **unicode**: add unicode support
+
+### Fix
+
+- add missing `encoding` parameter
+- **out.py**: `TextIOWrapper.reconfigure` typing
+- correct type hinting
+- use base config for encoding
+
+### Refactor
+
+- **defaults.py**: use variables in `DEFAULT_SETTINGS`
+
 ## v3.5.4 (2023-07-29)
 
 ### Refactor
