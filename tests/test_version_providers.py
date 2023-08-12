@@ -14,6 +14,7 @@ from commitizen.providers import (
     CommitizenProvider,
     ComposerProvider,
     NpmProvider,
+    Npm2Provider,
     Pep621Provider,
     PoetryProvider,
     ScmProvider,
@@ -225,3 +226,125 @@ def test_scm_provider_default_without_commits_and_tags(config: BaseConfig):
     provider = get_provider(config)
     assert isinstance(provider, ScmProvider)
     assert provider.get_version() == "0.0.0"
+
+
+NPM_PACKAGE_JSON = """\
+{
+  "name": "whatever",
+  "version": "0.1.0"
+}
+"""
+
+NPM_PACKAGE_EXPECTED = """\
+{
+  "name": "whatever",
+  "version": "42.1"
+}
+"""
+
+NPM_LOCKFILE_JSON = """\
+{
+  "name": "whatever",
+  "version": "0.1.0",
+  "lockfileVersion": 2,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "whatever",
+      "version": "0.1.0"
+    },
+    "someotherpackage": {
+      "version": "0.1.0"
+    }
+  }
+}
+"""
+
+NPM_LOCKFILE_EXPECTED = """\
+{
+  "name": "whatever",
+  "version": "42.1",
+  "lockfileVersion": 2,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "whatever",
+      "version": "42.1"
+    },
+    "someotherpackage": {
+      "version": "0.1.0"
+    }
+  }
+}
+"""
+
+NPM2_PROVIDER = [
+    (
+        NPM_PACKAGE_JSON,
+        NPM_PACKAGE_EXPECTED,
+        None,
+        None,
+        None,
+        None,
+    ),
+    (
+        NPM_PACKAGE_JSON,
+        NPM_PACKAGE_EXPECTED,
+        NPM_LOCKFILE_JSON,
+        NPM_LOCKFILE_EXPECTED,
+        None,
+        None,
+    ),
+    (
+        NPM_PACKAGE_JSON,
+        NPM_PACKAGE_EXPECTED,
+        None,
+        None,
+        NPM_LOCKFILE_JSON,
+        NPM_LOCKFILE_EXPECTED,
+    ),
+    (
+        NPM_PACKAGE_JSON,
+        NPM_PACKAGE_EXPECTED,
+        NPM_LOCKFILE_JSON,
+        NPM_LOCKFILE_EXPECTED,
+        NPM_LOCKFILE_JSON,
+        NPM_LOCKFILE_EXPECTED,
+    ),
+]
+
+
+@pytest.mark.parametrize(
+    "pkg_content,pkg_expected,pkg_lock_content,pkg_lock_expected,pkg_shrinkwrap_content,pkg_shrinkwrap_expected",
+    NPM2_PROVIDER,
+)
+def test_npm2_provider(
+    config: BaseConfig,
+    chdir: Path,
+    pkg_content: str,
+    pkg_expected: str,
+    pkg_lock_content: str,
+    pkg_lock_expected: str,
+    pkg_shrinkwrap_content: str,
+    pkg_shrinkwrap_expected: str,
+):
+    pkg = chdir / "package.json"
+    pkg.write_text(dedent(pkg_content))
+    if pkg_lock_content:
+        pkg_lock = chdir / "package-lock.json"
+        pkg_lock.write_text(dedent(pkg_lock_content))
+    if pkg_shrinkwrap_content:
+        pkg_shrinkwrap = chdir / "npm-shrinkwrap.json"
+        pkg_shrinkwrap.write_text(dedent(pkg_shrinkwrap_content))
+    config.settings["version_provider"] = "npm2"
+
+    provider = get_provider(config)
+    assert isinstance(provider, Npm2Provider)
+    assert provider.get_version() == "0.1.0"
+
+    provider.set_version("42.1")
+    assert pkg.read_text() == dedent(pkg_expected)
+    if pkg_lock_content:
+        assert pkg_lock.read_text() == dedent(pkg_lock_expected)
+    if pkg_shrinkwrap_content:
+        assert pkg_shrinkwrap.read_text() == dedent(pkg_shrinkwrap_expected)
