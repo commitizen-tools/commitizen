@@ -29,9 +29,9 @@ Copy the hooks from [here](https://github.com/commitizen-tools/hooks) into the `
   executable by running the following commands from the root of your Git repository:
 
 ```bash
-wget -o .git/hooks/prepare-commit-msg https://github.com/commitizen-tools/hooks/prepare-commit-msg.py
+wget -O .git/hooks/prepare-commit-msg https://raw.githubusercontent.com/commitizen-tools/commitizen/master/hooks/prepare-commit-msg.py
 chmod +x .git/hooks/prepare-commit-msg
-wget -o .git/hooks/post-commit https://github.com/commitizen-tools/hooks/post-commit.py
+wget -O .git/hooks/post-commit https://raw.githubusercontent.com/commitizen-tools/commitizen/master/hooks/post-commit.py
 chmod +x .git/hooks/post-commit
 ```
 
