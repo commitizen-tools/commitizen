@@ -214,7 +214,7 @@ class Npm2Provider(VersionProvider):
                 json.dumps(lock_document, indent=self.indent) + "\n"
             )
         if self.shrinkwrap_file.exists():
-            shrinkwrap_document = self.set_lock_version(
+            shrinkwrap_document = self.set_shrinkwrap_version(
                 json.loads(self.shrinkwrap_file.read_text()), version
             )
             self.shrinkwrap_file.write_text(
