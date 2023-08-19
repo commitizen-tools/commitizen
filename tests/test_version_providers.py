@@ -278,6 +278,20 @@ NPM_LOCKFILE_EXPECTED = """\
 }
 """
 
+NPM_NO_VERSION = """\
+{
+    "name": "whatever"
+}
+"""
+
+NPM_MULTIPLE_VERSIONS = """\
+{
+    "name": "whatever",
+    "version": "0.1.0",
+    "version": "0.2.0",
+}
+"""
+
 NPM2_PROVIDER = [
     (
         NPM_PACKAGE_JSON,
@@ -348,3 +362,15 @@ def test_npm2_provider(
         assert pkg_lock.read_text() == dedent(pkg_lock_expected)
     if pkg_shrinkwrap_content:
         assert pkg_shrinkwrap.read_text() == dedent(pkg_shrinkwrap_expected)
+
+
+def test_npm2_exceptions(
+    config: BaseConfig,
+):
+    config.settings["version_provider"] = "npm2"
+    provider = get_provider(config)
+    assert isinstance(provider, Npm2Provider)
+    with pytest.raises(ValueError):
+        provider.get_package_version(NPM_NO_VERSION)
+    with pytest.raises(ValueError):
+        provider.get_package_version(NPM_MULTIPLE_VERSIONS)
