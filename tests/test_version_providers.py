@@ -1,4 +1,5 @@
 from __future__ import annotations
+import json
 
 import os
 from pathlib import Path
@@ -371,6 +372,6 @@ def test_npm2_exceptions(
     provider = get_provider(config)
     assert isinstance(provider, Npm2Provider)
     with pytest.raises(ValueError):
-        provider.get_package_version(NPM_NO_VERSION)
+        provider.get_package_version(json.loads(NPM_NO_VERSION))
     with pytest.raises(ValueError):
-        provider.get_package_version(NPM_MULTIPLE_VERSIONS)
+        provider.get_package_version(json.loads(NPM_MULTIPLE_VERSIONS))
