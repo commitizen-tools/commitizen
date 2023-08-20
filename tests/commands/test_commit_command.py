@@ -255,3 +255,24 @@ def test_commit_in_non_git_project(tmpdir, config):
     with tmpdir.as_cwd():
         with pytest.raises(NotAGitProjectError):
             commands.Commit(config, {})
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_with_add_option(config, mocker: MockFixture):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "",
+        "footer": "",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
+    success_mock = mocker.patch("commitizen.out.success")
+    add_mock = mocker.patch("commitizen.git.add")
+    commands.Commit(config, {"add": True})()
+    add_mock.assert_called()
+    success_mock.assert_called_once()
