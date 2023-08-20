@@ -92,7 +92,7 @@ def tag(tag: str, annotated: bool = False, signed: bool = False) -> cmd.Command:
     return c
 
 
-def add():
+def add() -> cmd.Command:
     c = cmd.run("git add .")
     return c
 
