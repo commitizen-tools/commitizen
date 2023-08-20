@@ -75,6 +75,11 @@ data = {
                         "action": "store_true",
                         "help": "sign off the commit",
                     },
+                    {
+                        "name": ["-a", "--add"],
+                        "action": "store_true",
+                        "help": "automatically stage every tracked and un-staged file",
+                    },
                 ],
             },
             {
