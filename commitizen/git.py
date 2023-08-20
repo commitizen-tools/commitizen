@@ -92,6 +92,11 @@ def tag(tag: str, annotated: bool = False, signed: bool = False) -> cmd.Command:
     return c
 
 
+def add():
+    c = cmd.run("git add .")
+    return c
+
+
 def commit(
     message: str, args: str = "", committer_date: str | None = None
 ) -> cmd.Command:
