@@ -92,8 +92,8 @@ def tag(tag: str, annotated: bool = False, signed: bool = False) -> cmd.Command:
     return c
 
 
-def add() -> cmd.Command:
-    c = cmd.run("git add .")
+def add(args: str = "") -> cmd.Command:
+    c = cmd.run(f"git add {args}")
     return c
 
 

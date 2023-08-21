@@ -76,9 +76,9 @@ data = {
                         "help": "sign off the commit",
                     },
                     {
-                        "name": ["-a", "--add"],
+                        "name": ["-a", "--all"],
                         "action": "store_true",
-                        "help": "automatically stage every tracked and un-staged file",
+                        "help": "Tell the command to automatically stage files that have been modified and deleted, but new files you have not told Git about are not affected.",
                     },
                 ],
             },
