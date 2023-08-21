@@ -273,6 +273,6 @@ def test_commit_command_with_all_option(config, mocker: MockFixture):
     commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
     success_mock = mocker.patch("commitizen.out.success")
     add_mock = mocker.patch("commitizen.git.add")
-    commands.Commit(config, {"add": True})()
+    commands.Commit(config, {"all": True})()
     add_mock.assert_called()
     success_mock.assert_called_once()
