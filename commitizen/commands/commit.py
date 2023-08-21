@@ -67,9 +67,9 @@ class Commit:
         dry_run: bool = self.arguments.get("dry_run")
         write_message_to_file = self.arguments.get("write_message_to_file")
 
-        is_git_add: bool = self.arguments.get("add")
-        if is_git_add:
-            c = git.add()
+        is_all: bool = self.arguments.get("all")
+        if is_all:
+            c = git.add("-u")
 
         if git.is_staging_clean() and not dry_run:
             raise NothingToCommitError("No files added to staging!")

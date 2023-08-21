@@ -258,7 +258,7 @@ def test_commit_in_non_git_project(tmpdir, config):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_command_with_add_option(config, mocker: MockFixture):
+def test_commit_command_with_all_option(config, mocker: MockFixture):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
         "prefix": "feat",
