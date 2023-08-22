@@ -48,7 +48,6 @@ typing-extensions = { version = "^4.0.1", python = "<3.8" }
 charset-normalizer = ">=2.1.0,<4"
 # Use the Python 3.11 and 3.12 compatible API: https://github.com/python/importlib_metadata#compatibility
 importlib_metadata = { version = ">=4.13,<7"}
-jsonpath-ng = "^1.5.3"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^7.34"
@@ -89,7 +88,6 @@ cargo = "commitizen.providers:CargoProvider"
 commitizen = "commitizen.providers:CommitizenProvider"
 composer = "commitizen.providers:ComposerProvider"
 npm = "commitizen.providers:NpmProvider"
-npm2 = "commitizen.providers:Npm2Provider"
 pep621 = "commitizen.providers:Pep621Provider"
 poetry = "commitizen.providers:PoetryProvider"
 scm = "commitizen.providers:ScmProvider"

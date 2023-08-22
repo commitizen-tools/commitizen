@@ -293,16 +293,15 @@ But you can use any `commitizen.provider` entrypoint as value for `version_provi
 
 Commitizen provides some version providers for some well known formats:
 
-| name         | description                                                                                                                                                                                                                       |
-| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `commitizen` | Default version provider: Fetch and set version in commitizen config.                                                                                                                                                             |
-| `scm`        | Fetch the version from git and does not need to set it back                                                                                                                                                                       |
-| `pep621`     | Get and set version from `pyproject.toml` `project.version` field                                                                                                                                                                 |
-| `poetry`     | Get and set version from `pyproject.toml` `tool.poetry.version` field                                                                                                                                                             |
-| `cargo`      | Get and set version from `Cargo.toml` `project.version` field                                                                                                                                                                     |
-| `npm`        | Get and set version from `package.json` `project.version` field                                                                                                                                                                   |
-| `npm2`       | Get and set version from `package.json` `$.version` field, `package-lock.json` `$.version,$.packages.''.version` fields if the file exists, and `npm-shrinkwrap.json` `$.version,$.packages.''.version` fields if the file exists |
-| `composer`   | Get and set version from `composer.json` `project.version` field                                                                                                                                                                  |
+| name         | description                                                                                                                                                                                                             |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `commitizen` | Default version provider: Fetch and set version in commitizen config.                                                                                                                                                   |
+| `scm`        | Fetch the version from git and does not need to set it back                                                                                                                                                             |
+| `pep621`     | Get and set version from `pyproject.toml` `project.version` field                                                                                                                                                       |
+| `poetry`     | Get and set version from `pyproject.toml` `tool.poetry.version` field                                                                                                                                                   |
+| `cargo`      | Get and set version from `Cargo.toml` `project.version` field                                                                                                                                                           |
+| `npm`        | Get and set version from `package.json` `version` field, `package-lock.json` `version,packages.''.version` fields if the file exists, and `npm-shrinkwrap.json` `version,packages.''.version` fields if the file exists |
+| `composer`   | Get and set version from `composer.json` `project.version` field                                                                                                                                                        |
 
 !!! note
 The `scm` provider is meant to be used with `setuptools-scm` or any packager `*-scm` plugin.

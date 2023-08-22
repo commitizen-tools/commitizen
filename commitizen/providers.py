@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import jsonpath_ng  # type: ignore
 import re
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -161,24 +160,13 @@ class JsonProvider(FileProvider):
 
 class NpmProvider(JsonProvider):
     """
-    npm package.json version management
-    """
-
-    filename = "package.json"
-
-
-class Npm2Provider(VersionProvider):
-    """
     npm package.json and package-lock.json version management
     """
 
     indent: ClassVar[int] = 2
     package_filename = "package.json"
-    package_expression = "$.version"
     lock_filename = "package-lock.json"
-    lock_expressions = ["$.version", "$.packages.''.version"]
     shrinkwrap_filename = "npm-shrinkwrap.json"
-    shrinkwrap_expressions = ["$.version", "$.packages.''.version"]
 
     @property
     def package_file(self) -> Path:
@@ -199,7 +187,7 @@ class Npm2Provider(VersionProvider):
         package_document = json.loads(self.package_file.read_text())
         return self.get_package_version(package_document)
 
-    def set_version(self, version: str):
+    def set_version(self, version: str) -> None:
         package_document = self.set_package_version(
             json.loads(self.package_file.read_text()), version
         )
@@ -222,29 +210,26 @@ class Npm2Provider(VersionProvider):
             )
 
     def get_package_version(self, document: dict[str, Any]) -> str:
-        expr = jsonpath_ng.parse(self.package_expression)
-        versions = expr.find(document)
-        if len(versions) == 0:
-            raise ValueError("No version found")
-        elif len(versions) > 1:
-            raise ValueError("Multiple versions found")
-        return versions[0].value  # type: ignore
+        return document["version"]  # type: ignore
 
-    def set_package_version(self, document: dict[str, Any], version: str):
-        expr = jsonpath_ng.parse(self.package_expression)
-        document = expr.update(document, version)
+    def set_package_version(
+        self, document: dict[str, Any], version: str
+    ) -> dict[str, Any]:
+        document["version"] = version
         return document
 
-    def set_lock_version(self, document: dict[str, Any], version: str):
-        for expression in self.lock_expressions:
-            expr = jsonpath_ng.parse(expression)
-            document = expr.update(document, version)
+    def set_lock_version(
+        self, document: dict[str, Any], version: str
+    ) -> dict[str, Any]:
+        document["version"] = version
+        document["packages"][""]["version"] = version
         return document
 
-    def set_shrinkwrap_version(self, document: dict[str, Any], version: str):
-        for expression in self.shrinkwrap_expressions:
-            expr = jsonpath_ng.parse(expression)
-            document = expr.update(document, version)
+    def set_shrinkwrap_version(
+        self, document: dict[str, Any], version: str
+    ) -> dict[str, Any]:
+        document["version"] = version
+        document["packages"][""]["version"] = version
         return document
 
 
