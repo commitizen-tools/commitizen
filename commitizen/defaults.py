@@ -56,6 +56,7 @@ class Settings(TypedDict, total=False):
     post_bump_hooks: list[str] | None
     prerelease_offset: int
     encoding: str
+    always_signoff: bool
 
 
 name: str = "cz_conventional_commits"
@@ -96,6 +97,7 @@ DEFAULT_SETTINGS: Settings = {
     "post_bump_hooks": [],
     "prerelease_offset": 0,
     "encoding": encoding,
+    "always_signoff": False,
 }
 
 MAJOR = "MAJOR"
