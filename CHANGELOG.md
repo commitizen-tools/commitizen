@@ -1,4 +1,17 @@
 
+## v3.7.0 (2023-08-26)
+
+### Feat
+
+- **provider**: add npm2 provider to update package.json, package-lock.json, and npm-shrinkwrap.json
+
+### Fix
+
+- **provider**: fix npm version provider to update package-lock.json and npm-shrinkwrap.json if they exist
+- **provider**: fix npm provider to update package-lock.json and npm-shrinkwrap.json if they exist
+- **test**: pass correct type to get_package_version tests
+- **tests**: completed test coverage for npm2
+
 ## v3.6.0 (2023-08-01)
 
 ### Feat
