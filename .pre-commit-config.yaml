@@ -20,20 +20,20 @@ repos:
       - id: end-of-file-fixer
         exclude: "tests/((commands|data)/|test_).+"
       - id: trailing-whitespace
-        args: [--markdown-linebreak-ext=md]
+        args: [ --markdown-linebreak-ext=md ]
       - id: debug-statements
       - id: no-commit-to-branch
       - id: check-merge-conflict
       - id: check-toml
       - id: check-yaml
-        args: ['--unsafe']  # for mkdocs.yml
+        args: [ '--unsafe' ] # for mkdocs.yml
       - id: detect-private-key
 
   - repo: https://github.com/asottile/blacken-docs
     rev: 1.13.0
     hooks:
       - id: blacken-docs
-        additional_dependencies: [black==22.10]
+        additional_dependencies: [ black==22.10 ]
 
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.4
@@ -41,8 +41,9 @@ repos:
       - id: codespell
         name: Run codespell to check for common misspellings in files
         language: python
-        types: [text]
-        args: ["--write-changes", "--ignore-words-list", "asend"]
+        types: [ text ]
+        args: [ "--write-changes", "--ignore-words-list", "asend" ]
+        exclude: "poetry.lock"
 
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.6.0 # automatically updated by Commitizen
@@ -60,12 +61,12 @@ repos:
         language: system
         pass_filenames: false
         entry: ./scripts/format
-        types: [python]
+        types: [ python ]
 
       - id: linter and test
         name: linter and test
         language: system
         pass_filenames: false
-        stages: [push]
+        stages: [ push ]
         entry: ./scripts/test
-        types: [python]
+        types: [ python ]
