@@ -84,13 +84,13 @@ cz_jira = "commitizen.cz.jira:JiraSmartCz"
 cz_customize = "commitizen.cz.customize:CustomizeCommitsCz"
 
 [tool.poetry.plugins."commitizen.provider"]
-cargo = "commitizen.providers:CargoProvider"
-commitizen = "commitizen.providers:CommitizenProvider"
-composer = "commitizen.providers:ComposerProvider"
-npm = "commitizen.providers:NpmProvider"
-pep621 = "commitizen.providers:Pep621Provider"
-poetry = "commitizen.providers:PoetryProvider"
-scm = "commitizen.providers:ScmProvider"
+cargo = "commitizen.providers.cargo_provider:CargoProvider"
+commitizen = "commitizen.providers.commitizen_provider:CommitizenProvider"
+composer = "commitizen.providers.composer_provider:ComposerProvider"
+npm = "commitizen.providers.npm_provider:NpmProvider"
+pep621 = "commitizen.providers.pep621_provider:Pep621Provider"
+poetry = "commitizen.providers.poetry_provider:PoetryProvider"
+scm = "commitizen.providers.scm_provider:ScmProvider"
 
 [tool.poetry.plugins."commitizen.scheme"]
 pep440 = "commitizen.version_schemes:Pep440"
