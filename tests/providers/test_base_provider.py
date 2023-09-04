@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import TYPE_CHECKING, Iterator
+from typing import Iterator
 
 import pytest
 
@@ -10,9 +10,6 @@ from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import VersionProviderUnknown
 from commitizen.providers import get_provider
 from commitizen.providers.commitizen_provider import CommitizenProvider
-
-if TYPE_CHECKING:
-    pass
 
 
 @pytest.fixture

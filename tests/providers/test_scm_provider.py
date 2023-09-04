@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 
 import pytest
 
@@ -8,9 +7,6 @@ from commitizen.config.base_config import BaseConfig
 from commitizen.providers import get_provider
 from commitizen.providers.scm_provider import ScmProvider
 from tests.utils import create_file_and_commit, create_tag
-
-if TYPE_CHECKING:
-    pass
 
 
 @pytest.mark.parametrize(
