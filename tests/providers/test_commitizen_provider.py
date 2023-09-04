@@ -1,10 +1,7 @@
 from __future__ import annotations
 
-import os
-from pathlib import Path
-from typing import TYPE_CHECKING, Iterator
+from typing import TYPE_CHECKING
 
-import pytest
 
 from commitizen.config.base_config import BaseConfig
 from commitizen.providers.commitizen_provider import CommitizenProvider
@@ -12,14 +9,6 @@ from commitizen.providers.commitizen_provider import CommitizenProvider
 
 if TYPE_CHECKING:
     from pytest_mock import MockerFixture
-
-
-@pytest.fixture
-def chdir(tmp_path: Path) -> Iterator[Path]:
-    cwd = Path()
-    os.chdir(tmp_path)
-    yield tmp_path
-    os.chdir(cwd)
 
 
 def test_commitizen_provider(config: BaseConfig, mocker: MockerFixture):
