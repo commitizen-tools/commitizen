@@ -329,7 +329,8 @@ class Bump:
             cmd.run(git_add_changelog_and_version_files_command)
             c = git.commit(message, args=self._get_commit_args())
         if c.return_code != 0:
-            raise BumpCommitFailedError(f'2nd git.commit error: "{c.err.strip()}"')
+            err = c.err.strip() or c.out
+            raise BumpCommitFailedError(f'2nd git.commit error: "{err}"')
 
         if c.out:
             if self.git_output_to_stderr:

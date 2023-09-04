@@ -1,4 +1,10 @@
 
+## v3.7.1 (2023-09-04)
+
+### Fix
+
+- empty error on bump failure
+
 ## v3.7.0 (2023-08-26)
 
 ### Feat
