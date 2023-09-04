@@ -7,7 +7,7 @@ import importlib_metadata as metadata
 from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import VersionProviderUnknown
 
-from .base_provider import VersionProvider
+from commitizen.providers.base_provider import VersionProvider
 
 PROVIDER_ENTRYPOINT = "commitizen.provider"
 DEFAULT_PROVIDER = "commitizen"
