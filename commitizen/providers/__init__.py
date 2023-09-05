@@ -8,13 +8,24 @@ from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import VersionProviderUnknown
 
 from commitizen.providers.base_provider import VersionProvider
-from commitizen.providers.cargo_provider import CargoProvider  # noqa: F401
-from commitizen.providers.commitizen_provider import CommitizenProvider  # noqa: F401
-from commitizen.providers.composer_provider import ComposerProvider  # noqa: F401
-from commitizen.providers.npm_provider import NpmProvider  # noqa: F401
-from commitizen.providers.pep621_provider import Pep621Provider  # noqa: F401
-from commitizen.providers.poetry_provider import PoetryProvider  # noqa: F401
-from commitizen.providers.scm_provider import ScmProvider  # noqa: F401
+from commitizen.providers.cargo_provider import CargoProvider
+from commitizen.providers.commitizen_provider import CommitizenProvider
+from commitizen.providers.composer_provider import ComposerProvider
+from commitizen.providers.npm_provider import NpmProvider
+from commitizen.providers.pep621_provider import Pep621Provider
+from commitizen.providers.poetry_provider import PoetryProvider
+from commitizen.providers.scm_provider import ScmProvider
+
+__all__ = [
+    "get_provider",
+    "CargoProvider",
+    "CommitizenProvider",
+    "ComposerProvider",
+    "NpmProvider",
+    "Pep621Provider",
+    "PoetryProvider",
+    "ScmProvider",
+]
 
 PROVIDER_ENTRYPOINT = "commitizen.provider"
 DEFAULT_PROVIDER = "commitizen"
