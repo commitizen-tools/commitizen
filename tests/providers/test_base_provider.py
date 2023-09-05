@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import os
-from pathlib import Path
-from typing import Iterator
 
 import pytest
 
@@ -10,8 +7,6 @@ from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import VersionProviderUnknown
 from commitizen.providers import get_provider
 from commitizen.providers.commitizen_provider import CommitizenProvider
-
-
 
 
 def test_default_version_provider_is_commitizen_config(config: BaseConfig):
