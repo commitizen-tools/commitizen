@@ -1,4 +1,12 @@
 
+## v3.8.0 (2023-09-05)
+
+### Feat
+
+- **defaults.py**: add always_signoff config option for commits
+
+## 3.7.1 (2023-09-04)
+
 ## v3.7.1 (2023-09-04)
 
 ### Fix
