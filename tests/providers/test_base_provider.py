@@ -12,12 +12,6 @@ from commitizen.providers import get_provider
 from commitizen.providers.commitizen_provider import CommitizenProvider
 
 
-@pytest.fixture
-def chdir(tmp_path: Path) -> Iterator[Path]:
-    cwd = Path()
-    os.chdir(tmp_path)
-    yield tmp_path
-    os.chdir(cwd)
 
 
 def test_default_version_provider_is_commitizen_config(config: BaseConfig):
