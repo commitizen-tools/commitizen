@@ -89,7 +89,9 @@ class Commit:
         if dry_run:
             raise DryRunExit()
 
-        signoff: bool = self.arguments.get("signoff")
+        signoff: bool = (
+            self.arguments.get("signoff") or self.config.settings["always_signoff"]
+        )
 
         if signoff:
             c = git.commit(m, "-s")

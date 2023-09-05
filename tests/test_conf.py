@@ -63,6 +63,7 @@ _settings = {
     "post_bump_hooks": ["scripts/slack_notification.sh"],
     "prerelease_offset": 0,
     "encoding": "utf-8",
+    "always_signoff": False,
 }
 
 _new_settings = {
@@ -87,6 +88,7 @@ _new_settings = {
     "post_bump_hooks": ["scripts/slack_notification.sh"],
     "prerelease_offset": 0,
     "encoding": "utf-8",
+    "always_signoff": False,
 }
 
 _read_settings = {
