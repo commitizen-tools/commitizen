@@ -1,4 +1,10 @@
 
+## v3.8.1 (2023-09-08)
+
+### Fix
+
+- add sponsors to README
+
 ## v3.8.0 (2023-09-05)
 
 ### Feat
