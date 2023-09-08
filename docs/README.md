@@ -153,6 +153,12 @@ eval "$(register-python-argcomplete cz)"
 
 For further information on activation, please visit the [argcomplete website](https://kislyuk.github.io/argcomplete/).
 
+## Sponsors
+
+These are our cool sponsors!
+
+<!-- sponsors --><!-- sponsors -->
+
 [conventional_commits]: https://www.conventionalcommits.org
 [semver]: https://semver.org/
 [keepchangelog]: https://keepachangelog.com/
