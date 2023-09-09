@@ -1,4 +1,10 @@
 
+## v3.8.2 (2023-09-09)
+
+### Refactor
+
+- **provider**: split provider code and related tests into individual files for maintainability (#830)
+
 ## v3.8.1 (2023-09-08)
 
 ### Fix
