@@ -4,7 +4,7 @@ tag_format = "v$version"
 version_files = [
   "pyproject.toml:version",
   "commitizen/__version__.py",
-  ".pre-commit-config.yaml:rev:.+Commitizen"
+  ".pre-commit-config.yaml:rev:.+Commitizen",
 ]
 
 [tool.poetry]
@@ -122,7 +122,7 @@ semver = "commitizen.version_schemes:SemVer"
         '.venv/*',
         '*/virtualenv/*',
         '*/virtualenvs/*',
-        '*/tests/*'
+        '*/tests/*',
     ]
 
 [build-system]
@@ -137,7 +137,7 @@ line-length = 88
 ignore = [
     "E501",
     "D1",
-    "D415",
+    "D415"
 ]
 
 [tool.ruff.isort]
