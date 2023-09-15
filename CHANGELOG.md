@@ -1,4 +1,19 @@
 
+## v3.9.0 (2023-09-15)
+
+### Feat
+
+- **commands**: add arg of cz commit to execute git add
+
+### Fix
+
+- **tests**: modify the arg of commit from add to all
+- **commitizen**: Modify the function of the arg a of commit from git add all to git add update
+
+### Refactor
+
+- **commitizen**: add return type hint of git add function
+
 ## v3.8.2 (2023-09-09)
 
 ### Refactor
