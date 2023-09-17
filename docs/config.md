@@ -16,7 +16,7 @@ Type: `str`
 
 Default: `None`
 
-Current version. Example: "0.1.2". Required if you use `provider = "commitizen"`.
+Current version. Example: "0.1.2". Required if you use `version_provider = "commitizen"`.
 
 ### `version_files`
 
