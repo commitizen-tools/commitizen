@@ -5,6 +5,7 @@ from pathlib import Path
 import yaml
 
 from commitizen.git import smart_open
+from commitizen.exceptions import InvalidConfigurationError
 
 from .base_config import BaseConfig
 
@@ -13,8 +14,8 @@ class YAMLConfig(BaseConfig):
     def __init__(self, *, data: bytes | str, path: Path | str):
         super(YAMLConfig, self).__init__()
         self.is_empty_config = False
-        self._parse_setting(data)
         self.add_path(path)
+        self._parse_setting(data)
 
     def init_empty_config_content(self):
         with smart_open(self.path, "a", encoding=self.encoding) as json_file:
@@ -28,7 +29,13 @@ class YAMLConfig(BaseConfig):
           name: cz_conventional_commits
         ```
         """
-        doc = yaml.safe_load(data)
+        import yaml.scanner
+
+        try:
+            doc = yaml.safe_load(data)
+        except yaml.YAMLError as e:
+            raise InvalidConfigurationError(f"Failed to parse {self.path}: {e}")
+
         try:
             self.settings.update(doc["commitizen"])
         except (KeyError, TypeError):

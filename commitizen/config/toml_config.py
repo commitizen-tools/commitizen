@@ -5,6 +5,7 @@ from pathlib import Path
 
 from tomlkit import exceptions, parse, table
 
+from commitizen.exceptions import InvalidConfigurationError
 from .base_config import BaseConfig
 
 
@@ -12,8 +13,8 @@ class TomlConfig(BaseConfig):
     def __init__(self, *, data: bytes | str, path: Path | str):
         super(TomlConfig, self).__init__()
         self.is_empty_config = False
-        self._parse_setting(data)
         self.add_path(path)
+        self._parse_setting(data)
 
     def init_empty_config_content(self):
         if os.path.isfile(self.path):
@@ -50,7 +51,11 @@ class TomlConfig(BaseConfig):
         name = "cz_conventional_commits"
         ```
         """
-        doc = parse(data)
+        try:
+            doc = parse(data)
+        except exceptions.ParseError as e:
+            raise InvalidConfigurationError(f"Failed to parse {self.path}: {e}")
+
         try:
             self.settings.update(doc["tool"]["commitizen"])  # type: ignore
         except exceptions.NonExistentKey:
