@@ -6,6 +6,7 @@ import pytest
 import yaml
 
 from commitizen import config, defaults, git
+from commitizen.exceptions import InvalidConfigurationError
 
 PYPROJECT = """
 [tool.commitizen]
@@ -177,6 +178,13 @@ class TestTomlConfig:
         with open(path, "r", encoding="utf-8") as toml_file:
             assert toml_file.read() == existing_content + "\n[tool.commitizen]\n"
 
+    def test_init_with_invalid_config_content(self, tmpdir):
+        existing_content = "invalid toml content"
+        path = tmpdir.mkdir("commitizen").join(".cz.toml")
+
+        with pytest.raises(InvalidConfigurationError, match=r"\.cz\.toml"):
+            config.TomlConfig(data=existing_content, path=path)
+
 
 class TestJsonConfig:
     def test_init_empty_config_content(self, tmpdir):
@@ -187,6 +195,13 @@ class TestJsonConfig:
         with open(path, "r", encoding="utf-8") as json_file:
             assert json.load(json_file) == {"commitizen": {}}
 
+    def test_init_with_invalid_config_content(self, tmpdir):
+        existing_content = "invalid json content"
+        path = tmpdir.mkdir("commitizen").join(".cz.json")
+
+        with pytest.raises(InvalidConfigurationError, match=r"\.cz\.json"):
+            config.JsonConfig(data=existing_content, path=path)
+
 
 class TestYamlConfig:
     def test_init_empty_config_content(self, tmpdir):
@@ -196,3 +211,10 @@ class TestYamlConfig:
 
         with open(path, "r") as yaml_file:
             assert yaml.safe_load(yaml_file) == {"commitizen": {}}
+
+    def test_init_with_invalid_content(self, tmpdir):
+        existing_content = "invalid: .cz.yaml: content: maybe?"
+        path = tmpdir.mkdir("commitizen").join(".cz.yaml")
+
+        with pytest.raises(InvalidConfigurationError, match=r"\.cz\.yaml"):
+            config.YAMLConfig(data=existing_content, path=path)
