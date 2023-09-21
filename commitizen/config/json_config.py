@@ -47,8 +47,8 @@ class JsonConfig(BaseConfig):
         """
         try:
             doc = json.loads(data)
-        except json.JSONDecodeError:
-            raise InvalidConfigurationError(f"Failed to parse {self.path}")
+        except json.JSONDecodeError as e:
+            raise InvalidConfigurationError(f"Failed to parse {self.path}: {e}")
 
         try:
             self.settings.update(doc["commitizen"])
