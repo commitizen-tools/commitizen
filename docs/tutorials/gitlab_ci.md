@@ -74,7 +74,7 @@ test:
 
 auto-bump:
   stage: auto-bump
-  image: python:3.7
+  image: python:3.8
   before_script:
     - "which ssh-agent || ( apt-get update -qy && apt-get install openssh-client -qqy )"
     - eval `ssh-agent -s`
