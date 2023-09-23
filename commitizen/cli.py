@@ -465,6 +465,11 @@ def main():
             raise InvalidCommandArgumentError(
                 f"Invalid commitizen arguments were found before -- separator: `{' '.join(unknown_args[:pos])}`. "
             )
+        # Log warning for -- without any extra args
+        elif len(unknown_args) == 1:
+            logger.warning(
+                "Incomplete commit command: received -- separator without any following git arguments"
+            )
         extra_args = " ".join(unknown_args[1:])
         arguments["extra_cli_args"] = extra_args
 
