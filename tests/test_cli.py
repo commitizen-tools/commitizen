@@ -167,3 +167,4 @@ def test_unknown_args_before_double_dash_raises(mocker: MockFixture):
     with pytest.raises(InvalidCommandArgumentError) as excinfo:
         cli.main()
     assert "Invalid commitizen arguments were found before -- separator" in str(excinfo.value)
+

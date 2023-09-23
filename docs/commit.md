@@ -19,8 +19,10 @@ case for this is to [automatically prepare a commit message](./tutorials/auto_pr
 
 `git` command options that are not implemented by commitizen can be use via the `--` syntax for the `commit` command.
 The syntax separates commitizen arguments from `git commit` arguments by a double dash. This is the resulting syntax:
-```
-cz commit -commitizen-args -- -git-cli-args
+```sh
+cz commit <commitizen-args> -- <git-cli-args>
+
+# e.g., cz commit --dry-run -- -a -S
 ```
 For example, using the `-S` option on `git commit` to sign a commit is now commitizen compatible: `cz c -- -S`
 
