@@ -468,7 +468,7 @@ def main():
         # Log warning for -- without any extra args
         elif len(unknown_args) == 1:
             logger.warning(
-                "Incomplete commit command: received -- separator without any following git arguments"
+                "\nWARN: Incomplete commit command: received -- separator without any following git arguments\n"
             )
         extra_args = " ".join(unknown_args[1:])
         arguments["extra_cli_args"] = extra_args
