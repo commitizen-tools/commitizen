@@ -98,13 +98,16 @@ def add(args: str = "") -> cmd.Command:
 
 
 def commit(
-    message: str, args: str = "", extra_args: str = "", committer_date: str | None = None
+    message: str,
+    args: str = "",
+    extra_args: str = "",
+    committer_date: str | None = None,
 ) -> cmd.Command:
     f = NamedTemporaryFile("wb", delete=False)
     f.write(message.encode("utf-8"))
     f.close()
 
-    command = cmd.run(f"git commit {args} {extra_args} -F {f.name}")
+    command = f"git commit {args} {extra_args} -F {f.name}"
 
     if committer_date and os.name == "nt":  # pragma: no cover
         # Using `cmd /v /c "{command}"` sets environment variables only for that command
