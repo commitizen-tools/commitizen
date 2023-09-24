@@ -8,7 +8,10 @@ from pytest_mock import MockFixture
 
 from commitizen import cli
 from commitizen.exceptions import (
-    ExpectedExit, NoCommandFoundError, NotAGitProjectError, InvalidCommandArgumentError, NothingToCommitError
+    ExpectedExit,
+    NoCommandFoundError,
+    NotAGitProjectError,
+    InvalidCommandArgumentError,
 )
 
 
@@ -166,5 +169,6 @@ def test_unknown_args_before_double_dash_raises(mocker: MockFixture):
     mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(InvalidCommandArgumentError) as excinfo:
         cli.main()
-    assert "Invalid commitizen arguments were found before -- separator" in str(excinfo.value)
-
+    assert "Invalid commitizen arguments were found before -- separator" in str(
+        excinfo.value
+    )

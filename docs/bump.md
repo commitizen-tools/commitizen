@@ -323,7 +323,7 @@ These are used in:
 
 * `cz bump`: Find previous release tag (exact match) and generate new tag.
 * Find previous release tags in `cz changelog`.
-  * If `--incremental`: Using latest version found in the changelog, scan existing Git tags with 89\% similarity match. 
+  * If `--incremental`: Using latest version found in the changelog, scan existing Git tags with 89\% similarity match.
   * `--rev-range` is converted to Git tag names with `tag_format` before searching Git history.
 * If the `scm` `version_provider` is used, it uses different regexes to find the previous version tags:
   * If `tag_format` is set to `$version` (default): `VersionProtocol.parser` (allows `v` prefix)
