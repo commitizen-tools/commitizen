@@ -1104,13 +1104,13 @@ dev = ["pre-commit", "pytest-asyncio", "tox"]
 
 [[package]]
 name = "pytest-regressions"
-version = "2.4.3"
+version = "2.5.0"
 description = "Easy to use fixtures to write regression tests."
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.8"
 files = [
-    {file = "pytest-regressions-2.4.3.tar.gz", hash = "sha256:7238036bbd17c62944bff55d73edb4993eea3f5dbb835c332ec7bc0ddeb027ed"},
-    {file = "pytest_regressions-2.4.3-py3-none-any.whl", hash = "sha256:a0fd84e45d2c3b43d2b36157045ebca8b85185d3dc7b014a62b2954a05d8e07d"},
+    {file = "pytest-regressions-2.5.0.tar.gz", hash = "sha256:818c7884c1cff3babf89eebb02cbc27b307856b1985427c24d52cb812a106fd9"},
+    {file = "pytest_regressions-2.5.0-py3-none-any.whl", hash = "sha256:8c4e5c4037325fdb0825bc1fdcb75e17e03adf3407049f0cb704bb996d496255"},
 ]
 
 [package.dependencies]
