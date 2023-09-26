@@ -58,7 +58,7 @@ pytest-regressions = "^2.4.0"
 pytest-freezer = "^0.4.6"
 pytest-xdist = "^3.1.0"
 # code formatter
-black = "^22.10"
+black = ">=22.10,<24.0"
 # linter
 ruff = ">=0.0.275,<0.0.292"
 pre-commit = ">=2.18,<4.0"
