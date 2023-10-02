@@ -47,6 +47,7 @@ nav:
       - GitLab CI: "tutorials/gitlab_ci.md"
       - Github Actions: "tutorials/github_actions.md"
       - Jenkins pipeline: "tutorials/jenkins_pipeline.md"
+      - Developmental releases: "tutorials/dev_releases.md"
   - FAQ: "faq.md"
   - Exit Codes: "exit_codes.md"
   - Third-Party Commitizen Templates: "third-party-commitizen.md"
