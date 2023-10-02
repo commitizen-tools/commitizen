@@ -105,7 +105,7 @@ class Commit:
         else:
             extra_args = self.arguments.get("extra_cli_args", "")
 
-        c = git.commit(m, extra_args=extra_args)
+        c = git.commit(m, args=extra_args)
 
         if c.return_code != 0:
             out.error(c.err)

@@ -88,7 +88,7 @@ def test_commit_retry_works(config, mocker: MockFixture):
 
     commands.Commit(config, {"retry": True})()
 
-    commit_mock.assert_called_with("feat: user created\n\ncloses #21", extra_args="")
+    commit_mock.assert_called_with("feat: user created\n\ncloses #21", args="")
     prompt_mock.assert_called_once()
     success_mock.assert_called_once()
     assert not os.path.isfile(temp_file)
@@ -174,7 +174,7 @@ def test_commit_command_with_signoff_option(config, mocker: MockFixture):
 
     commands.Commit(config, {"signoff": True})()
 
-    commit_mock.assert_called_once_with(ANY, extra_args="-- -s")
+    commit_mock.assert_called_once_with(ANY, args="-- -s")
     success_mock.assert_called_once()
 
 
@@ -197,7 +197,7 @@ def test_commit_command_with_always_signoff_enabled(config, mocker: MockFixture)
     config.settings["always_signoff"] = True
     commands.Commit(config, {})()
 
-    commit_mock.assert_called_once_with(ANY, extra_args="-- -s")
+    commit_mock.assert_called_once_with(ANY, args="-- -s")
     success_mock.assert_called_once()
 
 
@@ -294,5 +294,5 @@ def test_commit_command_with_extra_args(config, mocker: MockFixture):
     commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
     success_mock = mocker.patch("commitizen.out.success")
     commands.Commit(config, {"extra_cli_args": "-- -extra-args1 -extra-arg2"})()
-    commit_mock.assert_called_once_with(ANY, extra_args="-- -extra-args1 -extra-arg2")
+    commit_mock.assert_called_once_with(ANY, args="-- -extra-args1 -extra-arg2")
     success_mock.assert_called_once()
