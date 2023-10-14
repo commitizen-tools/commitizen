@@ -1,4 +1,11 @@
 
+## v3.10.1 (2023-10-14)
+
+### Fix
+
+- **bump**: add bump support with custom type + scope + exclamation mark
+- **bump**: version bumping
+
 ## v3.10.0 (2023-09-25)
 
 ### Feat
