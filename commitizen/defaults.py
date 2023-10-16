@@ -1,14 +1,10 @@
 from __future__ import annotations
 
 import pathlib
-import sys
 from collections import OrderedDict
 from typing import Any, Iterable, MutableMapping
 
-if sys.version_info < (3, 8):
-    from typing_extensions import TypedDict
-else:
-    from typing import TypedDict
+from typing import TypedDict
 
 # Type
 Questions = Iterable[MutableMapping[str, Any]]

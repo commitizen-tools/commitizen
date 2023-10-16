@@ -55,7 +55,7 @@ def find_version_blocks(filepath: str, encoding: str = encoding) -> Generator:
 
     ```
     """
-    with open(filepath, "r", encoding=encoding) as f:
+    with open(filepath, encoding=encoding) as f:
         block: list = []
         for line in f:
             line = line.strip("\n")

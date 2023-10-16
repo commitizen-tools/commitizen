@@ -133,6 +133,7 @@ addopts = "--strict-markers"
 
 [tool.ruff]
 line-length = 88
+select = ["E", "F", "UP"]
 ignore = [
     "E501",
     "D1",

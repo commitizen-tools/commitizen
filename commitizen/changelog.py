@@ -30,7 +30,7 @@ import os
 import re
 from collections import OrderedDict, defaultdict
 from datetime import date
-from typing import TYPE_CHECKING, Callable, Iterable, Type, cast
+from typing import TYPE_CHECKING, Callable, Iterable, cast
 
 from jinja2 import Environment, PackageLoader
 
@@ -74,7 +74,7 @@ def tag_included_in_changelog(
     return True
 
 
-def get_version_tags(scheme: Type[BaseVersion], tags: list[GitTag]) -> list[GitTag]:
+def get_version_tags(scheme: type[BaseVersion], tags: list[GitTag]) -> list[GitTag]:
     valid_tags: list[GitTag] = []
     for tag in tags:
         try:
@@ -230,7 +230,7 @@ def get_metadata(
             "latest_version_position": None,
         }
 
-    with open(filepath, "r", encoding=encoding) as changelog_file:
+    with open(filepath, encoding=encoding) as changelog_file:
         for index, line in enumerate(changelog_file):
             line = line.strip().lower()
 

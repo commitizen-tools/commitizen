@@ -77,7 +77,7 @@ def test_changelog_from_start(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
     file_regression.check(out, extension=".md")
 
@@ -106,7 +106,7 @@ def test_changelog_replacing_unreleased_using_incremental(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(changelog_path, encoding="utf-8") as f:
         out = f.read().replace(
             datetime.strftime(datetime.now(), "%Y-%m-%d"), "2022-08-14"
         )
@@ -142,7 +142,7 @@ def test_changelog_is_persisted_using_incremental(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(changelog_path, encoding="utf-8") as f:
         out = f.read().replace(
             datetime.strftime(datetime.now(), "%Y-%m-%d"), "2022-08-14"
         )
@@ -176,7 +176,7 @@ def test_changelog_incremental_angular_sample(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -227,7 +227,7 @@ def test_changelog_incremental_keep_a_changelog_sample(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -375,7 +375,7 @@ def test_changelog_multiple_incremental_do_not_add_new_lines(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -396,7 +396,7 @@ def test_changelog_incremental_newline_separates_new_content_from_old(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
 
     assert (
@@ -562,7 +562,7 @@ def test_changelog_config_flag_increment(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
 
     assert "this should be persisted using increment" in out
@@ -597,7 +597,7 @@ def test_changelog_config_flag_merge_prerelease(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r") as f:
+    with open(changelog_path) as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -650,7 +650,7 @@ def test_changelog_incremental_keep_a_changelog_sample_with_annotated_tag(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -684,7 +684,7 @@ def test_changelog_incremental_with_release_candidate_version(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -714,7 +714,7 @@ def test_changelog_incremental_with_prerelease_version_to_prerelease_version(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r") as f:
+    with open(changelog_path) as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -748,7 +748,7 @@ def test_changelog_release_candidate_version_with_merge_prerelease(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r") as f:
+    with open(changelog_path) as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -788,7 +788,7 @@ def test_changelog_incremental_with_merge_prerelease(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r") as f:
+    with open(changelog_path) as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -837,7 +837,7 @@ def test_changelog_from_rev_first_version_from_arg(
     testargs = ["cz", "changelog", "0.2.0"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -873,7 +873,7 @@ def test_changelog_from_rev_latest_version_from_arg(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r") as f:
+    with open(changelog_path) as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -937,7 +937,7 @@ def test_changelog_from_rev_range_default_tag_format(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, "r") as f:
+    with open(changelog_path) as f:
         out = f.read()
 
     assert "new file" not in out
@@ -997,7 +997,7 @@ def test_changelog_from_rev_version_range_including_first_tag(
     testargs = ["cz", "changelog", "0.2.0..0.3.0"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -1037,7 +1037,7 @@ def test_changelog_from_rev_version_range_from_arg(
     testargs = ["cz", "changelog", "0.3.0..0.4.0"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-    with open(changelog_path, "r") as f:
+    with open(changelog_path) as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -1097,7 +1097,7 @@ def test_changelog_from_rev_version_with_big_range_from_arg(
     testargs = ["cz", "changelog", "0.3.0..0.5.0"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-    with open(changelog_path, "r") as f:
+    with open(changelog_path) as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -1196,7 +1196,7 @@ def test_changelog_with_customized_change_type_order(
     testargs = ["cz", "changelog", "0.3.0..0.4.0"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-    with open(changelog_path, "r") as f:
+    with open(changelog_path) as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")

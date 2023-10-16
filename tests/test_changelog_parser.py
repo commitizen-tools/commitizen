@@ -28,7 +28,7 @@ CHANGELOG_TEMPLATE = """
 @pytest.fixture
 def changelog_content() -> str:
     changelog_path = "tests/CHANGELOG_FOR_TEST.md"
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(changelog_path, encoding="utf-8") as f:
         return f.read()
 
 

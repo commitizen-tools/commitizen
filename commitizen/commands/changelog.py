@@ -192,7 +192,7 @@ class Changelog:
 
         lines = []
         if self.incremental and os.path.isfile(self.file_name):
-            with open(self.file_name, "r", encoding=self.encoding) as changelog_file:
+            with open(self.file_name, encoding=self.encoding) as changelog_file:
                 lines = changelog_file.readlines()
 
         self.write_changelog(changelog_out, lines, changelog_meta)

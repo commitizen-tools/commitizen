@@ -87,11 +87,9 @@ class Bump:
             else:
                 out.info(f"Tag {current_tag_version} could not be found. ")
                 out.info(
-                    (
-                        "Possible causes:\n"
-                        "- version in configuration is not the current version\n"
-                        "- tag_format is missing, check them using 'git tag --list'\n"
-                    )
+                    "Possible causes:\n"
+                    "- version in configuration is not the current version\n"
+                    "- tag_format is missing, check them using 'git tag --list'\n"
                 )
                 is_initial = questionary.confirm("Is this the first tag created?").ask()
         return is_initial
