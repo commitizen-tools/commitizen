@@ -108,7 +108,7 @@ def test_update_version_in_files(version_files, file_regression):
 
     file_contents = ""
     for filepath in version_files:
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             file_contents += f.read()
     file_regression.check(file_contents, extension=".txt")
 
@@ -120,7 +120,7 @@ def test_partial_update_of_file(version_repeated_file, file_regression):
     location = f"{version_repeated_file}:{regex}"
 
     bump.update_version_in_files(old_version, new_version, [location], encoding="utf-8")
-    with open(version_repeated_file, "r", encoding="utf-8") as f:
+    with open(version_repeated_file, encoding="utf-8") as f:
         file_regression.check(f.read(), extension=".json")
 
 
@@ -130,7 +130,7 @@ def test_random_location(random_location_version_file, file_regression):
     location = f"{random_location_version_file}:version.+Commitizen"
 
     bump.update_version_in_files(old_version, new_version, [location], encoding="utf-8")
-    with open(random_location_version_file, "r", encoding="utf-8") as f:
+    with open(random_location_version_file, encoding="utf-8") as f:
         file_regression.check(f.read(), extension=".lock")
 
 
@@ -142,7 +142,7 @@ def test_duplicates_are_change_with_no_regex(
     location = f"{random_location_version_file}:version"
 
     bump.update_version_in_files(old_version, new_version, [location], encoding="utf-8")
-    with open(random_location_version_file, "r", encoding="utf-8") as f:
+    with open(random_location_version_file, encoding="utf-8") as f:
         file_regression.check(f.read(), extension=".lock")
 
 
@@ -154,7 +154,7 @@ def test_version_bump_increase_string_length(
     location = f"{multiple_versions_increase_string}:version"
 
     bump.update_version_in_files(old_version, new_version, [location], encoding="utf-8")
-    with open(multiple_versions_increase_string, "r", encoding="utf-8") as f:
+    with open(multiple_versions_increase_string, encoding="utf-8") as f:
         file_regression.check(f.read(), extension=".txt")
 
 
@@ -166,7 +166,7 @@ def test_version_bump_reduce_string_length(
     location = f"{multiple_versions_reduce_string}:version"
 
     bump.update_version_in_files(old_version, new_version, [location], encoding="utf-8")
-    with open(multiple_versions_reduce_string, "r", encoding="utf-8") as f:
+    with open(multiple_versions_reduce_string, encoding="utf-8") as f:
         file_regression.check(f.read(), extension=".txt")
 
 
@@ -205,5 +205,5 @@ def test_multiplt_versions_to_bump(
     location = f"{multiple_versions_to_update_poetry_lock}:version"
 
     bump.update_version_in_files(old_version, new_version, [location], encoding="utf-8")
-    with open(multiple_versions_to_update_poetry_lock, "r", encoding="utf-8") as f:
+    with open(multiple_versions_to_update_poetry_lock, encoding="utf-8") as f:
         file_regression.check(f.read(), extension=".toml")

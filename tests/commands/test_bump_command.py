@@ -406,10 +406,10 @@ def test_bump_files_only(mocker: MockFixture, tmp_commitizen_project):
     tag_exists = git.tag_exist("0.3.0")
     assert tag_exists is False
 
-    with open(tmp_version_file, "r", encoding="utf-8") as f:
+    with open(tmp_version_file, encoding="utf-8") as f:
         assert "0.3.0" in f.read()
 
-    with open(tmp_commitizen_cfg_file, "r", encoding="utf-8") as f:
+    with open(tmp_commitizen_cfg_file, encoding="utf-8") as f:
         assert "0.3.0" in f.read()
 
 
@@ -431,7 +431,7 @@ def test_bump_local_version(mocker: MockFixture, tmp_commitizen_project):
     tag_exists = git.tag_exist("4.5.1+0.2.0")
     assert tag_exists is True
 
-    with open(tmp_version_file, "r", encoding="utf-8") as f:
+    with open(tmp_version_file, encoding="utf-8") as f:
         assert "4.5.1+0.2.0" in f.read()
 
 
@@ -511,7 +511,7 @@ def test_bump_with_changelog_arg(mocker: MockFixture, changelog_path):
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
     assert out.startswith("#")
     assert "0.2.0" in out
@@ -529,7 +529,7 @@ def test_bump_with_changelog_config(mocker: MockFixture, changelog_path, config_
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
     assert out.startswith("#")
     assert "0.2.0" in out
@@ -572,7 +572,7 @@ def test_bump_with_changelog_to_stdout_arg(mocker: MockFixture, capsys, changelo
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
-    with open(changelog_path, "r", encoding="utf-8") as f:
+    with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
     assert out.startswith("#")
     assert "0.2.0" in out
@@ -911,7 +911,7 @@ def test_bump_command_prelease_scheme_via_cli(
     assert tag_exists is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        with open(version_file, "r") as f:
+        with open(version_file) as f:
             assert "0.2.0-a0" in f.read()
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
@@ -923,7 +923,7 @@ def test_bump_command_prelease_scheme_via_cli(
     assert tag_exists is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        with open(version_file, "r") as f:
+        with open(version_file) as f:
             assert "0.2.0" in f.read()
 
 
@@ -944,7 +944,7 @@ def test_bump_command_prelease_scheme_via_config(
     assert tag_exists is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        with open(version_file, "r") as f:
+        with open(version_file) as f:
             assert "0.2.0-a0" in f.read()
 
     testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
@@ -955,7 +955,7 @@ def test_bump_command_prelease_scheme_via_config(
     assert tag_exists is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        with open(version_file, "r") as f:
+        with open(version_file) as f:
             assert "0.2.0-a1" in f.read()
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
@@ -967,7 +967,7 @@ def test_bump_command_prelease_scheme_via_config(
     assert tag_exists is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        with open(version_file, "r") as f:
+        with open(version_file) as f:
             assert "0.2.0" in f.read()
 
 
@@ -988,7 +988,7 @@ def test_bump_command_prelease_scheme_check_old_tags(
     assert tag_exists is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        with open(version_file, "r") as f:
+        with open(version_file) as f:
             assert "0.2.0-a0" in f.read()
 
     testargs = ["cz", "bump", "--prerelease", "alpha"]
@@ -999,7 +999,7 @@ def test_bump_command_prelease_scheme_check_old_tags(
     assert tag_exists is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        with open(version_file, "r") as f:
+        with open(version_file) as f:
             assert "0.2.0-a1" in f.read()
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
@@ -1011,7 +1011,7 @@ def test_bump_command_prelease_scheme_check_old_tags(
     assert tag_exists is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        with open(version_file, "r") as f:
+        with open(version_file) as f:
             assert "0.2.0" in f.read()
 
 

@@ -4,7 +4,7 @@ import re
 import sys
 import warnings
 from itertools import zip_longest
-from typing import TYPE_CHECKING, ClassVar, Type, cast
+from typing import TYPE_CHECKING, ClassVar, Protocol, Type, cast, runtime_checkable
 
 import importlib_metadata as metadata
 from packaging.version import InvalidVersion  # noqa: F401: Rexpose the common exception
@@ -13,11 +13,6 @@ from packaging.version import Version as _BaseVersion
 from commitizen.config.base_config import BaseConfig
 from commitizen.defaults import MAJOR, MINOR, PATCH
 from commitizen.exceptions import VersionSchemeUnknown
-
-if sys.version_info >= (3, 8):
-    from typing import Protocol, runtime_checkable
-else:
-    from typing_extensions import Protocol, runtime_checkable
 
 if TYPE_CHECKING:
     # TypeAlias is Python 3.10+ but backported in typing-extensions

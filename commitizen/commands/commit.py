@@ -42,7 +42,7 @@ class Commit:
             raise NoCommitBackupError()
 
         # Read commit message from backup
-        with open(self.temp_file, "r", encoding=self.encoding) as f:
+        with open(self.temp_file, encoding=self.encoding) as f:
             return f.read().strip()
 
     def prompt_commit_questions(self) -> str:

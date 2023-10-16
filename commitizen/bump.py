@@ -97,7 +97,7 @@ def _bump_with_regex(
     current_version_found = False
     lines = []
     pattern = re.compile(regex)
-    with open(version_filepath, "r", encoding=encoding) as f:
+    with open(version_filepath, encoding=encoding) as f:
         for line in f:
             if pattern.search(line):
                 bumped_line = line.replace(current_version, new_version)

@@ -22,7 +22,7 @@ class CustomizeCommitsCz(BaseCommitizen):
     change_type_order = defaults.change_type_order
 
     def __init__(self, config: BaseConfig):
-        super(CustomizeCommitsCz, self).__init__(config)
+        super().__init__(config)
 
         if "customize" not in self.config.settings:
             raise MissingCzCustomizeConfigError()
@@ -81,7 +81,7 @@ class CustomizeCommitsCz(BaseCommitizen):
         info_path = self.custom_settings.get("info_path")
         info = self.custom_settings.get("info")
         if info_path:
-            with open(info_path, "r", encoding=self.config.settings["encoding"]) as f:
+            with open(info_path, encoding=self.config.settings["encoding"]) as f:
                 content = f.read()
             return content
         elif info:

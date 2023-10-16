@@ -202,7 +202,7 @@ class ConventionalCommitsCz(BaseCommitizen):
     def info(self) -> str:
         dir_path = os.path.dirname(os.path.realpath(__file__))
         filepath = os.path.join(dir_path, "conventional_commits_info.txt")
-        with open(filepath, "r", encoding=self.config.settings["encoding"]) as f:
+        with open(filepath, encoding=self.config.settings["encoding"]) as f:
             content = f.read()
         return content
 

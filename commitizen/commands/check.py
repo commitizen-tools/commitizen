@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import re
 import sys
-from typing import Any, List
+from typing import Any
 
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
@@ -35,7 +35,7 @@ class Check:
         # we need to distinguish between None and [], which is a valid value
 
         allowed_prefixes = arguments.get("allowed_prefixes")
-        self.allowed_prefixes: List[str] = (
+        self.allowed_prefixes: list[str] = (
             allowed_prefixes
             if allowed_prefixes is not None
             else config.settings["allowed_prefixes"]
@@ -56,10 +56,8 @@ class Check:
             self.commit_msg: str | None = sys.stdin.read()
         elif num_exclusive_args_provided != 1:
             raise InvalidCommandArgumentError(
-                (
-                    "Only one of --rev-range, --message, and --commit-msg-file is permitted by check command! "
-                    "See 'cz check -h' for more information"
-                )
+                "Only one of --rev-range, --message, and --commit-msg-file is permitted by check command! "
+                "See 'cz check -h' for more information"
             )
 
     def __call__(self):
@@ -98,7 +96,7 @@ class Check:
         # Get commit message from file (--commit-msg-file)
         if self.commit_msg_file is not None:
             # Enter this branch if commit_msg_file is "".
-            with open(self.commit_msg_file, "r", encoding=self.encoding) as commit_file:
+            with open(self.commit_msg_file, encoding=self.encoding) as commit_file:
                 msg = commit_file.read()
         # Get commit message from command line (--message)
         elif self.commit_msg is not None:
