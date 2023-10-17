@@ -40,7 +40,7 @@ def test_bump_pre_commit_changelog(mocker: MockFixture, freezer, retry):
             """\
             repos:
               - repo: https://github.com/pre-commit/mirrors-prettier
-                rev: v2.6.2
+                rev: v3.0.3
                 hooks:
                 - id: prettier
                   stages: [commit]
