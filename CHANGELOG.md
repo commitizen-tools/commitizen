@@ -1,4 +1,17 @@
 
+## v3.11.0 (2023-10-17)
+
+### Feat
+
+- **cli.py**: Added support for extra git CLI args after -- separator for `cz commit` command
+
+### Refactor
+
+- **git.py**: Removed 'extra_args' from git.commit
+- **extra_args**: Fixed broken code due to rebase and finalized tests
+- Code Review - round 1 changes
+- **Commit**: Added deprecation on git signoff mechanic
+
 ## v3.10.1 (2023-10-14)
 
 ### Fix
