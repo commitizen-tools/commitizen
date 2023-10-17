@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.5">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.6">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.6a10b989.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.35e1ed30.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.356b1318.min.css">
@@ -410,19 +410,12 @@
     About
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    Configuration
-  </a>
-  
-    <nav class="md-nav" aria-label="Configuration">
+    <nav class="md-nav" aria-label="About">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#always_signoff" class="md-nav__link">
-    always_signoff
+  <a href="#git-options" class="md-nav__link">
+    git options
   </a>
   
 </li>
@@ -853,19 +846,12 @@
     About
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    Configuration
-  </a>
-  
-    <nav class="md-nav" aria-label="Configuration">
+    <nav class="md-nav" aria-label="About">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#always_signoff" class="md-nav__link">
-    always_signoff
+  <a href="#git-options" class="md-nav__link">
+    git options
   </a>
   
 </li>
@@ -895,24 +881,28 @@
 <p><img alt="Using commitizen cli" src="../images/demo.gif" /></p>
 <h2 id="about">About<a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
 <p>In your terminal run <code>cz commit</code> or the shortcut <code>cz c</code> to generate a guided git commit.</p>
-<p>A commit can be signed off using <code>cz commit --signoff</code> or the shortcut <code>cz commit -s</code>.</p>
 <p>You can run <code>cz commit --write-message-to-file COMMIT_MSG_FILE</code> to additionally save the
 generated message to a file. This can be combined with the <code>--dry-run</code> flag to only
 write the message to a file and not modify files and create a commit. A possible use
 case for this is to <a href="../tutorials/auto_prepare_commit_message/">automatically prepare a commit message</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>To maintain platform compatibility, the <code>commit</code> command disables ANSI escaping in its output.
-In particular, pre-commit hooks coloring will be deactivated as discussed in <a href="https://github.com/commitizen-tools/commitizen/issues/417">commitizen-tools/commitizen#417</a>.</p>
+<p>To maintain platform compatibility, the <code>commit</code> command disable ANSI escaping in its output.
+In particular pre-commit hooks coloring will be deactivated as discussed in <a href="https://github.com/commitizen-tools/commitizen/issues/417">commitizen-tools/commitizen#417</a>.</p>
 </div>
-<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
-<h3 id="always_signoff"><code>always_signoff</code><a class="headerlink" href="#always_signoff" title="Permanent link">&para;</a></h3>
-<p>When set to <code>true</code>, each commit message created by <code>cz commit</code> will be signed off.</p>
-<p>Defaults to: <code>false</code>.</p>
-<p>In your <code>pyproject.toml</code> or <code>.cz.toml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
-<span class="n">always_signoff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<h3 id="git-options">git options<a class="headerlink" href="#git-options" title="Permanent link">&para;</a></h3>
+<p><code>git</code> command options that are not implemented by commitizen can be use via the <code>--</code> syntax for the <code>commit</code> command.
+The syntax separates commitizen arguments from <code>git commit</code> arguments by a double dash. This is the resulting syntax:
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>commit<span class="w"> </span>&lt;commitizen-args&gt;<span class="w"> </span>--<span class="w"> </span>&lt;git-cli-args&gt;
+
+<span class="c1"># e.g., cz commit --dry-run -- -a -S</span>
 </code></pre></div>
+For example, using the <code>-S</code> option on <code>git commit</code> to sign a commit is now commitizen compatible: <code>cz c -- -S</code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Deprecation warning: A commit can be signed off using <code>cz commit --signoff</code> or the shortcut <code>cz commit -s</code>.
+This syntax is now deprecated in favor of the new <code>cz commit -- -s</code> syntax.</p>
+</div>
 
 
 
