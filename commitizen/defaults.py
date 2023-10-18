@@ -40,6 +40,7 @@ class Settings(TypedDict, total=False):
     allow_abort: bool
     allowed_prefixes: list[str]
     changelog_file: str
+    changelog_format: str | None
     changelog_incremental: bool
     changelog_start_rev: str | None
     changelog_merge_prerelease: bool
@@ -53,6 +54,8 @@ class Settings(TypedDict, total=False):
     prerelease_offset: int
     encoding: str
     always_signoff: bool
+    template: str | None
+    extras: dict[str, Any]
 
 
 name: str = "cz_conventional_commits"
@@ -83,6 +86,7 @@ DEFAULT_SETTINGS: Settings = {
         "squash!",
     ],
     "changelog_file": "CHANGELOG.md",
+    "changelog_format": None,  # default guessed from changelog_file
     "changelog_incremental": False,
     "changelog_start_rev": None,
     "changelog_merge_prerelease": False,
@@ -94,11 +98,15 @@ DEFAULT_SETTINGS: Settings = {
     "prerelease_offset": 0,
     "encoding": encoding,
     "always_signoff": False,
+    "template": None,  # default provided by plugin
+    "extras": {},
 }
 
 MAJOR = "MAJOR"
 MINOR = "MINOR"
 PATCH = "PATCH"
+
+CHANGELOG_FORMAT = "markdown"
 
 bump_pattern = r"^((BREAKING[\-\ ]CHANGE|\w+)(\(.+\))?!?):"
 bump_map = OrderedDict(

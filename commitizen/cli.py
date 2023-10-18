@@ -3,9 +3,11 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
+from copy import deepcopy
 from functools import partial
 from pathlib import Path
 from types import TracebackType
+from typing import Any, Sequence
 
 import argcomplete
 from decli import cli
@@ -20,6 +22,67 @@ from commitizen.exceptions import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+class ParseKwargs(argparse.Action):
+    """
+    Parse arguments in the for `key=value`.
+
+    Quoted strings are automatically unquoted.
+    Can be submitted multiple times:
+
+    ex:
+        -k key=value -k double-quotes="value" -k single-quotes='value'
+
+        will result in
+
+        namespace["opt"] == {
+            "key": "value",
+            "double-quotes": "value",
+            "single-quotes": "value",
+        }
+    """
+
+    def __call__(
+        self,
+        parser: argparse.ArgumentParser,
+        namespace: argparse.Namespace,
+        kwarg: str | Sequence[Any] | None,
+        option_string: str | None = None,
+    ):
+        if not isinstance(kwarg, str):
+            return
+        if "=" not in kwarg:
+            raise InvalidCommandArgumentError(
+                f"Option {option_string} expect a key=value format"
+            )
+        kwargs = getattr(namespace, self.dest, None) or {}
+        key, value = kwarg.split("=", 1)
+        if not key:
+            raise InvalidCommandArgumentError(
+                f"Option {option_string} expect a key=value format"
+            )
+        kwargs[key] = value.strip("'\"")
+        setattr(namespace, self.dest, kwargs)
+
+
+tpl_arguments = (
+    {
+        "name": ["--template", "-t"],
+        "help": (
+            "changelog template file name "
+            "(relative to the current working directory)"
+        ),
+    },
+    {
+        "name": ["--extra", "-e"],
+        "action": ParseKwargs,
+        "dest": "extras",
+        "metavar": "EXTRA",
+        "help": "a changelog extra variable (in the form 'key=value')",
+    },
+)
+
 data = {
     "prog": "cz",
     "description": (
@@ -210,6 +273,11 @@ data = {
                         "default": None,
                         "help": "keep major version at zero, even for breaking changes",
                     },
+                    *deepcopy(tpl_arguments),
+                    {
+                        "name": "--file-name",
+                        "help": "file name of changelog (default: 'CHANGELOG.md')",
+                    },
                     {
                         "name": ["--prerelease-offset"],
                         "type": int,
@@ -299,6 +367,12 @@ data = {
                         "default": None,
                         "choices": version_schemes.KNOWN_SCHEMES,
                     },
+                    {
+                        "name": "--export-template",
+                        "default": None,
+                        "help": "Export the changelog template into this file instead of rendering it",
+                    },
+                    *deepcopy(tpl_arguments),
                 ],
             },
             {

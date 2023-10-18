@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 import json
 import os
 from pathlib import Path
+from typing import Any
 
 import pytest
 import yaml
@@ -42,7 +45,7 @@ DICT_CONFIG = {
 }
 
 
-_settings = {
+_settings: dict[str, Any] = {
     "name": "cz_jira",
     "version": "1.0.0",
     "version_provider": "commitizen",
@@ -54,6 +57,7 @@ _settings = {
     "version_files": ["commitizen/__version__.py", "pyproject.toml"],
     "style": [["pointer", "reverse"], ["question", "underline"]],
     "changelog_file": "CHANGELOG.md",
+    "changelog_format": None,
     "changelog_incremental": False,
     "changelog_start_rev": None,
     "changelog_merge_prerelease": False,
@@ -65,9 +69,11 @@ _settings = {
     "prerelease_offset": 0,
     "encoding": "utf-8",
     "always_signoff": False,
+    "template": None,
+    "extras": {},
 }
 
-_new_settings = {
+_new_settings: dict[str, Any] = {
     "name": "cz_jira",
     "version": "2.0.0",
     "version_provider": "commitizen",
@@ -79,6 +85,7 @@ _new_settings = {
     "version_files": ["commitizen/__version__.py", "pyproject.toml"],
     "style": [["pointer", "reverse"], ["question", "underline"]],
     "changelog_file": "CHANGELOG.md",
+    "changelog_format": None,
     "changelog_incremental": False,
     "changelog_start_rev": None,
     "changelog_merge_prerelease": False,
@@ -90,16 +97,8 @@ _new_settings = {
     "prerelease_offset": 0,
     "encoding": "utf-8",
     "always_signoff": False,
-}
-
-_read_settings = {
-    "name": "cz_jira",
-    "version": "1.0.0",
-    "version_files": ["commitizen/__version__.py", "pyproject.toml"],
-    "style": [["pointer", "reverse"], ["question", "underline"]],
-    "changelog_file": "CHANGELOG.md",
-    "pre_bump_hooks": ["scripts/generate_documentation.sh"],
-    "post_bump_hooks": ["scripts/slack_notification.sh"],
+    "template": None,
+    "extras": {},
 }
 
 

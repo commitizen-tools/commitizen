@@ -14,6 +14,7 @@ update_changelog_on_bump = true
 ```bash
 $ cz changelog --help
 usage: cz changelog [-h] [--dry-run] [--file-name FILE_NAME] [--unreleased-version UNRELEASED_VERSION] [--incremental] [--start-rev START_REV]
+                    [--template TEMPLATE] [--extra EXTRA]
                     [rev_range]
 
 positional arguments:
@@ -31,6 +32,11 @@ optional arguments:
                         start rev of the changelog. If not set, it will generate changelog from the start
   --merge-prerelease
                         collect all changes from prereleases into next non-prerelease. If not set, it will include prereleases in the changelog
+                        start rev of the changelog.If not set, it will generate changelog from the start
+  --template TEMPLATE, -t TEMPLATE
+                        changelog template file name (relative to the current working directory)
+  --extra EXTRA, -e EXTRA
+                        a changelog extra variable (in the form 'key=value')
 ```
 
 ### Examples
@@ -185,6 +191,21 @@ cz changelog --merge-prerelease
 # ...
 changelog_merge_prerelease = true
 ```
+
+### `template`
+
+Provides your own changelog jinja template by using the `template` settings or the `--template` parameter.
+See [the template customization section](customization.md#customizing-the-changelog-template)
+
+### `extras`
+
+Provides your own changelog extra variables by using the `extras` settings or the `--extra/-e` parameter.
+
+```bash
+cz changelog --extra key=value -e short="quoted value"
+```
+
+See [the template customization section](customization.md#customizing-the-changelog-template)
 
 ## Hooks
 

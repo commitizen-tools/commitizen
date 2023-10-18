@@ -4,13 +4,19 @@ import os
 import re
 import tempfile
 from pathlib import Path
+from typing import Iterator
 
 import pytest
+from pytest_mock import MockerFixture
 
 from commitizen import cmd, defaults
 from commitizen.config import BaseConfig
-from commitizen.cz.base import BaseCommitizen
 from commitizen.cz import registry
+from commitizen.cz.base import BaseCommitizen
+from commitizen.changelog_formats import (
+    ChangelogFormat,
+    get_changelog_format,
+)
 from tests.utils import create_file_and_commit
 
 SIGNER = "GitHub Action"
@@ -35,6 +41,14 @@ def git_sandbox(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     r = cmd.run(f"git config --file {gitconfig} user.email {SIGNER_MAIL}")
     assert r.return_code == 0, r.err
     cmd.run("git config --global init.defaultBranch master")
+
+
+@pytest.fixture
+def chdir(tmp_path: Path) -> Iterator[Path]:
+    cwd = os.getcwd()
+    os.chdir(tmp_path)
+    yield tmp_path
+    os.chdir(cwd)
 
 
 @pytest.fixture(scope="function")
@@ -200,3 +214,42 @@ class SemverCommitizen(BaseCommitizen):
 def use_cz_semver(mocker):
     new_cz = {**registry, "cz_semver": SemverCommitizen}
     mocker.patch.dict("commitizen.cz.registry", new_cz)
+
+
+class MockPlugin(BaseCommitizen):
+    def questions(self) -> defaults.Questions:
+        return []
+
+    def message(self, answers: dict) -> str:
+        return ""
+
+
+@pytest.fixture
+def mock_plugin(mocker: MockerFixture, config: BaseConfig) -> BaseCommitizen:
+    mock = MockPlugin(config)
+    mocker.patch("commitizen.factory.commiter_factory", return_value=mock)
+    return mock
+
+
+SUPPORTED_FORMATS = ("markdown", "textile", "asciidoc", "restructuredtext")
+
+
+@pytest.fixture(params=SUPPORTED_FORMATS)
+def changelog_format(
+    config: BaseConfig, request: pytest.FixtureRequest
+) -> ChangelogFormat:
+    """For tests relying on formats specifics"""
+    format: str = request.param
+    config.settings["changelog_format"] = format
+    if "tmp_commitizen_project" in request.fixturenames:
+        tmp_commitizen_project = request.getfixturevalue("tmp_commitizen_project")
+        pyproject = tmp_commitizen_project / "pyproject.toml"
+        pyproject.write(f"{pyproject.read()}\n" f'changelog_format = "{format}"\n')
+    return get_changelog_format(config)
+
+
+@pytest.fixture
+def any_changelog_format(config: BaseConfig) -> ChangelogFormat:
+    """For test not relying on formats specifics, use the default"""
+    config.settings["changelog_format"] = defaults.CHANGELOG_FORMAT
+    return get_changelog_format(config)

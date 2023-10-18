@@ -3,9 +3,11 @@ from __future__ import annotations
 import os.path
 from difflib import SequenceMatcher
 from operator import itemgetter
+from pathlib import Path
 from typing import Callable
 
 from commitizen import bump, changelog, defaults, factory, git, out
+
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
     DryRunExit,
@@ -15,6 +17,7 @@ from commitizen.exceptions import (
     NotAGitProjectError,
     NotAllowed,
 )
+from commitizen.changelog_formats import get_changelog_format
 from commitizen.git import GitTag, smart_open
 from commitizen.version_schemes import get_version_scheme
 
@@ -36,6 +39,14 @@ class Changelog:
         self.file_name = args.get("file_name") or self.config.settings.get(
             "changelog_file"
         )
+        if not isinstance(self.file_name, str):
+            raise NotAllowed(
+                "Changelog file name is broken.\n"
+                "Check the flag `--file-name` in the terminal "
+                f"or the setting `changelog_file` in {self.config.path}"
+            )
+        self.changelog_format = get_changelog_format(self.config, self.file_name)
+
         self.incremental = args["incremental"] or self.config.settings.get(
             "changelog_incremental"
         )
@@ -65,6 +76,14 @@ class Changelog:
             "merge_prerelease"
         ) or self.config.settings.get("changelog_merge_prerelease")
 
+        self.template = (
+            args.get("template")
+            or self.config.settings.get("template")
+            or self.changelog_format.template
+        )
+        self.extras = args.get("extras") or {}
+        self.export_template_to = args.get("export_template")
+
     def _find_incremental_rev(self, latest_version: str, tags: list[GitTag]) -> str:
         """Try to find the 'start_rev'.
 
@@ -92,15 +111,8 @@ class Changelog:
         return start_rev
 
     def write_changelog(
-        self, changelog_out: str, lines: list[str], changelog_meta: dict
+        self, changelog_out: str, lines: list[str], changelog_meta: changelog.Metadata
     ):
-        if not isinstance(self.file_name, str):
-            raise NotAllowed(
-                "Changelog file name is broken.\n"
-                "Check the flag `--file-name` in the terminal "
-                f"or the setting `changelog_file` in {self.config.path}"
-            )
-
         changelog_hook: Callable | None = self.cz.changelog_hook
         with smart_open(self.file_name, "w", encoding=self.encoding) as changelog_file:
             partial_changelog: str | None = None
@@ -115,17 +127,25 @@ class Changelog:
                 changelog_out = changelog_hook(changelog_out, partial_changelog)
             changelog_file.write(changelog_out)
 
+    def export_template(self):
+        tpl = changelog.get_changelog_template(self.cz.template_loader, self.template)
+        src = Path(tpl.filename)
+        Path(self.export_template_to).write_text(src.read_text())
+
     def __call__(self):
         commit_parser = self.cz.commit_parser
         changelog_pattern = self.cz.changelog_pattern
         start_rev = self.start_rev
         unreleased_version = self.unreleased_version
-        changelog_meta: dict = {}
+        changelog_meta = changelog.Metadata()
         change_type_map: dict | None = self.change_type_map
-        changelog_message_builder_hook: None | (
-            Callable
-        ) = self.cz.changelog_message_builder_hook
+        changelog_message_builder_hook: Callable | None = (
+            self.cz.changelog_message_builder_hook
+        )
         merge_prerelease = self.merge_prerelease
+
+        if self.export_template_to:
+            return self.export_template()
 
         if not changelog_pattern or not commit_parser:
             raise NoPatternMapError(
@@ -142,15 +162,10 @@ class Changelog:
 
         end_rev = ""
         if self.incremental:
-            changelog_meta = changelog.get_metadata(
-                self.file_name,
-                self.scheme,
-                encoding=self.encoding,
-            )
-            latest_version = changelog_meta.get("latest_version")
-            if latest_version:
+            changelog_meta = self.changelog_format.get_metadata(self.file_name)
+            if changelog_meta.latest_version:
                 latest_tag_version: str = bump.normalize_tag(
-                    latest_version,
+                    changelog_meta.latest_version,
                     tag_format=self.tag_format,
                     scheme=self.scheme,
                 )
@@ -183,7 +198,13 @@ class Changelog:
         )
         if self.change_type_order:
             tree = changelog.order_changelog_tree(tree, self.change_type_order)
-        changelog_out = changelog.render_changelog(tree)
+
+        extras = self.cz.template_extras.copy()
+        extras.update(self.config.settings["extras"])
+        extras.update(self.extras)
+        changelog_out = changelog.render_changelog(
+            tree, loader=self.cz.template_loader, template=self.template, **extras
+        )
         changelog_out = changelog_out.lstrip("\n")
 
         if self.dry_run:

@@ -1,10 +1,14 @@
+from pathlib import Path
+
 import pytest
+from jinja2 import FileSystemLoader
 
 from commitizen import changelog, defaults, git
 from commitizen.cz.conventional_commits.conventional_commits import (
     ConventionalCommitsCz,
 )
 from commitizen.exceptions import InvalidConfigurationError
+from commitizen.changelog_formats import ChangelogFormat
 
 COMMITS_DATA = [
     {
@@ -1137,57 +1141,162 @@ def test_order_changelog_tree_raises():
     assert "Change types contain duplicates types" in str(excinfo)
 
 
-def test_render_changelog(gitcommits, tags, changelog_content):
+def test_render_changelog(
+    gitcommits, tags, changelog_content, any_changelog_format: ChangelogFormat
+):
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    template = any_changelog_format.template
+    tree = changelog.generate_tree_from_commits(
+        gitcommits, tags, parser, changelog_pattern
+    )
+    result = changelog.render_changelog(tree, loader, template)
+    assert result == changelog_content
+
+
+def test_render_changelog_from_default_plugin_values(
+    gitcommits, tags, changelog_content, any_changelog_format: ChangelogFormat
+):
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    template = any_changelog_format.template
+    tree = changelog.generate_tree_from_commits(
+        gitcommits, tags, parser, changelog_pattern
+    )
+    result = changelog.render_changelog(tree, loader, template)
+    assert result == changelog_content
+
+
+def test_render_changelog_override_loader(gitcommits, tags, tmp_path: Path):
+    loader = FileSystemLoader(tmp_path)
+    template = "tpl.j2"
+    tpl = "loader overridden"
+    (tmp_path / template).write_text(tpl)
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    tree = changelog.generate_tree_from_commits(
+        gitcommits, tags, parser, changelog_pattern
+    )
+    result = changelog.render_changelog(tree, loader, template)
+    assert result == tpl
+
+
+def test_render_changelog_override_template_from_cwd(
+    gitcommits, tags, chdir: Path, any_changelog_format: ChangelogFormat
+):
+    tpl = "overridden from cwd"
+    template = any_changelog_format.template
+    (chdir / template).write_text(tpl)
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    tree = changelog.generate_tree_from_commits(
+        gitcommits, tags, parser, changelog_pattern
+    )
+    result = changelog.render_changelog(tree, loader, template)
+    assert result == tpl
+
+
+def test_render_changelog_override_template_from_cwd_with_custom_name(
+    gitcommits, tags, chdir: Path
+):
+    tpl = "template overridden from cwd"
+    tpl_name = "tpl.j2"
+    (chdir / tpl_name).write_text(tpl)
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    tree = changelog.generate_tree_from_commits(
+        gitcommits, tags, parser, changelog_pattern
+    )
+    result = changelog.render_changelog(tree, loader, tpl_name)
+    assert result == tpl
+
+
+def test_render_changelog_override_loader_and_template(
+    gitcommits, tags, tmp_path: Path
+):
+    loader = FileSystemLoader(tmp_path)
+    tpl = "loader and template overridden"
+    tpl_name = "tpl.j2"
+    (tmp_path / tpl_name).write_text(tpl)
     parser = ConventionalCommitsCz.commit_parser
     changelog_pattern = ConventionalCommitsCz.bump_pattern
     tree = changelog.generate_tree_from_commits(
         gitcommits, tags, parser, changelog_pattern
     )
-    result = changelog.render_changelog(tree)
-    assert result == changelog_content
+    result = changelog.render_changelog(tree, loader, tpl_name)
+    assert result == tpl
 
 
-def test_render_changelog_unreleased(gitcommits):
+def test_render_changelog_support_arbitrary_kwargs(gitcommits, tags, tmp_path: Path):
+    loader = FileSystemLoader(tmp_path)
+    tpl_name = "tpl.j2"
+    (tmp_path / tpl_name).write_text("{{ key }}")
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    tree = changelog.generate_tree_from_commits(
+        gitcommits, tags, parser, changelog_pattern
+    )
+    result = changelog.render_changelog(tree, loader, tpl_name, key="value")
+    assert result == "value"
+
+
+def test_render_changelog_unreleased(gitcommits, any_changelog_format: ChangelogFormat):
     some_commits = gitcommits[:7]
     parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    template = any_changelog_format.template
     tree = changelog.generate_tree_from_commits(
         some_commits, [], parser, changelog_pattern
     )
-    result = changelog.render_changelog(tree)
+    result = changelog.render_changelog(tree, loader, template)
     assert "Unreleased" in result
 
 
-def test_render_changelog_tag_and_unreleased(gitcommits, tags):
+def test_render_changelog_tag_and_unreleased(
+    gitcommits, tags, any_changelog_format: ChangelogFormat
+):
     some_commits = gitcommits[:7]
     single_tag = [
         tag for tag in tags if tag.rev == "56c8a8da84e42b526bcbe130bd194306f7c7e813"
     ]
 
     parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    template = any_changelog_format.template
     tree = changelog.generate_tree_from_commits(
         some_commits, single_tag, parser, changelog_pattern
     )
-    result = changelog.render_changelog(tree)
+    result = changelog.render_changelog(tree, loader, template)
 
     assert "Unreleased" in result
     assert "## v1.1.1" in result
 
 
-def test_render_changelog_with_change_type(gitcommits, tags):
+def test_render_changelog_with_change_type(
+    gitcommits, tags, any_changelog_format: ChangelogFormat
+):
     new_title = ":some-emoji: feature"
     change_type_map = {"feat": new_title}
     parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    template = any_changelog_format.template
     tree = changelog.generate_tree_from_commits(
         gitcommits, tags, parser, changelog_pattern, change_type_map=change_type_map
     )
-    result = changelog.render_changelog(tree)
+    result = changelog.render_changelog(tree, loader, template)
     assert new_title in result
 
 
-def test_render_changelog_with_changelog_message_builder_hook(gitcommits, tags):
+def test_render_changelog_with_changelog_message_builder_hook(
+    gitcommits, tags, any_changelog_format: ChangelogFormat
+):
     def changelog_message_builder_hook(message: dict, commit: git.GitCommit) -> dict:
         message[
             "message"
@@ -1195,7 +1304,9 @@ def test_render_changelog_with_changelog_message_builder_hook(gitcommits, tags):
         return message
 
     parser = ConventionalCommitsCz.commit_parser
-    changelog_pattern = ConventionalCommitsCz.bump_pattern
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    template = any_changelog_format.template
     tree = changelog.generate_tree_from_commits(
         gitcommits,
         tags,
@@ -1203,7 +1314,7 @@ def test_render_changelog_with_changelog_message_builder_hook(gitcommits, tags):
         changelog_pattern,
         changelog_message_builder_hook=changelog_message_builder_hook,
     )
-    result = changelog.render_changelog(tree)
+    result = changelog.render_changelog(tree, loader, template)
 
     assert "[link](github.com/232323232) Commitizen author@cz.dev" in result
 

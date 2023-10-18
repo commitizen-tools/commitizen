@@ -33,4 +33,7 @@ These exit codes can be found in `commitizen/exceptions.py::ExitCode`.
 | GitCommandError             | 23        | Unexpected failure while calling a git command                                                              |
 | InvalidManualVersion        | 24        | Manually provided version is invalid                                                                        |
 | InitFailedError             | 25        | Failed to initialize pre-commit                                                                             |
-| VersionProviderUnknown      | 26        | `version_provider` setting is set to an unknown version provider identifier                                |
+| RunHookError                | 26        | An error occurred during a hook execution                                                                    |
+| VersionProviderUnknown      | 27        | `version_provider` setting is set to an unknown version provider identifier                                 |
+| VersionSchemeUnknown        | 28        | `version_scheme` setting is set to an unknown version scheme identifier                                     |
+| ChangelogFormatUnknown      | 29        | `changelog_format` setting is set to an unknown version scheme identifier or could not be guessed           |

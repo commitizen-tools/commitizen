@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
-from typing import Callable
+from typing import Any, Callable
 
+from jinja2 import BaseLoader, PackageLoader
 from prompt_toolkit.styles import Style, merge_styles
 
 from commitizen import git
@@ -42,6 +43,10 @@ class BaseCommitizen(metaclass=ABCMeta):
 
     # Executed only at the end of the changelog generation
     changelog_hook: Callable[[str, str | None], str] | None = None
+
+    # Plugins can override templates and provide extra template data
+    template_loader: BaseLoader = PackageLoader("commitizen", "templates")
+    template_extras: dict[str, Any] = {}
 
     def __init__(self, config: BaseConfig):
         self.config = config

@@ -1,5 +1,5 @@
 [tool.commitizen]
-version = "3.11.0"
+version = "3.12.0"
 tag_format = "v$version"
 version_files = [
   "pyproject.toml:version",
@@ -9,7 +9,7 @@ version_files = [
 
 [tool.poetry]
 name = "commitizen"
-version = "3.11.0"
+version = "3.12.0"
 description = "Python commitizen client tool"
 authors = ["Santiago Fraire <santiwilly@gmail.com>"]
 license = "MIT"
@@ -81,6 +81,12 @@ git-cz = "commitizen.cli:main"
 cz_conventional_commits = "commitizen.cz.conventional_commits:ConventionalCommitsCz"
 cz_jira = "commitizen.cz.jira:JiraSmartCz"
 cz_customize = "commitizen.cz.customize:CustomizeCommitsCz"
+
+[tool.poetry.plugins."commitizen.changelog_format"]
+markdown = "commitizen.changelog_formats.markdown:Markdown"
+asciidoc = "commitizen.changelog_formats.asciidoc:AsciiDoc"
+textile = "commitizen.changelog_formats.textile:Textile"
+restructuredtext = "commitizen.changelog_formats.restructuredtext:RestructuredText"
 
 [tool.poetry.plugins."commitizen.provider"]
 cargo = "commitizen.providers:CargoProvider"

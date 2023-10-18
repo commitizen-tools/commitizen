@@ -1,20 +1,27 @@
 import itertools
 import sys
 from datetime import datetime
+from pathlib import Path
+from textwrap import dedent
 
 import pytest
 from dateutil import relativedelta
+from jinja2 import FileSystemLoader
 from pytest_mock import MockFixture
 
+from commitizen import __file__ as commitizen_init
 from commitizen import cli, git
 from commitizen.commands.changelog import Changelog
+from commitizen.cz.base import BaseCommitizen
 from commitizen.exceptions import (
     DryRunExit,
+    InvalidCommandArgumentError,
     NoCommitsFoundError,
     NoRevisionError,
     NotAGitProjectError,
     NotAllowed,
 )
+from commitizen.changelog_formats import ChangelogFormat
 from tests.utils import (
     create_branch,
     create_file_and_commit,
@@ -67,34 +74,60 @@ def test_changelog_with_different_cz(mocker: MockFixture, capsys, file_regressio
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_from_start(
-    mocker: MockFixture, capsys, changelog_path, file_regression
+    mocker: MockFixture, capsys, changelog_format: ChangelogFormat, file_regression
 ):
     create_file_and_commit("feat: new file")
     create_file_and_commit("refactor: is in changelog")
     create_file_and_commit("Merge into master")
+    changelog_file = f"CHANGELOG.{changelog_format.extension}"
+    template = f"CHANGELOG.{changelog_format.extension}.j2"
 
-    testargs = ["cz", "changelog"]
+    testargs = [
+        "cz",
+        "changelog",
+        "--file-name",
+        changelog_file,
+        "--template",
+        template,
+    ]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, encoding="utf-8") as f:
+    with open(changelog_file, encoding="utf-8") as f:
         out = f.read()
-    file_regression.check(out, extension=".md")
+    file_regression.check(out, extension=changelog_format.ext)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_replacing_unreleased_using_incremental(
-    mocker: MockFixture, capsys, changelog_path, file_regression
+    mocker: MockFixture, capsys, changelog_format: ChangelogFormat, file_regression
 ):
     create_file_and_commit("feat: add new output")
     create_file_and_commit("fix: output glitch")
     create_file_and_commit("Merge into master")
+    changelog_file = f"CHANGELOG.{changelog_format.extension}"
+    template = f"CHANGELOG.{changelog_format.extension}.j2"
 
-    testargs = ["cz", "changelog"]
+    testargs = [
+        "cz",
+        "changelog",
+        "--file-name",
+        changelog_file,
+        "--template",
+        template,
+    ]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    testargs = ["cz", "bump", "--yes"]
+    testargs = [
+        "cz",
+        "bump",
+        "--yes",
+        "--file-name",
+        changelog_file,
+        "--template",
+        template,
+    ]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
@@ -102,16 +135,24 @@ def test_changelog_replacing_unreleased_using_incremental(
     create_file_and_commit("feat: add more stuff")
     create_file_and_commit("Merge into master")
 
-    testargs = ["cz", "changelog", "--incremental"]
+    testargs = [
+        "cz",
+        "changelog",
+        "--incremental",
+        "--file-name",
+        changelog_file,
+        "--template",
+        template,
+    ]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
-    with open(changelog_path, encoding="utf-8") as f:
+    with open(changelog_file, encoding="utf-8") as f:
         out = f.read().replace(
             datetime.strftime(datetime.now(), "%Y-%m-%d"), "2022-08-14"
         )
 
-    file_regression.check(out, extension=".md")
+    file_regression.check(out, extension=changelog_format.ext)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -1359,3 +1400,209 @@ def test_changelog_from_current_version_tag_with_nonversion_tag(
 - commit 1\n"
 
     write_patch.assert_called_with(full_changelog)
+
+
+@pytest.mark.parametrize(
+    "arg,cfg,expected",
+    (
+        pytest.param("", "", "default", id="default"),
+        pytest.param("", "changelog.cfg", "from config", id="from-config"),
+        pytest.param(
+            "--template=changelog.cmd", "changelog.cfg", "from cmd", id="from-command"
+        ),
+    ),
+)
+def test_changelog_template_option_precedance(
+    mocker: MockFixture,
+    tmp_commitizen_project: Path,
+    any_changelog_format: ChangelogFormat,
+    arg: str,
+    cfg: str,
+    expected: str,
+):
+    project_root = Path(tmp_commitizen_project)
+    cfg_template = project_root / "changelog.cfg"
+    cmd_template = project_root / "changelog.cmd"
+    default_template = project_root / any_changelog_format.template
+    changelog = project_root / any_changelog_format.default_changelog_file
+
+    cfg_template.write_text("from config")
+    cmd_template.write_text("from cmd")
+    default_template.write_text("default")
+
+    create_file_and_commit("feat: new file")
+
+    if cfg:
+        pyproject = project_root / "pyproject.toml"
+        pyproject.write_text(
+            dedent(
+                f"""\
+                [tool.commitizen]
+                version = "0.1.0"
+                template = "{cfg}"
+                """
+            )
+        )
+
+    testargs = ["cz", "changelog"]
+    if arg:
+        testargs.append(arg)
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    out = changelog.read_text()
+    assert out == expected
+
+
+def test_changelog_template_extras_precedance(
+    mocker: MockFixture,
+    tmp_commitizen_project: Path,
+    mock_plugin: BaseCommitizen,
+    any_changelog_format: ChangelogFormat,
+):
+    project_root = Path(tmp_commitizen_project)
+    changelog_tpl = project_root / any_changelog_format.template
+    changelog_tpl.write_text("{{first}} - {{second}} - {{third}}")
+
+    mock_plugin.template_extras = dict(
+        first="from-plugin", second="from-plugin", third="from-plugin"
+    )
+
+    pyproject = project_root / "pyproject.toml"
+    pyproject.write_text(
+        dedent(
+            """\
+            [tool.commitizen]
+            version = "0.1.0"
+            [tool.commitizen.extras]
+            first = "from-config"
+            second = "from-config"
+            """
+        )
+    )
+
+    create_file_and_commit("feat: new file")
+
+    testargs = ["cz", "changelog", "--extra", "first=from-command"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    changelog = project_root / any_changelog_format.default_changelog_file
+    assert changelog.read_text() == "from-command - from-config - from-plugin"
+
+
+def test_changelog_template_extra_quotes(
+    mocker: MockFixture,
+    tmp_commitizen_project: Path,
+    any_changelog_format: ChangelogFormat,
+):
+    project_root = Path(tmp_commitizen_project)
+    changelog_tpl = project_root / any_changelog_format.template
+    changelog_tpl.write_text("{{first}} - {{second}} - {{third}}")
+
+    create_file_and_commit("feat: new file")
+
+    testargs = [
+        "cz",
+        "changelog",
+        "-e",
+        "first=no-quote",
+        "-e",
+        "second='single quotes'",
+        "-e",
+        'third="double quotes"',
+    ]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    changelog = project_root / any_changelog_format.default_changelog_file
+    assert changelog.read_text() == "no-quote - single quotes - double quotes"
+
+
+@pytest.mark.parametrize(
+    "extra, expected",
+    (
+        pytest.param("key=value=", "value=", id="2-equals"),
+        pytest.param("key==value", "=value", id="2-consecutives-equals"),
+        pytest.param("key==value==", "=value==", id="multiple-equals"),
+    ),
+)
+def test_changelog_template_extra_weird_but_valid(
+    mocker: MockFixture,
+    tmp_commitizen_project: Path,
+    any_changelog_format: ChangelogFormat,
+    extra: str,
+    expected,
+):
+    project_root = Path(tmp_commitizen_project)
+    changelog_tpl = project_root / any_changelog_format.template
+    changelog_tpl.write_text("{{key}}")
+
+    create_file_and_commit("feat: new file")
+
+    testargs = ["cz", "changelog", "-e", extra]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    changelog = project_root / any_changelog_format.default_changelog_file
+    assert changelog.read_text() == expected
+
+
+@pytest.mark.parametrize("extra", ("no-equal", "", "=no-key"))
+def test_changelog_template_extra_bad_format(
+    mocker: MockFixture,
+    tmp_commitizen_project: Path,
+    any_changelog_format: ChangelogFormat,
+    extra: str,
+):
+    project_root = Path(tmp_commitizen_project)
+    changelog_tpl = project_root / any_changelog_format.template
+    changelog_tpl.write_text("")
+
+    create_file_and_commit("feat: new file")
+
+    testargs = ["cz", "changelog", "-e", extra]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(InvalidCommandArgumentError):
+        cli.main()
+
+
+def test_export_changelog_template_from_default(
+    mocker: MockFixture,
+    tmp_commitizen_project: Path,
+    any_changelog_format: ChangelogFormat,
+):
+    project_root = Path(tmp_commitizen_project)
+    target = project_root / "changelog.jinja"
+    src = Path(commitizen_init).parent / "templates" / any_changelog_format.template
+
+    args = ["cz", "changelog", "--export-template", str(target)]
+
+    mocker.patch.object(sys, "argv", args)
+    cli.main()
+
+    assert target.exists()
+    assert target.read_text() == src.read_text()
+
+
+def test_export_changelog_template_from_plugin(
+    mocker: MockFixture,
+    tmp_commitizen_project: Path,
+    mock_plugin: BaseCommitizen,
+    changelog_format: ChangelogFormat,
+    tmp_path: Path,
+):
+    project_root = Path(tmp_commitizen_project)
+    target = project_root / "changelog.jinja"
+    src = tmp_path / changelog_format.template
+    tpl = "I am a custom template"
+    src.write_text(tpl)
+    mock_plugin.template_loader = FileSystemLoader(tmp_path)
+
+    args = ["cz", "changelog", "--export-template", str(target)]
+
+    mocker.patch.object(sys, "argv", args)
+    cli.main()
+
+    assert target.exists()
+    assert target.read_text() == tpl
