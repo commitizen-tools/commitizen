@@ -1,4 +1,18 @@
 
+## v3.12.0 (2023-10-18)
+
+### Feat
+
+- **formats**: expose some new customizable changelog formats on the `commitizen.changelog_format` endpoint (Textile, AsciiDoc and RestructuredText)
+- **template**: add `changelog --export-template` command
+- **template**: allow to override the template from cli, configuration and plugins
+
+### Fix
+
+- **filename**: ensure `file_name` can be passed to `changelog` from `bump` command
+
+## 3.11.0 (2023-10-17)
+
 ## v3.11.0 (2023-10-17)
 
 ### Feat
