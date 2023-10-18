@@ -594,6 +594,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#changelog_format" class="md-nav__link">
+    changelog_format
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#changelog_incremental" class="md-nav__link">
     changelog_incremental
   </a>
@@ -666,6 +673,20 @@
           <li class="md-nav__item">
   <a href="#encoding" class="md-nav__link">
     encoding
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extras" class="md-nav__link">
+    extras
   </a>
   
 </li>
@@ -1160,6 +1181,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#changelog_format" class="md-nav__link">
+    changelog_format
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#changelog_incremental" class="md-nav__link">
     changelog_incremental
   </a>
@@ -1232,6 +1260,20 @@
           <li class="md-nav__item">
   <a href="#encoding" class="md-nav__link">
     encoding
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extras" class="md-nav__link">
+    extras
   </a>
   
 </li>
@@ -1364,6 +1406,10 @@ Allow some prefixes and do not try to match the regex when checking the message 
 <p>Type: <code>str</code></p>
 <p>Default: <code>CHANGELOG.md</code></p>
 <p>Filename of exported changelog</p>
+<h3 id="changelog_format"><code>changelog_format</code><a class="headerlink" href="#changelog_format" title="Permanent link">&para;</a></h3>
+<p>Type: <code>str</code></p>
+<p>Default: None</p>
+<p>Format used to parse and generate the changelog, If not specified, guessed from <a href="#changelog_file"><code>changelog_file</code></a>.</p>
 <h3 id="changelog_incremental"><code>changelog_incremental</code><a class="headerlink" href="#changelog_incremental" title="Permanent link">&para;</a></h3>
 <p>Type: <code>bool</code></p>
 <p>Default: <code>false</code></p>
@@ -1395,7 +1441,7 @@ Allow some prefixes and do not try to match the regex when checking the message 
 <h3 id="prerelease_offset"><code>prerelease_offset</code><a class="headerlink" href="#prerelease_offset" title="Permanent link">&para;</a></h3>
 <p>Type: <code>int</code></p>
 <p>Default: <code>0</code></p>
-<p>In some circumstances, a prerelease cannot start with a 0, e.g. in an embedded project individual characters are encoded as bytes. This can be done by specifying an offset from which to start counting. <a href="../bump/#-prerelease_offset">prerelease-offset</a> |</p>
+<p>In some circumstances, a prerelease cannot start with a 0, e.g. in an embedded project individual characters are encoded as bytes. This can be done by specifying an offset from which to start counting. <a href="../bump/#-prerelease_offset">prerelease-offset</a></p>
 <h3 id="pre_bump_hooks"><code>pre_bump_hooks</code><a class="headerlink" href="#pre_bump_hooks" title="Permanent link">&para;</a></h3>
 <p>Type: <code>list[str]</code></p>
 <p>Default: <code>[]</code></p>
@@ -1408,6 +1454,14 @@ Allow some prefixes and do not try to match the regex when checking the message 
 <p>Type: <code>str</code></p>
 <p>Default: <code>utf-8</code></p>
 <p>Sets the character encoding to be used when parsing commit messages. <a href="../tutorials/writing_commits/#writing-commits">Read more</a></p>
+<h3 id="template"><code>template</code><a class="headerlink" href="#template" title="Permanent link">&para;</a></h3>
+<p>Type: <code>str</code></p>
+<p>Default: <code>None</code> (provided by plugin)</p>
+<p>Provide custom changelog jinja template path relative to the current working directory. <a href="../customization/#customizing-the-changelog-template">Read more</a></p>
+<h3 id="extras"><code>extras</code><a class="headerlink" href="#extras" title="Permanent link">&para;</a></h3>
+<p>Type: <code>dict[str, Any]</code></p>
+<p>Default: <code>{}</code></p>
+<p>Provide extra variables to the changelog template. <a href="../customization/#customizing-the-changelog-template">Read more</a></p>
 <h2 id="configuration-file">Configuration file<a class="headerlink" href="#configuration-file" title="Permanent link">&para;</a></h2>
 <h3 id="pyprojecttoml-or-cztoml">pyproject.toml or .cz.toml<a class="headerlink" href="#pyprojecttoml-or-cztoml" title="Permanent link">&para;</a></h3>
 <p>Default and recommended configuration format for a project.

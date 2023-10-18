@@ -576,6 +576,20 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extras" class="md-nav__link">
+    extras
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1055,6 +1069,20 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extras" class="md-nav__link">
+    extras
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1093,6 +1121,7 @@
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>cz<span class="w"> </span>changelog<span class="w"> </span>--help
 usage:<span class="w"> </span>cz<span class="w"> </span>changelog<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>--dry-run<span class="o">]</span><span class="w"> </span><span class="o">[</span>--file-name<span class="w"> </span>FILE_NAME<span class="o">]</span><span class="w"> </span><span class="o">[</span>--unreleased-version<span class="w"> </span>UNRELEASED_VERSION<span class="o">]</span><span class="w"> </span><span class="o">[</span>--incremental<span class="o">]</span><span class="w"> </span><span class="o">[</span>--start-rev<span class="w"> </span>START_REV<span class="o">]</span>
+<span class="w">                    </span><span class="o">[</span>--template<span class="w"> </span>TEMPLATE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--extra<span class="w"> </span>EXTRA<span class="o">]</span>
 <span class="w">                    </span><span class="o">[</span>rev_range<span class="o">]</span>
 
 positional<span class="w"> </span>arguments:
@@ -1110,6 +1139,11 @@ optional<span class="w"> </span>arguments:
 <span class="w">                        </span>start<span class="w"> </span>rev<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>changelog.<span class="w"> </span>If<span class="w"> </span>not<span class="w"> </span>set,<span class="w"> </span>it<span class="w"> </span>will<span class="w"> </span>generate<span class="w"> </span>changelog<span class="w"> </span>from<span class="w"> </span>the<span class="w"> </span>start
 <span class="w">  </span>--merge-prerelease
 <span class="w">                        </span>collect<span class="w"> </span>all<span class="w"> </span>changes<span class="w"> </span>from<span class="w"> </span>prereleases<span class="w"> </span>into<span class="w"> </span>next<span class="w"> </span>non-prerelease.<span class="w"> </span>If<span class="w"> </span>not<span class="w"> </span>set,<span class="w"> </span>it<span class="w"> </span>will<span class="w"> </span>include<span class="w"> </span>prereleases<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>changelog
+<span class="w">                        </span>start<span class="w"> </span>rev<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>changelog.If<span class="w"> </span>not<span class="w"> </span>set,<span class="w"> </span>it<span class="w"> </span>will<span class="w"> </span>generate<span class="w"> </span>changelog<span class="w"> </span>from<span class="w"> </span>the<span class="w"> </span>start
+<span class="w">  </span>--template<span class="w"> </span>TEMPLATE,<span class="w"> </span>-t<span class="w"> </span>TEMPLATE
+<span class="w">                        </span>changelog<span class="w"> </span>template<span class="w"> </span>file<span class="w"> </span>name<span class="w"> </span><span class="o">(</span>relative<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>current<span class="w"> </span>working<span class="w"> </span>directory<span class="o">)</span>
+<span class="w">  </span>--extra<span class="w"> </span>EXTRA,<span class="w"> </span>-e<span class="w"> </span>EXTRA
+<span class="w">                        </span>a<span class="w"> </span>changelog<span class="w"> </span>extra<span class="w"> </span>variable<span class="w"> </span><span class="o">(</span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>form<span class="w"> </span><span class="s1">&#39;key=value&#39;</span><span class="o">)</span>
 </code></pre></div>
 <h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <h4 id="generate-full-changelog">Generate full changelog<a class="headerlink" href="#generate-full-changelog" title="Permanent link">&para;</a></h4>
@@ -1239,6 +1273,14 @@ if your tag is the same as the raw version, then ignore this.</p>
 <span class="c1"># ...</span>
 <span class="n">changelog_merge_prerelease</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
+<h3 id="template"><code>template</code><a class="headerlink" href="#template" title="Permanent link">&para;</a></h3>
+<p>Provides your own changelog jinja template by using the <code>template</code> settings or the <code>--template</code> parameter.
+See <a href="../customization/#customizing-the-changelog-template">the template customization section</a></p>
+<h3 id="extras"><code>extras</code><a class="headerlink" href="#extras" title="Permanent link">&para;</a></h3>
+<p>Provides your own changelog extra variables by using the <code>extras</code> settings or the <code>--extra/-e</code> parameter.</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>changelog<span class="w"> </span>--extra<span class="w"> </span><span class="nv">key</span><span class="o">=</span>value<span class="w"> </span>-e<span class="w"> </span><span class="nv">short</span><span class="o">=</span><span class="s2">&quot;quoted value&quot;</span>
+</code></pre></div>
+<p>See <a href="../customization/#customizing-the-changelog-template">the template customization section</a></p>
 <h2 id="hooks">Hooks<a class="headerlink" href="#hooks" title="Permanent link">&para;</a></h2>
 <p>Supported hook methods:</p>
 <ul>

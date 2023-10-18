@@ -610,6 +610,40 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#customizing-the-changelog-template" class="md-nav__link">
+    Customizing the changelog template
+  </a>
+  
+    <nav class="md-nav" aria-label="Customizing the changelog template">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#providing-a-template-with-your-customization-class" class="md-nav__link">
+    Providing a template with your customization class
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#providing-a-template-from-the-current-working-directory" class="md-nav__link">
+    Providing a template from the current working directory
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template-variables" class="md-nav__link">
+    Template variables
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1013,6 +1047,40 @@
         
       </ul>
     </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customizing-the-changelog-template" class="md-nav__link">
+    Customizing the changelog template
+  </a>
+  
+    <nav class="md-nav" aria-label="Customizing the changelog template">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#providing-a-template-with-your-customization-class" class="md-nav__link">
+    Providing a template with your customization class
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#providing-a-template-from-the-current-working-directory" class="md-nav__link">
+    Providing a template from the current working directory
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#template-variables" class="md-nav__link">
+    Template variables
+  </a>
   
 </li>
         
@@ -1575,6 +1643,137 @@ Migration should be straight-forward for legacy plugins:</p>
 <span class="p">)</span>
 </code></pre></div>
 <p>Then your plugin will be available under the name <code>plugin</code>.</p>
+<h2 id="customizing-the-changelog-template">Customizing the changelog template<a class="headerlink" href="#customizing-the-changelog-template" title="Permanent link">&para;</a></h2>
+<p>Commitizen gives you the possibility to provide your own changelog template, by:</p>
+<ul>
+<li>providing one with your customization class</li>
+<li>providing one from the current working directory and setting it:<ul>
+<li>as <a href="../config/#template">configuration</a></li>
+<li>as <code>--template</code> parameter to both <code>bump</code> and <code>changelog</code> commands</li>
+</ul>
+</li>
+<li>either by providing a template with the same name as the default template</li>
+</ul>
+<p>By default, the template used is the <code>CHANGELOG.md.j2</code> file from the commitizen repository.</p>
+<h3 id="providing-a-template-with-your-customization-class">Providing a template with your customization class<a class="headerlink" href="#providing-a-template-with-your-customization-class" title="Permanent link">&para;</a></h3>
+<p>There is 3 parameters available to change the template rendering from your custom <code>BaseCommitizen</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>template</code></td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td>Provide your own template name (default to <code>CHANGELOG.md.j2</code>)</td>
+</tr>
+<tr>
+<td><code>template_loader</code></td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td>Override the default template loader (so you can provide template from you customization class)</td>
+</tr>
+<tr>
+<td><code>template_extras</code></td>
+<td><code>dict</code></td>
+<td><code>None</code></td>
+<td>Provide some extra template parameters</td>
+</tr>
+</tbody>
+</table>
+<p>Let's see an example.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">commitizen.cz.base</span> <span class="kn">import</span> <span class="n">BaseCommitizen</span>
+<span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">PackageLoader</span>
+
+
+<span class="k">class</span> <span class="nc">MyPlugin</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;CHANGELOG.md.jinja&quot;</span>
+    <span class="n">template_loader</span> <span class="o">=</span> <span class="n">PackageLoader</span><span class="p">(</span><span class="s2">&quot;my_plugin&quot;</span><span class="p">,</span> <span class="s2">&quot;templates&quot;</span><span class="p">)</span>
+    <span class="n">template_extras</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">}</span>
+</code></pre></div>
+<p>This snippet will:</p>
+<ul>
+<li>use <code>CHANGELOG.md.jinja</code> as template name</li>
+<li>search for it in the <code>templates</code> directory for <code>my_plugin</code> package</li>
+<li>add the <code>key=value</code> variable in the template</li>
+</ul>
+<h3 id="providing-a-template-from-the-current-working-directory">Providing a template from the current working directory<a class="headerlink" href="#providing-a-template-from-the-current-working-directory" title="Permanent link">&para;</a></h3>
+<p>Users can provides their own template from their current working directory (your project root) by:</p>
+<ul>
+<li>providing a template with the same name (<code>CHANGELOG.md.j2</code> unless overridden by your custom class)</li>
+<li>setting your template path as <code>template</code> configuration</li>
+<li>giving your template path as <code>--template</code> parameter to <code>bump</code> and <code>changelog</code> commands</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The path is relative to the current working directory, aka. your project root most of the time.</p>
+</div>
+<h3 id="template-variables">Template variables<a class="headerlink" href="#template-variables" title="Permanent link">&para;</a></h3>
+<p>The default template use a single <code>tree</code> variable which is a list of entries (a release) with the following format:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>version</td>
+<td><code>str</code></td>
+<td>The release version</td>
+</tr>
+<tr>
+<td>date</td>
+<td><code>datetime</code></td>
+<td>The release date</td>
+</tr>
+<tr>
+<td>changes</td>
+<td><code>list[tuple[str, list[Change]]]</code></td>
+<td>The release sorted changes list in the form <code>(type, changes)</code></td>
+</tr>
+</tbody>
+</table>
+<p>Each <code>Change</code> has the following fields:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>scope</td>
+<td><code>str | None</code></td>
+<td>An optional scope</td>
+</tr>
+<tr>
+<td>message</td>
+<td><code>str</code></td>
+<td>The commit message body</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The field values depend on the customization class and/or the settings you provide</p>
+</div>
+<p>When using another template (either provided by a plugin or by yourself), you can also pass extra template variables
+by:</p>
+<ul>
+<li>defining them in your configuration with the <a href="../config/#extras"><code>extras</code> settings</a></li>
+<li>providing them on the commandline with the <code>--extra/-e</code> parameter to <code>bump</code> and <code>changelog</code> commands</li>
+</ul>
 
 
 
