@@ -439,6 +439,28 @@ def test_bump_local_version(mocker: MockFixture, tmp_commitizen_project):
         assert "4.5.1+0.2.0" in f.read()
 
 
+def test_bump_build_metadata_version(mocker: MockFixture, tmp_commitizen_project):
+    tmp_version_file = tmp_commitizen_project.join("__version__.py")
+    tmp_version_file.write("4.5.1")
+    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
+    tmp_commitizen_cfg_file.write(
+        f"[tool.commitizen]\n"
+        'version="4.5.1"\n'
+        f'version_files = ["{tmp_version_file_string}"]'
+    )
+
+    create_file_and_commit("feat: new user interface")
+    testargs = ["cz", "bump", "--yes", "--build-metadata", "metadata"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    tag_exists = git.tag_exist("4.6.0+metadata")
+    assert tag_exists is True
+
+    with open(tmp_version_file, encoding="utf-8") as f:
+        assert "4.6.0+metadata" in f.read()
+
+
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_dry_run(mocker: MockFixture, capsys):
     create_file_and_commit("feat: new file")

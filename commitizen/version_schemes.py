@@ -100,6 +100,7 @@ class VersionProtocol(Protocol):
         prerelease_offset: int = 0,
         devrelease: int | None = None,
         is_local_version: bool = False,
+        build_metadata: str | None = None,
     ) -> Self:
         """
         Based on the given increment, generate the next bumped version according to the version scheme
@@ -166,6 +167,17 @@ class BaseVersion(_BaseVersion):
 
         return f"dev{devrelease}"
 
+    def generate_build_metadata(self, build_metadata: str | None) -> str:
+        """Generate build metadata
+
+        The build metadata should be passed directly and is not
+        inferred based on previous versions.
+        """
+        if build_metadata is None:
+            return ""
+
+        return f"+{build_metadata}"
+
     def increment_base(self, increment: str | None = None) -> str:
         prev_release = list(self.release)
         increments = [MAJOR, MINOR, PATCH]
@@ -195,6 +207,7 @@ class BaseVersion(_BaseVersion):
         prerelease_offset: int = 0,
         devrelease: int | None = None,
         is_local_version: bool = False,
+        build_metadata: str | None = None,
     ) -> Self:
         """Based on the given increment a proper semver will be generated.
 
@@ -215,8 +228,9 @@ class BaseVersion(_BaseVersion):
             base = self.increment_base(increment)
             dev_version = self.generate_devrelease(devrelease)
             pre_version = self.generate_prerelease(prerelease, offset=prerelease_offset)
+            build_metadata = self.generate_build_metadata(build_metadata)
             # TODO: post version
-            return self.scheme(f"{base}{pre_version}{dev_version}")  # type: ignore
+            return self.scheme(f"{base}{pre_version}{dev_version}{build_metadata}")  # type: ignore
 
 
 class Pep440(BaseVersion):

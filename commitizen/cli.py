@@ -183,6 +183,10 @@ data = {
                         "help": "bump only the local version portion",
                     },
                     {
+                        "name": "--build-metadata",
+                        "help": "set the build metadata portion of the version",
+                    },
+                    {
                         "name": ["--changelog", "-ch"],
                         "action": "store_true",
                         "default": False,

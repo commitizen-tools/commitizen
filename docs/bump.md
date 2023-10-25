@@ -52,8 +52,8 @@ Some examples of pep440:
 
 ```bash
 $ cz bump --help
-usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
-               [--no-verify] [--yes] [--tag-format TAG_FORMAT]
+usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--build-metadata BUILD_METADATA]
+               [--changelog] [--no-verify] [--yes] [--tag-format TAG_FORMAT]
                [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}]
                [--devrelease DEVRELEASE] [--increment {MAJOR,MINOR,PATCH}]
                [--check-consistency] [--annotated-tag] [--gpg-sign]
