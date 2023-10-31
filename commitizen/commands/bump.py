@@ -46,6 +46,7 @@ class Bump:
                 for key in [
                     "tag_format",
                     "prerelease",
+                    "postrelease",
                     "increment",
                     "bump_message",
                     "gpg_sign",
@@ -147,6 +148,7 @@ class Bump:
         is_yes: bool = self.arguments["yes"]
         increment: str | None = self.arguments["increment"]
         prerelease: str | None = self.arguments["prerelease"]
+        postrelease: bool = self.arguments["postrelease"]
         devrelease: int | None = self.arguments["devrelease"]
         is_files_only: bool | None = self.arguments["files_only"]
         is_local_version: bool | None = self.arguments["local_version"]
@@ -159,6 +161,9 @@ class Bump:
 
             if prerelease:
                 raise NotAllowed("--prerelease cannot be combined with MANUAL_VERSION")
+
+            if postrelease:
+                raise NotAllowed("--postrelease cannot be combined with MANUAL_VERSION")
 
             if devrelease is not None:
                 raise NotAllowed("--devrelease cannot be combined with MANUAL_VERSION")
@@ -234,12 +239,13 @@ class Bump:
 
             # Increment is removed when current and next version
             # are expected to be prereleases.
-            if prerelease and current_version.is_prerelease:
+            if prerelease and current_version.is_prerelease or postrelease:
                 increment = None
 
             new_version = current_version.bump(
                 increment,
                 prerelease=prerelease,
+                postrelease=postrelease,
                 prerelease_offset=prerelease_offset,
                 devrelease=devrelease,
                 is_local_version=is_local_version,

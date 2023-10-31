@@ -25,6 +25,7 @@ class ScmProvider(VersionProvider):
         "$minor": r"(?P<minor>\d+)",
         "$patch": r"(?P<patch>\d+)",
         "$prerelease": r"(?P<prerelease>\w+\d+)?",
+        "$postrelease": r"(?P<postrelease>\.post\d+)?",
         "$devrelease": r"(?P<devrelease>\.dev\d+)?",
     }
 
@@ -52,6 +53,7 @@ class ScmProvider(VersionProvider):
                         f".{groups['minor']}" if groups.get("minor") else "",
                         f".{groups['patch']}" if groups.get("patch") else "",
                         groups["prerelease"] if groups.get("prerelease") else "",
+                        groups["postrelease"] if groups.get("postrelease") else "",
                         groups["devrelease"] if groups.get("devrelease") else "",
                     )
                 )

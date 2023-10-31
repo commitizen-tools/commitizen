@@ -224,6 +224,12 @@ data = {
                         "choices": ["alpha", "beta", "rc"],
                     },
                     {
+                        "name": ["--postrelease"],
+                        "action": "store_true",
+                        "default": False,
+                        "help": "mark as a post release",
+                    },
+                    {
                         "name": ["--devrelease", "-d"],
                         "help": "specify non-negative integer for dev. release",
                         "type": int,

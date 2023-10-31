@@ -134,10 +134,16 @@ def normalize_tag(
 
     major, minor, patch = version.release
     prerelease = version.prerelease or ""
+    postrelease = version.postrelease or ""
 
     t = Template(tag_format)
     return t.safe_substitute(
-        version=version, major=major, minor=minor, patch=patch, prerelease=prerelease
+        version=version,
+        major=major,
+        minor=minor,
+        patch=patch,
+        prerelease=prerelease,
+        postrelease=postrelease,
     )
 
 
