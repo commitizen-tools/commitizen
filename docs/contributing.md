@@ -20,7 +20,7 @@ If you're a first-time contributor, you can check the issues with [good first is
 5. Check out a new branch and add your modification.
 6. Add test cases for all your changes.
    (We use [CodeCov](https://codecov.io/) to ensure our test coverage does not drop.)
-7. Use [commitizen](https://github.com/commitizen-tools/commitizen) to do git commit. We follow [conventional commits][conventional-commits]
+7. Use [commitizen](https://github.com/commitizen-tools/commitizen) to do git commit. We follow [conventional commits](https://www.conventionalcommits.org/).
 8. Run `./scripts/format` and `./scripts/test` to ensure you follow the coding style and the tests pass.
 9. Optionally, update the `./docs/README.md`.
 9. **Do not** update the `CHANGELOG.md`, it will be automatically created after merging to `master`.
