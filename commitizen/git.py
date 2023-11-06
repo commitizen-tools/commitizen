@@ -91,6 +91,9 @@ def tag(
     if signed:
         _opt = f"-s {tag} -m"
 
+    # according to https://git-scm.com/book/en/v2/Git-Basics-Tagging,
+    # we're not able to create lightweight tag with message.
+    # by adding message, we make it a annotated tags
     c = cmd.run(f'git tag {_opt} "{tag if _opt == "" or msg is None else msg}"')
     return c
 
