@@ -25,6 +25,11 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         python -m mkdocs build
+    - name: Generate Sponsors 💖
+      uses: JamesIves/github-sponsors-readme-action@v1
+      with:
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN_FOR_ORG }}
+        file: 'docs/README.md'
     - name: Push doc to Github Page
       uses: peaceiris/actions-gh-pages@v2
       env:

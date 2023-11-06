@@ -16,11 +16,6 @@ jobs:
         with:
           fetch-depth: 0
           token: '${{ secrets.PERSONAL_ACCESS_TOKEN }}'
-      - name: Generate Sponsors 💖
-        uses: JamesIves/github-sponsors-readme-action@v1
-        with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN_FOR_ORG }}
-          file: 'docs/README.md'
       - name: Create bump and changelog
         uses: commitizen-tools/commitizen-action@master
         with:
