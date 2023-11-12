@@ -238,10 +238,10 @@ class Bump:
                 if last_final is not None:
                     commits = git.get_commits(last_final)
                     increment = self.find_increment(commits)
-                    semver = last_final.increment_base(
+                    base = last_final.increment_base(
                         increment=increment, force_bump=True
                     )
-                    if semver != current_version.base_version:
+                    if base != current_version.base_version:
                         force_bump = True
                 elif prerelease:
                     increment = None

@@ -221,8 +221,8 @@ class BaseVersion(_BaseVersion):
             release = list(self.release)
             if len(release) < 3:
                 release += [0] * (3 - len(release))
-            current_semver = ".".join(str(part) for part in release)
-            if base == current_semver:
+            current_base = ".".join(str(part) for part in release)
+            if base == current_base:
                 pre_version = self.generate_prerelease(
                     prerelease, offset=prerelease_offset
                 )
