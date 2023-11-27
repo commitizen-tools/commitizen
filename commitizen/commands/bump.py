@@ -230,29 +230,12 @@ class Bump:
                     "To avoid this error, manually specify the type of increment with `--increment`"
                 )
 
-            # Increment is removed when current and next version
-            # are expected to be prereleases.
-            force_bump = False
-            if current_version.is_prerelease:
-                last_final = self.find_previous_final_version(current_version)
-                if last_final is not None:
-                    commits = git.get_commits(last_final)
-                    increment = self.find_increment(commits)
-                    base = last_final.increment_base(
-                        increment=increment, force_bump=True
-                    )
-                    if base != current_version.base_version:
-                        force_bump = True
-                elif prerelease:
-                    increment = None
-
             new_version = current_version.bump(
                 increment,
                 prerelease=prerelease,
                 prerelease_offset=prerelease_offset,
                 devrelease=devrelease,
                 is_local_version=is_local_version,
-                force_bump=force_bump,
             )
 
         new_tag_version = bump.normalize_tag(

@@ -167,27 +167,20 @@ class BaseVersion(_BaseVersion):
 
         return f"dev{devrelease}"
 
-    def increment_base(
-        self, increment: str | None = None, force_bump: bool = False
-    ) -> str:
+    def increment_base(self, increment: str | None = None) -> str:
         prev_release = list(self.release)
         increments = [MAJOR, MINOR, PATCH]
         base = dict(zip_longest(increments, prev_release, fillvalue=0))
 
-        # This flag means that current version
-        # must remove its prerelease tag,
-        # so it doesn't matter the increment.
-        # Example: 1.0.0a0 with PATCH/MINOR -> 1.0.0
-        if not self.is_prerelease or force_bump:
-            if increment == MAJOR:
-                base[MAJOR] += 1
-                base[MINOR] = 0
-                base[PATCH] = 0
-            elif increment == MINOR:
-                base[MINOR] += 1
-                base[PATCH] = 0
-            elif increment == PATCH:
-                base[PATCH] += 1
+        if increment == MAJOR:
+            base[MAJOR] += 1
+            base[MINOR] = 0
+            base[PATCH] = 0
+        elif increment == MINOR:
+            base[MINOR] += 1
+            base[PATCH] = 0
+        elif increment == PATCH:
+            base[PATCH] += 1
 
         return f"{base[MAJOR]}.{base[MINOR]}.{base[PATCH]}"
 
@@ -216,7 +209,20 @@ class BaseVersion(_BaseVersion):
             local_version = self.scheme(self.local).bump(increment)
             return self.scheme(f"{self.public}+{local_version}")  # type: ignore
         else:
-            base = self.increment_base(increment, force_bump)
+            if not self.is_prerelease:
+                base = self.increment_base(increment)
+            elif force_bump:
+                base = self.increment_base(increment)
+            else:
+                base = f"{self.major}.{self.minor}.{self.micro}"
+                if increment == PATCH:
+                    pass
+                elif increment == MINOR:
+                    if self.micro != 0:
+                        base = self.increment_base(increment)
+                elif increment == MAJOR:
+                    if self.minor != 0 or self.micro != 0:
+                        base = self.increment_base(increment)
             dev_version = self.generate_devrelease(devrelease)
             release = list(self.release)
             if len(release) < 3:
