@@ -53,6 +53,11 @@ class ConventionalCommitsCz(BaseCommitizen):
                         "key": "x",
                     },
                     {
+                        "value": "chore",
+                        "name": "chore: Other changes that don't modify src or test files",
+                        "key": "h",
+                    },
+                    {
                         "value": "feat",
                         "name": "feat: A new feature. Correlates with MINOR in SemVer",
                         "key": "f",
