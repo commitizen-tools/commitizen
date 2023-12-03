@@ -1,4 +1,23 @@
 
+## v3.13.0 (2023-12-03)
+
+### Feat
+
+- **commands-bump**: automatically create annotated tag if message is given
+- add tag message argument to cli
+- **git**: add get tag message function
+- add custom message to annotated git tag
+
+### Fix
+
+- **test-bump-command**: typo in --annotated-tag option inside test
+- **commitizen-git**: add quotes for tag message
+
+### Refactor
+
+- **commands-bump**: make changelog variable in 1 line
+- **commands-bump**: cast str to bool
+
 ## v3.12.0 (2023-10-18)
 
 ### Feat
