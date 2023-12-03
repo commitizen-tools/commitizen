@@ -5,5 +5,5 @@ export PREFIX="poetry run python -m "
 
 set -x
 
-${PREFIX}ruff commitizen tests --fix
+${PREFIX}ruff format commitizen tests
 ${PREFIX}black commitizen tests
