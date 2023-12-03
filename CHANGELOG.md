@@ -30,8 +30,6 @@
 
 - **filename**: ensure `file_name` can be passed to `changelog` from `bump` command
 
-## 3.11.0 (2023-10-17)
-
 ## v3.11.0 (2023-10-17)
 
 ### Feat
@@ -63,8 +61,6 @@
 ### Fix
 
 - **conf**: handle parse error when init (#856)
-
-## 3.9.0 (2023-09-15)
 
 ## v3.9.0 (2023-09-15)
 
@@ -98,8 +94,6 @@
 ### Feat
 
 - **defaults.py**: add always_signoff config option for commits
-
-## 3.7.1 (2023-09-04)
 
 ## v3.7.1 (2023-09-04)
 
