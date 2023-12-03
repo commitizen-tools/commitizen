@@ -49,6 +49,7 @@ charset-normalizer = ">=2.1.0,<4"
 importlib_metadata = { version = ">=4.13,<7"}
 
 [tool.poetry.group.dev.dependencies]
+# dev tool
 ipython = "^8.0"
 # test
 pytest = "^7.2.0"
@@ -58,9 +59,9 @@ pytest-regressions = "^2.4.0"
 pytest-freezer = "^0.4.6"
 pytest-xdist = "^3.1.0"
 # code formatter
-black = ">=22.10,<24.0"
+black = ">=22.10"
 # linter
-ruff = ">=0.0.275,<0.0.293"
+ruff = ">=0.1.6"
 pre-commit = ">=2.18,<4.0"
 mypy = "^1.4"
 types-PyYAML = ">=5.4.3,<7.0.0"
