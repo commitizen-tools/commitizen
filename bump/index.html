@@ -496,6 +496,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#-annotated-tag-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      --annotated-tag-message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#-changelog-to-stdout" class="md-nav__link">
     <span class="md-ellipsis">
       --changelog-to-stdout
@@ -1206,6 +1215,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#-annotated-tag-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      --annotated-tag-message
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#-changelog-to-stdout" class="md-nav__link">
     <span class="md-ellipsis">
       --changelog-to-stdout
@@ -1512,13 +1530,10 @@
 <p><code>post</code> releases are not supported yet.</p>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>cz<span class="w"> </span>bump<span class="w"> </span>--help
-usage:<span class="w"> </span>cz<span class="w"> </span>bump<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>--dry-run<span class="o">]</span><span class="w"> </span><span class="o">[</span>--files-only<span class="o">]</span><span class="w"> </span><span class="o">[</span>--local-version<span class="o">]</span><span class="w"> </span><span class="o">[</span>--changelog<span class="o">]</span>
-<span class="w">               </span><span class="o">[</span>--no-verify<span class="o">]</span><span class="w"> </span><span class="o">[</span>--yes<span class="o">]</span><span class="w"> </span><span class="o">[</span>--tag-format<span class="w"> </span>TAG_FORMAT<span class="o">]</span>
-<span class="w">               </span><span class="o">[</span>--bump-message<span class="w"> </span>BUMP_MESSAGE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--prerelease<span class="w"> </span><span class="o">{</span>alpha,beta,rc<span class="o">}]</span>
-<span class="w">               </span><span class="o">[</span>--devrelease<span class="w"> </span>DEVRELEASE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--increment<span class="w"> </span><span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span>
-<span class="w">               </span><span class="o">[</span>--check-consistency<span class="o">]</span><span class="w"> </span><span class="o">[</span>--annotated-tag<span class="o">]</span><span class="w"> </span><span class="o">[</span>--gpg-sign<span class="o">]</span>
-<span class="w">               </span><span class="o">[</span>--changelog-to-stdout<span class="o">]</span><span class="w"> </span><span class="o">[</span>--git-output-to-stderr<span class="o">]</span><span class="w"> </span><span class="o">[</span>--retry<span class="o">]</span><span class="w"> </span><span class="o">[</span>--major-version-zero<span class="o">]</span>
-<span class="w">               </span><span class="o">[</span>--template<span class="w"> </span>TEMPLATE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--extra<span class="w"> </span>EXTRA<span class="o">]</span>
+usage:<span class="w"> </span>cz<span class="w"> </span>bump<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>--dry-run<span class="o">]</span><span class="w"> </span><span class="o">[</span>--files-only<span class="o">]</span><span class="w"> </span><span class="o">[</span>--local-version<span class="o">]</span><span class="w"> </span><span class="o">[</span>--changelog<span class="o">]</span><span class="w"> </span><span class="o">[</span>--no-verify<span class="o">]</span><span class="w"> </span><span class="o">[</span>--yes<span class="o">]</span><span class="w"> </span><span class="o">[</span>--tag-format<span class="w"> </span>TAG_FORMAT<span class="o">]</span>
+<span class="w">               </span><span class="o">[</span>--bump-message<span class="w"> </span>BUMP_MESSAGE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--prerelease<span class="w"> </span><span class="o">{</span>alpha,beta,rc<span class="o">}]</span><span class="w"> </span><span class="o">[</span>--devrelease<span class="w"> </span>DEVRELEASE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--increment<span class="w"> </span><span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span>
+<span class="w">               </span><span class="o">[</span>--check-consistency<span class="o">]</span><span class="w"> </span><span class="o">[</span>--annotated-tag<span class="o">]</span><span class="w"> </span><span class="o">[</span>--gpg-sign<span class="o">]</span><span class="w"> </span><span class="o">[</span>--changelog-to-stdout<span class="o">]</span><span class="w"> </span><span class="o">[</span>--git-output-to-stderr<span class="o">]</span><span class="w"> </span><span class="o">[</span>--retry<span class="o">]</span><span class="w"> </span><span class="o">[</span>--major-version-zero<span class="o">]</span>
+<span class="w">               </span><span class="o">[</span>--prerelease-offset<span class="w"> </span>PRERELEASE_OFFSET<span class="o">]</span><span class="w"> </span><span class="o">[</span>--version-scheme<span class="w"> </span><span class="o">{</span>semver,pep440<span class="o">}]</span><span class="w"> </span><span class="o">[</span>--version-type<span class="w"> </span><span class="o">{</span>semver,pep440<span class="o">}]</span>
 <span class="w">               </span><span class="o">[</span>MANUAL_VERSION<span class="o">]</span>
 
 positional<span class="w"> </span>arguments:
@@ -1530,15 +1545,12 @@ options:
 <span class="w">  </span>--files-only<span class="w">          </span>bump<span class="w"> </span>version<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>files<span class="w"> </span>from<span class="w"> </span>the<span class="w"> </span>config
 <span class="w">  </span>--local-version<span class="w">       </span>bump<span class="w"> </span>only<span class="w"> </span>the<span class="w"> </span><span class="nb">local</span><span class="w"> </span>version<span class="w"> </span>portion
 <span class="w">  </span>--changelog,<span class="w"> </span>-ch<span class="w">      </span>generate<span class="w"> </span>the<span class="w"> </span>changelog<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>newest<span class="w"> </span>version
-<span class="w">  </span>--no-verify<span class="w">           </span>this<span class="w"> </span>option<span class="w"> </span>bypasses<span class="w"> </span>the<span class="w"> </span>pre-commit<span class="w"> </span>and<span class="w"> </span>commit-msg
-<span class="w">                        </span>hooks
+<span class="w">  </span>--no-verify<span class="w">           </span>this<span class="w"> </span>option<span class="w"> </span>bypasses<span class="w"> </span>the<span class="w"> </span>pre-commit<span class="w"> </span>and<span class="w"> </span>commit-msg<span class="w"> </span>hooks
 <span class="w">  </span>--yes<span class="w">                 </span>accept<span class="w"> </span>automatically<span class="w"> </span>questions<span class="w"> </span><span class="k">done</span>
 <span class="w">  </span>--tag-format<span class="w"> </span>TAG_FORMAT
-<span class="w">                        </span>the<span class="w"> </span>format<span class="w"> </span>used<span class="w"> </span>to<span class="w"> </span>tag<span class="w"> </span>the<span class="w"> </span>commit<span class="w"> </span>and<span class="w"> </span><span class="nb">read</span><span class="w"> </span>it,<span class="w"> </span>use<span class="w"> </span>it
-<span class="w">                        </span><span class="k">in</span><span class="w"> </span>existing<span class="w"> </span>projects,<span class="w"> </span>wrap<span class="w"> </span>around<span class="w"> </span>simple<span class="w"> </span>quotes
+<span class="w">                        </span>the<span class="w"> </span>format<span class="w"> </span>used<span class="w"> </span>to<span class="w"> </span>tag<span class="w"> </span>the<span class="w"> </span>commit<span class="w"> </span>and<span class="w"> </span><span class="nb">read</span><span class="w"> </span>it,<span class="w"> </span>use<span class="w"> </span>it<span class="w"> </span><span class="k">in</span><span class="w"> </span>existing<span class="w"> </span>projects,<span class="w"> </span>wrap<span class="w"> </span>around<span class="w"> </span>simple<span class="w"> </span>quotes
 <span class="w">  </span>--bump-message<span class="w"> </span>BUMP_MESSAGE
-<span class="w">                        </span>template<span class="w"> </span>used<span class="w"> </span>to<span class="w"> </span>create<span class="w"> </span>the<span class="w"> </span>release<span class="w"> </span>commit,<span class="w"> </span>useful
-<span class="w">                        </span>when<span class="w"> </span>working<span class="w"> </span>with<span class="w"> </span>CI
+<span class="w">                        </span>template<span class="w"> </span>used<span class="w"> </span>to<span class="w"> </span>create<span class="w"> </span>the<span class="w"> </span>release<span class="w"> </span>commit,<span class="w"> </span>useful<span class="w"> </span>when<span class="w"> </span>working<span class="w"> </span>with<span class="w"> </span>CI
 <span class="w">  </span>--prerelease<span class="w"> </span><span class="o">{</span>alpha,beta,rc<span class="o">}</span>,<span class="w"> </span>-pr<span class="w"> </span><span class="o">{</span>alpha,beta,rc<span class="o">}</span>
 <span class="w">                        </span>choose<span class="w"> </span><span class="nb">type</span><span class="w"> </span>of<span class="w"> </span>prerelease
 <span class="w">  </span>--devrelease<span class="w"> </span>DEVRELEASE,<span class="w"> </span>-d<span class="w"> </span>DEVRELEASE
@@ -1546,8 +1558,7 @@ options:
 <span class="w">  </span>--increment<span class="w"> </span><span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}</span>
 <span class="w">                        </span>manually<span class="w"> </span>specify<span class="w"> </span>the<span class="w"> </span>desired<span class="w"> </span>increment
 <span class="w">  </span>--check-consistency,<span class="w"> </span>-cc
-<span class="w">                        </span>check<span class="w"> </span>consistency<span class="w"> </span>among<span class="w"> </span>versions<span class="w"> </span>defined<span class="w"> </span><span class="k">in</span><span class="w"> </span>commitizen
-<span class="w">                        </span>configuration<span class="w"> </span>and<span class="w"> </span>version_files
+<span class="w">                        </span>check<span class="w"> </span>consistency<span class="w"> </span>among<span class="w"> </span>versions<span class="w"> </span>defined<span class="w"> </span><span class="k">in</span><span class="w"> </span>commitizen<span class="w"> </span>configuration<span class="w"> </span>and<span class="w"> </span>version_files
 <span class="w">  </span>--annotated-tag,<span class="w"> </span>-at<span class="w">  </span>create<span class="w"> </span>annotated<span class="w"> </span>tag<span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span>lightweight<span class="w"> </span>one
 <span class="w">  </span>--gpg-sign,<span class="w"> </span>-s<span class="w">        </span>sign<span class="w"> </span>tag<span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span>lightweight<span class="w"> </span>one
 <span class="w">  </span>--changelog-to-stdout
@@ -1556,14 +1567,12 @@ options:
 <span class="w">                        </span>Redirect<span class="w"> </span>git<span class="w"> </span>output<span class="w"> </span>to<span class="w"> </span>stderr
 <span class="w">  </span>--retry<span class="w">               </span>retry<span class="w"> </span>commit<span class="w"> </span><span class="k">if</span><span class="w"> </span>it<span class="w"> </span>fails<span class="w"> </span>the<span class="w"> </span>1st<span class="w"> </span><span class="nb">time</span>
 <span class="w">  </span>--major-version-zero<span class="w">  </span>keep<span class="w"> </span>major<span class="w"> </span>version<span class="w"> </span>at<span class="w"> </span>zero,<span class="w"> </span>even<span class="w"> </span><span class="k">for</span><span class="w"> </span>breaking<span class="w"> </span>changes
-<span class="w">  </span>--prerelease-offset<span class="w">   </span>start<span class="w"> </span>pre-releases<span class="w"> </span>with<span class="w"> </span>this<span class="w"> </span>offset
-<span class="w">  </span>--version-scheme<span class="w"> </span><span class="o">{</span>pep440,semver<span class="o">}</span>
+<span class="w">  </span>--prerelease-offset<span class="w"> </span>PRERELEASE_OFFSET
+<span class="w">                        </span>start<span class="w"> </span>pre-releases<span class="w"> </span>with<span class="w"> </span>this<span class="w"> </span>offset
+<span class="w">  </span>--version-scheme<span class="w"> </span><span class="o">{</span>semver,pep440<span class="o">}</span>
 <span class="w">                        </span>choose<span class="w"> </span>version<span class="w"> </span>scheme
-
-<span class="w">  </span>--template<span class="w"> </span>TEMPLATE,<span class="w"> </span>-t<span class="w"> </span>TEMPLATE
-<span class="w">                        </span>changelog<span class="w"> </span>template<span class="w"> </span>file<span class="w"> </span>name<span class="w"> </span><span class="o">(</span>relative<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>current<span class="w"> </span>working<span class="w"> </span>directory<span class="o">)</span>
-<span class="w">  </span>--extra<span class="w"> </span>EXTRA,<span class="w"> </span>-e<span class="w"> </span>EXTRA
-<span class="w">                        </span>a<span class="w"> </span>changelog<span class="w"> </span>extra<span class="w"> </span>variable<span class="w"> </span><span class="o">(</span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>form<span class="w"> </span><span class="s1">&#39;key=value&#39;</span><span class="o">)</span>
+<span class="w">  </span>--version-type<span class="w"> </span><span class="o">{</span>semver,pep440<span class="o">}</span>
+<span class="w">                        </span>Deprecated,<span class="w"> </span>use<span class="w"> </span>--version-scheme
 </code></pre></div>
 <h3 id="-files-only"><code>--files-only</code><a class="headerlink" href="#-files-only" title="Permanent link">&para;</a></h3>
 <p>Bumps the version in the files defined in <code>version_files</code> without creating a commit and tag on the git repository,</p>
@@ -1610,6 +1619,8 @@ the version in <code>setup.py</code> to <code>1.21.0</code></p>
 <p>If <code>--local-version</code> is used, it will bump only the local version <code>0.1.0</code> and keep the public version <code>5.3.5</code> intact, bumping to the version <code>5.3.5+0.2.0</code>.</p>
 <h3 id="-annotated-tag"><code>--annotated-tag</code><a class="headerlink" href="#-annotated-tag" title="Permanent link">&para;</a></h3>
 <p>If <code>--annotated-tag</code> is used, commitizen will create annotated tags. Also available via configuration, in <code>pyproject.toml</code> or <code>.cz.toml</code>.</p>
+<h3 id="-annotated-tag-message"><code>--annotated-tag-message</code><a class="headerlink" href="#-annotated-tag-message" title="Permanent link">&para;</a></h3>
+<p>If <code>--annotated-tag-message</code> is used, commitizen will create annotated tags with the given message.</p>
 <h3 id="-changelog-to-stdout"><code>--changelog-to-stdout</code><a class="headerlink" href="#-changelog-to-stdout" title="Permanent link">&para;</a></h3>
 <p>If <code>--changelog-to-stdout</code> is used, the incremental changelog generated by the bump
 will be sent to the stdout, and any other message generated by the bump will be
