@@ -43,10 +43,11 @@ local_versions = [
     (("4.5.0+0.2.0", "MAJOR", None, 0, None), "4.5.0+1.0.0"),
 ]
 
-# this cases should be handled gracefully
-unexpected_cases = [
-    (("0.1.1rc0", None, "alpha", 0, None), "0.1.1a0"),
-    (("0.1.1b1", None, "alpha", 0, None), "0.1.1a0"),
+# never bump backwards on pre-releases
+linear_prerelease_cases = [
+    (("0.1.1b1", None, "alpha", 0, None), "0.1.1b2"),
+    (("0.1.1rc0", None, "alpha", 0, None), "0.1.1rc1"),
+    (("0.1.1rc0", None, "beta", 0, None), "0.1.1rc1"),
 ]
 
 weird_cases = [
@@ -145,7 +146,7 @@ prerelease_cases = [
         tdd_cases,
         weird_cases,
         simple_flow,
-        unexpected_cases,
+        linear_prerelease_cases,
         prerelease_cases,
     ),
 )

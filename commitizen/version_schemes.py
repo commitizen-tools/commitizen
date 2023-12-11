@@ -147,6 +147,12 @@ class BaseVersion(_BaseVersion):
         if not prerelease:
             return ""
 
+        # prevent down-bumping the pre-release phase, e.g. from 'b1' to 'a2'
+        # https://packaging.python.org/en/latest/specifications/version-specifiers/#pre-releases
+        # https://semver.org/#spec-item-11
+        if self.is_prerelease and self.pre:
+            prerelease = max(prerelease, self.pre[0])
+
         # version.pre is needed for mypy check
         if self.is_prerelease and self.pre and prerelease.startswith(self.pre[0]):
             prev_prerelease: int = self.pre[1]
