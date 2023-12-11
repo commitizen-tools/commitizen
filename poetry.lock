@@ -13,13 +13,13 @@ files = [
 
 [[package]]
 name = "argcomplete"
-version = "3.1.4"
+version = "3.2.1"
 description = "Bash tab completion for argparse"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "argcomplete-3.1.4-py3-none-any.whl", hash = "sha256:fbe56f8cda08aa9a04b307d8482ea703e96a6a801611acb4be9bf3942017989f"},
-    {file = "argcomplete-3.1.4.tar.gz", hash = "sha256:72558ba729e4c468572609817226fb0a6e7e9a0a7d477b882be168c0b4a62b94"},
+    {file = "argcomplete-3.2.1-py3-none-any.whl", hash = "sha256:30891d87f3c1abe091f2142613c9d33cac84a5e15404489f033b20399b691fec"},
+    {file = "argcomplete-3.2.1.tar.gz", hash = "sha256:437f67fb9b058da5a090df505ef9be0297c4883993f3f56cb186ff087778cfb4"},
 ]
 
 [package.extras]
@@ -1768,4 +1768,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8"
-content-hash = "56abcd89fe754b25b325526988664752aa8e53c5339d3ddae12978162b8e57b9"
+content-hash = "29e446da6af6f9b07dad6535fc2073109a32f65653e5f50fa07c2fda3a39fa45"
