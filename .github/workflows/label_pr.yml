@@ -10,4 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        sparse-checkout: |
+          .github/labeler.yaml
+        sparse-checkout-cone-mode: false
     - uses: actions/labeler@v5
+      with:
+        configuration-path: .github/labeler.yaml
