@@ -12,8 +12,8 @@ jobs:
     - uses: actions/checkout@v4
       with:
         sparse-checkout: |
-          .github/labeler.yaml
+          .github/labeler.yml
         sparse-checkout-cone-mode: false
     - uses: actions/labeler@v5
       with:
-        configuration-path: .github/labeler.yaml
+        configuration-path: .github/labeler.yml
