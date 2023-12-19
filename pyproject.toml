@@ -46,7 +46,7 @@ argcomplete = ">=1.12.1,<3.3"
 typing-extensions = { version = "^4.0.1", python = "<3.8" }
 charset-normalizer = ">=2.1.0,<4"
 # Use the Python 3.11 and 3.12 compatible API: https://github.com/python/importlib_metadata#compatibility
-importlib_metadata = { version = ">=4.13,<7"}
+importlib_metadata = { version = ">=4.13,<8"}
 
 [tool.poetry.group.dev.dependencies]
 # dev tool
