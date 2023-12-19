@@ -380,7 +380,7 @@ Supported variables:
 It is used to identify the files which should be updated with the new version.
 It is also possible to provide a pattern for each file, separated by colons (`:`).
 
-Commitizen will update it's configuration file automatically (`pyproject.toml`, `.cz`) when bumping,
+Commitizen will update its configuration file automatically (`pyproject.toml`, `.cz`) when bumping,
 regarding if the file is present or not in `version_files`.
 
 \* Renamed from `files` to `version_files`.
