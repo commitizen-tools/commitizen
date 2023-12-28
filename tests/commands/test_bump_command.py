@@ -813,6 +813,8 @@ def test_bump_changelog_command_commits_untracked_changelog_and_version_files(
         ["cz", "bump", "--devrelease", "0", "1.2.3"],
         ["cz", "bump", "--devrelease", "1", "1.2.3"],
         ["cz", "bump", "--increment", "PATCH", "1.2.3"],
+        ["cz", "bump", "--build-metadata=a.b.c", "1.2.3"],
+        ["cz", "bump", "--local-version", "--build-metadata=a.b.c"],
     ],
 )
 @pytest.mark.usefixtures("tmp_commitizen_project")

@@ -99,3 +99,50 @@ def test_bump_pre_commit_changelog_fails_always(mocker: MockFixture, freezer, re
     cmd.run("pre-commit install")
     with pytest.raises(exceptions.BumpCommitFailedError):
         cli.main()
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_with_build_metadata(mocker: MockFixture, freezer):
+    def _add_entry(test_str: str, args: list):
+        Path(test_str).write_text("")
+        cmd.run("git add -A")
+        cmd.run(f'git commit -m "fix: test-{test_str}"')
+        cz_args = ["cz", "bump", "--changelog", "--yes"] + args
+        mocker.patch.object(sys, "argv", cz_args)
+        cli.main()
+
+    freezer.move_to("2024-01-01")
+
+    _add_entry("a", ["--build-metadata", "a.b.c"])
+    _add_entry("b", [])
+    _add_entry("c", ["--build-metadata", "alongmetadatastring"])
+    _add_entry("d", [])
+
+    # Pre-commit fixed last line adding extra indent and "\" char
+    assert Path("CHANGELOG.md").read_text() == dedent(
+        """\
+        ## 0.1.4 (2024-01-01)
+
+        ### Fix
+
+        - test-d
+
+        ## 0.1.3+alongmetadatastring (2024-01-01)
+
+        ### Fix
+
+        - test-c
+
+        ## 0.1.2 (2024-01-01)
+
+        ### Fix
+
+        - test-b
+
+        ## 0.1.1+a.b.c (2024-01-01)
+
+        ### Fix
+
+        - test-a
+        """
+    )

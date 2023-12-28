@@ -155,6 +155,7 @@ class Bump:
         is_files_only: bool | None = self.arguments["files_only"]
         is_local_version: bool | None = self.arguments["local_version"]
         manual_version = self.arguments["manual_version"]
+        build_metadata = self.arguments["build_metadata"]
 
         if manual_version:
             if increment:
@@ -171,6 +172,11 @@ class Bump:
                     "--local-version cannot be combined with MANUAL_VERSION"
                 )
 
+            if build_metadata:
+                raise NotAllowed(
+                    "--build-metadata cannot be combined with MANUAL_VERSION"
+                )
+
             if major_version_zero:
                 raise NotAllowed(
                     "--major-version-zero cannot be combined with MANUAL_VERSION"
@@ -185,6 +191,12 @@ class Bump:
             if not current_version.release[0] == 0:
                 raise NotAllowed(
                     f"--major-version-zero is meaningless for current version {current_version}"
+                )
+
+        if build_metadata:
+            if is_local_version:
+                raise NotAllowed(
+                    "--local-version cannot be combined with --build-metadata"
                 )
 
         current_tag_version: str = bump.normalize_tag(
@@ -235,6 +247,7 @@ class Bump:
                 prerelease_offset=prerelease_offset,
                 devrelease=devrelease,
                 is_local_version=is_local_version,
+                build_metadata=build_metadata,
             )
 
         new_tag_version = bump.normalize_tag(

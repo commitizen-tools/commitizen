@@ -20,6 +20,7 @@ from commitizen.exceptions import (
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.git import GitTag, smart_open
 from commitizen.version_schemes import get_version_scheme
+from commitizen.cz.utils import strip_local_version
 
 
 class Changelog:
@@ -98,7 +99,12 @@ class Changelog:
         """
         SIMILARITY_THRESHOLD = 0.89
         tag_ratio = map(
-            lambda tag: (SequenceMatcher(None, latest_version, tag.name).ratio(), tag),
+            lambda tag: (
+                SequenceMatcher(
+                    None, latest_version, strip_local_version(tag.name)
+                ).ratio(),
+                tag,
+            ),
             tags,
         )
         try:
@@ -169,7 +175,9 @@ class Changelog:
                     tag_format=self.tag_format,
                     scheme=self.scheme,
                 )
-                start_rev = self._find_incremental_rev(latest_tag_version, tags)
+                start_rev = self._find_incremental_rev(
+                    strip_local_version(latest_tag_version), tags
+                )
 
         if self.rev_range:
             start_rev, end_rev = changelog.get_oldest_and_newest_rev(
