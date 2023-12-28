@@ -118,6 +118,7 @@ class VersionProtocol(Protocol):
         prerelease_offset: int = 0,
         devrelease: int | None = None,
         is_local_version: bool = False,
+        build_metadata: str | None = None,
         force_bump: bool = False,
     ) -> Self:
         """
@@ -191,6 +192,17 @@ class BaseVersion(_BaseVersion):
 
         return f"dev{devrelease}"
 
+    def generate_build_metadata(self, build_metadata: str | None) -> str:
+        """Generate build-metadata
+
+        Build-metadata (local version) is not used in version calculations
+        but added after + statically.
+        """
+        if build_metadata is None:
+            return ""
+
+        return f"+{build_metadata}"
+
     def increment_base(self, increment: str | None = None) -> str:
         prev_release = list(self.release)
         increments = [MAJOR, MINOR, PATCH]
@@ -215,6 +227,7 @@ class BaseVersion(_BaseVersion):
         prerelease_offset: int = 0,
         devrelease: int | None = None,
         is_local_version: bool = False,
+        build_metadata: str | None = None,
         force_bump: bool = False,
     ) -> Self:
         """Based on the given increment a proper semver will be generated.
@@ -248,6 +261,7 @@ class BaseVersion(_BaseVersion):
                     if self.minor != 0 or self.micro != 0:
                         base = self.increment_base(increment)
             dev_version = self.generate_devrelease(devrelease)
+
             release = list(self.release)
             if len(release) < 3:
                 release += [0] * (3 - len(release))
@@ -261,8 +275,9 @@ class BaseVersion(_BaseVersion):
                 pre_version = base_version.generate_prerelease(
                     prerelease, offset=prerelease_offset
                 )
+            build_metadata = self.generate_build_metadata(build_metadata)
             # TODO: post version
-            return self.scheme(f"{base}{pre_version}{dev_version}")  # type: ignore
+            return self.scheme(f"{base}{pre_version}{dev_version}{build_metadata}")  # type: ignore
 
 
 class Pep440(BaseVersion):

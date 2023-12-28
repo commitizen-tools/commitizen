@@ -55,7 +55,7 @@ $ cz bump --help
 usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog] [--no-verify] [--yes] [--tag-format TAG_FORMAT]
                [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}] [--devrelease DEVRELEASE] [--increment {MAJOR,MINOR,PATCH}]
                [--check-consistency] [--annotated-tag] [--gpg-sign] [--changelog-to-stdout] [--git-output-to-stderr] [--retry] [--major-version-zero]
-               [--prerelease-offset PRERELEASE_OFFSET] [--version-scheme {semver,pep440}] [--version-type {semver,pep440}]
+               [--prerelease-offset PRERELEASE_OFFSET] [--version-scheme {semver,pep440}] [--version-type {semver,pep440}] [--build-metadata BUILD_METADATA]
                [MANUAL_VERSION]
 
 positional arguments:
@@ -95,6 +95,8 @@ options:
                         choose version scheme
   --version-type {semver,pep440}
                         Deprecated, use --version-scheme
+  --build-metadata {BUILD_METADATA}
+                        additional metadata in the version string
 ```
 
 ### `--files-only`
@@ -291,6 +293,25 @@ cz bump --changelog --extra key=value -e short="quoted value"
 ```
 
 See [the template customization section](customization.md#customizing-the-changelog-template).
+
+### `--build-metadata`
+
+Provides a way to specify additional metadata in the version string. This parameter is not compatible with `--local-version` as it uses the same part of the version string.
+
+```bash
+cz bump --build-metadata yourmetadata
+```
+
+Will create a version like `1.1.2+yourmetadata`.
+This can be useful for multiple things
+* Git hash in version
+* Labeling the version with additional metadata.
+
+Note that Commitizen ignores everything after `+` when it bumps the version. It is therefore safe to write different build-metadata between versions.
+
+You should normally not use this functionality, but if you decide to do, keep in mind that
+* Version `1.2.3+a`, and `1.2.3+b` are the same version! Tools should not use the string after `+` for version calculation. This is probably not a guarantee (example in helm) even tho it is in the spec.
+* It might be problematic having the metadata in place when doing upgrades depending on what tool you use.
 
 ## Avoid raising errors
 

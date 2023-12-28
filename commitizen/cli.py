@@ -308,6 +308,11 @@ data = {
                         "help": "bump to the given version (e.g: 1.5.3)",
                         "metavar": "MANUAL_VERSION",
                     },
+                    {
+                        "name": ["--build-metadata"],
+                        "help": "Add additional build-metadata to the version-number",
+                        "default": None,
+                    },
                 ],
             },
             {
