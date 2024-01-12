@@ -549,7 +549,7 @@ Choose version scheme
 | devrelease     | `0.1.1.dev1`   | `0.1.1-dev1`    |
 | dev and pre    | `1.0.0a3.dev1` | `1.0.0-a3-dev1` |
 
-Options: `sever`, `pep440`
+Options: `semver`, `pep440`
 
 Defaults to: `pep440`
 
