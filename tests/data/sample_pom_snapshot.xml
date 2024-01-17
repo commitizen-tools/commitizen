@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- PARENT -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.1.0</version>
+        <relativePath />
+    </parent>
+
+    <!-- BASICS -->
+    <groupId>io.github.commitizen-tools</groupId>
+    <artifactId>sample-maven-pom</artifactId>
+    <version>3.2.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <!-- DESCRIPTION -->
+    <name>Sample Maven POM</name>
+    <description>This is a sample POM</description>
+
+    <scm>
+        <url>${app.url}</url>
+        <tag>v@{project.version}</tag>
+    </scm>
+
+    <!-- PROPS / VERSIONS -->
+    <properties>
+        <!-- App -->
+        <app.url>hthttps://github.com/commitizen-tools/commitizen</app.url>
+
+        <!-- Java -->
+        <java.version>17</java.version>
+
+        <!-- Spring -->
+        <spring-boot.version>3.1.0</spring-boot.version>
+    </properties>
+
+    <!-- BOM DEPS -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-devtools</artifactId>
+                <version>${spring-boot.version}</version>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-actuator</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

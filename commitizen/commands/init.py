@@ -47,6 +47,10 @@ class ProjectInfo:
         return os.path.isfile("Cargo.toml")
 
     @property
+    def is_maven_project(self) -> bool:
+        return os.path.isfile("pom.xml")
+
+    @property
     def is_npm_package(self) -> bool:
         return os.path.isfile("package.json")
 
@@ -222,6 +226,7 @@ class Init:
             "commitizen": "commitizen: Fetch and set version in commitizen config (default)",
             "cargo": "cargo: Get and set version from Cargo.toml:project.version field",
             "composer": "composer: Get and set version from composer.json:project.version field",
+            "mvn": "mvn: Get and set version from pom.xml:project.version field",
             "npm": "npm: Get and set version from package.json:project.version field",
             "pep621": "pep621: Get and set version from pyproject.toml:project.version field",
             "poetry": "poetry: Get and set version from pyproject.toml:tool.poetry.version field",
@@ -236,6 +241,8 @@ class Init:
                 default_val = "pep621"
         elif self.project_info.is_rust_cargo:
             default_val = "cargo"
+        elif self.project_info.is_maven_project:
+            default_val = "mvn"
         elif self.project_info.is_npm_package:
             default_val = "npm"
         elif self.project_info.is_php_composer:

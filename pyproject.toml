@@ -93,6 +93,7 @@ restructuredtext = "commitizen.changelog_formats.restructuredtext:RestructuredTe
 cargo = "commitizen.providers:CargoProvider"
 commitizen = "commitizen.providers:CommitizenProvider"
 composer = "commitizen.providers:ComposerProvider"
+mvn = "commitizen.providers:MavenProvider"
 npm = "commitizen.providers:NpmProvider"
 pep621 = "commitizen.providers:Pep621Provider"
 poetry = "commitizen.providers:PoetryProvider"
