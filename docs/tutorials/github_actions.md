@@ -72,7 +72,7 @@ newely created version.
 
 Once the new tag is created, triggering an automatic publish command would be desired.
 
-In order to do so, the crendetial needs to be added with the information of our PyPI account.
+In order to do so, the credential needs to be added with the information of our PyPI account.
 
 Instead of using username and password, we suggest using [api token](https://pypi.org/help/#apitoken) generated from PyPI.
 
