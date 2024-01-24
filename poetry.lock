@@ -13,13 +13,13 @@ files = [
 
 [[package]]
 name = "argcomplete"
-version = "3.2.1"
+version = "3.2.2"
 description = "Bash tab completion for argparse"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "argcomplete-3.2.1-py3-none-any.whl", hash = "sha256:30891d87f3c1abe091f2142613c9d33cac84a5e15404489f033b20399b691fec"},
-    {file = "argcomplete-3.2.1.tar.gz", hash = "sha256:437f67fb9b058da5a090df505ef9be0297c4883993f3f56cb186ff087778cfb4"},
+    {file = "argcomplete-3.2.2-py3-none-any.whl", hash = "sha256:e44f4e7985883ab3e73a103ef0acd27299dbfe2dfed00142c35d4ddd3005901d"},
+    {file = "argcomplete-3.2.2.tar.gz", hash = "sha256:f3e49e8ea59b4026ee29548e24488af46e30c9de57d48638e24f54a1ea1000a2"},
 ]
 
 [package.extras]
