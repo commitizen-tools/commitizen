@@ -164,7 +164,9 @@ def get_filenames_in_commit(git_reference: str = ""):
         raise GitCommandError(c.err)
 
 
-def get_tags(dateformat: str = "%Y-%m-%d") -> list[GitTag]:
+def get_tags(
+    dateformat: str = "%Y-%m-%d", reachable_only: bool = False
+) -> list[GitTag]:
     inner_delimiter = "---inner_delimiter---"
     formatter = (
         f'"%(refname:lstrip=2){inner_delimiter}'
@@ -172,8 +174,12 @@ def get_tags(dateformat: str = "%Y-%m-%d") -> list[GitTag]:
         f"%(creatordate:format:{dateformat}){inner_delimiter}"
         f'%(object)"'
     )
-    c = cmd.run(f"git tag --format={formatter} --sort=-creatordate")
+    extra = "--merged" if reachable_only else ""
+    c = cmd.run(f"git tag --format={formatter} --sort=-creatordate {extra}")
     if c.return_code != 0:
+        if reachable_only and c.err == "fatal: malformed object name HEAD\n":
+            # this can happen if there are no commits in the repo yet
+            return []
         raise GitCommandError(c.err)
 
     if c.err:

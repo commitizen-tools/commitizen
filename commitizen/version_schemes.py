@@ -4,7 +4,7 @@ import re
 import sys
 import warnings
 from itertools import zip_longest
-from typing import TYPE_CHECKING, ClassVar, Protocol, Type, cast, runtime_checkable
+from typing import TYPE_CHECKING, Any, ClassVar, Protocol, Type, cast, runtime_checkable
 
 import importlib_metadata as metadata
 from packaging.version import InvalidVersion  # noqa: F401: Rexpose the common exception
@@ -91,6 +91,24 @@ class VersionProtocol(Protocol):
     @property
     def micro(self) -> int:
         """The third item of :attr:`release` or ``0`` if unavailable."""
+        raise NotImplementedError("must be implemented")
+
+    def __lt__(self, other: Any) -> bool:
+        raise NotImplementedError("must be implemented")
+
+    def __le__(self, other: Any) -> bool:
+        raise NotImplementedError("must be implemented")
+
+    def __eq__(self, other: object) -> bool:
+        raise NotImplementedError("must be implemented")
+
+    def __ge__(self, other: Any) -> bool:
+        raise NotImplementedError("must be implemented")
+
+    def __gt__(self, other: Any) -> bool:
+        raise NotImplementedError("must be implemented")
+
+    def __ne__(self, other: object) -> bool:
         raise NotImplementedError("must be implemented")
 
     def bump(
