@@ -9,7 +9,13 @@ import pytest
 from commitizen import cmd, exceptions, git
 from pytest_mock import MockFixture
 
-from tests.utils import FakeCommand, create_file_and_commit, create_tag
+from tests.utils import (
+    FakeCommand,
+    create_file_and_commit,
+    create_tag,
+    create_branch,
+    switch_branch,
+)
 
 
 def test_git_object_eq():
@@ -40,6 +46,29 @@ def test_get_tags(mocker: MockFixture):
         "commitizen.cmd.run", return_value=FakeCommand(out="", err="No tag available")
     )
     assert git.get_tags() == []
+
+
+def test_get_reachable_tags(tmp_commitizen_project):
+    with tmp_commitizen_project.as_cwd():
+        create_file_and_commit("Initial state")
+        create_tag("1.0.0")
+        # create develop
+        create_branch("develop")
+        switch_branch("develop")
+
+        # add a feature to develop
+        create_file_and_commit("develop")
+        create_tag("1.1.0b0")
+
+        # create staging
+        switch_branch("master")
+        create_file_and_commit("master")
+        create_tag("1.0.1")
+
+        tags = git.get_tags(reachable_only=True)
+        tag_names = set([t.name for t in tags])
+        # 1.1.0b0 is not present
+        assert tag_names == {"1.0.0", "1.0.1"}
 
 
 def test_get_tag_names(mocker: MockFixture):

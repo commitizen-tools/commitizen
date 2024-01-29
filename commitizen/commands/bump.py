@@ -421,7 +421,7 @@ class Bump:
         if not final_versions:
             return None
 
-        final_versions = sorted(final_versions)  # type: ignore [type-var]
+        final_versions = sorted(final_versions)
         current_index = final_versions.index(current_version)
         previous_index = current_index - 1
         if previous_index < 0:

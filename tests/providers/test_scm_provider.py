@@ -6,7 +6,13 @@ import pytest
 from commitizen.config.base_config import BaseConfig
 from commitizen.providers import get_provider
 from commitizen.providers.scm_provider import ScmProvider
-from tests.utils import create_file_and_commit, create_tag
+from tests.utils import (
+    create_branch,
+    create_file_and_commit,
+    create_tag,
+    merge_branch,
+    switch_branch,
+)
 
 
 @pytest.mark.parametrize(
@@ -22,7 +28,8 @@ from tests.utils import create_file_and_commit, create_tag
         # much more lenient but require a v prefix.
         ("v$version", "v0.1.0", "0.1.0"),
         ("v$version", "no-match-because-no-v-prefix", "0.0.0"),
-        ("v$version", "v-match-TAG_FORMAT_REGEXS", "-match-TAG_FORMAT_REGEXS"),
+        # no match because not a valid version
+        ("v$version", "v-match-TAG_FORMAT_REGEXS", "0.0.0"),
         ("version-$version", "version-0.1.0", "0.1.0"),
         ("version-$version", "version-0.1", "0.1"),
         ("version-$version", "version-0.1.0rc1", "0.1.0rc1"),
@@ -62,3 +69,48 @@ def test_scm_provider_default_without_commits_and_tags(config: BaseConfig):
     provider = get_provider(config)
     assert isinstance(provider, ScmProvider)
     assert provider.get_version() == "0.0.0"
+
+
+@pytest.mark.usefixtures("tmp_git_project")
+def test_scm_provider_default_with_commits_and_tags(config: BaseConfig):
+    config.settings["version_provider"] = "scm"
+
+    provider = get_provider(config)
+    assert isinstance(provider, ScmProvider)
+    assert provider.get_version() == "0.0.0"
+
+    create_file_and_commit("Initial state")
+    create_tag("1.0.0")
+    # create develop
+    create_branch("develop")
+    switch_branch("develop")
+
+    # add a feature to develop
+    create_file_and_commit("develop: add beta feature1")
+    assert provider.get_version() == "1.0.0"
+    create_tag("1.1.0b0")
+
+    # create staging
+    create_branch("staging")
+    switch_branch("staging")
+    create_file_and_commit("staging: Starting release candidate")
+    assert provider.get_version() == "1.1.0b0"
+    create_tag("1.1.0rc0")
+
+    # add another feature to develop
+    switch_branch("develop")
+    create_file_and_commit("develop: add beta feature2")
+    assert provider.get_version() == "1.1.0b0"
+    create_tag("1.2.0b0")
+
+    # add a hotfix to master
+    switch_branch("master")
+    create_file_and_commit("master: add hotfix")
+    assert provider.get_version() == "1.0.0"
+    create_tag("1.0.1")
+
+    # merge the hotfix to staging
+    switch_branch("staging")
+    merge_branch("master")
+
+    assert provider.get_version() == "1.1.0rc0"
