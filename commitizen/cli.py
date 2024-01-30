@@ -231,6 +231,16 @@ data = {
                         "type": str.upper,
                     },
                     {
+                        "name": ["--exact-increment"],
+                        "action": "store_true",
+                        "help": (
+                            "apply the exact changes that have been specified (or "
+                            "determined from the commit log), disabling logic that "
+                            "guesses the next version based on typical version "
+                            "progression when a prelease suffix is present."
+                        ),
+                    },
+                    {
                         "name": ["--check-consistency", "-cc"],
                         "help": (
                             "check consistency among versions defined in "

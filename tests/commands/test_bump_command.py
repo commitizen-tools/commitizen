@@ -315,6 +315,55 @@ def test_bump_command_prelease_increment(mocker: MockFixture):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_command_prelease_exact_mode(mocker: MockFixture):
+    # PRERELEASE
+    create_file_and_commit("feat: location")
+
+    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    tag_exists = git.tag_exist("0.2.0a0")
+    assert tag_exists is True
+
+    # PRERELEASE + PATCH BUMP
+    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes", "--exact-increment"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    tag_exists = git.tag_exist("0.2.0a1")
+    assert tag_exists is True
+
+    # PRERELEASE + MINOR BUMP
+    # --exact-increment allows the minor version to bump, and restart the prerelease
+    create_file_and_commit("feat: location")
+
+    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes", "--exact-increment"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    tag_exists = git.tag_exist("0.3.0a0")
+    assert tag_exists is True
+
+    # PRERELEASE + MAJOR BUMP
+    # --exact-increment allows the major version to bump, and restart the prerelease
+    testargs = [
+        "cz",
+        "bump",
+        "--prerelease",
+        "alpha",
+        "--yes",
+        "--increment=MAJOR",
+        "--exact-increment",
+    ]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    tag_exists = git.tag_exist("1.0.0a0")
+    assert tag_exists is True
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_on_git_with_hooks_no_verify_disabled(mocker: MockFixture):
     """Bump commit without --no-verify"""
     cmd.run("mkdir .git/hooks")

@@ -83,6 +83,43 @@ tdd_cases = [
     (("1.0.0-alpha1", None, "alpha", 0, None), "1.0.0-a2"),
 ]
 
+excact_cases = [
+    (("1.0.0", "PATCH", None, 0, None), "1.0.1"),
+    (("1.0.0", "MINOR", None, 0, None), "1.1.0"),
+    # with exact_increment=False: "1.0.0-b0"
+    (("1.0.0a1", "PATCH", "beta", 0, None), "1.0.1-b0"),
+    # with exact_increment=False: "1.0.0-b1"
+    (("1.0.0b0", "PATCH", "beta", 0, None), "1.0.1-b0"),
+    # with exact_increment=False: "1.0.0-rc0"
+    (("1.0.0b1", "PATCH", "rc", 0, None), "1.0.1-rc0"),
+    # with exact_increment=False: "1.0.0-rc1"
+    (("1.0.0rc0", "PATCH", "rc", 0, None), "1.0.1-rc0"),
+    # with exact_increment=False: "1.0.0-rc1-dev1"
+    (("1.0.0rc0", "PATCH", "rc", 0, 1), "1.0.1-rc0-dev1"),
+    # with exact_increment=False: "1.0.0-b0"
+    (("1.0.0a1", "MINOR", "beta", 0, None), "1.1.0-b0"),
+    # with exact_increment=False: "1.0.0-b1"
+    (("1.0.0b0", "MINOR", "beta", 0, None), "1.1.0-b0"),
+    # with exact_increment=False: "1.0.0-rc0"
+    (("1.0.0b1", "MINOR", "rc", 0, None), "1.1.0-rc0"),
+    # with exact_increment=False: "1.0.0-rc1"
+    (("1.0.0rc0", "MINOR", "rc", 0, None), "1.1.0-rc0"),
+    # with exact_increment=False: "1.0.0-rc1-dev1"
+    (("1.0.0rc0", "MINOR", "rc", 0, 1), "1.1.0-rc0-dev1"),
+    # with exact_increment=False: "2.0.0"
+    (("2.0.0b0", "MAJOR", None, 0, None), "3.0.0"),
+    # with exact_increment=False: "2.0.0"
+    (("2.0.0b0", "MINOR", None, 0, None), "2.1.0"),
+    # with exact_increment=False: "2.0.0"
+    (("2.0.0b0", "PATCH", None, 0, None), "2.0.1"),
+    # same with exact_increment=False
+    (("2.0.0b0", "MAJOR", "alpha", 0, None), "3.0.0-a0"),
+    # with exact_increment=False: "2.0.0b1"
+    (("2.0.0b0", "MINOR", "alpha", 0, None), "2.1.0-a0"),
+    # with exact_increment=False: "2.0.0b1"
+    (("2.0.0b0", "PATCH", "alpha", 0, None), "2.0.1-a0"),
+]
+
 
 @pytest.mark.parametrize(
     "test_input, expected",
@@ -101,6 +138,27 @@ def test_bump_semver_version(test_input, expected):
                 prerelease=prerelease,
                 prerelease_offset=prerelease_offset,
                 devrelease=devrelease,
+            )
+        )
+        == expected
+    )
+
+
+@pytest.mark.parametrize("test_input, expected", excact_cases)
+def test_bump_semver_version_force(test_input, expected):
+    current_version = test_input[0]
+    increment = test_input[1]
+    prerelease = test_input[2]
+    prerelease_offset = test_input[3]
+    devrelease = test_input[4]
+    assert (
+        str(
+            SemVer(current_version).bump(
+                increment=increment,
+                prerelease=prerelease,
+                prerelease_offset=prerelease_offset,
+                devrelease=devrelease,
+                exact_increment=True,
             )
         )
         == expected
