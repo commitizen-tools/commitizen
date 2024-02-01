@@ -113,6 +113,34 @@ Generate a **changelog** along with the new version and tag when bumping.
 cz bump --changelog
 ```
 
+### `--prerelease`
+
+The bump is a pre-release bump, meaning that in addition to a possible version bump the new version receives a
+pre-release segment compatible with the bump’s version scheme, where the segment consist of a _phase_ and a
+non-negative number. Supported options for `--prerelease` are the following phase names  `alpha`, `beta`, or
+`rc` (release candidate). For more details, refer to the
+[Python Packaging User Guide](https://packaging.python.org/en/latest/specifications/version-specifiers/#pre-releases).
+
+Note that as per [semantic versioning spec](https://semver.org/#spec-item-9)
+
+> Pre-release versions have a lower precedence than the associated normal version. A pre-release version
+> indicates that the version is unstable and might not satisfy the intended compatibility requirements
+> as denoted by its associated normal version.
+
+For example, the following versions (using the [PEP 440](https://peps.python.org/pep-0440/) scheme) are ordered
+by their precedence and showcase how a release might flow through a development cycle:
+
+- `1.0.0` is the current published version
+- `1.0.1a0` after committing a `fix:` for pre-release
+- `1.1.0a1` after committing an additional `feat:` for pre-release
+- `1.1.0b0` after bumping a beta release
+- `1.1.0rc0` after bumping the release candidate
+- `1.1.0` next feature release
+
+Also note that bumping pre-releases _maintains linearity_: bumping of a pre-release with lower precedence than
+the current pre-release phase maintains the current phase of higher precedence. For example, if the current
+version is `1.0.0b1` then bumping with `--prerelease alpha` will continue to bump the “beta” phase.
+
 ### `--check-consistency`
 
 Check whether the versions defined in `version_files` and the version in commitizen

@@ -208,9 +208,9 @@ def test_bump_command_increment_option(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_command_prelease(mocker: MockFixture):
-    # PRERELEASE
     create_file_and_commit("feat: location")
 
+    # Create an alpha pre-release.
     testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
@@ -218,13 +218,100 @@ def test_bump_command_prelease(mocker: MockFixture):
     tag_exists = git.tag_exist("0.2.0a0")
     assert tag_exists is True
 
-    # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
+    # Create a beta pre-release.
+    testargs = ["cz", "bump", "--prerelease", "beta", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    tag_exists = git.tag_exist("0.2.0b0")
+    assert tag_exists is True
+
+    # With a current beta pre-release, bumping alpha must bump beta
+    # because we can't bump "backwards".
+    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    tag_exists = git.tag_exist("0.2.0a1")
+    assert tag_exists is False
+    tag_exists = git.tag_exist("0.2.0b1")
+    assert tag_exists is True
+
+    # Create a rc pre-release.
+    testargs = ["cz", "bump", "--prerelease", "rc", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    tag_exists = git.tag_exist("0.2.0rc0")
+    assert tag_exists is True
+
+    # With a current rc pre-release, bumping alpha must bump rc.
+    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    tag_exists = git.tag_exist("0.2.0a1")
+    assert tag_exists is False
+    tag_exists = git.tag_exist("0.2.0b2")
+    assert tag_exists is False
+    tag_exists = git.tag_exist("0.2.0rc1")
+    assert tag_exists is True
+
+    # With a current rc pre-release, bumping beta must bump rc.
+    testargs = ["cz", "bump", "--prerelease", "beta", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    tag_exists = git.tag_exist("0.2.0a2")
+    assert tag_exists is False
+    tag_exists = git.tag_exist("0.2.0b2")
+    assert tag_exists is False
+    tag_exists = git.tag_exist("0.2.0rc2")
+    assert tag_exists is True
+
+    # Create a final release from the current pre-release.
     testargs = ["cz", "bump"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_command_prelease_increment(mocker: MockFixture):
+    # FINAL RELEASE
+    create_file_and_commit("fix: location")
+
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    assert git.tag_exist("0.1.1")
+
+    # PRERELEASE
+    create_file_and_commit("fix: location")
+
+    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    assert git.tag_exist("0.1.2a0")
+
+    create_file_and_commit("feat: location")
+
+    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    assert git.tag_exist("0.2.0a0")
+
+    create_file_and_commit("feat!: breaking")
+
+    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    assert git.tag_exist("1.0.0a0")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")

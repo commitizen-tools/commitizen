@@ -44,10 +44,11 @@ local_versions = [
     (("4.5.0+0.2.0", "MAJOR", None, 0, None), "4.5.0+1.0.0"),
 ]
 
-# this cases should be handled gracefully
-unexpected_cases = [
-    (("0.1.1rc0", None, "alpha", 0, None), "0.1.1-a0"),
-    (("0.1.1b1", None, "alpha", 0, None), "0.1.1-a0"),
+# never bump backwards on pre-releases
+linear_prerelease_cases = [
+    (("0.1.1b1", None, "alpha", 0, None), "0.1.1-b2"),
+    (("0.1.1rc0", None, "alpha", 0, None), "0.1.1-rc1"),
+    (("0.1.1rc0", None, "beta", 0, None), "0.1.1-rc1"),
 ]
 
 weird_cases = [
@@ -84,7 +85,7 @@ tdd_cases = [
 
 @pytest.mark.parametrize(
     "test_input, expected",
-    itertools.chain(tdd_cases, weird_cases, simple_flow, unexpected_cases),
+    itertools.chain(tdd_cases, weird_cases, simple_flow, linear_prerelease_cases),
 )
 def test_bump_semver_version(test_input, expected):
     current_version = test_input[0]

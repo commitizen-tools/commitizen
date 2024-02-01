@@ -43,10 +43,11 @@ local_versions = [
     (("4.5.0+0.2.0", "MAJOR", None, 0, None), "4.5.0+1.0.0"),
 ]
 
-# this cases should be handled gracefully
-unexpected_cases = [
-    (("0.1.1rc0", None, "alpha", 0, None), "0.1.1a0"),
-    (("0.1.1b1", None, "alpha", 0, None), "0.1.1a0"),
+# never bump backwards on pre-releases
+linear_prerelease_cases = [
+    (("0.1.1b1", None, "alpha", 0, None), "0.1.1b2"),
+    (("0.1.1rc0", None, "alpha", 0, None), "0.1.1rc1"),
+    (("0.1.1rc0", None, "beta", 0, None), "0.1.1rc1"),
 ]
 
 weird_cases = [
@@ -78,10 +79,76 @@ tdd_cases = [
     (("1.0.0rc1", None, "rc", 0, None), "1.0.0rc2"),
 ]
 
+# additional pre-release tests run through various release scenarios
+prerelease_cases = [
+    #
+    (("3.3.3", "PATCH", "alpha", 0, None), "3.3.4a0"),
+    (("3.3.4a0", "PATCH", "alpha", 0, None), "3.3.4a1"),
+    (("3.3.4a1", "MINOR", "alpha", 0, None), "3.4.0a0"),
+    (("3.4.0a0", "PATCH", "alpha", 0, None), "3.4.0a1"),
+    (("3.4.0a1", "MINOR", "alpha", 0, None), "3.4.0a2"),
+    (("3.4.0a2", "MAJOR", "alpha", 0, None), "4.0.0a0"),
+    (("4.0.0a0", "PATCH", "alpha", 0, None), "4.0.0a1"),
+    (("4.0.0a1", "MINOR", "alpha", 0, None), "4.0.0a2"),
+    (("4.0.0a2", "MAJOR", "alpha", 0, None), "4.0.0a3"),
+    #
+    (("1.0.0", "PATCH", "alpha", 0, None), "1.0.1a0"),
+    (("1.0.1a0", "PATCH", "alpha", 0, None), "1.0.1a1"),
+    (("1.0.1a1", "MINOR", "alpha", 0, None), "1.1.0a0"),
+    (("1.1.0a0", "PATCH", "alpha", 0, None), "1.1.0a1"),
+    (("1.1.0a1", "MINOR", "alpha", 0, None), "1.1.0a2"),
+    (("1.1.0a2", "MAJOR", "alpha", 0, None), "2.0.0a0"),
+    #
+    (("1.0.0", "MINOR", "alpha", 0, None), "1.1.0a0"),
+    (("1.1.0a0", "PATCH", "alpha", 0, None), "1.1.0a1"),
+    (("1.1.0a1", "MINOR", "alpha", 0, None), "1.1.0a2"),
+    (("1.1.0a2", "PATCH", "alpha", 0, None), "1.1.0a3"),
+    (("1.1.0a3", "MAJOR", "alpha", 0, None), "2.0.0a0"),
+    #
+    (("1.0.0", "MAJOR", "alpha", 0, None), "2.0.0a0"),
+    (("2.0.0a0", "MINOR", "alpha", 0, None), "2.0.0a1"),
+    (("2.0.0a1", "PATCH", "alpha", 0, None), "2.0.0a2"),
+    (("2.0.0a2", "MAJOR", "alpha", 0, None), "2.0.0a3"),
+    (("2.0.0a3", "MINOR", "alpha", 0, None), "2.0.0a4"),
+    (("2.0.0a4", "PATCH", "alpha", 0, None), "2.0.0a5"),
+    (("2.0.0a5", "MAJOR", "alpha", 0, None), "2.0.0a6"),
+    #
+    (("1.0.1a0", "PATCH", None, 0, None), "1.0.1"),
+    (("1.0.1a0", "MINOR", None, 0, None), "1.1.0"),
+    (("1.0.1a0", "MAJOR", None, 0, None), "2.0.0"),
+    #
+    (("1.1.0a0", "PATCH", None, 0, None), "1.1.0"),
+    (("1.1.0a0", "MINOR", None, 0, None), "1.1.0"),
+    (("1.1.0a0", "MAJOR", None, 0, None), "2.0.0"),
+    #
+    (("2.0.0a0", "MINOR", None, 0, None), "2.0.0"),
+    (("2.0.0a0", "MAJOR", None, 0, None), "2.0.0"),
+    (("2.0.0a0", "PATCH", None, 0, None), "2.0.0"),
+    #
+    (("3.0.0a1", None, None, 0, None), "3.0.0"),
+    (("3.0.0b1", None, None, 0, None), "3.0.0"),
+    (("3.0.0rc1", None, None, 0, None), "3.0.0"),
+    #
+    (("3.1.4", None, "alpha", 0, None), "3.1.4a0"),
+    (("3.1.4", None, "beta", 0, None), "3.1.4b0"),
+    (("3.1.4", None, "rc", 0, None), "3.1.4rc0"),
+    #
+    (("3.1.4", None, "alpha", 0, None), "3.1.4a0"),
+    (("3.1.4a0", "PATCH", "alpha", 0, None), "3.1.4a1"),  # UNEXPECTED!
+    (("3.1.4a0", "MINOR", "alpha", 0, None), "3.2.0a0"),
+    (("3.1.4a0", "MAJOR", "alpha", 0, None), "4.0.0a0"),
+]
+
 
 @pytest.mark.parametrize(
     "test_input,expected",
-    itertools.chain(tdd_cases, weird_cases, simple_flow, unexpected_cases),
+    itertools.chain(
+        tdd_cases,
+        weird_cases,
+        simple_flow,
+        linear_prerelease_cases,
+        prerelease_cases,
+    ),
 )
 def test_bump_pep440_version(test_input, expected):
     current_version = test_input[0]
