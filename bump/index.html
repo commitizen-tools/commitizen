@@ -469,6 +469,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#-prerelease" class="md-nav__link">
+    <span class="md-ellipsis">
+      --prerelease
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#-check-consistency" class="md-nav__link">
     <span class="md-ellipsis">
       --check-consistency
@@ -1188,6 +1197,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#-prerelease" class="md-nav__link">
+    <span class="md-ellipsis">
+      --prerelease
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#-check-consistency" class="md-nav__link">
     <span class="md-ellipsis">
       --check-consistency
@@ -1582,6 +1600,31 @@ options:
 <p>Generate a <strong>changelog</strong> along with the new version and tag when bumping.</p>
 <div class="highlight"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--changelog
 </code></pre></div>
+<h3 id="-prerelease"><code>--prerelease</code><a class="headerlink" href="#-prerelease" title="Permanent link">&para;</a></h3>
+<p>The bump is a pre-release bump, meaning that in addition to a possible version bump the new version receives a
+pre-release segment compatible with the bump’s version scheme, where the segment consist of a <em>phase</em> and a
+non-negative number. Supported options for <code>--prerelease</code> are the following phase names  <code>alpha</code>, <code>beta</code>, or
+<code>rc</code> (release candidate). For more details, refer to the
+<a href="https://packaging.python.org/en/latest/specifications/version-specifiers/#pre-releases">Python Packaging User Guide</a>.</p>
+<p>Note that as per <a href="https://semver.org/#spec-item-9">semantic versioning spec</a></p>
+<blockquote>
+<p>Pre-release versions have a lower precedence than the associated normal version. A pre-release version
+indicates that the version is unstable and might not satisfy the intended compatibility requirements
+as denoted by its associated normal version.</p>
+</blockquote>
+<p>For example, the following versions (using the <a href="https://peps.python.org/pep-0440/">PEP 440</a> scheme) are ordered
+by their precedence and showcase how a release might flow through a development cycle:</p>
+<ul>
+<li><code>1.0.0</code> is the current published version</li>
+<li><code>1.0.1a0</code> after committing a <code>fix:</code> for pre-release</li>
+<li><code>1.1.0a1</code> after committing an additional <code>feat:</code> for pre-release</li>
+<li><code>1.1.0b0</code> after bumping a beta release</li>
+<li><code>1.1.0rc0</code> after bumping the release candidate</li>
+<li><code>1.1.0</code> next feature release</li>
+</ul>
+<p>Also note that bumping pre-releases <em>maintains linearity</em>: bumping of a pre-release with lower precedence than
+the current pre-release phase maintains the current phase of higher precedence. For example, if the current
+version is <code>1.0.0b1</code> then bumping with <code>--prerelease alpha</code> will continue to bump the “beta” phase.</p>
 <h3 id="-check-consistency"><code>--check-consistency</code><a class="headerlink" href="#-check-consistency" title="Permanent link">&para;</a></h3>
 <p>Check whether the versions defined in <code>version_files</code> and the version in commitizen
 configuration are consistent before bumping version.</p>
