@@ -1,4 +1,10 @@
 
+## v3.14.0 (2024-02-01)
+
+### Feat
+
+- properly bump versions between prereleases (#799)
+
 ## v3.13.0 (2023-12-03)
 
 ### Feat
