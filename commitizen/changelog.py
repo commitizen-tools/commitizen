@@ -24,6 +24,7 @@ Extra:
 - [x] hook after changelog is generated (api calls)
 - [x] add support for change_type maps
 """
+
 from __future__ import annotations
 
 import re

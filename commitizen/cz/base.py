@@ -37,9 +37,9 @@ class BaseCommitizen(metaclass=ABCMeta):
     change_type_order: list[str] | None = None
 
     # Executed per message parsed by the commitizen
-    changelog_message_builder_hook: None | (
-        Callable[[dict, git.GitCommit], dict]
-    ) = None
+    changelog_message_builder_hook: None | (Callable[[dict, git.GitCommit], dict]) = (
+        None
+    )
 
     # Executed only at the end of the changelog generation
     changelog_hook: Callable[[str, str | None], str] | None = None

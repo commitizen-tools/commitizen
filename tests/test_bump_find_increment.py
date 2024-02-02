@@ -2,6 +2,7 @@
 CC: Conventional commits
 SVE: Semantic version at the end
 """
+
 import pytest
 
 from commitizen import bump

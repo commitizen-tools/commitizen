@@ -1298,9 +1298,9 @@ def test_render_changelog_with_changelog_message_builder_hook(
     gitcommits, tags, any_changelog_format: ChangelogFormat
 ):
     def changelog_message_builder_hook(message: dict, commit: git.GitCommit) -> dict:
-        message[
-            "message"
-        ] = f"{message['message']} [link](github.com/232323232) {commit.author} {commit.author_email}"
+        message["message"] = (
+            f"{message['message']} [link](github.com/232323232) {commit.author} {commit.author_email}"
+        )
         return message
 
     parser = ConventionalCommitsCz.commit_parser
