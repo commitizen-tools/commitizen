@@ -498,7 +498,8 @@ def test_answer_unicode(config_with_unicode):
     }
     message = cz.message(answers)
     assert (
-        message == "✨ feature: this feature enables customization through a config file"
+        message
+        == "✨ feature: this feature enables customization through a config file"
     )
 
     cz = CustomizeCommitsCz(config_with_unicode)
@@ -574,7 +575,8 @@ def test_commit_parser(config):
 def test_commit_parser_unicode(config_with_unicode):
     cz = CustomizeCommitsCz(config_with_unicode)
     assert (
-        cz.commit_parser == "^(?P<change_type>✨ feature|🐛 bug fix):\\s(?P<message>.*)?"
+        cz.commit_parser
+        == "^(?P<change_type>✨ feature|🐛 bug fix):\\s(?P<message>.*)?"
     )
 
 
