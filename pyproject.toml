@@ -141,6 +141,8 @@ addopts = "--strict-markers"
 
 [tool.ruff]
 line-length = 88
+
+[tool.ruff.lint]
 select = ["E", "F", "UP"]
 ignore = [
     "E501",
@@ -148,10 +150,10 @@ ignore = [
     "D415"
 ]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["commitizen", "tests"]
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "google"
 
 [tool.mypy]
