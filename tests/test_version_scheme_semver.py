@@ -1,4 +1,5 @@
 import itertools
+import random
 
 import pytest
 
@@ -135,3 +136,76 @@ def test_semver_scheme_property():
 
 def test_semver_implement_version_protocol():
     assert isinstance(SemVer("0.0.1"), VersionProtocol)
+
+
+def test_semver_sortable():
+    test_input = [x[0][0] for x in simple_flow]
+    test_input.extend([x[1] for x in simple_flow])
+    # randomize
+    random_input = [SemVer(x) for x in random.sample(test_input, len(test_input))]
+    assert len(random_input) == len(test_input)
+    sorted_result = [str(x) for x in sorted(random_input)]
+    assert sorted_result == [
+        "0.1.0",
+        "0.1.0",
+        "0.1.1-dev1",
+        "0.1.1",
+        "0.1.1",
+        "0.2.0",
+        "0.2.0",
+        "0.2.0",
+        "0.3.0-dev1",
+        "0.3.0",
+        "0.3.0",
+        "0.3.0",
+        "0.3.0",
+        "0.3.1-a0",
+        "0.3.1-a0",
+        "0.3.1-a0",
+        "0.3.1-a0",
+        "0.3.1-a1",
+        "0.3.1-a1",
+        "0.3.1-a1",
+        "0.3.1",
+        "0.3.1",
+        "0.3.1",
+        "0.3.2",
+        "0.4.2",
+        "1.0.0-a0",
+        "1.0.0-a0",
+        "1.0.0-a1",
+        "1.0.0-a1",
+        "1.0.0-a1",
+        "1.0.0-a1",
+        "1.0.0-a2-dev0",
+        "1.0.0-a2-dev0",
+        "1.0.0-a2-dev1",
+        "1.0.0-a2",
+        "1.0.0-a3-dev0",
+        "1.0.0-a3-dev0",
+        "1.0.0-a3-dev1",
+        "1.0.0-b0",
+        "1.0.0-b0",
+        "1.0.0-b0",
+        "1.0.0-b1",
+        "1.0.0-b1",
+        "1.0.0-rc0",
+        "1.0.0-rc0",
+        "1.0.0-rc0",
+        "1.0.0-rc0",
+        "1.0.0-rc1-dev1",
+        "1.0.0-rc1",
+        "1.0.0",
+        "1.0.0",
+        "1.0.1",
+        "1.0.1",
+        "1.0.2",
+        "1.0.2",
+        "1.1.0",
+        "1.1.0",
+        "1.2.0",
+        "1.2.0",
+        "1.2.1",
+        "1.2.1",
+        "2.0.0",
+    ]
