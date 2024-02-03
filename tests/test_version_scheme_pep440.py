@@ -1,6 +1,8 @@
 import itertools
+import random
 
 import pytest
+
 from commitizen.version_schemes import Pep440, VersionProtocol
 
 simple_flow = [
@@ -140,6 +142,29 @@ prerelease_cases = [
 ]
 
 
+# test driven development
+sortability = [
+    "0.10.0a0",
+    "0.1.1",
+    "0.1.2",
+    "2.1.1",
+    "3.0.0",
+    "0.9.1a0",
+    "1.0.0a1",
+    "1.0.0b1",
+    "1.0.0a1",
+    "1.0.0a2.dev1",
+    "1.0.0rc2",
+    "1.0.0a3.dev0",
+    "1.0.0a2.dev0",
+    "1.0.0a3.dev1",
+    "1.0.0a2.dev0",
+    "1.0.0b0",
+    "1.0.0rc0",
+    "1.0.0rc1",
+]
+
+
 @pytest.mark.parametrize(
     "test_input,expected",
     itertools.chain(
@@ -198,3 +223,76 @@ def test_pep440_scheme_property():
 
 def test_pep440_implement_version_protocol():
     assert isinstance(Pep440("0.0.1"), VersionProtocol)
+
+
+def test_pep440_sortable():
+    test_input = [x[0][0] for x in simple_flow]
+    test_input.extend([x[1] for x in simple_flow])
+    # randomize
+    random_input = [Pep440(x) for x in random.sample(test_input, len(test_input))]
+    assert len(random_input) == len(test_input)
+    sorted_result = [str(x) for x in sorted(random_input)]
+    assert sorted_result == [
+        "0.1.0",
+        "0.1.0",
+        "0.1.1.dev1",
+        "0.1.1",
+        "0.1.1",
+        "0.2.0",
+        "0.2.0",
+        "0.2.0",
+        "0.3.0.dev1",
+        "0.3.0",
+        "0.3.0",
+        "0.3.0",
+        "0.3.0",
+        "0.3.1a0",
+        "0.3.1a0",
+        "0.3.1a0",
+        "0.3.1a0",
+        "0.3.1a1",
+        "0.3.1a1",
+        "0.3.1a1",
+        "0.3.1",
+        "0.3.1",
+        "0.3.1",
+        "0.3.2",
+        "0.4.2",
+        "1.0.0a0",
+        "1.0.0a0",
+        "1.0.0a1",
+        "1.0.0a1",
+        "1.0.0a1",
+        "1.0.0a1",
+        "1.0.0a2.dev0",
+        "1.0.0a2.dev0",
+        "1.0.0a2.dev1",
+        "1.0.0a2",
+        "1.0.0a3.dev0",
+        "1.0.0a3.dev0",
+        "1.0.0a3.dev1",
+        "1.0.0b0",
+        "1.0.0b0",
+        "1.0.0b0",
+        "1.0.0b1",
+        "1.0.0b1",
+        "1.0.0rc0",
+        "1.0.0rc0",
+        "1.0.0rc0",
+        "1.0.0rc0",
+        "1.0.0rc1.dev1",
+        "1.0.0rc1",
+        "1.0.0",
+        "1.0.0",
+        "1.0.1",
+        "1.0.1",
+        "1.0.2",
+        "1.0.2",
+        "1.1.0",
+        "1.1.0",
+        "1.2.0",
+        "1.2.0",
+        "1.2.1",
+        "1.2.1",
+        "2.0.0",
+    ]
