@@ -1,4 +1,11 @@
 
+## v3.14.1 (2024-02-04)
+
+### Fix
+
+- **bump**: remove unused method
+- **scm**: only search tags that are reachable by the current commit
+
 ## v3.14.0 (2024-02-01)
 
 ### Feat
