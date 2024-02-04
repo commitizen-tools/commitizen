@@ -27,7 +27,6 @@ from commitizen.providers import get_provider
 from commitizen.version_schemes import (
     get_version_scheme,
     InvalidVersion,
-    VersionProtocol,
 )
 
 logger = getLogger("commitizen")
@@ -397,33 +396,3 @@ class Bump:
         if self.no_verify:
             commit_args.append("--no-verify")
         return " ".join(commit_args)
-
-    def find_previous_final_version(
-        self, current_version: VersionProtocol
-    ) -> VersionProtocol | None:
-        tag_format: str = self.bump_settings["tag_format"]
-        current = bump.normalize_tag(
-            current_version,
-            tag_format=tag_format,
-            scheme=self.scheme,
-        )
-
-        final_versions = []
-        for tag in git.get_tag_names():
-            assert tag
-            try:
-                version = self.scheme(tag)
-                if not version.is_prerelease or tag == current:
-                    final_versions.append(version)
-            except InvalidVersion:
-                continue
-
-        if not final_versions:
-            return None
-
-        final_versions = sorted(final_versions)
-        current_index = final_versions.index(current_version)
-        previous_index = current_index - 1
-        if previous_index < 0:
-            return None
-        return final_versions[previous_index]
