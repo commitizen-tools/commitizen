@@ -209,20 +209,9 @@ class Bump:
             scheme=self.scheme,
         )
 
-        is_initial = self.is_initial_tag(current_tag_version, is_yes)
-        if is_initial:
-            commits = git.get_commits()
-        else:
-            commits = git.get_commits(current_tag_version)
-
         # If user specified changelog_to_stdout, they probably want the
         # changelog to be generated as well, this is the most intuitive solution
         self.changelog = self.changelog or bool(self.changelog_to_stdout)
-
-        # No commits, there is no need to create an empty tag.
-        # Unless we previously had a prerelease.
-        if not commits and not current_version.is_prerelease:
-            raise NoCommitsFoundError("[NO_COMMITS_FOUND]\n" "No new commits found.")
 
         if manual_version:
             try:
@@ -234,6 +223,19 @@ class Bump:
                 ) from exc
         else:
             if increment is None:
+                is_initial = self.is_initial_tag(current_tag_version, is_yes)
+                if is_initial:
+                    commits = git.get_commits()
+                else:
+                    commits = git.get_commits(current_tag_version)
+
+                # No commits, there is no need to create an empty tag.
+                # Unless we previously had a prerelease.
+                if not commits and not current_version.is_prerelease:
+                    raise NoCommitsFoundError(
+                        "[NO_COMMITS_FOUND]\n" "No new commits found."
+                    )
+
                 increment = self.find_increment(commits)
 
             # It may happen that there are commits, but they are not eligible
