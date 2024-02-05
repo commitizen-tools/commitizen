@@ -4,7 +4,16 @@ import re
 import sys
 import warnings
 from itertools import zip_longest
-from typing import TYPE_CHECKING, Any, ClassVar, Protocol, Type, cast, runtime_checkable
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    ClassVar,
+    Literal,
+    Protocol,
+    Type,
+    cast,
+    runtime_checkable,
+)
 
 import importlib_metadata as metadata
 from packaging.version import InvalidVersion  # noqa: F401: Rexpose the common exception
@@ -28,6 +37,8 @@ if TYPE_CHECKING:
         from typing import Self
 
 
+Increment: TypeAlias = Literal["MAJOR", "MINOR", "PATCH"]
+Prerelease: TypeAlias = Literal["alpha", "beta", "rc"]
 DEFAULT_VERSION_PARSER = r"v?(?P<version>([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?(\w+)?)"
 
 
@@ -113,8 +124,8 @@ class VersionProtocol(Protocol):
 
     def bump(
         self,
-        increment: str,
-        prerelease: str | None = None,
+        increment: Increment | None,
+        prerelease: Prerelease | None = None,
         prerelease_offset: int = 0,
         devrelease: int | None = None,
         is_local_version: bool = False,
@@ -203,7 +214,7 @@ class BaseVersion(_BaseVersion):
 
         return f"+{build_metadata}"
 
-    def increment_base(self, increment: str | None = None) -> str:
+    def increment_base(self, increment: Increment | None = None) -> str:
         prev_release = list(self.release)
         increments = [MAJOR, MINOR, PATCH]
         base = dict(zip_longest(increments, prev_release, fillvalue=0))
@@ -222,8 +233,8 @@ class BaseVersion(_BaseVersion):
 
     def bump(
         self,
-        increment: str,
-        prerelease: str | None = None,
+        increment: Increment | None,
+        prerelease: Prerelease | None = None,
         prerelease_offset: int = 0,
         devrelease: int | None = None,
         is_local_version: bool = False,

@@ -4,18 +4,19 @@ import os
 import re
 from collections import OrderedDict
 from string import Template
+from typing import cast
 
 from commitizen.defaults import MAJOR, MINOR, PATCH, bump_message, encoding
 from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import GitCommit, smart_open
-from commitizen.version_schemes import DEFAULT_SCHEME, Version, VersionScheme
+from commitizen.version_schemes import DEFAULT_SCHEME, Increment, Version, VersionScheme
 
 VERSION_TYPES = [None, PATCH, MINOR, MAJOR]
 
 
 def find_increment(
     commits: list[GitCommit], regex: str, increments_map: dict | OrderedDict
-) -> str | None:
+) -> Increment | None:
     if isinstance(increments_map, dict):
         increments_map = OrderedDict(increments_map)
 
@@ -42,7 +43,7 @@ def find_increment(
                 if increment == MAJOR:
                     break
 
-    return increment
+    return cast(Increment, increment)
 
 
 def update_version_in_files(
