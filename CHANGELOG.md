@@ -1,4 +1,10 @@
 
+## v3.15.0 (2024-02-17)
+
+### Feat
+
+- **bump**: functionality to add build-metadata to version string
+
 ## v3.14.1 (2024-02-04)
 
 ### Fix
