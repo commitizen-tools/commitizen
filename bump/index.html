@@ -574,6 +574,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#-build-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      --build-metadata
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1300,6 +1309,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#-build-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      --build-metadata
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1547,7 +1565,7 @@
 usage:<span class="w"> </span>cz<span class="w"> </span>bump<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>--dry-run<span class="o">]</span><span class="w"> </span><span class="o">[</span>--files-only<span class="o">]</span><span class="w"> </span><span class="o">[</span>--local-version<span class="o">]</span><span class="w"> </span><span class="o">[</span>--changelog<span class="o">]</span><span class="w"> </span><span class="o">[</span>--no-verify<span class="o">]</span><span class="w"> </span><span class="o">[</span>--yes<span class="o">]</span><span class="w"> </span><span class="o">[</span>--tag-format<span class="w"> </span>TAG_FORMAT<span class="o">]</span>
 <span class="w">               </span><span class="o">[</span>--bump-message<span class="w"> </span>BUMP_MESSAGE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--prerelease<span class="w"> </span><span class="o">{</span>alpha,beta,rc<span class="o">}]</span><span class="w"> </span><span class="o">[</span>--devrelease<span class="w"> </span>DEVRELEASE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--increment<span class="w"> </span><span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span>
 <span class="w">               </span><span class="o">[</span>--check-consistency<span class="o">]</span><span class="w"> </span><span class="o">[</span>--annotated-tag<span class="o">]</span><span class="w"> </span><span class="o">[</span>--gpg-sign<span class="o">]</span><span class="w"> </span><span class="o">[</span>--changelog-to-stdout<span class="o">]</span><span class="w"> </span><span class="o">[</span>--git-output-to-stderr<span class="o">]</span><span class="w"> </span><span class="o">[</span>--retry<span class="o">]</span><span class="w"> </span><span class="o">[</span>--major-version-zero<span class="o">]</span>
-<span class="w">               </span><span class="o">[</span>--prerelease-offset<span class="w"> </span>PRERELEASE_OFFSET<span class="o">]</span><span class="w"> </span><span class="o">[</span>--version-scheme<span class="w"> </span><span class="o">{</span>semver,pep440<span class="o">}]</span><span class="w"> </span><span class="o">[</span>--version-type<span class="w"> </span><span class="o">{</span>semver,pep440<span class="o">}]</span>
+<span class="w">               </span><span class="o">[</span>--prerelease-offset<span class="w"> </span>PRERELEASE_OFFSET<span class="o">]</span><span class="w"> </span><span class="o">[</span>--version-scheme<span class="w"> </span><span class="o">{</span>semver,pep440<span class="o">}]</span><span class="w"> </span><span class="o">[</span>--version-type<span class="w"> </span><span class="o">{</span>semver,pep440<span class="o">}]</span><span class="w"> </span><span class="o">[</span>--build-metadata<span class="w"> </span>BUILD_METADATA<span class="o">]</span>
 <span class="w">               </span><span class="o">[</span>MANUAL_VERSION<span class="o">]</span>
 
 positional<span class="w"> </span>arguments:
@@ -1587,6 +1605,8 @@ options:
 <span class="w">                        </span>choose<span class="w"> </span>version<span class="w"> </span>scheme
 <span class="w">  </span>--version-type<span class="w"> </span><span class="o">{</span>semver,pep440<span class="o">}</span>
 <span class="w">                        </span>Deprecated,<span class="w"> </span>use<span class="w"> </span>--version-scheme
+<span class="w">  </span>--build-metadata<span class="w"> </span><span class="o">{</span>BUILD_METADATA<span class="o">}</span>
+<span class="w">                        </span>additional<span class="w"> </span>metadata<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>version<span class="w"> </span>string
 </code></pre></div>
 <h3 id="-files-only"><code>--files-only</code><a class="headerlink" href="#-files-only" title="Permanent link">&para;</a></h3>
 <p>Bumps the version in the files defined in <code>version_files</code> without creating a commit and tag on the git repository,</p>
@@ -1737,6 +1757,18 @@ See <a href="../customization/#customizing-the-changelog-template">the template 
 <div class="highlight"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--changelog<span class="w"> </span>--extra<span class="w"> </span><span class="nv">key</span><span class="o">=</span>value<span class="w"> </span>-e<span class="w"> </span><span class="nv">short</span><span class="o">=</span><span class="s2">&quot;quoted value&quot;</span>
 </code></pre></div>
 <p>See <a href="../customization/#customizing-the-changelog-template">the template customization section</a>.</p>
+<h3 id="-build-metadata"><code>--build-metadata</code><a class="headerlink" href="#-build-metadata" title="Permanent link">&para;</a></h3>
+<p>Provides a way to specify additional metadata in the version string. This parameter is not compatible with <code>--local-version</code> as it uses the same part of the version string.</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--build-metadata<span class="w"> </span>yourmetadata
+</code></pre></div>
+<p>Will create a version like <code>1.1.2+yourmetadata</code>.
+This can be useful for multiple things
+* Git hash in version
+* Labeling the version with additional metadata.</p>
+<p>Note that Commitizen ignores everything after <code>+</code> when it bumps the version. It is therefore safe to write different build-metadata between versions.</p>
+<p>You should normally not use this functionality, but if you decide to do, keep in mind that
+* Version <code>1.2.3+a</code>, and <code>1.2.3+b</code> are the same version! Tools should not use the string after <code>+</code> for version calculation. This is probably not a guarantee (example in helm) even tho it is in the spec.
+* It might be problematic having the metadata in place when doing upgrades depending on what tool you use.</p>
 <h2 id="avoid-raising-errors">Avoid raising errors<a class="headerlink" href="#avoid-raising-errors" title="Permanent link">&para;</a></h2>
 <p>Some situations from commitizen raise an exit code different than 0.
 If the error code is different than 0, any CI or script running commitizen might be interrupted.</p>
