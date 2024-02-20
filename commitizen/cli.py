@@ -231,13 +231,16 @@ data = {
                         "type": str.upper,
                     },
                     {
-                        "name": ["--exact-increment"],
-                        "action": "store_true",
+                        "name": ["--increment-mode"],
+                        "choices": ["linear", "exact"],
+                        "default": "linear",
                         "help": (
-                            "apply the exact changes that have been specified (or "
-                            "determined from the commit log), disabling logic that "
-                            "guesses the next version based on typical version "
-                            "progression when a prelease suffix is present."
+                            "set the method by which the new version is chosen. "
+                            "'linear' (default) guesses the next version based on typical linear version progression, "
+                            "such that bumping of a pre-release with lower precedence than the current pre-release "
+                            "phase maintains the current phase of higher precedence. "
+                            "'exact' applies the changes that have been specified (or determined from the commit log) "
+                            "without interpretation, such that the increment and pre-release are always honored"
                         ),
                     },
                     {

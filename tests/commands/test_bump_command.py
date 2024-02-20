@@ -327,7 +327,14 @@ def test_bump_command_prelease_exact_mode(mocker: MockFixture):
     assert tag_exists is True
 
     # PRERELEASE + PATCH BUMP
-    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes", "--exact-increment"]
+    testargs = [
+        "cz",
+        "bump",
+        "--prerelease",
+        "alpha",
+        "--yes",
+        "--increment-mode=exact",
+    ]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
@@ -335,10 +342,17 @@ def test_bump_command_prelease_exact_mode(mocker: MockFixture):
     assert tag_exists is True
 
     # PRERELEASE + MINOR BUMP
-    # --exact-increment allows the minor version to bump, and restart the prerelease
+    # --increment-mode allows the minor version to bump, and restart the prerelease
     create_file_and_commit("feat: location")
 
-    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes", "--exact-increment"]
+    testargs = [
+        "cz",
+        "bump",
+        "--prerelease",
+        "alpha",
+        "--yes",
+        "--increment-mode=exact",
+    ]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
 
@@ -346,7 +360,7 @@ def test_bump_command_prelease_exact_mode(mocker: MockFixture):
     assert tag_exists is True
 
     # PRERELEASE + MAJOR BUMP
-    # --exact-increment allows the major version to bump, and restart the prerelease
+    # --increment-mode=exact allows the major version to bump, and restart the prerelease
     testargs = [
         "cz",
         "bump",
@@ -354,7 +368,7 @@ def test_bump_command_prelease_exact_mode(mocker: MockFixture):
         "alpha",
         "--yes",
         "--increment=MAJOR",
-        "--exact-increment",
+        "--increment-mode=exact",
     ]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
