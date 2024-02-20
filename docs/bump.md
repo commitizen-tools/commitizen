@@ -79,7 +79,12 @@ options:
                         specify non-negative integer for dev. release
   --increment {MAJOR,MINOR,PATCH}
                         manually specify the desired increment
-  --exact-increment     apply the exact changes that have been specified (or determined from the commit log), disabling logic that guesses the next version based on typical version progression when a prelease suffix is present.
+  --increment-mode
+                        set the method by which the new version is chosen. 'linear' (default) guesses the next version based
+                        on typical linear version progression, such that bumping of a pre-release with lower precedence than
+                        the current pre-release phase maintains the current phase of higher precedence. 'exact' applies the
+                        changes that have been specified (or determined from the commit log) without interpretation, such that
+                        the increment and pre-release are always honored
   --check-consistency, -cc
                         check consistency among versions defined in commitizen configuration and version_files
   --annotated-tag, -at  create annotated tag instead of lightweight one
@@ -140,29 +145,27 @@ by their precedence and showcase how a release might flow through a development 
 - `1.1.0rc0` after bumping the release candidate
 - `1.1.0` next feature release
 
-Also note that bumping pre-releases _maintains linearity_: bumping of a pre-release with lower precedence than
-the current pre-release phase maintains the current phase of higher precedence. For example, if the current
-version is `1.0.0b1` then bumping with `--prerelease alpha` will continue to bump the “beta” phase.
-This behavior can be overridden by passing `--exact-increment` (see below).
+### `--increment-mode`
 
-### `--exact-increment`
+By default, `--increment-mode` is set to `linear`, which ensures taht bumping pre-releases _maintains linearity_: 
+bumping of a pre-release with lower precedence than the current pre-release phase maintains the current phase of 
+higher precedence. For example, if the current version is `1.0.0b1` then bumping with `--prerelease alpha` will 
+continue to bump the “beta” phase.
 
-The `--exact-increment` flag bypasses the logic that creates a best guess for the next version based on the
-principle of maintaining linearity when a pre-release is present (see above).  Instead, `bump` will apply the 
+Setting `--increment-mode` to `exact` instructs `cz bump` to instead apply the 
 exact changes that have been specified with `--increment` or determined from the commit log. For example, 
 `--prerelease beta` will always result in a `b` tag, and `--increment PATCH` will always increase the patch component.
 
 Below are some examples that illustrate the difference in behavior:
 
-
-| Increment | Pre-release | Start Version | Without `--exact-increment` | With `--exact-increment` |
-|-----------|-------------|---------------|-----------------------------|--------------------------|
-| `MAJOR`   |             | `2.0.0b0`     | `2.0.0`                     | `3.0.0`                  |
-| `MINOR`   |             | `2.0.0b0`     | `2.0.0`                     | `2.1.0`                  |
-| `PATCH`   |             | `2.0.0b0`     | `2.0.0`                     | `2.0.1`                  |
-| `MAJOR`   | `alpha`     | `2.0.0b0`     | `3.0.0a0`                   | `3.0.0a0`                |
-| `MINOR`   | `alpha`     | `2.0.0b0`     | `2.0.0b1`                   | `2.1.0a0`                |
-| `PATCH`   | `alpha`     | `2.0.0b0`     | `2.0.0b1`                   | `2.0.1a0`                |
+| Increment | Pre-release | Start Version | `--increment-mode=linear` | `--increment-mode=exact` |
+|-----------|-------------|---------------|---------------------------|--------------------------|
+| `MAJOR`   |             | `2.0.0b0`     | `2.0.0`                   | `3.0.0`                  |
+| `MINOR`   |             | `2.0.0b0`     | `2.0.0`                   | `2.1.0`                  |
+| `PATCH`   |             | `2.0.0b0`     | `2.0.0`                   | `2.0.1`                  |
+| `MAJOR`   | `alpha`     | `2.0.0b0`     | `3.0.0a0`                 | `3.0.0a0`                |
+| `MINOR`   | `alpha`     | `2.0.0b0`     | `2.0.0b1`                 | `2.1.0a0`                |
+| `PATCH`   | `alpha`     | `2.0.0b0`     | `2.0.0b1`                 | `2.0.1a0`                |
 
 ### `--check-consistency`
 

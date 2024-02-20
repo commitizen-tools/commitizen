@@ -52,7 +52,7 @@ class Bump:
                     "tag_format",
                     "prerelease",
                     "increment",
-                    "exact_increment",
+                    "increment_mode",
                     "bump_message",
                     "gpg_sign",
                     "annotated_tag",
@@ -159,7 +159,7 @@ class Bump:
         is_local_version: bool = self.arguments["local_version"]
         manual_version = self.arguments["manual_version"]
         build_metadata = self.arguments["build_metadata"]
-        exact_increment: bool = self.arguments["exact_increment"]
+        increment_mode: str = self.arguments["increment_mode"]
 
         if manual_version:
             if increment:
@@ -254,7 +254,7 @@ class Bump:
                 devrelease=devrelease,
                 is_local_version=is_local_version,
                 build_metadata=build_metadata,
-                exact_increment=exact_increment,
+                exact_increment=increment_mode == "exact",
             )
 
         new_tag_version = bump.normalize_tag(
