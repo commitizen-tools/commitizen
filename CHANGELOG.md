@@ -1,4 +1,16 @@
 
+## v3.16.0 (2024-02-26)
+
+### Feat
+
+- **commands**: add bump --exact
+
+### Fix
+
+- **bump**: change --exact-increment to --increment-mode
+- **bump**:  only get and validate commits if increment is not provided
+-  Improve type annotations
+
 ## v3.15.0 (2024-02-17)
 
 ### Feat
