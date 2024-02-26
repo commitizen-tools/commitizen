@@ -168,8 +168,10 @@ class Changelog:
         # Don't continue if no `file_name` specified.
         assert self.file_name
 
-        tags = changelog.get_version_tags(self.scheme, git.get_tags()) or []
-
+        tags = (
+            changelog.get_version_tags(self.scheme, git.get_tags(), self.tag_format)
+            or []
+        )
         end_rev = ""
         if self.incremental:
             changelog_meta = self.changelog_format.get_metadata(self.file_name)
@@ -182,7 +184,6 @@ class Changelog:
                 start_rev = self._find_incremental_rev(
                     strip_local_version(latest_tag_version), tags
                 )
-
         if self.rev_range:
             start_rev, end_rev = changelog.get_oldest_and_newest_rev(
                 tags,
@@ -190,13 +191,11 @@ class Changelog:
                 tag_format=self.tag_format,
                 scheme=self.scheme,
             )
-
         commits = git.get_commits(start=start_rev, end=end_rev, args="--topo-order")
         if not commits and (
             self.current_version is None or not self.current_version.is_prerelease
         ):
             raise NoCommitsFoundError("No commits found")
-
         tree = changelog.generate_tree_from_commits(
             commits,
             tags,

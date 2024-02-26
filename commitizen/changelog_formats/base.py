@@ -25,10 +25,30 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
         # See: https://bugs.python.org/issue44807
         self.config = config
         self.encoding = self.config.settings["encoding"]
+        self.tag_format = self.config.settings.get("tag_format")
 
     @property
     def version_parser(self) -> Pattern:
-        return get_version_scheme(self.config).parser
+        version_regex = get_version_scheme(self.config).parser.pattern
+        if self.tag_format != "$version":
+            TAG_FORMAT_REGEXS = {
+                "$version": version_regex,
+                "$major": "(?P<major>\d+)",
+                "$minor": "(?P<minor>\d+)",
+                "$patch": "(?P<patch>\d+)",
+                "$prerelease": "(?P<prerelease>\w+\d+)?",
+                "$devrelease": "(?P<devrelease>\.dev\d+)?",
+                "${version}": version_regex,
+                "${major}": "(?P<major>\d+)",
+                "${minor}": "(?P<minor>\d+)",
+                "${patch}": "(?P<patch>\d+)",
+                "${prerelease}": "(?P<prerelease>\w+\d+)?",
+                "${devrelease}": "(?P<devrelease>\.dev\d+)?",
+            }
+            version_regex = self.tag_format
+            for pattern, regex in TAG_FORMAT_REGEXS.items():
+                version_regex = version_regex.replace(pattern, regex)
+        return rf"{version_regex}"
 
     def get_metadata(self, filepath: str) -> Metadata:
         if not os.path.isfile(filepath):
