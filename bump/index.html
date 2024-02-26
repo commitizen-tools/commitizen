@@ -476,6 +476,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#-increment-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      --increment-mode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#-check-consistency" class="md-nav__link">
     <span class="md-ellipsis">
       --check-consistency
@@ -1211,6 +1220,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#-increment-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      --increment-mode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#-check-consistency" class="md-nav__link">
     <span class="md-ellipsis">
       --check-consistency
@@ -1589,6 +1607,12 @@ options:
 <span class="w">                        </span>specify<span class="w"> </span>non-negative<span class="w"> </span>integer<span class="w"> </span><span class="k">for</span><span class="w"> </span>dev.<span class="w"> </span>release
 <span class="w">  </span>--increment<span class="w"> </span><span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}</span>
 <span class="w">                        </span>manually<span class="w"> </span>specify<span class="w"> </span>the<span class="w"> </span>desired<span class="w"> </span>increment
+<span class="w">  </span>--increment-mode
+<span class="w">                        </span><span class="nb">set</span><span class="w"> </span>the<span class="w"> </span>method<span class="w"> </span>by<span class="w"> </span>which<span class="w"> </span>the<span class="w"> </span>new<span class="w"> </span>version<span class="w"> </span>is<span class="w"> </span>chosen.<span class="w"> </span><span class="s1">&#39;linear&#39;</span><span class="w"> </span><span class="o">(</span>default<span class="o">)</span><span class="w"> </span>guesses<span class="w"> </span>the<span class="w"> </span>next<span class="w"> </span>version<span class="w"> </span>based
+<span class="w">                        </span>on<span class="w"> </span>typical<span class="w"> </span>linear<span class="w"> </span>version<span class="w"> </span>progression,<span class="w"> </span>such<span class="w"> </span>that<span class="w"> </span>bumping<span class="w"> </span>of<span class="w"> </span>a<span class="w"> </span>pre-release<span class="w"> </span>with<span class="w"> </span>lower<span class="w"> </span>precedence<span class="w"> </span>than
+<span class="w">                        </span>the<span class="w"> </span>current<span class="w"> </span>pre-release<span class="w"> </span>phase<span class="w"> </span>maintains<span class="w"> </span>the<span class="w"> </span>current<span class="w"> </span>phase<span class="w"> </span>of<span class="w"> </span>higher<span class="w"> </span>precedence.<span class="w"> </span><span class="s1">&#39;exact&#39;</span><span class="w"> </span>applies<span class="w"> </span>the
+<span class="w">                        </span>changes<span class="w"> </span>that<span class="w"> </span>have<span class="w"> </span>been<span class="w"> </span>specified<span class="w"> </span><span class="o">(</span>or<span class="w"> </span>determined<span class="w"> </span>from<span class="w"> </span>the<span class="w"> </span>commit<span class="w"> </span>log<span class="o">)</span><span class="w"> </span>without<span class="w"> </span>interpretation,<span class="w"> </span>such<span class="w"> </span>that
+<span class="w">                        </span>the<span class="w"> </span>increment<span class="w"> </span>and<span class="w"> </span>pre-release<span class="w"> </span>are<span class="w"> </span>always<span class="w"> </span>honored
 <span class="w">  </span>--check-consistency,<span class="w"> </span>-cc
 <span class="w">                        </span>check<span class="w"> </span>consistency<span class="w"> </span>among<span class="w"> </span>versions<span class="w"> </span>defined<span class="w"> </span><span class="k">in</span><span class="w"> </span>commitizen<span class="w"> </span>configuration<span class="w"> </span>and<span class="w"> </span>version_files
 <span class="w">  </span>--annotated-tag,<span class="w"> </span>-at<span class="w">  </span>create<span class="w"> </span>annotated<span class="w"> </span>tag<span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span>lightweight<span class="w"> </span>one
@@ -1638,9 +1662,70 @@ by their precedence and showcase how a release might flow through a development 
 <li><code>1.1.0rc0</code> after bumping the release candidate</li>
 <li><code>1.1.0</code> next feature release</li>
 </ul>
-<p>Also note that bumping pre-releases <em>maintains linearity</em>: bumping of a pre-release with lower precedence than
-the current pre-release phase maintains the current phase of higher precedence. For example, if the current
-version is <code>1.0.0b1</code> then bumping with <code>--prerelease alpha</code> will continue to bump the “beta” phase.</p>
+<h3 id="-increment-mode"><code>--increment-mode</code><a class="headerlink" href="#-increment-mode" title="Permanent link">&para;</a></h3>
+<p>By default, <code>--increment-mode</code> is set to <code>linear</code>, which ensures taht bumping pre-releases <em>maintains linearity</em>: 
+bumping of a pre-release with lower precedence than the current pre-release phase maintains the current phase of 
+higher precedence. For example, if the current version is <code>1.0.0b1</code> then bumping with <code>--prerelease alpha</code> will 
+continue to bump the “beta” phase.</p>
+<p>Setting <code>--increment-mode</code> to <code>exact</code> instructs <code>cz bump</code> to instead apply the 
+exact changes that have been specified with <code>--increment</code> or determined from the commit log. For example, 
+<code>--prerelease beta</code> will always result in a <code>b</code> tag, and <code>--increment PATCH</code> will always increase the patch component.</p>
+<p>Below are some examples that illustrate the difference in behavior:</p>
+<table>
+<thead>
+<tr>
+<th>Increment</th>
+<th>Pre-release</th>
+<th>Start Version</th>
+<th><code>--increment-mode=linear</code></th>
+<th><code>--increment-mode=exact</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MAJOR</code></td>
+<td></td>
+<td><code>2.0.0b0</code></td>
+<td><code>2.0.0</code></td>
+<td><code>3.0.0</code></td>
+</tr>
+<tr>
+<td><code>MINOR</code></td>
+<td></td>
+<td><code>2.0.0b0</code></td>
+<td><code>2.0.0</code></td>
+<td><code>2.1.0</code></td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td></td>
+<td><code>2.0.0b0</code></td>
+<td><code>2.0.0</code></td>
+<td><code>2.0.1</code></td>
+</tr>
+<tr>
+<td><code>MAJOR</code></td>
+<td><code>alpha</code></td>
+<td><code>2.0.0b0</code></td>
+<td><code>3.0.0a0</code></td>
+<td><code>3.0.0a0</code></td>
+</tr>
+<tr>
+<td><code>MINOR</code></td>
+<td><code>alpha</code></td>
+<td><code>2.0.0b0</code></td>
+<td><code>2.0.0b1</code></td>
+<td><code>2.1.0a0</code></td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>alpha</code></td>
+<td><code>2.0.0b0</code></td>
+<td><code>2.0.0b1</code></td>
+<td><code>2.0.1a0</code></td>
+</tr>
+</tbody>
+</table>
 <h3 id="-check-consistency"><code>--check-consistency</code><a class="headerlink" href="#-check-consistency" title="Permanent link">&para;</a></h3>
 <p>Check whether the versions defined in <code>version_files</code> and the version in commitizen
 configuration are consistent before bumping version.</p>
