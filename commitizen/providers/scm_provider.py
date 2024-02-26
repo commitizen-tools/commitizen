@@ -31,6 +31,12 @@ class ScmProvider(VersionProvider):
         "$patch": r"(?P<patch>\d+)",
         "$prerelease": r"(?P<prerelease>\w+\d+)?",
         "$devrelease": r"(?P<devrelease>\.dev\d+)?",
+        "${version}": r"(?P<version>.+)",
+        "${major}": r"(?P<major>\d+)",
+        "${minor}": r"(?P<minor>\d+)",
+        "${patch}": r"(?P<patch>\d+)",
+        "${prerelease}": r"(?P<prerelease>\w+\d+)?",
+        "${devrelease}": r"(?P<devrelease>\.dev\d+)?",
     }
 
     def _tag_format_matcher(self) -> Callable[[str], VersionProtocol | None]:

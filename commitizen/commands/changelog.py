@@ -6,7 +6,7 @@ from operator import itemgetter
 from pathlib import Path
 from typing import Callable
 
-from commitizen import bump, changelog, defaults, factory, git, out
+from commitizen import changelog, defaults, factory, git, out
 
 from commitizen.config import BaseConfig
 from commitizen.cz.base import MessageBuilderHook, ChangelogReleaseHook
@@ -169,21 +169,17 @@ class Changelog:
         # Don't continue if no `file_name` specified.
         assert self.file_name
 
-        tags = changelog.get_version_tags(self.scheme, git.get_tags()) or []
-
+        tags = (
+            changelog.get_version_tags(self.scheme, git.get_tags(), self.tag_format)
+            or []
+        )
         end_rev = ""
         if self.incremental:
             changelog_meta = self.changelog_format.get_metadata(self.file_name)
             if changelog_meta.latest_version:
-                latest_tag_version: str = bump.normalize_tag(
-                    changelog_meta.latest_version,
-                    tag_format=self.tag_format,
-                    scheme=self.scheme,
-                )
                 start_rev = self._find_incremental_rev(
-                    strip_local_version(latest_tag_version), tags
+                    strip_local_version(changelog_meta.latest_version), tags
                 )
-
         if self.rev_range:
             start_rev, end_rev = changelog.get_oldest_and_newest_rev(
                 tags,
@@ -197,7 +193,6 @@ class Changelog:
             self.current_version is None or not self.current_version.is_prerelease
         ):
             raise NoCommitsFoundError("No commits found")
-
         tree = changelog.generate_tree_from_commits(
             commits,
             tags,

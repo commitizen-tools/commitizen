@@ -93,16 +93,34 @@ def tag_included_in_changelog(
     return True
 
 
-def get_version_tags(scheme: type[BaseVersion], tags: list[GitTag]) -> list[GitTag]:
+def get_version_tags(
+    scheme: type[BaseVersion], tags: list[GitTag], tag_format: str
+) -> list[GitTag]:
     valid_tags: list[GitTag] = []
+    TAG_FORMAT_REGEXS = {
+        "$version": str(scheme.parser.pattern),
+        "$major": r"(?P<major>\d+)",
+        "$minor": r"(?P<minor>\d+)",
+        "$patch": r"(?P<patch>\d+)",
+        "$prerelease": r"(?P<prerelease>\w+\d+)?",
+        "$devrelease": r"(?P<devrelease>\.dev\d+)?",
+        "${version}": str(scheme.parser.pattern),
+        "${major}": r"(?P<major>\d+)",
+        "${minor}": r"(?P<minor>\d+)",
+        "${patch}": r"(?P<patch>\d+)",
+        "${prerelease}": r"(?P<prerelease>\w+\d+)?",
+        "${devrelease}": r"(?P<devrelease>\.dev\d+)?",
+    }
+    tag_format_regex = tag_format
+    for pattern, regex in TAG_FORMAT_REGEXS.items():
+        tag_format_regex = tag_format_regex.replace(pattern, regex)
     for tag in tags:
-        try:
-            scheme(tag.name)
-        except InvalidVersion:
-            out.warn(f"InvalidVersion {tag}")
-        else:
+        if re.match(tag_format_regex, tag.name):
             valid_tags.append(tag)
-
+        else:
+            out.warn(
+                f"InvalidVersion {tag.name} doesn't match configured tag format {tag_format}"
+            )
     return valid_tags
 
 
@@ -351,7 +369,6 @@ def get_oldest_and_newest_rev(
         oldest, newest = version.split("..")
     except ValueError:
         newest = version
-
     newest_tag = normalize_tag(newest, tag_format=tag_format, scheme=scheme)
 
     oldest_tag = None
