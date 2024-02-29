@@ -314,7 +314,9 @@ class Bump:
                 "unreleased_version": new_tag_version,
                 "template": self.template,
                 "extras": self.extras,
-                "incremental": True,
+                "incremental": self.config.mutated_settings.get(
+                            "changelog_incremental", True
+                        ),
                 "dry_run": dry_run,
                 # governs logic for merge_prerelease
                 "during_version_bump": self.arguments["prerelease"] is None,
@@ -330,7 +332,14 @@ class Bump:
 
             changelog_cmd = Changelog(
                 self.config,
-                {**changelog_args, "file_name": self.file_name},  # type: ignore[typeddict-item]
+                {
+                    "unreleased_version": new_tag_version,
+                    "incremental": True,
+                    "dry_run": dry_run,
+                    "template": self.template,
+                    "extras": self.extras,
+                    "file_name": self.file_name,
+                },
             )
             changelog_cmd()
             changelog_file_name = changelog_cmd.file_name
