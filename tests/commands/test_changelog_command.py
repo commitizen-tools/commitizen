@@ -1523,6 +1523,120 @@ def test_changelog_template_extras_precedance(
     assert changelog.read_text() == "from-command - from-config - from-plugin"
 
 
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2021-06-11")
+def test_changelog_only_tag_matching_tag_format_included_prefix(
+    mocker: MockFixture,
+    changelog_path: Path,
+    config_path: Path,
+):
+    with open(config_path, "a", encoding="utf-8") as f:
+        f.write('\ntag_format = "custom${version}"\n')
+    create_file_and_commit("feat: new file")
+    git.tag("v0.2.0")
+    create_file_and_commit("feat: another new file")
+    git.tag("0.2.0")
+    git.tag("random0.2.0")
+    testargs = ["cz", "bump", "--changelog", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    wait_for_tag()
+    create_file_and_commit("feat: another new file")
+    cli.main()
+    with open(changelog_path) as f:
+        out = f.read()
+    assert out.startswith("## custom0.3.0 (2021-06-11)")
+    assert "## v0.2.0 (2021-06-11)" not in out
+    assert "## 0.2.0  (2021-06-11)" not in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_only_tag_matching_tag_format_included_prefix_sep(
+    mocker: MockFixture,
+    changelog_path: Path,
+    config_path: Path,
+):
+    with open(config_path, "a", encoding="utf-8") as f:
+        f.write('\ntag_format = "custom-${version}"\n')
+    create_file_and_commit("feat: new file")
+    git.tag("v0.2.0")
+    create_file_and_commit("feat: another new file")
+    git.tag("0.2.0")
+    git.tag("random0.2.0")
+    wait_for_tag()
+    testargs = ["cz", "bump", "--changelog", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    with open(changelog_path) as f:
+        out = f.read()
+    create_file_and_commit("feat: new version another new file")
+    create_file_and_commit("feat: new version some new file")
+    testargs = ["cz", "bump", "--changelog"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    with open(changelog_path) as f:
+        out = f.read()
+    assert out.startswith("## custom-0.3.0")
+    assert "## v0.2.0" not in out
+    assert "## 0.2.0" not in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2021-06-11")
+def test_changelog_only_tag_matching_tag_format_included_suffix(
+    mocker: MockFixture,
+    changelog_path: Path,
+    config_path: Path,
+):
+    with open(config_path, "a", encoding="utf-8") as f:
+        f.write('\ntag_format = "${version}custom"\n')
+    create_file_and_commit("feat: new file")
+    git.tag("v0.2.0")
+    create_file_and_commit("feat: another new file")
+    git.tag("0.2.0")
+    git.tag("random0.2.0")
+    testargs = ["cz", "bump", "--changelog", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    wait_for_tag()
+    create_file_and_commit("feat: another new file")
+    cli.main()
+    wait_for_tag()
+    with open(changelog_path) as f:
+        out = f.read()
+    assert out.startswith("## 0.3.0custom (2021-06-11)")
+    assert "## v0.2.0 (2021-06-11)" not in out
+    assert "## 0.2.0  (2021-06-11)" not in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2021-06-11")
+def test_changelog_only_tag_matching_tag_format_included_suffix_sep(
+    mocker: MockFixture,
+    changelog_path: Path,
+    config_path: Path,
+):
+    with open(config_path, "a", encoding="utf-8") as f:
+        f.write('\ntag_format = "${version}-custom"\n')
+    create_file_and_commit("feat: new file")
+    git.tag("v0.2.0")
+    create_file_and_commit("feat: another new file")
+    git.tag("0.2.0")
+    git.tag("random0.2.0")
+    testargs = ["cz", "bump", "--changelog", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    wait_for_tag()
+    create_file_and_commit("feat: another new file")
+    cli.main()
+    wait_for_tag()
+    with open(changelog_path) as f:
+        out = f.read()
+    assert out.startswith("## 0.3.0-custom (2021-06-11)")
+    assert "## v0.2.0 (2021-06-11)" not in out
+    assert "## 0.2.0  (2021-06-11)" not in out
+
+
 def test_changelog_template_extra_quotes(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
