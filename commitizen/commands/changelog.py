@@ -9,6 +9,7 @@ from typing import Callable
 from commitizen import bump, changelog, defaults, factory, git, out
 
 from commitizen.config import BaseConfig
+from commitizen.cz.base import MessageBuilderHook
 from commitizen.exceptions import (
     DryRunExit,
     NoCommitsFoundError,
@@ -145,7 +146,7 @@ class Changelog:
         unreleased_version = self.unreleased_version
         changelog_meta = changelog.Metadata()
         change_type_map: dict | None = self.change_type_map
-        changelog_message_builder_hook: Callable | None = (
+        changelog_message_builder_hook: MessageBuilderHook | None = (
             self.cz.changelog_message_builder_hook
         )
         merge_prerelease = self.merge_prerelease

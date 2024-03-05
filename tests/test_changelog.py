@@ -1,3 +1,5 @@
+import re
+
 from pathlib import Path
 
 import pytest
@@ -1317,6 +1319,32 @@ def test_render_changelog_with_changelog_message_builder_hook(
     result = changelog.render_changelog(tree, loader, template)
 
     assert "[link](github.com/232323232) Commitizen author@cz.dev" in result
+
+
+def test_changelog_message_builder_hook_can_remove_commits(
+    gitcommits, tags, any_changelog_format: ChangelogFormat
+):
+    def changelog_message_builder_hook(message: dict, commit: git.GitCommit):
+        return None
+
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    template = any_changelog_format.template
+    tree = changelog.generate_tree_from_commits(
+        gitcommits,
+        tags,
+        parser,
+        changelog_pattern,
+        changelog_message_builder_hook=changelog_message_builder_hook,
+    )
+    result = changelog.render_changelog(tree, loader, template)
+
+    RE_HEADER = re.compile(r"^## v?\d+\.\d+\.\d+(\w)* \(\d{4}-\d{2}-\d{2}\)$")
+    # Rendered changelog should be empty, only containing version headers
+    for no, line in enumerate(result.splitlines()):
+        if line := line.strip():
+            assert RE_HEADER.match(line), f"Line {no} should not be there: {line}"
 
 
 def test_get_smart_tag_range_returns_an_extra_for_a_range(tags):

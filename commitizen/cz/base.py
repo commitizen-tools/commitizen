@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
-from typing import Any, Callable
+from typing import Any, Callable, Protocol
 
 from jinja2 import BaseLoader, PackageLoader
 from prompt_toolkit.styles import Style, merge_styles
@@ -9,6 +9,12 @@ from prompt_toolkit.styles import Style, merge_styles
 from commitizen import git
 from commitizen.config.base_config import BaseConfig
 from commitizen.defaults import Questions
+
+
+class MessageBuilderHook(Protocol):
+    def __call__(
+        self, message: dict[str, Any], commit: git.GitCommit
+    ) -> dict[str, Any] | None: ...
 
 
 class BaseCommitizen(metaclass=ABCMeta):
@@ -37,9 +43,7 @@ class BaseCommitizen(metaclass=ABCMeta):
     change_type_order: list[str] | None = None
 
     # Executed per message parsed by the commitizen
-    changelog_message_builder_hook: None | (Callable[[dict, git.GitCommit], dict]) = (
-        None
-    )
+    changelog_message_builder_hook: MessageBuilderHook | None = None
 
     # Executed only at the end of the changelog generation
     changelog_hook: Callable[[str, str | None], str] | None = None
