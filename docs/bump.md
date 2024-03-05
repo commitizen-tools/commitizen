@@ -147,13 +147,13 @@ by their precedence and showcase how a release might flow through a development 
 
 ### `--increment-mode`
 
-By default, `--increment-mode` is set to `linear`, which ensures taht bumping pre-releases _maintains linearity_: 
-bumping of a pre-release with lower precedence than the current pre-release phase maintains the current phase of 
-higher precedence. For example, if the current version is `1.0.0b1` then bumping with `--prerelease alpha` will 
+By default, `--increment-mode` is set to `linear`, which ensures that bumping pre-releases _maintains linearity_:
+bumping of a pre-release with lower precedence than the current pre-release phase maintains the current phase of
+higher precedence. For example, if the current version is `1.0.0b1` then bumping with `--prerelease alpha` will
 continue to bump the “beta” phase.
 
-Setting `--increment-mode` to `exact` instructs `cz bump` to instead apply the 
-exact changes that have been specified with `--increment` or determined from the commit log. For example, 
+Setting `--increment-mode` to `exact` instructs `cz bump` to instead apply the
+exact changes that have been specified with `--increment` or determined from the commit log. For example,
 `--prerelease beta` will always result in a `b` tag, and `--increment PATCH` will always increase the patch component.
 
 Below are some examples that illustrate the difference in behavior:

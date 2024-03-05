@@ -318,7 +318,7 @@ You can customize it of course, and this are the variables you need to add to yo
 | `commit_parser`                  | `str`                                                                    | NO       | Regex which should provide the variables explained in the [changelog description][changelog-des]                                                                                                                    |
 | `changelog_pattern`              | `str`                                                                    | NO       | Regex to validate the commits, this is useful to skip commits that don't meet your ruling standards like a Merge. Usually the same as bump_pattern                                                                  |
 | `change_type_map`                | `dict`                                                                   | NO       | Convert the title of the change type that will appear in the changelog, if a value is not found, the original will be provided                                                                                      |
-| `changelog_message_builder_hook` | `method: (dict, git.GitCommit) -> dict`                                  | NO       | Customize with extra information your message output, like adding links, this function is executed per parsed commit. Each GitCommit contains the following attrs: `rev`, `title`, `body`, `author`, `author_email` |
+| `changelog_message_builder_hook` | `method: (dict, git.GitCommit) -> dict | None`                                  | NO       | Customize with extra information your message output, like adding links, this function is executed per parsed commit. Each GitCommit contains the following attrs: `rev`, `title`, `body`, `author`, `author_email`. Returning a falsy value ignore the commit. |
 | `changelog_hook`                 | `method: (full_changelog: str, partial_changelog: Optional[str]) -> str` | NO       | Receives the whole and partial (if used incremental) changelog. Useful to send slack messages or notify a compliance department. Must return the full_changelog                                                     |
 
 ```python
@@ -339,7 +339,7 @@ class StrangeCommitizen(BaseCommitizen):
 
     def changelog_message_builder_hook(
         self, parsed_message: dict, commit: git.GitCommit
-    ) -> dict:
+    ) -> dict | None:
         rev = commit.rev
         m = parsed_message["message"]
         parsed_message[
