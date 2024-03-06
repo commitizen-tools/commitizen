@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.12">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.13">
     
     
       
@@ -1620,9 +1620,9 @@ You can customize it of course, and this are the variables you need to add to yo
 </tr>
 <tr>
 <td><code>changelog_message_builder_hook</code></td>
-<td><code>method: (dict, git.GitCommit) -&gt; dict</code></td>
+<td><code>method: (dict, git.GitCommit) -&gt; dict | None</code></td>
 <td>NO</td>
-<td>Customize with extra information your message output, like adding links, this function is executed per parsed commit. Each GitCommit contains the following attrs: <code>rev</code>, <code>title</code>, <code>body</code>, <code>author</code>, <code>author_email</code></td>
+<td>Customize with extra information your message output, like adding links, this function is executed per parsed commit. Each GitCommit contains the following attrs: <code>rev</code>, <code>title</code>, <code>body</code>, <code>author</code>, <code>author_email</code>. Returning a falsy value ignore the commit.</td>
 </tr>
 <tr>
 <td><code>changelog_hook</code></td>
@@ -1649,7 +1649,7 @@ You can customize it of course, and this are the variables you need to add to yo
 
     <span class="k">def</span> <span class="nf">changelog_message_builder_hook</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">parsed_message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">commit</span><span class="p">:</span> <span class="n">git</span><span class="o">.</span><span class="n">GitCommit</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">rev</span> <span class="o">=</span> <span class="n">commit</span><span class="o">.</span><span class="n">rev</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">parsed_message</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span>
         <span class="n">parsed_message</span><span class="p">[</span>

@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.12">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.13">
     
     
       
@@ -1663,12 +1663,12 @@ by their precedence and showcase how a release might flow through a development 
 <li><code>1.1.0</code> next feature release</li>
 </ul>
 <h3 id="-increment-mode"><code>--increment-mode</code><a class="headerlink" href="#-increment-mode" title="Permanent link">&para;</a></h3>
-<p>By default, <code>--increment-mode</code> is set to <code>linear</code>, which ensures taht bumping pre-releases <em>maintains linearity</em>: 
-bumping of a pre-release with lower precedence than the current pre-release phase maintains the current phase of 
-higher precedence. For example, if the current version is <code>1.0.0b1</code> then bumping with <code>--prerelease alpha</code> will 
+<p>By default, <code>--increment-mode</code> is set to <code>linear</code>, which ensures that bumping pre-releases <em>maintains linearity</em>:
+bumping of a pre-release with lower precedence than the current pre-release phase maintains the current phase of
+higher precedence. For example, if the current version is <code>1.0.0b1</code> then bumping with <code>--prerelease alpha</code> will
 continue to bump the “beta” phase.</p>
-<p>Setting <code>--increment-mode</code> to <code>exact</code> instructs <code>cz bump</code> to instead apply the 
-exact changes that have been specified with <code>--increment</code> or determined from the commit log. For example, 
+<p>Setting <code>--increment-mode</code> to <code>exact</code> instructs <code>cz bump</code> to instead apply the
+exact changes that have been specified with <code>--increment</code> or determined from the commit log. For example,
 <code>--prerelease beta</code> will always result in a <code>b</code> tag, and <code>--increment PATCH</code> will always increase the patch component.</p>
 <p>Below are some examples that illustrate the difference in behavior:</p>
 <table>
