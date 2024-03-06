@@ -1,4 +1,10 @@
 
+## v3.17.0 (2024-03-06)
+
+### Feat
+
+- **changelog**: `changelog_message_build_hook` can remove message by returning a falsy value
+
 ## v3.16.0 (2024-02-26)
 
 ### Feat
