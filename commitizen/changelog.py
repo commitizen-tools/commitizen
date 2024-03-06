@@ -31,7 +31,7 @@ import re
 from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
 from datetime import date
-from typing import TYPE_CHECKING, Callable, Iterable
+from typing import TYPE_CHECKING, Iterable
 
 from jinja2 import (
     BaseLoader,
@@ -52,6 +52,7 @@ from commitizen.version_schemes import (
 )
 
 if TYPE_CHECKING:
+    from commitizen.cz.base import MessageBuilderHook
     from commitizen.version_schemes import VersionScheme
 
 
@@ -111,7 +112,7 @@ def generate_tree_from_commits(
     changelog_pattern: str,
     unreleased_version: str | None = None,
     change_type_map: dict[str, str] | None = None,
-    changelog_message_builder_hook: Callable | None = None,
+    changelog_message_builder_hook: MessageBuilderHook | None = None,
     merge_prerelease: bool = False,
     scheme: VersionScheme = DEFAULT_SCHEME,
 ) -> Iterable[dict]:
@@ -156,37 +157,46 @@ def generate_tree_from_commits(
             continue
 
         # Process subject from commit message
-        message = map_pat.match(commit.message)
-        if message:
-            parsed_message: dict = message.groupdict()
-
-            if changelog_message_builder_hook:
-                parsed_message = changelog_message_builder_hook(parsed_message, commit)
-            if parsed_message:
-                change_type = parsed_message.pop("change_type", None)
-                if change_type_map:
-                    change_type = change_type_map.get(change_type, change_type)
-                changes[change_type].append(parsed_message)
+        if message := map_pat.match(commit.message):
+            process_commit_message(
+                changelog_message_builder_hook,
+                message,
+                commit,
+                changes,
+                change_type_map,
+            )
 
         # Process body from commit message
         body_parts = commit.body.split("\n\n")
         for body_part in body_parts:
-            message_body = body_map_pat.match(body_part)
-            if not message_body:
-                continue
-            parsed_message_body: dict = message_body.groupdict()
-
-            if changelog_message_builder_hook:
-                parsed_message_body = changelog_message_builder_hook(
-                    parsed_message_body, commit
+            if message := body_map_pat.match(body_part):
+                process_commit_message(
+                    changelog_message_builder_hook,
+                    message,
+                    commit,
+                    changes,
+                    change_type_map,
                 )
-            if parsed_message_body:
-                change_type = parsed_message_body.pop("change_type", None)
-                if change_type_map:
-                    change_type = change_type_map.get(change_type, change_type)
-                changes[change_type].append(parsed_message_body)
 
     yield {"version": current_tag_name, "date": current_tag_date, "changes": changes}
+
+
+def process_commit_message(
+    hook: MessageBuilderHook | None,
+    parsed: re.Match[str],
+    commit: GitCommit,
+    changes: dict[str | None, list],
+    change_type_map: dict[str, str] | None = None,
+):
+    message: dict = parsed.groupdict()
+
+    if processed := hook(message, commit) if hook else message:
+        messages = [processed] if isinstance(processed, dict) else processed
+        for msg in messages:
+            change_type = msg.pop("change_type", None)
+            if change_type_map:
+                change_type = change_type_map.get(change_type, change_type)
+            changes[change_type].append(msg)
 
 
 def order_changelog_tree(tree: Iterable, change_type_order: list[str]) -> Iterable:

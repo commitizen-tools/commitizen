@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
-from typing import Any, Callable, Protocol
+from typing import Any, Callable, Iterable, Protocol
 
 from jinja2 import BaseLoader, PackageLoader
 from prompt_toolkit.styles import Style, merge_styles
@@ -14,7 +14,7 @@ from commitizen.defaults import Questions
 class MessageBuilderHook(Protocol):
     def __call__(
         self, message: dict[str, Any], commit: git.GitCommit
-    ) -> dict[str, Any] | None: ...
+    ) -> dict[str, Any] | Iterable[dict[str, Any]] | None: ...
 
 
 class BaseCommitizen(metaclass=ABCMeta):
