@@ -1347,6 +1347,37 @@ def test_changelog_message_builder_hook_can_remove_commits(
             assert RE_HEADER.match(line), f"Line {no} should not be there: {line}"
 
 
+def test_changelog_message_builder_hook_can_access_and_modify_change_type(
+    gitcommits, tags, any_changelog_format: ChangelogFormat
+):
+    def changelog_message_builder_hook(message: dict, commit: git.GitCommit):
+        assert "change_type" in message
+        message["change_type"] = "overridden"
+        return message
+
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    template = any_changelog_format.template
+    tree = changelog.generate_tree_from_commits(
+        gitcommits,
+        tags,
+        parser,
+        changelog_pattern,
+        changelog_message_builder_hook=changelog_message_builder_hook,
+    )
+    result = changelog.render_changelog(tree, loader, template)
+
+    RE_HEADER = re.compile(r"^### (?P<type>.+)$")
+    # There should be only "overridden" change type headers
+    for no, line in enumerate(result.splitlines()):
+        if (line := line.strip()) and (match := RE_HEADER.match(line)):
+            change_type = match.group("type")
+            assert (
+                change_type == "overridden"
+            ), f"Line {no}: type {change_type} should have been overridden"
+
+
 def test_get_smart_tag_range_returns_an_extra_for_a_range(tags):
     start, end = (
         tags[0],
