@@ -1007,6 +1007,29 @@ def test_bump_with_pre_bump_hooks(
     )
 
 
+def test_bump_with_hooks_and_increment(mocker: MockFixture, tmp_commitizen_project):
+    pre_bump_hook = "scripts/pre_bump_hook.sh"
+    post_bump_hook = "scripts/post_bump_hook.sh"
+
+    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_commitizen_cfg_file.write(
+        f"{tmp_commitizen_cfg_file.read()}\n"
+        f'pre_bump_hooks = ["{pre_bump_hook}"]\n'
+        f'post_bump_hooks = ["{post_bump_hook}"]\n'
+    )
+
+    run_mock = mocker.Mock()
+    mocker.patch.object(hooks, "run", run_mock)
+
+    create_file_and_commit("test: some test")
+    testargs = ["cz", "bump", "--yes", "--increment", "MINOR"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    tag_exists = git.tag_exist("0.2.0")
+    assert tag_exists is True
+
+
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_manual_version_disallows_prerelease_offset(mocker):
     create_file_and_commit("feat: new file")
