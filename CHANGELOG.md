@@ -1,4 +1,10 @@
 
+## v3.17.2 (2024-03-07)
+
+### Fix
+
+- **changelog**: ensure `changelog_message_builder_hook` can access and modify `change_type` (#1002)
+
 ## v3.17.1 (2024-03-07)
 
 ### Fix
