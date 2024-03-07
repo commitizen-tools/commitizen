@@ -159,14 +159,13 @@ def generate_tree_from_commits(
         message = map_pat.match(commit.message)
         if message:
             parsed_message: dict = message.groupdict()
-            # change_type becomes optional by providing None
-            change_type = parsed_message.pop("change_type", None)
 
-            if change_type_map:
-                change_type = change_type_map.get(change_type, change_type)
             if changelog_message_builder_hook:
                 parsed_message = changelog_message_builder_hook(parsed_message, commit)
             if parsed_message:
+                change_type = parsed_message.pop("change_type", None)
+                if change_type_map:
+                    change_type = change_type_map.get(change_type, change_type)
                 changes[change_type].append(parsed_message)
 
         # Process body from commit message
@@ -177,14 +176,14 @@ def generate_tree_from_commits(
                 continue
             parsed_message_body: dict = message_body.groupdict()
 
-            change_type = parsed_message_body.pop("change_type", None)
-            if change_type_map:
-                change_type = change_type_map.get(change_type, change_type)
             if changelog_message_builder_hook:
                 parsed_message_body = changelog_message_builder_hook(
                     parsed_message_body, commit
                 )
             if parsed_message_body:
+                change_type = parsed_message_body.pop("change_type", None)
+                if change_type_map:
+                    change_type = change_type_map.get(change_type, change_type)
                 changes[change_type].append(parsed_message_body)
 
     yield {"version": current_tag_name, "date": current_tag_date, "changes": changes}
