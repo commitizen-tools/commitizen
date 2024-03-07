@@ -1347,6 +1347,32 @@ def test_changelog_message_builder_hook_can_remove_commits(
             assert RE_HEADER.match(line), f"Line {no} should not be there: {line}"
 
 
+def test_render_changelog_with_changelog_message_builder_hook_multiple_entries(
+    gitcommits, tags, any_changelog_format: ChangelogFormat
+):
+    def changelog_message_builder_hook(message: dict, commit: git.GitCommit):
+        messages = [message.copy(), message.copy(), message.copy()]
+        for idx, msg in enumerate(messages):
+            msg["message"] = "Message #{idx}"
+        return messages
+
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    template = any_changelog_format.template
+    tree = changelog.generate_tree_from_commits(
+        gitcommits,
+        tags,
+        parser,
+        changelog_pattern,
+        changelog_message_builder_hook=changelog_message_builder_hook,
+    )
+    result = changelog.render_changelog(tree, loader, template)
+
+    for idx in range(3):
+        assert "Message #{idx}" in result
+
+
 def test_changelog_message_builder_hook_can_access_and_modify_change_type(
     gitcommits, tags, any_changelog_format: ChangelogFormat
 ):
