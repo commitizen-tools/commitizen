@@ -1,4 +1,10 @@
 
+## v3.17.1 (2024-03-07)
+
+### Fix
+
+- **bump**: pre and post bump hooks were failing when an increment was provided (fix #1004)
+
 ## v3.17.0 (2024-03-06)
 
 ### Feat
