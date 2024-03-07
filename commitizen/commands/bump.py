@@ -209,6 +209,8 @@ class Bump:
             scheme=self.scheme,
         )
 
+        is_initial = self.is_initial_tag(current_tag_version, is_yes)
+
         # If user specified changelog_to_stdout, they probably want the
         # changelog to be generated as well, this is the most intuitive solution
         self.changelog = self.changelog or bool(self.changelog_to_stdout)
@@ -223,7 +225,6 @@ class Bump:
                 ) from exc
         else:
             if increment is None:
-                is_initial = self.is_initial_tag(current_tag_version, is_yes)
                 if is_initial:
                     commits = git.get_commits()
                 else:
