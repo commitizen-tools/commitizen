@@ -1,4 +1,10 @@
 
+## v3.18.0 (2024-03-07)
+
+### Feat
+
+- **changelog**: `changelog_message_build_hook` can now generate multiple changelog entries from a single commit (#1003)
+
 ## v3.17.2 (2024-03-07)
 
 ### Fix
