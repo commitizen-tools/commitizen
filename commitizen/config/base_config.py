@@ -41,6 +41,11 @@ class BaseConfig:
 
     @property
     def mutated_settings(self) -> Settings:
+        """It is used to record the changes from the config file defined by users,
+         which helps distinguish the ambiguous default behavior of
+        `changelog_incremental`.
+        Please refer to https://github.com/commitizen-tools/commitizen/pull/996
+        """
         return self._settings_from_configs
 
     @property
