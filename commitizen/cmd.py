@@ -1,3 +1,4 @@
+import os
 import subprocess
 from typing import NamedTuple
 
@@ -28,6 +29,8 @@ def _try_decode(bytes_: bytes) -> str:
 
 
 def run(cmd: str, env=None) -> Command:
+    if env is not None:
+        env = {**os.environ, **env}
     process = subprocess.Popen(
         cmd,
         shell=True,

@@ -71,6 +71,18 @@ def test_get_reachable_tags(tmp_commitizen_project):
         assert tag_names == {"1.0.0", "1.0.1"}
 
 
+@pytest.mark.parametrize("locale", ["en_US", "fr_FR"])
+def test_get_reachable_tags_with_commits(
+    tmp_commitizen_project, locale: str, monkeypatch: pytest.MonkeyPatch
+):
+    monkeypatch.setenv("LANG", f"{locale}.UTF-8")
+    monkeypatch.setenv("LANGUAGE", f"{locale}.UTF-8")
+    monkeypatch.setenv("LC_ALL", f"{locale}.UTF-8")
+    with tmp_commitizen_project.as_cwd():
+        tags = git.get_tags(reachable_only=True)
+        assert tags == []
+
+
 def test_get_tag_names(mocker: MockFixture):
     tag_str = "v1.0.0\n" "v0.5.0\n" "v0.0.1\n"
     mocker.patch("commitizen.cmd.run", return_value=FakeCommand(out=tag_str))
