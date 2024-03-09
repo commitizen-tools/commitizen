@@ -12,6 +12,7 @@ from pytest_mock import MockFixture
 from commitizen import __file__ as commitizen_init
 from commitizen import cli, git
 from commitizen.commands.changelog import Changelog
+from commitizen.config.base_config import BaseConfig
 from commitizen.cz.base import BaseCommitizen
 from commitizen.exceptions import (
     DryRunExit,
@@ -275,7 +276,8 @@ def test_changelog_incremental_keep_a_changelog_sample(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_hook(mocker: MockFixture, config):
+@pytest.mark.parametrize("dry_run", [True, False])
+def test_changelog_hook(mocker: MockFixture, config: BaseConfig, dry_run: bool):
     changelog_hook_mock = mocker.Mock()
     changelog_hook_mock.return_value = "cool changelog hook"
 
@@ -283,12 +285,15 @@ def test_changelog_hook(mocker: MockFixture, config):
     create_file_and_commit("refactor: is in changelog")
     create_file_and_commit("Merge into master")
 
-    config.settings["change_type_order"] = ["Refactor", "Feat"]
+    config.settings["change_type_order"] = ["Refactor", "Feat"]  # type: ignore[typeddict-unknown-key]
     changelog = Changelog(
-        config, {"unreleased_version": None, "incremental": True, "dry_run": False}
+        config, {"unreleased_version": None, "incremental": True, "dry_run": dry_run}
     )
     mocker.patch.object(changelog.cz, "changelog_hook", changelog_hook_mock)
-    changelog()
+    try:
+        changelog()
+    except DryRunExit:
+        pass
     full_changelog = (
         "## Unreleased\n\n### Refactor\n\n- is in changelog\n\n### Feat\n\n- new file\n"
     )
