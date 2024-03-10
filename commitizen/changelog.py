@@ -188,7 +188,12 @@ def process_commit_message(
     changes: dict[str | None, list],
     change_type_map: dict[str, str] | None = None,
 ):
-    message: dict = parsed.groupdict()
+    message: dict = {
+        "sha1": commit.rev,
+        "author": commit.author,
+        "author_email": commit.author_email,
+        **parsed.groupdict(),
+    }
 
     if processed := hook(message, commit) if hook else message:
         messages = [processed] if isinstance(processed, dict) else processed
