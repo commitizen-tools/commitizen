@@ -1,6 +1,7 @@
 import re
 
 from pathlib import Path
+from typing import Optional
 
 import pytest
 from jinja2 import FileSystemLoader
@@ -1402,6 +1403,26 @@ def test_changelog_message_builder_hook_can_access_and_modify_change_type(
             assert (
                 change_type == "overridden"
             ), f"Line {no}: type {change_type} should have been overridden"
+
+
+def test_render_changelog_with_changelog_release_hook(
+    gitcommits, tags, any_changelog_format: ChangelogFormat
+):
+    def changelog_release_hook(release: dict, tag: Optional[git.GitTag]) -> dict:
+        release["extra"] = "whatever"
+        return release
+
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    tree = changelog.generate_tree_from_commits(
+        gitcommits,
+        tags,
+        parser,
+        changelog_pattern,
+        changelog_release_hook=changelog_release_hook,
+    )
+    for release in tree:
+        assert release["extra"] == "whatever"
 
 
 def test_get_smart_tag_range_returns_an_extra_for_a_range(tags):
