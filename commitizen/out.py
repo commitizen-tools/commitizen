@@ -39,4 +39,4 @@ def diagnostic(value: str):
 
 def warn(value: str) -> None:
     message = colored(value, "magenta")
-    line(message)
+    line(message, file=sys.stderr)
