@@ -1,3 +1,9 @@
+## v3.18.3 (2024-03-11)
+
+### Fix
+
+- **warnings**: all warnings should go to `stdout`
+
 ## v3.18.2 (2024-03-11)
 
 ### Fix
