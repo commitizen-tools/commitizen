@@ -1,3 +1,8 @@
+## v3.18.2 (2024-03-11)
+
+### Fix
+
+- **git**: force the default git locale on methods relying on parsing the output (#1012)
 
 ## v3.18.1 (2024-03-11)
 
@@ -86,16 +91,11 @@
 - **formats**: expose some new customizable changelog formats on the `commitizen.changelog_format` endpoint (Textile, AsciiDoc and RestructuredText)
 - **template**: add `changelog --export-template` command
 - **template**: allow to override the template from cli, configuration and plugins
+- **cli.py**: Added support for extra git CLI args after -- separator for `cz commit` command
 
 ### Fix
 
 - **filename**: ensure `file_name` can be passed to `changelog` from `bump` command
-
-## v3.11.0 (2023-10-17)
-
-### Feat
-
-- **cli.py**: Added support for extra git CLI args after -- separator for `cz commit` command
 
 ### Refactor
 
@@ -304,6 +304,7 @@
 ### BREAKING CHANGE
 
 - Plugins are now exposed as `commitizen.plugin` entrypoints
+- Python 3.6 is not officially supported anymore. Please migrate from 3.6 to 3.7 or greater.
 
 ### Feat
 
@@ -427,7 +428,7 @@
 
 ### Fix
 
-- **bump.py**: `CHANGELOG.md` gets git added and committed correctly
+- **bump.py**: `CHANGELOG.md` gets git added and commited correctly
 
 ## v2.33.0 (2022-09-15)
 
@@ -491,15 +492,15 @@
 
 ## v2.31.0 (2022-08-14)
 
+### Feat
+
+- new file
+
 ### Fix
 
 - **pyproject.toml**: remove test added configurations
 - **changelog**: use defaults.change_type_order in conventional commit
 - capitalize types in default change_type_order
-
-### Feat
-
-- new file
 
 ## v2.30.0 (2022-08-14)
 
@@ -605,13 +606,13 @@
 
 ## v2.24.0 (2022-04-15)
 
-### Fix
-
-- change error code for NoneIncrementExit
-
 ### Feat
 
 - add --no-raise to avoid raising error codes
+
+### Fix
+
+- change error code for NoneIncrementExit
 
 ## v2.23.0 (2022-03-29)
 
@@ -621,14 +622,14 @@
 
 ## v2.22.0 (2022-03-29)
 
+### Feat
+
+- **changelog**: add support for single version and version range
+
 ### Refactor
 
 - speed up testing and wait for tags
 - **git**: use date as a function in GitTag to easily patch
-
-### Feat
-
-- **changelog**: add support for single version and version range
 
 ## v2.21.2 (2022-02-22)
 
@@ -649,25 +650,22 @@
 ### Feat
 
 - skip merge messages that start with Pull request
-- skip merge messages that start with Pull request
 
 ## v2.20.5 (2022-02-07)
+
+### Fix
+
+- Ignore packages that are not plugins
 
 ### Refactor
 
 - iter_modules only accepts str
 
-### Fix
-
-- Ignore packages that are not plugins
-- Ignore packages that are not plugins
-
 ## v2.20.4 (2022-01-17)
 
 ### Fix
 
-- **bump**: raise non zero error code when there's no eligible commit to bump
-- **bump**: raise non zero error code when there's no eligible commit to bump
+- **bump**: raise non zero error code when there's no elegible commit to bump
 
 ## v2.20.3 (2021-12-20)
 
@@ -683,16 +681,16 @@
 
 ## v2.20.1 (2021-12-14)
 
+### Fix
+
+- import TypedDict from type_extensions for backward compatibility
+
 ### Refactor
 
 - **conventional_commits**: remove duplicate patterns and import from defaults
 - **config**: add CzSettings and Questions TypedDict
 - **defaults**: add Settings typeddict
 - **defaults**: move bump_map, bump_pattern, commit_parser from defaults to ConventionalCommitsCz
-
-### Fix
-
-- import TypedDict from type_extensions for backward compatibility
 
 ## v2.20.0 (2021-10-06)
 
@@ -717,17 +715,17 @@
 
 ### Fix
 
-- **commit**: correct the stage checker before committing
+- **commit**: correct the stage checker before commiting
 
 ## v2.18.0 (2021-08-13)
-
-### Refactor
-
-- **shortcuts**: move check for shortcut config setting to apply to any list select
 
 ### Feat
 
 - **prompt**: add keyboard shortcuts with config option
+
+### Refactor
+
+- **shortcuts**: move check for shortcut config setting to apply to any list select
 
 ## v2.17.13 (2021-07-14)
 
@@ -792,7 +790,7 @@
 
 ### Fix
 
-- **bump**: replace all occurrences that match regex
+- **bump**: replace all occurances that match regex
 - **wip**: add test for current breaking change
 
 ## v2.17.1 (2021-04-08)
@@ -857,15 +855,15 @@
 
 ## v2.13.0 (2021-01-01)
 
+### Feat
+
+- **#319**: add optional change_type_order
+
 ### Refactor
 
 - raise an InvalidConfigurationError
 - **#323**: address PR feedback
 - move expected COMMITS_TREE to global
-
-### Feat
-
-- **#319**: add optional change_type_order
 
 ## v2.12.1 (2020-12-30)
 
@@ -890,10 +888,12 @@
 ### Feat
 
 - add yaml as a config option
-
-### feat
-
 - **config**: add support for the new class YAMLConfig at the root of the confi internal package
+- **init**: add support for yaml config file at init
+
+### Fix
+
+- **YAMLConfig**: add a TypeError exception to handle in _parse_settings method
 
 ## v2.10.0 (2020-12-02)
 
@@ -903,14 +903,14 @@
 
 ## v2.9.0 (2020-12-02)
 
-### Fix
-
-- **json_config**: fix the emtpy_config_content method
-
 ### Feat
 
 - **Init**: add the json config support as an option at Init
 - **commitizen/config/json_config**: add json support for configuration
+
+### Fix
+
+- **json_config**: fix the emtpy_config_content method
 
 ## v2.8.2 (2020-11-21)
 
@@ -979,14 +979,14 @@
 
 ## v2.3.0 (2020-09-03)
 
+### Feat
+
+- **cli**: rewrite cli instructions to be more succinct about what they require
+
 ### Fix
 
 - **cli**: add guideline for subject input
 - **cli**: wrap the word enter with brackets
-
-### Feat
-
-- **cli**: rewrite cli instructions to be more succinct about what they require
 
 ## v2.2.0 (2020-08-31)
 
@@ -996,14 +996,14 @@
 
 ## v2.1.0 (2020-08-06)
 
-### Refactor
-
-- **cz_check**: Refactor _get_commits to return GitCommit instead of dict
-
 ### Feat
 
 - **cz_check**: Add rev to all displayed ill-formatted commits
 - **cz_check**: Update to show all ill-formatted commits
+
+### Refactor
+
+- **cz_check**: Refactor _get_commits to return GitCommit instead of dict
 
 ## v2.0.2 (2020-08-03)
 
@@ -1020,26 +1020,27 @@
 
 ## v2.0.0 (2020-07-26)
 
-### Fix
+### BREAKING CHANGE
 
-- add missing `pyyaml` dependency
-- **cli**: make command required for commitizen
+- setup.cfg, .cz and .cz.cfg are no longer supported
+- Use "cz verion" instead
+- "cz --debug" will no longer work
+ #47
 
 ### Feat
 
 - **init**: enable setting up pre-commit hook through "cz init"
+
+### Fix
+
+- add missing `pyyaml` dependency
+- **cli**: make command required for commitizen
 
 ### Refactor
 
 - **config**: drop "files" configure support. Please use "version_files" instead
 - **config**: remove ini configuration support
 - **cli**: remove "--version" argument
-
-### BREAKING CHANGE
-
-- setup.cfg, .cz and .cz.cfg are no longer supported
-- Use "cz version" instead
-- "cz --debug" will no longer work
 
 ## v1.25.0 (2020-07-26)
 
@@ -1084,6 +1085,10 @@
 
 ## v1.23.0 (2020-06-14)
 
+### Feat
+
+- **cli**: enable displaying all traceback for CommitizenException when --debug flag is used
+
 ### Refactor
 
 - **exception**: rename MissingConfigError as MissingCzCustomizeConfigError
@@ -1095,10 +1100,6 @@
 - introduce DryRunExit, ExpectedExit, NoCommandFoundError, InvalidCommandArgumentError
 - use custom exception for error handling
 - **error_codes**: remove unused NO_COMMIT_MSG error code
-
-### Feat
-
-- **cli**: enable displaying all traceback for CommitizenException when --debug flag is used
 
 ## v1.22.3 (2020-06-10)
 
@@ -1116,15 +1117,15 @@
 
 ## v1.22.0 (2020-05-13)
 
-### Fix
-
-- **changelog**: rename `message_hook` -> `changelog_message_builder_hook`
-
 ### Feat
 
 - **changelog**: add support for `changelog_hook` when changelog finishes the generation
 - **changelog**: add support for `message_hook` method
 - **changelog**: add support for modifying the change_type in the title of the changelog
+
+### Fix
+
+- **changelog**: rename `message_hook` -> `changelog_message_builder_hook`
 
 ## v1.21.0 (2020-05-09)
 
@@ -1163,27 +1164,31 @@
 
 ## v1.19.0 (2020-05-02)
 
-### Fix
-
-- **git**: missing dependency removed
-- **changelog**: check get_metadata for existing changelog file
-
 ### Feat
 
 - **changelog**: add support for any commit rule system
 - **changelog**: add incremental flag
+- **commands/changelog**: make changelog_file an option in config
+- **commands/changelog**: exit when there is no commit exists
+- **commands/changlog**: add --start-rev argument to `cz changelog`
+- **changelog**: generate changelog based on git log
+- **commands/changelog**: generate changelog_tree from all past commits
+- **cz/conventinal_commits**: add changelog_map, changelog_pattern and implement process_commit
+- **cz/base**: add default process_commit for processing commit message
+- **changelog**: changelog tree generation from markdown
 
-## v1.18.3 (2020-04-22)
+### Fix
+
+- **git**: missing dependency removed
+- **changelog**: check get_metadata for existing changelog file
+- **cz/conventional_commits**: fix schema_pattern break due to rebase
+- **changelog_template**: fix list format
+- **commitizen/cz**: set changelog_map, changelog_pattern to none as default
+- **commands/changelog**: remove --skip-merge argument
+- **cli**: add changelog arguments
 
 ### Refactor
 
-- **commands/init**: fix typo
-
-## v1.18.2 (2020-04-22)
-
-### Refactor
-
-- **git**: replace GitCommit.message code with one-liner
 - **changelog**: use functions from changelog.py
 - **changelog**: rename category to change_type to fit 'keep a changelog'
 - **templates**: rename as "keep_a_changelog_template.j2"
@@ -1194,25 +1199,21 @@
 - **commands/changelog**: remove redundant if statement
 - **commands/changelog**: use jinja2 template instead of string concatenation to build changelog
 
+## v1.18.3 (2020-04-22)
+
+### Refactor
+
+- **commands/init**: fix typo
+
+## v1.18.2 (2020-04-22)
+
 ### Fix
 
 - **git**: fix returned value for GitCommit.message when body is empty
-- **cz/conventional_commits**: fix schema_pattern break due to rebase
-- **changelog_template**: fix list format
-- **commitizen/cz**: set changelog_map, changelog_pattern to none as default
-- **commands/changelog**: remove --skip-merge argument
-- **cli**: add changelog arguments
 
-### Feat
+### Refactor
 
-- **commands/changelog**: make changelog_file an option in config
-- **commands/changelog**: exit when there is no commit exists
-- **commands/changelog**: add --start-rev argument to `cz changelog`
-- **changelog**: generate changelog based on git log
-- **commands/changelog**: generate changelog_tree from all past commits
-- **cz/conventinal_commits**: add changelog_map, changelog_pattern and implement process_commit
-- **cz/base**: add default process_commit for processing commit message
-- **changelog**: changelog tree generation from markdown
+- **git**: replace GitCommit.message code with one-liner
 
 ## v1.18.1 (2020-04-16)
 
@@ -1221,6 +1222,14 @@
 - **config**: display ini config deprecation warning only when commitizen config is inside
 
 ## v1.18.0 (2020-04-13)
+
+### Feat
+
+- **bump**: support for ! as BREAKING change in commit message
+
+### Fix
+
+- **cz/customize**: add error handling when customize detail is not set
 
 ### Refactor
 
@@ -1232,14 +1241,6 @@
 - **cz/base**: fix config type used in base cz
 - **cz**: add type annotation for each function in cz
 - **config**: fix mypy warning for _conf
-
-### Fix
-
-- **cz/customize**: add error handling when customize detail is not set
-
-### Feat
-
-- **bump**: support for ! as BREAKING change in commit message
 
 ## v1.17.1 (2020-03-24)
 
@@ -1253,19 +1254,19 @@
 
 ## v1.17.0 (2020-03-15)
 
-### Refactor
+### Feat
 
-- **tests/bump**: use parameterize to group similliar tests
-- **cz/connventional_commit**: use \S to check scope
-- **git**: remove unnecessary dot between git range
+- **commands/check**: add --rev-range argument for checking commits within some range
 
 ### Fix
 
 - **bump**: fix bump find_increment error
 
-### Feat
+### Refactor
 
-- **commands/check**: add --rev-range argument for checking commits within some range
+- **cz/connventional_commit**: use \S to check scope
+- **git**: remove unnecessary dot between git range
+- **tests/bump**: use parameterize to group similliar tests
 
 ## v1.16.4 (2020-03-03)
 
@@ -1301,6 +1302,10 @@
 
 ## v1.16.0 (2020-01-21)
 
+### Feat
+
+- **git**: get_commits default from first_commit
+
 ### Refactor
 
 - **commands/bump**: rename parameter into bump_setting to distinguish bump_setting and argument
@@ -1308,38 +1313,40 @@
 - **cmd**: reimplement how cmd is run
 - **git**: Use GitCommit, GitTag object to store commit and git information
 - **git**: make arguments other then start and end in get_commit keyword arguments
-- **git**: Change get_commits into returning commits instead of lines of messages
-
-### Feat
-
-- **git**: get_commits default from first_commit
+- **git**: Change get_commits into returning commits instead of lines of messsages
 
 ## v1.15.1 (2020-01-20)
 
-## v1.15.0 (2020-01-20)
+### Fix
+
+- **cli**: fix --version not functional
 
 ### Refactor
 
 - **tests/commands/bump**: use tmp_dir to replace self implemented tmp dir behavior
-- **git**: make find_git_project_root return None if it's not a git project
-- **config/base_config**: make set_key not implemented
-- **error_codes**: move all the error_codes to a module
-- **config**: replace string type path with pathlib.Path
 - **test_bump_command**: rename camel case variables
 - **tests/commands/check**: use pytest fixture tmpdir replace self implemented contextmanager
 - **test/commands/other**: replace unit test style mock with mocker fixture
 - **tests/commands**: separate command unit tests into modules
 - **tests/commands**: make commands related tests a module
 
-### Fix
-
-- **git**: remove breakline in the return value of find_git_project_root
-- **cli**: fix --version not functional
+## v1.15.0 (2020-01-20)
 
 ### Feat
 
 - **config**: look up configuration in git project root
 - **git**: add find_git_project_root
+
+### Fix
+
+- **git**: remove breakline in the return value of find_git_project_root
+
+### Refactor
+
+- **git**: make find_git_project_root return None if it's not a git project
+- **config/base_config**: make set_key not implemented
+- **error_codes**: move all the error_codes to a module
+- **config**: replace string type path with pathlib.Path
 
 ## v1.14.2 (2020-01-14)
 
@@ -1349,20 +1356,20 @@
 
 ## v1.14.1 (2020-01-11)
 
+### Fix
+
+- **cli**: fix the way default handled for name argument
+- **cli**: fix name cannot be overwritten through config in newly refactored config design
+
 ## v1.14.0 (2020-01-06)
-
-### Refactor
-
-- **pre-commit-hooks**: add metadata for the check hook
 
 ### Feat
 
 - **pre-commit-hooks**: add pre-commit hook
 
-### Fix
+### Refactor
 
-- **cli**: fix the way default handled for name argument
-- **cli**: fix name cannot be overwritten through config in newly refactored config design
+- **pre-commit-hooks**: add metadata for the check hook
 
 ## v1.13.1 (2019-12-31)
 
@@ -1392,6 +1399,12 @@
 
 ## v1.10.2 (2019-12-27)
 
+### Fix
+
+- **config**: handle empty config file
+- **config**: fix load global_conf even if it doesn't exist
+- **config/ini_config**: replase outdated _parse_ini_settings with _parse_settings
+
 ### Refactor
 
 - new config system where each config type has its own class
@@ -1403,12 +1416,6 @@
 - **cz/customize**: remove unnecessary statement "raise NotImplementedError("Not Implemented yet")"
 - **config**: move default settings back to defaults
 - **config**: Make config a class and each type of config (e.g., toml, ini) a child class
-
-### Fix
-
-- **config**: handle empty config file
-- **config**: fix load global_conf even if it doesn't exist
-- **config/ini_config**: replace outdated _parse_ini_settings with _parse_settings
 
 ## v1.10.1 (2019-12-10)
 
@@ -1444,28 +1451,34 @@
 - **config**: add deprecation warning for loading config from ini files
 - **cz/customize**: add jinja support to enhance template flexibility
 - **cz/filters**: add required_validator and multiple_line_breaker
+- **Commands/commit**: add ´--dry-run´ flag to the Commit command
 - **cz/cz_customize**: implement info to support info and info_path
 - **cz/cz_customize**: enable bump_pattern bump_map customization
 - **cz/cz_customize**: implement customizable cz
-- **Commands/commit**: add ´--dry-run´ flag to the Commit command
 - new 'git-cz' entrypoint
+
+### Fix
+
+- commit dry-run doesnt require staging to be clean
+- **scripts**: add back the delelte poetry prefix
+- correct typo to spell "convention"
+- removing folder in windows throwing a PermissionError
+- **test_cli**: testing the version command
 
 ### Refactor
 
 - **config**: remove has_pyproject which is no longer used
-- **cz/customize**: make jinja2 a custom requirement. if not installed use string.Template instead
+- **cz/customize**: make jinja2 a custom requirement. if not installed use string.Tempalte instead
 - **cz/utils**: rename filters as utils
 - **cli**: add back --version and remove subcommand required constraint
 
-### Fix
-
-- commit dry-run doesn't require staging to be clean
-- correct typo to spell "convention"
-- removing folder in windows throwing a PermissionError
-- **scripts**: add back the delete poetry prefix
-- **test_cli**: testing the version command
-
 ## v1.8.0 (2019-11-12)
+
+### Feat
+
+- **cz**: add a base exception for cz customization
+- **commands/commit**: abort commit if there is nothing to commit
+- **git**: add is_staging_clean to check if there is any file in git staging
 
 ### Fix
 
@@ -1479,13 +1492,13 @@
 - **command/version**: use out.write instead of out.line
 - **command**: make version a command instead of an argument
 
+## v1.7.0 (2019-11-08)
+
 ### Feat
 
-- **cz**: add a base exception for cz customization
-- **commands/commit**: abort commit if there is nothing to commit
-- **git**: add is_staging_clean to check if there is any file in git staging
-
-## v1.7.0 (2019-11-08)
+- **config**: update style instead of overwrite
+- **config**: parse style in config
+- **commit**: make style configurable for commit command
 
 ### Fix
 
@@ -1496,12 +1509,6 @@
 ### Refactor
 
 - **cz**: change the color of default style
-
-### Feat
-
-- **config**: update style instead of overwrite
-- **config**: parse style in config
-- **commit**: make style configurable for commit command
 
 ## v1.6.0 (2019-11-05)
 
@@ -1523,13 +1530,13 @@
 
 ## v1.4.0 (2019-04-26)
 
-### Fix
-
-- **bump**: handle commit and create tag failure
-
 ### Feat
 
 - added argument yes to bump in order to accept questions
+
+### Fix
+
+- **bump**: handle commit and create tag failure
 
 ## v1.3.0 (2019-04-24)
 
@@ -1551,6 +1558,11 @@
 
 ## v1.1.1 (2019-04-18)
 
+### Fix
+
+- **bump**: commit message now fits better with semver
+- conventional commit 'breaking change' in body instead of title
+
 ### Refactor
 
 - changed stdout statements
@@ -1558,11 +1570,6 @@
 - **info**: command logic removed from commitizen base
 - **example**: command logic removed from commitizen base
 - **commit**: moved most of the commit logic to the commit command
-
-### Fix
-
-- **bump**: commit message now fits better with semver
-- conventional commit 'breaking change' in body instead of title
 
 ## v1.1.0 (2019-04-14)
 
@@ -1573,7 +1580,7 @@
 - update given files with new version
 - **config**: new set key, used to set version to cfg
 - support for pyproject.toml
-- first semantic version bump implementation
+- first semantic version bump implementaiton
 
 ### Fix
 
@@ -1630,13 +1637,13 @@
 
 ## v0.9.6 (2018-09-19)
 
-### Refactor
-
-- **conventionalCommit**: moved filters to questions instead of message
-
 ### Fix
 
-- **manifest**: included missing files
+- **manifest**: inluded missing files
+
+### Refactor
+
+- **conventionalCommit**: moved fitlers to questions instead of message
 
 ## v0.9.5 (2018-08-24)
 
@@ -1654,7 +1661,7 @@
 
 ### Feat
 
-- **committer**: conventional commit is a bit more intelligent now
+- **commiter**: conventional commit is a bit more intelligent now
 
 ## v0.9.2 (2017-11-11)
 
