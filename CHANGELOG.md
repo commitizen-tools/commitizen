@@ -1,4 +1,10 @@
 
+## v3.18.1 (2024-03-11)
+
+### Fix
+
+- **changelog**: changelog hook was not called on dry run
+
 ## v3.18.0 (2024-03-07)
 
 ### Feat
