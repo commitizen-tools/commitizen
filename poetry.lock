@@ -1530,13 +1530,13 @@ test = ["argcomplete (>=3.0.3)", "mypy (>=1.7.0)", "pre-commit", "pytest (>=7.0,
 
 [[package]]
 name = "types-deprecated"
-version = "1.2.9.20240106"
+version = "1.2.9.20240311"
 description = "Typing stubs for Deprecated"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "types-Deprecated-1.2.9.20240106.tar.gz", hash = "sha256:afeb819e9a03d0a5795f18c88fe6207c48ed13c639e93281bd9d9b7bb6d34310"},
-    {file = "types_Deprecated-1.2.9.20240106-py3-none-any.whl", hash = "sha256:9dcb258493b5be407574ee21e50ddac9e429072d39b576126bf1ac00764fb9a8"},
+    {file = "types-Deprecated-1.2.9.20240311.tar.gz", hash = "sha256:0680e89989a8142707de8103f15d182445a533c1047fd9b7e8c5459101e9b90a"},
+    {file = "types_Deprecated-1.2.9.20240311-py3-none-any.whl", hash = "sha256:d7793aaf32ff8f7e49a8ac781de4872248e0694c4b75a7a8a186c51167463f9d"},
 ]
 
 [[package]]
