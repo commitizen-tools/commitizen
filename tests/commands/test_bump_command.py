@@ -1406,3 +1406,36 @@ def test_bump_template_extra_quotes(
 
     changelog = project_root / any_changelog_format.default_changelog_file
     assert changelog.read_text() == "no-quote - single quotes - double quotes"
+
+
+def test_bump_changelog_contains_increment_only(mocker, tmp_commitizen_project, capsys):
+    """Issue 1024"""
+    # Initialize commitizen up to v1.0.0
+    project_root = Path(tmp_commitizen_project)
+    tmp_commitizen_cfg_file = project_root / "pyproject.toml"
+    tmp_commitizen_cfg_file.write_text(
+        "[tool.commitizen]\n" 'version="1.0.0"\n' "update_changelog_on_bump = true\n"
+    )
+    tmp_changelog_file = project_root / "CHANGELOG.md"
+    tmp_changelog_file.write_text("## v1.0.0")
+    create_file_and_commit("feat(user): new file")
+    create_tag("v1.0.0")
+
+    # Add a commit and bump to v2.0.0
+    create_file_and_commit("feat(user)!: new file")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    _ = capsys.readouterr()
+
+    # Add a commit and create the incremental changelog to v3.0.0
+    # it should only include v3 changes
+    create_file_and_commit("feat(next)!: next version")
+    testargs = ["cz", "bump", "--yes", "--files-only", "--changelog-to-stdout"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(ExpectedExit):
+        cli.main()
+    out, _ = capsys.readouterr()
+
+    assert "3.0.0" in out
+    assert "2.0.0" not in out

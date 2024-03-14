@@ -294,11 +294,15 @@ def test_changelog_hook(mocker: MockFixture, config: BaseConfig, dry_run: bool):
         changelog()
     except DryRunExit:
         pass
+
     full_changelog = (
         "## Unreleased\n\n### Refactor\n\n- is in changelog\n\n### Feat\n\n- new file\n"
     )
+    partial_changelog = full_changelog
+    if dry_run:
+        partial_changelog = ""
 
-    changelog_hook_mock.assert_called_with(full_changelog, full_changelog)
+    changelog_hook_mock.assert_called_with(full_changelog, partial_changelog)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
