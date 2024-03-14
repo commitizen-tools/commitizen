@@ -1,3 +1,9 @@
+## v3.18.4 (2024-03-14)
+
+### Fix
+
+- **changelog**: include latest change when dry run and incremental
+
 ## v3.18.3 (2024-03-11)
 
 ### Fix

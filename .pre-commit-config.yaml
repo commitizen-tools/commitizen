@@ -46,7 +46,7 @@ repos:
         exclude: "poetry.lock"
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.18.3 # automatically updated by Commitizen
+    rev: v3.18.4 # automatically updated by Commitizen
     hooks:
       - id: commitizen
       - id: commitizen-branch
