@@ -82,6 +82,14 @@ Default: `None`
 
 Create custom commit message, useful to skip ci. [Read more][bump_message]
 
+### `retry_after_failure`
+
+Type: `bool`
+
+Default: `false`
+
+Automatically retry failed commit when running `cz commit`. [Read more][retry_after_failure]
+
 ### `allow_abort`
 
 Type: `bool`
@@ -380,6 +388,7 @@ setup(
 [bump_message]: bump.md#bump_message
 [major-version-zero]: bump.md#-major-version-zero
 [prerelease-offset]: bump.md#-prerelease_offset
+[retry_after_failure]: commit.md#retry
 [allow_abort]: check.md#allow-abort
 [version-scheme]: bump.md#version-scheme
 [pre_bump_hooks]: bump.md#pre_bump_hooks
