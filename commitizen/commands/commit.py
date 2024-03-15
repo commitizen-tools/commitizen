@@ -1,6 +1,8 @@
 import contextlib
 import os
 
+from typing import Optional
+
 import questionary
 
 from commitizen import factory, git, out
@@ -33,7 +35,7 @@ class Commit:
         self.arguments = arguments
         self.temp_file: str = get_backup_file_path()
 
-    def read_backup_message(self) -> str | None:
+    def read_backup_message(self) -> Optional[str]:
         # Check the commit backup file exists
         if not os.path.isfile(self.temp_file):
             return None
