@@ -21,10 +21,17 @@ def strip_local_version(version: str) -> str:
 
 
 def get_backup_file_path() -> str:
+    project_root = git.find_git_project_root()
+
+    if project_root is None:
+        project = ""
+    else:
+        project = project_root.as_posix().replace("/", "%")
+
     return os.path.join(
         tempfile.gettempdir(),
-        "cz.commit%{user}%{project_root}.backup".format(
+        "cz.commit%{user}%{project}.backup".format(
             user=os.environ.get("USER", ""),
-            project_root=str(git.find_git_project_root()).replace("/", "%"),
+            project=project,
         ),
     )
