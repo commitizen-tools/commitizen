@@ -1,19 +1,19 @@
 #!/usr/bin/env python
-import os
 import shutil
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 from subprocess import CalledProcessError
 
+try:
+    from commitizen.cz.utils import get_backup_file_path
+except ImportError as error:
+    print("could not import commitizen:")
+    print(error)
+    exit(1)
+
 
 def prepare_commit_msg(commit_msg_file: Path) -> int:
-    # check that commitizen is installed
-    if shutil.which("cz") is None:
-        print("commitizen is not installed!")
-        return 0
-
     # check if the commit message needs to be generated using commitizen
     if (
         subprocess.run(
@@ -27,9 +27,7 @@ def prepare_commit_msg(commit_msg_file: Path) -> int:
         ).returncode
         != 0
     ):
-        backup_file = Path(
-            tempfile.gettempdir(), f"cz.commit{os.environ.get('USER', '')}.backup"
-        )
+        backup_file = Path(get_backup_file_path())
 
         if backup_file.is_file():
             # confirm if commit message from backup file should be reused
