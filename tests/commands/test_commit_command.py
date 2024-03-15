@@ -95,6 +95,69 @@ def test_commit_retry_works(config, mocker: MockFixture):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
+def test_commit_retry_after_failure_no_backup(config, mocker: MockFixture):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "closes #21",
+        "footer": "",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
+    success_mock = mocker.patch("commitizen.out.success")
+
+    config.settings["retry_after_failure"] = True
+    commands.Commit(config, {})()
+
+    commit_mock.assert_called_with("feat: user created\n\ncloses #21", args="")
+    prompt_mock.assert_called_once()
+    success_mock.assert_called_once()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_retry_after_failure_works(config, mocker: MockFixture):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "closes #21",
+        "footer": "",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("", "error", b"", b"", 9)
+    error_mock = mocker.patch("commitizen.out.error")
+
+    with pytest.raises(CommitError):
+        commit_cmd = commands.Commit(config, {})
+        temp_file = commit_cmd.temp_file
+        commit_cmd()
+
+    prompt_mock.assert_called_once()
+    error_mock.assert_called_once()
+    assert os.path.isfile(temp_file)
+
+    # Previous commit failed, so retry should pick up the backup commit
+    # commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
+    success_mock = mocker.patch("commitizen.out.success")
+
+    config.settings["retry_after_failure"] = True
+    commands.Commit(config, {})()
+
+    commit_mock.assert_called_with("feat: user created\n\ncloses #21", args="")
+    prompt_mock.assert_called_once()
+    success_mock.assert_called_once()
+    assert not os.path.isfile(temp_file)
+
+
+@pytest.mark.usefixtures("staging_is_clean")
 def test_commit_command_with_dry_run_option(config, mocker: MockFixture):
     prompt_mock = mocker = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
