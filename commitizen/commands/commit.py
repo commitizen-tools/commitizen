@@ -33,13 +33,16 @@ class Commit:
         self.arguments = arguments
         self.temp_file: str = os.path.join(
             tempfile.gettempdir(),
-            "cz.commit{user}.backup".format(user=os.environ.get("USER", "")),
+            "cz.commit%{user}%{project_root}.backup".format(
+                user=os.environ.get("USER", ""),
+                project_root=str(git.find_git_project_root()).replace("/", "%"),
+            ),
         )
 
-    def read_backup_message(self) -> str:
+    def read_backup_message(self) -> str | None:
         # Check the commit backup file exists
         if not os.path.isfile(self.temp_file):
-            raise NoCommitBackupError()
+            return None
 
         # Read commit message from backup
         with open(self.temp_file, encoding=self.encoding) as f:
@@ -65,7 +68,7 @@ class Commit:
 
     def __call__(self):
         dry_run: bool = self.arguments.get("dry_run")
-        write_message_to_file = self.arguments.get("write_message_to_file")
+        write_message_to_file: bool = self.arguments.get("write_message_to_file")
 
         is_all: bool = self.arguments.get("all")
         if is_all:
@@ -78,9 +81,17 @@ class Commit:
             raise NotAllowed(f"{write_message_to_file} is a directory")
 
         retry: bool = self.arguments.get("retry")
+        no_retry: bool = self.arguments.get("no_retry")
+        retry_after_failure: bool = self.config.settings.get("retry_after_failure")
 
         if retry:
             m = self.read_backup_message()
+            if m is None:
+                raise NoCommitBackupError()
+        elif retry_after_failure and not no_retry:
+            m = self.read_backup_message()
+            if m is None:
+                m = self.prompt_commit_questions()
         else:
             m = self.prompt_commit_questions()
 
