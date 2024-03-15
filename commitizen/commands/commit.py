@@ -7,6 +7,7 @@ import questionary
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
 from commitizen.cz.exceptions import CzException
+from commitizen.cz.utils import get_backup_file_path
 from commitizen.exceptions import (
     CommitError,
     CustomError,
@@ -31,13 +32,7 @@ class Commit:
         self.encoding = config.settings["encoding"]
         self.cz = factory.commiter_factory(self.config)
         self.arguments = arguments
-        self.temp_file: str = os.path.join(
-            tempfile.gettempdir(),
-            "cz.commit%{user}%{project_root}.backup".format(
-                user=os.environ.get("USER", ""),
-                project_root=str(git.find_git_project_root()).replace("/", "%"),
-            ),
-        )
+        self.temp_file: str = get_backup_file_path()
 
     def read_backup_message(self) -> str | None:
         # Check the commit backup file exists
