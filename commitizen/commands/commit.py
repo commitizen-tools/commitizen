@@ -1,6 +1,5 @@
 import contextlib
 import os
-import tempfile
 
 import questionary
 
