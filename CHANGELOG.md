@@ -1,3 +1,9 @@
+## v3.20.0 (2024-03-19)
+
+### Feat
+
+- **changelog**: expose commits `sha1`, `author` and `author_email` in changelog tree (fix #987) (#1013)
+
 ## v3.19.0 (2024-03-19)
 
 ### Feat
