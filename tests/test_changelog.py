@@ -1084,10 +1084,24 @@ def test_generate_tree_from_commits(gitcommits, tags, merge_prereleases):
     tree = changelog.generate_tree_from_commits(
         gitcommits, tags, parser, changelog_pattern, merge_prerelease=merge_prereleases
     )
-    if merge_prereleases:
-        assert tuple(tree) == COMMITS_TREE_AFTER_MERGED_PRERELEASES
-    else:
-        assert tuple(tree) == COMMITS_TREE
+    expected = (
+        COMMITS_TREE_AFTER_MERGED_PRERELEASES if merge_prereleases else COMMITS_TREE
+    )
+
+    for release, expected_release in zip(tree, expected):
+        assert release["version"] == expected_release["version"]
+        assert release["date"] == expected_release["date"]
+        assert release["changes"].keys() == expected_release["changes"].keys()
+        for change_type in release["changes"]:
+            changes = release["changes"][change_type]
+            expected_changes = expected_release["changes"][change_type]
+            for change, expected_change in zip(changes, expected_changes):
+                assert change["scope"] == expected_change["scope"]
+                assert change["breaking"] == expected_change["breaking"]
+                assert change["message"] == expected_change["message"]
+                assert change["author"] == "Commitizen"
+                assert change["author_email"] in "author@cz.dev"
+                assert "sha1" in change
 
 
 def test_generate_tree_from_commits_with_no_commits(tags):

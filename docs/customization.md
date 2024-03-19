@@ -505,6 +505,9 @@ Each `Change` has the following fields:
 | ---- | ---- | ----------- |
 | scope | `str | None` | An optional scope |
 | message | `str` | The commit message body |
+| sha1 | `str` | The commit `sha1` |
+| author | `str` | The commit author name |
+| author_email | `str` | The commit author email |
 
 !!! Note
     The field values depend on the customization class and/or the settings you provide
