@@ -1,3 +1,9 @@
+## v3.19.0 (2024-03-19)
+
+### Feat
+
+- **changelog**: adds a `changelog_release_hook` called for each release in the changelog (#1018)
+
 ## v3.18.4 (2024-03-14)
 
 ### Fix
