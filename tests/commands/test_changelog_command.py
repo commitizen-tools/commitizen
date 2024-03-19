@@ -328,6 +328,28 @@ def test_changelog_hook_customize(mocker: MockFixture, config_customize):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_release_hook(mocker: MockFixture, config):
+    def changelog_release_hook(release: dict, tag: git.GitTag) -> dict:
+        return release
+
+    for i in range(3):
+        create_file_and_commit("feat: new file")
+        create_file_and_commit("refactor: is in changelog")
+        create_file_and_commit("Merge into master")
+        git.tag(f"0.{i + 1}.0")
+
+    # changelog = Changelog(config, {})
+    changelog = Changelog(
+        config, {"unreleased_version": None, "incremental": True, "dry_run": False}
+    )
+    mocker.patch.object(changelog.cz, "changelog_release_hook", changelog_release_hook)
+    spy = mocker.spy(changelog.cz, "changelog_release_hook")
+    changelog()
+
+    assert spy.call_count == 3
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_with_non_linear_merges_commit_order(
     mocker: MockFixture, config_customize
 ):

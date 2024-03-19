@@ -43,6 +43,7 @@ from jinja2 import (
 
 from commitizen import out
 from commitizen.bump import normalize_tag
+from commitizen.cz.base import ChangelogReleaseHook
 from commitizen.exceptions import InvalidConfigurationError, NoCommitsFoundError
 from commitizen.git import GitCommit, GitTag
 from commitizen.version_schemes import (
@@ -113,6 +114,7 @@ def generate_tree_from_commits(
     unreleased_version: str | None = None,
     change_type_map: dict[str, str] | None = None,
     changelog_message_builder_hook: MessageBuilderHook | None = None,
+    changelog_release_hook: ChangelogReleaseHook | None = None,
     merge_prerelease: bool = False,
     scheme: VersionScheme = DEFAULT_SCHEME,
 ) -> Iterable[dict]:
@@ -143,11 +145,14 @@ def generate_tree_from_commits(
             commit_tag, used_tags, merge_prerelease, scheme=scheme
         ):
             used_tags.append(commit_tag)
-            yield {
+            release = {
                 "version": current_tag_name,
                 "date": current_tag_date,
                 "changes": changes,
             }
+            if changelog_release_hook:
+                release = changelog_release_hook(release, commit_tag)
+            yield release
             current_tag_name = commit_tag.name
             current_tag_date = commit_tag.date
             changes = defaultdict(list)
@@ -178,7 +183,14 @@ def generate_tree_from_commits(
                     change_type_map,
                 )
 
-    yield {"version": current_tag_name, "date": current_tag_date, "changes": changes}
+    release = {
+        "version": current_tag_name,
+        "date": current_tag_date,
+        "changes": changes,
+    }
+    if changelog_release_hook:
+        release = changelog_release_hook(release, commit_tag)
+    yield release
 
 
 def process_commit_message(

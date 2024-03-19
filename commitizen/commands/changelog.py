@@ -9,7 +9,7 @@ from typing import Callable
 from commitizen import bump, changelog, defaults, factory, git, out
 
 from commitizen.config import BaseConfig
-from commitizen.cz.base import MessageBuilderHook
+from commitizen.cz.base import MessageBuilderHook, ChangelogReleaseHook
 from commitizen.exceptions import (
     DryRunExit,
     NoCommitsFoundError,
@@ -150,6 +150,9 @@ class Changelog:
         changelog_message_builder_hook: MessageBuilderHook | None = (
             self.cz.changelog_message_builder_hook
         )
+        changelog_release_hook: ChangelogReleaseHook | None = (
+            self.cz.changelog_release_hook
+        )
         merge_prerelease = self.merge_prerelease
 
         if self.export_template_to:
@@ -203,6 +206,7 @@ class Changelog:
             unreleased_version,
             change_type_map=change_type_map,
             changelog_message_builder_hook=changelog_message_builder_hook,
+            changelog_release_hook=changelog_release_hook,
             merge_prerelease=merge_prerelease,
             scheme=self.scheme,
         )

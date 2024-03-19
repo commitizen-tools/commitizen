@@ -320,6 +320,7 @@ You can customize it of course, and this are the variables you need to add to yo
 | `change_type_map`                | `dict`                                                                   | NO       | Convert the title of the change type that will appear in the changelog, if a value is not found, the original will be provided                                                                                      |
 | `changelog_message_builder_hook` | `method: (dict, git.GitCommit) -> dict | list | None`                                  | NO       | Customize with extra information your message output, like adding links, this function is executed per parsed commit. Each GitCommit contains the following attrs: `rev`, `title`, `body`, `author`, `author_email`. Returning a falsy value ignore the commit. |
 | `changelog_hook`                 | `method: (full_changelog: str, partial_changelog: Optional[str]) -> str` | NO       | Receives the whole and partial (if used incremental) changelog. Useful to send slack messages or notify a compliance department. Must return the full_changelog                                                     |
+| `changelog_release_hook` | `method: (release: dict, tag: git.GitTag) -> dict` | NO | Receives each generated changelog release and its associated tag. Useful to enrich a releases before they are rendered. Must return the update release
 
 ```python
 from commitizen.cz.base import BaseCommitizen
@@ -346,6 +347,10 @@ class StrangeCommitizen(BaseCommitizen):
             "message"
         ] = f"{m} {rev} [{commit.author}]({commit.author_email})"
         return parsed_message
+
+    def changelog_release_hook(self, release: dict, tag: git.GitTag) -> dict:
+        release["author"] = tag.author
+        return release
 
     def changelog_hook(
         self, full_changelog: str, partial_changelog: Optional[str]

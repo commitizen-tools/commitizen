@@ -17,6 +17,12 @@ class MessageBuilderHook(Protocol):
     ) -> dict[str, Any] | Iterable[dict[str, Any]] | None: ...
 
 
+class ChangelogReleaseHook(Protocol):
+    def __call__(
+        self, release: dict[str, Any], tag: git.GitTag | None
+    ) -> dict[str, Any]: ...
+
+
 class BaseCommitizen(metaclass=ABCMeta):
     bump_pattern: str | None = None
     bump_map: dict[str, str] | None = None
@@ -47,6 +53,9 @@ class BaseCommitizen(metaclass=ABCMeta):
 
     # Executed only at the end of the changelog generation
     changelog_hook: Callable[[str, str | None], str] | None = None
+
+    # Executed for each release in the changelog
+    changelog_release_hook: ChangelogReleaseHook | None = None
 
     # Plugins can override templates and provide extra template data
     template_loader: BaseLoader = PackageLoader("commitizen", "templates")
