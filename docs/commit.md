@@ -29,3 +29,10 @@ For example, using the `-S` option on `git commit` to sign a commit is now commi
 !!! note
     Deprecation warning: A commit can be signed off using `cz commit --signoff` or the shortcut `cz commit -s`.
     This syntax is now deprecated in favor of the new `cz commit -- -s` syntax.
+
+### Retry
+
+You can use `cz commit --retry` to reuse the last commit message when the previous commit attempt failed.
+To automatically retry when running `cz commit`, you can set the `retry_after_failure`
+configuration option to `true`. Running `cz commit --no-retry` makes commitizen ignore `retry_after_failure`, forcing
+a new commit message to be prompted.

@@ -124,6 +124,12 @@ data = {
                         "help": "retry last commit",
                     },
                     {
+                        "name": ["--no-retry"],
+                        "action": "store_true",
+                        "default": False,
+                        "help": "skip retry if retry_after_failure is set to true",
+                    },
+                    {
                         "name": "--dry-run",
                         "action": "store_true",
                         "help": "show output to stdout, no commit, no modified files",
