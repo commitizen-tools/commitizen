@@ -52,5 +52,6 @@ class JsonConfig(BaseConfig):
 
         try:
             self.settings.update(doc["commitizen"])
+            self.mutated_settings.update(doc["commitizen"])
         except KeyError:
             self.is_empty_config = True
