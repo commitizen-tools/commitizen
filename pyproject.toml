@@ -54,7 +54,7 @@ importlib_metadata = { version = ">=4.13,<8"}
 ipython = "^8.0"
 # test
 pytest = ">=7.2,<9.0"
-pytest-cov = "^4.0"
+pytest-cov = ">=4,<6"
 pytest-mock = "^3.10"
 pytest-regressions = "^2.4.0"
 pytest-freezer = "^0.4.6"
