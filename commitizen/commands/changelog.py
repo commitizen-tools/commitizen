@@ -6,7 +6,7 @@ from operator import itemgetter
 from pathlib import Path
 from typing import Callable
 
-from commitizen import changelog, defaults, factory, git, out
+from commitizen import bump, changelog, defaults, factory, git, out
 
 from commitizen.config import BaseConfig
 from commitizen.cz.base import MessageBuilderHook, ChangelogReleaseHook
@@ -177,8 +177,13 @@ class Changelog:
         if self.incremental:
             changelog_meta = self.changelog_format.get_metadata(self.file_name)
             if changelog_meta.latest_version:
+                latest_tag_version: str = bump.normalize_tag(
+                    changelog_meta.latest_version,
+                    tag_format=self.tag_format,
+                    scheme=self.scheme,
+                )
                 start_rev = self._find_incremental_rev(
-                    strip_local_version(changelog_meta.latest_version), tags
+                    strip_local_version(latest_tag_version), tags
                 )
         if self.rev_range:
             start_rev, end_rev = changelog.get_oldest_and_newest_rev(

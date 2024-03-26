@@ -1540,9 +1540,47 @@ def test_changelog_only_tag_matching_tag_format_included(
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
     wait_for_tag()
+    create_file_and_commit("feat: some awesome new feature")
+    # git.tag("0.2.1")
+    testargs = ["cz", "bump", "--changelog", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    wait_for_tag()
     with open(changelog_path) as f:
         out = f.read()
-    assert out.startswith("## 0.2.0custom (2021-06-11)")
+    assert out.startswith("## 0.3.0custom (2021-06-11)")
+    assert "## 0.2.0custom (2021-06-11)" in out
+    assert "## v0.2.0 (2021-06-11)" not in out
+    assert "## 0.2.0  (2021-06-11)" not in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2021-06-11")
+def test_changelog_only_tag_matching_tag_format_included_prefix(
+    mocker: MockFixture,
+    changelog_path: Path,
+    config_path: Path,
+):
+    with open(config_path, "a", encoding="utf-8") as f:
+        f.write('\ntag_format = "example-${version}"\n')
+    create_file_and_commit("feat: new file")
+    git.tag("v0.2.0")
+    create_file_and_commit("feat: another new file")
+    git.tag("0.2.0")
+    git.tag("random0.2.0")
+    testargs = ["cz", "bump", "--changelog", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    wait_for_tag()
+    create_file_and_commit("feat: some awesome new feature")
+    testargs = ["cz", "bump", "--changelog", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    wait_for_tag()
+    with open(changelog_path) as f:
+        out = f.read()
+    assert out.startswith("## example-0.3.0 (2021-06-11)")
+    assert "## example-0.2.0 (2021-06-11)" in out
     assert "## v0.2.0 (2021-06-11)" not in out
     assert "## 0.2.0  (2021-06-11)" not in out
 
