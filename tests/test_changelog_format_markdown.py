@@ -74,6 +74,32 @@ EXPECTED_D = Metadata(
 )
 
 
+CHANGELOG_E = """
+# Unreleased
+
+## example-1.0.0
+"""
+EXPECTED_E = Metadata(
+    latest_version="1.0.0",
+    latest_version_position=3,
+    unreleased_end=3,
+    unreleased_start=1,
+)
+
+
+CHANGELOG_F = """
+# Unreleased
+
+## 1.0.0-custom
+"""
+EXPECTED_F = Metadata(
+    latest_version="1.0.0",
+    latest_version_position=3,
+    unreleased_end=3,
+    unreleased_start=1,
+)
+
+
 @pytest.fixture
 def format(config: BaseConfig) -> Markdown:
     return Markdown(config)
@@ -94,6 +120,10 @@ VERSIONS_EXAMPLES = [
     ("All notable changes to this project will be documented in this file.", None),
     ("# Changelog", None),
     ("### Bug Fixes", None),
+    ("### 0.1.1custom", "0.1.1"),
+    ("### 0.1.1-custom", "0.1.1"),
+    ("### example0.1.1", "0.1.1"),
+    ("### example-0.1.1", "0.1.1"),
 ]
 
 
@@ -127,6 +157,8 @@ def test_parse_title_type_of_line(
         pytest.param(CHANGELOG_B, EXPECTED_B, id="B"),
         pytest.param(CHANGELOG_C, EXPECTED_C, id="C"),
         pytest.param(CHANGELOG_D, EXPECTED_D, id="D"),
+        pytest.param(CHANGELOG_E, EXPECTED_E, id="E"),
+        pytest.param(CHANGELOG_F, EXPECTED_F, id="F"),
     ),
 )
 def test_get_matadata(
