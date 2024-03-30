@@ -6,7 +6,7 @@ from typing import Optional
 import pytest
 from jinja2 import FileSystemLoader
 
-from commitizen import changelog, defaults, git
+from commitizen import changelog, git
 from commitizen.cz.conventional_commits.conventional_commits import (
     ConventionalCommitsCz,
 )
@@ -1079,8 +1079,8 @@ COMMITS_TREE_AFTER_MERGED_PRERELEASES = (
 
 @pytest.mark.parametrize("merge_prereleases", (True, False))
 def test_generate_tree_from_commits(gitcommits, tags, merge_prereleases):
-    parser = defaults.commit_parser
-    changelog_pattern = defaults.bump_pattern
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.bump_pattern
     tree = changelog.generate_tree_from_commits(
         gitcommits, tags, parser, changelog_pattern, merge_prerelease=merge_prereleases
     )
@@ -1106,8 +1106,8 @@ def test_generate_tree_from_commits(gitcommits, tags, merge_prereleases):
 
 def test_generate_tree_from_commits_with_no_commits(tags):
     gitcommits = []
-    parser = defaults.commit_parser
-    changelog_pattern = defaults.bump_pattern
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.bump_pattern
     tree = changelog.generate_tree_from_commits(
         gitcommits, tags, parser, changelog_pattern
     )
