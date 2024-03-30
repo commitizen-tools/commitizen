@@ -93,7 +93,7 @@ def test_init_when_config_already_exists(config, capsys):
 
 def test_init_without_choosing_tag(config, mocker: MockFixture, tmpdir):
     mocker.patch(
-        "commitizen.commands.init.get_tag_names", return_value=["0.0.1", "0.0.2"]
+        "commitizen.commands.init.get_tag_names", return_value=["0.0.2", "0.0.1"]
     )
     mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value="0.0.2")
     mocker.patch(

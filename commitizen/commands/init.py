@@ -186,9 +186,11 @@ class Init:
                 out.error("No Existing Tag. Set tag to v0.0.1")
                 return "0.0.1"
 
+            # the latest tag is most likely with the largest number. Thus list the tags in reverse order makes more sense
+            sorted_tags = sorted(tags, reverse=True)
             latest_tag = questionary.select(
                 "Please choose the latest tag: ",
-                choices=tags,
+                choices=sorted_tags,
                 style=self.cz.style,
             ).unsafe_ask()
 
