@@ -1,3 +1,9 @@
+## v3.21.2 (2024-03-30)
+
+### Fix
+
+- **commitizen/git.py,-tests/test_git.py**: Resolve tempfile path spaces issue in git commit function
+
 ## v3.21.1 (2024-03-30)
 
 ### Fix
