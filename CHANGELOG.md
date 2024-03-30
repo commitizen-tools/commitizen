@@ -1,3 +1,9 @@
+## v3.21.3 (2024-03-30)
+
+### Refactor
+
+- **defaults**: move cz_conventional_commit defaults out of defaults.py
+
 ## v3.21.2 (2024-03-30)
 
 ### Fix
