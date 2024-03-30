@@ -293,3 +293,32 @@ def test_create_tag_with_message(tmp_commitizen_project):
         assert git.get_tag_message(tag_name) == (
             tag_message if platform.system() != "Windows" else f"'{tag_message}'"
         )
+
+
+@pytest.mark.parametrize(
+    "file_path,expected_cmd",
+    [
+        (
+            "/tmp/temp file",
+            'git commit --signoff -F "/tmp/temp file"',
+        ),  # File contains spaces
+        (
+            "/tmp dir/temp file",
+            'git commit --signoff -F "/tmp dir/temp file"',
+        ),  # Path contains spaces
+        (
+            "/tmp/tempfile",
+            'git commit --signoff -F "/tmp/tempfile"',
+        ),  # Path does not contain spaces
+    ],
+)
+def test_commit_with_spaces_in_path(mocker, file_path, expected_cmd):
+    mock_run = mocker.patch("commitizen.cmd.run", return_value=FakeCommand())
+    mock_unlink = mocker.patch("os.unlink")
+    mock_temp_file = mocker.patch("commitizen.git.NamedTemporaryFile")
+    mock_temp_file.return_value.name = file_path
+
+    git.commit("feat: new feature", "--signoff")
+
+    mock_run.assert_called_once_with(expected_cmd)
+    mock_unlink.assert_called_once_with(file_path)

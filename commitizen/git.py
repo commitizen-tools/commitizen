@@ -112,7 +112,7 @@ def commit(
     f.write(message.encode("utf-8"))
     f.close()
 
-    command = f"git commit {args} -F {f.name}"
+    command = f'git commit {args} -F "{f.name}"'
 
     if committer_date and os.name == "nt":  # pragma: no cover
         # Using `cmd /v /c "{command}"` sets environment variables only for that command
