@@ -427,6 +427,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#retry" class="md-nav__link">
+    <span class="md-ellipsis">
+      Retry
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -883,6 +892,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#retry" class="md-nav__link">
+    <span class="md-ellipsis">
+      Retry
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -930,6 +948,11 @@ For example, using the <code>-S</code> option on <code>git commit</code> to sign
 <p>Deprecation warning: A commit can be signed off using <code>cz commit --signoff</code> or the shortcut <code>cz commit -s</code>.
 This syntax is now deprecated in favor of the new <code>cz commit -- -s</code> syntax.</p>
 </div>
+<h3 id="retry">Retry<a class="headerlink" href="#retry" title="Permanent link">&para;</a></h3>
+<p>You can use <code>cz commit --retry</code> to reuse the last commit message when the previous commit attempt failed.
+To automatically retry when running <code>cz commit</code>, you can set the <code>retry_after_failure</code>
+configuration option to <code>true</code>. Running <code>cz commit --no-retry</code> makes commitizen ignore <code>retry_after_failure</code>, forcing
+a new commit message to be prompted.</p>
 
 
 
