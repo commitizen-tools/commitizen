@@ -1,3 +1,9 @@
+## v3.21.1 (2024-03-30)
+
+### Fix
+
+- **command-init**: "cz init" should list exisitng tag in reverse order
+
 ## v3.21.0 (2024-03-30)
 
 ### Feat
