@@ -301,15 +301,20 @@ def test_create_tag_with_message(tmp_commitizen_project):
         (
             "/tmp/temp file",
             'git commit --signoff -F "/tmp/temp file"',
-        ),  # File contains spaces
+        ),
         (
             "/tmp dir/temp file",
             'git commit --signoff -F "/tmp dir/temp file"',
-        ),  # Path contains spaces
+        ),
         (
             "/tmp/tempfile",
             'git commit --signoff -F "/tmp/tempfile"',
-        ),  # Path does not contain spaces
+        ),
+    ],
+    ids=[
+        "File contains spaces",
+        "Path contains spaces",
+        "Path does not contain spaces",
     ],
 )
 def test_commit_with_spaces_in_path(mocker, file_path, expected_cmd):
