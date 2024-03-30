@@ -4,6 +4,7 @@ import inspect
 import os
 import platform
 import shutil
+import subprocess
 
 import pytest
 from commitizen import cmd, exceptions, git
@@ -327,3 +328,32 @@ def test_commit_with_spaces_in_path(mocker, file_path, expected_cmd):
 
     mock_run.assert_called_once_with(expected_cmd)
     mock_unlink.assert_called_once_with(file_path)
+
+
+@pytest.mark.parametrize(
+    "project_subpath",
+    [
+        "path/with/no/blanks",
+        "path/with single/blank",
+    ],
+)
+def test_git_commit_command_with_varied_paths_handles_blank(
+    tmp_commitizen_project, tmp_path, project_subpath
+):
+    project_path = os.path.join(str(tmp_path), project_subpath)
+    os.makedirs(project_path, exist_ok=True)
+    with tmp_commitizen_project.as_cwd():
+        message = "fix: path with single blank"
+        filepath = os.path.join(project_path, "test.txt")
+        create_file_and_commit(message, filepath)
+        process = subprocess.Popen(
+            ["git", "log", "-n", "1", "--pretty=format:%s"], stdout=subprocess.PIPE
+        )
+        output, _ = process.communicate()
+        actual_command_message = output.decode("utf-8").strip()
+        expected_message = f"{message}"
+        assert actual_command_message == expected_message, (
+            f"The command's output could not be correctly parsed to match the expected message. "
+            f"Actual message: '{actual_command_message}', "
+            f"Expected format: '{expected_message}'."
+        )
