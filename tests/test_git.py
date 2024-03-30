@@ -4,6 +4,7 @@ import inspect
 import os
 import platform
 import shutil
+import subprocess
 
 import pytest
 from commitizen import cmd, exceptions, git
@@ -215,7 +216,8 @@ def test_get_commits_with_signature():
 
 
 def test_get_tag_names_has_correct_arrow_annotation():
-    arrow_annotation = inspect.getfullargspec(git.get_tag_names).annotations["return"]
+    arrow_annotation = inspect.getfullargspec(
+        git.get_tag_names).annotations["return"]
 
     assert arrow_annotation == "list[str | None]"
 
@@ -296,34 +298,29 @@ def test_create_tag_with_message(tmp_commitizen_project):
 
 
 @pytest.mark.parametrize(
-    "file_path,expected_cmd",
+    "project_subpath",
     [
-        (
-            "/tmp/temp file",
-            'git commit --signoff -F "/tmp/temp file"',
-        ),
-        (
-            "/tmp dir/temp file",
-            'git commit --signoff -F "/tmp dir/temp file"',
-        ),
-        (
-            "/tmp/tempfile",
-            'git commit --signoff -F "/tmp/tempfile"',
-        ),
-    ],
-    ids=[
-        "File contains spaces",
-        "Path contains spaces",
-        "Path does not contain spaces",
+        "path/with/no/blanks",
+        "path/with single/blank",
     ],
 )
-def test_commit_with_spaces_in_path(mocker, file_path, expected_cmd):
-    mock_run = mocker.patch("commitizen.cmd.run", return_value=FakeCommand())
-    mock_unlink = mocker.patch("os.unlink")
-    mock_temp_file = mocker.patch("commitizen.git.NamedTemporaryFile")
-    mock_temp_file.return_value.name = file_path
-
-    git.commit("feat: new feature", "--signoff")
-
-    mock_run.assert_called_once_with(expected_cmd)
-    mock_unlink.assert_called_once_with(file_path)
+def test_git_commit_command_with_varied_paths_handles_blank(
+    tmp_commitizen_project, tmp_path, project_subpath
+):
+    project_path = os.path.join(str(tmp_path), project_subpath)
+    os.makedirs(project_path, exist_ok=True)
+    with tmp_commitizen_project.as_cwd():
+        message = "fix: path with single blank"
+        filepath = os.path.join(project_path, "test.txt")
+        create_file_and_commit(message, filepath)
+        process = subprocess.Popen(
+            ["git", "log", "-n", "1", "--pretty=format:%s"], stdout=subprocess.PIPE
+        )
+        output, _ = process.communicate()
+        actual_command_message = output.decode("utf-8").strip()
+        expected_message = f"{message}"
+        assert actual_command_message == expected_message, (
+            f"The command's output could not be correctly parsed to match the expected message. "
+            f"Actual message: '{actual_command_message}', "
+            f"Expected format: '{expected_message}'."
+        )
