@@ -1,3 +1,17 @@
+## v3.21.0 (2024-03-30)
+
+### Feat
+
+- **commit**: add retry_after_failure config option and --no-retry flag
+
+### Refactor
+
+- **utils**: convert git project root to posix path for backup file name
+- **commit**: use Optional[str] instead of str | None
+- **commit**: remove unused tempfile import
+- **git-hooks**: make git hooks use get_backup_file_path
+- **utils**: move backup path creation to utils
+
 ## v3.20.0 (2024-03-19)
 
 ### Feat
