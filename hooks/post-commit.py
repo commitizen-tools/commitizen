@@ -4,8 +4,7 @@ from pathlib import Path
 try:
     from commitizen.cz.utils import get_backup_file_path
 except ImportError as error:
-    print("could not import commitizen:")
-    print(error)
+    print(f"could not import commitizen:\n{error}")
     exit(1)
 
 

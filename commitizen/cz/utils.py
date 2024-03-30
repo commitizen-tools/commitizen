@@ -28,10 +28,5 @@ def get_backup_file_path() -> str:
     else:
         project = project_root.as_posix().replace("/", "%")
 
-    return os.path.join(
-        tempfile.gettempdir(),
-        "cz.commit%{user}%{project}.backup".format(
-            user=os.environ.get("USER", ""),
-            project=project,
-        ),
-    )
+    user = os.environ.get("USER", "")
+    return os.path.join(tempfile.gettempdir(), f"cz.commit%{user}%{project}.backup")
