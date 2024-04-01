@@ -44,6 +44,27 @@ DICT_CONFIG = {
     }
 }
 
+JSON_STR = r"""
+    {
+        "commitizen": {
+            "name": "cz_jira",
+            "version": "1.0.0",
+            "version_files": [
+                "commitizen/__version__.py",
+                "pyproject.toml"
+            ]
+        }
+    }
+"""
+
+YAML_STR = """
+commitizen:
+  name: cz_jira
+  version: 1.0.0
+  version_files:
+  - commitizen/__version__.py
+  - pyproject.toml
+"""
 
 _settings: dict[str, Any] = {
     "name": "cz_jira",
@@ -160,12 +181,29 @@ class TestReadCfg:
 
     def test_load_pyproject_toml_not_in_root_folder(_, tmpdir):
         with tmpdir.as_cwd():
-            _not_root_path = tmpdir.mkdir("not_in_root")
-            p = tmpdir.join("./not_in_root/pyproject.toml")
-            p.write(PYPROJECT)
+            _not_root_path = tmpdir.mkdir("not_in_root").join("pyproject.toml")
+            _not_root_path.write(PYPROJECT)
 
             cfg = config.read_cfg(filepath="./not_in_root/pyproject.toml")
             assert cfg.settings == _settings
+
+    def test_load_cz_json_not_in_root_folder(_, tmpdir):
+        with tmpdir.as_cwd():
+            _not_root_path = tmpdir.mkdir("not_in_root").join(".cz.json")
+            _not_root_path.write(JSON_STR)
+
+            cfg = config.read_cfg(filepath="./not_in_root/.cz.json")
+            json_cfg_by_class = config.JsonConfig(data=JSON_STR, path=_not_root_path)
+            assert cfg.settings == json_cfg_by_class.settings
+
+    def test_load_cz_yaml_not_in_root_folder(_, tmpdir):
+        with tmpdir.as_cwd():
+            _not_root_path = tmpdir.mkdir("not_in_root").join(".cz.yaml")
+            _not_root_path.write(YAML_STR)
+
+            cfg = config.read_cfg(filepath="./not_in_root/.cz.yaml")
+            yaml_cfg_by_class = config.YAMLConfig(data=JSON_STR, path=_not_root_path)
+            assert cfg.settings == yaml_cfg_by_class._settings
 
 
 class TestTomlConfig:
