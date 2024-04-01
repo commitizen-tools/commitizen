@@ -158,6 +158,15 @@ class TestReadCfg:
             cfg = config.read_cfg()
             assert cfg.settings == _settings
 
+    def test_load_pyproject_toml_not_in_root_folder(_, tmpdir):
+        with tmpdir.as_cwd():
+            _not_root_path = tmpdir.mkdir("not_in_root")
+            p = tmpdir.join("./not_in_root/pyproject.toml")
+            p.write(PYPROJECT)
+
+            cfg = config.read_cfg(filepath="./not_in_root/pyproject.toml")
+            assert cfg.settings == _settings
+
 
 class TestTomlConfig:
     def test_init_empty_config_content(self, tmpdir):
