@@ -46,7 +46,6 @@ class RestructuredText(BaseFormat):
             third = third.strip().lower()
             title: str | None = None
             kind: TitleKind | None = None
-
             if self.is_overlined_title(first, second, third):
                 title = second
                 kind = (first[0], third[0])
@@ -67,10 +66,25 @@ class RestructuredText(BaseFormat):
                 # Try to find the latest release done
                 m = re.search(self.version_parser, title)
                 if m:
-                    version = m.group("version")
-                    meta.latest_version = version
-                    meta.latest_version_position = index
-                    break  # there's no need for more info
+                    matches = m.groupdict()
+                    if "version" in matches:
+                        version = m.group("version")
+                        meta.latest_version = version
+                        meta.latest_version_position = index
+                        break  # there's no need for more info
+                    try:
+                        partial_version = (
+                            f"{matches['major']}.{matches['minor']}.{matches['patch']}"
+                        )
+                        if matches.get("prerelease"):
+                            partial_version += f"-{matches['prerelease']}"
+                        if matches.get("devrelease"):
+                            partial_version += f"{matches['devrelease']}"
+                        meta.latest_version = partial_version
+                        meta.latest_version_position = index
+                        break
+                    except KeyError:
+                        pass
         if meta.unreleased_start is not None and meta.unreleased_end is None:
             meta.unreleased_end = (
                 meta.latest_version_position if meta.latest_version else index + 1

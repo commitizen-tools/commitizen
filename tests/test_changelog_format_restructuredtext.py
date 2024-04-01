@@ -273,9 +273,36 @@ NOT_OVERLINED_TITLES = (
     """,
 )
 
+CHANGELOG = """
+Changelog
+    #########
+
+    All notable changes to this project will be documented in this file.
+
+    The format is based on `Keep a Changelog <https://keepachangelog.com/en/1.0.0/>`,
+    and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`.
+
+    Unreleased
+    ==========
+    * Start using "changelog" over "change log" since it's the common usage.
+
+    {tag_formatted_version} - 2017-06-20
+    {underline}
+    Added
+    -----
+    * New visual identity by `@tylerfortune8 <https://github.com/tylerfortune8>`.
+    * Version navigation.
+""".strip()
+
 
 @pytest.fixture
 def format(config: BaseConfig) -> RestructuredText:
+    return RestructuredText(config)
+
+
+@pytest.fixture
+def format_with_tags(config: BaseConfig, request) -> RestructuredText:
+    config.settings["tag_format"] = request.param
     return RestructuredText(config)
 
 
@@ -308,3 +335,42 @@ def test_is_overlined_title(format: RestructuredText, text: str, expected: bool)
     _, first, second, third = dedent(text).splitlines()
 
     assert format.is_overlined_title(first, second, third) is expected
+
+
+@pytest.mark.parametrize(
+    "format_with_tags, tag_string, expected, ",
+    (
+        pytest.param("${version}-example", "1.0.0-example", "1.0.0"),
+        pytest.param("${version}", "1.0.0", "1.0.0"),
+        pytest.param("${version}example", "1.0.0example", "1.0.0"),
+        pytest.param("example${version}", "example1.0.0", "1.0.0"),
+        pytest.param("example-${version}", "example-1.0.0", "1.0.0"),
+        pytest.param("example-${major}-${minor}-${patch}", "example-1-0-0", "1.0.0"),
+        pytest.param("example-${major}-${minor}", "example-1-0-0", None),
+        pytest.param(
+            "${major}-${minor}-${patch}-${prerelease}-example",
+            "1-0-0-rc1-example",
+            "1.0.0-rc1",
+        ),
+        pytest.param(
+            "${major}-${minor}-${patch}-${prerelease}${devrelease}-example",
+            "1-0-0-a1.dev1-example",
+            "1.0.0-a1.dev1",
+        ),
+    ),
+    indirect=["format_with_tags"],
+)
+def test_get_metadata_custom_tag_format(
+    tmp_path: Path,
+    format_with_tags: RestructuredText,
+    tag_string: str,
+    expected: Metadata,
+):
+    content = CHANGELOG.format(
+        tag_formatted_version=tag_string,
+        underline="=" * len(tag_string) + "=============",
+    )
+    changelog = tmp_path / format_with_tags.default_changelog_file
+    changelog.write_text(content)
+
+    assert format_with_tags.get_metadata(str(changelog)).latest_version == expected

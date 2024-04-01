@@ -98,13 +98,13 @@ def get_version_tags(
 ) -> list[GitTag]:
     valid_tags: list[GitTag] = []
     TAG_FORMAT_REGEXS = {
-        "$version": str(scheme.parser.pattern),
+        "$version": scheme.parser.pattern,
         "$major": r"(?P<major>\d+)",
         "$minor": r"(?P<minor>\d+)",
         "$patch": r"(?P<patch>\d+)",
         "$prerelease": r"(?P<prerelease>\w+\d+)?",
         "$devrelease": r"(?P<devrelease>\.dev\d+)?",
-        "${version}": str(scheme.parser.pattern),
+        "${version}": scheme.parser.pattern,
         "${major}": r"(?P<major>\d+)",
         "${minor}": r"(?P<minor>\d+)",
         "${patch}": r"(?P<patch>\d+)",

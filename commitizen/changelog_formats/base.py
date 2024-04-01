@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import re
 from abc import ABCMeta
 from re import Pattern
 from typing import IO, Any, ClassVar
@@ -25,30 +26,29 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
         # See: https://bugs.python.org/issue44807
         self.config = config
         self.encoding = self.config.settings["encoding"]
-        self.tag_format = self.config.settings.get("tag_format")
+        self.tag_format = self.config.settings["tag_format"]
 
     @property
     def version_parser(self) -> Pattern:
+        tag_regex: str = self.tag_format
         version_regex = get_version_scheme(self.config).parser.pattern
-        if self.tag_format != "$version":
-            TAG_FORMAT_REGEXS = {
-                "$version": version_regex,
-                "$major": "(?P<major>\d+)",
-                "$minor": "(?P<minor>\d+)",
-                "$patch": "(?P<patch>\d+)",
-                "$prerelease": "(?P<prerelease>\w+\d+)?",
-                "$devrelease": "(?P<devrelease>\.dev\d+)?",
-                "${version}": version_regex,
-                "${major}": "(?P<major>\d+)",
-                "${minor}": "(?P<minor>\d+)",
-                "${patch}": "(?P<patch>\d+)",
-                "${prerelease}": "(?P<prerelease>\w+\d+)?",
-                "${devrelease}": "(?P<devrelease>\.dev\d+)?",
-            }
-            version_regex = self.tag_format
-            for pattern, regex in TAG_FORMAT_REGEXS.items():
-                version_regex = version_regex.replace(pattern, regex)
-        return rf"{version_regex}"
+        TAG_FORMAT_REGEXS = {
+            "$version": version_regex,
+            "$major": r"(?P<major>\d+)",
+            "$minor": r"(?P<minor>\d+)",
+            "$patch": r"(?P<patch>\d+)",
+            "$prerelease": r"(?P<prerelease>\w+\d+)?",
+            "$devrelease": r"(?P<devrelease>\.dev\d+)?",
+            "${version}": version_regex,
+            "${major}": r"(?P<major>\d+)",
+            "${minor}": r"(?P<minor>\d+)",
+            "${patch}": r"(?P<patch>\d+)",
+            "${prerelease}": r"(?P<prerelease>\w+\d+)?",
+            "${devrelease}": r"(?P<devrelease>\.dev\d+)?",
+        }
+        for pattern, regex in TAG_FORMAT_REGEXS.items():
+            tag_regex = tag_regex.replace(pattern, regex)
+        return re.compile(tag_regex)
 
     def get_metadata(self, filepath: str) -> Metadata:
         if not os.path.isfile(filepath):
