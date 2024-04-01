@@ -12,6 +12,7 @@ from commitizen.exceptions import (
     NoCommandFoundError,
     NotAGitProjectError,
     InvalidCommandArgumentError,
+    ConfigFileNotFound,
 )
 
 
@@ -23,6 +24,15 @@ def test_sysexit_no_argv(mocker: MockFixture, capsys):
         cli.main()
         out, _ = capsys.readouterr()
         assert out.startswith("usage")
+
+
+def test_cz_config_file_without_correct_file_path(mocker: MockFixture, capsys):
+    testargs = ["cz", "--config", "./config/pyproject.toml", "example"]
+    mocker.patch.object(sys, "argv", testargs)
+
+    with pytest.raises(ConfigFileNotFound) as excinfo:
+        cli.main()
+    assert "Cannot found the config file" in str(excinfo.value)
 
 
 def test_cz_with_arg_but_without_command(mocker: MockFixture):

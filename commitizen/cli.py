@@ -92,6 +92,10 @@ data = {
     ),
     "formatter_class": argparse.RawDescriptionHelpFormatter,
     "arguments": [
+        {
+            "name": "--config",
+            "help": "specify file path if config file is not in root folder",
+        },
         {"name": "--debug", "action": "store_true", "help": "use debug mode"},
         {
             "name": ["-n", "--name"],
@@ -534,9 +538,7 @@ def parse_no_raise(comma_separated_no_raise: str) -> list[int]:
 
 
 def main():
-    conf = config.read_cfg()
     parser = cli(data)
-
     argcomplete.autocomplete(parser)
     # Show help if no arg provided
     if len(sys.argv) == 1:
@@ -575,6 +577,11 @@ def main():
             )
         extra_args = " ".join(unknown_args[1:])
         arguments["extra_cli_args"] = extra_args
+
+    if args.config:
+        conf = config.read_cfg(args.config)
+    else:
+        conf = config.read_cfg()
 
     if args.name:
         conf.update({"name": args.name})

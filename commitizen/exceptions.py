@@ -34,6 +34,7 @@ class ExitCode(enum.IntEnum):
     VERSION_PROVIDER_UNKNOWN = 27
     VERSION_SCHEME_UNKNOWN = 28
     CHANGELOG_FORMAT_UNKNOWN = 29
+    CONFIG_FILE_NOT_FOUND = 30
 
 
 class CommitizenException(Exception):
@@ -189,3 +190,8 @@ class VersionSchemeUnknown(CommitizenException):
 class ChangelogFormatUnknown(CommitizenException):
     exit_code = ExitCode.CHANGELOG_FORMAT_UNKNOWN
     message = "Unknown changelog format identifier"
+
+
+class ConfigFileNotFound(CommitizenException):
+    exit_code = ExitCode.CONFIG_FILE_NOT_FOUND
+    message = "Cannot found the config file, please check your file path again."
