@@ -9,32 +9,32 @@ jobs:
   publish-documentation:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        token: '${{ secrets.PERSONAL_ACCESS_TOKEN }}'
-        fetch-depth: 0
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.x'
-    - name: Install dependencies
-      run: |
-        python -m pip install -U mkdocs mkdocs-material
-    - name: Build docs
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        python -m mkdocs build
-    - name: Generate Sponsors 💖
-      uses: JamesIves/github-sponsors-readme-action@v1
-      with:
-        token: ${{ secrets.PERSONAL_ACCESS_TOKEN_FOR_ORG }}
-        file: 'docs/README.md'
-    - name: Push doc to Github Page
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        personal_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        publish_branch: gh-pages
-        publish_dir: ./site
-        user_name: "github-actions[bot]"
-        user_email: "github-actions[bot]@users.noreply.github.com"
+      - uses: actions/checkout@v4
+        with:
+          token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install dependencies
+        run: |
+          python -m pip install -U mkdocs mkdocs-material
+      - name: Build docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python -m mkdocs build
+      - name: Generate Sponsors 💖
+        uses: JamesIves/github-sponsors-readme-action@v1
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN_FOR_ORG }}
+          file: "docs/README.md"
+      - name: Push doc to Github Page
+        uses: peaceiris/actions-gh-pages@v2
+        with:
+          personal_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./site
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"

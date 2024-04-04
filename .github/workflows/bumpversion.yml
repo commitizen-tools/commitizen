@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: '${{ secrets.PERSONAL_ACCESS_TOKEN }}'
+          token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
       - name: Create bump and changelog
         uses: commitizen-tools/commitizen-action@master
         with:
