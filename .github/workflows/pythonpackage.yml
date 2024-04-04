@@ -26,7 +26,7 @@ jobs:
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
-          ./scripts/test
+          poetry run pre-commit run --all-files
         shell: bash
       - name: Upload coverage to Codecov
         if: runner.os == 'Linux'
