@@ -73,6 +73,7 @@ mkdocs-material = "^9.1.6"
 deprecated = "^1.2.13"
 types-deprecated = "^1.2.9.2"
 types-python-dateutil = "^2.8.19.13"
+rich = "^13.7.1"
 
 
 [tool.poetry.scripts]
