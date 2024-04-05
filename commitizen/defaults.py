@@ -45,7 +45,7 @@ class Settings(TypedDict, total=False):
     changelog_merge_prerelease: bool
     update_changelog_on_bump: bool
     use_shortcuts: bool
-    style: list[tuple[str, str]] | None
+    style: list[tuple[str, str]]
     customize: CzSettings
     major_version_zero: bool
     pre_bump_hooks: list[str] | None
