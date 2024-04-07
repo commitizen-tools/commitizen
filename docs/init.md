@@ -1,3 +1,5 @@
+![Bump version](images/init.gif)
+
 To start using commitizen, the recommended approach is to run
 
 ```sh
@@ -16,3 +18,4 @@ The `init` will help you with
 5. Choosing a version type (`semver` or `pep440`)
 6. Whether to create the changelog automatically or not during bump
 7. Whether you want to keep the major as zero while building alpha software.
+8. Whether to setup pre-commit hooks.
