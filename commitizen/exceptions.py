@@ -35,6 +35,7 @@ class ExitCode(enum.IntEnum):
     VERSION_SCHEME_UNKNOWN = 28
     CHANGELOG_FORMAT_UNKNOWN = 29
     CONFIG_FILE_NOT_FOUND = 30
+    CONFIG_FILE_IS_EMPTY = 31
 
 
 class CommitizenException(Exception):
@@ -195,3 +196,8 @@ class ChangelogFormatUnknown(CommitizenException):
 class ConfigFileNotFound(CommitizenException):
     exit_code = ExitCode.CONFIG_FILE_NOT_FOUND
     message = "Cannot found the config file, please check your file path again."
+
+
+class ConfigFileIsEmpty(CommitizenException):
+    exit_code = ExitCode.CONFIG_FILE_IS_EMPTY
+    message = "Config file is empty, please check your file path again."
