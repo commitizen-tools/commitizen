@@ -94,7 +94,7 @@ data = {
     "arguments": [
         {
             "name": "--config",
-            "help": "specify file path if config file is not in root folder",
+            "help": "the path of configuration file",
         },
         {"name": "--debug", "action": "store_true", "help": "use debug mode"},
         {

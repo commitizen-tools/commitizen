@@ -9,7 +9,7 @@ import pytest
 import yaml
 
 from commitizen import config, defaults, git
-from commitizen.exceptions import InvalidConfigurationError
+from commitizen.exceptions import InvalidConfigurationError, ConfigFileIsEmpty
 
 PYPROJECT = """
 [tool.commitizen]
@@ -179,7 +179,7 @@ class TestReadCfg:
             cfg = config.read_cfg()
             assert cfg.settings == _settings
 
-    def test_load_pyproject_toml_not_in_root_folder(_, tmpdir):
+    def test_load_pyproject_toml_from_config_argument(_, tmpdir):
         with tmpdir.as_cwd():
             _not_root_path = tmpdir.mkdir("not_in_root").join("pyproject.toml")
             _not_root_path.write(PYPROJECT)
@@ -187,7 +187,7 @@ class TestReadCfg:
             cfg = config.read_cfg(filepath="./not_in_root/pyproject.toml")
             assert cfg.settings == _settings
 
-    def test_load_cz_json_not_in_root_folder(_, tmpdir):
+    def test_load_cz_json_not_from_config_argument(_, tmpdir):
         with tmpdir.as_cwd():
             _not_root_path = tmpdir.mkdir("not_in_root").join(".cz.json")
             _not_root_path.write(JSON_STR)
@@ -196,14 +196,22 @@ class TestReadCfg:
             json_cfg_by_class = config.JsonConfig(data=JSON_STR, path=_not_root_path)
             assert cfg.settings == json_cfg_by_class.settings
 
-    def test_load_cz_yaml_not_in_root_folder(_, tmpdir):
+    def test_load_cz_yaml_not_from_config_argument(_, tmpdir):
         with tmpdir.as_cwd():
             _not_root_path = tmpdir.mkdir("not_in_root").join(".cz.yaml")
             _not_root_path.write(YAML_STR)
 
             cfg = config.read_cfg(filepath="./not_in_root/.cz.yaml")
-            yaml_cfg_by_class = config.YAMLConfig(data=JSON_STR, path=_not_root_path)
+            yaml_cfg_by_class = config.YAMLConfig(data=YAML_STR, path=_not_root_path)
             assert cfg.settings == yaml_cfg_by_class._settings
+
+    def test_load_empty_pyproject_toml_from_config_argument(_, tmpdir):
+        with tmpdir.as_cwd():
+            _not_root_path = tmpdir.mkdir("not_in_root").join("pyproject.toml")
+            _not_root_path.write("")
+
+            with pytest.raises(ConfigFileIsEmpty):
+                config.read_cfg(filepath="./not_in_root/pyproject.toml")
 
 
 class TestTomlConfig:

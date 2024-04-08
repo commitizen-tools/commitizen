@@ -107,7 +107,7 @@ For more information about the topic go to https://conventionalcommits.org/
 
 optional arguments:
   -h, --help            show this help message and exit
-  --config              specify file path if config file is not in root folder
+  --config              the path of configuration file
   --debug               use debug mode
   -n NAME, --name NAME  use the given commitizen (default: cz_conventional_commits)
   -nr NO_RAISE, --no-raise NO_RAISE
