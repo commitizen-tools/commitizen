@@ -33,6 +33,8 @@ jobs:
     - name: Push doc to Github Page
       uses: peaceiris/actions-gh-pages@v4
       env:
-        PERSONAL_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        PUBLISH_BRANCH: gh-pages
-        PUBLISH_DIR: ./site
+        personal_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        publish_branch: gh-pages
+        publish_dir: ./site
+        user_name: "github-actions[bot]"
+        user_email: "github-actions[bot]@users.noreply.github.com"
