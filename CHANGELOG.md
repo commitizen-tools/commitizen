@@ -1,3 +1,9 @@
+## v3.22.0 (2024-04-11)
+
+### Feat
+
+- **cli**: add config option to specify config file path
+
 ## v3.21.3 (2024-03-30)
 
 ### Refactor
