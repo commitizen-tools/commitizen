@@ -38,6 +38,7 @@ class YAMLConfig(BaseConfig):
 
         try:
             self.settings.update(doc["commitizen"])
+            self.mutated_settings.update(doc["commitizen"])
         except (KeyError, TypeError):
             self.is_empty_config = True
 

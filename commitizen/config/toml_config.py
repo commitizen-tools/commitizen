@@ -58,5 +58,6 @@ class TomlConfig(BaseConfig):
 
         try:
             self.settings.update(doc["tool"]["commitizen"])  # type: ignore
+            self.mutated_settings.update(doc["tool"]["commitizen"])  # type: ignore
         except exceptions.NonExistentKey:
             self.is_empty_config = True
