@@ -55,7 +55,7 @@ $ cz bump --help
 usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog] [--no-verify] [--yes] [--tag-format TAG_FORMAT]
                [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}] [--devrelease DEVRELEASE] [--increment {MAJOR,MINOR,PATCH}]
                [--check-consistency] [--annotated-tag] [--gpg-sign] [--changelog-to-stdout] [--git-output-to-stderr] [--retry] [--major-version-zero]
-               [--prerelease-offset PRERELEASE_OFFSET] [--version-scheme {semver,pep440}] [--version-type {semver,pep440}] [--build-metadata BUILD_METADATA]
+               [--prerelease-offset PRERELEASE_OFFSET] [--version-scheme {pep440,semver,semver2}] [--version-type {pep440,semver,semver2}] [--build-metadata BUILD_METADATA]
                [MANUAL_VERSION]
 
 positional arguments:
@@ -97,9 +97,9 @@ options:
   --major-version-zero  keep major version at zero, even for breaking changes
   --prerelease-offset PRERELEASE_OFFSET
                         start pre-releases with this offset
-  --version-scheme {semver,pep440}
+  --version-scheme {pep440,semver,semver2}
                         choose version scheme
-  --version-type {semver,pep440}
+  --version-type {pep440,semver,semver2}
                         Deprecated, use --version-scheme
   --build-metadata {BUILD_METADATA}
                         additional metadata in the version string
@@ -619,14 +619,14 @@ prerelease_offset = 1
 
 Choose version scheme
 
-| schemes        | pep440         | semver          |
-| -------------- | -------------- | --------------- |
-| non-prerelease | `0.1.0`        | `0.1.0`         |
-| prerelease     | `0.3.1a0`      | `0.3.1-a0`      |
-| devrelease     | `0.1.1.dev1`   | `0.1.1-dev1`    |
-| dev and pre    | `1.0.0a3.dev1` | `1.0.0-a3-dev1` |
+| schemes        | pep440         | semver          | semver2               |
+| -------------- | -------------- | --------------- | --------------------- |
+| non-prerelease | `0.1.0`        | `0.1.0`         | `0.1.0`               |
+| prerelease     | `0.3.1a0`      | `0.3.1-a0`      | `0.3.1-alpha.0`       |
+| devrelease     | `0.1.1.dev1`   | `0.1.1-dev1`    | `0.1.1-dev.1`         |
+| dev and pre    | `1.0.0a3.dev1` | `1.0.0-a3-dev1` | `1.0.0-alpha.3.dev.1` |
 
-Options: `semver`, `pep440`
+Options: `pep440`, `semver`, `semver2`
 
 Defaults to: `pep440`
 

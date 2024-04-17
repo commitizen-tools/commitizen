@@ -310,7 +310,7 @@ class SemVer(BaseVersion):
     """
     Semantic Versioning (SemVer) scheme
 
-    See: https://semver.org/
+    See: https://semver.org/spec/v1.0.0.html
     """
 
     def __str__(self) -> str:
@@ -324,9 +324,8 @@ class SemVer(BaseVersion):
         parts.append(".".join(str(x) for x in self.release))
 
         # Pre-release
-        if self.pre:
-            pre = "".join(str(x) for x in self.pre)
-            parts.append(f"-{pre}")
+        if self.prerelease:
+            parts.append(f"-{self.prerelease}")
 
         # Post-release
         if self.post is not None:
@@ -335,6 +334,60 @@ class SemVer(BaseVersion):
         # Development release
         if self.dev is not None:
             parts.append(f"-dev{self.dev}")
+
+        # Local version segment
+        if self.local:
+            parts.append(f"+{self.local}")
+
+        return "".join(parts)
+
+
+class SemVer2(SemVer):
+    """
+    Semantic Versioning 2.0 (SemVer2) schema
+
+    See: https://semver.org/spec/v2.0.0.html
+    """
+
+    _STD_PRELEASES = {
+        "a": "alpha",
+        "b": "beta",
+    }
+
+    @property
+    def prerelease(self) -> str | None:
+        if self.is_prerelease and self.pre:
+            prerelease_type = self._STD_PRELEASES.get(self.pre[0], self.pre[0])
+            return f"{prerelease_type}.{self.pre[1]}"
+        return None
+
+    def __str__(self) -> str:
+        parts = []
+
+        # Epoch
+        if self.epoch != 0:
+            parts.append(f"{self.epoch}!")
+
+        # Release segment
+        parts.append(".".join(str(x) for x in self.release))
+
+        # Pre-release identifiers
+        # See: https://semver.org/spec/v2.0.0.html#spec-item-9
+        prerelease_parts = []
+        if self.prerelease:
+            prerelease_parts.append(f"{self.prerelease}")
+
+        # Post-release
+        if self.post is not None:
+            prerelease_parts.append(f"post.{self.post}")
+
+        # Development release
+        if self.dev is not None:
+            prerelease_parts.append(f"dev.{self.dev}")
+
+        if prerelease_parts:
+            parts.append("-")
+            parts.append(".".join(prerelease_parts))
 
         # Local version segment
         if self.local:
