@@ -4,7 +4,7 @@ import os.path
 from difflib import SequenceMatcher
 from operator import itemgetter
 from pathlib import Path
-from typing import Callable
+from typing import Callable, cast
 
 from commitizen import bump, changelog, defaults, factory, git, out
 
@@ -38,8 +38,8 @@ class Changelog:
         self.start_rev = args.get("start_rev") or self.config.settings.get(
             "changelog_start_rev"
         )
-        self.file_name = args.get("file_name") or self.config.settings.get(
-            "changelog_file"
+        self.file_name = args.get("file_name") or cast(
+            str, self.config.settings.get("changelog_file")
         )
         if not isinstance(self.file_name, str):
             raise NotAllowed(

@@ -474,6 +474,10 @@ In the example above, we can see the reference `"setup.py:version"`.
 This means that it will find a file `setup.py` and will only make a change
 in a line containing the `version` substring.
 
+!!! note
+    Files can be specified using relative (to the execution) paths, absolute paths
+    or glob patterns.
+
 ---
 
 ### `bump_message`

@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import re
 from collections import OrderedDict
+from glob import iglob
 from string import Template
 from typing import cast
 
@@ -53,23 +54,20 @@ def update_version_in_files(
     *,
     check_consistency: bool = False,
     encoding: str = encoding,
-) -> None:
+) -> list[str]:
     """Change old version to the new one in every file given.
 
     Note that this version is not the tag formatted one.
     So for example, your tag could look like `v1.0.0` while your version in
     the package like `1.0.0`.
+
+    Returns the list of updated files.
     """
     # TODO: separate check step and write step
-    for location in files:
-        drive, tail = os.path.splitdrive(location)
-        path, _, regex = tail.partition(":")
-        filepath = drive + path
-        if not regex:
-            regex = _version_to_regex(current_version)
-
+    updated = []
+    for path, regex in files_and_regexs(files, current_version):
         current_version_found, version_file = _bump_with_regex(
-            filepath,
+            path,
             current_version,
             new_version,
             regex,
@@ -78,14 +76,33 @@ def update_version_in_files(
 
         if check_consistency and not current_version_found:
             raise CurrentVersionNotFoundError(
-                f"Current version {current_version} is not found in {location}.\n"
+                f"Current version {current_version} is not found in {path}.\n"
                 "The version defined in commitizen configuration and the ones in "
                 "version_files are possibly inconsistent."
             )
 
         # Write the file out again
-        with smart_open(filepath, "w", encoding=encoding) as file:
+        with smart_open(path, "w", encoding=encoding) as file:
             file.write(version_file)
+        updated.append(path)
+    return updated
+
+
+def files_and_regexs(patterns: list[str], version: str) -> list[tuple[str, str]]:
+    """
+    Resolve all distinct files with their regexp from a list of glob patterns with optional regexp
+    """
+    out = []
+    for pattern in patterns:
+        drive, tail = os.path.splitdrive(pattern)
+        path, _, regex = tail.partition(":")
+        filepath = drive + path
+        if not regex:
+            regex = _version_to_regex(version)
+
+        for path in iglob(filepath):
+            out.append((path, regex))
+    return sorted(list(set(out)))
 
 
 def _bump_with_regex(

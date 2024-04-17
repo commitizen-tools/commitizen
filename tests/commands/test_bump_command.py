@@ -812,6 +812,16 @@ __version__ = "0.1.0"
 """,
             id="version in __init__.py with regex",
         ),
+        pytest.param(
+            "pyproject.toml",
+            "*.toml:^version",
+            """
+[tool.poetry]
+name = "my_package"
+version = "0.1.0"
+""",
+            id="version in pyproject.toml with glob and regex",
+        ),
     ],
 )
 @pytest.mark.parametrize(

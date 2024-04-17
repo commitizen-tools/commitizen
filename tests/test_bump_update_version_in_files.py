@@ -207,3 +207,21 @@ def test_multiplt_versions_to_bump(
     bump.update_version_in_files(old_version, new_version, [location], encoding="utf-8")
     with open(multiple_versions_to_update_poetry_lock, encoding="utf-8") as f:
         file_regression.check(f.read(), extension=".toml")
+
+
+def test_update_version_in_globbed_files(commitizen_config_file, file_regression):
+    old_version = "1.2.3"
+    new_version = "2.0.0"
+    other = commitizen_config_file.dirpath("other.toml")
+    print(commitizen_config_file, other)
+    copyfile(commitizen_config_file, other)
+
+    # Prepend full ppath as test assume absolute paths or cwd-relative
+    version_files = [commitizen_config_file.dirpath("*.toml")]
+
+    bump.update_version_in_files(
+        old_version, new_version, version_files, encoding="utf-8"
+    )
+
+    for file in commitizen_config_file, other:
+        file_regression.check(file.read_text("utf-8"), extension=".toml")
