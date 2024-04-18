@@ -1,3 +1,9 @@
+## v3.24.0 (2024-04-18)
+
+### Feat
+
+- **schemes**: adds support for SemVer 2.0 (dot in pre-releases) (fix #1025) (#1072)
+
 ## v3.23.0 (2024-04-18)
 
 ### Feat
