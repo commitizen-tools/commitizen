@@ -1976,6 +1976,11 @@ regarding if the file is present or not in <code>version_files</code>.</p>
 <p>In the example above, we can see the reference <code>"setup.py:version"</code>.
 This means that it will find a file <code>setup.py</code> and will only make a change
 in a line containing the <code>version</code> substring.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Files can be specified using relative (to the execution) paths, absolute paths
+or glob patterns.</p>
+</div>
 <hr />
 <h3 id="bump_message"><code>bump_message</code><a class="headerlink" href="#bump_message" title="Permanent link">&para;</a></h3>
 <p>Template used to specify the commit message generated when bumping.</p>
