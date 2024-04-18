@@ -40,7 +40,8 @@ Type: `str`
 
 Default: `pep440`
 
-Select a version scheme from the following options [`pep440`, `semver`]. Useful for non-python projects. [Read more][version-scheme]
+Select a version scheme from the following options [`pep440`, `semver`, `semver2`].
+Useful for non-python projects. [Read more][version-scheme]
 
 ### `tag_format`
 

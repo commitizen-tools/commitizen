@@ -103,6 +103,7 @@ scm = "commitizen.providers:ScmProvider"
 [tool.poetry.plugins."commitizen.scheme"]
 pep440 = "commitizen.version_schemes:Pep440"
 semver = "commitizen.version_schemes:SemVer"
+semver2 = "commitizen.version_schemes:SemVer2"
 
 [tool.coverage]
     [tool.coverage.report]
