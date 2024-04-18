@@ -1583,7 +1583,7 @@
 usage:<span class="w"> </span>cz<span class="w"> </span>bump<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>--dry-run<span class="o">]</span><span class="w"> </span><span class="o">[</span>--files-only<span class="o">]</span><span class="w"> </span><span class="o">[</span>--local-version<span class="o">]</span><span class="w"> </span><span class="o">[</span>--changelog<span class="o">]</span><span class="w"> </span><span class="o">[</span>--no-verify<span class="o">]</span><span class="w"> </span><span class="o">[</span>--yes<span class="o">]</span><span class="w"> </span><span class="o">[</span>--tag-format<span class="w"> </span>TAG_FORMAT<span class="o">]</span>
 <span class="w">               </span><span class="o">[</span>--bump-message<span class="w"> </span>BUMP_MESSAGE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--prerelease<span class="w"> </span><span class="o">{</span>alpha,beta,rc<span class="o">}]</span><span class="w"> </span><span class="o">[</span>--devrelease<span class="w"> </span>DEVRELEASE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--increment<span class="w"> </span><span class="o">{</span>MAJOR,MINOR,PATCH<span class="o">}]</span>
 <span class="w">               </span><span class="o">[</span>--check-consistency<span class="o">]</span><span class="w"> </span><span class="o">[</span>--annotated-tag<span class="o">]</span><span class="w"> </span><span class="o">[</span>--gpg-sign<span class="o">]</span><span class="w"> </span><span class="o">[</span>--changelog-to-stdout<span class="o">]</span><span class="w"> </span><span class="o">[</span>--git-output-to-stderr<span class="o">]</span><span class="w"> </span><span class="o">[</span>--retry<span class="o">]</span><span class="w"> </span><span class="o">[</span>--major-version-zero<span class="o">]</span>
-<span class="w">               </span><span class="o">[</span>--prerelease-offset<span class="w"> </span>PRERELEASE_OFFSET<span class="o">]</span><span class="w"> </span><span class="o">[</span>--version-scheme<span class="w"> </span><span class="o">{</span>semver,pep440<span class="o">}]</span><span class="w"> </span><span class="o">[</span>--version-type<span class="w"> </span><span class="o">{</span>semver,pep440<span class="o">}]</span><span class="w"> </span><span class="o">[</span>--build-metadata<span class="w"> </span>BUILD_METADATA<span class="o">]</span>
+<span class="w">               </span><span class="o">[</span>--prerelease-offset<span class="w"> </span>PRERELEASE_OFFSET<span class="o">]</span><span class="w"> </span><span class="o">[</span>--version-scheme<span class="w"> </span><span class="o">{</span>pep440,semver,semver2<span class="o">}]</span><span class="w"> </span><span class="o">[</span>--version-type<span class="w"> </span><span class="o">{</span>pep440,semver,semver2<span class="o">}]</span><span class="w"> </span><span class="o">[</span>--build-metadata<span class="w"> </span>BUILD_METADATA<span class="o">]</span>
 <span class="w">               </span><span class="o">[</span>MANUAL_VERSION<span class="o">]</span>
 
 positional<span class="w"> </span>arguments:
@@ -1625,9 +1625,9 @@ options:
 <span class="w">  </span>--major-version-zero<span class="w">  </span>keep<span class="w"> </span>major<span class="w"> </span>version<span class="w"> </span>at<span class="w"> </span>zero,<span class="w"> </span>even<span class="w"> </span><span class="k">for</span><span class="w"> </span>breaking<span class="w"> </span>changes
 <span class="w">  </span>--prerelease-offset<span class="w"> </span>PRERELEASE_OFFSET
 <span class="w">                        </span>start<span class="w"> </span>pre-releases<span class="w"> </span>with<span class="w"> </span>this<span class="w"> </span>offset
-<span class="w">  </span>--version-scheme<span class="w"> </span><span class="o">{</span>semver,pep440<span class="o">}</span>
+<span class="w">  </span>--version-scheme<span class="w"> </span><span class="o">{</span>pep440,semver,semver2<span class="o">}</span>
 <span class="w">                        </span>choose<span class="w"> </span>version<span class="w"> </span>scheme
-<span class="w">  </span>--version-type<span class="w"> </span><span class="o">{</span>semver,pep440<span class="o">}</span>
+<span class="w">  </span>--version-type<span class="w"> </span><span class="o">{</span>pep440,semver,semver2<span class="o">}</span>
 <span class="w">                        </span>Deprecated,<span class="w"> </span>use<span class="w"> </span>--version-scheme
 <span class="w">  </span>--build-metadata<span class="w"> </span><span class="o">{</span>BUILD_METADATA<span class="o">}</span>
 <span class="w">                        </span>additional<span class="w"> </span>metadata<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>version<span class="w"> </span>string
@@ -2154,6 +2154,7 @@ release. During execution of the script, some environment variables are availabl
 <th>schemes</th>
 <th>pep440</th>
 <th>semver</th>
+<th>semver2</th>
 </tr>
 </thead>
 <tbody>
@@ -2161,25 +2162,29 @@ release. During execution of the script, some environment variables are availabl
 <td>non-prerelease</td>
 <td><code>0.1.0</code></td>
 <td><code>0.1.0</code></td>
+<td><code>0.1.0</code></td>
 </tr>
 <tr>
 <td>prerelease</td>
 <td><code>0.3.1a0</code></td>
 <td><code>0.3.1-a0</code></td>
+<td><code>0.3.1-alpha.0</code></td>
 </tr>
 <tr>
 <td>devrelease</td>
 <td><code>0.1.1.dev1</code></td>
 <td><code>0.1.1-dev1</code></td>
+<td><code>0.1.1-dev.1</code></td>
 </tr>
 <tr>
 <td>dev and pre</td>
 <td><code>1.0.0a3.dev1</code></td>
 <td><code>1.0.0-a3-dev1</code></td>
+<td><code>1.0.0-alpha.3.dev.1</code></td>
 </tr>
 </tbody>
 </table>
-<p>Options: <code>semver</code>, <code>pep440</code></p>
+<p>Options: <code>pep440</code>, <code>semver</code>, <code>semver2</code></p>
 <p>Defaults to: <code>pep440</code></p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;semver&quot;</span>
