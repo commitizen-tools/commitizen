@@ -1,3 +1,9 @@
+## v3.23.0 (2024-04-18)
+
+### Feat
+
+- **bump**: `version_files` now support glob patterns (fix #1067) (#1070)
+
 ## v3.22.0 (2024-04-11)
 
 ### Feat
