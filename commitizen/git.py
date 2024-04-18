@@ -98,8 +98,8 @@ def tag(
     return c
 
 
-def add(args: str = "") -> cmd.Command:
-    c = cmd.run(f"git add {args}")
+def add(*args: str) -> cmd.Command:
+    c = cmd.run(f"git add {' '.join(args)}")
     return c
 
 

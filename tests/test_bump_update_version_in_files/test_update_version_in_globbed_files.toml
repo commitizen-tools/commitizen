@@ -1,0 +1,3 @@
+[tool.poetry]
+name = "commitizen"
+version = "2.0.0"

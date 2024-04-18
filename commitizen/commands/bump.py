@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import os
 import warnings
 from logging import getLogger
 
 import questionary
 
-from commitizen import bump, cmd, factory, git, hooks, out
+from commitizen import bump, factory, git, hooks, out
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
@@ -286,56 +285,39 @@ class Bump:
                 "The commits found are not eligible to be bumped"
             )
 
+        files: list[str] = []
         if self.changelog:
+            args = {
+                "unreleased_version": new_tag_version,
+                "template": self.template,
+                "extras": self.extras,
+                "incremental": True,
+                "dry_run": dry_run,
+            }
             if self.changelog_to_stdout:
-                changelog_cmd = Changelog(
-                    self.config,
-                    {
-                        "unreleased_version": new_tag_version,
-                        "template": self.template,
-                        "extras": self.extras,
-                        "incremental": True,
-                        "dry_run": True,
-                    },
-                )
+                changelog_cmd = Changelog(self.config, {**args, "dry_run": True})
                 try:
                     changelog_cmd()
                 except DryRunExit:
                     pass
-            changelog_cmd = Changelog(
-                self.config,
-                {
-                    "unreleased_version": new_tag_version,
-                    "incremental": True,
-                    "dry_run": dry_run,
-                    "template": self.template,
-                    "extras": self.extras,
-                    "file_name": self.file_name,
-                },
-            )
+
+            args["file_name"] = self.file_name
+            changelog_cmd = Changelog(self.config, args)
             changelog_cmd()
-            file_names = []
-            for file_name in version_files:
-                drive, tail = os.path.splitdrive(file_name)
-                path, _, regex = tail.partition(":")
-                path = drive + path if path != "" else drive + regex
-                file_names.append(path)
-            git_add_changelog_and_version_files_command = (
-                f"git add {changelog_cmd.file_name} "
-                f"{' '.join(name for name in file_names)}"
-            )
-            c = cmd.run(git_add_changelog_and_version_files_command)
+            files.append(changelog_cmd.file_name)
 
         # Do not perform operations over files or git.
         if dry_run:
             raise DryRunExit()
 
-        bump.update_version_in_files(
-            str(current_version),
-            str(new_version),
-            version_files,
-            check_consistency=self.check_consistency,
-            encoding=self.encoding,
+        files.extend(
+            bump.update_version_in_files(
+                str(current_version),
+                str(new_version),
+                version_files,
+                check_consistency=self.check_consistency,
+                encoding=self.encoding,
+            )
         )
 
         provider.set_version(str(new_version))
@@ -358,12 +340,13 @@ class Bump:
             raise ExpectedExit()
 
         # FIXME: check if any changes have been staged
+        git.add(*files)
         c = git.commit(message, args=self._get_commit_args())
         if self.retry and c.return_code != 0 and self.changelog:
             # Maybe pre-commit reformatted some files? Retry once
             logger.debug("1st git.commit error: %s", c.err)
             logger.info("1st commit attempt failed; retrying once")
-            cmd.run(git_add_changelog_and_version_files_command)
+            git.add(*files)
             c = git.commit(message, args=self._get_commit_args())
         if c.return_code != 0:
             err = c.err.strip() or c.out
