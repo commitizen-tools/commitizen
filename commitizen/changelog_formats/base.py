@@ -9,6 +9,7 @@ from typing import IO, Any, ClassVar
 from commitizen.changelog import Metadata
 from commitizen.config.base_config import BaseConfig
 from commitizen.version_schemes import get_version_scheme
+from commitizen.defaults import get_tag_regexes
 
 from . import ChangelogFormat
 
@@ -32,20 +33,7 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
     def version_parser(self) -> Pattern:
         tag_regex: str = self.tag_format
         version_regex = get_version_scheme(self.config).parser.pattern
-        TAG_FORMAT_REGEXS = {
-            "$version": version_regex,
-            "$major": r"(?P<major>\d+)",
-            "$minor": r"(?P<minor>\d+)",
-            "$patch": r"(?P<patch>\d+)",
-            "$prerelease": r"(?P<prerelease>\w+\d+)?",
-            "$devrelease": r"(?P<devrelease>\.dev\d+)?",
-            "${version}": version_regex,
-            "${major}": r"(?P<major>\d+)",
-            "${minor}": r"(?P<minor>\d+)",
-            "${patch}": r"(?P<patch>\d+)",
-            "${prerelease}": r"(?P<prerelease>\w+\d+)?",
-            "${devrelease}": r"(?P<devrelease>\.dev\d+)?",
-        }
+        TAG_FORMAT_REGEXS = get_tag_regexes(version_regex)
         for pattern, regex in TAG_FORMAT_REGEXS.items():
             tag_regex = tag_regex.replace(pattern, regex)
         return re.compile(tag_regex)
