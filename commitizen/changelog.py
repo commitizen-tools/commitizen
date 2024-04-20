@@ -44,6 +44,7 @@ from jinja2 import (
 from commitizen import out
 from commitizen.bump import normalize_tag
 from commitizen.cz.base import ChangelogReleaseHook
+from commitizen.defaults import get_tag_regexes
 from commitizen.exceptions import InvalidConfigurationError, NoCommitsFoundError
 from commitizen.git import GitCommit, GitTag
 from commitizen.version_schemes import (
@@ -97,20 +98,7 @@ def get_version_tags(
     scheme: type[BaseVersion], tags: list[GitTag], tag_format: str
 ) -> list[GitTag]:
     valid_tags: list[GitTag] = []
-    TAG_FORMAT_REGEXS = {
-        "$version": scheme.parser.pattern,
-        "$major": r"(?P<major>\d+)",
-        "$minor": r"(?P<minor>\d+)",
-        "$patch": r"(?P<patch>\d+)",
-        "$prerelease": r"(?P<prerelease>\w+\d+)?",
-        "$devrelease": r"(?P<devrelease>\.dev\d+)?",
-        "${version}": scheme.parser.pattern,
-        "${major}": r"(?P<major>\d+)",
-        "${minor}": r"(?P<minor>\d+)",
-        "${patch}": r"(?P<patch>\d+)",
-        "${prerelease}": r"(?P<prerelease>\w+\d+)?",
-        "${devrelease}": r"(?P<devrelease>\.dev\d+)?",
-    }
+    TAG_FORMAT_REGEXS = get_tag_regexes(scheme.parser.pattern)
     tag_format_regex = tag_format
     for pattern, regex in TAG_FORMAT_REGEXS.items():
         tag_format_regex = tag_format_regex.replace(pattern, regex)

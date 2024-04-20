@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 from typing import Callable
 
+from commitizen.defaults import get_tag_regexes
 from commitizen.git import get_tags
 from commitizen.providers.base_provider import VersionProvider
 from commitizen.version_schemes import (
@@ -22,20 +23,7 @@ class ScmProvider(VersionProvider):
     It is meant for `setuptools-scm` or any package manager `*-scm` provider.
     """
 
-    TAG_FORMAT_REGEXS = {
-        "$version": r"(?P<version>.+)",
-        "$major": r"(?P<major>\d+)",
-        "$minor": r"(?P<minor>\d+)",
-        "$patch": r"(?P<patch>\d+)",
-        "$prerelease": r"(?P<prerelease>\w+\d+)?",
-        "$devrelease": r"(?P<devrelease>\.dev\d+)?",
-        "${version}": r"(?P<version>.+)",
-        "${major}": r"(?P<major>\d+)",
-        "${minor}": r"(?P<minor>\d+)",
-        "${patch}": r"(?P<patch>\d+)",
-        "${prerelease}": r"(?P<prerelease>\w+\d+)?",
-        "${devrelease}": r"(?P<devrelease>\.dev\d+)?",
-    }
+    TAG_FORMAT_REGEXS = get_tag_regexes(r"(?P<version>.+)")
 
     def _tag_format_matcher(self) -> Callable[[str], VersionProtocol | None]:
         version_scheme = get_version_scheme(self.config)
