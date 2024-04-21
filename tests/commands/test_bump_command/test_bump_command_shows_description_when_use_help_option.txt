@@ -11,6 +11,7 @@ usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
                [--version-scheme {pep440,semver,semver2}]
                [--version-type {pep440,semver,semver2}]
                [--build-metadata BUILD_METADATA] [--get-next]
+               [--allow-no-commit]
                [MANUAL_VERSION]
 
 bump semantic version based on the git log
@@ -77,3 +78,4 @@ options:
   --build-metadata BUILD_METADATA
                         Add additional build-metadata to the version-number
   --get-next            Determine the next version and write to stdout
+  --allow-no-commit     bump version without eligible commits
