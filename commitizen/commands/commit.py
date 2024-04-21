@@ -61,7 +61,9 @@ class Commit:
 
         if not answers:
             raise NoAnswersError()
-        return cz.message(answers)
+
+        message_length_limit: int = self.arguments.get("message_length_limit", 0)
+        return cz.message(answers, message_length_limit=message_length_limit)
 
     def __call__(self):
         dry_run: bool = self.arguments.get("dry_run")

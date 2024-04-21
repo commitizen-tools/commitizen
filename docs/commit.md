@@ -36,3 +36,13 @@ You can use `cz commit --retry` to reuse the last commit message when the previo
 To automatically retry when running `cz commit`, you can set the `retry_after_failure`
 configuration option to `true`. Running `cz commit --no-retry` makes commitizen ignore `retry_after_failure`, forcing
 a new commit message to be prompted.
+
+### Commit message length limit
+
+The argument `-l` (or `--message-length-limit`) followed by a positive number can limit the length of commit messages.
+An exception would be raised when the message length exceeds the limit.
+For example, `cz commit -l 72` will limit the length of commit messages to 72 characters.
+By default the limit is set to 0, which means no limit on the length.
+
+Note that for `ConventionalCommitsCz`, the limit applies only from the prefix to the subject.
+In other words, everything after the first line (the body and the footer) are not counted in the length.

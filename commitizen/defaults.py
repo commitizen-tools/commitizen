@@ -57,6 +57,7 @@ class Settings(TypedDict, total=False):
     always_signoff: bool
     template: str | None
     extras: dict[str, Any]
+    message_length_limit: int
 
 
 name: str = "cz_conventional_commits"
@@ -102,6 +103,7 @@ DEFAULT_SETTINGS: Settings = {
     "always_signoff": False,
     "template": None,  # default provided by plugin
     "extras": {},
+    "message_length_limit": 0,
 }
 
 MAJOR = "MAJOR"

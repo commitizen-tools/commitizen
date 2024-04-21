@@ -227,9 +227,11 @@ class JiraCz(BaseCommitizen):
         ]
         return questions
 
-    def message(self, answers: dict) -> str:
+    def message(self, answers: dict, message_length_limit: int = 0) -> str:
         """Generate the message with the given answers."""
-        return "{0} (#{1})".format(answers["title"], answers["issue"])
+        message = "{0} (#{1})".format(answers["title"], answers["issue"])
+        self._check_message_length_limit(message, message_length_limit)
+        return message
 
     def example(self) -> str:
         """Provide an example to help understand the style (OPTIONAL)
