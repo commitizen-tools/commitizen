@@ -372,9 +372,9 @@ data = {
                         "default": False,
                     },
                     {
-                        "name": ["--empty"],
+                        "name": ["--allow-no-commit"],
                         "default": False,
-                        "help": "bump tags without new commits",
+                        "help": "bump version without eligible commits",
                         "action": "store_true",
                     },
                 ],
