@@ -9,6 +9,7 @@ from prompt_toolkit.styles import Style, merge_styles
 from commitizen import git
 from commitizen.config.base_config import BaseConfig
 from commitizen.defaults import Questions
+from commitizen.exceptions import CommitMessageLengthExceededError
 
 
 class MessageBuilderHook(Protocol):
@@ -71,7 +72,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         """Questions regarding the commit message."""
 
     @abstractmethod
-    def message(self, answers: dict) -> str:
+    def message(self, answers: dict, message_length_limit: int) -> str:
         """Format your git message."""
 
     @property
@@ -105,3 +106,12 @@ class BaseCommitizen(metaclass=ABCMeta):
         If not overwritten, it returns the first line of commit.
         """
         return commit.split("\n")[0]
+
+    def _check_message_length_limit(
+        self, message: str, message_length_limit: int
+    ) -> None:
+        message_len = len(message)
+        if message_length_limit > 0 and message_len > message_length_limit:
+            raise CommitMessageLengthExceededError(
+                f"Length of commit message exceeds limit ({message_len}/{message_length_limit})"
+            )

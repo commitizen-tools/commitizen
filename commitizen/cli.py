@@ -154,6 +154,12 @@ data = {
                         "action": "store_true",
                         "help": "Tell the command to automatically stage files that have been modified and deleted, but new files you have not told Git about are not affected.",
                     },
+                    {
+                        "name": ["-l", "--message-length-limit"],
+                        "type": int,
+                        "default": 0,
+                        "help": "length limit of the commit message; 0 for no limit",
+                    },
                 ],
             },
             {
