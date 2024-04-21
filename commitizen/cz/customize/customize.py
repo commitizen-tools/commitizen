@@ -61,15 +61,12 @@ class CustomizeCommitsCz(BaseCommitizen):
     def questions(self) -> Questions:
         return self.custom_settings.get("questions", [{}])
 
-    def message(self, answers: dict, message_length_limit: int = 0) -> str:
+    def message(self, answers: dict) -> str:
         message_template = Template(self.custom_settings.get("message_template", ""))
-        message: str = (
-            message_template.substitute(**answers)  # type: ignore
-            if getattr(Template, "substitute", None)
-            else message_template.render(**answers)
-        )
-        self._check_message_length_limit(message, message_length_limit)
-        return message
+        if getattr(Template, "substitute", None):
+            return message_template.substitute(**answers)  # type: ignore
+        else:
+            return message_template.render(**answers)
 
     def example(self) -> str | None:
         return self.custom_settings.get("example")

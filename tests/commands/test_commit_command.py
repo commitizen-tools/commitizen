@@ -9,6 +9,7 @@ from commitizen.cz.exceptions import CzException
 from commitizen.cz.utils import get_backup_file_path
 from commitizen.exceptions import (
     CommitError,
+    CommitMessageLengthExceededError,
     CustomError,
     DryRunExit,
     NoAnswersError,
@@ -379,3 +380,29 @@ def test_commit_command_with_extra_args(config, mocker: MockFixture):
     commands.Commit(config, {"extra_cli_args": "-- -extra-args1 -extra-arg2"})()
     commit_mock.assert_called_once_with(ANY, args="-- -extra-args1 -extra-arg2")
     success_mock.assert_called_once()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_with_message_length_limit(config, mocker: MockFixture):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prefix = "feat"
+    subject = "random subject"
+    message_length = len(prefix) + len(": ") + len(subject)
+    prompt_mock.return_value = {
+        "prefix": prefix,
+        "subject": subject,
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "random body",
+        "footer": "random footer",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
+    success_mock = mocker.patch("commitizen.out.success")
+
+    commands.Commit(config, {"message_length_limit": message_length})()
+    success_mock.assert_called_once()
+
+    with pytest.raises(CommitMessageLengthExceededError):
+        commands.Commit(config, {"message_length_limit": message_length - 1})()

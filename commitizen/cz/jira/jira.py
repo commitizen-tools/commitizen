@@ -44,8 +44,8 @@ class JiraSmartCz(BaseCommitizen):
         ]
         return questions
 
-    def message(self, answers: dict, message_length_limit: int = 0) -> str:
-        message = " ".join(
+    def message(self, answers: dict) -> str:
+        return " ".join(
             filter(
                 bool,
                 [
@@ -57,8 +57,6 @@ class JiraSmartCz(BaseCommitizen):
                 ],
             )
         )
-        self._check_message_length_limit(message, message_length_limit)
-        return message
 
     def example(self) -> str:
         return (

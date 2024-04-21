@@ -150,7 +150,7 @@ class ConventionalCommitsCz(BaseCommitizen):
         ]
         return questions
 
-    def message(self, answers: dict, message_length_limit: int = 0) -> str:
+    def message(self, answers: dict) -> str:
         prefix = answers["prefix"]
         scope = answers["scope"]
         subject = answers["subject"]
@@ -167,9 +167,9 @@ class ConventionalCommitsCz(BaseCommitizen):
         if footer:
             footer = f"\n\n{footer}"
 
-        message = f"{prefix}{scope}: {subject}"
-        self._check_message_length_limit(message, message_length_limit)
-        return f"{message}{body}{footer}"
+        message = f"{prefix}{scope}: {subject}{body}{footer}"
+
+        return message
 
     def example(self) -> str:
         return (

@@ -12,6 +12,7 @@ from commitizen.cz.exceptions import CzException
 from commitizen.cz.utils import get_backup_file_path
 from commitizen.exceptions import (
     CommitError,
+    CommitMessageLengthExceededError,
     CustomError,
     DryRunExit,
     NoAnswersError,
@@ -62,8 +63,15 @@ class Commit:
         if not answers:
             raise NoAnswersError()
 
+        message = cz.message(answers)
+        message_len = len(message.partition("\n")[0])
         message_length_limit: int = self.arguments.get("message_length_limit", 0)
-        return cz.message(answers, message_length_limit=message_length_limit)
+        if message_length_limit > 0 and message_len > message_length_limit:
+            raise CommitMessageLengthExceededError(
+                f"Length of commit message exceeds limit ({message_len}/{message_length_limit})"
+            )
+
+        return message
 
     def __call__(self):
         dry_run: bool = self.arguments.get("dry_run")
