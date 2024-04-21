@@ -206,3 +206,4 @@ class ConfigFileIsEmpty(CommitizenException):
 
 class CommitMessageLengthExceededError(CommitizenException):
     exit_code = ExitCode.COMMIT_MESSAGE_LENGTH_LIMIT_EXCEEDED
+    message = "Length of commit message exceeds the given limit."

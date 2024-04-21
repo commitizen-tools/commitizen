@@ -204,12 +204,10 @@ class SemverCommitizen(BaseCommitizen):
             },
         ]
 
-    def message(self, answers: dict, message_length_limit: int = 0) -> str:
+    def message(self, answers: dict) -> str:
         prefix = answers["prefix"]
         subject = answers.get("subject", "default message").trim()
-        message = f"{prefix}: {subject}"
-        self._check_message_length_limit(message, message_length_limit)
-        return message
+        return f"{prefix}: {subject}"
 
 
 @pytest.fixture()
@@ -222,7 +220,7 @@ class MockPlugin(BaseCommitizen):
     def questions(self) -> defaults.Questions:
         return []
 
-    def message(self, answers: dict, message_length_limit: int = 0) -> str:
+    def message(self, answers: dict) -> str:
         return ""
 
 
