@@ -28,7 +28,7 @@ This command will bump your project's version, and it will create a tag.
 
 Because of the setting `update_changelog_on_bump`, bump will also create the **changelog**.
 You can also [update files](./bump.md#version_files).
-You can configure the [version type](./bump.md#version-type) and [version provider](./config.md#version-providers).
+You can configure the [version scheme](./bump.md#version_scheme) and [version provider](./config.md#version-providers).
 
 There are many more options available, please read the docs for the [bump command](./bump.md).
 
