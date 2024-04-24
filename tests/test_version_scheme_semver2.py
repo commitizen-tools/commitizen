@@ -5,6 +5,8 @@ import pytest
 
 from commitizen.version_schemes import SemVer2, VersionProtocol
 
+# current_version, increment, prerelease, prerelease_offset, devrelease
+
 simple_flow = [
     (("0.1.0", "PATCH", None, 0, None), "0.1.1"),
     (("0.1.0", "PATCH", None, 0, 1), "0.1.1-dev.1"),
@@ -64,6 +66,7 @@ weird_cases = [
     (("1.0.0-alpha.1", None, "alpha", 0, None), "1.0.0-alpha.2"),
     (("1", None, "rc", 0, None), "1.0.0-rc.0"),
     (("1.0.0-rc.1+e20d7b57f3eb", "PATCH", None, 0, None), "1.0.0"),
+    (("1.0.0-reallyweird", "PATCH", "reallyweird", 0, None), "1.0.0"),
 ]
 
 # test driven development
