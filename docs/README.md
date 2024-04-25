@@ -32,7 +32,7 @@ descriptive commits.
 ### Features
 
 - Command-line utility to create commits with your rules. Defaults: [Conventional commits][conventional_commits]
-- Bump version automatically using [semantic versioning][semver] based on the commits. [Read More](./bump.md)
+- Bump version automatically using [semantic versioning][semver] based on the commits. [Read More](./commands/bump.md)
 - Generate a changelog using [Keep a changelog][keepchangelog]
 - Update your project's version files automatically
 - Display information about your commit rules (commands: schema, example, info)

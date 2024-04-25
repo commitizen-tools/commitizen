@@ -33,11 +33,11 @@ nav:
   - Introduction: "README.md"
   - Getting Started: "getting_started.md"
   - Commands:
-      - Init: "init.md"
-      - Commit: "commit.md"
-      - Bump: "bump.md"
-      - Check: "check.md"
-      - Changelog: "changelog.md"
+      - Init: "commands/init.md"
+      - Commit: "commands/commit.md"
+      - Bump: "commands/bump.md"
+      - Check: "commands/check.md"
+      - Changelog: "commands/changelog.md"
   - Configuration: "config.md"
   - Customization: "customization.md"
   - Tutorials:

@@ -5,9 +5,11 @@
 This feature checks whether the commit message follows the given committing rules. And comment in git message will be ignored.
 
 If you want to setup an automatic check before every git commit, please refer to
-[Automatically check message before commit](./tutorials/auto_check.md).
+[Automatically check message before commit](../tutorials/auto_check.md).
 
 ## Usage
+
+![cz check --help](../images/cli_help/cz_check___help.svg)
 
 There are three mutually exclusive ways to use `cz check`:
 
@@ -54,7 +56,7 @@ $ cz check --commit-msg-file COMMIT_MSG_FILE
 ```
 
 In this option, COMMIT_MSG_FILE is the path of the temporal file that contains the commit message.
-This argument can be useful when cooperating with git hook, please check [Automatically check message before commit](./tutorials/auto_check.md) for more information about how to use this argument with git hook.
+This argument can be useful when cooperating with git hook, please check [Automatically check message before commit](../tutorials/auto_check.md) for more information about how to use this argument with git hook.
 
 ### Allow Abort
 

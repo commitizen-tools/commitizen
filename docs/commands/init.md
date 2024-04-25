@@ -1,10 +1,16 @@
-![Bump version](images/init.gif)
+## Usage
+
+![cz init --help](../images/cli_help/cz_init___help.svg)
+
+## Example
 
 To start using commitizen, the recommended approach is to run
 
 ```sh
 cz init
 ```
+
+![init](../images/init.gif)
 
 This command will ask you for information about the project and will
 configure the selected file type (`pyproject.toml`, `.cz.toml`, etc.).
