@@ -1,4 +1,4 @@
-![Bump version](images/bump.gif)
+![Bump version](../images/bump.gif)
 
 ## About
 
@@ -50,60 +50,8 @@ Some examples of pep440:
 
 ## Usage
 
-```bash
-$ cz bump --help
-usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog] [--no-verify] [--yes] [--tag-format TAG_FORMAT]
-               [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}] [--devrelease DEVRELEASE] [--increment {MAJOR,MINOR,PATCH}]
-               [--check-consistency] [--annotated-tag] [--gpg-sign] [--changelog-to-stdout] [--git-output-to-stderr] [--retry] [--major-version-zero]
-               [--prerelease-offset PRERELEASE_OFFSET] [--version-scheme {pep440,semver,semver2}] [--version-type {pep440,semver,semver2}] [--build-metadata BUILD_METADATA]
-               [MANUAL_VERSION]
+![cz bump --help](../images/cli_help/cz_bump___help.svg)
 
-positional arguments:
-  MANUAL_VERSION        bump to the given version (e.g: 1.5.3)
-
-options:
-  -h, --help            show this help message and exit
-  --dry-run             show output to stdout, no commit, no modified files
-  --files-only          bump version in the files from the config
-  --local-version       bump only the local version portion
-  --changelog, -ch      generate the changelog for the newest version
-  --no-verify           this option bypasses the pre-commit and commit-msg hooks
-  --yes                 accept automatically questions done
-  --tag-format TAG_FORMAT
-                        the format used to tag the commit and read it, use it in existing projects, wrap around simple quotes
-  --bump-message BUMP_MESSAGE
-                        template used to create the release commit, useful when working with CI
-  --prerelease {alpha,beta,rc}, -pr {alpha,beta,rc}
-                        choose type of prerelease
-  --devrelease DEVRELEASE, -d DEVRELEASE
-                        specify non-negative integer for dev. release
-  --increment {MAJOR,MINOR,PATCH}
-                        manually specify the desired increment
-  --increment-mode
-                        set the method by which the new version is chosen. 'linear' (default) guesses the next version based
-                        on typical linear version progression, such that bumping of a pre-release with lower precedence than
-                        the current pre-release phase maintains the current phase of higher precedence. 'exact' applies the
-                        changes that have been specified (or determined from the commit log) without interpretation, such that
-                        the increment and pre-release are always honored
-  --check-consistency, -cc
-                        check consistency among versions defined in commitizen configuration and version_files
-  --annotated-tag, -at  create annotated tag instead of lightweight one
-  --gpg-sign, -s        sign tag instead of lightweight one
-  --changelog-to-stdout
-                        Output changelog to the stdout
-  --git-output-to-stderr
-                        Redirect git output to stderr
-  --retry               retry commit if it fails the 1st time
-  --major-version-zero  keep major version at zero, even for breaking changes
-  --prerelease-offset PRERELEASE_OFFSET
-                        start pre-releases with this offset
-  --version-scheme {pep440,semver,semver2}
-                        choose version scheme
-  --version-type {pep440,semver,semver2}
-                        Deprecated, use --version-scheme
-  --build-metadata {BUILD_METADATA}
-                        additional metadata in the version string
-```
 
 ### `--files-only`
 
@@ -306,7 +254,7 @@ Yes, you shouldn't have any issues.
 ### `--template`
 
 Provides your own changelog jinja template.
-See [the template customization section](customization.md#customizing-the-changelog-template)
+See [the template customization section](../customization.md#customizing-the-changelog-template)
 
 ### `--extra`
 
@@ -316,7 +264,7 @@ Provides your own changelog extra variables by using the `extras` settings or th
 cz bump --changelog --extra key=value -e short="quoted value"
 ```
 
-See [the template customization section](customization.md#customizing-the-changelog-template).
+See [the template customization section](../customization.md#customizing-the-changelog-template).
 
 ### `--build-metadata`
 
@@ -388,7 +336,7 @@ cz --no-raise 3,4,5
 
 ### Longer way
 
-Check the list of [exit_codes](./exit_codes.md) and understand which one you have
+Check the list of [exit_codes](../exit_codes.md) and understand which one you have
 to skip and why.
 
 Remember to document somewhere this, because you'll forget.
@@ -637,7 +585,7 @@ version_scheme = "semver"
 
 ## Custom bump
 
-Read the [customizing section](./customization.md).
+Read the [customizing section](../customization.md).
 
 [pep440]: https://www.python.org/dev/peps/pep-0440/
 [semver]: https://semver.org/

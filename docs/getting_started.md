@@ -27,10 +27,10 @@ cz bump
 This command will bump your project's version, and it will create a tag.
 
 Because of the setting `update_changelog_on_bump`, bump will also create the **changelog**.
-You can also [update files](./bump.md#version_files).
-You can configure the [version scheme](./bump.md#version_scheme) and [version provider](./config.md#version-providers).
+You can also [update files](./commands/bump.md#version_files).
+You can configure the [version scheme](./commands/bump.md#version_scheme) and [version provider](./config.md#version-providers).
 
-There are many more options available, please read the docs for the [bump command](./bump.md).
+There are many more options available, please read the docs for the [bump command](./commands/bump.md).
 
 ### Committing
 
@@ -116,4 +116,4 @@ Note that pre-commit discourages using `master` as a revision, and the above com
 pre-commit autoupdate
 ```
 
-Read more about the `check` command [here](check.md).
+Read more about the `check` command [here](commands/check.md).

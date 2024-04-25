@@ -105,4 +105,4 @@ flowchart TD
 ```
 
 
-[conventional-commmits]: https://www.conventionalcommits.org/
+[conventional-commits]: https://www.conventionalcommits.org/

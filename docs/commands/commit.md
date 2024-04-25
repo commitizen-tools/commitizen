@@ -1,4 +1,4 @@
-![Using commitizen cli](images/demo.gif)
+![Using commitizen cli](../images/demo.gif)
 
 ## About
 
@@ -7,13 +7,16 @@ In your terminal run `cz commit` or the shortcut `cz c` to generate a guided git
 You can run `cz commit --write-message-to-file COMMIT_MSG_FILE` to additionally save the
 generated message to a file. This can be combined with the `--dry-run` flag to only
 write the message to a file and not modify files and create a commit. A possible use
-case for this is to [automatically prepare a commit message](./tutorials/auto_prepare_commit_message.md).
+case for this is to [automatically prepare a commit message](../tutorials/auto_prepare_commit_message.md).
 
 
 !!! note
     To maintain platform compatibility, the `commit` command disable ANSI escaping in its output.
     In particular pre-commit hooks coloring will be deactivated as discussed in [commitizen-tools/commitizen#417](https://github.com/commitizen-tools/commitizen/issues/417).
 
+## Usage
+
+![cz commit --help](../images/cli_help/cz_commit___help.svg)
 
 ### git options
 

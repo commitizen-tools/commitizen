@@ -11,33 +11,7 @@ update_changelog_on_bump = true
 
 ## Usage
 
-```bash
-$ cz changelog --help
-usage: cz changelog [-h] [--dry-run] [--file-name FILE_NAME] [--unreleased-version UNRELEASED_VERSION] [--incremental] [--start-rev START_REV]
-                    [--template TEMPLATE] [--extra EXTRA]
-                    [rev_range]
-
-positional arguments:
-  rev_range             generates changelog for the given version (e.g: 1.5.3) or version range (e.g: 1.5.3..1.7.9)
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --dry-run             show changelog to stdout
-  --file-name FILE_NAME
-                        file name of changelog (default: 'CHANGELOG.md')
-  --unreleased-version UNRELEASED_VERSION
-                        set the value for the new version (use the tag value), instead of using unreleased
-  --incremental         generates changelog from last created version, useful if the changelog has been manually modified
-  --start-rev START_REV
-                        start rev of the changelog. If not set, it will generate changelog from the start
-  --merge-prerelease
-                        collect all changes from prereleases into next non-prerelease. If not set, it will include prereleases in the changelog
-                        start rev of the changelog.If not set, it will generate changelog from the start
-  --template TEMPLATE, -t TEMPLATE
-                        changelog template file name (relative to the current working directory)
-  --extra EXTRA, -e EXTRA
-                        a changelog extra variable (in the form 'key=value')
-```
+![cz changelog --help](../images/cli_help/cz_changelog___help.svg)
 
 ### Examples
 
@@ -195,7 +169,7 @@ changelog_merge_prerelease = true
 ### `template`
 
 Provides your own changelog jinja template by using the `template` settings or the `--template` parameter.
-See [the template customization section](customization.md#customizing-the-changelog-template)
+See [the template customization section](../customization.md#customizing-the-changelog-template)
 
 ### `extras`
 
@@ -205,7 +179,7 @@ Provides your own changelog extra variables by using the `extras` settings or th
 cz changelog --extra key=value -e short="quoted value"
 ```
 
-See [the template customization section](customization.md#customizing-the-changelog-template)
+See [the template customization section](../customization.md#customizing-the-changelog-template)
 
 ## Hooks
 
@@ -218,4 +192,4 @@ Read more about hooks in the [customization page][customization]
 
 [keepachangelog]: https://keepachangelog.com/
 [semver]: https://semver.org/
-[customization]: ./customization.md
+[customization]: ../customization.md

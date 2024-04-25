@@ -7,7 +7,7 @@ squash) so that the complete git history adheres to the commit message conventio
 without ever having to call `cz commit`.
 
 To automatically prepare a commit message prior to committing, you can
-use a [prepare-commit-msg Git hook](prepare-commit-msg-docs):
+use a [prepare-commit-msg Git hook][prepare-commit-msg-docs]:
 
 > This hook is invoked by git-commit right after preparing the
 > default log message, and before the editor is started.

@@ -193,7 +193,7 @@ The basic steps are:
 3. Create a python package using `setup.py`, `poetry`, etc
 4. Expose the class as a `commitizen.plugin` entrypoint
 
-Check an [example](convcomms) on how to configure `BaseCommitizen`.
+Check an [example][convcomms] on how to configure `BaseCommitizen`.
 
 You can also automate the steps above through [cookiecutter](https://cookiecutter.readthedocs.io/en/1.7.0/).
 
@@ -372,7 +372,7 @@ class StrangeCommitizen(BaseCommitizen):
         return full_changelog
 ```
 
-[changelog-des]: ./changelog.md#description
+[changelog-des]: ./commands/changelog.md#description
 
 ### Raise Customize Exception
 
