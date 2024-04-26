@@ -64,7 +64,7 @@ class Commit:
             raise NoAnswersError()
 
         message = cz.message(answers)
-        message_len = len(message.partition("\n")[0])
+        message_len = len(message.partition("\n")[0].strip())
         message_length_limit: int = self.arguments.get("message_length_limit", 0)
         if message_length_limit > 0 and message_len > message_length_limit:
             raise CommitMessageLengthExceededError(
