@@ -27,9 +27,9 @@ class AsciiDoc(BaseFormat):
             return None
 
         if partial_matches.get("prerelease"):
-            partial_version += f"-{partial_matches['prerelease']}"
+            partial_version = f"{partial_version}-{partial_matches['prerelease']}"
         if partial_matches.get("devrelease"):
-            partial_version += f"{partial_matches['devrelease']}"
+            partial_version = f"{partial_version}{partial_matches['devrelease']}"
         return partial_version
 
     def parse_title_level(self, line: str) -> int | None:

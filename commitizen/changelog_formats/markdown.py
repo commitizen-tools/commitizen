@@ -30,9 +30,9 @@ class Markdown(BaseFormat):
             return None
 
         if matches.get("prerelease"):
-            partial_version += f"-{matches['prerelease']}"
+            partial_version = f"{partial_version}-{matches['prerelease']}"
         if matches.get("devrelease"):
-            partial_version += f"{matches['devrelease']}"
+            partial_version = f"{partial_version}{matches['devrelease']}"
         return partial_version
 
     def parse_title_level(self, line: str) -> int | None:

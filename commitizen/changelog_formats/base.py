@@ -8,8 +8,8 @@ from typing import IO, Any, ClassVar
 
 from commitizen.changelog import Metadata
 from commitizen.config.base_config import BaseConfig
-from commitizen.version_schemes import get_version_scheme
 from commitizen.defaults import get_tag_regexes
+from commitizen.version_schemes import get_version_scheme
 
 from . import ChangelogFormat
 

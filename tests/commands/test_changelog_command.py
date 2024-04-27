@@ -1597,9 +1597,11 @@ def test_changelog_only_tag_matching_tag_format_included_suffix(
     git.tag("random0.2.0")
     testargs = ["cz", "bump", "--changelog", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
+    # bump to 0.2.0custom
     cli.main()
     wait_for_tag()
     create_file_and_commit("feat: another new file")
+    # bump to 0.3.0custom
     cli.main()
     wait_for_tag()
     with open(changelog_path) as f:
