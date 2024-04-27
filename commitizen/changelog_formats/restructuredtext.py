@@ -77,9 +77,13 @@ class RestructuredText(BaseFormat):
                             f"{matches['major']}.{matches['minor']}.{matches['patch']}"
                         )
                         if matches.get("prerelease"):
-                            partial_version += f"-{matches['prerelease']}"
+                            partial_version = (
+                                f"{partial_version}-{matches['prerelease']}"
+                            )
                         if matches.get("devrelease"):
-                            partial_version += f"{matches['devrelease']}"
+                            partial_version = (
+                                f"{partial_version}{matches['devrelease']}"
+                            )
                         meta.latest_version = partial_version
                         meta.latest_version_position = index
                         break

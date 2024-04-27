@@ -1,21 +1,22 @@
 # Configuring commitizen in a monorepo
 
-This tutorial assumes the monorepo layout is designed with multiple components that can be released independently of each other,
-some suggested layouts:
+This tutorial assumes the monorepo layout is designed with multiple components that can be released independently of each
+other, it also assumes that conventional commits with scopes are in use. Some suggested layouts:
 
 ```
-library-a
-  .cz.toml
-library-b
-  .cz.toml
+.
+├── library-b
+│   └── .cz.toml
+└── library-z
+    └── .cz.toml
 ```
 
 ```
 src
-    library-b
-      .cz.toml
-    library-z
-      .cz.toml
+├── library-b
+│   └── .cz.toml
+└── library-z
+    └── .cz.toml
 ```
 
 Each component will have its own changelog, commits will need to use scopes so only relevant commits are included in the

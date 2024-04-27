@@ -134,7 +134,9 @@ change_type_order = ["BREAKING CHANGE", "Feat", "Fix", "Refactor", "Perf"]
 bump_message = "bump: version $current_version → $new_version"
 
 
-def get_tag_regexes(version_regex: str) -> dict[str | Any, str | Any]:
+def get_tag_regexes(
+    version_regex: str,
+) -> dict[str, str]:
     return {
         "$version": version_regex,
         "$major": r"(?P<major>\d+)",

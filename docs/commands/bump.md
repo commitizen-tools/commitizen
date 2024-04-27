@@ -418,20 +418,14 @@ The variables must be preceded by a `$` sign and optionally can be wrapped in `{
 
 Supported variables:
 
-| Variable        | Description                                 |
-|-----------------|---------------------------------------------|
-| `$version`      | full generated version                      |
-| `$major`        | MAJOR increment                             |
-| `$minor`        | MINOR increment                             |
-| `$patch`        | PATCH increment                             |
-| `$prerelease`   | Prerelease (alpha, beta, release candidate) |
-| `$devrelease`   | Development release                         |
-| `${version}`    | full generated version                      |
-| `${major}`      | MAJOR increment                             |
-| `${minor}`      | MINOR increment                             |
-| `${patch}`      | PATCH increment                             |
-| `${prerelease}` | Prerelease (alpha, beta, release candidate) |
-| `${devrelease}` | Development release                         |
+| Variable                       | Description                                 |
+|--------------------------------|---------------------------------------------|
+| `$version`, `${version}`       | full generated version                      |
+| `$major`, `${major}`           | MAJOR increment                             |
+| `$minor`, `${minor}`           | MINOR increment                             |
+| `$patch`, `${patch}`           | PATCH increment                             |
+| `$prerelease`, `${prerelease}` | Prerelease (alpha, beta, release candidate) |
+| `$devrelease`, ${devrelease}`  | Development release                         |
 
 ---
 
