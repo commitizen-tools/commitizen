@@ -1,3 +1,19 @@
+## v3.25.0 (2024-04-30)
+
+### Feat
+
+- add an argument to limit the length of commit message
+
+### Fix
+
+- strip the commit message for calculating length
+- resolve test error by removing defaults
+
+### Refactor
+
+- **commands/commit**: replace comparison with chained comparison
+- check the length in Commit instead of Commitizen
+
 ## v3.24.0 (2024-04-18)
 
 ### Feat
