@@ -436,6 +436,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#commit-message-length-limit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commit message length limit
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -901,6 +910,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#commit-message-length-limit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commit message length limit
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -953,6 +971,14 @@ This syntax is now deprecated in favor of the new <code>cz commit -- -s</code> s
 To automatically retry when running <code>cz commit</code>, you can set the <code>retry_after_failure</code>
 configuration option to <code>true</code>. Running <code>cz commit --no-retry</code> makes commitizen ignore <code>retry_after_failure</code>, forcing
 a new commit message to be prompted.</p>
+<h3 id="commit-message-length-limit">Commit message length limit<a class="headerlink" href="#commit-message-length-limit" title="Permanent link">&para;</a></h3>
+<p>The argument <code>-l</code> (or <code>--message-length-limit</code>) followed by a positive number can limit the length of commit messages.
+An exception would be raised when the message length exceeds the limit.
+For example, <code>cz commit -l 72</code> will limit the length of commit messages to 72 characters.
+By default the limit is set to 0, which means no limit on the length.</p>
+<p><strong>Note that the limit applies only to the first line of the message.</strong>
+Specifically, for <code>ConventionalCommitsCz</code> the length only counts from the type of change to the subject,
+while the body and the footer are not counted.</p>
 
 
 
