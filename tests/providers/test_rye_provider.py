@@ -7,37 +7,38 @@ import pytest
 
 from commitizen.config.base_config import BaseConfig
 from commitizen.providers import get_provider
-from commitizen.providers.poetry_provider import PoetryProvider
+from commitizen.providers.base_provider import VersionProvider
+from commitizen.providers.rye_provider import RyeProvider
 
 
-POETRY_TOML = """\
-[tool.poetry]
+RYE_TOML = """\
+[tool.rye]
 version = "0.1.0"
 """
 
-POETRY_EXPECTED = """\
-[tool.poetry]
+RYE_EXPECTED = """\
+[tool.rye]
 version = "42.1"
 """
 
 
 @pytest.mark.parametrize(
     "content, expected",
-    ((POETRY_TOML, POETRY_EXPECTED),),
+    ((RYE_TOML, RYE_EXPECTED),),
 )
-def test_poetry_provider(
+def test_rye_provider(
     config: BaseConfig,
     chdir: Path,
     content: str,
     expected: str,
 ):
-    filename = PoetryProvider.filename
+    filename = RyeProvider.filename
     file = chdir / filename
     file.write_text(dedent(content))
-    config.settings["version_provider"] = "poetry"
+    config.settings["version_provider"] = "rye"
 
-    provider = get_provider(config)
-    assert isinstance(provider, PoetryProvider)
+    provider: VersionProvider = get_provider(config)
+    assert isinstance(provider, RyeProvider)
     assert provider.get_version() == "0.1.0"
 
     provider.set_version("42.1")

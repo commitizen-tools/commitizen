@@ -98,6 +98,7 @@ composer = "commitizen.providers:ComposerProvider"
 npm = "commitizen.providers:NpmProvider"
 pep621 = "commitizen.providers:Pep621Provider"
 poetry = "commitizen.providers:PoetryProvider"
+rye = "commitizen.providers:RyeProvider"
 scm = "commitizen.providers:ScmProvider"
 
 [tool.poetry.plugins."commitizen.scheme"]
