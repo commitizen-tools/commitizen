@@ -102,7 +102,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                     {
                         "value": "ci",
                         "name": (
-                            "ci: Changes to our CI configuration files and "
+                            "ci: Changes to CI configuration files and "
                             "scripts (example scopes: GitLabCI)"
                         ),
                         "key": "c",
