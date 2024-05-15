@@ -11,25 +11,25 @@
       
       
       
-        <link rel="prev" href="../getting_started/">
+        <link rel="prev" href="../info/">
       
       
-        <link rel="next" href="../commit/">
+        <link rel="next" href="../schema/">
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.22">
     
     
       
-        <title>Init - Commitizen</title>
+        <title>ls - Commitizen</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.732c4fb1.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.732c4fb1.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -48,7 +48,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -73,6 +73,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#usage" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -85,7 +90,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Commitizen" class="md-header__button md-logo" aria-label="Commitizen" data-md-component="logo">
+    <a href="../.." title="Commitizen" class="md-header__button md-logo" aria-label="Commitizen" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -105,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Init
+              ls
             
           </span>
         </div>
@@ -234,7 +239,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Commitizen" class="md-nav__button md-logo" aria-label="Commitizen" data-md-component="logo">
+    <a href="../.." title="Commitizen" class="md-nav__button md-logo" aria-label="Commitizen" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -264,7 +269,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -284,7 +289,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting_started/" class="md-nav__link">
+      <a href="../../getting_started/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -338,26 +343,18 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../init/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Init
+    init
   </span>
   
 
       </a>
-      
     </li>
   
 
@@ -374,7 +371,7 @@
         
   
   <span class="md-ellipsis">
-    Commit
+    commit
   </span>
   
 
@@ -395,7 +392,7 @@
         
   
   <span class="md-ellipsis">
-    Bump
+    bump
   </span>
   
 
@@ -416,7 +413,7 @@
         
   
   <span class="md-ellipsis">
-    Check
+    check
   </span>
   
 
@@ -437,7 +434,157 @@
         
   
   <span class="md-ellipsis">
-    Changelog
+    changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../example/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    example
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../info/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    info
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    ls
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    ls
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../schema/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    schema
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    version
   </span>
   
 
@@ -461,7 +608,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../config/" class="md-nav__link">
+      <a href="../../config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -481,7 +628,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../customization/" class="md-nav__link">
+      <a href="../../customization/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -536,7 +683,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/writing_commits/" class="md-nav__link">
+      <a href="../../tutorials/writing_commits/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -557,7 +704,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/auto_check/" class="md-nav__link">
+      <a href="../../tutorials/auto_check/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -578,7 +725,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/auto_prepare_commit_message/" class="md-nav__link">
+      <a href="../../tutorials/auto_prepare_commit_message/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -599,7 +746,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/gitlab_ci/" class="md-nav__link">
+      <a href="../../tutorials/gitlab_ci/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -620,7 +767,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/github_actions/" class="md-nav__link">
+      <a href="../../tutorials/github_actions/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -641,7 +788,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/jenkins_pipeline/" class="md-nav__link">
+      <a href="../../tutorials/jenkins_pipeline/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -662,7 +809,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/dev_releases/" class="md-nav__link">
+      <a href="../../tutorials/dev_releases/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -690,7 +837,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../faq/" class="md-nav__link">
+      <a href="../../faq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -710,7 +857,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../exit_codes/" class="md-nav__link">
+      <a href="../../exit_codes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -730,7 +877,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../third-party-commitizen/" class="md-nav__link">
+      <a href="../../third-party-commitizen/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -750,7 +897,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributing/" class="md-nav__link">
+      <a href="../../contributing/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -770,7 +917,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../external_links/" class="md-nav__link">
+      <a href="../../external_links/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -801,6 +948,23 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -814,25 +978,10 @@
                   
 
 
-  <h1>Init</h1>
+  <h1>ls</h1>
 
-<p><img alt="Bump version" src="../images/init.gif" /></p>
-<p>To start using commitizen, the recommended approach is to run</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>init
-</code></pre></div>
-<p>This command will ask you for information about the project and will
-configure the selected file type (<code>pyproject.toml</code>, <code>.cz.toml</code>, etc.).</p>
-<p>The <code>init</code> will help you with</p>
-<ol>
-<li>Choose a convention rules (<code>name</code>)</li>
-<li>Choosing a version provider (<code>commitizen</code> or for example <code>Cargo.toml</code>)</li>
-<li>Detecting your project's version</li>
-<li>Detecting the tag format used</li>
-<li>Choosing a version type (<code>semver</code> or <code>pep440</code>)</li>
-<li>Whether to create the changelog automatically or not during bump</li>
-<li>Whether you want to keep the major as zero while building alpha software.</li>
-<li>Whether to setup pre-commit hooks.</li>
-</ol>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<p><img alt="cz ls --help" src="../../images/cli_help/cz_ls___help.svg" /></p>
 
 
 
@@ -879,10 +1028,10 @@ configure the selected file type (<code>pyproject.toml</code>, <code>.cz.toml</c
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.5cfa9459.min.js"></script>
+      <script src="../../assets/javascripts/bundle.5cfa9459.min.js"></script>
       
     
   </body>

@@ -11,7 +11,7 @@
       
       
       
-        <link rel="prev" href="../changelog/">
+        <link rel="prev" href="../commands/version/">
       
       
         <link rel="next" href="../customization/">
@@ -344,11 +344,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../init/" class="md-nav__link">
+      <a href="../commands/init/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Init
+    init
   </span>
   
 
@@ -365,11 +365,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../commit/" class="md-nav__link">
+      <a href="../commands/commit/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Commit
+    commit
   </span>
   
 
@@ -386,11 +386,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../bump/" class="md-nav__link">
+      <a href="../commands/bump/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Bump
+    bump
   </span>
   
 
@@ -407,11 +407,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../check/" class="md-nav__link">
+      <a href="../commands/check/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Check
+    check
   </span>
   
 
@@ -428,11 +428,116 @@
   
   
     <li class="md-nav__item">
-      <a href="../changelog/" class="md-nav__link">
+      <a href="../commands/changelog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Changelog
+    changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/example/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    example
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/info/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    info
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/ls/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ls
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/schema/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    schema
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/version/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    version
   </span>
   
 
@@ -1538,7 +1643,7 @@
 <h3 id="version_files"><code>version_files</code><a class="headerlink" href="#version_files" title="Permanent link">&para;</a></h3>
 <p>Type: <code>list</code></p>
 <p>Default: <code>[ ]</code></p>
-<p>Files were the version will be updated. A pattern to match a line, can also be specified, separated by <code>:</code> <a href="../bump/#version_files">Read more</a></p>
+<p>Files were the version will be updated. A pattern to match a line, can also be specified, separated by <code>:</code> <a href="../commands/bump/#version_files">Read more</a></p>
 <h3 id="version_provider"><code>version_provider</code><a class="headerlink" href="#version_provider" title="Permanent link">&para;</a></h3>
 <p>Type: <code>str</code></p>
 <p>Default: <code>commitizen</code></p>
@@ -1547,11 +1652,11 @@
 <p>Type: <code>str</code></p>
 <p>Default: <code>pep440</code></p>
 <p>Select a version scheme from the following options [<code>pep440</code>, <code>semver</code>, <code>semver2</code>].
-Useful for non-python projects. <a href="../bump/#version-scheme">Read more</a></p>
+Useful for non-python projects. <a href="../commands/bump/#version-scheme">Read more</a></p>
 <h3 id="tag_format"><code>tag_format</code><a class="headerlink" href="#tag_format" title="Permanent link">&para;</a></h3>
 <p>Type: <code>str</code></p>
 <p>Default: <code>$version</code></p>
-<p>Format for the git tag, useful for old projects, that use a convention like <code>"v1.2.1"</code>. <a href="../bump/#tag_format">Read more</a></p>
+<p>Format for the git tag, useful for old projects, that use a convention like <code>"v1.2.1"</code>. <a href="../commands/bump/#tag_format">Read more</a></p>
 <h3 id="update_changelog_on_bump"><code>update_changelog_on_bump</code><a class="headerlink" href="#update_changelog_on_bump" title="Permanent link">&para;</a></h3>
 <p>Type: <code>bool</code></p>
 <p>Default: <code>false</code></p>
@@ -1567,19 +1672,19 @@ Useful for non-python projects. <a href="../bump/#version-scheme">Read more</a><
 <h3 id="bump_message"><code>bump_message</code><a class="headerlink" href="#bump_message" title="Permanent link">&para;</a></h3>
 <p>Type: <code>str</code></p>
 <p>Default: <code>None</code></p>
-<p>Create custom commit message, useful to skip ci. <a href="../bump/#bump_message">Read more</a></p>
+<p>Create custom commit message, useful to skip ci. <a href="../commands/bump/#bump_message">Read more</a></p>
 <h3 id="retry_after_failure"><code>retry_after_failure</code><a class="headerlink" href="#retry_after_failure" title="Permanent link">&para;</a></h3>
 <p>Type: <code>bool</code></p>
 <p>Default: <code>false</code></p>
-<p>Automatically retry failed commit when running <code>cz commit</code>. <a href="../commit/#retry">Read more</a></p>
+<p>Automatically retry failed commit when running <code>cz commit</code>. <a href="../commands/commit/#retry">Read more</a></p>
 <h3 id="allow_abort"><code>allow_abort</code><a class="headerlink" href="#allow_abort" title="Permanent link">&para;</a></h3>
 <p>Type: <code>bool</code></p>
 <p>Default: <code>false</code></p>
-<p>Disallow empty commit messages, useful in ci. <a href="../check/#allow-abort">Read more</a></p>
+<p>Disallow empty commit messages, useful in ci. <a href="../commands/check/#allow-abort">Read more</a></p>
 <h3 id="allowed_prefixes"><code>allowed_prefixes</code><a class="headerlink" href="#allowed_prefixes" title="Permanent link">&para;</a></h3>
 <p>Type: <code>list</code>
 Default: <code>[ "Merge", "Revert", "Pull request", "fixup!", "squash!"]</code>
-Allow some prefixes and do not try to match the regex when checking the message <a href="../check/#allowed-prefixes">Read more</a></p>
+Allow some prefixes and do not try to match the regex when checking the message <a href="../commands/check/#allowed-prefixes">Read more</a></p>
 <h3 id="changelog_file"><code>changelog_file</code><a class="headerlink" href="#changelog_file" title="Permanent link">&para;</a></h3>
 <p>Type: <code>str</code></p>
 <p>Default: <code>CHANGELOG.md</code></p>
@@ -1615,19 +1720,19 @@ Allow some prefixes and do not try to match the regex when checking the message 
 <h3 id="major_version_zero"><code>major_version_zero</code><a class="headerlink" href="#major_version_zero" title="Permanent link">&para;</a></h3>
 <p>Type: <code>bool</code></p>
 <p>Default: <code>false</code></p>
-<p>When true, breaking changes on a <code>0.x</code> will remain as a <code>0.x</code> version. On <code>false</code>, a breaking change will bump a <code>0.x</code> version to <code>1.0</code>. <a href="../bump/#-major-version-zero">major-version-zero</a></p>
+<p>When true, breaking changes on a <code>0.x</code> will remain as a <code>0.x</code> version. On <code>false</code>, a breaking change will bump a <code>0.x</code> version to <code>1.0</code>. <a href="../commands/bump/#-major-version-zero">major-version-zero</a></p>
 <h3 id="prerelease_offset"><code>prerelease_offset</code><a class="headerlink" href="#prerelease_offset" title="Permanent link">&para;</a></h3>
 <p>Type: <code>int</code></p>
 <p>Default: <code>0</code></p>
-<p>In some circumstances, a prerelease cannot start with a 0, e.g. in an embedded project individual characters are encoded as bytes. This can be done by specifying an offset from which to start counting. <a href="../bump/#-prerelease_offset">prerelease-offset</a></p>
+<p>In some circumstances, a prerelease cannot start with a 0, e.g. in an embedded project individual characters are encoded as bytes. This can be done by specifying an offset from which to start counting. <a href="../commands/bump/#-prerelease_offset">prerelease-offset</a></p>
 <h3 id="pre_bump_hooks"><code>pre_bump_hooks</code><a class="headerlink" href="#pre_bump_hooks" title="Permanent link">&para;</a></h3>
 <p>Type: <code>list[str]</code></p>
 <p>Default: <code>[]</code></p>
-<p>Calls the hook scripts <strong>before</strong> bumping version. <a href="../bump/#pre_bump_hooks">Read more</a></p>
+<p>Calls the hook scripts <strong>before</strong> bumping version. <a href="../commands/bump/#pre_bump_hooks">Read more</a></p>
 <h3 id="post_bump_hooks"><code>post_bump_hooks</code><a class="headerlink" href="#post_bump_hooks" title="Permanent link">&para;</a></h3>
 <p>Type: <code>list[str]</code></p>
 <p>Default: <code>[]</code></p>
-<p>Calls the hook scripts <strong>after</strong> bumping the version. <a href="../bump/#post_bump_hooks">Read more</a></p>
+<p>Calls the hook scripts <strong>after</strong> bumping the version. <a href="../commands/bump/#post_bump_hooks">Read more</a></p>
 <h3 id="encoding"><code>encoding</code><a class="headerlink" href="#encoding" title="Permanent link">&para;</a></h3>
 <p>Type: <code>str</code></p>
 <p>Default: <code>utf-8</code></p>

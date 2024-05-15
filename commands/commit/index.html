@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../github_actions/">
+        <link rel="prev" href="../init/">
       
       
-        <link rel="next" href="../dev_releases/">
+        <link rel="next" href="../bump/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Jenkins pipeline - Commitizen</title>
+        <title>commit - Commitizen</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#create-a-new-release-with-jenkins-pipelines" class="md-skip">
+        <a href="#about" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Jenkins pipeline
+              commit
             
           </span>
         </div>
@@ -306,17 +306,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -330,7 +332,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Commands
@@ -344,7 +346,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/init/" class="md-nav__link">
+      <a href="../init/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -362,10 +364,28 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../commands/commit/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    commit
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -374,6 +394,75 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#about" class="md-nav__link">
+    <span class="md-ellipsis">
+      About
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#git-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      git options
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retry" class="md-nav__link">
+    <span class="md-ellipsis">
+      Retry
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit-message-length-limit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commit message length limit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -386,7 +475,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/bump/" class="md-nav__link">
+      <a href="../bump/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -407,7 +496,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/check/" class="md-nav__link">
+      <a href="../check/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -428,7 +517,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/changelog/" class="md-nav__link">
+      <a href="../changelog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -449,7 +538,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/example/" class="md-nav__link">
+      <a href="../example/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -470,7 +559,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/info/" class="md-nav__link">
+      <a href="../info/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -491,7 +580,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/ls/" class="md-nav__link">
+      <a href="../ls/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -512,7 +601,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/schema/" class="md-nav__link">
+      <a href="../schema/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -533,7 +622,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/version/" class="md-nav__link">
+      <a href="../version/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -598,19 +687,17 @@
       
   
   
-    
   
   
-  
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -624,7 +711,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
@@ -638,7 +725,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../writing_commits/" class="md-nav__link">
+      <a href="../../tutorials/writing_commits/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -659,7 +746,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../auto_check/" class="md-nav__link">
+      <a href="../../tutorials/auto_check/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -680,7 +767,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../auto_prepare_commit_message/" class="md-nav__link">
+      <a href="../../tutorials/auto_prepare_commit_message/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -701,7 +788,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gitlab_ci/" class="md-nav__link">
+      <a href="../../tutorials/gitlab_ci/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -722,7 +809,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../github_actions/" class="md-nav__link">
+      <a href="../../tutorials/github_actions/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -740,19 +827,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../tutorials/jenkins_pipeline/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -761,7 +839,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -774,7 +851,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../dev_releases/" class="md-nav__link">
+      <a href="../../tutorials/dev_releases/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -912,8 +989,65 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#about" class="md-nav__link">
+    <span class="md-ellipsis">
+      About
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#git-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      git options
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retry" class="md-nav__link">
+    <span class="md-ellipsis">
+      Retry
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit-message-length-limit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commit message length limit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -928,56 +1062,48 @@
                   
 
 
-<h1 id="create-a-new-release-with-jenkins-pipelines">Create a new release with Jenkins Pipelines<a class="headerlink" href="#create-a-new-release-with-jenkins-pipelines" title="Permanent link">&para;</a></h1>
-<p>For this we are using the modern approach of <a href="https://www.jenkins.io/doc/book/pipeline/">declarative pipelines</a>.</p>
-<p>You must also ensure your jenkins instance supports docker.
-Most modern jenkins systems do have support for it, <a href="https://www.jenkins.io/doc/book/pipeline/docker/">they have embraced it</a>.</p>
-<div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">any</span>
-<span class="w">  </span><span class="o">}</span>
-<span class="w">  </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">CI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;true&#39;</span>
-<span class="w">  </span><span class="o">}</span>
-<span class="w">  </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Bump version&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">      </span><span class="n">when</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">beforeAgent</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">        </span><span class="n">expression</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">BRANCH_IS_PRIMARY</span><span class="w"> </span><span class="o">}</span>
-<span class="w">        </span><span class="n">not</span><span class="w"> </span><span class="o">{</span>
-<span class="w">          </span><span class="n">changelog</span><span class="w"> </span><span class="s1">&#39;^bump:.+&#39;</span>
-<span class="w">        </span><span class="o">}</span>
-<span class="w">      </span><span class="o">}</span>
-<span class="w">      </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
-<span class="w">          </span><span class="n">useCz</span><span class="w"> </span><span class="o">{</span>
-<span class="w">            </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;cz bump --changelog&quot;</span>
-<span class="w">          </span><span class="o">}</span>
-<span class="w">         </span><span class="c1">// Here push back to your repository the new commit and tag</span>
-<span class="w">        </span><span class="o">}</span>
-<span class="w">      </span><span class="o">}</span>
-<span class="w">    </span><span class="o">}</span>
-<span class="w">  </span><span class="o">}</span>
-<span class="o">}</span>
+  <h1>commit</h1>
 
-<span class="kt">def</span><span class="w"> </span><span class="nf">useCz</span><span class="o">(</span><span class="n">String</span><span class="w"> </span><span class="n">authorName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Jenkins CI Server&#39;</span><span class="o">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">authorEmail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;your-jenkins@email.com&#39;</span><span class="o">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">image</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s1">&#39;registry.hub.docker.com/commitizen/commitizen:latest&#39;</span><span class="o">,</span><span class="w"> </span><span class="n">Closure</span><span class="w"> </span><span class="n">body</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">docker</span>
-<span class="w">    </span><span class="o">.</span><span class="na">image</span><span class="o">(</span><span class="n">image</span><span class="o">)</span>
-<span class="w">    </span><span class="o">.</span><span class="na">inside</span><span class="o">(</span><span class="s2">&quot;-u 0 -v $WORKSPACE:/workspace -w /workspace -e GIT_AUTHOR_NAME=&#39;${authorName}&#39; -e GIT_AUTHOR_EMAIL=&#39;${authorEmail}&#39; -entrypoint=&#39;/bin/sh&#39;&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;git config --global --add safe.directory &quot;*&quot;&#39;</span>
-<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;git config --global user.email &#39;${authorName}&#39;&quot;</span>
-<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;git config --global user.name &#39;${authorEmail}&#39;&quot;</span>
-<span class="w">        </span><span class="n">body</span><span class="o">()</span>
-<span class="w">    </span><span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Using jenkins pipeline with any git plugin may require many different configurations,
-you'll have to tinker with it until your pipelines properly detects git events. Check your
-webhook in your git repository and check the "behaviors" and "build strategies" in
-your pipeline settings.</p>
+<p><img alt="Using commitizen cli" src="../../images/demo.gif" /></p>
+<h2 id="about">About<a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
+<p>In your terminal run <code>cz commit</code> or the shortcut <code>cz c</code> to generate a guided git commit.</p>
+<p>You can run <code>cz commit --write-message-to-file COMMIT_MSG_FILE</code> to additionally save the
+generated message to a file. This can be combined with the <code>--dry-run</code> flag to only
+write the message to a file and not modify files and create a commit. A possible use
+case for this is to <a href="../../tutorials/auto_prepare_commit_message/">automatically prepare a commit message</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To maintain platform compatibility, the <code>commit</code> command disable ANSI escaping in its output.
+In particular pre-commit hooks coloring will be deactivated as discussed in <a href="https://github.com/commitizen-tools/commitizen/issues/417">commitizen-tools/commitizen#417</a>.</p>
 </div>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<p><img alt="cz commit --help" src="../../images/cli_help/cz_commit___help.svg" /></p>
+<h3 id="git-options">git options<a class="headerlink" href="#git-options" title="Permanent link">&para;</a></h3>
+<p><code>git</code> command options that are not implemented by commitizen can be use via the <code>--</code> syntax for the <code>commit</code> command.
+The syntax separates commitizen arguments from <code>git commit</code> arguments by a double dash. This is the resulting syntax:
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>commit<span class="w"> </span>&lt;commitizen-args&gt;<span class="w"> </span>--<span class="w"> </span>&lt;git-cli-args&gt;
+
+<span class="c1"># e.g., cz commit --dry-run -- -a -S</span>
+</code></pre></div>
+For example, using the <code>-S</code> option on <code>git commit</code> to sign a commit is now commitizen compatible: <code>cz c -- -S</code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Deprecation warning: A commit can be signed off using <code>cz commit --signoff</code> or the shortcut <code>cz commit -s</code>.
+This syntax is now deprecated in favor of the new <code>cz commit -- -s</code> syntax.</p>
+</div>
+<h3 id="retry">Retry<a class="headerlink" href="#retry" title="Permanent link">&para;</a></h3>
+<p>You can use <code>cz commit --retry</code> to reuse the last commit message when the previous commit attempt failed.
+To automatically retry when running <code>cz commit</code>, you can set the <code>retry_after_failure</code>
+configuration option to <code>true</code>. Running <code>cz commit --no-retry</code> makes commitizen ignore <code>retry_after_failure</code>, forcing
+a new commit message to be prompted.</p>
+<h3 id="commit-message-length-limit">Commit message length limit<a class="headerlink" href="#commit-message-length-limit" title="Permanent link">&para;</a></h3>
+<p>The argument <code>-l</code> (or <code>--message-length-limit</code>) followed by a positive number can limit the length of commit messages.
+An exception would be raised when the message length exceeds the limit.
+For example, <code>cz commit -l 72</code> will limit the length of commit messages to 72 characters.
+By default the limit is set to 0, which means no limit on the length.</p>
+<p><strong>Note that the limit applies only to the first line of the message.</strong>
+Specifically, for <code>ConventionalCommitsCz</code> the length only counts from the type of change to the subject,
+while the body and the footer are not counted.</p>
 
 
 

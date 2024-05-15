@@ -344,11 +344,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../init/" class="md-nav__link">
+      <a href="../commands/init/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Init
+    init
   </span>
   
 
@@ -365,11 +365,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../commit/" class="md-nav__link">
+      <a href="../commands/commit/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Commit
+    commit
   </span>
   
 
@@ -386,11 +386,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../bump/" class="md-nav__link">
+      <a href="../commands/bump/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Bump
+    bump
   </span>
   
 
@@ -407,11 +407,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../check/" class="md-nav__link">
+      <a href="../commands/check/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Check
+    check
   </span>
   
 
@@ -428,11 +428,116 @@
   
   
     <li class="md-nav__item">
-      <a href="../changelog/" class="md-nav__link">
+      <a href="../commands/changelog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Changelog
+    changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/example/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    example
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/info/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    info
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/ls/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ls
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/schema/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    schema
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/version/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    version
   </span>
   
 
@@ -1479,7 +1584,7 @@ To specify keyboard shortcuts for your custom choices, provide the shortcut usin
 <li>Create a python package using <code>setup.py</code>, <code>poetry</code>, etc</li>
 <li>Expose the class as a <code>commitizen.plugin</code> entrypoint</li>
 </ol>
-<p>Check an <a href="convcomms">example</a> on how to configure <code>BaseCommitizen</code>.</p>
+<p>Check an <a href="https://github.com/commitizen-tools/commitizen/blob/master/commitizen/cz/conventional_commits/conventional_commits.py">example</a> on how to configure <code>BaseCommitizen</code>.</p>
 <p>You can also automate the steps above through <a href="https://cookiecutter.readthedocs.io/en/1.7.0/">cookiecutter</a>.</p>
 <div class="highlight"><pre><span></span><code>cookiecutter<span class="w"> </span>gh:commitizen-tools/commitizen_cz_template
 </code></pre></div>
@@ -1604,7 +1709,7 @@ You can customize it of course, and this are the variables you need to add to yo
 <td><code>commit_parser</code></td>
 <td><code>str</code></td>
 <td>NO</td>
-<td>Regex which should provide the variables explained in the <a href="../changelog/#description">changelog description</a></td>
+<td>Regex which should provide the variables explained in the <a href="../commands/changelog/#description">changelog description</a></td>
 </tr>
 <tr>
 <td><code>changelog_pattern</code></td>

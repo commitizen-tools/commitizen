@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../github_actions/">
+        <link rel="prev" href="../changelog/">
       
       
-        <link rel="next" href="../dev_releases/">
+        <link rel="next" href="../info/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Jenkins pipeline - Commitizen</title>
+        <title>example - Commitizen</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#create-a-new-release-with-jenkins-pipelines" class="md-skip">
+        <a href="#usage" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Jenkins pipeline
+              example
             
           </span>
         </div>
@@ -306,17 +306,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -330,7 +332,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Commands
@@ -344,7 +346,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/init/" class="md-nav__link">
+      <a href="../init/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -365,7 +367,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/commit/" class="md-nav__link">
+      <a href="../commit/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -386,7 +388,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/bump/" class="md-nav__link">
+      <a href="../bump/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -407,7 +409,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/check/" class="md-nav__link">
+      <a href="../check/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -428,7 +430,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/changelog/" class="md-nav__link">
+      <a href="../changelog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -446,10 +448,28 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../commands/example/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    example
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -458,6 +478,33 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -470,7 +517,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/info/" class="md-nav__link">
+      <a href="../info/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -491,7 +538,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/ls/" class="md-nav__link">
+      <a href="../ls/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -512,7 +559,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/schema/" class="md-nav__link">
+      <a href="../schema/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -533,7 +580,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/version/" class="md-nav__link">
+      <a href="../version/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -598,19 +645,17 @@
       
   
   
-    
   
   
-  
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -624,7 +669,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
@@ -638,7 +683,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../writing_commits/" class="md-nav__link">
+      <a href="../../tutorials/writing_commits/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -659,7 +704,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../auto_check/" class="md-nav__link">
+      <a href="../../tutorials/auto_check/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -680,7 +725,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../auto_prepare_commit_message/" class="md-nav__link">
+      <a href="../../tutorials/auto_prepare_commit_message/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -701,7 +746,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gitlab_ci/" class="md-nav__link">
+      <a href="../../tutorials/gitlab_ci/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -722,7 +767,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../github_actions/" class="md-nav__link">
+      <a href="../../tutorials/github_actions/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -740,19 +785,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../tutorials/jenkins_pipeline/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -761,7 +797,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -774,7 +809,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../dev_releases/" class="md-nav__link">
+      <a href="../../tutorials/dev_releases/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -912,8 +947,23 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -928,56 +978,11 @@
                   
 
 
-<h1 id="create-a-new-release-with-jenkins-pipelines">Create a new release with Jenkins Pipelines<a class="headerlink" href="#create-a-new-release-with-jenkins-pipelines" title="Permanent link">&para;</a></h1>
-<p>For this we are using the modern approach of <a href="https://www.jenkins.io/doc/book/pipeline/">declarative pipelines</a>.</p>
-<p>You must also ensure your jenkins instance supports docker.
-Most modern jenkins systems do have support for it, <a href="https://www.jenkins.io/doc/book/pipeline/docker/">they have embraced it</a>.</p>
-<div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">any</span>
-<span class="w">  </span><span class="o">}</span>
-<span class="w">  </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">CI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;true&#39;</span>
-<span class="w">  </span><span class="o">}</span>
-<span class="w">  </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Bump version&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">      </span><span class="n">when</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">beforeAgent</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">        </span><span class="n">expression</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">BRANCH_IS_PRIMARY</span><span class="w"> </span><span class="o">}</span>
-<span class="w">        </span><span class="n">not</span><span class="w"> </span><span class="o">{</span>
-<span class="w">          </span><span class="n">changelog</span><span class="w"> </span><span class="s1">&#39;^bump:.+&#39;</span>
-<span class="w">        </span><span class="o">}</span>
-<span class="w">      </span><span class="o">}</span>
-<span class="w">      </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
-<span class="w">          </span><span class="n">useCz</span><span class="w"> </span><span class="o">{</span>
-<span class="w">            </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;cz bump --changelog&quot;</span>
-<span class="w">          </span><span class="o">}</span>
-<span class="w">         </span><span class="c1">// Here push back to your repository the new commit and tag</span>
-<span class="w">        </span><span class="o">}</span>
-<span class="w">      </span><span class="o">}</span>
-<span class="w">    </span><span class="o">}</span>
-<span class="w">  </span><span class="o">}</span>
-<span class="o">}</span>
+  <h1>example</h1>
 
-<span class="kt">def</span><span class="w"> </span><span class="nf">useCz</span><span class="o">(</span><span class="n">String</span><span class="w"> </span><span class="n">authorName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Jenkins CI Server&#39;</span><span class="o">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">authorEmail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;your-jenkins@email.com&#39;</span><span class="o">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">image</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s1">&#39;registry.hub.docker.com/commitizen/commitizen:latest&#39;</span><span class="o">,</span><span class="w"> </span><span class="n">Closure</span><span class="w"> </span><span class="n">body</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">docker</span>
-<span class="w">    </span><span class="o">.</span><span class="na">image</span><span class="o">(</span><span class="n">image</span><span class="o">)</span>
-<span class="w">    </span><span class="o">.</span><span class="na">inside</span><span class="o">(</span><span class="s2">&quot;-u 0 -v $WORKSPACE:/workspace -w /workspace -e GIT_AUTHOR_NAME=&#39;${authorName}&#39; -e GIT_AUTHOR_EMAIL=&#39;${authorEmail}&#39; -entrypoint=&#39;/bin/sh&#39;&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;git config --global --add safe.directory &quot;*&quot;&#39;</span>
-<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;git config --global user.email &#39;${authorName}&#39;&quot;</span>
-<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;git config --global user.name &#39;${authorEmail}&#39;&quot;</span>
-<span class="w">        </span><span class="n">body</span><span class="o">()</span>
-<span class="w">    </span><span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Using jenkins pipeline with any git plugin may require many different configurations,
-you'll have to tinker with it until your pipelines properly detects git events. Check your
-webhook in your git repository and check the "behaviors" and "build strategies" in
-your pipeline settings.</p>
-</div>
+<p>Show commit example</p>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<p><img alt="cz example --help" src="../../images/cli_help/cz_example___help.svg" /></p>
 
 
 
