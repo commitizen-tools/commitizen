@@ -1,3 +1,9 @@
+## v3.25.1 (2024-05-15)
+
+### Refactor
+
+- strip possessive from note about ci option
+
 ## v3.25.0 (2024-04-30)
 
 ### Feat
