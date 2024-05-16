@@ -414,3 +414,15 @@ def test_check_conventional_commit_succeed_with_git_diff(mocker, capsys):
     cli.main()
     out, _ = capsys.readouterr()
     assert "Commit validation: successful!" in out
+
+
+def test_check_command_shows_description_when_use_help_option(
+    mocker: MockFixture, capsys, file_regression
+):
+    testargs = ["cz", "check", "--help"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(SystemExit):
+        cli.main()
+
+    out, _ = capsys.readouterr()
+    file_regression.check(out, extension=".txt")

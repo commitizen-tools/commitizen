@@ -1449,3 +1449,15 @@ def test_bump_changelog_contains_increment_only(mocker, tmp_commitizen_project, 
 
     assert "3.0.0" in out
     assert "2.0.0" not in out
+
+
+def test_bump_command_shows_description_when_use_help_option(
+    mocker: MockFixture, capsys, file_regression
+):
+    testargs = ["cz", "bump", "--help"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(SystemExit):
+        cli.main()
+
+    out, _ = capsys.readouterr()
+    file_regression.check(out, extension=".txt")

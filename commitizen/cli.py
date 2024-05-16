@@ -114,11 +114,13 @@ data = {
         "commands": [
             {
                 "name": ["init"],
+                "description": "init commitizen configuration",
                 "help": "init commitizen configuration",
                 "func": commands.Init,
             },
             {
                 "name": ["commit", "c"],
+                "description": "create new commit",
                 "help": "create new commit",
                 "func": commands.Commit,
                 "arguments": [
@@ -164,22 +166,31 @@ data = {
             },
             {
                 "name": "ls",
+                "description": "show available commitizens",
                 "help": "show available commitizens",
                 "func": commands.ListCz,
             },
             {
                 "name": "example",
+                "description": "show commit example",
                 "help": "show commit example",
                 "func": commands.Example,
             },
             {
                 "name": "info",
+                "description": "show information about the cz",
                 "help": "show information about the cz",
                 "func": commands.Info,
             },
-            {"name": "schema", "help": "show commit schema", "func": commands.Schema},
+            {
+                "name": "schema",
+                "description": "show commit schema",
+                "help": "show commit schema",
+                "func": commands.Schema,
+            },
             {
                 "name": "bump",
+                "description": "bump semantic version based on the git log",
                 "help": "bump semantic version based on the git log",
                 "func": commands.Bump,
                 "arguments": [
@@ -346,6 +357,9 @@ data = {
             },
             {
                 "name": ["changelog", "ch"],
+                "description": (
+                    "generate changelog (note that it will overwrite existing file)"
+                ),
                 "help": (
                     "generate changelog (note that it will overwrite existing file)"
                 ),
@@ -416,6 +430,7 @@ data = {
             },
             {
                 "name": ["check"],
+                "description": "validates that a commit message matches the commitizen schema",
                 "help": "validates that a commit message matches the commitizen schema",
                 "func": commands.Check,
                 "arguments": [
@@ -455,6 +470,10 @@ data = {
             },
             {
                 "name": ["version"],
+                "description": (
+                    "get the version of the installed commitizen or the current project"
+                    " (default: installed commitizen)"
+                ),
                 "help": (
                     "get the version of the installed commitizen or the current project"
                     " (default: installed commitizen)"

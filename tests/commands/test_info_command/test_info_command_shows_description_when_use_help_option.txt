@@ -1,0 +1,6 @@
+usage: cz info [-h]
+
+show information about the cz
+
+options:
+  -h, --help  show this help message and exit

@@ -1637,3 +1637,15 @@ def test_export_changelog_template_from_plugin(
 
     assert target.exists()
     assert target.read_text() == tpl
+
+
+def test_changelog_command_shows_description_when_use_help_option(
+    mocker: MockFixture, capsys, file_regression
+):
+    testargs = ["cz", "changelog", "--help"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(SystemExit):
+        cli.main()
+
+    out, _ = capsys.readouterr()
+    file_regression.check(out, extension=".txt")

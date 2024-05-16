@@ -1,0 +1,22 @@
+usage: cz check [-h]
+                [--commit-msg-file COMMIT_MSG_FILE | --rev-range REV_RANGE | -m MESSAGE]
+                [--allow-abort] [--allowed-prefixes [ALLOWED_PREFIXES ...]]
+
+validates that a commit message matches the commitizen schema
+
+options:
+  -h, --help            show this help message and exit
+  --commit-msg-file COMMIT_MSG_FILE
+                        ask for the name of the temporal file that contains
+                        the commit message. Using it in a git hook script:
+                        MSG_FILE=$1
+  --rev-range REV_RANGE
+                        a range of git rev to check. e.g, master..HEAD
+  -m MESSAGE, --message MESSAGE
+                        commit message that needs to be checked
+  --allow-abort         allow empty commit messages, which typically abort a
+                        commit
+  --allowed-prefixes [ALLOWED_PREFIXES ...]
+                        allowed commit message prefixes. If the message starts
+                        by one of these prefixes, the message won't be checked
+                        against the regex

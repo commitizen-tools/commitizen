@@ -1,10 +1,11 @@
 import os
+import sys
 
 import pytest
 from pytest_mock import MockFixture
 from unittest.mock import ANY
 
-from commitizen import cmd, commands
+from commitizen import cli, cmd, commands
 from commitizen.cz.exceptions import CzException
 from commitizen.cz.utils import get_backup_file_path
 from commitizen.exceptions import (
@@ -406,3 +407,15 @@ def test_commit_command_with_message_length_limit(config, mocker: MockFixture):
 
     with pytest.raises(CommitMessageLengthExceededError):
         commands.Commit(config, {"message_length_limit": message_length - 1})()
+
+
+def test_commit_command_shows_description_when_use_help_option(
+    mocker: MockFixture, capsys, file_regression
+):
+    testargs = ["cz", "commit", "--help"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(SystemExit):
+        cli.main()
+
+    out, _ = capsys.readouterr()
+    file_regression.check(out, extension=".txt")

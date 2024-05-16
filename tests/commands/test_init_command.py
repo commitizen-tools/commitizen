@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 from typing import Any
 
 import pytest
 import yaml
 from pytest_mock import MockFixture
 
-from commitizen import commands
+from commitizen import cli, commands
 from commitizen.__version__ import __version__
 from commitizen.exceptions import InitFailedError, NoAnswersError
 
@@ -251,3 +252,15 @@ class TestNoPreCommitInstalled:
         with tmpdir.as_cwd():
             with pytest.raises(InitFailedError):
                 commands.Init(config)()
+
+
+def test_init_command_shows_description_when_use_help_option(
+    mocker: MockFixture, capsys, file_regression
+):
+    testargs = ["cz", "init", "--help"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(SystemExit):
+        cli.main()
+
+    out, _ = capsys.readouterr()
+    file_regression.check(out, extension=".txt")
