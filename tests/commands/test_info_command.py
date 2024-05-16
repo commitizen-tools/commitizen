@@ -1,8 +1,14 @@
 import pytest
 import sys
-from commitizen import cli
+from commitizen import cli, commands
 
 from pytest_mock import MockerFixture
+
+
+def test_info(config, mocker: MockerFixture):
+    write_mock = mocker.patch("commitizen.out.write")
+    commands.Info(config)()
+    write_mock.assert_called_once()
 
 
 def test_info_command_shows_description_when_use_help_option(
