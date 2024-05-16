@@ -1,0 +1,12 @@
+usage: cz version [-h] [-r | -p | -c | -v]
+
+get the version of the installed commitizen or the current project (default:
+installed commitizen)
+
+options:
+  -h, --help        show this help message and exit
+  -r, --report      get system information for reporting bugs
+  -p, --project     get the version of the current project
+  -c, --commitizen  get the version of the installed commitizen
+  -v, --verbose     get the version of both the installed commitizen and the
+                    current project

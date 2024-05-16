@@ -4,7 +4,7 @@ import sys
 import pytest
 from pytest_mock import MockerFixture
 
-from commitizen import commands
+from commitizen import cli, commands
 from commitizen.__version__ import __version__
 from commitizen.config.base_config import BaseConfig
 
@@ -106,3 +106,15 @@ def test_version_use_version_provider(
     get_provider.assert_called_once()
     mock.get_version.assert_called_once()
     mock.set_version.assert_not_called()
+
+
+def test_version_command_shows_description_when_use_help_option(
+    mocker: MockerFixture, capsys, file_regression
+):
+    testargs = ["cz", "version", "--help"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(SystemExit):
+        cli.main()
+
+    out, _ = capsys.readouterr()
+    file_regression.check(out, extension=".txt")

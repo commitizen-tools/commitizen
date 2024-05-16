@@ -1,0 +1,6 @@
+usage: cz init [-h]
+
+init commitizen configuration
+
+options:
+  -h, --help  show this help message and exit
