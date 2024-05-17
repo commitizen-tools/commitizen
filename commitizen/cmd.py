@@ -33,7 +33,7 @@ def run(cmd: str, env=None) -> Command:
         env = {**os.environ, **env}
     process = subprocess.Popen(
         cmd,
-        shell=True,
+        shell=False if os.name == 'nt' else True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         stdin=subprocess.PIPE,
