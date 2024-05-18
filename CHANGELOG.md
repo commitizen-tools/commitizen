@@ -1,3 +1,9 @@
+## v3.26.0 (2024-05-18)
+
+### Feat
+
+- **ci/cd**: automates the generation of CLI screenshots
+
 ## v3.25.1 (2024-05-15)
 
 ### Refactor
