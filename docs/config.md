@@ -227,11 +227,11 @@ Provide extra variables to the changelog template. [Read more][template-customiz
 
 ## Configuration file
 
-### pyproject.toml or .cz.toml
+### pyproject.toml, .cz.toml or cz.toml
 
 Default and recommended configuration format for a project.
 For a **python** project, we recommend adding an entry to your `pyproject.toml`.
-You can also create a `.cz.toml` file at the root of your project folder.
+You can also create a `.cz.toml` or `cz.toml` file at the root of your project folder.
 
 Example configuration:
 
@@ -339,7 +339,7 @@ Commitizen provides some version providers for some well known formats:
 !!! note
 The `scm` provider is meant to be used with `setuptools-scm` or any packager `*-scm` plugin.
 
-An example in your `.cz.toml` would look like this:
+An example in your `.cz.toml` or `cz.toml` would look like this:
 
 ```toml
 [tool.commitizen]

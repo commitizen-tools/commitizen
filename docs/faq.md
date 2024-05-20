@@ -57,7 +57,7 @@ They differ a bit in design, not sure if cz-js does any of this, but these are s
 - create custom rules, version bumps and changelog generation, by default we use the popular conventional commits (I think cz-js allows this).
 - single package, install one thing and it will work (cz-js is a monorepo, but you have to install different dependencies AFAIK)
 - pre-commit integration
-- works on any language project, as long as you create the `.cz.toml` file.
+- works on any language project, as long as you create the `.cz.toml` or `cz.toml` file.
 
 Where do they cross paths?
 
