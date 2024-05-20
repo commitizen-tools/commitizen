@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 import pytest
+
 from commitizen import defaults
-from commitizen.config.base_config import BaseConfig
 from commitizen.changelog_formats import (
     KNOWN_CHANGELOG_FORMATS,
     ChangelogFormat,
     get_changelog_format,
     guess_changelog_format,
 )
+from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import ChangelogFormatUnknown
 
 

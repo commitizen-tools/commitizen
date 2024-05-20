@@ -5,9 +5,8 @@ from typing import ClassVar, Protocol
 import importlib_metadata as metadata
 
 from commitizen.changelog import Metadata
-from commitizen.exceptions import ChangelogFormatUnknown
 from commitizen.config.base_config import BaseConfig
-
+from commitizen.exceptions import ChangelogFormatUnknown
 
 CHANGELOG_FORMAT_ENTRYPOINT = "commitizen.changelog_format"
 TEMPLATE_EXTENSION = "j2"

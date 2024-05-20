@@ -12,6 +12,7 @@ from pytest_mock import MockFixture
 
 import commitizen.commands.bump as bump
 from commitizen import cli, cmd, git, hooks
+from commitizen.changelog_formats import ChangelogFormat
 from commitizen.cz.base import BaseCommitizen
 from commitizen.exceptions import (
     BumpTagFailedError,
@@ -28,7 +29,6 @@ from commitizen.exceptions import (
     NotAllowed,
     NoVersionSpecifiedError,
 )
-from commitizen.changelog_formats import ChangelogFormat
 from tests.utils import create_file_and_commit, create_tag, skip_below_py_3_10
 
 

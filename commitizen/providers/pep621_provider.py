@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-
 from commitizen.providers.base_provider import TomlProvider
 
 

@@ -6,14 +6,14 @@ import platform
 import shutil
 
 import pytest
-from commitizen import cmd, exceptions, git
 from pytest_mock import MockFixture
 
+from commitizen import cmd, exceptions, git
 from tests.utils import (
     FakeCommand,
+    create_branch,
     create_file_and_commit,
     create_tag,
-    create_branch,
     switch_branch,
 )
 

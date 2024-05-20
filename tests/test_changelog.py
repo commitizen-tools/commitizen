@@ -1,5 +1,4 @@
 import re
-
 from pathlib import Path
 from typing import Optional
 
@@ -7,11 +6,11 @@ import pytest
 from jinja2 import FileSystemLoader
 
 from commitizen import changelog, git
+from commitizen.changelog_formats import ChangelogFormat
 from commitizen.cz.conventional_commits.conventional_commits import (
     ConventionalCommitsCz,
 )
 from commitizen.exceptions import InvalidConfigurationError
-from commitizen.changelog_formats import ChangelogFormat
 
 COMMITS_DATA = [
     {

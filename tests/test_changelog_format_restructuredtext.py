@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING
 import pytest
 
 from commitizen.changelog import Metadata
-from commitizen.config.base_config import BaseConfig
 from commitizen.changelog_formats.restructuredtext import RestructuredText
+from commitizen.config.base_config import BaseConfig
 
 if TYPE_CHECKING:
     from _pytest.mark.structures import ParameterSet

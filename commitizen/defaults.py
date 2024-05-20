@@ -2,9 +2,7 @@ from __future__ import annotations
 
 import pathlib
 from collections import OrderedDict
-from typing import Any, Iterable, MutableMapping
-
-from typing import TypedDict
+from typing import Any, Iterable, MutableMapping, TypedDict
 
 # Type
 Questions = Iterable[MutableMapping[str, Any]]

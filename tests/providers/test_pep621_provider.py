@@ -9,7 +9,6 @@ from commitizen.config.base_config import BaseConfig
 from commitizen.providers import get_provider
 from commitizen.providers.pep621_provider import Pep621Provider
 
-
 PEP621_TOML = """\
 [project]
 version = "0.1.0"

@@ -4,8 +4,8 @@ from pathlib import Path
 
 import yaml
 
-from commitizen.git import smart_open
 from commitizen.exceptions import InvalidConfigurationError
+from commitizen.git import smart_open
 
 from .base_config import BaseConfig
 

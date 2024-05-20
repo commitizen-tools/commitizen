@@ -6,6 +6,7 @@ from pathlib import Path
 from tomlkit import exceptions, parse, table
 
 from commitizen.exceptions import InvalidConfigurationError
+
 from .base_config import BaseConfig
 
 

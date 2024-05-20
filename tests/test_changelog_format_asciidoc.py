@@ -5,9 +5,8 @@ from pathlib import Path
 import pytest
 
 from commitizen.changelog import Metadata
-from commitizen.config.base_config import BaseConfig
 from commitizen.changelog_formats.asciidoc import AsciiDoc
-
+from commitizen.config.base_config import BaseConfig
 
 CHANGELOG_A = """
 = Changelog

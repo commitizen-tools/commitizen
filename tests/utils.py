@@ -1,15 +1,14 @@
 from __future__ import annotations
 
+import sys
 import time
 import uuid
-import sys
 from pathlib import Path
 
 import pytest
 from deprecated import deprecated
 
 from commitizen import cmd, exceptions, git
-
 
 skip_below_py_3_10 = pytest.mark.skipif(
     sys.version_info < (3, 10),

@@ -6,7 +6,6 @@ import importlib_metadata as metadata
 
 from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import VersionProviderUnknown
-
 from commitizen.providers.base_provider import VersionProvider
 from commitizen.providers.cargo_provider import CargoProvider
 from commitizen.providers.commitizen_provider import CommitizenProvider

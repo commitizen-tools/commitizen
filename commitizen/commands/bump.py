@@ -6,6 +6,7 @@ from logging import getLogger
 import questionary
 
 from commitizen import bump, factory, git, hooks, out
+from commitizen.changelog_formats import get_changelog_format
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
@@ -21,13 +22,12 @@ from commitizen.exceptions import (
     NotAllowed,
     NoVersionSpecifiedError,
 )
-from commitizen.changelog_formats import get_changelog_format
 from commitizen.providers import get_provider
 from commitizen.version_schemes import (
-    get_version_scheme,
     Increment,
     InvalidVersion,
     Prerelease,
+    get_version_scheme,
 )
 
 logger = getLogger("commitizen")

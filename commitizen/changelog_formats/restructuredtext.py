@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 import sys
 from itertools import zip_longest
-from typing import IO, TYPE_CHECKING, Any, Union, Tuple
+from typing import IO, TYPE_CHECKING, Any, Tuple, Union
 
 from commitizen.changelog import Metadata
 

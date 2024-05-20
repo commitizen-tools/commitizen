@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from commitizen.exceptions import InvalidConfigurationError
 
+from commitizen.exceptions import InvalidConfigurationError
 from commitizen.git import smart_open
 
 from .base_config import BaseConfig

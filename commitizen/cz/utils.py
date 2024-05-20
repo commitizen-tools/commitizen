@@ -1,9 +1,9 @@
-import re
 import os
+import re
 import tempfile
 
-from commitizen.cz import exceptions
 from commitizen import git
+from commitizen.cz import exceptions
 
 
 def required_validator(answer, msg=None):

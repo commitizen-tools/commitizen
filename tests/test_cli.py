@@ -8,11 +8,11 @@ from pytest_mock import MockFixture
 
 from commitizen import cli
 from commitizen.exceptions import (
+    ConfigFileNotFound,
     ExpectedExit,
+    InvalidCommandArgumentError,
     NoCommandFoundError,
     NotAGitProjectError,
-    InvalidCommandArgumentError,
-    ConfigFileNotFound,
 )
 
 
