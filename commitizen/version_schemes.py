@@ -401,7 +401,7 @@ DEFAULT_SCHEME: VersionScheme = Pep440
 SCHEMES_ENTRYPOINT = "commitizen.scheme"
 """Schemes entrypoints group"""
 
-KNOWN_SCHEMES = {ep.name for ep in metadata.entry_points(group=SCHEMES_ENTRYPOINT)}
+KNOWN_SCHEMES = [ep.name for ep in metadata.entry_points(group=SCHEMES_ENTRYPOINT)]
 """All known registered version schemes"""
 
 
