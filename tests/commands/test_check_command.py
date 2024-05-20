@@ -12,7 +12,7 @@ from commitizen.exceptions import (
     InvalidCommitMessageError,
     NoCommitsFoundError,
 )
-from tests.utils import create_file_and_commit
+from tests.utils import create_file_and_commit, skip_below_py_3_10
 
 COMMIT_LOG = [
     "refactor: A code change that neither fixes a bug nor adds a feature",
@@ -416,6 +416,7 @@ def test_check_conventional_commit_succeed_with_git_diff(mocker, capsys):
     assert "Commit validation: successful!" in out
 
 
+@skip_below_py_3_10
 def test_check_command_shows_description_when_use_help_option(
     mocker: MockFixture, capsys, file_regression
 ):

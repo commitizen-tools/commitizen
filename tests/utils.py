@@ -2,10 +2,19 @@ from __future__ import annotations
 
 import time
 import uuid
+import sys
 from pathlib import Path
+
+import pytest
 from deprecated import deprecated
 
 from commitizen import cmd, exceptions, git
+
+
+skip_below_py_3_10 = pytest.mark.skipif(
+    sys.version_info < (3, 10),
+    reason="The output meesage of argparse is different between Python 3.10 and lower than Python 3.10",
+)
 
 
 class FakeCommand:

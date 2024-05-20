@@ -13,6 +13,8 @@ from commitizen import cli, commands
 from commitizen.__version__ import __version__
 from commitizen.exceptions import InitFailedError, NoAnswersError
 
+from tests.utils import skip_below_py_3_10
+
 
 class FakeQuestion:
     def __init__(self, expected_return):
@@ -254,6 +256,7 @@ class TestNoPreCommitInstalled:
                 commands.Init(config)()
 
 
+@skip_below_py_3_10
 def test_init_command_shows_description_when_use_help_option(
     mocker: MockFixture, capsys, file_regression
 ):
