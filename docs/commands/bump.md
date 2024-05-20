@@ -285,6 +285,18 @@ You should normally not use this functionality, but if you decide to do, keep in
 * Version `1.2.3+a`, and `1.2.3+b` are the same version! Tools should not use the string after `+` for version calculation. This is probably not a guarantee (example in helm) even tho it is in the spec.
 * It might be problematic having the metadata in place when doing upgrades depending on what tool you use.
 
+### `--allow-no-commit`
+
+Allow the project version to be bumped even when there's no eligible version. This is most useful when used with `--increment {MAJOR,MINOR,PATCH}` or `[MANUL_VERSION]`
+
+```sh
+# bump a minor version even when there's only bug fixes, documentation changes or even no commits
+cz bump --incremental MINOR --allow-no-commit
+
+# bump version to 2.0.0 even when there's no breaking changes changes or even no commits
+cz bump --allow-no-commit 2.0.0
+```
+
 ## Avoid raising errors
 
 Some situations from commitizen raise an exit code different than 0.

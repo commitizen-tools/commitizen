@@ -159,6 +159,7 @@ class Bump:
         manual_version = self.arguments["manual_version"]
         build_metadata = self.arguments["build_metadata"]
         increment_mode: str = self.arguments["increment_mode"]
+        allow_no_commit: bool | None = self.arguments["allow_no_commit"]
 
         if manual_version:
             if increment:
@@ -231,7 +232,11 @@ class Bump:
 
                 # No commits, there is no need to create an empty tag.
                 # Unless we previously had a prerelease.
-                if not commits and not current_version.is_prerelease:
+                if (
+                    not commits
+                    and not current_version.is_prerelease
+                    and not allow_no_commit
+                ):
                     raise NoCommitsFoundError(
                         "[NO_COMMITS_FOUND]\n" "No new commits found."
                     )
@@ -246,6 +251,10 @@ class Bump:
                     "No commits found to generate a pre-release.\n"
                     "To avoid this error, manually specify the type of increment with `--increment`"
                 )
+
+            # we create an empty PATCH increment for empty tag
+            if increment is None and allow_no_commit:
+                increment = "PATCH"
 
             new_version = current_version.bump(
                 increment,
