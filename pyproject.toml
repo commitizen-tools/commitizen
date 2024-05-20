@@ -149,7 +149,16 @@ addopts = "--strict-markers"
 line-length = 88
 
 [tool.ruff.lint]
-select = ["E", "F", "UP"]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # isort
+    "I",
+]
 ignore = [
     "E501",
     "D1",

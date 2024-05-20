@@ -5,5 +5,7 @@ export PREFIX="poetry run python -m "
 
 set -x
 
+# This is needed for running import sorting
+${PREFIX}ruff check --fix commitizen tests
 ${PREFIX}ruff format commitizen tests
 ${PREFIX}black commitizen tests
