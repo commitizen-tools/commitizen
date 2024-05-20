@@ -32,6 +32,10 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: Implementation :: CPython",
 ]
+packages = [
+  {include = "commitizen"},
+  {include = "commitizen/py.typed"},
+]
 
 [tool.poetry.dependencies]
 python = ">=3.8"
