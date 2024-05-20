@@ -21,6 +21,7 @@ repos:
         exclude: "tests/((commands|data)/|test_).+"
       - id: trailing-whitespace
         args: [ --markdown-linebreak-ext=md ]
+        exclude: '\.svg$'
       - id: debug-statements
       - id: no-commit-to-branch
       - id: check-merge-conflict
