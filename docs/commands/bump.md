@@ -408,7 +408,7 @@ regarding if the file is present or not in `version_files`.
 
 Some examples
 
-`pyproject.toml` or `.cz.toml`
+`pyproject.toml`, `.cz.toml` or `cz.toml`
 
 ```toml
 [tool.commitizen]
@@ -441,7 +441,7 @@ defaults to: `bump: version $current_version → $new_version`
 
 Some examples
 
-`pyproject.toml` or `.cz.toml`
+`pyproject.toml`, `.cz.toml` or `cz.toml`
 
 ```toml
 [tool.commitizen]

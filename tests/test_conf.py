@@ -214,19 +214,30 @@ class TestReadCfg:
                 config.read_cfg(filepath="./not_in_root/pyproject.toml")
 
 
+@pytest.mark.parametrize(
+    "config_file, exception_string",
+    [
+        (".cz.toml", r"\.cz\.toml"),
+        ("cz.toml", r"cz\.toml"),
+        ("pyproject.toml", r"pyproject\.toml"),
+    ],
+    ids=[".cz.toml", "cz.toml", "pyproject.toml"],
+)
 class TestTomlConfig:
-    def test_init_empty_config_content(self, tmpdir):
-        path = tmpdir.mkdir("commitizen").join(".cz.toml")
+    def test_init_empty_config_content(self, tmpdir, config_file, exception_string):
+        path = tmpdir.mkdir("commitizen").join(config_file)
         toml_config = config.TomlConfig(data="", path=path)
         toml_config.init_empty_config_content()
 
         with open(path, encoding="utf-8") as toml_file:
             assert toml_file.read() == "[tool.commitizen]\n"
 
-    def test_init_empty_config_content_with_existing_content(self, tmpdir):
+    def test_init_empty_config_content_with_existing_content(
+        self, tmpdir, config_file, exception_string
+    ):
         existing_content = "[tool.black]\n" "line-length = 88\n"
 
-        path = tmpdir.mkdir("commitizen").join(".cz.toml")
+        path = tmpdir.mkdir("commitizen").join(config_file)
         path.write(existing_content)
         toml_config = config.TomlConfig(data="", path=path)
         toml_config.init_empty_config_content()
@@ -234,11 +245,13 @@ class TestTomlConfig:
         with open(path, encoding="utf-8") as toml_file:
             assert toml_file.read() == existing_content + "\n[tool.commitizen]\n"
 
-    def test_init_with_invalid_config_content(self, tmpdir):
+    def test_init_with_invalid_config_content(
+        self, tmpdir, config_file, exception_string
+    ):
         existing_content = "invalid toml content"
-        path = tmpdir.mkdir("commitizen").join(".cz.toml")
+        path = tmpdir.mkdir("commitizen").join(config_file)
 
-        with pytest.raises(InvalidConfigurationError, match=r"\.cz\.toml"):
+        with pytest.raises(InvalidConfigurationError, match=exception_string):
             config.TomlConfig(data=existing_content, path=path)
 
 

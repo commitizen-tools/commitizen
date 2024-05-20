@@ -67,6 +67,7 @@ config_files: list[str] = [
     "cz.json",
     ".cz.yaml",
     "cz.yaml",
+    "cz.toml",
 ]
 encoding: str = "utf-8"
 

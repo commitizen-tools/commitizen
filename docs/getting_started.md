@@ -8,7 +8,7 @@ The assistant utility will help you set up everything
 cz init
 ```
 
-Alternatively, create a file `.cz.toml` in your project's directory.
+Alternatively, create a file `.cz.toml` or `cz.toml` in your project's directory.
 
 ```toml
 [tool.commitizen]
