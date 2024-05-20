@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from commitizen import defaults, git
-from commitizen.exceptions import ConfigFileNotFound, ConfigFileIsEmpty
+from commitizen.exceptions import ConfigFileIsEmpty, ConfigFileNotFound
 
 from .base_config import BaseConfig
 from .json_config import JsonConfig

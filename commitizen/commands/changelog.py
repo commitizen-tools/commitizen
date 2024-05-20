@@ -7,9 +7,10 @@ from pathlib import Path
 from typing import Callable, cast
 
 from commitizen import bump, changelog, defaults, factory, git, out
-
+from commitizen.changelog_formats import get_changelog_format
 from commitizen.config import BaseConfig
-from commitizen.cz.base import MessageBuilderHook, ChangelogReleaseHook
+from commitizen.cz.base import ChangelogReleaseHook, MessageBuilderHook
+from commitizen.cz.utils import strip_local_version
 from commitizen.exceptions import (
     DryRunExit,
     NoCommitsFoundError,
@@ -18,10 +19,8 @@ from commitizen.exceptions import (
     NotAGitProjectError,
     NotAllowed,
 )
-from commitizen.changelog_formats import get_changelog_format
 from commitizen.git import GitTag, smart_open
 from commitizen.version_schemes import get_version_scheme
-from commitizen.cz.utils import strip_local_version
 
 
 class Changelog:

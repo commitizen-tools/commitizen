@@ -3,16 +3,14 @@ from __future__ import annotations
 import re
 from typing import Callable
 
-
 from commitizen.git import get_tags
+from commitizen.providers.base_provider import VersionProvider
 from commitizen.version_schemes import (
-    get_version_scheme,
     InvalidVersion,
     Version,
     VersionProtocol,
+    get_version_scheme,
 )
-
-from commitizen.providers.base_provider import VersionProvider
 
 
 class ScmProvider(VersionProvider):

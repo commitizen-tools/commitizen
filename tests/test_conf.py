@@ -9,7 +9,7 @@ import pytest
 import yaml
 
 from commitizen import config, defaults, git
-from commitizen.exceptions import InvalidConfigurationError, ConfigFileIsEmpty
+from commitizen.exceptions import ConfigFileIsEmpty, InvalidConfigurationError
 
 PYPROJECT = """
 [tool.commitizen]

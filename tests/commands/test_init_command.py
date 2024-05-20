@@ -12,7 +12,6 @@ from pytest_mock import MockFixture
 from commitizen import cli, commands
 from commitizen.__version__ import __version__
 from commitizen.exceptions import InitFailedError, NoAnswersError
-
 from tests.utils import skip_below_py_3_10
 
 

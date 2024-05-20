@@ -9,7 +9,6 @@ from commitizen.config.base_config import BaseConfig
 from commitizen.providers import get_provider
 from commitizen.providers.cargo_provider import CargoProvider
 
-
 CARGO_TOML = """\
 [package]
 name = "whatever"

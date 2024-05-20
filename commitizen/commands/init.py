@@ -6,6 +6,7 @@ from typing import Any
 
 import questionary
 import yaml
+
 from commitizen import cmd, factory, out
 from commitizen.__version__ import __version__
 from commitizen.config import BaseConfig, JsonConfig, TomlConfig, YAMLConfig

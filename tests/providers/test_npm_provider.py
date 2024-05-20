@@ -9,7 +9,6 @@ from commitizen.config.base_config import BaseConfig
 from commitizen.providers import get_provider
 from commitizen.providers.npm_provider import NpmProvider
 
-
 NPM_PACKAGE_JSON = """\
 {
   "name": "whatever",

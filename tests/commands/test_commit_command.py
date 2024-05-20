@@ -1,9 +1,9 @@
 import os
 import sys
+from unittest.mock import ANY
 
 import pytest
 from pytest_mock import MockFixture
-from unittest.mock import ANY
 
 from commitizen import cli, cmd, commands
 from commitizen.cz.exceptions import CzException
@@ -19,7 +19,6 @@ from commitizen.exceptions import (
     NotAllowed,
     NothingToCommitError,
 )
-
 from tests.utils import skip_below_py_3_10
 
 

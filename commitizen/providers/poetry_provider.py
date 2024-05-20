@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import tomlkit
 
-
 from commitizen.providers.base_provider import TomlProvider
 
 

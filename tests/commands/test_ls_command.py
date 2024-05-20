@@ -1,9 +1,9 @@
-import pytest
 import sys
-from commitizen import cli, commands
 
+import pytest
 from pytest_mock import MockerFixture
 
+from commitizen import cli, commands
 from tests.utils import skip_below_py_3_10
 
 

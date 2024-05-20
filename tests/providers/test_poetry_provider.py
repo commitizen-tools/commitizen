@@ -9,7 +9,6 @@ from commitizen.config.base_config import BaseConfig
 from commitizen.providers import get_provider
 from commitizen.providers.poetry_provider import PoetryProvider
 
-
 POETRY_TOML = """\
 [tool.poetry]
 version = "0.1.0"

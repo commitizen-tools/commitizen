@@ -4,7 +4,6 @@ import json
 from pathlib import Path
 from typing import Any, ClassVar
 
-
 from commitizen.providers.base_provider import VersionProvider
 
 

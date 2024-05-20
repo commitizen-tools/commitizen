@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+import importlib_metadata as metadata
 import pytest
 from pytest_mock import MockerFixture
-import importlib_metadata as metadata
 
 from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import VersionSchemeUnknown

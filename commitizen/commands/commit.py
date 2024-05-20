@@ -3,7 +3,6 @@ from __future__ import annotations
 import contextlib
 import os
 
-
 import questionary
 
 from commitizen import factory, git, out
