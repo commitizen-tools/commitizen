@@ -31,6 +31,7 @@ from tests.utils import (
     merge_branch,
     switch_branch,
     wait_for_tag,
+    skip_below_py_3_10,
 )
 
 
@@ -1639,6 +1640,7 @@ def test_export_changelog_template_from_plugin(
     assert target.read_text() == tpl
 
 
+@skip_below_py_3_10
 def test_changelog_command_shows_description_when_use_help_option(
     mocker: MockFixture, capsys, file_regression
 ):

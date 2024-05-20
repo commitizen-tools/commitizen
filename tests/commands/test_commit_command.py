@@ -20,6 +20,8 @@ from commitizen.exceptions import (
     NothingToCommitError,
 )
 
+from tests.utils import skip_below_py_3_10
+
 
 @pytest.fixture
 def staging_is_clean(mocker: MockFixture, tmp_git_project):
@@ -409,6 +411,7 @@ def test_commit_command_with_message_length_limit(config, mocker: MockFixture):
         commands.Commit(config, {"message_length_limit": message_length - 1})()
 
 
+@skip_below_py_3_10
 def test_commit_command_shows_description_when_use_help_option(
     mocker: MockFixture, capsys, file_regression
 ):
