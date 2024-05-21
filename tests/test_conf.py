@@ -255,35 +255,53 @@ class TestTomlConfig:
             config.TomlConfig(data=existing_content, path=path)
 
 
+@pytest.mark.parametrize(
+    "config_file, exception_string",
+    [
+        (".cz.json", r"\.cz\.json"),
+        ("cz.json", r"cz\.json"),
+    ],
+    ids=[".cz.json", "cz.json"],
+)
 class TestJsonConfig:
-    def test_init_empty_config_content(self, tmpdir):
-        path = tmpdir.mkdir("commitizen").join(".cz.json")
+    def test_init_empty_config_content(self, tmpdir, config_file, exception_string):
+        path = tmpdir.mkdir("commitizen").join(config_file)
         json_config = config.JsonConfig(data="{}", path=path)
         json_config.init_empty_config_content()
 
         with open(path, encoding="utf-8") as json_file:
             assert json.load(json_file) == {"commitizen": {}}
 
-    def test_init_with_invalid_config_content(self, tmpdir):
+    def test_init_with_invalid_config_content(
+        self, tmpdir, config_file, exception_string
+    ):
         existing_content = "invalid json content"
-        path = tmpdir.mkdir("commitizen").join(".cz.json")
+        path = tmpdir.mkdir("commitizen").join(config_file)
 
-        with pytest.raises(InvalidConfigurationError, match=r"\.cz\.json"):
+        with pytest.raises(InvalidConfigurationError, match=exception_string):
             config.JsonConfig(data=existing_content, path=path)
 
 
+@pytest.mark.parametrize(
+    "config_file, exception_string",
+    [
+        (".cz.yaml", r"\.cz\.yaml"),
+        ("cz.yaml", r"cz\.yaml"),
+    ],
+    ids=[".cz.yaml", "cz.yaml"],
+)
 class TestYamlConfig:
-    def test_init_empty_config_content(self, tmpdir):
-        path = tmpdir.mkdir("commitizen").join(".cz.yaml")
+    def test_init_empty_config_content(self, tmpdir, config_file, exception_string):
+        path = tmpdir.mkdir("commitizen").join(config_file)
         yaml_config = config.YAMLConfig(data="{}", path=path)
         yaml_config.init_empty_config_content()
 
         with open(path) as yaml_file:
             assert yaml.safe_load(yaml_file) == {"commitizen": {}}
 
-    def test_init_with_invalid_content(self, tmpdir):
+    def test_init_with_invalid_content(self, tmpdir, config_file, exception_string):
         existing_content = "invalid: .cz.yaml: content: maybe?"
-        path = tmpdir.mkdir("commitizen").join(".cz.yaml")
+        path = tmpdir.mkdir("commitizen").join(config_file)
 
-        with pytest.raises(InvalidConfigurationError, match=r"\.cz\.yaml"):
+        with pytest.raises(InvalidConfigurationError, match=exception_string):
             config.YAMLConfig(data=existing_content, path=path)
