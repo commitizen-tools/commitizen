@@ -41,10 +41,10 @@ repos:
     hooks:
       - id: codespell
         name: Run codespell to check for common misspellings in files
+        # config section is within pyproject.toml
         language: python
         types: [ text ]
-        args: [ "--write-changes", "--ignore-words-list", "asend" ]
-        exclude: "poetry.lock"
+        args: [ "--write-changes" ]
 
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.26.2 # automatically updated by Commitizen

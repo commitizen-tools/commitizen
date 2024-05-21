@@ -174,3 +174,9 @@ warn_unused_configs = true
 [[tool.mypy.overrides]]
 module = "py.*"  # Legacy pytest dependencies
 ignore_missing_imports = true
+
+[tool.codespell]
+# Ref: https://github.com/codespell-project/codespell#using-a-config-file
+skip = '.git*,*.svg,*.lock'
+check-hidden = true
+ignore-words-list = 'asend'
