@@ -24,6 +24,7 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
         # Constructor needs to be redefined because `Protocol` prevent instantiation by default
         # See: https://bugs.python.org/issue44807
         self.config = config
+        self.encoding = self.config.settings["encoding"]
 
     @property
     def version_parser(self) -> Pattern:
@@ -33,7 +34,7 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
         if not os.path.isfile(filepath):
             return Metadata()
 
-        with open(filepath) as changelog_file:
+        with open(filepath, encoding=self.encoding) as changelog_file:
             return self.get_metadata_from_file(changelog_file)
 
     def get_metadata_from_file(self, file: IO[Any]) -> Metadata:
