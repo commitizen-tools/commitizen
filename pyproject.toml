@@ -63,8 +63,6 @@ pytest-mock = "^3.10"
 pytest-regressions = "^2.4.0"
 pytest-freezer = "^0.4.6"
 pytest-xdist = "^3.1.0"
-# code formatter
-black = ">=23.11,<25.0"
 # linter
 ruff = ">=0.1.6,<0.5.0"
 pre-commit = ">=2.18,<4.0"
