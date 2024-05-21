@@ -773,7 +773,7 @@
 
 ### Fix
 
-- **check**: filter out comment messege when checking
+- **check**: filter out comment message when checking
 
 ## v2.20.2 (2021-12-14)
 
@@ -1024,7 +1024,7 @@
 
 ### Fix
 
-- prevent prerelase from creating a bump when there are no commits
+- prevent prerelease from creating a bump when there are no commits
 
 ## v2.8.0 (2020-11-15)
 
@@ -1511,7 +1511,7 @@
 
 - new config system where each config type has its own class
 - **config**: add type annotation to config property
-- **config**: fix wrongly type annoated functions
+- **config**: fix wrongly type annotated functions
 - **config/ini_config**: move deprecation warning into class initialization
 - **config**: use add_path instead of directly assigning _path
 - **all**: replace all the _settings invoke with settings.update
