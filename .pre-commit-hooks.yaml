@@ -1,7 +1,7 @@
 - id: commitizen
   name: commitizen check
   description: >
-    Check whether the current commit message follows commiting rules. Allow
+    Check whether the current commit message follows committing rules. Allow
     empty commit messages by default, because they typically indicate to Git
     that the commit should be aborted.
   entry: cz check
