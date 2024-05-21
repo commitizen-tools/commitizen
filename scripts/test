@@ -5,7 +5,6 @@ export PREFIX='poetry run python -m '
 export REGEX='^(?![.]|venv).*'
 
 ${PREFIX}pytest -n 3 --dist=loadfile --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen tests/
-${PREFIX}black commitizen tests
 ${PREFIX}ruff check commitizen/ tests/ --fix
 ${PREFIX}mypy commitizen/ tests/
 ${PREFIX}commitizen -nr 3 check --rev-range origin/master..
