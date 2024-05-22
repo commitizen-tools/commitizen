@@ -45,6 +45,8 @@ repos:
         language: python
         types: [ text ]
         args: [ "--write-changes" ]
+        additional_dependencies:
+          - tomli
 
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.26.2 # automatically updated by Commitizen
