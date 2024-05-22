@@ -2,7 +2,7 @@
 
 ### Feat
 
-- **config_files**: add suport for "cz.toml" config file
+- **config_files**: add support for "cz.toml" config file
 
 ## v3.26.2 (2024-05-22)
 
