@@ -1,3 +1,9 @@
+## v3.26.2 (2024-05-22)
+
+### Fix
+
+- **base.py**: add encoding when open changlelog_file
+
 ## v3.26.1 (2024-05-22)
 
 ### Fix
