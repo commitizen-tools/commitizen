@@ -1,3 +1,14 @@
+## v3.26.1 (2024-05-22)
+
+### Fix
+
+- **cli/commands**: add description for subcommands
+
+### Refactor
+
+- **KNOWN_SCHEMES**: replace set comprehension for list comprehension
+- **tests/commands**: move "other" tests for the correspondent file
+
 ## v3.26.0 (2024-05-18)
 
 ### Feat
