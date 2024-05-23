@@ -2019,7 +2019,7 @@ It is also possible to provide a pattern for each file, separated by colons (<co
 regarding if the file is present or not in <code>version_files</code>.</p>
 <p>* Renamed from <code>files</code> to <code>version_files</code>.</p>
 <p>Some examples</p>
-<p><code>pyproject.toml</code> or <code>.cz.toml</code></p>
+<p><code>pyproject.toml</code>, <code>.cz.toml</code> or <code>cz.toml</code></p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="s2">&quot;src/__version__.py&quot;</span><span class="p">,</span>
@@ -2057,7 +2057,7 @@ or glob patterns.</p>
 </tbody>
 </table>
 <p>Some examples</p>
-<p><code>pyproject.toml</code> or <code>.cz.toml</code></p>
+<p><code>pyproject.toml</code>, <code>.cz.toml</code> or <code>cz.toml</code></p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">bump_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;release $current_version → $new_version [skip-ci]&quot;</span>
 </code></pre></div>

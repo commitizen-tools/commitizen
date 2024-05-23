@@ -884,9 +884,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#pyprojecttoml-or-cztoml" class="md-nav__link">
+  <a href="#pyprojecttoml-cztoml-or-cztoml" class="md-nav__link">
     <span class="md-ellipsis">
-      pyproject.toml or .cz.toml
+      pyproject.toml, .cz.toml or cz.toml
     </span>
   </a>
   
@@ -1560,9 +1560,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#pyprojecttoml-or-cztoml" class="md-nav__link">
+  <a href="#pyprojecttoml-cztoml-or-cztoml" class="md-nav__link">
     <span class="md-ellipsis">
-      pyproject.toml or .cz.toml
+      pyproject.toml, .cz.toml or cz.toml
     </span>
   </a>
   
@@ -1746,10 +1746,10 @@ Allow some prefixes and do not try to match the regex when checking the message 
 <p>Default: <code>{}</code></p>
 <p>Provide extra variables to the changelog template. <a href="../customization/#customizing-the-changelog-template">Read more</a></p>
 <h2 id="configuration-file">Configuration file<a class="headerlink" href="#configuration-file" title="Permanent link">&para;</a></h2>
-<h3 id="pyprojecttoml-or-cztoml">pyproject.toml or .cz.toml<a class="headerlink" href="#pyprojecttoml-or-cztoml" title="Permanent link">&para;</a></h3>
+<h3 id="pyprojecttoml-cztoml-or-cztoml">pyproject.toml, .cz.toml or cz.toml<a class="headerlink" href="#pyprojecttoml-cztoml-or-cztoml" title="Permanent link">&para;</a></h3>
 <p>Default and recommended configuration format for a project.
 For a <strong>python</strong> project, we recommend adding an entry to your <code>pyproject.toml</code>.
-You can also create a <code>.cz.toml</code> file at the root of your project folder.</p>
+You can also create a <code>.cz.toml</code> or <code>cz.toml</code> file at the root of your project folder.</p>
 <p>Example configuration:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cz_conventional_commits&quot;</span>
@@ -1871,7 +1871,7 @@ But you can use any <code>commitizen.provider</code> entrypoint as value for <co
 <p class="admonition-title">Note</p>
 </div>
 <p>The <code>scm</code> provider is meant to be used with <code>setuptools-scm</code> or any packager <code>*-scm</code> plugin.</p>
-<p>An example in your <code>.cz.toml</code> would look like this:</p>
+<p>An example in your <code>.cz.toml</code> or <code>cz.toml</code> would look like this:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;pep621&quot;</span>
 </code></pre></div>
