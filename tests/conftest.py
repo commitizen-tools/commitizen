@@ -17,6 +17,7 @@ from commitizen.changelog_formats import (
 from commitizen.config import BaseConfig
 from commitizen.cz import registry
 from commitizen.cz.base import BaseCommitizen
+from commitizen.cz.conventional_commits import ConventionalCommitsCz
 from tests.utils import create_file_and_commit
 
 SIGNER = "GitHub Action"
@@ -253,3 +254,17 @@ def any_changelog_format(config: BaseConfig) -> ChangelogFormat:
     """For test not relying on formats specifics, use the default"""
     config.settings["changelog_format"] = defaults.CHANGELOG_FORMAT
     return get_changelog_format(config)
+
+
+@pytest.fixture(autouse=True)
+def default_change_type_map(mocker: MockerFixture) -> None:
+    mocker.patch.object(
+        ConventionalCommitsCz,
+        "change_type_map",
+        {
+            "feat": "Feat",
+            "fix": "Fix",
+            "refactor": "Refactor",
+            "perf": "Perf",
+        },
+    )

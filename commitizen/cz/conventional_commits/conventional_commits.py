@@ -33,11 +33,18 @@ class ConventionalCommitsCz(BaseCommitizen):
     bump_map_major_version_zero = defaults.bump_map_major_version_zero
     commit_parser = r"^((?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?|\w+!):\s(?P<message>.*)?"  # noqa
     change_type_map = {
-        "feat": "Feat",
-        "fix": "Fix",
-        "refactor": "Refactor",
-        "perf": "Perf",
+        "feat": "New features",
+        "fix": "Bug fixes",
+        "refactor": "Code refactoring",
+        "perf": "Performance improvements",
     }
+    change_type_order = [
+        "BREAKING CHANGE",
+        "New features",
+        "Bug fixes",
+        "Code refactoring",
+        "Performance improvements",
+    ]
     changelog_pattern = defaults.bump_pattern
 
     def questions(self) -> Questions:
