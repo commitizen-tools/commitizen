@@ -1,0 +1,2 @@
+signoff mechanic is deprecated, please use `cz commit -- -s` instead.
+
