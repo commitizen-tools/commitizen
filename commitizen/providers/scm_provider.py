@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from typing import Callable
 
-from commitizen.git import get_tags
+from commitizen.git import get_tags, get_current_branch
 from commitizen.providers.base_provider import VersionProvider
 from commitizen.version_schemes import (
     InvalidVersion,
@@ -79,6 +79,24 @@ class ScmProvider(VersionProvider):
         )
         if not matches:
             return "0.0.0"
+
+        branch_prerelease_map = self.config.settings.get("branch_prerelease_map")
+        current_branch = get_current_branch()
+
+        if branch_prerelease_map and current_branch in branch_prerelease_map:
+            release_type = branch_prerelease_map[current_branch]
+
+            if release_type:
+                prerelease_matches = [
+                    v for v in matches if v.is_prerelease and release_type in v.prerelease
+                ]
+                if prerelease_matches:
+                    return str(prerelease_matches[-1])
+            else:
+                stable_matches = [v for v in matches if not v.is_prerelease]
+                if stable_matches:
+                    return str(stable_matches[-1])
+
         return str(matches[-1])
 
     def set_version(self, version: str):

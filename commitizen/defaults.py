@@ -55,6 +55,7 @@ class Settings(TypedDict, total=False):
     always_signoff: bool
     template: str | None
     extras: dict[str, Any]
+    branch_prerelease_map: dict[str, str]
 
 
 name: str = "cz_conventional_commits"
@@ -101,6 +102,7 @@ DEFAULT_SETTINGS: Settings = {
     "always_signoff": False,
     "template": None,  # default provided by plugin
     "extras": {},
+    "branch_prerelease_map": {}
 }
 
 MAJOR = "MAJOR"

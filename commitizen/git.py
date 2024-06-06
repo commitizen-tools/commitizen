@@ -276,6 +276,13 @@ def smart_open(*args, **kargs):
     return open(*args, newline=get_eol_style().get_eol_for_open(), **kargs)
 
 
+def get_current_branch() -> str:
+    c = cmd.run("git rev-parse --abbrev-ref HEAD")
+    if c.return_code != 0:
+        raise GitCommandError(c.err)
+    return c.out.strip("\n")
+
+
 def _get_log_as_str_list(start: str | None, end: str, args: str) -> list[str]:
     """Get string representation of each log entry"""
     delimiter = "----------commit-delimiter----------"

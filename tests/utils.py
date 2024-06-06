@@ -60,7 +60,7 @@ def get_current_branch() -> str:
     c = cmd.run("git rev-parse --abbrev-ref HEAD")
     if c.return_code != 0:
         raise exceptions.GitCommandError(c.err)
-    return c.out
+    return c.out.strip("\n")
 
 
 def create_tag(tag: str, message: str | None = None) -> None:
