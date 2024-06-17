@@ -44,7 +44,7 @@ def find_increment(
                 if increment == MAJOR:
                     break
 
-    return cast(Increment, increment)
+    return None if increment is None else Increment[increment]
 
 
 def update_version_in_files(

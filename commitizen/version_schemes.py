@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import enum
 import re
 import sys
 import warnings
@@ -37,9 +38,21 @@ if TYPE_CHECKING:
         from typing import Self
 
 
-Increment: TypeAlias = Literal["MAJOR", "MINOR", "PATCH"]
-Prerelease: TypeAlias = Literal["alpha", "beta", "rc"]
 DEFAULT_VERSION_PARSER = r"v?(?P<version>([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?(\w+)?)"
+
+
+class Increment(enum.StrEnum):
+    MAJOR = "MAJOR"
+    MINOR = "MINOR"
+    PATCH = "PATCH"
+
+
+class Prerelease(enum.StrEnum):
+    alpha = "alpha"
+    beta = "beta"
+    rc = "rc"
+    none = "none"
+
 
 
 @runtime_checkable

@@ -244,7 +244,7 @@ data = {
                     {
                         "name": ["--prerelease", "-pr"],
                         "help": "choose type of prerelease",
-                        "choices": ["alpha", "beta", "rc"],
+                        "choices": ["alpha", "beta", "rc", "none"],
                     },
                     {
                         "name": ["--devrelease", "-d"],
