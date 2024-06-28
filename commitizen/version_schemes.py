@@ -4,10 +4,12 @@ import re
 import sys
 import warnings
 from itertools import zip_longest
-from typing import TYPE_CHECKING, ClassVar, Protocol, Type, cast, runtime_checkable
+from typing import (TYPE_CHECKING, ClassVar, Protocol, Type, cast,
+                    runtime_checkable)
 
 import importlib_metadata as metadata
-from packaging.version import InvalidVersion  # noqa: F401: Rexpose the common exception
+from packaging.version import \
+    InvalidVersion  # noqa: F401: Rexpose the common exception
 from packaging.version import Version as _BaseVersion
 
 from commitizen.config.base_config import BaseConfig
@@ -28,7 +30,7 @@ if TYPE_CHECKING:
         from typing import Self
 
 
-DEFAULT_VERSION_PARSER = r"v?(?P<version>([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?(\w+)?)"
+DEFAULT_VERSION_PARSER = r"(?P<version>([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?(\w+)?)"
 
 
 @runtime_checkable
