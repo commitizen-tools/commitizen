@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import os
+import re
 from abc import ABCMeta
 from re import Pattern
 from typing import IO, Any, ClassVar
 
 from commitizen.changelog import Metadata
 from commitizen.config.base_config import BaseConfig
+from commitizen.defaults import get_tag_regexes
 from commitizen.version_schemes import get_version_scheme
 
 from . import ChangelogFormat
@@ -25,10 +27,16 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
         # See: https://bugs.python.org/issue44807
         self.config = config
         self.encoding = self.config.settings["encoding"]
+        self.tag_format = self.config.settings["tag_format"]
 
     @property
     def version_parser(self) -> Pattern:
-        return get_version_scheme(self.config).parser
+        tag_regex: str = self.tag_format
+        version_regex = get_version_scheme(self.config).parser.pattern
+        TAG_FORMAT_REGEXS = get_tag_regexes(version_regex)
+        for pattern, regex in TAG_FORMAT_REGEXS.items():
+            tag_regex = tag_regex.replace(pattern, regex)
+        return re.compile(tag_regex)
 
     def get_metadata(self, filepath: str) -> Metadata:
         if not os.path.isfile(filepath):

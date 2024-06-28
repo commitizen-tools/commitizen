@@ -72,9 +72,39 @@ EXPECTED_D = Metadata(
     unreleased_start=1,
 )
 
+CHANGELOG_E = """
+= Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on https://keepachangelog.com/en/1.0.0/[Keep a Changelog],
+and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Versioning].
+
+== [Unreleased]
+* Start using "changelog" over "change log" since it's the common usage.
+
+== [{tag_formatted_version}] - 2017-06-20
+=== Added
+* New visual identity by https://github.com/tylerfortune8[@tylerfortune8].
+* Version navigation.
+""".strip()
+
+EXPECTED_E = Metadata(
+    latest_version="1.0.0",
+    latest_version_position=10,
+    unreleased_end=10,
+    unreleased_start=7,
+)
+
 
 @pytest.fixture
 def format(config: BaseConfig) -> AsciiDoc:
+    return AsciiDoc(config)
+
+
+@pytest.fixture
+def format_with_tags(config: BaseConfig, request) -> AsciiDoc:
+    config.settings["tag_format"] = request.param
     return AsciiDoc(config)
 
 
@@ -135,3 +165,34 @@ def test_get_matadata(
     changelog.write_text(content)
 
     assert format.get_metadata(str(changelog)) == expected
+
+
+@pytest.mark.parametrize(
+    "format_with_tags, tag_string, expected, ",
+    (
+        pytest.param("${version}-example", "1.0.0-example", "1.0.0"),
+        pytest.param("${version}example", "1.0.0example", "1.0.0"),
+        pytest.param("example${version}", "example1.0.0", "1.0.0"),
+        pytest.param("example-${version}", "example-1.0.0", "1.0.0"),
+        pytest.param("example-${major}-${minor}-${patch}", "example-1-0-0", "1.0.0"),
+        pytest.param("example-${major}-${minor}", "example-1-0-0", None),
+        pytest.param(
+            "${major}-${minor}-${patch}-${prerelease}-example",
+            "1-0-0-rc1-example",
+            "1.0.0-rc1",
+        ),
+        pytest.param(
+            "${major}-${minor}-${patch}-${prerelease}${devrelease}-example",
+            "1-0-0-a1.dev1-example",
+            "1.0.0-a1.dev1",
+        ),
+    ),
+    indirect=["format_with_tags"],
+)
+def test_get_metadata_custom_tag_format(
+    tmp_path: Path, format_with_tags: AsciiDoc, tag_string: str, expected: Metadata
+):
+    content = CHANGELOG_E.format(tag_formatted_version=tag_string)
+    changelog = tmp_path / format_with_tags.default_changelog_file
+    changelog.write_text(content)
+    assert format_with_tags.get_metadata(str(changelog)).latest_version == expected
