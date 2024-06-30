@@ -149,7 +149,7 @@ data = {
                     {
                         "name": ["-s", "--signoff"],
                         "action": "store_true",
-                        "help": "sign off the commit",
+                        "help": "sign off the commit (deprecated: use `cz commit -- -s` instead)",
                     },
                     {
                         "name": ["-a", "--all"],

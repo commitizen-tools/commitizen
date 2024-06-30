@@ -12,7 +12,8 @@ options:
   --write-message-to-file FILE_PATH
                         write message to file before committing (can be
                         combined with --dry-run)
-  -s, --signoff         sign off the commit
+  -s, --signoff         sign off the commit (deprecated: use `cz commit -- -s`
+                        instead)
   -a, --all             Tell the command to automatically stage files that
                         have been modified and deleted, but new files you have
                         not told Git about are not affected.
