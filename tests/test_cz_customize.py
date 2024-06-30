@@ -564,7 +564,7 @@ def test_info_with_info_path(tmpdir, config_info):
 
 def test_info_without_info(config_without_info):
     cz = CustomizeCommitsCz(config_without_info)
-    assert cz.info() is None
+    assert cz.info() == ""
 
 
 def test_commit_parser(config):
