@@ -152,7 +152,7 @@ class Bump:
         dry_run: bool = self.arguments["dry_run"]
         is_yes: bool = self.arguments["yes"]
         increment: Increment | None = self.arguments["increment"]
-        prerelease: Prerelease | None = self.arguments["prerelease"]
+        prerelease: Prerelease | None = None if self.arguments["prerelease"] == "none" else self.arguments["prerelease"]
         devrelease: int | None = self.arguments["devrelease"]
         is_files_only: bool | None = self.arguments["files_only"]
         is_local_version: bool = self.arguments["local_version"]
