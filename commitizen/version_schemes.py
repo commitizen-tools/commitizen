@@ -15,7 +15,11 @@ from typing import (
     runtime_checkable,
 )
 
-import importlib_metadata as metadata
+if sys.version_info >= (3, 10):
+    from importlib import metadata
+else:
+    import importlib_metadata as metadata
+
 from packaging.version import InvalidVersion  # noqa: F401: Rexpose the common exception
 from packaging.version import Version as _BaseVersion
 

@@ -1,7 +1,11 @@
 import sys
 from textwrap import dedent
 
-import importlib_metadata as metadata
+if sys.version_info >= (3, 10):
+    from importlib import metadata
+else:
+    import importlib_metadata as metadata
+
 import pytest
 
 from commitizen import BaseCommitizen, defaults, factory

@@ -2,10 +2,14 @@ from __future__ import annotations
 
 import importlib
 import pkgutil
+import sys
 import warnings
 from typing import Iterable
 
-import importlib_metadata as metadata
+if sys.version_info >= (3, 10):
+    from importlib import metadata
+else:
+    import importlib_metadata as metadata
 
 from commitizen.cz.base import BaseCommitizen
 
