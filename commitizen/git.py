@@ -158,7 +158,7 @@ def get_filenames_in_commit(git_reference: str = ""):
         raise GitCommandError(c.err)
 
 
-def get_tags(dateformat: str = "%Y-%m-%d") -> list[GitTag]:
+def get_tags(prefix: str, dateformat: str = "%Y-%m-%d") -> list[GitTag]:
     inner_delimiter = "---inner_delimiter---"
     formatter = (
         f'"%(refname:lstrip=2){inner_delimiter}'
@@ -180,6 +180,9 @@ def get_tags(dateformat: str = "%Y-%m-%d") -> list[GitTag]:
         GitTag.from_line(line=line, inner_delimiter=inner_delimiter)
         for line in c.out.split("\n")[:-1]
     ]
+
+    if prefix:
+        git_tags = [tag for tag in git_tags if tag.name.startswith(prefix)]
 
     return git_tags
 

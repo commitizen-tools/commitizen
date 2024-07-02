@@ -90,13 +90,13 @@ def tag_included_in_changelog(
     return True
 
 
-def get_version_tags(scheme: type[BaseVersion], tags: list[GitTag]) -> list[GitTag]:
+def get_version_tags(scheme: type[BaseVersion], tags: list[GitTag], prefix: str = "") -> list[GitTag]:
     valid_tags: list[GitTag] = []
     for tag in tags:
         try:
-            scheme(tag.name)
-        except InvalidVersion:
-            out.warn(f"InvalidVersion {tag}")
+            scheme(tag.name.replace(prefix, ''))
+        except InvalidVersion as e:
+            out.warn(f"InvalidVersion hey {tag}")
         else:
             valid_tags.append(tag)
 
