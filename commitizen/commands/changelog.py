@@ -72,6 +72,9 @@ class Changelog:
         self.tag_format: str = (
             args.get("tag_format") or self.config.settings["tag_format"]
         )
+        self.tag_prefix: str = args.get("tag_prefix") or self.config.settings.get(
+            "tag_prefix"
+        )
         self.merge_prerelease = args.get(
             "merge_prerelease"
         ) or self.config.settings.get("changelog_merge_prerelease")
@@ -158,7 +161,7 @@ class Changelog:
         # Don't continue if no `file_name` specified.
         assert self.file_name
 
-        tags = changelog.get_version_tags(self.scheme, git.get_tags()) or []
+        tags = changelog.get_version_tags(self.scheme, git.get_tags(self.tag_prefix), self.tag_prefix) or []
 
         end_rev = ""
         if self.incremental:

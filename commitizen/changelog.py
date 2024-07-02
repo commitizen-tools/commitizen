@@ -95,7 +95,7 @@ def get_version_tags(scheme: type[BaseVersion], tags: list[GitTag], prefix: str 
     for tag in tags:
         try:
             scheme(tag.name.replace(prefix, ''))
-        except InvalidVersion as e:
+        except InvalidVersion:
             out.warn(f"InvalidVersion {tag}")
         else:
             valid_tags.append(tag)
