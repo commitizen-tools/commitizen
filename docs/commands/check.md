@@ -75,3 +75,13 @@ By default, the the following prefixes are allowed: `Merge`, `Revert`, `Pull Req
 ```bash
 cz check --message MESSAGE --allowed-prefixes 'Merge' 'Revert' 'Custom Prefix'
 ```
+
+### Commit message length limit
+
+The argument `-l` (or `--message-length-limmit`) followed by a positive number, can limit the length of commit messages.
+For example, `cz check --message MESSAGE -l 3` would fail the check, since `MESSAGE` is more than 3 characters long.
+By default, the limit is set to 0, which means no limit on the length.
+
+**Note that the limit applies only to the first line of the message.***
+Specifically, for `ConventionalCommitsCz` the length only counts from the type of change to the subject,
+while the body, and the footer are not counted.

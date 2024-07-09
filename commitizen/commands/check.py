@@ -31,6 +31,7 @@ class Check:
         self.allow_abort: bool = bool(
             arguments.get("allow_abort", config.settings["allow_abort"])
         )
+        self.max_msg_length: int = arguments.get("message_length_limit", 0)
 
         # we need to distinguish between None and [], which is a valid value
 
@@ -145,4 +146,8 @@ class Check:
 
         if any(map(commit_msg.startswith, self.allowed_prefixes)):
             return True
+        if self.max_msg_length:
+            msg_len = len(commit_msg.partition("\n")[0].strip())
+            if msg_len > self.max_msg_length:
+                return False
         return bool(re.match(pattern, commit_msg))
