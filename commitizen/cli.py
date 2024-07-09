@@ -466,6 +466,12 @@ data = {
                         "If the message starts by one of these prefixes, "
                         "the message won't be checked against the regex",
                     },
+                    {
+                        "name": ["-l", "--message-length-limit"],
+                        "type": int,
+                        "default": 0,
+                        "help": "length limit of the commit message; 0 for no limit",
+                    },
                 ],
             },
             {

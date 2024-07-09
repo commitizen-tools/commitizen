@@ -1,6 +1,7 @@
 usage: cz check [-h]
                 [--commit-msg-file COMMIT_MSG_FILE | --rev-range REV_RANGE | -m MESSAGE]
                 [--allow-abort] [--allowed-prefixes [ALLOWED_PREFIXES ...]]
+                [-l MESSAGE_LENGTH_LIMIT]
 
 validates that a commit message matches the commitizen schema
 
@@ -20,3 +21,5 @@ options:
                         allowed commit message prefixes. If the message starts
                         by one of these prefixes, the message won't be checked
                         against the regex
+  -l MESSAGE_LENGTH_LIMIT, --message-length-limit MESSAGE_LENGTH_LIMIT
+                        length limit of the commit message; 0 for no limit

@@ -427,3 +427,28 @@ def test_check_command_shows_description_when_use_help_option(
 
     out, _ = capsys.readouterr()
     file_regression.check(out, extension=".txt")
+
+
+def test_check_command_with_message_length_limit(config, mocker: MockFixture):
+    success_mock = mocker.patch("commitizen.out.success")
+    message = "fix(scope): some commit message"
+    check_cmd = commands.Check(
+        config=config,
+        arguments={"message": message, "message_length_limit": len(message) + 1},
+    )
+
+    check_cmd()
+    success_mock.assert_called_once()
+
+
+def test_check_command_with_message_length_limit_exceeded(config, mocker: MockFixture):
+    error_mock = mocker.patch("commitizen.out.error")
+    message = "fix(scope): some commit message"
+    check_cmd = commands.Check(
+        config=config,
+        arguments={"message": message, "message_length_limit": len(message) - 1},
+    )
+
+    with pytest.raises(InvalidCommitMessageError):
+        check_cmd()
+        error_mock.assert_called_once()
