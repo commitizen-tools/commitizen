@@ -542,6 +542,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#commit-message-length-limit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commit message length limit
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1132,6 +1141,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#commit-message-length-limit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commit message length limit
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1196,6 +1214,13 @@ permit them. Since <code>git commit</code> accepts an <code>--allow-empty-messag
 By default, the the following prefixes are allowed: <code>Merge</code>, <code>Revert</code>, <code>Pull Request</code>, <code>fixup!</code> and <code>squash!</code>.</p>
 <div class="highlight"><pre><span></span><code>cz<span class="w"> </span>check<span class="w"> </span>--message<span class="w"> </span>MESSAGE<span class="w"> </span>--allowed-prefixes<span class="w"> </span><span class="s1">&#39;Merge&#39;</span><span class="w"> </span><span class="s1">&#39;Revert&#39;</span><span class="w"> </span><span class="s1">&#39;Custom Prefix&#39;</span>
 </code></pre></div>
+<h3 id="commit-message-length-limit">Commit message length limit<a class="headerlink" href="#commit-message-length-limit" title="Permanent link">&para;</a></h3>
+<p>The argument <code>-l</code> (or <code>--message-length-limmit</code>) followed by a positive number, can limit the length of commit messages.
+For example, <code>cz check --message MESSAGE -l 3</code> would fail the check, since <code>MESSAGE</code> is more than 3 characters long.
+By default, the limit is set to 0, which means no limit on the length.</p>
+<p><strong>Note that the limit applies only to the first line of the message.</strong>*
+Specifically, for <code>ConventionalCommitsCz</code> the length only counts from the type of change to the subject,
+while the body, and the footer are not counted.</p>
 
 
 
