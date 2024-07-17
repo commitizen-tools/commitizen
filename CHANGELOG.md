@@ -1,3 +1,9 @@
+## v3.28.0 (2024-07-17)
+
+### Feat
+
+- add argument to limit length of commit message in checks
+
 ## v3.27.0 (2024-05-22)
 
 ### Feat
