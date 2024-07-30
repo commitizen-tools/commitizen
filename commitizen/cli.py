@@ -353,6 +353,12 @@ data = {
                         "help": "Add additional build-metadata to the version-number",
                         "default": None,
                     },
+                    {
+                        "name": ["--get-next"],
+                        "action": "store_true",
+                        "help": "Determine the next version and write to stdout",
+                        "default": False,
+                    },
                 ],
             },
             {
