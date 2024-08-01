@@ -297,8 +297,26 @@ cz bump --get-next
 Will output the next version, e.g. `1.2.3`. This can be useful for determining the next version based in CI for non
 production environments/builds.
 
-It will raise a `NoneIncrementExit` if the commits found are not eligible for a version bump.
-See [avoid raising errors](#avoid-raising-errors) for information on suppressing this exit.
+This behavior differs from the `--dry-run` flag. The `--dry-run` flag provides a more detailed output and can also show
+the changes as they would appear in the changelog file.
+
+The following output is the result of `cz bump --dry-run`:
+
+```
+bump: version 3.28.0 → 3.29.0
+tag to create: v3.29.0
+increment detected: MINOR
+```
+
+The following output is the result of `cz bump --get-next`:
+
+```
+3.29.0
+```
+
+The `--get-next` flag will raise a `NoneIncrementExit` if the found commits are not eligible for a version bump.
+
+For information on how to suppress this exit, see [avoid raising errors](#avoid-raising-errors).
 
 ## Avoid raising errors
 
