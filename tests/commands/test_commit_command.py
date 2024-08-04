@@ -287,6 +287,50 @@ def test_commit_command_with_always_signoff_enabled(config, mocker: MockFixture)
     success_mock.assert_called_once()
 
 
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_with_signoff_option_prints_deprecated_warning(
+    config, mocker: MockFixture, capsys, file_regression
+):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "",
+        "footer": "",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
+    commands.Commit(config, {"signoff": True})()
+
+    _, err = capsys.readouterr()
+    file_regression.check(err, extension=".txt")
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_without_signoff_option_dont_prints_deprecated_warning(
+    config, mocker: MockFixture, capsys, file_regression
+):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "",
+        "footer": "",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
+    commands.Commit(config, {"signoff": False})()
+
+    _, err = capsys.readouterr()
+    file_regression.check(err, extension=".txt")
+
+
 @pytest.mark.usefixtures("tmp_git_project")
 def test_commit_when_nothing_to_commit(config, mocker: MockFixture):
     is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
