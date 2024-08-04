@@ -381,18 +381,18 @@ In your `pyproject.toml` or `.cz.toml`
 tag_format = "v$major.$minor.$patch$prerelease"
 ```
 
-The variables must be preceded by a `$` sign. Default is `$version`.
+The variables must be preceded by a `$` sign and optionally can be wrapped in `{}` . Default is `$version`.
 
 Supported variables:
 
-| Variable      | Description                                 |
-| ------------- | ------------------------------------------- |
-| `$version`    | full generated version                      |
-| `$major`      | MAJOR increment                             |
-| `$minor`      | MINOR increment                             |
-| `$patch`      | PATCH increment                             |
-| `$prerelease` | Prerelease (alpha, beta, release candidate) |
-| `$devrelease` | Development release                         |
+| Variable                       | Description                                 |
+|--------------------------------|---------------------------------------------|
+| `$version`, `${version}`       | full generated version                      |
+| `$major`, `${major}`           | MAJOR increment                             |
+| `$minor`, `${minor}`           | MINOR increment                             |
+| `$patch`, `${patch}`           | PATCH increment                             |
+| `$prerelease`, `${prerelease}` | Prerelease (alpha, beta, release candidate) |
+| `$devrelease`, ${devrelease}`  | Development release                         |
 
 ---
 
