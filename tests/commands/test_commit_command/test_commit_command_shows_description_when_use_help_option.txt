@@ -16,5 +16,5 @@ options:
   -a, --all             Tell the command to automatically stage files that
                         have been modified and deleted, but new files you have
                         not told Git about are not affected.
-  -l MESSAGE_LENGTH_LIMIT, --message-length-limit MESSAGE_LENGTH_LIMIT
+  -l, --message-length-limit MESSAGE_LENGTH_LIMIT
                         length limit of the commit message; 0 for no limit
