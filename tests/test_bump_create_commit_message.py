@@ -24,7 +24,19 @@ def test_create_tag(test_input, expected):
     assert new_tag == expected
 
 
-@pytest.mark.parametrize("retry", (True, False))
+@pytest.mark.parametrize(
+    "retry",
+    (
+        pytest.param(
+            True,
+            marks=pytest.mark.skipif(
+                sys.version_info >= (3, 13),
+                reason="mirrors-prettier is not supported with Python 3.13 or higher",
+            ),
+        ),
+        False,
+    ),
+)
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_pre_commit_changelog(mocker: MockFixture, freezer, retry):
     freezer.move_to("2022-04-01")
