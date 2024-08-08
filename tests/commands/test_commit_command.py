@@ -19,7 +19,7 @@ from commitizen.exceptions import (
     NotAllowed,
     NothingToCommitError,
 )
-from tests.utils import skip_below_py_3_10
+from tests.utils import skip_below_py_3_13
 
 
 @pytest.fixture
@@ -410,7 +410,7 @@ def test_commit_command_with_message_length_limit(config, mocker: MockFixture):
         commands.Commit(config, {"message_length_limit": message_length - 1})()
 
 
-@skip_below_py_3_10
+@skip_below_py_3_13
 def test_commit_command_shows_description_when_use_help_option(
     mocker: MockFixture, capsys, file_regression
 ):

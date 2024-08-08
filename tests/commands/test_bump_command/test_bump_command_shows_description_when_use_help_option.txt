@@ -33,9 +33,9 @@ options:
   --bump-message BUMP_MESSAGE
                         template used to create the release commit, useful
                         when working with CI
-  --prerelease {alpha,beta,rc}, -pr {alpha,beta,rc}
+  --prerelease, -pr {alpha,beta,rc}
                         choose type of prerelease
-  --devrelease DEVRELEASE, -d DEVRELEASE
+  --devrelease, -d DEVRELEASE
                         specify non-negative integer for dev. release
   --increment {MAJOR,MINOR,PATCH}
                         manually specify the desired increment
@@ -53,7 +53,7 @@ options:
                         check consistency among versions defined in commitizen
                         configuration and version_files
   --annotated-tag, -at  create annotated tag instead of lightweight one
-  --annotated-tag-message ANNOTATED_TAG_MESSAGE, -atm ANNOTATED_TAG_MESSAGE
+  --annotated-tag-message, -atm ANNOTATED_TAG_MESSAGE
                         create annotated tag message
   --gpg-sign, -s        sign tag instead of lightweight one
   --changelog-to-stdout
@@ -62,11 +62,10 @@ options:
                         Redirect git output to stderr
   --retry               retry commit if it fails the 1st time
   --major-version-zero  keep major version at zero, even for breaking changes
-  --template TEMPLATE, -t TEMPLATE
+  --template, -t TEMPLATE
                         changelog template file name (relative to the current
                         working directory)
-  --extra EXTRA, -e EXTRA
-                        a changelog extra variable (in the form 'key=value')
+  --extra, -e EXTRA     a changelog extra variable (in the form 'key=value')
   --file-name FILE_NAME
                         file name of changelog (default: 'CHANGELOG.md')
   --prerelease-offset PRERELEASE_OFFSET

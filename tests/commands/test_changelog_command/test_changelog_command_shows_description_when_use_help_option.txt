@@ -33,8 +33,7 @@ options:
   --export-template EXPORT_TEMPLATE
                         Export the changelog template into this file instead
                         of rendering it
-  --template TEMPLATE, -t TEMPLATE
+  --template, -t TEMPLATE
                         changelog template file name (relative to the current
                         working directory)
-  --extra EXTRA, -e EXTRA
-                        a changelog extra variable (in the form 'key=value')
+  --extra, -e EXTRA     a changelog extra variable (in the form 'key=value')
