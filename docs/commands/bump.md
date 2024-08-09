@@ -285,6 +285,39 @@ You should normally not use this functionality, but if you decide to do, keep in
 * Version `1.2.3+a`, and `1.2.3+b` are the same version! Tools should not use the string after `+` for version calculation. This is probably not a guarantee (example in helm) even tho it is in the spec.
 * It might be problematic having the metadata in place when doing upgrades depending on what tool you use.
 
+### `--get-next`
+
+Provides a way to determine the next version and write it to stdout. This parameter is not compatible with `--changelog`
+and `manual version`.
+
+```bash
+cz bump --get-next
+```
+
+Will output the next version, e.g. `1.2.3`. This can be useful for determining the next version based in CI for non
+production environments/builds.
+
+This behavior differs from the `--dry-run` flag. The `--dry-run` flag provides a more detailed output and can also show
+the changes as they would appear in the changelog file.
+
+The following output is the result of `cz bump --dry-run`:
+
+```
+bump: version 3.28.0 → 3.29.0
+tag to create: v3.29.0
+increment detected: MINOR
+```
+
+The following output is the result of `cz bump --get-next`:
+
+```
+3.29.0
+```
+
+The `--get-next` flag will raise a `NoneIncrementExit` if the found commits are not eligible for a version bump.
+
+For information on how to suppress this exit, see [avoid raising errors](#avoid-raising-errors).
+
 ## Avoid raising errors
 
 Some situations from commitizen raise an exit code different than 0.

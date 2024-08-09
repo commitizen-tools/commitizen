@@ -10,7 +10,7 @@ usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
                [--file-name FILE_NAME] [--prerelease-offset PRERELEASE_OFFSET]
                [--version-scheme {pep440,semver,semver2}]
                [--version-type {pep440,semver,semver2}]
-               [--build-metadata BUILD_METADATA]
+               [--build-metadata BUILD_METADATA] [--get-next]
                [MANUAL_VERSION]
 
 bump semantic version based on the git log
@@ -77,3 +77,4 @@ options:
                         Deprecated, use --version-scheme
   --build-metadata BUILD_METADATA
                         Add additional build-metadata to the version-number
+  --get-next            Determine the next version and write to stdout
