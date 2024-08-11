@@ -1,3 +1,9 @@
+## v3.29.0 (2024-08-11)
+
+### Feat
+
+- **bump**: add functionality to write the next version to stdout
+
 ## v3.28.0 (2024-07-17)
 
 ### Feat
