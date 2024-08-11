@@ -592,6 +592,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#-get-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      --get-next
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1441,6 +1450,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#-get-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      --get-next
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1907,6 +1925,25 @@ This can be useful for multiple things
 <p>You should normally not use this functionality, but if you decide to do, keep in mind that
 * Version <code>1.2.3+a</code>, and <code>1.2.3+b</code> are the same version! Tools should not use the string after <code>+</code> for version calculation. This is probably not a guarantee (example in helm) even tho it is in the spec.
 * It might be problematic having the metadata in place when doing upgrades depending on what tool you use.</p>
+<h3 id="-get-next"><code>--get-next</code><a class="headerlink" href="#-get-next" title="Permanent link">&para;</a></h3>
+<p>Provides a way to determine the next version and write it to stdout. This parameter is not compatible with <code>--changelog</code>
+and <code>manual version</code>.</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--get-next
+</code></pre></div>
+<p>Will output the next version, e.g., <code>1.2.3</code>. This can be useful for determining the next version based on CI for non
+production environments/builds.</p>
+<p>This behavior differs from the <code>--dry-run</code> flag. The <code>--dry-run</code> flag provides a more detailed output and can also show
+the changes as they would appear in the changelog file.</p>
+<p>The following output is the result of <code>cz bump --dry-run</code>:</p>
+<div class="highlight"><pre><span></span><code>bump: version 3.28.0 → 3.29.0
+tag to create: v3.29.0
+increment detected: MINOR
+</code></pre></div>
+<p>The following output is the result of <code>cz bump --get-next</code>:</p>
+<div class="highlight"><pre><span></span><code>3.29.0
+</code></pre></div>
+<p>The <code>--get-next</code> flag will raise a <code>NoneIncrementExit</code> if the found commits are not eligible for a version bump.</p>
+<p>For information on how to suppress this exit, see <a href="#avoid-raising-errors">avoid raising errors</a>.</p>
 <h2 id="avoid-raising-errors">Avoid raising errors<a class="headerlink" href="#avoid-raising-errors" title="Permanent link">&para;</a></h2>
 <p>Some situations from commitizen raise an exit code different than 0.
 If the error code is different than 0, any CI or script running commitizen might be interrupted.</p>
