@@ -294,7 +294,7 @@ and `manual version`.
 cz bump --get-next
 ```
 
-Will output the next version, e.g. `1.2.3`. This can be useful for determining the next version based in CI for non
+Will output the next version, e.g., `1.2.3`. This can be useful for determining the next version based on CI for non
 production environments/builds.
 
 This behavior differs from the `--dry-run` flag. The `--dry-run` flag provides a more detailed output and can also show
