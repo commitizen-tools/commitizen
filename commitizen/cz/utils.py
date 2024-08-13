@@ -6,13 +6,34 @@ from commitizen import git
 from commitizen.cz import exceptions
 
 
-def required_validator(answer, msg=None):
+def required_validator(answer: str, msg=None) -> str:
     if not answer:
         raise exceptions.AnswerRequiredError(msg)
     return answer
 
 
-def multiple_line_breaker(answer, sep="|"):
+def required_validator_scope(
+    answer: str,
+    msg: str = "! Error: Scope is required",
+) -> str:
+    return required_validator(answer, msg)
+
+
+def required_validator_subject_strip(
+    answer: str,
+    msg: str = "! Error: Subject is required",
+) -> str:
+    return required_validator(answer.strip(".").strip(), msg)
+
+
+def required_validator_title_strip(
+    answer: str,
+    msg: str = "! Error: Title is required",
+) -> str:
+    return required_validator(answer.strip(".").strip(), msg)
+
+
+def multiple_line_breaker(answer: str, sep: str = "|") -> str:
     return "\n".join(line.strip() for line in answer.split(sep) if line)
 
 
