@@ -321,6 +321,7 @@ commitizen:
     params=[
         TomlConfig(data=TOML_STR, path="not_exist.toml"),
         JsonConfig(data=JSON_STR, path="not_exist.json"),
+        YAMLConfig(data=YAML_STR, path="not_exist.yaml"),
     ]
 )
 def config(request):
