@@ -110,6 +110,11 @@ commitizen:
     schema: '<type>: <body>'
     schema_pattern: '(feature|bug fix):(\\s.*)'
     bump_pattern: '^(break|new|fix|hotfix)'
+    commit_parser: '^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?'
+    changelog_pattern: '^(feature|bug fix)?(!)?'
+    change_type_map:
+      feature: Feat
+      bug fix: Fix
     bump_map:
       break: MAJOR
       new: MINOR
