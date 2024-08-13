@@ -110,13 +110,13 @@ And the correspondent example for a yaml json file:
 commitizen:
   name: cz_customize
   customize:
-    message_template: "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
+    message_template: '{{change_type}}:{% if show_message %} {{message}}{% endif %}'
     example: 'feature: this feature enable customize through config file'
-    schema: "<type>: <body>"
-    schema_pattern: "(feature|bug fix):(\\s.*)"
-    bump_pattern: "^(break|new|fix|hotfix)"
-    commit_parser: "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?",
-    changelog_pattern: "^(feature|bug fix)?(!)?",
+    schema: '<type>: <body>'
+    schema_pattern: '(feature|bug fix):(\\s.*)'
+    bump_pattern: '^(break|new|fix|hotfix)'
+    commit_parser: '^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?'
+    changelog_pattern: '^(feature|bug fix)?(!)?'
     change_type_map:
       feature: Feat
       bug fix: Fix
@@ -125,7 +125,7 @@ commitizen:
       new: MINOR
       fix: PATCH
       hotfix: PATCH
-    change_type_order: ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]
+    change_type_order: ['BREAKING CHANGE', 'feat', 'fix', 'refactor', 'perf']
     info_path: cz_customize_info.txt
     info: This is customized info
     questions:
