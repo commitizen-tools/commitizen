@@ -134,9 +134,8 @@ class Commit:
         if dry_run:
             raise DryRunExit()
 
-        signoff: bool = (
-            self.arguments.get("signoff") or self.config.settings["always_signoff"]
-        )
+        always_signoff: bool = self.config.settings["always_signoff"]
+        signoff: bool = self.arguments.get("signoff")
 
         extra_args = self.arguments.get("extra_cli_args", "")
 
@@ -144,6 +143,8 @@ class Commit:
             out.warn(
                 "signoff mechanic is deprecated, please use `cz commit -- -s` instead."
             )
+
+        if always_signoff or signoff:
             extra_args = f"{extra_args} -s".strip()
 
         c = git.commit(m, args=extra_args)
