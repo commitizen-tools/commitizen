@@ -110,17 +110,22 @@ commitizen:
   - commitizen/__version__.py
   - pyproject.toml
   customize:
-    message_template: "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
+    message_template: '{{change_type}}:{% if show_message %} {{message}}{% endif %}'
     example: 'feature: this feature enables customization through a config file'
-    schema: "<type>: <body>"
-    schema_pattern: "(feature|bug fix):(\\s.*)"
-    bump_pattern: "^(break|new|fix|hotfix)"
+    schema: '<type>: <body>'
+    schema_pattern: '(feature|bug fix):(\\s.*)'
+    bump_pattern: '^(break|new|fix|hotfix)'
+    commit_parser: '^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?'
+    changelog_pattern: '^(feature|bug fix)?(!)?'
+    change_type_map:
+      feature: Feat
+      bug fix: Fix
     bump_map:
       break: MAJOR
       new: MINOR
       fix: PATCH
       hotfix: PATCH
-    change_type_order: ["perf", "BREAKING CHANGE", "feat", "fix", "refactor"]
+    change_type_order: ['perf', 'BREAKING CHANGE', 'feat', 'fix', 'refactor']
     info: This is a customized cz.
     questions:
     - type: list
@@ -326,6 +331,7 @@ commitizen:
     params=[
         TomlConfig(data=TOML_STR, path=Path("not_exist.toml")),
         JsonConfig(data=JSON_STR, path=Path("not_exist.json")),
+        YAMLConfig(data=YAML_STR, path=Path("not_exist.yaml")),
     ]
 )
 def config(request):
