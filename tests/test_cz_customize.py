@@ -2,13 +2,22 @@ import re
 from pathlib import Path
 
 import pytest
+from pytest_mock import MockFixture
 
+from commitizen import cmd, commands
 from commitizen.config import BaseConfig
 from commitizen.config.json_config import JsonConfig
 from commitizen.config.toml_config import TomlConfig
 from commitizen.config.yaml_config import YAMLConfig
 from commitizen.cz.customize import CustomizeCommitsCz
-from commitizen.exceptions import MissingCzCustomizeConfigError
+from commitizen.cz.utils import (
+    multiple_line_breaker,
+    required_validator,
+    required_validator_scope,
+    required_validator_subject_strip,
+    required_validator_title_strip,
+)
+from commitizen.exceptions import MissingCzCustomizeConfigError, NotAllowed
 
 TOML_STR = r"""
     [tool.commitizen]
@@ -44,8 +53,15 @@ TOML_STR = r"""
 
     [[tool.commitizen.customize.questions]]
     type = "input"
+    name = "subject"
+    message = "Subject."
+    filter = "required_validator_subject_strip"
+
+    [[tool.commitizen.customize.questions]]
+    type = "input"
     name = "message"
     message = "Body."
+    filter = "multiple_line_breaker"
 
     [[tool.commitizen.customize.questions]]
     type = "confirm"
@@ -97,8 +113,15 @@ JSON_STR = r"""
                     },
                     {
                         "type": "input",
+                        "name": "subject",
+                        "message": "Subject.",
+                        "filter": "required_validator_subject_strip"
+                    },
+                    {
+                        "type": "input",
                         "name": "message",
-                        "message": "Body."
+                        "message": "Body.",
+                        "filter": "multiple_line_breaker"
                     },
                     {
                         "type": "confirm",
@@ -146,8 +169,13 @@ commitizen:
         name: 'bug fix: A bug fix.'
       message: Select the type of change you are committing
     - type: input
+      name: subject
+      message: Subject.
+      filter: required_validator_subject_strip
+    - type: input
       name: message
       message: Body.
+      filter: multiple_line_breaker
     - type: confirm
       name: show_message
       message: Do you want to add body message in commit?
@@ -336,6 +364,13 @@ commitizen:
 """
 
 
+@pytest.fixture
+def staging_is_clean(mocker: MockFixture, tmp_git_project):
+    is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
+    is_staging_clean_mock.return_value = False
+    return tmp_git_project
+
+
 @pytest.fixture(
     params=[
         TomlConfig(data=TOML_STR, path=Path("not_exist.toml")),
@@ -349,6 +384,15 @@ def config(request):
     This fixture allow to test multiple config formats,
     without add the builtin parametrize decorator
     """
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        YAMLConfig(data=YAML_STR, path=Path("not_exist.yaml")),
+    ]
+)
+def config_filters(request):
     return request.param
 
 
@@ -524,7 +568,7 @@ def test_change_type_order_unicode(config_with_unicode):
     ]
 
 
-def test_questions(config):
+def test_questions_default(config):
     cz = CustomizeCommitsCz(config)
     questions = cz.questions()
     expected_questions = [
@@ -537,7 +581,18 @@ def test_questions(config):
             ],
             "message": "Select the type of change you are committing",
         },
-        {"type": "input", "name": "message", "message": "Body."},
+        {
+            "type": "input",
+            "name": "subject",
+            "message": "Subject.",
+            "filter": "required_validator_subject_strip",
+        },
+        {
+            "type": "input",
+            "name": "message",
+            "message": "Body.",
+            "filter": "multiple_line_breaker",
+        },
         {
             "type": "confirm",
             "name": "show_message",
@@ -545,6 +600,83 @@ def test_questions(config):
         },
     ]
     assert list(questions) == expected_questions
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_questions_filter_default(config, mocker: MockFixture):
+    is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
+    is_staging_clean_mock.return_value = False
+
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "change_type": "feature",
+        "subject": "user created",
+        "message": "body of the commit",
+        "show_message": True,
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
+
+    commands.Commit(config, {})()
+
+    prompts_questions = prompt_mock.call_args[0][0]
+    assert prompts_questions[0]["type"] == "list"
+    assert prompts_questions[0]["name"] == "change_type"
+    assert prompts_questions[0]["use_shortcuts"] is False
+    assert prompts_questions[1]["type"] == "input"
+    assert prompts_questions[1]["name"] == "subject"
+    assert prompts_questions[1]["filter"] == required_validator_subject_strip
+    assert prompts_questions[2]["type"] == "input"
+    assert prompts_questions[2]["name"] == "message"
+    assert prompts_questions[2]["filter"] == multiple_line_breaker
+    assert prompts_questions[3]["type"] == "confirm"
+    assert prompts_questions[3]["name"] == "show_message"
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_questions_filter_values(config_filters, mocker: MockFixture):
+    is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
+    is_staging_clean_mock.return_value = False
+
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "change_type": "feature",
+        "subject": "user created",
+        "message": "body of the commit",
+        "show_message": True,
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
+
+    commit_cmd = commands.Commit(config_filters, {})
+
+    assert isinstance(commit_cmd.cz, CustomizeCommitsCz)
+
+    for filter_desc in [
+        ("multiple_line_breaker", multiple_line_breaker),
+        ("required_validator", required_validator),
+        ("required_validator_scope", required_validator_scope),
+        ("required_validator_subject_strip", required_validator_subject_strip),
+        ("required_validator_title_strip", required_validator_title_strip),
+    ]:
+        commit_cmd.cz.custom_settings["questions"][1]["filter"] = filter_desc[0]  # type: ignore[index]
+        commit_cmd()
+
+        assert filter_desc[1]("input")
+
+        prompts_questions = prompt_mock.call_args[0][0]
+        assert prompts_questions[1]["filter"] == filter_desc[1]
+
+    for filter_name in [
+        "",
+        "faulty_value",
+    ]:
+        commit_cmd.cz.custom_settings["questions"][1]["filter"] = filter_name  # type: ignore[index]
+
+        with pytest.raises(NotAllowed):
+            commit_cmd()
 
 
 def test_questions_unicode(config_with_unicode):
