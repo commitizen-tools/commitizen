@@ -19,7 +19,7 @@
     the fact (e.g., pre-push or in CI) without an expensive check of the entire
     repository history.
   entry: cz
-  args: [check, --rev-range, origin/HEAD..HEAD]
+  args: [--no-raise, '3', check, --rev-range, origin/HEAD..HEAD]
   always_run: true
   pass_filenames: false
   language: python
