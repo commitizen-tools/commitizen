@@ -325,6 +325,68 @@ def test_commit_when_nothing_to_commit(config, mocker: MockFixture):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
+def test_commit_when_nothing_added_to_commit(config, mocker: MockFixture):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "",
+        "footer": "",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command(
+        'nothing added to commit but untracked files present (use "git add" to track)',
+        "",
+        b"",
+        b"",
+        0,
+    )
+
+    error_mock = mocker.patch("commitizen.out.error")
+
+    commands.Commit(config, {"all": False})()
+
+    prompt_mock.assert_called_once()
+    error_mock.assert_called_once()
+
+    assert "nothing added" in error_mock.call_args[0][0]
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_when_no_changes_added_to_commit(config, mocker: MockFixture):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "",
+        "footer": "",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command(
+        'no changes added to commit (use "git add" and/or "git commit -a")',
+        "",
+        b"",
+        b"",
+        0,
+    )
+
+    error_mock = mocker.patch("commitizen.out.error")
+
+    commands.Commit(config, {"all": False})()
+
+    prompt_mock.assert_called_once()
+    error_mock.assert_called_once()
+
+    assert "no changes added to commit" in error_mock.call_args[0][0]
+
+
+@pytest.mark.usefixtures("staging_is_clean")
 def test_commit_with_allow_empty(config, mocker: MockFixture):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
