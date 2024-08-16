@@ -35,12 +35,19 @@ def git_sandbox(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     gitconfig = tmp_path / ".git" / "config"
     if not gitconfig.parent.exists():
         gitconfig.parent.mkdir()
+
     monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(gitconfig))
+
     r = cmd.run(f"git config --file {gitconfig} user.name {SIGNER}")
     assert r.return_code == 0, r.err
     r = cmd.run(f"git config --file {gitconfig} user.email {SIGNER_MAIL}")
     assert r.return_code == 0, r.err
-    cmd.run("git config --global init.defaultBranch master")
+
+    r = cmd.run(f"git config --file {gitconfig} safe.directory '*'")
+    assert r.return_code == 0, r.err
+
+    r = cmd.run("git config --global init.defaultBranch master")
+    assert r.return_code == 0, r.err
 
 
 @pytest.fixture
