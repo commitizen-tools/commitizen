@@ -69,7 +69,8 @@ class Commit:
 
     def _get_message_by_prompt_commit_questions(self) -> str:
         # Prompt user for the commit message
-        questions = self.cz.questions()
+        questions = [dict(question) for question in self.cz.questions()]
+
         for question in (q for q in questions if q["type"] == "list"):
             question["use_shortcuts"] = self.config.settings["use_shortcuts"]
         try:
