@@ -5,6 +5,14 @@ from commitizen.cz.customize import CustomizeCommitsCz
 from commitizen.exceptions import MissingCzCustomizeConfigError
 
 TOML_STR = r"""
+    [tool.commitizen]
+    name = "cz_customize"
+    version = "1.0.0"
+    version_files = [
+        "commitizen/__version__.py",
+        "pyproject.toml"
+    ]
+
     [tool.commitizen.customize]
     message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
     example = "feature: this feature enables customization through a config file"
@@ -42,7 +50,7 @@ TOML_STR = r"""
 JSON_STR = r"""
     {
         "commitizen": {
-            "name": "cz_jira",
+            "name": "cz_customize",
             "version": "1.0.0",
             "version_files": [
                 "commitizen/__version__.py",
@@ -99,7 +107,7 @@ JSON_STR = r"""
 
 YAML_STR = """
 commitizen:
-  name: cz_jira
+  name: cz_customize
   version: 1.0.0
   version_files:
   - commitizen/__version__.py
