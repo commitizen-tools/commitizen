@@ -49,7 +49,7 @@ descriptive commits.
 To make commitizen available in your system
 
 ```bash
-pip install --user -U Commitizen
+pip install --user -U commitizen
 ```
 
 ### Python project
