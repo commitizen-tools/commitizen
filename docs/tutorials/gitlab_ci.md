@@ -79,7 +79,7 @@ auto-bump:
     - "which ssh-agent || ( apt-get update -qy && apt-get install openssh-client -qqy )"
     - eval `ssh-agent -s`
     - echo "${SSH_PRIVATE_KEY}" | tr -d '\r' | ssh-add - > /dev/null # add ssh key
-    - pip3 install -U Commitizen # install commitizen
+    - pip3 install -U commitizen # install commitizen
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "$SSH_PUBLIC_KEY" >> ~/.ssh/id_rsa.pub
