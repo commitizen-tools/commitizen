@@ -1208,8 +1208,13 @@ descriptive commits.</p>
 <p><a href="https://www.python.org/downloads/">Python</a> <code>3.8+</code></p>
 <p><a href="https://git-scm.com/downloads">Git</a> <code>1.8.5.2+</code></p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<p>To make commitizen available in your system</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>-U<span class="w"> </span>Commitizen
+<p>Install commitizen in your system using <code>pipx</code> (Recommended, <a href="https://pypa.github.io/pipx/installation/">https://pypa.github.io/pipx/installation/</a>):</p>
+<div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>ensurepath
+pipx<span class="w"> </span>install<span class="w"> </span>commitizen
+pipx<span class="w"> </span>upgrade<span class="w"> </span>commitizen
+</code></pre></div>
+<p>Install commitizen using <code>pip</code> with <code>--user</code> flag:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>-U<span class="w"> </span>commitizen
 </code></pre></div>
 <h3 id="python-project">Python project<a class="headerlink" href="#python-project" title="Permanent link">&para;</a></h3>
 <p>You can add it to your local project using one of these:</p>
