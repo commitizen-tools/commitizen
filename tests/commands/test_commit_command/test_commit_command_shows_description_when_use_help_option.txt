@@ -1,6 +1,6 @@
 usage: cz commit [-h] [--retry] [--no-retry] [--dry-run]
                  [--write-message-to-file FILE_PATH] [-s] [-a] [-e]
-                 [-l MESSAGE_LENGTH_LIMIT]
+                 [-l MESSAGE_LENGTH_LIMIT] [--]
 
 create new commit
 
@@ -19,3 +19,4 @@ options:
   -e, --edit            edit the commit message before committing
   -l, --message-length-limit MESSAGE_LENGTH_LIMIT
                         length limit of the commit message; 0 for no limit
+  --                    Positional arguments separator (recommended)
