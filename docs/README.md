@@ -46,7 +46,15 @@ descriptive commits.
 
 ## Installation
 
-To make commitizen available in your system
+Install commitizen in your system using `pipx` (Recommended, <https://pypa.github.io/pipx/installation/>):
+
+```bash
+pipx ensurepath
+pipx install commitizen
+pipx upgrade commitizen
+```
+
+Install commitizen using `pip` with `--user` flag:
 
 ```bash
 pip install --user -U commitizen
