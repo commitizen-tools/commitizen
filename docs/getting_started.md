@@ -51,13 +51,13 @@ cz c
 Run in the terminal
 
 ```bash
-cz commit --signoff
+cz commit -- --signoff
 ```
 
 or the shortcut
 
 ```bash
-cz commit -s
+cz commit -- -s
 ```
 
 ### Get project version
