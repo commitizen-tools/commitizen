@@ -147,11 +147,6 @@ data = {
                         "help": "write message to file before committing (can be combined with --dry-run)",
                     },
                     {
-                        "name": ["-s", "--signoff"],
-                        "action": "store_true",
-                        "help": "sign off the commit",
-                    },
-                    {
                         "name": ["-a", "--all"],
                         "action": "store_true",
                         "help": "Tell the command to automatically stage files that have been modified and deleted, but new files you have not told Git about are not affected.",

@@ -243,28 +243,6 @@ def test_commit_command_with_invalid_write_message_to_file_option(
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_command_with_signoff_option(config, mocker: MockFixture):
-    prompt_mock = mocker.patch("questionary.prompt")
-    prompt_mock.return_value = {
-        "prefix": "feat",
-        "subject": "user created",
-        "scope": "",
-        "is_breaking_change": False,
-        "body": "",
-        "footer": "",
-    }
-
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
-
-    commands.Commit(config, {"signoff": True})()
-
-    commit_mock.assert_called_once_with(ANY, args="-s")
-    success_mock.assert_called_once()
-
-
-@pytest.mark.usefixtures("staging_is_clean")
 def test_commit_command_with_always_signoff_enabled(config, mocker: MockFixture):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
