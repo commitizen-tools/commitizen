@@ -27,11 +27,8 @@ cz commit <commitizen-args> -- <git-cli-args>
 
 # e.g., cz commit --dry-run -- -a -S
 ```
-For example, using the `-S` option on `git commit` to sign a commit is now commitizen compatible: `cz c -- -S`
 
-!!! note
-    Deprecation warning: A commit can be signed off using `cz commit --signoff` or the shortcut `cz commit -s`.
-    This syntax is now deprecated in favor of the new `cz commit -- -s` syntax.
+For example, using the `-S` option on `git commit` to sign a commit is now commitizen compatible: `cz c -- -S`
 
 ### Retry
 
