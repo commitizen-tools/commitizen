@@ -325,6 +325,55 @@ def test_commit_when_nothing_to_commit(config, mocker: MockFixture):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
+def test_commit_with_allow_empty(config, mocker: MockFixture):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "closes #21",
+        "footer": "",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
+    success_mock = mocker.patch("commitizen.out.success")
+
+    commands.Commit(config, {"extra_cli_args": "--allow-empty"})()
+
+    commit_mock.assert_called_with(
+        "feat: user created\n\ncloses #21", args="--allow-empty"
+    )
+    success_mock.assert_called_once()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_with_signoff_and_allow_empty(config, mocker: MockFixture):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "closes #21",
+        "footer": "",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
+    success_mock = mocker.patch("commitizen.out.success")
+
+    config.settings["always_signoff"] = True
+    commands.Commit(config, {"extra_cli_args": "--allow-empty"})()
+
+    commit_mock.assert_called_with(
+        "feat: user created\n\ncloses #21", args="--allow-empty -s"
+    )
+    success_mock.assert_called_once()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
 def test_commit_when_customized_expected_raised(config, mocker: MockFixture, capsys):
     _err = ValueError()
     _err.__context__ = CzException("This is the root custom err")
