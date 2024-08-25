@@ -93,6 +93,10 @@ class Commit:
         return message
 
     def __call__(self):
+        extra_args: str = self.arguments.get("extra_cli_args", "")
+
+        allow_empty: bool = "--allow-empty" in extra_args
+
         dry_run: bool = self.arguments.get("dry_run")
         write_message_to_file: bool = self.arguments.get("write_message_to_file")
         manual_edit: bool = self.arguments.get("edit")
@@ -101,7 +105,7 @@ class Commit:
         if is_all:
             c = git.add("-u")
 
-        if git.is_staging_clean() and not dry_run:
+        if git.is_staging_clean() and not (dry_run or allow_empty):
             raise NothingToCommitError("No files added to staging!")
 
         if write_message_to_file is not None and write_message_to_file.is_dir():
@@ -136,8 +140,6 @@ class Commit:
 
         always_signoff: bool = self.config.settings["always_signoff"]
         signoff: bool = self.arguments.get("signoff")
-
-        extra_args = self.arguments.get("extra_cli_args", "")
 
         if signoff:
             out.warn(
