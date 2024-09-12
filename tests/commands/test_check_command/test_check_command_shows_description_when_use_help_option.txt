@@ -1,6 +1,6 @@
-usage: cz check [-h]
-                [--commit-msg-file COMMIT_MSG_FILE | --rev-range REV_RANGE | -m MESSAGE]
-                [--allow-abort] [--allowed-prefixes [ALLOWED_PREFIXES ...]]
+usage: cz check [-h] [--commit-msg-file COMMIT_MSG_FILE |
+                --rev-range REV_RANGE | -m MESSAGE] [--allow-abort]
+                [--allowed-prefixes [ALLOWED_PREFIXES ...]]
                 [-l MESSAGE_LENGTH_LIMIT]
 
 validates that a commit message matches the commitizen schema
