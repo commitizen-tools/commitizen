@@ -11,25 +11,21 @@
       
       
       
-        <link rel="prev" href="..">
       
       
-        <link rel="next" href="../commands/init/">
-      
-      
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.38">
     
     
       
-        <title>Getting Started - Commitizen</title>
+        <title>Configuring commitizen in a monorepo - Commitizen</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -48,7 +44,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -74,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#initialize-commitizen" class="md-skip">
+        <a href="#configuring-commitizen-in-a-monorepo" class="md-skip">
           Skip to content
         </a>
       
@@ -90,7 +86,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Commitizen" class="md-header__button md-logo" aria-label="Commitizen" data-md-component="logo">
+    <a href="../.." title="Commitizen" class="md-header__button md-logo" aria-label="Commitizen" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -110,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Getting Started
+              Configuring commitizen in a monorepo
             
           </span>
         </div>
@@ -239,7 +235,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Commitizen" class="md-nav__button md-logo" aria-label="Commitizen" data-md-component="logo">
+    <a href="../.." title="Commitizen" class="md-nav__button md-logo" aria-label="Commitizen" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -269,7 +265,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -286,28 +282,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Getting Started
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../getting_started/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -316,99 +294,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#initialize-commitizen" class="md-nav__link">
-    <span class="md-ellipsis">
-      Initialize commitizen
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Usage
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Usage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#bump-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      Bump version
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#committing" class="md-nav__link">
-    <span class="md-ellipsis">
-      Committing
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Committing">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sign-off-the-commit" class="md-nav__link">
-    <span class="md-ellipsis">
-      Sign off the commit
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-project-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      Get project version
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#integration-with-pre-commit" class="md-nav__link">
-    <span class="md-ellipsis">
-      Integration with Pre-commit
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -455,7 +340,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/init/" class="md-nav__link">
+      <a href="../../commands/init/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -476,7 +361,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/commit/" class="md-nav__link">
+      <a href="../../commands/commit/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -497,7 +382,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/bump/" class="md-nav__link">
+      <a href="../../commands/bump/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -518,7 +403,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/check/" class="md-nav__link">
+      <a href="../../commands/check/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -539,7 +424,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/changelog/" class="md-nav__link">
+      <a href="../../commands/changelog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -560,7 +445,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/example/" class="md-nav__link">
+      <a href="../../commands/example/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -581,7 +466,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/info/" class="md-nav__link">
+      <a href="../../commands/info/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -602,7 +487,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/ls/" class="md-nav__link">
+      <a href="../../commands/ls/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -623,7 +508,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/schema/" class="md-nav__link">
+      <a href="../../commands/schema/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -644,7 +529,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/version/" class="md-nav__link">
+      <a href="../../commands/version/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -672,7 +557,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../config/" class="md-nav__link">
+      <a href="../../config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -692,7 +577,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../customization/" class="md-nav__link">
+      <a href="../../customization/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -747,7 +632,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/writing_commits/" class="md-nav__link">
+      <a href="../writing_commits/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -768,7 +653,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/auto_check/" class="md-nav__link">
+      <a href="../auto_check/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -789,7 +674,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/auto_prepare_commit_message/" class="md-nav__link">
+      <a href="../auto_prepare_commit_message/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -810,7 +695,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/gitlab_ci/" class="md-nav__link">
+      <a href="../gitlab_ci/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -831,7 +716,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/github_actions/" class="md-nav__link">
+      <a href="../github_actions/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -852,7 +737,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/jenkins_pipeline/" class="md-nav__link">
+      <a href="../jenkins_pipeline/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -873,7 +758,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/dev_releases/" class="md-nav__link">
+      <a href="../dev_releases/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -901,7 +786,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../faq/" class="md-nav__link">
+      <a href="../../faq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -921,7 +806,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../exit_codes/" class="md-nav__link">
+      <a href="../../exit_codes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -941,7 +826,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../third-party-commitizen/" class="md-nav__link">
+      <a href="../../third-party-commitizen/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -961,7 +846,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributing/" class="md-nav__link">
+      <a href="../../contributing/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -981,7 +866,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../external_links/" class="md-nav__link">
+      <a href="../../external_links/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1011,89 +896,8 @@
   
   
   
+    
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#initialize-commitizen" class="md-nav__link">
-    <span class="md-ellipsis">
-      Initialize commitizen
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Usage
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Usage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#bump-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      Bump version
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#committing" class="md-nav__link">
-    <span class="md-ellipsis">
-      Committing
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Committing">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sign-off-the-commit" class="md-nav__link">
-    <span class="md-ellipsis">
-      Sign off the commit
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-project-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      Get project version
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#integration-with-pre-commit" class="md-nav__link">
-    <span class="md-ellipsis">
-      Integration with Pre-commit
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -1108,91 +912,36 @@
                   
 
 
-  <h1>Getting Started</h1>
-
-<h2 id="initialize-commitizen">Initialize commitizen<a class="headerlink" href="#initialize-commitizen" title="Permanent link">&para;</a></h2>
-<p>If it's your first time, you'll need to create a commitizen configuration file.</p>
-<p>The assistant utility will help you set up everything</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>init
+<h1 id="configuring-commitizen-in-a-monorepo">Configuring commitizen in a monorepo<a class="headerlink" href="#configuring-commitizen-in-a-monorepo" title="Permanent link">&para;</a></h1>
+<p>This tutorial assumes the monorepo layout is designed with multiple components that can be released independently of each
+other, it also assumes that conventional commits with scopes are in use. Some suggested layouts:</p>
+<div class="highlight"><pre><span></span><code>.
+├── library-b
+│   └── .cz.toml
+└── library-z
+    └── .cz.toml
 </code></pre></div>
-<p>Alternatively, create a file <code>.cz.toml</code> or <code>cz.toml</code> in your project's directory.</p>
+<div class="highlight"><pre><span></span><code>src
+├── library-b
+│   └── .cz.toml
+└── library-z
+    └── .cz.toml
+</code></pre></div>
+<p>Each component will have its own changelog, commits will need to use scopes so only relevant commits are included in the
+appropriate change log for a given component. Example config and commit for <code>library-b</code></p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
-<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cz_customize&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0&quot;</span>
+<span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${version}-library-b&quot;</span><span class="w"> </span><span class="c1"># the component name can be a prefix or suffix with or without a separator</span>
 <span class="n">update_changelog_on_bump</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+
+<span class="k">[tool.commitizen.customize]</span>
+<span class="n">changelog_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;^(feat|fix)</span><span class="se">\\</span><span class="s2">(library-b</span><span class="se">\\</span><span class="s2">)(!)?:&quot;</span><span class="w"> </span><span class="c1">#the pattern on types can be a wild card or any types you wish to include</span>
 </code></pre></div>
-<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
-<h3 id="bump-version">Bump version<a class="headerlink" href="#bump-version" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>bump
-</code></pre></div>
-<p>This command will bump your project's version, and it will create a tag.</p>
-<p>Because of the setting <code>update_changelog_on_bump</code>, bump will also create the <strong>changelog</strong>.
-You can also <a href="../commands/bump/#version_files">update files</a>.
-You can configure the <a href="../commands/bump/#version_scheme">version scheme</a> and <a href="../config/#version-providers">version provider</a>.</p>
-<p>There are many more options available, please read the docs for the <a href="../commands/bump/">bump command</a>.</p>
-<h3 id="committing">Committing<a class="headerlink" href="#committing" title="Permanent link">&para;</a></h3>
-<p>Run in your terminal</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>commit
-</code></pre></div>
-<p>or the shortcut</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>c
-</code></pre></div>
-<h4 id="sign-off-the-commit">Sign off the commit<a class="headerlink" href="#sign-off-the-commit" title="Permanent link">&para;</a></h4>
-<p>Run in the terminal</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>commit<span class="w"> </span>--signoff
-</code></pre></div>
-<p>or the shortcut</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>commit<span class="w"> </span>-s
-</code></pre></div>
-<h3 id="get-project-version">Get project version<a class="headerlink" href="#get-project-version" title="Permanent link">&para;</a></h3>
-<p>Running <code>cz version</code> will return the version of commitizen, but if you want
-your project's version you can run:</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>version<span class="w"> </span>-p
-</code></pre></div>
-<p>This can be useful in many situations, where otherwise, you would require a way
-to parse the version of your project. Maybe it's simple if you use a <code>VERSION</code> file,
-but once you start working with many different projects, it becomes tricky.</p>
-<p>A common example is, when you need to send to slack, the changes for the version that you
-just created:</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>changelog<span class="w"> </span>--dry-run<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>cz<span class="w"> </span>version<span class="w"> </span>-p<span class="k">)</span><span class="s2">&quot;</span>
-</code></pre></div>
-<h3 id="integration-with-pre-commit">Integration with Pre-commit<a class="headerlink" href="#integration-with-pre-commit" title="Permanent link">&para;</a></h3>
-<p>Commitizen can lint your commit message for you with <code>cz check</code>.</p>
-<p>You can integrate this in your <a href="https://pre-commit.com/">pre-commit</a> config with:</p>
-<div class="highlight"><pre><span></span><code><span class="nn">---</span>
-<span class="nt">repos</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/commitizen-tools/commitizen</span>
-<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">master</span>
-<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">commitizen</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">commitizen-branch</span>
-<span class="w">        </span><span class="nt">stages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">push</span><span class="p p-Indicator">]</span>
-</code></pre></div>
-<p>After the configuration is added, you'll need to run:</p>
-<div class="highlight"><pre><span></span><code>pre-commit<span class="w"> </span>install<span class="w"> </span>--hook-type<span class="w"> </span>commit-msg<span class="w"> </span>--hook-type<span class="w"> </span>pre-push
-</code></pre></div>
-<p>If you aren't using both hooks, you needn't install both stages.</p>
-<table>
-<thead>
-<tr>
-<th>Hook</th>
-<th>Recommended Stage</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>commitizen</td>
-<td>commit-msg</td>
-</tr>
-<tr>
-<td>commitizen-branch</td>
-<td>pre-push</td>
-</tr>
-</tbody>
-</table>
-<p>Note that pre-commit discourages using <code>master</code> as a revision, and the above command will print a warning. You should replace the <code>master</code> revision with the <a href="https://github.com/commitizen-tools/commitizen/tags">latest tag</a>. This can be done automatically with:</p>
-<div class="highlight"><pre><span></span><code>pre-commit<span class="w"> </span>autoupdate
-</code></pre></div>
-<p>Read more about the <code>check</code> command <a href="../commands/check/">here</a>.</p>
+<p>example commit message for the above</p>
+<p><code>fix:(library-b) Some awesome message</code></p>
+<p>If the above is followed and the <code>cz bump --changelog</code> is run in the directory containing the component the changelog
+should be generated in the same directory with only commits scoped to the component.</p>
 
 
 
@@ -1239,10 +988,10 @@ just created:</p>
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.d6f25eb3.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d6f25eb3.min.js"></script>
       
     
   </body>

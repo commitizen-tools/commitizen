@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.37">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.38">
     
     
       
@@ -2012,7 +2012,7 @@ on the list and then you can use the exit code:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;v$major.$minor.$patch$prerelease&quot;</span>
 </code></pre></div>
-<p>The variables must be preceded by a <code>$</code> sign. Default is <code>$version</code>.</p>
+<p>The variables must be preceded by a <code>$</code> sign and optionally can be wrapped in <code>{}</code> . Default is <code>$version</code>.</p>
 <p>Supported variables:</p>
 <table>
 <thead>
@@ -2023,27 +2023,27 @@ on the list and then you can use the exit code:</p>
 </thead>
 <tbody>
 <tr>
-<td><code>$version</code></td>
+<td><code>$version</code>, <code>${version}</code></td>
 <td>full generated version</td>
 </tr>
 <tr>
-<td><code>$major</code></td>
+<td><code>$major</code>, <code>${major}</code></td>
 <td>MAJOR increment</td>
 </tr>
 <tr>
-<td><code>$minor</code></td>
+<td><code>$minor</code>, <code>${minor}</code></td>
 <td>MINOR increment</td>
 </tr>
 <tr>
-<td><code>$patch</code></td>
+<td><code>$patch</code>, <code>${patch}</code></td>
 <td>PATCH increment</td>
 </tr>
 <tr>
-<td><code>$prerelease</code></td>
+<td><code>$prerelease</code>, <code>${prerelease}</code></td>
 <td>Prerelease (alpha, beta, release candidate)</td>
 </tr>
 <tr>
-<td><code>$devrelease</code></td>
+<td><code>$devrelease</code>, ${devrelease}`</td>
 <td>Development release</td>
 </tr>
 </tbody>
