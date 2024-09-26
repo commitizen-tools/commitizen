@@ -1,3 +1,15 @@
+## v3.29.1 (2024-09-26)
+
+### Fix
+
+- **changelog**: Factorized TAG_FORMAT_REGEXES
+- **changelog**: Handle tag format without version pattern
+- **changelog**: handle custom tag_format in changelog generation
+
+### Refactor
+
+- Use format strings
+
 ## v3.29.0 (2024-08-11)
 
 ### Feat
