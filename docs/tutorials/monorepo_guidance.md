@@ -11,7 +11,7 @@ other, it also assumes that conventional commits with scopes are in use. Some su
     └── .cz.toml
 ```
 
-```sh
+```shell-session
 src
 ├── library-b
 │   └── .cz.toml
