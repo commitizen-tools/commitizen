@@ -73,10 +73,24 @@ class Commit:
         return message
 
     def __call__(self):
+        signoff: bool = (
+            self.arguments.get("signoff") or self.config.settings["always_signoff"]
+        )
         dry_run: bool = self.arguments.get("dry_run")
         write_message_to_file: bool = self.arguments.get("write_message_to_file")
-
+        retry: bool = self.arguments.get("retry")
+        no_retry: bool = self.arguments.get("no_retry")
+        retry_after_failure: bool = self.config.settings.get("retry_after_failure")
         is_all: bool = self.arguments.get("all")
+
+        if signoff:
+            out.warn(
+                "signoff mechanic is deprecated, please use `cz commit -- -s` instead.\n"
+            )
+            extra_args = self.arguments.get("extra_cli_args", "--") + " -s"
+        else:
+            extra_args = self.arguments.get("extra_cli_args", "")
+
         if is_all:
             c = git.add("-u")
 
@@ -85,10 +99,6 @@ class Commit:
 
         if write_message_to_file is not None and write_message_to_file.is_dir():
             raise NotAllowed(f"{write_message_to_file} is a directory")
-
-        retry: bool = self.arguments.get("retry")
-        no_retry: bool = self.arguments.get("no_retry")
-        retry_after_failure: bool = self.config.settings.get("retry_after_failure")
 
         if retry:
             m = self.read_backup_message()
@@ -109,18 +119,6 @@ class Commit:
 
         if dry_run:
             raise DryRunExit()
-
-        signoff: bool = (
-            self.arguments.get("signoff") or self.config.settings["always_signoff"]
-        )
-
-        if signoff:
-            out.warn(
-                "signoff mechanic is deprecated, please use `cz commit -- -s` instead."
-            )
-            extra_args = self.arguments.get("extra_cli_args", "--") + " -s"
-        else:
-            extra_args = self.arguments.get("extra_cli_args", "")
 
         c = git.commit(m, args=extra_args)
 
