@@ -11,6 +11,10 @@
       
       
       
+        <link rel="prev" href="../dev_releases/">
+      
+      
+        <link rel="next" href="../../faq/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -18,7 +22,7 @@
     
     
       
-        <title>Configuring commitizen in a monorepo - Commitizen</title>
+        <title>Monorepo support - Commitizen</title>
       
     
     
@@ -106,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Configuring commitizen in a monorepo
+              Monorepo support
             
           </span>
         </div>
@@ -594,17 +598,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -618,7 +624,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
@@ -772,6 +778,91 @@
 
               
             
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Monorepo support
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Monorepo support
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#changelog-per-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changelog per component
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Changelog per component">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-with-scope-in-conventional-commits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example with scope in conventional commits
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -899,6 +990,38 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#changelog-per-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changelog per component
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Changelog per component">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-with-scope-in-conventional-commits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example with scope in conventional commits
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -915,33 +1038,59 @@
 <h1 id="configuring-commitizen-in-a-monorepo">Configuring commitizen in a monorepo<a class="headerlink" href="#configuring-commitizen-in-a-monorepo" title="Permanent link">&para;</a></h1>
 <p>This tutorial assumes the monorepo layout is designed with multiple components that can be released independently of each
 other, it also assumes that conventional commits with scopes are in use. Some suggested layouts:</p>
-<div class="highlight"><pre><span></span><code>.
-├── library-b
-│   └── .cz.toml
-└── library-z
-    └── .cz.toml
+<div class="highlight"><pre><span></span><code><span class="go">.</span>
+<span class="go">├── library-b</span>
+<span class="go">│   └── .cz.toml</span>
+<span class="go">└── library-z</span>
+<span class="go">    └── .cz.toml</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>src
-├── library-b
-│   └── .cz.toml
-└── library-z
-    └── .cz.toml
+<div class="highlight"><pre><span></span><code><span class="go">src</span>
+<span class="go">├── library-b</span>
+<span class="go">│   └── .cz.toml</span>
+<span class="go">└── library-z</span>
+<span class="go">    └── .cz.toml</span>
 </code></pre></div>
-<p>Each component will have its own changelog, commits will need to use scopes so only relevant commits are included in the
-appropriate change log for a given component. Example config and commit for <code>library-b</code></p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<p>Sample <code>.cz.toml</code> for each component:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># library-b/.cz.toml</span>
+<span class="k">[tool.commitizen]</span>
 <span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cz_customize&quot;</span>
 <span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0&quot;</span>
 <span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${version}-library-b&quot;</span><span class="w"> </span><span class="c1"># the component name can be a prefix or suffix with or without a separator</span>
 <span class="n">update_changelog_on_bump</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-
-<span class="k">[tool.commitizen.customize]</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># library-z/.cz.toml</span>
+<span class="k">[tool.commitizen]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cz_customize&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0&quot;</span>
+<span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${version}-library-z&quot;</span>
+<span class="n">update_changelog_on_bump</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</code></pre></div>
+<p>And finally, to bump each of these:</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>--config<span class="w"> </span>library-b/.cz.toml<span class="w"> </span>bump<span class="w"> </span>--yes
+cz<span class="w"> </span>--config<span class="w"> </span>library-z/.cz.toml<span class="w"> </span>bump<span class="w"> </span>--yes
+</code></pre></div>
+<h2 id="changelog-per-component">Changelog per component<a class="headerlink" href="#changelog-per-component" title="Permanent link">&para;</a></h2>
+<p>In order to filter the correct commits for each component, you'll have to come up with a strategy.</p>
+<p>For example:</p>
+<ul>
+<li>Trigger the pipeline based on the changed path, which can have some downsides, as you'll rely on the developer not including files from other files<ul>
+<li><a href="https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore">github actions</a> uses <code>path</code></li>
+<li><a href="https://www.jenkins.io/doc/book/pipeline/syntax/#built-in-conditions">Jenkins</a> uses <code>changeset</code></li>
+<li><a href="https://docs.gitlab.com/ee/ci/yaml/#ruleschanges">Gitlab</a> uses <code>rules:changes</code></li>
+</ul>
+</li>
+<li>Filter certain pattern of the commit message (recommended)</li>
+</ul>
+<h3 id="example-with-scope-in-conventional-commits">Example with scope in conventional commits<a class="headerlink" href="#example-with-scope-in-conventional-commits" title="Permanent link">&para;</a></h3>
+<p>For this example, to include the message in the changelog, we will require commits to use a specific scope.
+This way, only relevant commits will be included in the appropriate change log for a given component, and any other commit will be ignored.</p>
+<p>Example config and commit for <code>library-b</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen.customize]</span>
 <span class="n">changelog_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;^(feat|fix)</span><span class="se">\\</span><span class="s2">(library-b</span><span class="se">\\</span><span class="s2">)(!)?:&quot;</span><span class="w"> </span><span class="c1">#the pattern on types can be a wild card or any types you wish to include</span>
 </code></pre></div>
-<p>example commit message for the above</p>
-<p><code>fix:(library-b) Some awesome message</code></p>
-<p>If the above is followed and the <code>cz bump --changelog</code> is run in the directory containing the component the changelog
-should be generated in the same directory with only commits scoped to the component.</p>
+<p>A commit message looking like this, would be included:</p>
+<div class="highlight"><pre><span></span><code>fix:(library-b) Some awesome message
+</code></pre></div>
 
 
 
