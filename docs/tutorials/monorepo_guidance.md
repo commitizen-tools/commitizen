@@ -3,7 +3,7 @@
 This tutorial assumes the monorepo layout is designed with multiple components that can be released independently of each
 other, it also assumes that conventional commits with scopes are in use. Some suggested layouts:
 
-```sh
+```shell-session
 .
 ├── library-b
 │   └── .cz.toml
