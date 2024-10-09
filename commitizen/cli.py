@@ -162,6 +162,12 @@ data = {
                         "default": 0,
                         "help": "length limit of the commit message; 0 for no limit",
                     },
+                    {
+                        "name": ["--"],
+                        "action": "store_true",
+                        "dest": "double_dash",
+                        "help": "Positional arguments separator (recommended)",
+                    },
                 ],
             },
             {
