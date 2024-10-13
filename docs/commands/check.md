@@ -70,7 +70,7 @@ permit them. Since `git commit` accepts an `--allow-empty-message` flag (primari
 ### Allowed Prefixes
 
 If the commit message starts by some specific prefixes, `cz check` returns `True` without checkign the regex.
-By default, the the following prefixes are allowed: `Merge`, `Revert`, `Pull Request`, `fixup!` and `squash!`.
+By default, the the following prefixes are allowed: `Merge`, `Revert`, `Pull request`, `fixup!` and `squash!`.
 
 ```bash
 cz check --message MESSAGE --allowed-prefixes 'Merge' 'Revert' 'Custom Prefix'
