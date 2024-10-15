@@ -410,6 +410,36 @@ def test_commit_command_with_message_length_limit(config, mocker: MockFixture):
         commands.Commit(config, {"message_length_limit": message_length - 1})()
 
 
+@pytest.mark.usefixtures("staging_is_clean")
+@pytest.mark.parametrize("editor", ["vim", None])
+def test_manual_edit(editor, config, mocker: MockFixture, tmp_path):
+    mocker.patch("commitizen.git.get_core_editor", return_value=editor)
+    subprocess_mock = mocker.patch("subprocess.call")
+
+    mocker.patch("shutil.which", return_value=editor)
+
+    test_message = "Initial commit message"
+    temp_file = tmp_path / "temp_commit_message"
+    temp_file.write_text(test_message)
+
+    mock_temp_file = mocker.patch("tempfile.NamedTemporaryFile")
+    mock_temp_file.return_value.__enter__.return_value.name = str(temp_file)
+
+    commit_cmd = commands.Commit(config, {"edit": True})
+
+    if editor is None:
+        with pytest.raises(RuntimeError):
+            commit_cmd.manual_edit(test_message)
+    else:
+        edited_message = commit_cmd.manual_edit(test_message)
+
+        subprocess_mock.assert_called_once_with(["vim", str(temp_file)])
+
+        assert edited_message == test_message.strip()
+
+        temp_file.unlink()
+
+
 @skip_below_py_3_13
 def test_commit_command_shows_description_when_use_help_option(
     mocker: MockFixture, capsys, file_regression

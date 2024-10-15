@@ -1,5 +1,5 @@
 usage: cz commit [-h] [--retry] [--no-retry] [--dry-run]
-                 [--write-message-to-file FILE_PATH] [-s] [-a]
+                 [--write-message-to-file FILE_PATH] [-s] [-a] [-e]
                  [-l MESSAGE_LENGTH_LIMIT]
 
 create new commit
@@ -16,5 +16,6 @@ options:
   -a, --all             Tell the command to automatically stage files that
                         have been modified and deleted, but new files you have
                         not told Git about are not affected.
+  -e, --edit            edit the commit message before committing
   -l, --message-length-limit MESSAGE_LENGTH_LIMIT
                         length limit of the commit message; 0 for no limit
