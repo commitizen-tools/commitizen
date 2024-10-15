@@ -78,3 +78,7 @@ class ScmProvider(VersionProvider):
     def set_version(self, version: str):
         # Not necessary
         pass
+
+    def get_files(self) -> list[str]:
+        # No files for this provider
+        return []
