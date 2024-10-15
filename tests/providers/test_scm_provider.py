@@ -60,6 +60,10 @@ def test_scm_provider(
     # Should not fail on set_version()
     provider.set_version("43.1")
 
+    # Shouldn not have any files
+    files = provider.get_files()
+    assert files == []
+
 
 @pytest.mark.usefixtures("tmp_git_project")
 def test_scm_provider_default_without_commits_and_tags(config: BaseConfig):
