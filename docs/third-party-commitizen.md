@@ -9,7 +9,7 @@ Just like _conventional commit_ format, but the scope has been restricted to a
 JIRA issue format, i.e. `project-issueNumber`. This standardises scopes in a
 meaningful way.
 
-### Installation
+#### Installation
 
 ```sh
 pip install conventional-JIRA
@@ -23,25 +23,25 @@ This plugin extends the commitizen tools by:
 - creating links to GitHub commits in the CHANGELOG.md
 - creating links to JIRA issues in the CHANGELOG.md
 
-### Installation
+#### Installation
 
 ```sh
 pip install cz-github-jira-conventional
 ```
 
-For installation instructions (configuration and pre-commit) please visit https://github.com/apheris/cz-github-jira-conventional
+For installation instructions (configuration and pre-commit) please visit [https://github.com/apheris/cz-github-jira-conventional](https://github.com/apheris/cz-github-jira-conventional)
 
 ### [cz-emoji](https://github.com/adam-grant-hendry/cz-emoji)
 
 _conventional commit_ format, but with emojis
 
-### Installation
+#### Installation
 
 ```sh
 pip install cz-emoji
 ```
 
-### Usage
+#### Usage
 
 ```sh
 cz --name cz_emoji commit
@@ -53,15 +53,15 @@ cz --name cz_emoji commit
 
 Includes a pre-commit hook that automatically adds the correct gitmoji to the commit message based on the conventional type.
 
-### Installation
+#### Installation
 
-```bash
+```sh
 pip install cz-conventional-gitmoji
 ```
 
-### Usage
+#### Usage
 
-```bash
+```sh
 cz --name cz_gitmoji commit
 ```
 
@@ -69,9 +69,17 @@ cz --name cz_gitmoji commit
 
 Just like _conventional commit_ format, but with emojis and optionally time spent and related tasks.
 
-It can be installed with `pip install commitizen-emoji`.
+#### Installation
 
-Usage: `cz --name cz_commitizen_emoji commit`.
+```sh
+pip install commitizen-emoji
+```
+
+#### Usage
+
+```sh
+cz --name cz_commitizen_emoji commit
+```
 
 ### [Conventional Legacy (cz_legacy)][1]
 
@@ -79,18 +87,27 @@ An extension of the _conventional commit_ format to include user-specified
 legacy change types in the `CHANGELOG` while preventing the legacy change types
 from being used in new commit messages
 
-`cz_legacy` can be installed with `pip install cz_legacy`
+#### Installation
+
+```sh
+pip install cz_legacy
+```
+
+#### Usage
 
 See the [README][1] for instructions on configuration
 
 [1]: https://pypi.org/project/cz_legacy
 
+## Third-Party Commitizen Providers
+
+Commitizen can read and write version from different sources.  In addition to the native providers, some alternative version sources are available as PyPI packages (installable with `pip`).
+
 ### [commitizen-deno-provider](https://pypi.org/project/commitizen-deno-provider/)
 
-A provider for Deno projects. The provider updates the version in deno.json and jsr.json files.
+A provider for **Deno** projects. The provider updates the version in deno.json and jsr.json files.
 
 #### Installation
-
 
 ```sh
 pip install commitizen-deno-provider
