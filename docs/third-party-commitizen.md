@@ -87,12 +87,12 @@ See the [README][1] for instructions on configuration
 
 ### [commitizen-deno-provider](https://pypi.org/project/commitizen-deno-provider/)
 
-A provider for Deno projects. The provider updates the version in deno.json, deno.lock and jsr.json files.
+A provider for Deno projects. The provider updates the version in deno.json and jsr.json files.
 
 #### Installation
 
 
-```
+```sh
 pip install commitizen-deno-provider
 ```
 
@@ -102,7 +102,7 @@ Add `deno-provider` to your configuration file.
 
 Example for `.cz.yaml`:
 
-```yml
+```yaml
 ---
 commitizen:
   major_version_zero: true
