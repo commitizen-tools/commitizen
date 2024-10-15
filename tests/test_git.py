@@ -283,6 +283,26 @@ def test_eoltypes_get_eol_for_open():
     assert git.EOLTypes.get_eol_for_open(git.EOLTypes.CRLF) == "\r\n"
 
 
+def test_get_core_editor(mocker):
+    mocker.patch.dict(os.environ, {"GIT_EDITOR": "nano"})
+    assert git.get_core_editor() == "nano"
+
+    mocker.patch.dict(os.environ, clear=True)
+    mocker.patch(
+        "commitizen.cmd.run",
+        return_value=cmd.Command(
+            out="vim", err="", stdout=b"", stderr=b"", return_code=0
+        ),
+    )
+    assert git.get_core_editor() == "vim"
+
+    mocker.patch(
+        "commitizen.cmd.run",
+        return_value=cmd.Command(out="", err="", stdout=b"", stderr=b"", return_code=1),
+    )
+    assert git.get_core_editor() is None
+
+
 def test_create_tag_with_message(tmp_commitizen_project):
     with tmp_commitizen_project.as_cwd():
         create_file_and_commit("feat(test): test")
