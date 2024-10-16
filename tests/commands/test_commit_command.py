@@ -412,7 +412,7 @@ def test_commit_command_with_message_length_limit(config, mocker: MockFixture):
 
 @pytest.mark.usefixtures("staging_is_clean")
 @pytest.mark.parametrize("editor", ["vim", None])
-def test_force_edit(editor, config, mocker: MockFixture, tmp_path):
+def test_manual_edit(editor, config, mocker: MockFixture, tmp_path):
     mocker.patch("commitizen.git.get_core_editor", return_value=editor)
     subprocess_mock = mocker.patch("subprocess.call")
 
@@ -425,14 +425,14 @@ def test_force_edit(editor, config, mocker: MockFixture, tmp_path):
     mock_temp_file = mocker.patch("tempfile.NamedTemporaryFile")
     mock_temp_file.return_value.__enter__.return_value.name = str(temp_file)
 
-    commit_instance = commands.Commit(config, {"edit": True})
+    commit_cmd = commands.Commit(config, {"edit": True})
 
     if editor is None:
         with pytest.raises(RuntimeError):
-            commit_instance.force_edit(test_message)
+            commit_cmd.manual_edit(test_message)
         return
     else:
-        edited_message = commit_instance.force_edit(test_message)
+        edited_message = commit_cmd.manual_edit(test_message)
 
         subprocess_mock.assert_called_once_with(["vim", str(temp_file)])
 

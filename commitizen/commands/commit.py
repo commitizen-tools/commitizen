@@ -75,7 +75,7 @@ class Commit:
 
         return message
 
-    def force_edit(self, message: str) -> str:
+    def manual_edit(self, message: str) -> str:
         editor = git.get_core_editor()
         if editor is None:
             raise RuntimeError("No 'editor' value given and no default available.")
@@ -95,7 +95,7 @@ class Commit:
     def __call__(self):
         dry_run: bool = self.arguments.get("dry_run")
         write_message_to_file: bool = self.arguments.get("write_message_to_file")
-        force_edit: bool = self.arguments.get("edit")
+        manual_edit: bool = self.arguments.get("edit")
 
         is_all: bool = self.arguments.get("all")
         if is_all:
@@ -122,8 +122,8 @@ class Commit:
         else:
             m = self.prompt_commit_questions()
 
-        if force_edit:
-            m = self.force_edit(m)
+        if manual_edit:
+            m = self.manual_edit(m)
 
         out.info(f"\n{m}\n")
 
