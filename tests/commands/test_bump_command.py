@@ -540,16 +540,10 @@ def test_bump_not_add_unstaged(mocker: MockFixture, tmp_commitizen_project):
     create_file_and_commit("feat: new file", unstaged_file)
     tmp_file = tmp_commitizen_project.join(unstaged_file)
     tmp_file.write("updated content")
-    # print("Before")
-    # cmd_res = cmd.run('git status')
-    # print(cmd_res.out)
-
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
     cli.main()
-    # print("After")
     cmd_res = cmd.run("git diff --name-only")
-    # print(cmd_res.out)
     assert unstaged_file in cmd_res.out
 
 

@@ -60,7 +60,7 @@ def test_scm_provider(
     # Should not fail on set_version()
     provider.set_version("43.1")
 
-    # Shouldn not have any files
+    # Should not have any files
     files = provider.get_files()
     assert files == []
 
