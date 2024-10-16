@@ -271,6 +271,13 @@ def get_eol_style() -> EOLTypes:
         return map["native"]
 
 
+def get_core_editor() -> str | None:
+    c = cmd.run("git var GIT_EDITOR")
+    if c.out:
+        return c.out.strip()
+    return None
+
+
 def smart_open(*args, **kargs):
     """Open a file with the EOL style determined from Git."""
     return open(*args, newline=get_eol_style().get_eol_for_open(), **kargs)

@@ -157,6 +157,12 @@ data = {
                         "help": "Tell the command to automatically stage files that have been modified and deleted, but new files you have not told Git about are not affected.",
                     },
                     {
+                        "name": ["-e", "--edit"],
+                        "action": "store_true",
+                        "default": False,
+                        "help": "edit the commit message before committing",
+                    },
+                    {
                         "name": ["-l", "--message-length-limit"],
                         "type": int,
                         "default": 0,
