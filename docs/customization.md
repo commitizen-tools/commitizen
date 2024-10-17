@@ -168,14 +168,15 @@ commitizen:
 
 #### Detailed `questions` content
 
-| Parameter | Type   | Default | Description                                                                                                                                                                                     |
-| --------- | ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `type`    | `str`  | `None`  | The type of questions. Valid type: `list`, `input` and etc. [See More][different-question-types]                                                                                                |
-| `name`    | `str`  | `None`  | The key for the value answered by user. It's used in `message_template`                                                                                                                         |
-| `message` | `str`  | `None`  | Detail description for the question.                                                                                                                                                            |
-| `choices` | `list` | `None`  | (OPTIONAL) The choices when `type = list`. Either use a list of values or a list of dictionaries with `name` and `value` keys. Keyboard shortcuts can be defined via `key`. See examples above. |
-| `default` | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                                                                 |
-| `filter`  | `str`  | `None`  | (Optional) Validator for user's answer. **(Work in Progress)**                                                                                                                                  |
+| Parameter   | Type   | Default | Description                                                                                                                                                                                     |
+| ----------- | ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`      | `str`  | `None`  | The type of questions. Valid type: `list`, `input` and etc. [See More][different-question-types]                                                                                                |
+| `name`      | `str`  | `None`  | The key for the value answered by user. It's used in `message_template`                                                                                                                         |
+| `message`   | `str`  | `None`  | Detail description for the question.                                                                                                                                                            |
+| `choices`   | `list` | `None`  | (OPTIONAL) The choices when `type = list`. Either use a list of values or a list of dictionaries with `name` and `value` keys. Keyboard shortcuts can be defined via `key`. See examples above. |
+| `default`   | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                                                                 |
+| `filter`    | `str`  | `None`  | (Optional) Validator for user's answer. **(Work in Progress)**                                                                                                                                  |
+| `multiline` | `bool` | `False` | (OPTIONAL) Enable multiline support when `type = input`.                                                                                                                                            |
 [different-question-types]: https://github.com/tmbo/questionary#different-question-types
 
 #### Shortcut keys
