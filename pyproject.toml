@@ -64,7 +64,7 @@ pytest-regressions = "^2.4.0"
 pytest-freezer = "^0.4.6"
 pytest-xdist = "^3.1.0"
 # linter
-ruff = ">=0.5.0,<0.7.0"
+ruff = ">=0.5.0,<0.8.0"
 pre-commit = ">=2.18,<4.0"
 mypy = "^1.4"
 types-PyYAML = ">=5.4.3,<7.0.0"
