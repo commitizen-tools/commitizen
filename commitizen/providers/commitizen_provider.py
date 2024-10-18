@@ -13,3 +13,6 @@ class CommitizenProvider(VersionProvider):
 
     def set_version(self, version: str):
         self.config.set_key("version", version)
+
+    def get_files(self) -> list[str]:
+        return [str(self.config._path)]

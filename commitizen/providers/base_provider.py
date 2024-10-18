@@ -34,6 +34,12 @@ class VersionProvider(ABC):
         Set the new current version
         """
 
+    @abstractmethod
+    def get_files(self) -> list[str]:
+        """
+        Get the version files
+        """
+
 
 class FileProvider(VersionProvider):
     """
@@ -66,6 +72,9 @@ class JsonProvider(FileProvider):
     def get(self, document: dict[str, Any]) -> str:
         return document["version"]  # type: ignore
 
+    def get_files(self) -> list[str]:
+        return [str(self.file)]
+
     def set(self, document: dict[str, Any], version: str):
         document["version"] = version
 
@@ -86,6 +95,9 @@ class TomlProvider(FileProvider):
 
     def get(self, document: tomlkit.TOMLDocument) -> str:
         return document["project"]["version"]  # type: ignore
+
+    def get_files(self) -> list[str]:
+        return [str(self.file)]
 
     def set(self, document: tomlkit.TOMLDocument, version: str):
         document["project"]["version"] = version  # type: ignore

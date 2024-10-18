@@ -535,6 +535,18 @@ def test_bump_major_version_zero_when_major_is_not_zero(mocker, tmp_commitizen_p
     assert expected_error_message in str(excinfo.value)
 
 
+def test_bump_not_add_unstaged(mocker: MockFixture, tmp_commitizen_project):
+    unstaged_file = "ui.py"
+    create_file_and_commit("feat: new file", unstaged_file)
+    tmp_file = tmp_commitizen_project.join(unstaged_file)
+    tmp_file.write("updated content")
+    testargs = ["cz", "bump", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    cmd_res = cmd.run("git diff --name-only")
+    assert unstaged_file in cmd_res.out
+
+
 def test_bump_files_only(mocker: MockFixture, tmp_commitizen_project):
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_version_file.write("0.1.0")
