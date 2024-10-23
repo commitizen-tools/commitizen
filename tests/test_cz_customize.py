@@ -338,7 +338,7 @@ EMPTY_JSON_STR = """
 EMPTY_YAML_STR = """
 commitizen:
   name: cz_customize
-  customize: 
+  customize:
     info: This is a customized cz with emojis 🎉!
 """
 
