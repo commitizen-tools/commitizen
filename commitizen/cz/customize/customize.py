@@ -1,26 +1,21 @@
 from __future__ import annotations
 
+from commitizen.cz.conventional_commits import ConventionalCommitsCz
+
 try:
     from jinja2 import Template
 except ImportError:
     from string import Template  # type: ignore
 
 
-from commitizen import defaults
 from commitizen.config import BaseConfig
-from commitizen.cz.base import BaseCommitizen
 from commitizen.defaults import Questions
 from commitizen.exceptions import MissingCzCustomizeConfigError
 
 __all__ = ["CustomizeCommitsCz"]
 
 
-class CustomizeCommitsCz(BaseCommitizen):
-    bump_pattern = defaults.bump_pattern
-    bump_map = defaults.bump_map
-    bump_map_major_version_zero = defaults.bump_map_major_version_zero
-    change_type_order = defaults.change_type_order
-
+class CustomizeCommitsCz(ConventionalCommitsCz):
     def __init__(self, config: BaseConfig):
         super().__init__(config)
 
@@ -59,25 +54,40 @@ class CustomizeCommitsCz(BaseCommitizen):
             self.change_type_map = change_type_map
 
     def questions(self) -> Questions:
-        return self.custom_settings.get("questions", [{}])
+        custom_questions = self.custom_settings.get("questions")
+        if custom_questions:
+            return custom_questions
+        return super().questions()
 
     def message(self, answers: dict) -> str:
-        message_template = Template(self.custom_settings.get("message_template", ""))
-        if getattr(Template, "substitute", None):
-            return message_template.substitute(**answers)  # type: ignore
-        else:
-            return message_template.render(**answers)
+        custom_message = self.custom_settings.get("message_template")
+        if custom_message:
+            message_template = Template(custom_message)
+            if getattr(Template, "substitute", None):
+                return message_template.substitute(**answers)  # type: ignore
+            else:
+                return message_template.render(**answers)
+        return super().message(answers)
 
-    def example(self) -> str | None:
-        return self.custom_settings.get("example")
+    def example(self) -> str:
+        custom_example = self.custom_settings.get("example")
+        if custom_example:
+            return custom_example
+        return super().example()
 
-    def schema_pattern(self) -> str | None:
-        return self.custom_settings.get("schema_pattern")
+    def schema_pattern(self) -> str:
+        custom_schema_pattern = self.custom_settings.get("schema_pattern")
+        if custom_schema_pattern:
+            return custom_schema_pattern
+        return super().schema_pattern()
 
-    def schema(self) -> str | None:
-        return self.custom_settings.get("schema")
+    def schema(self) -> str:
+        custom_schema = self.custom_settings.get("schema")
+        if custom_schema:
+            return custom_schema
+        return super().schema()
 
-    def info(self) -> str | None:
+    def info(self) -> str:
         info_path = self.custom_settings.get("info_path")
         info = self.custom_settings.get("info")
         if info_path:
@@ -86,4 +96,4 @@ class CustomizeCommitsCz(BaseCommitizen):
             return content
         elif info:
             return info
-        return None
+        return super().info()

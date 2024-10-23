@@ -1,6 +1,8 @@
 import pytest
 
+from commitizen import defaults
 from commitizen.config import BaseConfig, JsonConfig, TomlConfig, YAMLConfig
+from commitizen.cz.conventional_commits import ConventionalCommitsCz
 from commitizen.cz.customize import CustomizeCommitsCz
 from commitizen.exceptions import MissingCzCustomizeConfigError
 
@@ -16,6 +18,7 @@ TOML_STR = r"""
 
     bump_pattern = "^(break|new|fix|hotfix)"
     bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
+    bump_map_major_version_zero = {"break" = "MINOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
     change_type_order = ["perf", "BREAKING CHANGE", "feat", "fix", "refactor"]
     info = "This is a customized cz."
 
@@ -60,6 +63,12 @@ JSON_STR = r"""
                     "fix": "PATCH",
                     "hotfix": "PATCH"
                 },
+                "bump_map_major_version_zero": {
+                    "break": "MINOR",
+                    "new": "MINOR",
+                    "fix": "PATCH",
+                    "hotfix": "PATCH"
+                    },
                 "commit_parser": "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?",
                 "changelog_pattern": "^(feature|bug fix)?(!)?",
                 "change_type_map": {"feature": "Feat", "bug fix": "Fix"},
@@ -112,6 +121,11 @@ commitizen:
     bump_pattern: "^(break|new|fix|hotfix)"
     bump_map:
       break: MAJOR
+      new: MINOR
+      fix: PATCH
+      hotfix: PATCH
+    bump_map_major_version_zero:
+      break: MINOR
       new: MINOR
       fix: PATCH
       hotfix: PATCH
@@ -315,6 +329,30 @@ commitizen:
       fix: PATCH
       hotfix: PATCH
 """
+EMPTY_TOML_STR = """
+[tool.commitizen]
+name = "cz_customize"
+[tool.commitizen.customize]
+info = "This is a customized cz with emojis 🎉!"
+"""
+
+EMPTY_JSON_STR = """
+{
+    "commitizen": {
+        "name": "cz_customize",
+        "customize": {
+            "info": "This is a customized cz with emojis 🎉!"
+        }
+    }
+}
+"""
+
+EMPTY_YAML_STR = """
+commitizen:
+  name: cz_customize
+  customize:
+    info: This is a customized cz with emojis 🎉!
+"""
 
 
 @pytest.fixture(
@@ -361,6 +399,17 @@ def config_without_info(request):
     ]
 )
 def config_with_unicode(request):
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        TomlConfig(data=EMPTY_TOML_STR, path="not_exist.toml"),
+        JsonConfig(data=EMPTY_JSON_STR, path="not_exist.json"),
+        YAMLConfig(data=EMPTY_YAML_STR, path="not_exist.yaml"),
+    ]
+)
+def empty_config(request):
     return request.param
 
 
@@ -564,7 +613,8 @@ def test_info_with_info_path(tmpdir, config_info):
 
 def test_info_without_info(config_without_info):
     cz = CustomizeCommitsCz(config_without_info)
-    assert cz.info() is None
+    conventional_commits = ConventionalCommitsCz(config_without_info)
+    assert cz.info() == conventional_commits.info()
 
 
 def test_commit_parser(config):
@@ -598,3 +648,51 @@ def test_change_type_map(config):
 def test_change_type_map_unicode(config_with_unicode):
     cz = CustomizeCommitsCz(config_with_unicode)
     assert cz.change_type_map == {"✨ feature": "Feat", "🐛 bug fix": "Fix"}
+
+
+def test_questions_without_config(empty_config):
+    cz = CustomizeCommitsCz(empty_config)
+    empty_config.settings.update({"name": defaults.DEFAULT_SETTINGS["name"]})
+    conventional_commits = ConventionalCommitsCz(empty_config)
+    assert cz.questions() == conventional_commits.questions()
+
+
+def test_message_without_config(empty_config):
+    cz = CustomizeCommitsCz(empty_config)
+    empty_config.settings.update({"name": defaults.DEFAULT_SETTINGS["name"]})
+    conventional_commits = ConventionalCommitsCz(empty_config)
+    answers = {
+        "prefix": "fix",
+        "scope": "users",
+        "subject": "email pattern corrected",
+        "is_breaking_change": False,
+        "body": "complete content",
+        "footer": "closes #24",
+    }
+    message = conventional_commits.message(answers)
+    assert (
+        message
+        == "fix(users): email pattern corrected\n\ncomplete content\n\ncloses #24"
+    )
+    assert cz.message(answers) == message
+
+
+def test_example_with_config(empty_config):
+    cz = CustomizeCommitsCz(empty_config)
+    empty_config.settings.update({"name": defaults.DEFAULT_SETTINGS["name"]})
+    conventional_commits = ConventionalCommitsCz(empty_config)
+    assert cz.example() == conventional_commits.example()
+
+
+def test_schema_pattern_with_config(empty_config):
+    cz = CustomizeCommitsCz(empty_config)
+    empty_config.settings.update({"name": defaults.DEFAULT_SETTINGS["name"]})
+    conventional_commits = ConventionalCommitsCz(empty_config)
+    assert cz.schema_pattern() == conventional_commits.schema_pattern()
+
+
+def test_schema_without_config(empty_config):
+    cz = CustomizeCommitsCz(empty_config)
+    empty_config.settings.update({"name": defaults.DEFAULT_SETTINGS["name"]})
+    conventional_commits = ConventionalCommitsCz(empty_config)
+    assert cz.schema() == conventional_commits.schema()
