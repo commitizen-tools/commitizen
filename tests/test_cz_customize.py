@@ -1,6 +1,7 @@
 import pytest
 
 from commitizen.config import BaseConfig, JsonConfig, TomlConfig, YAMLConfig
+from commitizen.cz.conventional_commits import ConventionalCommitsCz
 from commitizen.cz.customize import CustomizeCommitsCz
 from commitizen.exceptions import MissingCzCustomizeConfigError
 
@@ -564,7 +565,8 @@ def test_info_with_info_path(tmpdir, config_info):
 
 def test_info_without_info(config_without_info):
     cz = CustomizeCommitsCz(config_without_info)
-    assert cz.info() is None
+    cz_super = ConventionalCommitsCz(config_without_info)
+    assert cz.info() == cz_super.info()
 
 
 def test_commit_parser(config):
