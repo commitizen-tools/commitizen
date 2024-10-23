@@ -54,7 +54,7 @@ class CustomizeCommitsCz(ConventionalCommitsCz):
             self.change_type_map = change_type_map
 
     def questions(self) -> Questions:
-        custom_questions = self.custom_settings.get("questions", [{}])
+        custom_questions = self.custom_settings.get("questions")
         if custom_questions:
             return custom_questions
         return super().questions()
