@@ -18,6 +18,7 @@ TOML_STR = r"""
 
     bump_pattern = "^(break|new|fix|hotfix)"
     bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
+    bump_map_major_version_zero = {"break" = "MINOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
     change_type_order = ["perf", "BREAKING CHANGE", "feat", "fix", "refactor"]
     info = "This is a customized cz."
 
@@ -62,6 +63,12 @@ JSON_STR = r"""
                     "fix": "PATCH",
                     "hotfix": "PATCH"
                 },
+                "bump_map_major_version_zero": {
+                    "break": "MINOR",
+                    "new": "MINOR",
+                    "fix": "PATCH",
+                    "hotfix": "PATCH"
+                    },
                 "commit_parser": "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?",
                 "changelog_pattern": "^(feature|bug fix)?(!)?",
                 "change_type_map": {"feature": "Feat", "bug fix": "Fix"},
@@ -114,6 +121,11 @@ commitizen:
     bump_pattern: "^(break|new|fix|hotfix)"
     bump_map:
       break: MAJOR
+      new: MINOR
+      fix: PATCH
+      hotfix: PATCH
+    bump_map_major_version_zero:
+      break: MINOR
       new: MINOR
       fix: PATCH
       hotfix: PATCH
@@ -654,11 +666,14 @@ def test_message_without_config(empty_config):
         "scope": "users",
         "subject": "email pattern corrected",
         "is_breaking_change": False,
-        "body": "",
-        "footer": "",
+        "body": "complete content",
+        "footer": "closes #24",
     }
     message = conventional_commits.message(answers)
-    assert message == "fix(users): email pattern corrected"
+    assert (
+        message
+        == "fix(users): email pattern corrected\n\ncomplete content\n\ncloses #24"
+    )
     assert cz.message(answers) == message
 
 
