@@ -1,3 +1,13 @@
+## v3.30.0 (2024-10-23)
+
+### Feat
+
+- **commands/commit**: add force-edit functionality after answering questions
+
+### Refactor
+
+- remove redundant return None
+
 ## v3.29.1 (2024-09-26)
 
 ### Fix
