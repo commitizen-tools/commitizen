@@ -9,7 +9,7 @@ from typing import Iterator
 import pytest
 from pytest_mock import MockerFixture
 
-from commitizen import cmd, defaults
+from commitizen import cmd, defaults, git
 from commitizen.changelog_formats import (
     ChangelogFormat,
     get_changelog_format,
@@ -229,6 +229,78 @@ def mock_plugin(mocker: MockerFixture, config: BaseConfig) -> BaseCommitizen:
     mock = MockPlugin(config)
     mocker.patch("commitizen.factory.commiter_factory", return_value=mock)
     return mock
+
+
+class ValidationCz(BaseCommitizen):
+    def questions(self):
+        return [
+            {"type": "input", "name": "commit", "message": "Initial commit:\n"},
+            {"type": "input", "name": "issue_nb", "message": "ABC-123"},
+        ]
+
+    def message(self, answers: dict):
+        return f"{answers['issue_nb']}: {answers['commit']}"
+
+    def schema(self):
+        return "<issue_nb>: <commit>"
+
+    def schema_pattern(self):
+        return r"^(?P<issue_nb>[A-Z]{3}-\d+): (?P<commit>.*)$"
+
+    def validate_commit_message(
+        self,
+        commit_msg: str,
+        pattern: str | None,
+        allow_abort: bool,
+        allowed_prefixes: list[str],
+        max_msg_length: int,
+    ) -> tuple[bool, list]:
+        """Validate commit message against the pattern."""
+        if not commit_msg:
+            return allow_abort, [] if allow_abort else ["commit message is empty"]
+
+        if pattern is None:
+            return True, []
+
+        if any(map(commit_msg.startswith, allowed_prefixes)):
+            return True, []
+        if max_msg_length:
+            msg_len = len(commit_msg.partition("\n")[0].strip())
+            if msg_len > max_msg_length:
+                return False, [
+                    f"commit message is too long. Max length is {max_msg_length}"
+                ]
+        pattern_match = bool(re.match(pattern, commit_msg))
+        if not pattern_match:
+            return False, [f"commit message does not match pattern {pattern}"]
+        return True, []
+
+    def format_exception_message(
+        self, ill_formated_commits: list[tuple[git.GitCommit, list]]
+    ) -> str:
+        """Format commit errors."""
+        displayed_msgs_content = "\n".join(
+            [
+                (
+                    f'commit "{commit.rev}": "{commit.message}"\n'
+                    f"errors:\n"
+                    "\n".join(f"- {error}" for error in errors)
+                )
+                for (commit, errors) in ill_formated_commits
+            ]
+        )
+        return (
+            "commit validation: failed!\n"
+            "please enter a commit message in the commitizen format.\n"
+            f"{displayed_msgs_content}\n"
+            f"pattern: {self.schema_pattern}"
+        )
+
+
+@pytest.fixture
+def use_cz_custom_validator(mocker):
+    new_cz = {**registry, "cz_custom_validator": ValidationCz}
+    mocker.patch.dict("commitizen.cz.registry", new_cz)
 
 
 SUPPORTED_FORMATS = ("markdown", "textile", "asciidoc", "restructuredtext")

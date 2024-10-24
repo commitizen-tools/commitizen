@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from abc import ABCMeta, abstractmethod
 from typing import Any, Callable, Iterable, Protocol
 
@@ -94,6 +95,46 @@ class BaseCommitizen(metaclass=ABCMeta):
     def schema_pattern(self) -> str | None:
         """Regex matching the schema used for message validation."""
         raise NotImplementedError("Not Implemented yet")
+
+    def validate_commit_message(
+        self,
+        commit_msg: str,
+        pattern: str | None,
+        allow_abort: bool,
+        allowed_prefixes: list[str],
+        max_msg_length: int,
+    ) -> tuple[bool, list]:
+        """Validate commit message against the pattern."""
+        if not commit_msg:
+            return allow_abort, []
+
+        if pattern is None:
+            return True, []
+
+        if any(map(commit_msg.startswith, allowed_prefixes)):
+            return True, []
+        if max_msg_length:
+            msg_len = len(commit_msg.partition("\n")[0].strip())
+            if msg_len > max_msg_length:
+                return False, []
+        return bool(re.match(pattern, commit_msg)), []
+
+    def format_exception_message(
+        self, ill_formated_commits: list[tuple[git.GitCommit, list]]
+    ) -> str:
+        """Format commit errors."""
+        displayed_msgs_content = "\n".join(
+            [
+                f'commit "{commit.rev}": "{commit.message}"'
+                for commit, _ in ill_formated_commits
+            ]
+        )
+        return (
+            "commit validation: failed!\n"
+            "please enter a commit message in the commitizen format.\n"
+            f"{displayed_msgs_content}\n"
+            f"pattern: {self.schema_pattern()}"
+        )
 
     def info(self) -> str | None:
         """Information about the standardized commit message."""
