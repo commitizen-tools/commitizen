@@ -61,7 +61,7 @@ class BaseCommitizen(metaclass=ABCMeta):
     template_loader: BaseLoader = PackageLoader("commitizen", "templates")
     template_extras: dict[str, Any] = {}
 
-    def __init__(self, config: BaseConfig):
+    def __init__(self, config: BaseConfig) -> None:
         self.config = config
         if not self.config.settings.get("style"):
             self.config.settings.update({"style": BaseCommitizen.default_style_config})
@@ -83,19 +83,19 @@ class BaseCommitizen(metaclass=ABCMeta):
             ]
         )
 
-    def example(self) -> str | None:
+    def example(self) -> str:
         """Example of the commit message."""
         raise NotImplementedError("Not Implemented yet")
 
-    def schema(self) -> str | None:
+    def schema(self) -> str:
         """Schema definition of the commit message."""
         raise NotImplementedError("Not Implemented yet")
 
-    def schema_pattern(self) -> str | None:
+    def schema_pattern(self) -> str:
         """Regex matching the schema used for message validation."""
         raise NotImplementedError("Not Implemented yet")
 
-    def info(self) -> str | None:
+    def info(self) -> str:
         """Information about the standardized commit message."""
         raise NotImplementedError("Not Implemented yet")
 

@@ -547,7 +547,7 @@ def commitizen_excepthook(
             original_excepthook(type, value, traceback)
         exit_code = value.exit_code
         if exit_code in no_raise:
-            exit_code = 0
+            exit_code = ExitCode.EXPECTED_EXIT
         sys.exit(exit_code)
     else:
         original_excepthook(type, value, traceback)
