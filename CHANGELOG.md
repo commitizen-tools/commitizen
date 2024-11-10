@@ -1,3 +1,11 @@
+## v3.30.1 (2024-11-10)
+
+### Refactor
+
+- **cli**: replace magic number 0 with ExitCode.EXPECTED_EXIT
+- **defaults**: disallow style as None
+- **cz_customize**: return empty string for info, example, schema and schema_pattern if not provided
+
 ## v3.30.0 (2024-10-23)
 
 ### Feat
