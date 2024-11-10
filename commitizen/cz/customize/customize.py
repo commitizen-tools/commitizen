@@ -1,9 +1,14 @@
 from __future__ import annotations
 
-try:
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
     from jinja2 import Template
-except ImportError:
-    from string import Template  # type: ignore
+else:
+    try:
+        from jinja2 import Template
+    except ImportError:
+        from string import Template
 
 
 from commitizen import defaults
