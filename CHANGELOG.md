@@ -1,3 +1,14 @@
+## v3.31.0 (2024-11-16)
+
+### Feat
+
+- **commitizen**: document '--' double dash in '--help'
+
+### Fix
+
+- **commit**: avoid warnings with 'always_signoff' configuration
+- **commit**: resolve 'always_signoff' configuration and '-s' CLI issues
+
 ## v3.30.1 (2024-11-10)
 
 ### Refactor
