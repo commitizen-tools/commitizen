@@ -138,17 +138,15 @@ bump_message = "bump: version $current_version → $new_version"
 def get_tag_regexes(
     version_regex: str,
 ) -> dict[str, str]:
+    regexs = {
+        "version": version_regex,
+        "major": r"(?P<major>\d+)",
+        "minor": r"(?P<minor>\d+)",
+        "patch": r"(?P<patch>\d+)",
+        "prerelease": r"(?P<prerelease>\w+\d+)?",
+        "devrelease": r"(?P<devrelease>\.dev\d+)?",
+    }
     return {
-        "$version": version_regex,
-        "$major": r"(?P<major>\d+)",
-        "$minor": r"(?P<minor>\d+)",
-        "$patch": r"(?P<patch>\d+)",
-        "$prerelease": r"(?P<prerelease>\w+\d+)?",
-        "$devrelease": r"(?P<devrelease>\.dev\d+)?",
-        "${version}": version_regex,
-        "${major}": r"(?P<major>\d+)",
-        "${minor}": r"(?P<minor>\d+)",
-        "${patch}": r"(?P<patch>\d+)",
-        "${prerelease}": r"(?P<prerelease>\w+\d+)?",
-        "${devrelease}": r"(?P<devrelease>\.dev\d+)?",
+        **{f"${k}": v for k, v in regexs.items()},
+        **{f"${{{k}}}": v for k, v in regexs.items()},
     }
