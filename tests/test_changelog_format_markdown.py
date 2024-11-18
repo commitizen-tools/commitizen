@@ -55,6 +55,7 @@ CHANGELOG_C = """
 """
 EXPECTED_C = Metadata(
     latest_version="1.0.0",
+    latest_version_tag="v1.0.0",
     latest_version_position=3,
     unreleased_end=3,
     unreleased_start=1,
@@ -105,20 +106,21 @@ def format(config: BaseConfig) -> Markdown:
 @pytest.fixture
 def format_with_tags(config: BaseConfig, request) -> Markdown:
     config.settings["tag_format"] = request.param
+    config.settings["legacy_tag_formats"] = ["legacy-${version}"]
     return Markdown(config)
 
 
 VERSIONS_EXAMPLES = [
-    ("## [1.0.0] - 2017-06-20", "1.0.0"),
+    ("## [1.0.0] - 2017-06-20", ("1.0.0", "1.0.0")),
     (
         "# [10.0.0-next.3](https://github.com/angular/angular/compare/10.0.0-next.2...10.0.0-next.3) (2020-04-22)",
-        "10.0.0-next.3",
+        ("10.0.0-next.3", "10.0.0-next.3"),
     ),
-    ("### 0.19.1 (Jan 7, 2020)", "0.19.1"),
-    ("## 1.0.0", "1.0.0"),
-    ("## v1.0.0", "1.0.0"),
-    ("## v1.0.0 - (2012-24-32)", "1.0.0"),
-    ("# version 2020.03.24", "2020.03.24"),
+    ("### 0.19.1 (Jan 7, 2020)", ("0.19.1", "0.19.1")),
+    ("## 1.0.0", ("1.0.0", "1.0.0")),
+    ("## v1.0.0", ("1.0.0", "v1.0.0")),
+    ("## v1.0.0 - (2012-24-32)", ("1.0.0", "v1.0.0")),
+    ("# version 2020.03.24", ("2020.03.24", "2020.03.24")),
     ("## [Unreleased]", None),
     ("All notable changes to this project will be documented in this file.", None),
     ("# Changelog", None),
@@ -128,7 +130,7 @@ VERSIONS_EXAMPLES = [
 
 @pytest.mark.parametrize("line_from_changelog,output_version", VERSIONS_EXAMPLES)
 def test_changelog_detect_version(
-    line_from_changelog: str, output_version: str, format: Markdown
+    line_from_changelog: str, output_version: tuple[str, str] | None, format: Markdown
 ):
     version = format.parse_version_from_title(line_from_changelog)
     assert version == output_version
@@ -191,6 +193,7 @@ def test_get_matadata(
             "1-0-0-a1.dev1-example",
             "1.0.0-a1.dev1",
         ),
+        pytest.param("new-${version}", "legacy-1.0.0", "1.0.0"),
     ),
     indirect=["format_with_tags"],
 )

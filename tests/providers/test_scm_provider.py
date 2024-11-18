@@ -113,3 +113,26 @@ def test_scm_provider_default_with_commits_and_tags(config: BaseConfig):
     merge_branch("master")
 
     assert provider.get_version() == "1.1.0rc0"
+
+
+@pytest.mark.usefixtures("tmp_git_project")
+def test_scm_provider_detect_legacy_tags(config: BaseConfig):
+    config.settings["version_provider"] = "scm"
+    config.settings["tag_format"] = "v${version}"
+    config.settings["legacy_tag_formats"] = [
+        "legacy-${version}",
+        "old-${version}",
+    ]
+    provider = get_provider(config)
+
+    create_file_and_commit("test: fake commit")
+    create_tag("old-0.4.1")
+    assert provider.get_version() == "0.4.1"
+
+    create_file_and_commit("test: fake commit")
+    create_tag("legacy-0.4.2")
+    assert provider.get_version() == "0.4.2"
+
+    create_file_and_commit("test: fake commit")
+    create_tag("v0.5.0")
+    assert provider.get_version() == "0.5.0"

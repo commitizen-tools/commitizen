@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import re
 import sys
 from itertools import zip_longest
 from typing import IO, TYPE_CHECKING, Any, Union
@@ -64,31 +63,11 @@ class RestructuredText(BaseFormat):
                 elif unreleased_title_kind and unreleased_title_kind == kind:
                     meta.unreleased_end = index
                 # Try to find the latest release done
-                m = re.search(self.version_parser, title)
-                if m:
-                    matches = m.groupdict()
-                    if "version" in matches:
-                        version = m.group("version")
-                        meta.latest_version = version
-                        meta.latest_version_position = index
-                        break  # there's no need for more info
-                    try:
-                        partial_version = (
-                            f"{matches['major']}.{matches['minor']}.{matches['patch']}"
-                        )
-                        if matches.get("prerelease"):
-                            partial_version = (
-                                f"{partial_version}-{matches['prerelease']}"
-                            )
-                        if matches.get("devrelease"):
-                            partial_version = (
-                                f"{partial_version}{matches['devrelease']}"
-                            )
-                        meta.latest_version = partial_version
-                        meta.latest_version_position = index
-                        break
-                    except KeyError:
-                        pass
+                if version := self.tag_rules.search_version(title):
+                    meta.latest_version = version[0]
+                    meta.latest_version_tag = version[1]
+                    meta.latest_version_position = index
+                    break
         if meta.unreleased_start is not None and meta.unreleased_end is None:
             meta.unreleased_end = (
                 meta.latest_version_position if meta.latest_version else index + 1
