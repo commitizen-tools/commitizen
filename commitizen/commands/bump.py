@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import warnings
 from logging import getLogger
+from typing import cast
 
 import questionary
 
@@ -9,6 +10,7 @@ from commitizen import bump, factory, git, hooks, out
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
+from commitizen.defaults import Settings
 from commitizen.exceptions import (
     BumpCommitFailedError,
     BumpTagFailedError,
@@ -24,6 +26,7 @@ from commitizen.exceptions import (
     NoVersionSpecifiedError,
 )
 from commitizen.providers import get_provider
+from commitizen.tags import TagRules
 from commitizen.version_schemes import (
     Increment,
     InvalidVersion,
@@ -84,7 +87,7 @@ class Bump:
                 )
             )
         self.scheme = get_version_scheme(
-            self.config, arguments["version_scheme"] or deprecated_version_type
+            self.config.settings, arguments["version_scheme"] or deprecated_version_type
         )
         self.file_name = arguments["file_name"] or self.config.settings.get(
             "changelog_file"
@@ -98,18 +101,20 @@ class Bump:
         )
         self.extras = arguments["extras"]
 
-    def is_initial_tag(self, current_tag_version: str, is_yes: bool = False) -> bool:
+    def is_initial_tag(
+        self, current_tag: git.GitTag | None, is_yes: bool = False
+    ) -> bool:
         """Check if reading the whole git tree up to HEAD is needed."""
         is_initial = False
-        if not git.tag_exist(current_tag_version):
+        if not current_tag:
             if is_yes:
                 is_initial = True
             else:
-                out.info(f"Tag {current_tag_version} could not be found. ")
+                out.info("No tag matching configuration could not be found.")
                 out.info(
                     "Possible causes:\n"
                     "- version in configuration is not the current version\n"
-                    "- tag_format is missing, check them using 'git tag --list'\n"
+                    "- tag_format or legacy_tag_formats is missing, check them using 'git tag --list'\n"
                 )
                 is_initial = questionary.confirm("Is this the first tag created?").ask()
         return is_initial
@@ -143,7 +148,6 @@ class Bump:
         except TypeError:
             raise NoVersionSpecifiedError()
 
-        tag_format: str = self.bump_settings["tag_format"]
         bump_commit_message: str = self.bump_settings["bump_message"]
         version_files: list[str] = self.bump_settings["version_files"]
         major_version_zero: bool = self.bump_settings["major_version_zero"]
@@ -226,13 +230,13 @@ class Bump:
                 or self.changelog_config
             )
 
-        current_tag_version: str = bump.normalize_tag(
-            current_version,
-            tag_format=tag_format,
-            scheme=self.scheme,
+        rules = TagRules.from_settings(cast(Settings, self.bump_settings))
+        current_tag = rules.find_tag_for(git.get_tags(), current_version)
+        current_tag_version = getattr(
+            current_tag, "name", rules.normalize_tag(current_version)
         )
 
-        is_initial = self.is_initial_tag(current_tag_version, is_yes)
+        is_initial = self.is_initial_tag(current_tag, is_yes)
 
         if manual_version:
             try:
@@ -244,10 +248,10 @@ class Bump:
                 ) from exc
         else:
             if increment is None:
-                if is_initial:
-                    commits = git.get_commits()
+                if current_tag:
+                    commits = git.get_commits(current_tag.name)
                 else:
-                    commits = git.get_commits(current_tag_version)
+                    commits = git.get_commits()
 
                 # No commits, there is no need to create an empty tag.
                 # Unless we previously had a prerelease.
@@ -285,11 +289,7 @@ class Bump:
                 exact_increment=increment_mode == "exact",
             )
 
-        new_tag_version = bump.normalize_tag(
-            new_version,
-            tag_format=tag_format,
-            scheme=self.scheme,
-        )
+        new_tag_version = rules.normalize_tag(new_version)
         message = bump.create_commit_message(
             current_version, new_version, bump_commit_message
         )

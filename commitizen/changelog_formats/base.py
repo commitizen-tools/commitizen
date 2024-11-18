@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 import os
-import re
 from abc import ABCMeta
-from re import Pattern
 from typing import IO, Any, ClassVar
 
 from commitizen.changelog import Metadata
 from commitizen.config.base_config import BaseConfig
-from commitizen.defaults import get_tag_regexes
+from commitizen.tags import TagRules, VersionTag
 from commitizen.version_schemes import get_version_scheme
 
 from . import ChangelogFormat
@@ -28,15 +26,12 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
         self.config = config
         self.encoding = self.config.settings["encoding"]
         self.tag_format = self.config.settings["tag_format"]
-
-    @property
-    def version_parser(self) -> Pattern:
-        tag_regex: str = self.tag_format
-        version_regex = get_version_scheme(self.config).parser.pattern
-        TAG_FORMAT_REGEXS = get_tag_regexes(version_regex)
-        for pattern, regex in TAG_FORMAT_REGEXS.items():
-            tag_regex = tag_regex.replace(pattern, regex)
-        return re.compile(tag_regex)
+        self.tag_rules = TagRules(
+            scheme=get_version_scheme(self.config.settings),
+            tag_format=self.tag_format,
+            legacy_tag_formats=self.config.settings["legacy_tag_formats"],
+            ignored_tag_formats=self.config.settings["ignored_tag_formats"],
+        )
 
     def get_metadata(self, filepath: str) -> Metadata:
         if not os.path.isfile(filepath):
@@ -63,9 +58,10 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
                 meta.unreleased_end = index
 
             # Try to find the latest release done
-            version = self.parse_version_from_title(line)
-            if version:
-                meta.latest_version = version
+            parsed = self.parse_version_from_title(line)
+            if parsed:
+                meta.latest_version = parsed.version
+                meta.latest_version_tag = parsed.tag
                 meta.latest_version_position = index
                 break  # there's no need for more info
         if meta.unreleased_start is not None and meta.unreleased_end is None:
@@ -73,7 +69,7 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
 
         return meta
 
-    def parse_version_from_title(self, line: str) -> str | None:
+    def parse_version_from_title(self, line: str) -> VersionTag | None:
         """
         Extract the version from a title line if any
         """

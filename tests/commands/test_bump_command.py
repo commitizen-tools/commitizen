@@ -7,6 +7,7 @@ from pathlib import Path
 from textwrap import dedent
 from unittest.mock import MagicMock, call
 
+import py
 import pytest
 from pytest_mock import MockFixture
 
@@ -1644,3 +1645,31 @@ def test_bump_allow_no_commit_with_manual_version(
         cli.main()
         out, _ = capsys.readouterr()
         assert "bump: version 1.0.0 → 2.0.0" in out
+
+
+def test_bump_detect_legacy_tags_from_scm(
+    tmp_commitizen_project: py.path.local, mocker: MockFixture
+):
+    project_root = Path(tmp_commitizen_project)
+    tmp_commitizen_cfg_file = project_root / "pyproject.toml"
+    tmp_commitizen_cfg_file.write_text(
+        "\n".join(
+            [
+                "[tool.commitizen]",
+                'version_provider = "scm"',
+                'tag_format = "v$version"',
+                "legacy_tag_formats = [",
+                '  "legacy-${version}"',
+                "]",
+            ]
+        ),
+    )
+    create_file_and_commit("feat: new file")
+    create_tag("legacy-0.4.2")
+    create_file_and_commit("feat: new file")
+
+    testargs = ["cz", "bump", "--increment", "patch", "--changelog"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    assert git.tag_exist("v0.4.3")

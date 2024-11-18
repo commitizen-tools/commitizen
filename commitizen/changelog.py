@@ -42,21 +42,13 @@ from jinja2 import (
     Template,
 )
 
-from commitizen import out
-from commitizen.bump import normalize_tag
 from commitizen.cz.base import ChangelogReleaseHook
-from commitizen.defaults import get_tag_regexes
 from commitizen.exceptions import InvalidConfigurationError, NoCommitsFoundError
 from commitizen.git import GitCommit, GitTag
-from commitizen.version_schemes import (
-    DEFAULT_SCHEME,
-    BaseVersion,
-    InvalidVersion,
-)
+from commitizen.tags import TagRules
 
 if TYPE_CHECKING:
     from commitizen.cz.base import MessageBuilderHook
-    from commitizen.version_schemes import VersionScheme
 
 
 @dataclass
@@ -69,48 +61,17 @@ class Metadata:
     unreleased_end: int | None = None
     latest_version: str | None = None
     latest_version_position: int | None = None
+    latest_version_tag: str | None = None
+
+    def __post_init__(self):
+        if self.latest_version and not self.latest_version_tag:
+            # Test syntactic sugar
+            # latest version tag is optional if same as latest version
+            self.latest_version_tag = self.latest_version
 
 
 def get_commit_tag(commit: GitCommit, tags: list[GitTag]) -> GitTag | None:
     return next((tag for tag in tags if tag.rev == commit.rev), None)
-
-
-def tag_included_in_changelog(
-    tag: GitTag,
-    used_tags: list,
-    merge_prerelease: bool,
-    scheme: VersionScheme = DEFAULT_SCHEME,
-) -> bool:
-    if tag in used_tags:
-        return False
-
-    try:
-        version = scheme(tag.name)
-    except InvalidVersion:
-        return False
-
-    if merge_prerelease and version.is_prerelease:
-        return False
-
-    return True
-
-
-def get_version_tags(
-    scheme: type[BaseVersion], tags: list[GitTag], tag_format: str
-) -> list[GitTag]:
-    valid_tags: list[GitTag] = []
-    TAG_FORMAT_REGEXS = get_tag_regexes(scheme.parser.pattern)
-    tag_format_regex = tag_format
-    for pattern, regex in TAG_FORMAT_REGEXS.items():
-        tag_format_regex = tag_format_regex.replace(pattern, regex)
-    for tag in tags:
-        if re.match(tag_format_regex, tag.name):
-            valid_tags.append(tag)
-        else:
-            out.warn(
-                f"InvalidVersion {tag.name} doesn't match configured tag format {tag_format}"
-            )
-    return valid_tags
 
 
 def generate_tree_from_commits(
@@ -122,13 +83,13 @@ def generate_tree_from_commits(
     change_type_map: dict[str, str] | None = None,
     changelog_message_builder_hook: MessageBuilderHook | None = None,
     changelog_release_hook: ChangelogReleaseHook | None = None,
-    merge_prerelease: bool = False,
-    scheme: VersionScheme = DEFAULT_SCHEME,
+    rules: TagRules | None = None,
 ) -> Iterable[dict]:
     pat = re.compile(changelog_pattern)
     map_pat = re.compile(commit_parser, re.MULTILINE)
     body_map_pat = re.compile(commit_parser, re.MULTILINE | re.DOTALL)
     current_tag: GitTag | None = None
+    rules = rules or TagRules()
 
     # Check if the latest commit is not tagged
     if commits:
@@ -148,8 +109,10 @@ def generate_tree_from_commits(
     for commit in commits:
         commit_tag = get_commit_tag(commit, tags)
 
-        if commit_tag is not None and tag_included_in_changelog(
-            commit_tag, used_tags, merge_prerelease, scheme=scheme
+        if (
+            commit_tag
+            and commit_tag not in used_tags
+            and rules.include_in_changelog(commit_tag)
         ):
             used_tags.append(commit_tag)
             release = {
@@ -343,8 +306,7 @@ def get_smart_tag_range(
 def get_oldest_and_newest_rev(
     tags: list[GitTag],
     version: str,
-    tag_format: str,
-    scheme: VersionScheme | None = None,
+    rules: TagRules,
 ) -> tuple[str | None, str | None]:
     """Find the tags for the given version.
 
@@ -358,22 +320,28 @@ def get_oldest_and_newest_rev(
         oldest, newest = version.split("..")
     except ValueError:
         newest = version
-    newest_tag = normalize_tag(newest, tag_format=tag_format, scheme=scheme)
+    if not (newest_tag := rules.find_tag_for(tags, newest)):
+        raise NoCommitsFoundError("Could not find a valid revision range.")
 
     oldest_tag = None
+    oldest_tag_name = None
     if oldest:
-        oldest_tag = normalize_tag(oldest, tag_format=tag_format, scheme=scheme)
+        if not (oldest_tag := rules.find_tag_for(tags, oldest)):
+            raise NoCommitsFoundError("Could not find a valid revision range.")
+        oldest_tag_name = oldest_tag.name
 
-    tags_range = get_smart_tag_range(tags, newest=newest_tag, oldest=oldest_tag)
+    tags_range = get_smart_tag_range(
+        tags, newest=newest_tag.name, oldest=oldest_tag_name
+    )
     if not tags_range:
         raise NoCommitsFoundError("Could not find a valid revision range.")
 
     oldest_rev: str | None = tags_range[-1].name
-    newest_rev = newest_tag
+    newest_rev = newest_tag.name
 
     # check if it's the first tag created
     # and it's also being requested as part of the range
-    if oldest_rev == tags[-1].name and oldest_rev == oldest_tag:
+    if oldest_rev == tags[-1].name and oldest_rev == oldest_tag_name:
         return None, newest_rev
 
     # when they are the same, and it's also the

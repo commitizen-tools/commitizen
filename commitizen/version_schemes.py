@@ -22,8 +22,7 @@ else:
 from packaging.version import InvalidVersion  # noqa: F401: Rexpose the common exception
 from packaging.version import Version as _BaseVersion
 
-from commitizen.config.base_config import BaseConfig
-from commitizen.defaults import MAJOR, MINOR, PATCH
+from commitizen.defaults import MAJOR, MINOR, PATCH, Settings
 from commitizen.exceptions import VersionSchemeUnknown
 
 if TYPE_CHECKING:
@@ -42,7 +41,7 @@ if TYPE_CHECKING:
 
 Increment: TypeAlias = Literal["MAJOR", "MINOR", "PATCH"]
 Prerelease: TypeAlias = Literal["alpha", "beta", "rc"]
-DEFAULT_VERSION_PARSER = r"v?(?P<version>([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?(\w+)?)"
+DEFAULT_VERSION_PARSER = r"v?(?P<version>([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z.]+)?(\w+)?)"
 
 
 @runtime_checkable
@@ -408,14 +407,15 @@ KNOWN_SCHEMES = [ep.name for ep in metadata.entry_points(group=SCHEMES_ENTRYPOIN
 """All known registered version schemes"""
 
 
-def get_version_scheme(config: BaseConfig, name: str | None = None) -> VersionScheme:
+def get_version_scheme(settings: Settings, name: str | None = None) -> VersionScheme:
     """
     Get the version scheme as defined in the configuration
     or from an overridden `name`
 
     :raises VersionSchemeUnknown: if the version scheme is not found.
     """
-    deprecated_setting: str | None = config.settings.get("version_type")
+    # TODO: Remove the deprecated `version_type` handling
+    deprecated_setting: str | None = settings.get("version_type")
     if deprecated_setting:
         warnings.warn(
             DeprecationWarning(
@@ -423,7 +423,7 @@ def get_version_scheme(config: BaseConfig, name: str | None = None) -> VersionSc
                 "Please use `version_scheme` instead"
             )
         )
-    name = name or config.settings.get("version_scheme") or deprecated_setting
+    name = name or settings.get("version_scheme") or deprecated_setting
     if not name:
         return DEFAULT_SCHEME
 
