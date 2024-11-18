@@ -249,6 +249,7 @@ class ValidationCz(BaseCommitizen):
 
     def validate_commit_message(
         self,
+        *,
         commit_msg: str,
         pattern: str | None,
         allow_abort: bool,

@@ -76,8 +76,8 @@ class Check:
             for commit in commits
             if not (
                 check := self.cz.validate_commit_message(
-                    commit.message,
-                    pattern,
+                    commit_msg=commit.message,
+                    pattern=pattern,
                     allow_abort=self.allow_abort,
                     allowed_prefixes=self.allowed_prefixes,
                     max_msg_length=self.max_msg_length,

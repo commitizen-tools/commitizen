@@ -45,7 +45,13 @@ def test_schema(config):
 
 def test_validate_commit_message(config):
     cz = DummyCz(config)
-    assert cz.validate_commit_message("test", None, False, [], 0) == (True, [])
+    assert cz.validate_commit_message(
+        commit_msg="test",
+        pattern=None,
+        allow_abort=False,
+        allowed_prefixes=[],
+        max_msg_length=0,
+    ) == (True, [])
 
 
 def test_info(config):
