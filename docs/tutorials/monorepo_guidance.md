@@ -27,6 +27,7 @@ Sample `.cz.toml` for each component:
 name = "cz_customize"
 version = "0.0.0"
 tag_format = "${version}-library-b" # the component name can be a prefix or suffix with or without a separator
+ignored_tag_formats = ["${version}-library-*"] # Avoid noise from other tags
 update_changelog_on_bump = true
 ```
 
@@ -36,6 +37,7 @@ update_changelog_on_bump = true
 name = "cz_customize"
 version = "0.0.0"
 tag_format = "${version}-library-z"
+ignored_tag_formats = ["${version}-library-*"] # Avoid noise from other tags
 update_changelog_on_bump = true
 ```
 

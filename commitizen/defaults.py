@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pathlib
 from collections import OrderedDict
-from collections.abc import Iterable, MutableMapping
+from collections.abc import Iterable, MutableMapping, Sequence
 from typing import Any, TypedDict
 
 # Type
@@ -35,6 +35,8 @@ class Settings(TypedDict, total=False):
     version_scheme: str | None
     version_type: str | None
     tag_format: str
+    legacy_tag_formats: Sequence[str]
+    ignored_tag_formats: Sequence[str]
     bump_message: str | None
     retry_after_failure: bool
     allow_abort: bool
@@ -77,6 +79,8 @@ DEFAULT_SETTINGS: Settings = {
     "version_provider": "commitizen",
     "version_scheme": None,
     "tag_format": "$version",  # example v$version
+    "legacy_tag_formats": [],
+    "ignored_tag_formats": [],
     "bump_message": None,  # bumped v$current_version to $new_version
     "retry_after_failure": False,
     "allow_abort": False,
