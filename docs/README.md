@@ -3,6 +3,7 @@
 [![PyPI Package latest release](https://img.shields.io/pypi/v/commitizen.svg?style=flat-square)](https://pypi.org/project/commitizen/)
 [![PyPI Package download count (per month)](https://img.shields.io/pypi/dm/commitizen?style=flat-square)](https://pypi.org/project/commitizen/)
 [![Supported versions](https://img.shields.io/pypi/pyversions/commitizen.svg?style=flat-square)](https://pypi.org/project/commitizen/)
+[![Conda Version](https://img.shields.io/conda/vn/conda-forge/commitizen?style=flat-square)](https://anaconda.org/conda-forge/commitizen)
 [![homebrew](https://img.shields.io/homebrew/v/commitizen?color=teal&style=flat-square)](https://formulae.brew.sh/formula/commitizen)
 [![Codecov](https://img.shields.io/codecov/c/github/commitizen-tools/commitizen.svg?style=flat-square)](https://codecov.io/gh/commitizen-tools/commitizen)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?style=flat-square&logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
@@ -62,19 +63,27 @@ pip install --user -U commitizen
 
 ### Python project
 
-You can add it to your local project using one of these:
+You can add it to your local project using one of the following.
+
+With `pip`:
 
 ```bash
 pip install -U commitizen
 ```
 
-for Poetry >= 1.2.0:
+With `conda`:
+
+```bash
+conda install -c conda-forge commitizen
+```
+
+With Poetry >= 1.2.0:
 
 ```bash
 poetry add commitizen --group dev
 ```
 
-for Poetry < 1.2.0:
+With Poetry < 1.2.0:
 
 ```bash
 poetry add commitizen --dev

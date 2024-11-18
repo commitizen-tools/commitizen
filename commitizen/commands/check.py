@@ -53,7 +53,7 @@ class Check:
             for arg in (self.commit_msg_file, self.commit_msg, self.rev_range)
         )
         if num_exclusive_args_provided == 0 and not sys.stdin.isatty():
-            self.commit_msg: str | None = sys.stdin.read()
+            self.commit_msg = sys.stdin.read()
         elif num_exclusive_args_provided != 1:
             raise InvalidCommandArgumentError(
                 "Only one of --rev-range, --message, and --commit-msg-file is permitted by check command! "
@@ -106,7 +106,9 @@ class Check:
             return [git.GitCommit(rev="", title="", body=msg)]
 
         # Get commit messages from git log (--rev-range)
-        return git.get_commits(end=self.rev_range)
+        if self.rev_range:
+            return git.get_commits(end=self.rev_range)
+        return git.get_commits()
 
     @staticmethod
     def _filter_comments(msg: str) -> str:

@@ -157,10 +157,22 @@ data = {
                         "help": "Tell the command to automatically stage files that have been modified and deleted, but new files you have not told Git about are not affected.",
                     },
                     {
+                        "name": ["-e", "--edit"],
+                        "action": "store_true",
+                        "default": False,
+                        "help": "edit the commit message before committing",
+                    },
+                    {
                         "name": ["-l", "--message-length-limit"],
                         "type": int,
                         "default": 0,
                         "help": "length limit of the commit message; 0 for no limit",
+                    },
+                    {
+                        "name": ["--"],
+                        "action": "store_true",
+                        "dest": "double_dash",
+                        "help": "Positional arguments separator (recommended)",
                     },
                 ],
             },
@@ -541,7 +553,7 @@ def commitizen_excepthook(
             original_excepthook(type, value, traceback)
         exit_code = value.exit_code
         if exit_code in no_raise:
-            exit_code = 0
+            exit_code = ExitCode.EXPECTED_EXIT
         sys.exit(exit_code)
     else:
         original_excepthook(type, value, traceback)

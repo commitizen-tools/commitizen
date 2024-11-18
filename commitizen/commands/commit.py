@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import contextlib
 import os
+import shutil
+import subprocess
+import tempfile
 
 import questionary
 
@@ -72,9 +75,27 @@ class Commit:
 
         return message
 
+    def manual_edit(self, message: str) -> str:
+        editor = git.get_core_editor()
+        if editor is None:
+            raise RuntimeError("No 'editor' value given and no default available.")
+        exec_path = shutil.which(editor)
+        if exec_path is None:
+            raise RuntimeError(f"Editor '{editor}' not found.")
+        with tempfile.NamedTemporaryFile(mode="w", delete=False) as file:
+            file.write(message)
+        file_path = file.name
+        argv = [exec_path, file_path]
+        subprocess.call(argv)
+        with open(file_path) as temp_file:
+            message = temp_file.read().strip()
+        file.unlink()
+        return message
+
     def __call__(self):
         dry_run: bool = self.arguments.get("dry_run")
         write_message_to_file: bool = self.arguments.get("write_message_to_file")
+        manual_edit: bool = self.arguments.get("edit")
 
         is_all: bool = self.arguments.get("all")
         if is_all:
@@ -101,6 +122,9 @@ class Commit:
         else:
             m = self.prompt_commit_questions()
 
+        if manual_edit:
+            m = self.manual_edit(m)
+
         out.info(f"\n{m}\n")
 
         if write_message_to_file:
@@ -110,17 +134,18 @@ class Commit:
         if dry_run:
             raise DryRunExit()
 
-        signoff: bool = (
-            self.arguments.get("signoff") or self.config.settings["always_signoff"]
-        )
+        always_signoff: bool = self.config.settings["always_signoff"]
+        signoff: bool = self.arguments.get("signoff")
+
+        extra_args = self.arguments.get("extra_cli_args", "")
 
         if signoff:
             out.warn(
                 "signoff mechanic is deprecated, please use `cz commit -- -s` instead."
             )
-            extra_args = self.arguments.get("extra_cli_args", "--") + " -s"
-        else:
-            extra_args = self.arguments.get("extra_cli_args", "")
+
+        if always_signoff or signoff:
+            extra_args = f"{extra_args} -s".strip()
 
         c = git.commit(m, args=extra_args)
 

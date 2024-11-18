@@ -1,5 +1,5 @@
 [tool.commitizen]
-version = "3.29.1"
+version = "3.31.0"
 tag_format = "v$version"
 version_files = [
   "pyproject.toml:version",
@@ -9,7 +9,7 @@ version_files = [
 
 [tool.poetry]
 name = "commitizen"
-version = "3.29.1"
+version = "3.31.0"
 description = "Python commitizen client tool"
 authors = ["Santiago Fraire <santiwilly@gmail.com>"]
 license = "MIT"
@@ -64,7 +64,7 @@ pytest-regressions = "^2.4.0"
 pytest-freezer = "^0.4.6"
 pytest-xdist = "^3.1.0"
 # linter
-ruff = ">=0.5.0,<0.7.0"
+ruff = ">=0.5.0,<0.8.0"
 pre-commit = ">=2.18,<4.0"
 mypy = "^1.4"
 types-PyYAML = ">=5.4.3,<7.0.0"
