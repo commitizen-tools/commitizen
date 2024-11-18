@@ -1,5 +1,3 @@
-from typing import Optional
-
 import pytest
 
 from commitizen.cz.base import BaseCommitizen, ValidationResult
@@ -12,8 +10,8 @@ class DummyCz(BaseCommitizen):
     def message(self, answers: dict):
         return answers["commit"]
 
-    def schema_pattern(self) -> Optional[str]:
-        return None
+    def schema_pattern(self) -> str:
+        return ".*"
 
 
 def test_base_raises_error(config):
