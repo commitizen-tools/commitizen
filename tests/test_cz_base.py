@@ -2,7 +2,7 @@ from typing import Optional
 
 import pytest
 
-from commitizen.cz.base import BaseCommitizen
+from commitizen.cz.base import BaseCommitizen, ValidationResult
 
 
 class DummyCz(BaseCommitizen):
@@ -51,7 +51,7 @@ def test_validate_commit_message(config):
         allow_abort=False,
         allowed_prefixes=[],
         max_msg_length=0,
-    ) == (True, [])
+    ) == ValidationResult(True, [])
 
 
 def test_info(config):

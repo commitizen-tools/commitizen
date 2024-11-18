@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 from abc import ABCMeta, abstractmethod
-from typing import Any, Callable, Iterable, Protocol
+from typing import Any, Callable, Iterable, NamedTuple, Protocol
 
 from jinja2 import BaseLoader, PackageLoader
 from prompt_toolkit.styles import Style, merge_styles
@@ -24,6 +24,11 @@ class ChangelogReleaseHook(Protocol):
     ) -> dict[str, Any]: ...
 
 
+class ValidationResult(NamedTuple):
+    is_valid: bool
+    errors: list
+
+
 class BaseCommitizen(metaclass=ABCMeta):
     bump_pattern: str | None = None
     bump_map: dict[str, str] | None = None
@@ -41,7 +46,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         ("disabled", "fg:#858585 italic"),
     ]
 
-    # The whole subject will be parsed as message by default
+    # The whole subject will be parsed as a message by default
     # This allows supporting changelog for any rule system.
     # It can be modified per rule
     commit_parser: str | None = r"(?P<message>.*)"
@@ -104,21 +109,21 @@ class BaseCommitizen(metaclass=ABCMeta):
         allow_abort: bool,
         allowed_prefixes: list[str],
         max_msg_length: int,
-    ) -> tuple[bool, list]:
+    ) -> ValidationResult:
         """Validate commit message against the pattern."""
         if not commit_msg:
-            return allow_abort, []
+            return ValidationResult(allow_abort, [])
 
         if pattern is None:
-            return True, []
+            return ValidationResult(True, [])
 
         if any(map(commit_msg.startswith, allowed_prefixes)):
-            return True, []
+            return ValidationResult(True, [])
         if max_msg_length:
             msg_len = len(commit_msg.partition("\n")[0].strip())
             if msg_len > max_msg_length:
-                return False, []
-        return bool(re.match(pattern, commit_msg)), []
+                return ValidationResult(False, [])
+        return ValidationResult(bool(re.match(pattern, commit_msg)), [])
 
     def format_exception_message(
         self, ill_formated_commits: list[tuple[git.GitCommit, list]]

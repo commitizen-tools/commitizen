@@ -16,7 +16,7 @@ from commitizen.changelog_formats import (
 )
 from commitizen.config import BaseConfig
 from commitizen.cz import registry
-from commitizen.cz.base import BaseCommitizen
+from commitizen.cz.base import BaseCommitizen, ValidationResult
 from tests.utils import create_file_and_commit
 
 SIGNER = "GitHub Action"
@@ -255,26 +255,31 @@ class ValidationCz(BaseCommitizen):
         allow_abort: bool,
         allowed_prefixes: list[str],
         max_msg_length: int,
-    ) -> tuple[bool, list]:
+    ) -> ValidationResult:
         """Validate commit message against the pattern."""
         if not commit_msg:
-            return allow_abort, [] if allow_abort else ["commit message is empty"]
+            return ValidationResult(
+                allow_abort, [] if allow_abort else ["commit message is empty"]
+            )
 
         if pattern is None:
-            return True, []
+            return ValidationResult(True, [])
 
         if any(map(commit_msg.startswith, allowed_prefixes)):
-            return True, []
+            return ValidationResult(True, [])
         if max_msg_length:
             msg_len = len(commit_msg.partition("\n")[0].strip())
             if msg_len > max_msg_length:
-                return False, [
-                    f"commit message is too long. Max length is {max_msg_length}"
-                ]
+                return ValidationResult(
+                    False,
+                    [f"commit message is too long. Max length is {max_msg_length}"],
+                )
         pattern_match = bool(re.match(pattern, commit_msg))
         if not pattern_match:
-            return False, [f"commit message does not match pattern {pattern}"]
-        return True, []
+            return ValidationResult(
+                False, [f"commit message does not match pattern {pattern}"]
+            )
+        return ValidationResult(True, [])
 
     def format_exception_message(
         self, ill_formated_commits: list[tuple[git.GitCommit, list]]

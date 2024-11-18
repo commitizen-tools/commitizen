@@ -72,7 +72,7 @@ class Check:
 
         pattern = self.cz.schema_pattern()
         ill_formated_commits = [
-            (commit, check[1])
+            (commit, check.errors)
             for commit in commits
             if not (
                 check := self.cz.validate_commit_message(
@@ -82,7 +82,7 @@ class Check:
                     allowed_prefixes=self.allowed_prefixes,
                     max_msg_length=self.max_msg_length,
                 )
-            )[0]
+            ).is_valid
         ]
 
         if ill_formated_commits:
