@@ -29,9 +29,10 @@ from __future__ import annotations
 
 import re
 from collections import OrderedDict, defaultdict
+from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import date
-from typing import TYPE_CHECKING, Iterable
+from typing import TYPE_CHECKING
 
 from jinja2 import (
     BaseLoader,

@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 import sys
 from itertools import zip_longest
-from typing import IO, TYPE_CHECKING, Any, Tuple, Union
+from typing import IO, TYPE_CHECKING, Any, Union
 
 from commitizen.changelog import Metadata
 
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 
 # Can't use `|` operator and native type because of https://bugs.python.org/issue42233 only fixed in 3.10
-TitleKind: TypeAlias = Union[str, Tuple[str, str]]
+TitleKind: TypeAlias = Union[str, tuple[str, str]]
 
 
 class RestructuredText(BaseFormat):
