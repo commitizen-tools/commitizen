@@ -10,7 +10,6 @@ from typing import (
     ClassVar,
     Literal,
     Protocol,
-    Type,
     cast,
     runtime_checkable,
 )
@@ -150,7 +149,7 @@ class VersionProtocol(Protocol):
 
 # With PEP 440 and SemVer semantic, Scheme is the type, Version is an instance
 Version: TypeAlias = VersionProtocol
-VersionScheme: TypeAlias = Type[VersionProtocol]
+VersionScheme: TypeAlias = type[VersionProtocol]
 
 
 class BaseVersion(_BaseVersion):
