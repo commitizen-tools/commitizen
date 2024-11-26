@@ -25,11 +25,11 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
 ]
 packages = [
@@ -38,7 +38,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.8"
+python = ">=3.9"
 questionary = "^2.0"
 decli = "^0.6.0"
 colorama = "^0.4.1"
@@ -48,7 +48,7 @@ tomlkit = ">=0.5.3,<1.0.0"
 jinja2 = ">=2.10.3"
 pyyaml = ">=3.08"
 argcomplete = ">=1.12.1,<3.6"
-typing-extensions = { version = "^4.0.1", python = "<3.8" }
+typing-extensions = { version = "^4.0.1", python = "<3.11" }
 charset-normalizer = ">=2.1.0,<4"
 # Use the Python 3.11 and 3.12 compatible API: https://github.com/python/importlib_metadata#compatibility
 importlib_metadata = { version = ">=8.0.0,<9", python = "<3.10"}
