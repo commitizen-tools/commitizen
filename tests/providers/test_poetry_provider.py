@@ -41,3 +41,6 @@ def test_cargo_provider(
 
     provider.set_version("42.1")
     assert file.read_text() == dedent(expected)
+
+    files = provider.get_files()
+    assert filename in files

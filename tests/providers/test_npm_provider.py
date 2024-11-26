@@ -96,3 +96,10 @@ def test_npm_provider(
         assert pkg_lock.read_text() == dedent(pkg_lock_expected)
     if pkg_shrinkwrap_content:
         assert pkg_shrinkwrap.read_text() == dedent(pkg_shrinkwrap_expected)
+
+    files = provider.get_files()
+    assert NpmProvider.package_filename in files
+    if pkg_lock_content:
+        assert NpmProvider.lock_filename in files
+    if pkg_shrinkwrap_content:
+        assert NpmProvider.shrinkwrap_filename in files

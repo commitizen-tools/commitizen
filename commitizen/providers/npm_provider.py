@@ -58,6 +58,15 @@ class NpmProvider(VersionProvider):
                 json.dumps(shrinkwrap_document, indent=self.indent) + "\n"
             )
 
+    def get_files(self) -> list[str]:
+        files = []
+        files.append(str(self.package_file))
+        if self.lock_file.exists():
+            files.append(str(self.lock_file))
+        if self.shrinkwrap_file.exists():
+            files.append(str(self.shrinkwrap_file))
+        return files
+
     def get_package_version(self, document: dict[str, Any]) -> str:
         return document["version"]  # type: ignore
 

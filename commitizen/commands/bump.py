@@ -344,6 +344,7 @@ class Bump:
         )
 
         provider.set_version(str(new_version))
+        files.extend(provider.get_files())
 
         if self.pre_bump_hooks:
             hooks.run(
@@ -420,7 +421,7 @@ class Bump:
             out.success("Done!")
 
     def _get_commit_args(self) -> str:
-        commit_args = ["-a"]
+        commit_args = []
         if self.no_verify:
             commit_args.append("--no-verify")
         return " ".join(commit_args)

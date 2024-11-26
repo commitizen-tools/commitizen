@@ -366,6 +366,9 @@ class MyProvider(VersionProvider):
     def set_version(self, version: str):
         self.file.write_text(version)
 
+    def get_files(self) -> list[str]:
+      return [str(file)]
+
 ```
 
 ```python title="setup.py"
