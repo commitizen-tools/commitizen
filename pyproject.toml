@@ -2,9 +2,9 @@
 version = "4.0.0"
 tag_format = "v$version"
 version_files = [
-  "pyproject.toml:version",
-  "commitizen/__version__.py",
-  ".pre-commit-config.yaml:rev:.+Commitizen",
+    "pyproject.toml:version",
+    "commitizen/__version__.py",
+    ".pre-commit-config.yaml:rev:.+Commitizen",
 ]
 
 [tool.poetry]
@@ -32,10 +32,7 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
 ]
-packages = [
-  {include = "commitizen"},
-  {include = "commitizen/py.typed"},
-]
+packages = [{ include = "commitizen" }, { include = "commitizen/py.typed" }]
 
 [tool.poetry.dependencies]
 python = ">=3.9"
@@ -51,7 +48,7 @@ argcomplete = ">=1.12.1,<3.6"
 typing-extensions = { version = "^4.0.1", python = "<3.11" }
 charset-normalizer = ">=2.1.0,<4"
 # Use the Python 3.11 and 3.12 compatible API: https://github.com/python/importlib_metadata#compatibility
-importlib_metadata = { version = ">=8.0.0,<9", python = "<3.10"}
+importlib_metadata = { version = ">=8.0.0,<9", python = "<3.10" }
 
 [tool.poetry.group.dev.dependencies]
 # dev tool
@@ -65,7 +62,7 @@ pytest-freezer = "^0.4.6"
 pytest-xdist = "^3.1.0"
 # linter
 ruff = ">=0.5.0,<0.9.0"
-pre-commit = ">=2.18,<4.0"
+pre-commit = ">=2.18,<5.0"
 mypy = "^1.4"
 types-PyYAML = ">=5.4.3,<7.0.0"
 types-termcolor = "^0.1.1"
@@ -108,33 +105,33 @@ semver = "commitizen.version_schemes:SemVer"
 semver2 = "commitizen.version_schemes:SemVer2"
 
 [tool.coverage]
-    [tool.coverage.report]
-    show_missing = true
-    exclude_lines = [
-        # Have to re-enable the standard pragma
-        'pragma: no cover',
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+    # Have to re-enable the standard pragma
+    'pragma: no cover',
 
-        # Don't complain about missing debug-only code:
-        'def __repr__',
-        'if self\.debug',
+    # Don't complain about missing debug-only code:
+    'def __repr__',
+    'if self\.debug',
 
-        # Don't complain if tests don't hit defensive assertion code:
-        'raise AssertionError',
-        'raise NotImplementedError',
+    # Don't complain if tests don't hit defensive assertion code:
+    'raise AssertionError',
+    'raise NotImplementedError',
 
-        # Don't complain if non-runnable code isn't run:
-        'if 0:',
-        'if __name__ == .__main__.:',
-        'if TYPE_CHECKING:',
-    ]
-    omit = [
-        'env/*',
-        'venv/*',
-        '.venv/*',
-        '*/virtualenv/*',
-        '*/virtualenvs/*',
-        '*/tests/*',
-    ]
+    # Don't complain if non-runnable code isn't run:
+    'if 0:',
+    'if __name__ == .__main__.:',
+    'if TYPE_CHECKING:',
+]
+omit = [
+    'env/*',
+    'venv/*',
+    '.venv/*',
+    '*/virtualenv/*',
+    '*/virtualenvs/*',
+    '*/tests/*',
+]
 
 [build-system]
 requires = ["poetry_core>=1.0.0"]
@@ -157,11 +154,7 @@ select = [
     # isort
     "I",
 ]
-ignore = [
-    "E501",
-    "D1",
-    "D415"
-]
+ignore = ["E501", "D1", "D415"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["commitizen", "tests"]
@@ -179,7 +172,7 @@ warn_unused_ignores = true
 warn_unused_configs = true
 
 [[tool.mypy.overrides]]
-module = "py.*"  # Legacy pytest dependencies
+module = "py.*"               # Legacy pytest dependencies
 ignore_missing_imports = true
 
 [tool.codespell]
