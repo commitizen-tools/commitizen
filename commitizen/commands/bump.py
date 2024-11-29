@@ -66,9 +66,8 @@ class Bump:
             },
         }
         self.cz = factory.commiter_factory(self.config)
-        self.changelog = arguments["changelog"] or self.config.settings.get(
-            "update_changelog_on_bump"
-        )
+        self.changelog_flag = arguments["changelog"]
+        self.changelog_config = self.config.settings.get("update_changelog_on_bump")
         self.changelog_to_stdout = arguments["changelog_to_stdout"]
         self.git_output_to_stderr = arguments["git_output_to_stderr"]
         self.no_verify = arguments["no_verify"]
@@ -207,17 +206,24 @@ class Bump:
                     "--local-version cannot be combined with --build-metadata"
                 )
 
-        # If user specified changelog_to_stdout, they probably want the
-        # changelog to be generated as well, this is the most intuitive solution
-        self.changelog = self.changelog or bool(self.changelog_to_stdout)
-
         if get_next:
-            if self.changelog:
+            # if trying to use --get-next, we should not allow --changelog or --changelog-to-stdout
+            if self.changelog_flag or bool(self.changelog_to_stdout):
                 raise NotAllowed(
                     "--changelog or --changelog-to-stdout is not allowed with --get-next"
                 )
+            # --get-next is a special case, taking precedence over config for 'update_changelog_on_bump'
+            self.changelog_config = False
             # Setting dry_run to prevent any unwanted changes to the repo or files
             self.dry_run = True
+        else:
+            # If user specified changelog_to_stdout, they probably want the
+            # changelog to be generated as well, this is the most intuitive solution
+            self.changelog_flag = (
+                self.changelog_flag
+                or bool(self.changelog_to_stdout)
+                or self.changelog_config
+            )
 
         current_tag_version: str = bump.normalize_tag(
             current_version,
@@ -309,7 +315,7 @@ class Bump:
             )
 
         files: list[str] = []
-        if self.changelog:
+        if self.changelog_flag:
             args = {
                 "unreleased_version": new_tag_version,
                 "template": self.template,
@@ -356,7 +362,9 @@ class Bump:
                 new_tag_version=new_tag_version,
                 message=message,
                 increment=increment,
-                changelog_file_name=changelog_cmd.file_name if self.changelog else None,
+                changelog_file_name=changelog_cmd.file_name
+                if self.changelog_flag
+                else None,
             )
 
         if is_files_only:
@@ -365,7 +373,7 @@ class Bump:
         # FIXME: check if any changes have been staged
         git.add(*files)
         c = git.commit(message, args=self._get_commit_args())
-        if self.retry and c.return_code != 0 and self.changelog:
+        if self.retry and c.return_code != 0 and self.changelog_flag:
             # Maybe pre-commit reformatted some files? Retry once
             logger.debug("1st git.commit error: %s", c.err)
             logger.info("1st commit attempt failed; retrying once")
@@ -410,7 +418,9 @@ class Bump:
                 current_tag_version=new_tag_version,
                 message=message,
                 increment=increment,
-                changelog_file_name=changelog_cmd.file_name if self.changelog else None,
+                changelog_file_name=changelog_cmd.file_name
+                if self.changelog_flag
+                else None,
             )
 
         # TODO: For v3 output this only as diagnostic and remove this if
