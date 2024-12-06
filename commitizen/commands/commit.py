@@ -11,7 +11,14 @@ import questionary
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
 from commitizen.cz.exceptions import CzException
-from commitizen.cz.utils import get_backup_file_path
+from commitizen.cz.utils import (
+    get_backup_file_path,
+    multiple_line_breaker,
+    required_validator,
+    required_validator_scope,
+    required_validator_subject_strip,
+    required_validator_title_strip,
+)
 from commitizen.exceptions import (
     CommitError,
     CommitMessageLengthExceededError,
@@ -51,9 +58,27 @@ class Commit:
     def prompt_commit_questions(self) -> str:
         # Prompt user for the commit message
         cz = self.cz
-        questions = cz.questions()
+        questions = [dict(question) for question in cz.questions()]
+
         for question in filter(lambda q: q["type"] == "list", questions):
             question["use_shortcuts"] = self.config.settings["use_shortcuts"]
+
+        for question in filter(
+            lambda q: isinstance(q.get("filter", None), str), questions
+        ):
+            if question["filter"] == "multiple_line_breaker":
+                question["filter"] = multiple_line_breaker
+            elif question["filter"] == "required_validator":
+                question["filter"] = required_validator
+            elif question["filter"] == "required_validator_scope":
+                question["filter"] = required_validator_scope
+            elif question["filter"] == "required_validator_subject_strip":
+                question["filter"] = required_validator_subject_strip
+            elif question["filter"] == "required_validator_title_strip":
+                question["filter"] = required_validator_title_strip
+            else:
+                raise NotAllowed(f"Unknown value filter: {question['filter']}")
+
         try:
             answers = questionary.prompt(questions, style=cz.style)
         except ValueError as err:
@@ -93,6 +118,10 @@ class Commit:
         return message
 
     def __call__(self):
+        extra_args: str = self.arguments.get("extra_cli_args", "")
+
+        allow_empty: bool = "--allow-empty" in extra_args
+
         dry_run: bool = self.arguments.get("dry_run")
         write_message_to_file: bool = self.arguments.get("write_message_to_file")
         manual_edit: bool = self.arguments.get("edit")
@@ -101,7 +130,7 @@ class Commit:
         if is_all:
             c = git.add("-u")
 
-        if git.is_staging_clean() and not dry_run:
+        if git.is_staging_clean() and not (dry_run or allow_empty):
             raise NothingToCommitError("No files added to staging!")
 
         if write_message_to_file is not None and write_message_to_file.is_dir():
@@ -136,8 +165,6 @@ class Commit:
 
         always_signoff: bool = self.config.settings["always_signoff"]
         signoff: bool = self.arguments.get("signoff")
-
-        extra_args = self.arguments.get("extra_cli_args", "")
 
         if signoff:
             out.warn(
