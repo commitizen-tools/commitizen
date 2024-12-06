@@ -1,3 +1,9 @@
+## v4.1.0 (2024-12-06)
+
+### Feat
+
+- **commit**: allow '-- --allow-empty' to create empty commits
+
 ## v4.0.0 (2024-11-26)
 
 ## v3.31.0 (2024-11-16)
