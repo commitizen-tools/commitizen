@@ -1,4 +1,5 @@
 import re
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
@@ -11,6 +12,7 @@ from commitizen.cz.conventional_commits.conventional_commits import (
     ConventionalCommitsCz,
 )
 from commitizen.exceptions import InvalidConfigurationError
+from commitizen.version_schemes import Pep440
 
 COMMITS_DATA = [
     {
@@ -522,12 +524,14 @@ def test_get_commit_tag_is_None(gitcommits, tags):
 @pytest.mark.parametrize("test_input", TAGS)
 def test_valid_tag_included_in_changelog(test_input):
     tag = git.GitTag(*test_input)
-    assert changelog.tag_included_in_changelog(tag, [], False)
+    rules = changelog.TagRules()
+    assert rules.include_in_changelog(tag)
 
 
 def test_invalid_tag_included_in_changelog():
     tag = git.GitTag("not_a_version", "rev", "date")
-    assert not changelog.tag_included_in_changelog(tag, [], False)
+    rules = changelog.TagRules()
+    assert not rules.include_in_changelog(tag)
 
 
 COMMITS_TREE = (
@@ -1080,8 +1084,11 @@ COMMITS_TREE_AFTER_MERGED_PRERELEASES = (
 def test_generate_tree_from_commits(gitcommits, tags, merge_prereleases):
     parser = ConventionalCommitsCz.commit_parser
     changelog_pattern = ConventionalCommitsCz.bump_pattern
+    rules = changelog.TagRules(
+        merge_prereleases=merge_prereleases,
+    )
     tree = changelog.generate_tree_from_commits(
-        gitcommits, tags, parser, changelog_pattern, merge_prerelease=merge_prereleases
+        gitcommits, tags, parser, changelog_pattern, rules=rules
     )
     expected = (
         COMMITS_TREE_AFTER_MERGED_PRERELEASES if merge_prereleases else COMMITS_TREE
@@ -1451,3 +1458,105 @@ def test_get_smart_tag_range_returns_an_extra_for_a_single_tag(tags):
     start = tags[0]  # len here is 1, but we expect one more tag as designed
     res = changelog.get_smart_tag_range(tags, start.name)
     assert 2 == len(res)
+
+
+@dataclass
+class TagDef:
+    name: str
+    is_version: bool
+    is_legacy: bool
+    is_ignored: bool
+
+
+TAGS_PARAMS = (
+    pytest.param(TagDef("1.2.3", True, False, False), id="version"),
+    # We test with `v-` prefix as `v` prefix is a special case kept for backward compatibility
+    pytest.param(TagDef("v-1.2.3", False, True, False), id="v-prefix"),
+    pytest.param(TagDef("project-1.2.3", False, True, False), id="project-prefix"),
+    pytest.param(TagDef("ignored", False, False, True), id="ignored"),
+    pytest.param(TagDef("unknown", False, False, False), id="unknown"),
+)
+
+
+@pytest.mark.parametrize("tag", TAGS_PARAMS)
+def test_tag_rules_tag_format_only(tag: TagDef):
+    rules = changelog.TagRules(Pep440, "$version")
+    assert rules.is_version_tag(tag.name) is tag.is_version
+
+
+@pytest.mark.parametrize("tag", TAGS_PARAMS)
+def test_tag_rules_with_legacy_tags(tag: TagDef):
+    rules = changelog.TagRules(
+        scheme=Pep440,
+        tag_format="$version",
+        legacy_tag_formats=["v-$version", "project-${version}"],
+    )
+    assert rules.is_version_tag(tag.name) is tag.is_version or tag.is_legacy
+
+
+@pytest.mark.parametrize("tag", TAGS_PARAMS)
+def test_tag_rules_with_ignored_tags(tag: TagDef):
+    rules = changelog.TagRules(
+        scheme=Pep440, tag_format="$version", ignored_tag_formats=["ignored"]
+    )
+    assert rules.is_ignored_tag(tag.name) is tag.is_ignored
+
+
+def test_tags_rules_get_version_tags(capsys: pytest.CaptureFixture):
+    tags = [
+        git.GitTag("v1.1.0", "17efb44d2cd16f6621413691a543e467c7d2dda6", "2019-04-14"),
+        git.GitTag("v1.0.0", "aa44a92d68014d0da98965c0c2cb8c07957d4362", "2019-03-01"),
+        git.GitTag("1.0.0b2", "aab33d13110f26604fb786878856ec0b9e5fc32b", "2019-01-18"),
+        git.GitTag(
+            "project-not-a-version",
+            "7c7e96b723c2aaa1aec3a52561f680adf0b60e97",
+            "2019-01-17",
+        ),
+        git.GitTag(
+            "not-a-version", "c52eca6f74f844ab3ffbde61d98ef96071e132b7", "2018-12-17"
+        ),
+        git.GitTag(
+            "star-something", "c52eca6f74f844ab3ffbde61d98fe96071e132b2", "2018-11-12"
+        ),
+        git.GitTag("known", "b3f89892222340150e32631ae6b7aab65230036f", "2018-09-22"),
+        git.GitTag(
+            "ignored-0.9.3", "684e0259cc95c7c5e94854608cd3dcebbd53219e", "2018-09-22"
+        ),
+        git.GitTag(
+            "project-0.9.3", "dacc86159b260ee98eb5f57941c99ba731a01399", "2018-07-28"
+        ),
+        git.GitTag(
+            "anything-0.9", "5141f54503d2e1cf39bd666c0ca5ab5eb78772ab", "2018-01-10"
+        ),
+        git.GitTag(
+            "project-0.9.2", "1541f54503d2e1cf39bd777c0ca5ab5eb78772ba", "2017-11-11"
+        ),
+        git.GitTag(
+            "ignored-0.9.1", "46e9032e18a819e466618c7a014bcb0e9981af9e", "2017-11-11"
+        ),
+    ]
+
+    rules = changelog.TagRules(
+        scheme=Pep440,
+        tag_format="v$version",
+        legacy_tag_formats=["$version", "project-${version}"],
+        ignored_tag_formats=[
+            "known",
+            "ignored-${version}",
+            "star-*",
+            "*-${major}.${minor}",
+        ],
+    )
+
+    version_tags = rules.get_version_tags(tags, warn=True)
+    assert {t.name for t in version_tags} == {
+        "v1.1.0",
+        "v1.0.0",
+        "1.0.0b2",
+        "project-0.9.3",
+        "project-0.9.2",
+    }
+
+    captured = capsys.readouterr()
+    assert captured.err.count("InvalidVersion") == 2
+    assert captured.err.count("not-a-version") == 2

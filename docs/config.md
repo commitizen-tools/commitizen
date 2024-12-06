@@ -51,6 +51,26 @@ Default: `$version`
 
 Format for the git tag, useful for old projects, that use a convention like `"v1.2.1"`. [Read more][tag_format]
 
+### `legacy_tag_formats`
+
+Type: `list`
+
+Default: `[ ]`
+
+Legacy git tag formats, useful for old projects that changed tag format.
+Tags matching those formats will be recognized as version tags and be included in the changelog.
+Each entry use the the syntax as [`tag_format`](#tag_format). [Read more][tag_format]
+
+### `ignored_tag_formats`
+
+Type: `list`
+
+Default: `[ ]`
+
+Tags matching those formats will be totally ignored and won't raise a warning.
+Each entry use the the syntax as [`tag_format`](#tag_format) with the addition of `*`
+that will match everything (non-greedy). [Read more][tag_format]
+
 ### `update_changelog_on_bump`
 
 Type: `bool`
