@@ -4,7 +4,7 @@ import importlib
 import pkgutil
 import sys
 import warnings
-from typing import Iterable
+from collections.abc import Iterable
 
 if sys.version_info >= (3, 10):
     from importlib import metadata

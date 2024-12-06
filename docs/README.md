@@ -41,7 +41,7 @@ descriptive commits.
 
 ## Requirements
 
-[Python](https://www.python.org/downloads/) `3.8+`
+[Python](https://www.python.org/downloads/) `3.9+`
 
 [Git][gitscm] `1.8.5.2+`
 

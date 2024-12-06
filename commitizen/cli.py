@@ -3,11 +3,12 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
+from collections.abc import Sequence
 from copy import deepcopy
 from functools import partial
 from pathlib import Path
 from types import TracebackType
-from typing import Any, Sequence
+from typing import Any
 
 import argcomplete
 from decli import cli
