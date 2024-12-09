@@ -1,6 +1,6 @@
 import pytest
 
-from commitizen.cz.base import BaseCommitizen
+from commitizen.cz.base import BaseCommitizen, ValidationResult
 
 
 class DummyCz(BaseCommitizen):
@@ -9,6 +9,9 @@ class DummyCz(BaseCommitizen):
 
     def message(self, answers: dict):
         return answers["commit"]
+
+    def schema_pattern(self) -> str:
+        return ".*"
 
 
 def test_base_raises_error(config):
@@ -36,6 +39,17 @@ def test_schema(config):
     cz = DummyCz(config)
     with pytest.raises(NotImplementedError):
         cz.schema()
+
+
+def test_validate_commit_message(config):
+    cz = DummyCz(config)
+    assert cz.validate_commit_message(
+        commit_msg="test",
+        pattern=None,
+        allow_abort=False,
+        allowed_prefixes=[],
+        max_msg_length=0,
+    ) == ValidationResult(True, [])
 
 
 def test_info(config):
