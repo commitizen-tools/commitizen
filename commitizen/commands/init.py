@@ -98,7 +98,7 @@ class Init:
             version_provider = self._ask_version_provider()  # select
             tag = self._ask_tag()  # confirm & select
             version_scheme = self._ask_version_scheme()  # select
-            version = get_version_scheme(self.config, version_scheme)(tag)
+            version = get_version_scheme(self.config.settings, version_scheme)(tag)
             tag_format = self._ask_tag_format(tag)  # confirm & text
             update_changelog_on_bump = self._ask_update_changelog_on_bump()  # confirm
             major_version_zero = self._ask_major_version_zero(version)  # confirm
