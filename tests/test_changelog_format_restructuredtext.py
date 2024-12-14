@@ -22,6 +22,7 @@ def case(
     content: str,
     latest_version: str | None = None,
     latest_version_position: int | None = None,
+    latest_version_tag: str | None = None,
     unreleased_start: int | None = None,
     unreleased_end: int | None = None,
 ):
@@ -30,6 +31,7 @@ def case(
             dedent(content).strip(),
             Metadata(
                 latest_version=latest_version,
+                latest_version_tag=latest_version_tag,
                 latest_version_position=latest_version_position,
                 unreleased_start=unreleased_start,
                 unreleased_end=unreleased_end,
@@ -93,6 +95,7 @@ case(
     ======
     """,
     latest_version="1.0.0",
+    latest_version_tag="v1.0.0",
     latest_version_position=3,
     unreleased_start=0,
     unreleased_end=3,
@@ -303,6 +306,7 @@ def format(config: BaseConfig) -> RestructuredText:
 @pytest.fixture
 def format_with_tags(config: BaseConfig, request) -> RestructuredText:
     config.settings["tag_format"] = request.param
+    config.settings["legacy_tag_formats"] = ["legacy-${version}"]
     return RestructuredText(config)
 
 
@@ -357,6 +361,7 @@ def test_is_overlined_title(format: RestructuredText, text: str, expected: bool)
             "1-0-0-a1.dev1-example",
             "1.0.0-a1.dev1",
         ),
+        pytest.param("new-${version}", "legacy-1.0.0", "1.0.0"),
     ),
     indirect=["format_with_tags"],
 )
