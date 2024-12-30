@@ -1,0 +1,12 @@
+prefix_en=Select the type of change you are committing
+fix_en=A bug fix. Correlates with PATCH in SemVer
+feat_en=A new feature. Correlates with MINOR in SemVer
+docs_en=Documentation only changes
+style_en=Changes that do not affect the meaning of the code (white-space, formatting,  missing semi-colons, etc)
+refactor_en=A code change that neither fixes a bug nor adds a feature
+perf_en=A code change that improves performance
+test_en=Adding missing or correcting existing tests
+build_en=Changes that affect the build system or external dependencies (example scopes: pip, docker, npm)
+ci_en=Changes to CI configuration files and scripts (example scopes: GitLabCI)
+scope_en=What is the scope of this change? (class or file name): (press [enter] to skip)
+subject_en=Write a short and imperative summary of the code changes: (lower case and no period)
