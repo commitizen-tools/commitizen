@@ -1,6 +1,9 @@
+import os
+
 from translate import Translator
 
-FILENAME = "commitizen/cz/conventional_commits/.cache_multilanguage.txt"
+FILENAME = os.path.join(os.path.dirname(__file__), "cache_multilanguage.txt")
+
 IS_TRANSLATING = True
 MULTILANGUAGE = {}
 
