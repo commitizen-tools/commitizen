@@ -49,6 +49,7 @@ typing-extensions = { version = "^4.0.1", python = "<3.11" }
 charset-normalizer = ">=2.1.0,<4"
 # Use the Python 3.11 and 3.12 compatible API: https://github.com/python/importlib_metadata#compatibility
 importlib_metadata = { version = ">=8.0.0,<9", python = "<3.10" }
+translate = "^3.6.1"
 
 [tool.poetry.group.dev.dependencies]
 # dev tool

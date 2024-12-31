@@ -156,28 +156,38 @@ class ConventionalCommitsCz(BaseCommitizen):
                 "filter": parse_subject,
                 "message": translate_text_from_eng(
                     "Write a short and imperative summary of the code changes: (lower case and no period)\n",
-                    language, "subject"),
+                    language,
+                    "subject",
+                ),
             },
             {
                 "type": "input",
                 "name": "body",
-                "message": (
-                    "Provide additional contextual information about the code changes: (press [enter] to skip)\n"
+                "message": translate_text_from_eng(
+                    "Provide additional contextual information about the code changes: (press [enter] to skip)\n",
+                    language,
+                    "body",
                 ),
                 "filter": multiple_line_breaker,
             },
             {
                 "type": "confirm",
-                "message": "Is this a BREAKING CHANGE? Correlates with MAJOR in SemVer",
+                "message": translate_text_from_eng(
+                    "Is this a BREAKING CHANGE? Correlates with MAJOR in SemVer",
+                    language,
+                    "is_breaking_change",
+                ),
                 "name": "is_breaking_change",
                 "default": False,
             },
             {
                 "type": "input",
                 "name": "footer",
-                "message": (
+                "message": translate_text_from_eng(
                     "Footer. Information about Breaking Changes and "
-                    "reference issues that this commit closes: (press [enter] to skip)\n"
+                    "reference issues that this commit closes: (press [enter] to skip)\n",
+                    language,
+                    "footer",
                 ),
             },
         ]

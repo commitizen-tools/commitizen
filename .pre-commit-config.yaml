@@ -47,6 +47,7 @@ repos:
         args: [ "--write-changes" ]
         additional_dependencies:
           - tomli
+        exclude: "commitizen/cz/conventional_commits/\\.cache_multilanguage\\.txt"
 
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v4.1.0 # automatically updated by Commitizen
