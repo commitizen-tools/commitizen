@@ -43,7 +43,7 @@ class ConventionalCommitsCz(BaseCommitizen):
     }
     changelog_pattern = defaults.bump_pattern
 
-    def questions(self, language: str = "en") -> Questions:
+    def questions(self, language: str) -> Questions:
         questions: Questions = [
             {
                 "type": "list",

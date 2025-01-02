@@ -112,7 +112,7 @@ data = {
             "name": ["-language"],
             "type": str,
             "default": "en",
-            "help": "Choose the language that you want to use with the conventional format : en, fr, etc",
+            "help": "language of the commit message (default: en). Available languages: enGLISH, frENCH. others are welcome",
         },
     ],
     "subcommands": {
@@ -180,12 +180,6 @@ data = {
                         "action": "store_true",
                         "dest": "double_dash",
                         "help": "Positional arguments separator (recommended)",
-                    },
-                    {
-                        "name": ["-language"],
-                        "type": str,
-                        "default": "en",
-                        "help": "Select a language for the commit message [en/fr/...]",
                     },
                 ],
             },
