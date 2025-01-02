@@ -1,0 +1,7 @@
+coverage:
+  status:
+    project:
+      default:
+        # minimum of 97% (real 96%)
+        target: 97%
+        threshold: 1%

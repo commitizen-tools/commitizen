@@ -1,0 +1,61 @@
+name: 🛠 Bug report
+description: Create a report to help us improve
+title: Good bug title tells us about precise symptom, not about the root cause.
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: |
+        A clear and concise description of what the bug is
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Run ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current behavior
+      description: What happens actually so you think this is a bug.
+    validations:
+      required: true
+  - type: textarea
+    id: desired-behavior
+    attributes:
+      label: Desired behavior
+      description: |
+        A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: |
+        If applicable, add screenshots to help explain your problem.
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: |
+        For older commitizen versions, please include the output of the following commands manually
+      placeholder: |
+        - commitizen version: `cz version`
+        - python version: `python --version`
+        - operating system: `python3 -c "import platform; print(platform.system())"`
+
+        ```bash
+        cz version --report
+        ```
+    validations:
+      required: true

@@ -35,7 +35,7 @@ classifiers = [
 packages = [{ include = "commitizen" }, { include = "commitizen/py.typed" }]
 
 [tool.poetry.dependencies]
-python = ">=3.9"
+python = ">=3.10,<4.0"
 questionary = "^2.0"
 decli = "^0.6.0"
 colorama = "^0.4.1"

@@ -1,0 +1,29 @@
+name: 📖 Documentation
+description: Suggest an improvement for the documentation of this project
+title: Content to be added or fixed
+labels: [documentation]
+body:
+  - type: checkboxes
+    id: type
+    attributes:
+      label: Type
+      options:
+        - label: Content inaccurate
+        - label: Content missing
+        - label: Typo
+  - type: input
+    id: url
+    attributes:
+      label: URL
+      placeholder: |
+        URL to the code we did not clearly describe or the document page where the content is inaccurate
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: |
+        A clear and concise description of what content should be added or fixed
+    validations:
+      required: true
