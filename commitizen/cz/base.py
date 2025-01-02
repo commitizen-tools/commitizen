@@ -62,6 +62,8 @@ class BaseCommitizen(metaclass=ABCMeta):
     template_loader: BaseLoader = PackageLoader("commitizen", "templates")
     template_extras: dict[str, Any] = {}
 
+    language: str = "en"
+
     def __init__(self, config: BaseConfig) -> None:
         self.config = config
         if not self.config.settings.get("style"):
