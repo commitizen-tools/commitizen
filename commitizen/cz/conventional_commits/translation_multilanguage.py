@@ -8,18 +8,20 @@ FILENAME = os.path.join(os.path.dirname(__file__), ".cache_multilanguage.txt")
 IS_TRANSLATING = True
 MULTILANGUAGE = {}
 
-# test
 
-
-def load_multilanguage():
+def load_multilanguage(file=FILENAME):
     global MULTILANGUAGE
     MULTILANGUAGE = {}
-    with open(FILENAME) as file:
-        for line in file:
+    with open(file) as f:
+        for line in f:
             if not line.strip():
                 continue
-            key, value = line.strip().split("=", 1)
-            MULTILANGUAGE[key] = value
+            try:
+                key, value = line.strip().split("=", 1)
+                MULTILANGUAGE[key] = value
+            except ValueError:
+                print(f"Skipping malformed line: {line.strip()}")
+    return MULTILANGUAGE
 
 
 def generate_key(original_key, to_lang):

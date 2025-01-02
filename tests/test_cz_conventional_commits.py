@@ -1,9 +1,20 @@
+from unittest.mock import mock_open, patch
+
 import pytest
 
 from commitizen.cz.conventional_commits.conventional_commits import (
     ConventionalCommitsCz,
     parse_scope,
     parse_subject,
+)
+from commitizen.cz.conventional_commits.translation_multilanguage import (
+    FILENAME,
+    MULTILANGUAGE,
+    generate_key,
+    load_multilanguage,
+    save_multilanguage,
+    translate_text,
+    translate_text_from_eng,
 )
 from commitizen.cz.exceptions import AnswerRequiredError
 
@@ -153,3 +164,83 @@ def test_process_commit(commit_message, expected_message, config):
     conventional_commits = ConventionalCommitsCz(config)
     message = conventional_commits.process_commit(commit_message)
     assert message == expected_message
+
+
+def test_load_multilanguage():
+    mock_data = "hello_en=hello\nworld_fr=monde\n"
+
+    file = "builtins.open"
+    with patch(file, mock_open(read_data=mock_data)):
+        MULTILANGUAGE = load_multilanguage(file)
+
+    assert MULTILANGUAGE == {"hello_en": "hello", "world_fr": "monde"}
+
+
+def test_save_multilanguage():
+    key = "hello_fr"
+    value = "bonjour"
+    with patch("builtins.open", mock_open()) as mocked_file:
+        save_multilanguage(key, value)
+        mocked_file.assert_called_once_with(FILENAME, "a")
+        mocked_file().write.assert_called_once_with(f"{key}={value}\n")
+
+
+def test_generate_key():
+    original_key = "hello"
+    to_lang = "fr"
+    expected_key = "hello_fr"
+    assert generate_key(original_key, to_lang) == expected_key
+
+
+def test_translate_text_error():
+    with patch("translate.Translator") as MockTranslator:
+        mock_translator = MockTranslator.return_value
+        mock_translator.translate.return_value = "IS AN INVALID TARGET LANGUAGE"
+
+        text = "hello"
+        from_lang = "en"
+        to_lang = "xx"  # Langue invalid
+        translated = translate_text(text, from_lang, to_lang)
+
+        assert translated == text
+
+
+def test_translate_text_from_eng_default_language():
+    text = "hello"
+    to_lang = "en"
+    key = "hello"
+
+    translated = translate_text_from_eng(text, to_lang, key)
+
+    # La langue de destination est l'anglais, donc le texte doit être renvoyé tel quel
+    assert translated == "hello"
+
+
+def test_translate_text_with_is_translating_false():
+    global IS_TRANSLATING
+    IS_TRANSLATING = False  # Simuler que la traduction est désactivée
+
+    text = "hello"
+    from_lang = "en"
+    to_lang = "fr"
+
+    translated = translate_text(text, from_lang, to_lang)
+
+    # IS_TRANSLATING est False, donc le texte doit être retourné sans modification
+    assert translated == text
+
+
+def test_load_multilanguage_empty_file():
+    with patch("builtins.open", mock_open(read_data="")):
+        load_multilanguage()
+    assert MULTILANGUAGE == {}
+
+
+def test_load_multilanguage_malformed_file():
+    malformed_data = "hello=bonjour\ninvalid-line\nworld=monde\n"
+    file = "builtins.open"
+    with patch(file, mock_open(read_data=malformed_data)):
+        MULTILANGUAGE = load_multilanguage(file)
+
+    # Devrait ignorer les lignes malformées
+    assert MULTILANGUAGE == {"hello": "bonjour", "world": "monde"}

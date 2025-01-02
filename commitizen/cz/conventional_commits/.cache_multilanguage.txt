@@ -148,3 +148,4 @@ footer_ko=Footer. Breaking Changes 및 이 커밋이 종료되는 참조 문제�
 body_en=Provide additional contextual information about the code changes: (press [enter] to skip)
 is_breaking_change_en=Is this a BREAKING CHANGE? Correlates with MAJOR in SemVer
 footer_en=Footer. Information about Breaking Changes and reference issues that this commit closes: (press [enter] to skip)
+hello_fr=bonjour
