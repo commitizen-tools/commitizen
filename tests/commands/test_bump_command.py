@@ -1482,6 +1482,26 @@ def test_bump_get_next(mocker: MockFixture, capsys):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_get_next_update_changelog_on_bump(
+    mocker: MockFixture, capsys, config_path
+):
+    create_file_and_commit("feat: new file")
+    with open(config_path, "a", encoding="utf-8") as fp:
+        fp.write("update_changelog_on_bump = true\n")
+
+    testargs = ["cz", "bump", "--yes", "--get-next"]
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.raises(GetNextExit):
+        cli.main()
+
+    out, _ = capsys.readouterr()
+    assert "0.2.0" in out
+
+    tag_exists = git.tag_exist("0.2.0")
+    assert tag_exists is False
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_get_next__changelog_is_not_allowed(mocker: MockFixture):
     create_file_and_commit("feat: new file")
 
