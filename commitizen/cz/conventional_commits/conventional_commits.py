@@ -3,6 +3,9 @@ import re
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
+from commitizen.cz.conventional_commits.translation_multilanguage import (
+    translate_text_from_eng,
+)
 from commitizen.cz.utils import multiple_line_breaker, required_validator
 from commitizen.defaults import Questions
 
@@ -40,70 +43,98 @@ class ConventionalCommitsCz(BaseCommitizen):
     }
     changelog_pattern = defaults.bump_pattern
 
-    def questions(self) -> Questions:
+    def questions(self, language: str) -> Questions:
         questions: Questions = [
             {
                 "type": "list",
                 "name": "prefix",
-                "message": "Select the type of change you are committing",
+                "message": translate_text_from_eng(
+                    "Select the type of change you are committing", language, "prefix"
+                ),
                 "choices": [
                     {
                         "value": "fix",
-                        "name": "fix: A bug fix. Correlates with PATCH in SemVer",
+                        "name": "fix: "
+                        + translate_text_from_eng(
+                            "A bug fix. Correlates with PATCH in SemVer",
+                            language,
+                            "fix",
+                        ),
                         "key": "x",
                     },
                     {
                         "value": "feat",
-                        "name": "feat: A new feature. Correlates with MINOR in SemVer",
+                        "name": "feat: "
+                        + translate_text_from_eng(
+                            "A new feature. Correlates with MINOR in SemVer",
+                            language,
+                            "feat",
+                        ),
                         "key": "f",
                     },
                     {
                         "value": "docs",
-                        "name": "docs: Documentation only changes",
+                        "name": "docs: "
+                        + translate_text_from_eng(
+                            "Documentation only changes", language, "docs"
+                        ),
                         "key": "d",
                     },
                     {
                         "value": "style",
-                        "name": (
-                            "style: Changes that do not affect the "
-                            "meaning of the code (white-space, formatting,"
-                            " missing semi-colons, etc)"
+                        "name": "style: "
+                        + translate_text_from_eng(
+                            """Changes that do not affect the meaning of the code (white-space, formatting,  missing semi-colons, etc)""",
+                            language,
+                            "style",
                         ),
                         "key": "s",
                     },
                     {
                         "value": "refactor",
-                        "name": (
-                            "refactor: A code change that neither fixes "
-                            "a bug nor adds a feature"
+                        "name": "refactor: "
+                        + translate_text_from_eng(
+                            """A code change that neither fixes a bug nor adds a feature""",
+                            language,
+                            "refactor",
                         ),
                         "key": "r",
                     },
                     {
                         "value": "perf",
-                        "name": "perf: A code change that improves performance",
+                        "name": "perf: "
+                        + translate_text_from_eng(
+                            "A code change that improves performance", language, "perf"
+                        ),
                         "key": "p",
                     },
                     {
                         "value": "test",
-                        "name": (
-                            "test: Adding missing or correcting " "existing tests"
+                        "name": "test: "
+                        + translate_text_from_eng(
+                            "Adding missing or correcting existing tests",
+                            language,
+                            "test",
                         ),
                         "key": "t",
                     },
                     {
                         "value": "build",
-                        "name": (
-                            "build: Changes that affect the build system or "
-                            "external dependencies (example scopes: pip, docker, npm)"
+                        "name": "build: "
+                        + translate_text_from_eng(
+                            """Changes that affect the build system or external dependencies (example scopes: pip, docker, npm)""",
+                            language,
+                            "build",
                         ),
                         "key": "b",
                     },
                     {
                         "value": "ci",
-                        "name": (
-                            "ci: Changes to CI configuration files and "
-                            "scripts (example scopes: GitLabCI)"
+                        "name": "ci: "
+                        + translate_text_from_eng(
+                            """Changes to CI configuration files and scripts (example scopes: GitLabCI)""",
+                            language,
+                            "ci",
                         ),
                         "key": "c",
                     },
@@ -112,8 +143,10 @@ class ConventionalCommitsCz(BaseCommitizen):
             {
                 "type": "input",
                 "name": "scope",
-                "message": (
-                    "What is the scope of this change? (class or file name): (press [enter] to skip)\n"
+                "message": translate_text_from_eng(
+                    "What is the scope of this change? (class or file name): (press [enter] to skip)\n",
+                    language,
+                    "scope",
                 ),
                 "filter": parse_scope,
             },
@@ -121,9 +154,9 @@ class ConventionalCommitsCz(BaseCommitizen):
                 "type": "input",
                 "name": "subject",
                 "filter": parse_subject,
-                "message": (
-                    "Write a short and imperative summary of the code changes: (lower case and no period)\n"
-                ),
+                "message": translate_text_from_eng(
+                    "Write a short and imperative summary of the code changes: (lower case and no period)\n",
+                    language, "subject"),
             },
             {
                 "type": "input",

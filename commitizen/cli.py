@@ -108,6 +108,12 @@ data = {
             "required": False,
             "help": "comma separated error codes that won't rise error, e.g: cz -nr 1,2,3 bump. See codes at https://commitizen-tools.github.io/commitizen/exit_codes/",
         },
+        {
+            "name": ["-language"],
+            "type": str,
+            "default": "en",
+            "help": "language of the commit message (default: en). Available languages: enGLISH, frENCH. others are welcome",
+        },
     ],
     "subcommands": {
         "title": "commands",
