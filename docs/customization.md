@@ -110,13 +110,13 @@ And the correspondent example for a yaml json file:
 commitizen:
   name: cz_customize
   customize:
-    message_template: "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
+    message_template: '{{change_type}}:{% if show_message %} {{message}}{% endif %}'
     example: 'feature: this feature enable customize through config file'
-    schema: "<type>: <body>"
-    schema_pattern: "(feature|bug fix):(\\s.*)"
-    bump_pattern: "^(break|new|fix|hotfix)"
-    commit_parser: "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?",
-    changelog_pattern: "^(feature|bug fix)?(!)?",
+    schema: '<type>: <body>'
+    schema_pattern: '(feature|bug fix):(\\s.*)'
+    bump_pattern: '^(break|new|fix|hotfix)'
+    commit_parser: '^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?'
+    changelog_pattern: '^(feature|bug fix)?(!)?'
     change_type_map:
       feature: Feat
       bug fix: Fix
@@ -125,7 +125,7 @@ commitizen:
       new: MINOR
       fix: PATCH
       hotfix: PATCH
-    change_type_order: ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]
+    change_type_order: ['BREAKING CHANGE', 'feat', 'fix', 'refactor', 'perf']
     info_path: cz_customize_info.txt
     info: This is customized info
     questions:
@@ -176,7 +176,8 @@ commitizen:
 | `choices`   | `list` | `None`  | (OPTIONAL) The choices when `type = list`. Either use a list of values or a list of dictionaries with `name` and `value` keys. Keyboard shortcuts can be defined via `key`. See examples above. |
 | `default`   | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                                                                 |
 | `filter`    | `str`  | `None`  | (OPTIONAL) Validator for user's answer. **(Work in Progress)**                                                                                                                                  |
-| `multiline` | `bool` | `False` | (OPTIONAL) Enable multiline support when `type = input`.                                                                                                                                            |
+| `filter`    | `str`  | `None`  | (OPTIONAL) Validator for user's answer. The string is the name of a `commitizen.cz.utils.NAME(answer...)` function like `multiple_line_breaker`                                                 |
+| `multiline` | `bool` | `False` | (OPTIONAL) Enable multiline support when `type = input`.                                                                                                                                        |
 [different-question-types]: https://github.com/tmbo/questionary#different-question-types
 
 #### Shortcut keys
