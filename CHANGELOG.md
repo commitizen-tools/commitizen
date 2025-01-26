@@ -1,3 +1,10 @@
+## v4.1.1 (2025-01-26)
+
+### Fix
+
+- **get-next-bump**: add a test case
+- **get-next-bump**: fix to permit usage of --get-next options even when update_changelog_on_bump is set to true
+
 ## v4.1.0 (2024-12-06)
 
 ### Feat
