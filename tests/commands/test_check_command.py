@@ -238,7 +238,7 @@ def test_check_a_range_of_failed_git_commits(config, mocker: MockFixture):
     ill_formated_commits_msgs = [
         "First commit does not follow rule",
         "Second commit does not follow rule",
-        ("Third commit does not follow rule\n" "Ill-formatted commit with body"),
+        ("Third commit does not follow rule\nIll-formatted commit with body"),
     ]
     mocker.patch(
         "commitizen.git.get_commits",

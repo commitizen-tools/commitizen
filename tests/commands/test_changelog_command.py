@@ -1295,7 +1295,7 @@ def test_changelog_prerelease_rev_with_use_scheme_semver(
     mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
 
     with open(config_path, "a") as f:
-        f.write('tag_format = "$version"\n' 'version_scheme = "semver"')
+        f.write('tag_format = "$version"\nversion_scheme = "semver"')
 
     # create commit and tag
     create_file_and_commit("feat: new file")

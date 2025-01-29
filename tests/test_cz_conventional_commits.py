@@ -7,7 +7,7 @@ from commitizen.cz.conventional_commits.conventional_commits import (
 )
 from commitizen.cz.exceptions import AnswerRequiredError
 
-valid_scopes = ["", "simple", "dash-separated", "camelCase" "UPPERCASE"]
+valid_scopes = ["", "simple", "dash-separated", "camelCaseUPPERCASE"]
 
 scopes_transformations = [["with spaces", "with-spaces"], [None, ""]]
 

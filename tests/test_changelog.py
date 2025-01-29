@@ -1413,9 +1413,9 @@ def test_changelog_message_builder_hook_can_access_and_modify_change_type(
     for no, line in enumerate(result.splitlines()):
         if (line := line.strip()) and (match := RE_HEADER.match(line)):
             change_type = match.group("type")
-            assert (
-                change_type == "overridden"
-            ), f"Line {no}: type {change_type} should have been overridden"
+            assert change_type == "overridden", (
+                f"Line {no}: type {change_type} should have been overridden"
+            )
 
 
 def test_render_changelog_with_changelog_release_hook(
