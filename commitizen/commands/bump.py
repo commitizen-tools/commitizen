@@ -246,7 +246,7 @@ class Bump:
                 # Unless we previously had a prerelease.
                 if not commits and not current_version.is_prerelease:
                     raise NoCommitsFoundError(
-                        "[NO_COMMITS_FOUND]\n" "No new commits found."
+                        "[NO_COMMITS_FOUND]\nNo new commits found."
                     )
 
                 increment = self.find_increment(commits)
@@ -290,7 +290,7 @@ class Bump:
             raise GetNextExit()
 
         # Report found information
-        information = f"{message}\n" f"tag to create: {new_tag_version}\n"
+        information = f"{message}\ntag to create: {new_tag_version}\n"
         if increment:
             information += f"increment detected: {increment}\n"
 
@@ -304,8 +304,7 @@ class Bump:
 
         if increment is None and new_tag_version == current_tag_version:
             raise NoneIncrementExit(
-                "[NO_COMMITS_TO_BUMP]\n"
-                "The commits found are not eligible to be bumped"
+                "[NO_COMMITS_TO_BUMP]\nThe commits found are not eligible to be bumped"
             )
 
         files: list[str] = []

@@ -235,7 +235,7 @@ class TestTomlConfig:
     def test_init_empty_config_content_with_existing_content(
         self, tmpdir, config_file, exception_string
     ):
-        existing_content = "[tool.black]\n" "line-length = 88\n"
+        existing_content = "[tool.black]\nline-length = 88\n"
 
         path = tmpdir.mkdir("commitizen").join(config_file)
         path.write(existing_content)

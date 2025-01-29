@@ -71,8 +71,7 @@ tpl_arguments = (
     {
         "name": ["--template", "-t"],
         "help": (
-            "changelog template file name "
-            "(relative to the current working directory)"
+            "changelog template file name (relative to the current working directory)"
         ),
     },
     {

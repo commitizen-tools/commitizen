@@ -102,7 +102,7 @@ def test_bump_minor_increment_annotated_config_file(
 ):
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
     tmp_commitizen_cfg_file.write(
-        f"{tmp_commitizen_cfg_file.read()}\n" f"annotated_tag = 1"
+        f"{tmp_commitizen_cfg_file.read()}\nannotated_tag = 1"
     )
     create_file_and_commit(commit_msg)
     testargs = ["cz", "bump", "--yes"]
@@ -121,7 +121,7 @@ def test_bump_minor_increment_signed_config_file(
     commit_msg, mocker: MockFixture, tmp_commitizen_project_with_gpg
 ):
     tmp_commitizen_cfg_file = tmp_commitizen_project_with_gpg.join("pyproject.toml")
-    tmp_commitizen_cfg_file.write(f"{tmp_commitizen_cfg_file.read()}\n" f"gpg_sign = 1")
+    tmp_commitizen_cfg_file.write(f"{tmp_commitizen_cfg_file.read()}\ngpg_sign = 1")
     create_file_and_commit(commit_msg)
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
@@ -383,7 +383,7 @@ def test_bump_on_git_with_hooks_no_verify_disabled(mocker: MockFixture):
     """Bump commit without --no-verify"""
     cmd.run("mkdir .git/hooks")
     with open(".git/hooks/pre-commit", "w", encoding="utf-8") as f:
-        f.write("#!/usr/bin/env bash\n" 'echo "0.1.0"')
+        f.write('#!/usr/bin/env bash\necho "0.1.0"')
     cmd.run("chmod +x .git/hooks/pre-commit")
 
     # MINOR
@@ -402,7 +402,7 @@ def test_bump_on_git_with_hooks_no_verify_disabled(mocker: MockFixture):
 def test_bump_tag_exists_raises_exception(mocker: MockFixture):
     cmd.run("mkdir .git/hooks")
     with open(".git/hooks/post-commit", "w", encoding="utf-8") as f:
-        f.write("#!/usr/bin/env bash\n" "exit 9")
+        f.write("#!/usr/bin/env bash\nexit 9")
     cmd.run("chmod +x .git/hooks/post-commit")
 
     # MINOR
@@ -421,7 +421,7 @@ def test_bump_tag_exists_raises_exception(mocker: MockFixture):
 def test_bump_on_git_with_hooks_no_verify_enabled(mocker: MockFixture):
     cmd.run("mkdir .git/hooks")
     with open(".git/hooks/pre-commit", "w", encoding="utf-8") as f:
-        f.write("#!/usr/bin/env bash\n" 'echo "0.1.0"')
+        f.write('#!/usr/bin/env bash\necho "0.1.0"')
     cmd.run("chmod +x .git/hooks/pre-commit")
 
     # MINOR
@@ -478,7 +478,7 @@ def test_bump_when_no_new_commit(mocker: MockFixture):
     with pytest.raises(NoCommitsFoundError) as excinfo:
         cli.main()
 
-    expected_error_message = "[NO_COMMITS_FOUND]\n" "No new commits found."
+    expected_error_message = "[NO_COMMITS_FOUND]\nNo new commits found."
     assert expected_error_message in str(excinfo.value)
 
 
@@ -710,7 +710,7 @@ def test_prevent_prerelease_when_no_increment_detected(mocker: MockFixture, caps
         cli.main()
 
     expected_error_message = (
-        "[NO_COMMITS_FOUND]\n" "No commits found to generate a pre-release."
+        "[NO_COMMITS_FOUND]\nNo commits found to generate a pre-release."
     )
     assert expected_error_message in str(excinfo.value)
 
@@ -862,7 +862,7 @@ def test_bump_changelog_command_commits_untracked_changelog_and_version_files(
         mode="a",
         encoding="utf-8",
     ) as commitizen_config:
-        commitizen_config.write(f"version_files = [\n" f"'{version_regex}'\n]")
+        commitizen_config.write(f"version_files = [\n'{version_regex}'\n]")
 
     with tmp_commitizen_project.join(version_filepath).open(
         mode="a+", encoding="utf-8"
@@ -917,7 +917,7 @@ def test_bump_invalid_manual_version_raises_exception(mocker, manual_version):
         cli.main()
 
     expected_error_message = (
-        "[INVALID_MANUAL_VERSION]\n" f"Invalid manual version: '{manual_version}'"
+        f"[INVALID_MANUAL_VERSION]\nInvalid manual version: '{manual_version}'"
     )
     assert expected_error_message in str(excinfo.value)
 
@@ -1425,7 +1425,7 @@ def test_bump_changelog_contains_increment_only(mocker, tmp_commitizen_project, 
     project_root = Path(tmp_commitizen_project)
     tmp_commitizen_cfg_file = project_root / "pyproject.toml"
     tmp_commitizen_cfg_file.write_text(
-        "[tool.commitizen]\n" 'version="1.0.0"\n' "update_changelog_on_bump = true\n"
+        '[tool.commitizen]\nversion="1.0.0"\nupdate_changelog_on_bump = true\n'
     )
     tmp_changelog_file = project_root / "CHANGELOG.md"
     tmp_changelog_file.write_text("## v1.0.0")

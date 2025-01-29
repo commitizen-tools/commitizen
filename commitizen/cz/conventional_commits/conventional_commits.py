@@ -86,9 +86,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                     },
                     {
                         "value": "test",
-                        "name": (
-                            "test: Adding missing or correcting " "existing tests"
-                        ),
+                        "name": ("test: Adding missing or correcting existing tests"),
                         "key": "t",
                     },
                     {

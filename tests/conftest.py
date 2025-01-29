@@ -69,7 +69,7 @@ def tmp_git_project(tmpdir):
 @pytest.fixture(scope="function")
 def tmp_commitizen_project(tmp_git_project):
     tmp_commitizen_cfg_file = tmp_git_project.join("pyproject.toml")
-    tmp_commitizen_cfg_file.write("[tool.commitizen]\n" 'version="0.1.0"\n')
+    tmp_commitizen_cfg_file.write('[tool.commitizen]\nversion="0.1.0"\n')
 
     yield tmp_git_project
 
@@ -83,9 +83,7 @@ def tmp_commitizen_project_initial(tmp_git_project):
     ):
         with tmp_git_project.as_cwd():
             tmp_commitizen_cfg_file = tmp_git_project.join("pyproject.toml")
-            tmp_commitizen_cfg_file.write(
-                f"[tool.commitizen]\n" f'version="{version}"\n'
-            )
+            tmp_commitizen_cfg_file.write(f'[tool.commitizen]\nversion="{version}"\n')
             tmp_version_file = tmp_git_project.join("__version__.py")
             tmp_version_file.write(version)
             tmp_commitizen_cfg_file = tmp_git_project.join("pyproject.toml")
@@ -251,7 +249,7 @@ def changelog_format(
     if "tmp_commitizen_project" in request.fixturenames:
         tmp_commitizen_project = request.getfixturevalue("tmp_commitizen_project")
         pyproject = tmp_commitizen_project / "pyproject.toml"
-        pyproject.write(f"{pyproject.read()}\n" f'changelog_format = "{format}"\n')
+        pyproject.write(f'{pyproject.read()}\nchangelog_format = "{format}"\n')
     return get_changelog_format(config)
 
 

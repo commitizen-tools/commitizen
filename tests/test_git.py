@@ -84,7 +84,7 @@ def test_get_reachable_tags_with_commits(
 
 
 def test_get_tag_names(mocker: MockFixture):
-    tag_str = "v1.0.0\n" "v0.5.0\n" "v0.0.1\n"
+    tag_str = "v1.0.0\nv0.5.0\nv0.0.1\n"
     mocker.patch("commitizen.cmd.run", return_value=FakeCommand(out=tag_str))
 
     assert git.get_tag_names() == ["v1.0.0", "v0.5.0", "v0.0.1"]
