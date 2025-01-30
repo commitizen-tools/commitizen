@@ -19,133 +19,133 @@
         font-weight: 700;
     }
 
-    .terminal-4198725382-matrix {
+    .terminal-2205183093-matrix {
         font-family: Fira Code, monospace;
         font-size: 20px;
         line-height: 24.4px;
         font-variant-east-asian: full-width;
     }
 
-    .terminal-4198725382-title {
+    .terminal-2205183093-title {
         font-size: 18px;
         font-weight: bold;
         font-family: arial;
     }
 
-    .terminal-4198725382-r1 { fill: #c5c8c6 }
-.terminal-4198725382-r2 { fill: #c5c8c6;font-weight: bold }
-.terminal-4198725382-r3 { fill: #d0b344 }
-.terminal-4198725382-r4 { fill: #1984e9;text-decoration: underline; }
-.terminal-4198725382-r5 { fill: #68a0b3;font-weight: bold }
+    .terminal-2205183093-r1 { fill: #c5c8c6 }
+.terminal-2205183093-r2 { fill: #c5c8c6;font-weight: bold }
+.terminal-2205183093-r3 { fill: #d0b344 }
+.terminal-2205183093-r4 { fill: #1984e9;text-decoration: underline; }
+.terminal-2205183093-r5 { fill: #68a0b3;font-weight: bold }
     </style>
 
     <defs>
-    <clipPath id="terminal-4198725382-clip-terminal">
+    <clipPath id="terminal-2205183093-clip-terminal">
       <rect x="0" y="0" width="975.0" height="877.4" />
     </clipPath>
-    <clipPath id="terminal-4198725382-line-0">
+    <clipPath id="terminal-2205183093-line-0">
     <rect x="0" y="1.5" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-1">
+<clipPath id="terminal-2205183093-line-1">
     <rect x="0" y="25.9" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-2">
+<clipPath id="terminal-2205183093-line-2">
     <rect x="0" y="50.3" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-3">
+<clipPath id="terminal-2205183093-line-3">
     <rect x="0" y="74.7" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-4">
+<clipPath id="terminal-2205183093-line-4">
     <rect x="0" y="99.1" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-5">
+<clipPath id="terminal-2205183093-line-5">
     <rect x="0" y="123.5" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-6">
+<clipPath id="terminal-2205183093-line-6">
     <rect x="0" y="147.9" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-7">
+<clipPath id="terminal-2205183093-line-7">
     <rect x="0" y="172.3" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-8">
+<clipPath id="terminal-2205183093-line-8">
     <rect x="0" y="196.7" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-9">
+<clipPath id="terminal-2205183093-line-9">
     <rect x="0" y="221.1" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-10">
+<clipPath id="terminal-2205183093-line-10">
     <rect x="0" y="245.5" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-11">
+<clipPath id="terminal-2205183093-line-11">
     <rect x="0" y="269.9" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-12">
+<clipPath id="terminal-2205183093-line-12">
     <rect x="0" y="294.3" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-13">
+<clipPath id="terminal-2205183093-line-13">
     <rect x="0" y="318.7" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-14">
+<clipPath id="terminal-2205183093-line-14">
     <rect x="0" y="343.1" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-15">
+<clipPath id="terminal-2205183093-line-15">
     <rect x="0" y="367.5" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-16">
+<clipPath id="terminal-2205183093-line-16">
     <rect x="0" y="391.9" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-17">
+<clipPath id="terminal-2205183093-line-17">
     <rect x="0" y="416.3" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-18">
+<clipPath id="terminal-2205183093-line-18">
     <rect x="0" y="440.7" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-19">
+<clipPath id="terminal-2205183093-line-19">
     <rect x="0" y="465.1" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-20">
+<clipPath id="terminal-2205183093-line-20">
     <rect x="0" y="489.5" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-21">
+<clipPath id="terminal-2205183093-line-21">
     <rect x="0" y="513.9" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-22">
+<clipPath id="terminal-2205183093-line-22">
     <rect x="0" y="538.3" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-23">
+<clipPath id="terminal-2205183093-line-23">
     <rect x="0" y="562.7" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-24">
+<clipPath id="terminal-2205183093-line-24">
     <rect x="0" y="587.1" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-25">
+<clipPath id="terminal-2205183093-line-25">
     <rect x="0" y="611.5" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-26">
+<clipPath id="terminal-2205183093-line-26">
     <rect x="0" y="635.9" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-27">
+<clipPath id="terminal-2205183093-line-27">
     <rect x="0" y="660.3" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-28">
+<clipPath id="terminal-2205183093-line-28">
     <rect x="0" y="684.7" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-29">
+<clipPath id="terminal-2205183093-line-29">
     <rect x="0" y="709.1" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-30">
+<clipPath id="terminal-2205183093-line-30">
     <rect x="0" y="733.5" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-31">
+<clipPath id="terminal-2205183093-line-31">
     <rect x="0" y="757.9" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-32">
+<clipPath id="terminal-2205183093-line-32">
     <rect x="0" y="782.3" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-33">
+<clipPath id="terminal-2205183093-line-33">
     <rect x="0" y="806.7" width="976" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-4198725382-line-34">
+<clipPath id="terminal-2205183093-line-34">
     <rect x="0" y="831.1" width="976" height="24.65"/>
             </clipPath>
     </defs>
@@ -157,45 +157,45 @@
             <circle cx="44" cy="0" r="7" fill="#28c840"/>
             </g>
         
-    <g transform="translate(9, 41)" clip-path="url(#terminal-4198725382-clip-terminal)">
+    <g transform="translate(9, 41)" clip-path="url(#terminal-2205183093-clip-terminal)">
     
-    <g class="terminal-4198725382-matrix">
-    <text class="terminal-4198725382-r1" x="0" y="20" textLength="134.2" clip-path="url(#terminal-4198725382-line-0)">$&#160;cz&#160;--help</text><text class="terminal-4198725382-r1" x="976" y="20" textLength="12.2" clip-path="url(#terminal-4198725382-line-0)">
-</text><text class="terminal-4198725382-r1" x="0" y="44.4" textLength="122" clip-path="url(#terminal-4198725382-line-1)">usage:&#160;cz&#160;</text><text class="terminal-4198725382-r2" x="122" y="44.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-1)">[</text><text class="terminal-4198725382-r1" x="134.2" y="44.4" textLength="24.4" clip-path="url(#terminal-4198725382-line-1)">-h</text><text class="terminal-4198725382-r2" x="158.6" y="44.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-1)">]</text><text class="terminal-4198725382-r2" x="183" y="44.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-1)">[</text><text class="terminal-4198725382-r1" x="195.2" y="44.4" textLength="183" clip-path="url(#terminal-4198725382-line-1)">--config&#160;CONFIG</text><text class="terminal-4198725382-r2" x="378.2" y="44.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-1)">]</text><text class="terminal-4198725382-r2" x="402.6" y="44.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-1)">[</text><text class="terminal-4198725382-r1" x="414.8" y="44.4" textLength="85.4" clip-path="url(#terminal-4198725382-line-1)">--debug</text><text class="terminal-4198725382-r2" x="500.2" y="44.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-1)">]</text><text class="terminal-4198725382-r2" x="524.6" y="44.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-1)">[</text><text class="terminal-4198725382-r1" x="536.8" y="44.4" textLength="85.4" clip-path="url(#terminal-4198725382-line-1)">-n&#160;NAME</text><text class="terminal-4198725382-r2" x="622.2" y="44.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-1)">]</text><text class="terminal-4198725382-r2" x="646.6" y="44.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-1)">[</text><text class="terminal-4198725382-r1" x="658.8" y="44.4" textLength="146.4" clip-path="url(#terminal-4198725382-line-1)">-nr&#160;NO_RAISE</text><text class="terminal-4198725382-r2" x="805.2" y="44.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-1)">]</text><text class="terminal-4198725382-r1" x="976" y="44.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-1)">
-</text><text class="terminal-4198725382-r2" x="122" y="68.8" textLength="12.2" clip-path="url(#terminal-4198725382-line-2)">{</text><text class="terminal-4198725382-r1" x="134.2" y="68.8" textLength="829.6" clip-path="url(#terminal-4198725382-line-2)">init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version</text><text class="terminal-4198725382-r2" x="963.8" y="68.8" textLength="12.2" clip-path="url(#terminal-4198725382-line-2)">}</text><text class="terminal-4198725382-r1" x="976" y="68.8" textLength="12.2" clip-path="url(#terminal-4198725382-line-2)">
-</text><text class="terminal-4198725382-r3" x="122" y="93.2" textLength="36.6" clip-path="url(#terminal-4198725382-line-3)">...</text><text class="terminal-4198725382-r1" x="976" y="93.2" textLength="12.2" clip-path="url(#terminal-4198725382-line-3)">
-</text><text class="terminal-4198725382-r1" x="976" y="117.6" textLength="12.2" clip-path="url(#terminal-4198725382-line-4)">
-</text><text class="terminal-4198725382-r1" x="0" y="142" textLength="707.6" clip-path="url(#terminal-4198725382-line-5)">Commitizen&#160;is&#160;a&#160;cli&#160;tool&#160;to&#160;generate&#160;conventional&#160;commits.</text><text class="terminal-4198725382-r1" x="976" y="142" textLength="12.2" clip-path="url(#terminal-4198725382-line-5)">
-</text><text class="terminal-4198725382-r1" x="0" y="166.4" textLength="524.6" clip-path="url(#terminal-4198725382-line-6)">For&#160;more&#160;information&#160;about&#160;the&#160;topic&#160;go&#160;to&#160;</text><text class="terminal-4198725382-r4" x="524.6" y="166.4" textLength="390.4" clip-path="url(#terminal-4198725382-line-6)">https://conventionalcommits.org/</text><text class="terminal-4198725382-r1" x="976" y="166.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-6)">
-</text><text class="terminal-4198725382-r1" x="976" y="190.8" textLength="12.2" clip-path="url(#terminal-4198725382-line-7)">
-</text><text class="terminal-4198725382-r1" x="0" y="215.2" textLength="97.6" clip-path="url(#terminal-4198725382-line-8)">options:</text><text class="terminal-4198725382-r1" x="976" y="215.2" textLength="12.2" clip-path="url(#terminal-4198725382-line-8)">
-</text><text class="terminal-4198725382-r1" x="0" y="239.6" textLength="671" clip-path="url(#terminal-4198725382-line-9)">&#160;&#160;-h,&#160;--help&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;show&#160;this&#160;help&#160;message&#160;and&#160;exit</text><text class="terminal-4198725382-r1" x="976" y="239.6" textLength="12.2" clip-path="url(#terminal-4198725382-line-9)">
-</text><text class="terminal-4198725382-r1" x="0" y="264" textLength="658.8" clip-path="url(#terminal-4198725382-line-10)">&#160;&#160;--config&#160;CONFIG&#160;&#160;&#160;&#160;&#160;&#160;&#160;the&#160;path&#160;of&#160;configuration&#160;file</text><text class="terminal-4198725382-r1" x="976" y="264" textLength="12.2" clip-path="url(#terminal-4198725382-line-10)">
-</text><text class="terminal-4198725382-r1" x="0" y="288.4" textLength="463.6" clip-path="url(#terminal-4198725382-line-11)">&#160;&#160;--debug&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;use&#160;debug&#160;mode</text><text class="terminal-4198725382-r1" x="976" y="288.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-11)">
-</text><text class="terminal-4198725382-r1" x="0" y="312.8" textLength="597.8" clip-path="url(#terminal-4198725382-line-12)">&#160;&#160;-n&#160;NAME,&#160;--name&#160;NAME&#160;&#160;use&#160;the&#160;given&#160;commitizen&#160;</text><text class="terminal-4198725382-r2" x="597.8" y="312.8" textLength="12.2" clip-path="url(#terminal-4198725382-line-12)">(</text><text class="terminal-4198725382-r1" x="610" y="312.8" textLength="97.6" clip-path="url(#terminal-4198725382-line-12)">default:</text><text class="terminal-4198725382-r1" x="976" y="312.8" textLength="12.2" clip-path="url(#terminal-4198725382-line-12)">
-</text><text class="terminal-4198725382-r1" x="0" y="337.2" textLength="573.4" clip-path="url(#terminal-4198725382-line-13)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;cz_conventional_commits</text><text class="terminal-4198725382-r2" x="573.4" y="337.2" textLength="12.2" clip-path="url(#terminal-4198725382-line-13)">)</text><text class="terminal-4198725382-r1" x="976" y="337.2" textLength="12.2" clip-path="url(#terminal-4198725382-line-13)">
-</text><text class="terminal-4198725382-r1" x="0" y="361.6" textLength="427" clip-path="url(#terminal-4198725382-line-14)">&#160;&#160;-nr&#160;NO_RAISE,&#160;--no-raise&#160;NO_RAISE</text><text class="terminal-4198725382-r1" x="976" y="361.6" textLength="12.2" clip-path="url(#terminal-4198725382-line-14)">
-</text><text class="terminal-4198725382-r1" x="0" y="386" textLength="902.8" clip-path="url(#terminal-4198725382-line-15)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;comma&#160;separated&#160;error&#160;codes&#160;that&#160;won&#x27;t&#160;rise&#160;error,</text><text class="terminal-4198725382-r1" x="976" y="386" textLength="12.2" clip-path="url(#terminal-4198725382-line-15)">
-</text><text class="terminal-4198725382-r1" x="0" y="410.4" textLength="439.2" clip-path="url(#terminal-4198725382-line-16)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;e.g:&#160;cz&#160;-nr&#160;</text><text class="terminal-4198725382-r5" x="439.2" y="410.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-16)">1</text><text class="terminal-4198725382-r1" x="451.4" y="410.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-16)">,</text><text class="terminal-4198725382-r5" x="463.6" y="410.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-16)">2</text><text class="terminal-4198725382-r1" x="475.8" y="410.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-16)">,</text><text class="terminal-4198725382-r5" x="488" y="410.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-16)">3</text><text class="terminal-4198725382-r1" x="500.2" y="410.4" textLength="231.8" clip-path="url(#terminal-4198725382-line-16)">&#160;bump.&#160;See&#160;codes&#160;at</text><text class="terminal-4198725382-r1" x="976" y="410.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-16)">
-</text><text class="terminal-4198725382-r4" x="292.8" y="434.8" textLength="231.8" clip-path="url(#terminal-4198725382-line-17)">https://commitizen-</text><text class="terminal-4198725382-r1" x="976" y="434.8" textLength="12.2" clip-path="url(#terminal-4198725382-line-17)">
-</text><text class="terminal-4198725382-r1" x="0" y="459.2" textLength="756.4" clip-path="url(#terminal-4198725382-line-18)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;tools.github.io/commitizen/exit_codes/</text><text class="terminal-4198725382-r1" x="976" y="459.2" textLength="12.2" clip-path="url(#terminal-4198725382-line-18)">
-</text><text class="terminal-4198725382-r1" x="976" y="483.6" textLength="12.2" clip-path="url(#terminal-4198725382-line-19)">
-</text><text class="terminal-4198725382-r1" x="0" y="508" textLength="109.8" clip-path="url(#terminal-4198725382-line-20)">commands:</text><text class="terminal-4198725382-r1" x="976" y="508" textLength="12.2" clip-path="url(#terminal-4198725382-line-20)">
-</text><text class="terminal-4198725382-r2" x="24.4" y="532.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-21)">{</text><text class="terminal-4198725382-r1" x="36.6" y="532.4" textLength="829.6" clip-path="url(#terminal-4198725382-line-21)">init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version</text><text class="terminal-4198725382-r2" x="866.2" y="532.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-21)">}</text><text class="terminal-4198725382-r1" x="976" y="532.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-21)">
-</text><text class="terminal-4198725382-r1" x="0" y="556.8" textLength="646.6" clip-path="url(#terminal-4198725382-line-22)">&#160;&#160;&#160;&#160;init&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;init&#160;commitizen&#160;configuration</text><text class="terminal-4198725382-r1" x="976" y="556.8" textLength="12.2" clip-path="url(#terminal-4198725382-line-22)">
-</text><text class="terminal-4198725382-r1" x="0" y="581.2" textLength="134.2" clip-path="url(#terminal-4198725382-line-23)">&#160;&#160;&#160;&#160;commit&#160;</text><text class="terminal-4198725382-r2" x="134.2" y="581.2" textLength="12.2" clip-path="url(#terminal-4198725382-line-23)">(</text><text class="terminal-4198725382-r1" x="146.4" y="581.2" textLength="12.2" clip-path="url(#terminal-4198725382-line-23)">c</text><text class="terminal-4198725382-r2" x="158.6" y="581.2" textLength="12.2" clip-path="url(#terminal-4198725382-line-23)">)</text><text class="terminal-4198725382-r1" x="170.8" y="581.2" textLength="329.4" clip-path="url(#terminal-4198725382-line-23)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;create&#160;new&#160;commit</text><text class="terminal-4198725382-r1" x="976" y="581.2" textLength="12.2" clip-path="url(#terminal-4198725382-line-23)">
-</text><text class="terminal-4198725382-r1" x="0" y="605.6" textLength="610" clip-path="url(#terminal-4198725382-line-24)">&#160;&#160;&#160;&#160;ls&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;show&#160;available&#160;commitizens</text><text class="terminal-4198725382-r1" x="976" y="605.6" textLength="12.2" clip-path="url(#terminal-4198725382-line-24)">
-</text><text class="terminal-4198725382-r1" x="0" y="630" textLength="524.6" clip-path="url(#terminal-4198725382-line-25)">&#160;&#160;&#160;&#160;example&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;show&#160;commit&#160;example</text><text class="terminal-4198725382-r1" x="976" y="630" textLength="12.2" clip-path="url(#terminal-4198725382-line-25)">
-</text><text class="terminal-4198725382-r1" x="0" y="654.4" textLength="646.6" clip-path="url(#terminal-4198725382-line-26)">&#160;&#160;&#160;&#160;info&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;show&#160;information&#160;about&#160;the&#160;cz</text><text class="terminal-4198725382-r1" x="976" y="654.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-26)">
-</text><text class="terminal-4198725382-r1" x="0" y="678.8" textLength="512.4" clip-path="url(#terminal-4198725382-line-27)">&#160;&#160;&#160;&#160;schema&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;show&#160;commit&#160;schema</text><text class="terminal-4198725382-r1" x="976" y="678.8" textLength="12.2" clip-path="url(#terminal-4198725382-line-27)">
-</text><text class="terminal-4198725382-r1" x="0" y="703.2" textLength="805.2" clip-path="url(#terminal-4198725382-line-28)">&#160;&#160;&#160;&#160;bump&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;bump&#160;semantic&#160;version&#160;based&#160;on&#160;the&#160;git&#160;log</text><text class="terminal-4198725382-r1" x="976" y="703.2" textLength="12.2" clip-path="url(#terminal-4198725382-line-28)">
-</text><text class="terminal-4198725382-r1" x="0" y="727.6" textLength="170.8" clip-path="url(#terminal-4198725382-line-29)">&#160;&#160;&#160;&#160;changelog&#160;</text><text class="terminal-4198725382-r2" x="170.8" y="727.6" textLength="12.2" clip-path="url(#terminal-4198725382-line-29)">(</text><text class="terminal-4198725382-r1" x="183" y="727.6" textLength="24.4" clip-path="url(#terminal-4198725382-line-29)">ch</text><text class="terminal-4198725382-r2" x="207.4" y="727.6" textLength="12.2" clip-path="url(#terminal-4198725382-line-29)">)</text><text class="terminal-4198725382-r1" x="219.6" y="727.6" textLength="305" clip-path="url(#terminal-4198725382-line-29)">&#160;&#160;&#160;&#160;&#160;&#160;generate&#160;changelog&#160;</text><text class="terminal-4198725382-r2" x="524.6" y="727.6" textLength="12.2" clip-path="url(#terminal-4198725382-line-29)">(</text><text class="terminal-4198725382-r1" x="536.8" y="727.6" textLength="329.4" clip-path="url(#terminal-4198725382-line-29)">note&#160;that&#160;it&#160;will&#160;overwrite</text><text class="terminal-4198725382-r1" x="976" y="727.6" textLength="12.2" clip-path="url(#terminal-4198725382-line-29)">
-</text><text class="terminal-4198725382-r1" x="0" y="752" textLength="451.4" clip-path="url(#terminal-4198725382-line-30)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;existing&#160;file</text><text class="terminal-4198725382-r2" x="451.4" y="752" textLength="12.2" clip-path="url(#terminal-4198725382-line-30)">)</text><text class="terminal-4198725382-r1" x="976" y="752" textLength="12.2" clip-path="url(#terminal-4198725382-line-30)">
-</text><text class="terminal-4198725382-r1" x="0" y="776.4" textLength="951.6" clip-path="url(#terminal-4198725382-line-31)">&#160;&#160;&#160;&#160;check&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;validates&#160;that&#160;a&#160;commit&#160;message&#160;matches&#160;the&#160;commitizen</text><text class="terminal-4198725382-r1" x="976" y="776.4" textLength="12.2" clip-path="url(#terminal-4198725382-line-31)">
-</text><text class="terminal-4198725382-r1" x="0" y="800.8" textLength="366" clip-path="url(#terminal-4198725382-line-32)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;schema</text><text class="terminal-4198725382-r1" x="976" y="800.8" textLength="12.2" clip-path="url(#terminal-4198725382-line-32)">
-</text><text class="terminal-4198725382-r1" x="0" y="825.2" textLength="902.8" clip-path="url(#terminal-4198725382-line-33)">&#160;&#160;&#160;&#160;version&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;get&#160;the&#160;version&#160;of&#160;the&#160;installed&#160;commitizen&#160;or&#160;the</text><text class="terminal-4198725382-r1" x="976" y="825.2" textLength="12.2" clip-path="url(#terminal-4198725382-line-33)">
-</text><text class="terminal-4198725382-r1" x="0" y="849.6" textLength="488" clip-path="url(#terminal-4198725382-line-34)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;current&#160;project&#160;</text><text class="terminal-4198725382-r2" x="488" y="849.6" textLength="12.2" clip-path="url(#terminal-4198725382-line-34)">(</text><text class="terminal-4198725382-r1" x="500.2" y="849.6" textLength="353.8" clip-path="url(#terminal-4198725382-line-34)">default:&#160;installed&#160;commitizen</text><text class="terminal-4198725382-r2" x="854" y="849.6" textLength="12.2" clip-path="url(#terminal-4198725382-line-34)">)</text><text class="terminal-4198725382-r1" x="976" y="849.6" textLength="12.2" clip-path="url(#terminal-4198725382-line-34)">
-</text><text class="terminal-4198725382-r1" x="976" y="874" textLength="12.2" clip-path="url(#terminal-4198725382-line-35)">
+    <g class="terminal-2205183093-matrix">
+    <text class="terminal-2205183093-r1" x="0" y="20" textLength="134.2" clip-path="url(#terminal-2205183093-line-0)">$&#160;cz&#160;--help</text><text class="terminal-2205183093-r1" x="976" y="20" textLength="12.2" clip-path="url(#terminal-2205183093-line-0)">
+</text><text class="terminal-2205183093-r1" x="0" y="44.4" textLength="122" clip-path="url(#terminal-2205183093-line-1)">usage:&#160;cz&#160;</text><text class="terminal-2205183093-r2" x="122" y="44.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-1)">[</text><text class="terminal-2205183093-r1" x="134.2" y="44.4" textLength="24.4" clip-path="url(#terminal-2205183093-line-1)">-h</text><text class="terminal-2205183093-r2" x="158.6" y="44.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-1)">]</text><text class="terminal-2205183093-r2" x="183" y="44.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-1)">[</text><text class="terminal-2205183093-r1" x="195.2" y="44.4" textLength="183" clip-path="url(#terminal-2205183093-line-1)">--config&#160;CONFIG</text><text class="terminal-2205183093-r2" x="378.2" y="44.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-1)">]</text><text class="terminal-2205183093-r2" x="402.6" y="44.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-1)">[</text><text class="terminal-2205183093-r1" x="414.8" y="44.4" textLength="85.4" clip-path="url(#terminal-2205183093-line-1)">--debug</text><text class="terminal-2205183093-r2" x="500.2" y="44.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-1)">]</text><text class="terminal-2205183093-r2" x="524.6" y="44.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-1)">[</text><text class="terminal-2205183093-r1" x="536.8" y="44.4" textLength="85.4" clip-path="url(#terminal-2205183093-line-1)">-n&#160;NAME</text><text class="terminal-2205183093-r2" x="622.2" y="44.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-1)">]</text><text class="terminal-2205183093-r2" x="646.6" y="44.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-1)">[</text><text class="terminal-2205183093-r1" x="658.8" y="44.4" textLength="146.4" clip-path="url(#terminal-2205183093-line-1)">-nr&#160;NO_RAISE</text><text class="terminal-2205183093-r2" x="805.2" y="44.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-1)">]</text><text class="terminal-2205183093-r1" x="976" y="44.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-1)">
+</text><text class="terminal-2205183093-r2" x="122" y="68.8" textLength="12.2" clip-path="url(#terminal-2205183093-line-2)">{</text><text class="terminal-2205183093-r1" x="134.2" y="68.8" textLength="829.6" clip-path="url(#terminal-2205183093-line-2)">init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version</text><text class="terminal-2205183093-r2" x="963.8" y="68.8" textLength="12.2" clip-path="url(#terminal-2205183093-line-2)">}</text><text class="terminal-2205183093-r1" x="976" y="68.8" textLength="12.2" clip-path="url(#terminal-2205183093-line-2)">
+</text><text class="terminal-2205183093-r3" x="0" y="93.2" textLength="36.6" clip-path="url(#terminal-2205183093-line-3)">...</text><text class="terminal-2205183093-r1" x="976" y="93.2" textLength="12.2" clip-path="url(#terminal-2205183093-line-3)">
+</text><text class="terminal-2205183093-r1" x="976" y="117.6" textLength="12.2" clip-path="url(#terminal-2205183093-line-4)">
+</text><text class="terminal-2205183093-r1" x="0" y="142" textLength="707.6" clip-path="url(#terminal-2205183093-line-5)">Commitizen&#160;is&#160;a&#160;cli&#160;tool&#160;to&#160;generate&#160;conventional&#160;commits.</text><text class="terminal-2205183093-r1" x="976" y="142" textLength="12.2" clip-path="url(#terminal-2205183093-line-5)">
+</text><text class="terminal-2205183093-r1" x="0" y="166.4" textLength="524.6" clip-path="url(#terminal-2205183093-line-6)">For&#160;more&#160;information&#160;about&#160;the&#160;topic&#160;go&#160;to&#160;</text><text class="terminal-2205183093-r4" x="524.6" y="166.4" textLength="390.4" clip-path="url(#terminal-2205183093-line-6)">https://conventionalcommits.org/</text><text class="terminal-2205183093-r1" x="976" y="166.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-6)">
+</text><text class="terminal-2205183093-r1" x="976" y="190.8" textLength="12.2" clip-path="url(#terminal-2205183093-line-7)">
+</text><text class="terminal-2205183093-r1" x="0" y="215.2" textLength="97.6" clip-path="url(#terminal-2205183093-line-8)">options:</text><text class="terminal-2205183093-r1" x="976" y="215.2" textLength="12.2" clip-path="url(#terminal-2205183093-line-8)">
+</text><text class="terminal-2205183093-r1" x="0" y="239.6" textLength="671" clip-path="url(#terminal-2205183093-line-9)">&#160;&#160;-h,&#160;--help&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;show&#160;this&#160;help&#160;message&#160;and&#160;exit</text><text class="terminal-2205183093-r1" x="976" y="239.6" textLength="12.2" clip-path="url(#terminal-2205183093-line-9)">
+</text><text class="terminal-2205183093-r1" x="0" y="264" textLength="658.8" clip-path="url(#terminal-2205183093-line-10)">&#160;&#160;--config&#160;CONFIG&#160;&#160;&#160;&#160;&#160;&#160;&#160;the&#160;path&#160;of&#160;configuration&#160;file</text><text class="terminal-2205183093-r1" x="976" y="264" textLength="12.2" clip-path="url(#terminal-2205183093-line-10)">
+</text><text class="terminal-2205183093-r1" x="0" y="288.4" textLength="463.6" clip-path="url(#terminal-2205183093-line-11)">&#160;&#160;--debug&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;use&#160;debug&#160;mode</text><text class="terminal-2205183093-r1" x="976" y="288.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-11)">
+</text><text class="terminal-2205183093-r1" x="0" y="312.8" textLength="597.8" clip-path="url(#terminal-2205183093-line-12)">&#160;&#160;-n,&#160;--name&#160;NAME&#160;&#160;&#160;&#160;&#160;&#160;&#160;use&#160;the&#160;given&#160;commitizen&#160;</text><text class="terminal-2205183093-r2" x="597.8" y="312.8" textLength="12.2" clip-path="url(#terminal-2205183093-line-12)">(</text><text class="terminal-2205183093-r1" x="610" y="312.8" textLength="97.6" clip-path="url(#terminal-2205183093-line-12)">default:</text><text class="terminal-2205183093-r1" x="976" y="312.8" textLength="12.2" clip-path="url(#terminal-2205183093-line-12)">
+</text><text class="terminal-2205183093-r1" x="0" y="337.2" textLength="573.4" clip-path="url(#terminal-2205183093-line-13)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;cz_conventional_commits</text><text class="terminal-2205183093-r2" x="573.4" y="337.2" textLength="12.2" clip-path="url(#terminal-2205183093-line-13)">)</text><text class="terminal-2205183093-r1" x="976" y="337.2" textLength="12.2" clip-path="url(#terminal-2205183093-line-13)">
+</text><text class="terminal-2205183093-r1" x="0" y="361.6" textLength="317.2" clip-path="url(#terminal-2205183093-line-14)">&#160;&#160;-nr,&#160;--no-raise&#160;NO_RAISE</text><text class="terminal-2205183093-r1" x="976" y="361.6" textLength="12.2" clip-path="url(#terminal-2205183093-line-14)">
+</text><text class="terminal-2205183093-r1" x="0" y="386" textLength="902.8" clip-path="url(#terminal-2205183093-line-15)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;comma&#160;separated&#160;error&#160;codes&#160;that&#160;won&#x27;t&#160;rise&#160;error,</text><text class="terminal-2205183093-r1" x="976" y="386" textLength="12.2" clip-path="url(#terminal-2205183093-line-15)">
+</text><text class="terminal-2205183093-r1" x="0" y="410.4" textLength="439.2" clip-path="url(#terminal-2205183093-line-16)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;e.g:&#160;cz&#160;-nr&#160;</text><text class="terminal-2205183093-r5" x="439.2" y="410.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-16)">1</text><text class="terminal-2205183093-r1" x="451.4" y="410.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-16)">,</text><text class="terminal-2205183093-r5" x="463.6" y="410.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-16)">2</text><text class="terminal-2205183093-r1" x="475.8" y="410.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-16)">,</text><text class="terminal-2205183093-r5" x="488" y="410.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-16)">3</text><text class="terminal-2205183093-r1" x="500.2" y="410.4" textLength="231.8" clip-path="url(#terminal-2205183093-line-16)">&#160;bump.&#160;See&#160;codes&#160;at</text><text class="terminal-2205183093-r1" x="976" y="410.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-16)">
+</text><text class="terminal-2205183093-r4" x="292.8" y="434.8" textLength="231.8" clip-path="url(#terminal-2205183093-line-17)">https://commitizen-</text><text class="terminal-2205183093-r1" x="976" y="434.8" textLength="12.2" clip-path="url(#terminal-2205183093-line-17)">
+</text><text class="terminal-2205183093-r1" x="0" y="459.2" textLength="756.4" clip-path="url(#terminal-2205183093-line-18)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;tools.github.io/commitizen/exit_codes/</text><text class="terminal-2205183093-r1" x="976" y="459.2" textLength="12.2" clip-path="url(#terminal-2205183093-line-18)">
+</text><text class="terminal-2205183093-r1" x="976" y="483.6" textLength="12.2" clip-path="url(#terminal-2205183093-line-19)">
+</text><text class="terminal-2205183093-r1" x="0" y="508" textLength="109.8" clip-path="url(#terminal-2205183093-line-20)">commands:</text><text class="terminal-2205183093-r1" x="976" y="508" textLength="12.2" clip-path="url(#terminal-2205183093-line-20)">
+</text><text class="terminal-2205183093-r2" x="24.4" y="532.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-21)">{</text><text class="terminal-2205183093-r1" x="36.6" y="532.4" textLength="829.6" clip-path="url(#terminal-2205183093-line-21)">init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version</text><text class="terminal-2205183093-r2" x="866.2" y="532.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-21)">}</text><text class="terminal-2205183093-r1" x="976" y="532.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-21)">
+</text><text class="terminal-2205183093-r1" x="0" y="556.8" textLength="646.6" clip-path="url(#terminal-2205183093-line-22)">&#160;&#160;&#160;&#160;init&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;init&#160;commitizen&#160;configuration</text><text class="terminal-2205183093-r1" x="976" y="556.8" textLength="12.2" clip-path="url(#terminal-2205183093-line-22)">
+</text><text class="terminal-2205183093-r1" x="0" y="581.2" textLength="134.2" clip-path="url(#terminal-2205183093-line-23)">&#160;&#160;&#160;&#160;commit&#160;</text><text class="terminal-2205183093-r2" x="134.2" y="581.2" textLength="12.2" clip-path="url(#terminal-2205183093-line-23)">(</text><text class="terminal-2205183093-r1" x="146.4" y="581.2" textLength="12.2" clip-path="url(#terminal-2205183093-line-23)">c</text><text class="terminal-2205183093-r2" x="158.6" y="581.2" textLength="12.2" clip-path="url(#terminal-2205183093-line-23)">)</text><text class="terminal-2205183093-r1" x="170.8" y="581.2" textLength="329.4" clip-path="url(#terminal-2205183093-line-23)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;create&#160;new&#160;commit</text><text class="terminal-2205183093-r1" x="976" y="581.2" textLength="12.2" clip-path="url(#terminal-2205183093-line-23)">
+</text><text class="terminal-2205183093-r1" x="0" y="605.6" textLength="610" clip-path="url(#terminal-2205183093-line-24)">&#160;&#160;&#160;&#160;ls&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;show&#160;available&#160;commitizens</text><text class="terminal-2205183093-r1" x="976" y="605.6" textLength="12.2" clip-path="url(#terminal-2205183093-line-24)">
+</text><text class="terminal-2205183093-r1" x="0" y="630" textLength="524.6" clip-path="url(#terminal-2205183093-line-25)">&#160;&#160;&#160;&#160;example&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;show&#160;commit&#160;example</text><text class="terminal-2205183093-r1" x="976" y="630" textLength="12.2" clip-path="url(#terminal-2205183093-line-25)">
+</text><text class="terminal-2205183093-r1" x="0" y="654.4" textLength="646.6" clip-path="url(#terminal-2205183093-line-26)">&#160;&#160;&#160;&#160;info&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;show&#160;information&#160;about&#160;the&#160;cz</text><text class="terminal-2205183093-r1" x="976" y="654.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-26)">
+</text><text class="terminal-2205183093-r1" x="0" y="678.8" textLength="512.4" clip-path="url(#terminal-2205183093-line-27)">&#160;&#160;&#160;&#160;schema&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;show&#160;commit&#160;schema</text><text class="terminal-2205183093-r1" x="976" y="678.8" textLength="12.2" clip-path="url(#terminal-2205183093-line-27)">
+</text><text class="terminal-2205183093-r1" x="0" y="703.2" textLength="805.2" clip-path="url(#terminal-2205183093-line-28)">&#160;&#160;&#160;&#160;bump&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;bump&#160;semantic&#160;version&#160;based&#160;on&#160;the&#160;git&#160;log</text><text class="terminal-2205183093-r1" x="976" y="703.2" textLength="12.2" clip-path="url(#terminal-2205183093-line-28)">
+</text><text class="terminal-2205183093-r1" x="0" y="727.6" textLength="170.8" clip-path="url(#terminal-2205183093-line-29)">&#160;&#160;&#160;&#160;changelog&#160;</text><text class="terminal-2205183093-r2" x="170.8" y="727.6" textLength="12.2" clip-path="url(#terminal-2205183093-line-29)">(</text><text class="terminal-2205183093-r1" x="183" y="727.6" textLength="24.4" clip-path="url(#terminal-2205183093-line-29)">ch</text><text class="terminal-2205183093-r2" x="207.4" y="727.6" textLength="12.2" clip-path="url(#terminal-2205183093-line-29)">)</text><text class="terminal-2205183093-r1" x="219.6" y="727.6" textLength="305" clip-path="url(#terminal-2205183093-line-29)">&#160;&#160;&#160;&#160;&#160;&#160;generate&#160;changelog&#160;</text><text class="terminal-2205183093-r2" x="524.6" y="727.6" textLength="12.2" clip-path="url(#terminal-2205183093-line-29)">(</text><text class="terminal-2205183093-r1" x="536.8" y="727.6" textLength="329.4" clip-path="url(#terminal-2205183093-line-29)">note&#160;that&#160;it&#160;will&#160;overwrite</text><text class="terminal-2205183093-r1" x="976" y="727.6" textLength="12.2" clip-path="url(#terminal-2205183093-line-29)">
+</text><text class="terminal-2205183093-r1" x="0" y="752" textLength="451.4" clip-path="url(#terminal-2205183093-line-30)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;existing&#160;file</text><text class="terminal-2205183093-r2" x="451.4" y="752" textLength="12.2" clip-path="url(#terminal-2205183093-line-30)">)</text><text class="terminal-2205183093-r1" x="976" y="752" textLength="12.2" clip-path="url(#terminal-2205183093-line-30)">
+</text><text class="terminal-2205183093-r1" x="0" y="776.4" textLength="951.6" clip-path="url(#terminal-2205183093-line-31)">&#160;&#160;&#160;&#160;check&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;validates&#160;that&#160;a&#160;commit&#160;message&#160;matches&#160;the&#160;commitizen</text><text class="terminal-2205183093-r1" x="976" y="776.4" textLength="12.2" clip-path="url(#terminal-2205183093-line-31)">
+</text><text class="terminal-2205183093-r1" x="0" y="800.8" textLength="366" clip-path="url(#terminal-2205183093-line-32)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;schema</text><text class="terminal-2205183093-r1" x="976" y="800.8" textLength="12.2" clip-path="url(#terminal-2205183093-line-32)">
+</text><text class="terminal-2205183093-r1" x="0" y="825.2" textLength="902.8" clip-path="url(#terminal-2205183093-line-33)">&#160;&#160;&#160;&#160;version&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;get&#160;the&#160;version&#160;of&#160;the&#160;installed&#160;commitizen&#160;or&#160;the</text><text class="terminal-2205183093-r1" x="976" y="825.2" textLength="12.2" clip-path="url(#terminal-2205183093-line-33)">
+</text><text class="terminal-2205183093-r1" x="0" y="849.6" textLength="488" clip-path="url(#terminal-2205183093-line-34)">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;current&#160;project&#160;</text><text class="terminal-2205183093-r2" x="488" y="849.6" textLength="12.2" clip-path="url(#terminal-2205183093-line-34)">(</text><text class="terminal-2205183093-r1" x="500.2" y="849.6" textLength="353.8" clip-path="url(#terminal-2205183093-line-34)">default:&#160;installed&#160;commitizen</text><text class="terminal-2205183093-r2" x="854" y="849.6" textLength="12.2" clip-path="url(#terminal-2205183093-line-34)">)</text><text class="terminal-2205183093-r1" x="976" y="849.6" textLength="12.2" clip-path="url(#terminal-2205183093-line-34)">
+</text><text class="terminal-2205183093-r1" x="976" y="874" textLength="12.2" clip-path="url(#terminal-2205183093-line-35)">
 </text>
     </g>
     </g>
