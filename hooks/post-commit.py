@@ -8,7 +8,7 @@ except ImportError as error:
     exit(1)
 
 
-def post_commit():
+def post_commit() -> None:
     backup_file = Path(get_backup_file_path())
 
     # remove backup file if it exists
@@ -17,4 +17,5 @@ def post_commit():
 
 
 if __name__ == "__main__":
-    exit(post_commit())
+    post_commit()
+    exit(0)
