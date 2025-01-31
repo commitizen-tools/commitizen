@@ -3,6 +3,10 @@ name = "commitizen"
 version = "4.1.1"
 description = "Python commitizen client tool"
 authors = [{ name = "Santiago Fraire", email = "santiwilly@gmail.com" }]
+maintainers = [
+    { name = "Wei Lee", email = "weilee.rx@gmail.com" },
+    { name = " Axel H.", email = "noirbizarre@gmail.com" },
+]
 license = { text = "LICENSE" }
 readme = "docs/README.md"
 requires-python = ">=3.9,<4.0"
