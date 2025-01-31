@@ -104,7 +104,7 @@ The equivalent example for a json config file:
 }
 ```
 
-And the correspondent example for a yaml json file:
+And the correspondent example for a yaml file:
 
 ```yaml
 commitizen:
@@ -115,8 +115,8 @@ commitizen:
     schema: "<type>: <body>"
     schema_pattern: "(feature|bug fix):(\\s.*)"
     bump_pattern: "^(break|new|fix|hotfix)"
-    commit_parser: "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?",
-    changelog_pattern: "^(feature|bug fix)?(!)?",
+    commit_parser: "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?"
+    changelog_pattern: "^(feature|bug fix)?(!)?"
     change_type_map:
       feature: Feat
       bug fix: Fix
@@ -139,10 +139,10 @@ commitizen:
       message: Select the type of change you are committing
     - type: input
       name: message
-      message: Body.
+      message: 'Body.'
     - type: confirm
       name: show_message
-      message: Do you want to add body message in commit?
+      message: 'Do you want to add body message in commit?'
 ```
 
 ### Customize configuration
