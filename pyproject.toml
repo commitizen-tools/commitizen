@@ -93,6 +93,7 @@ version_files = [
     "commitizen/__version__.py",
     ".pre-commit-config.yaml:rev:.+Commitizen",
 ]
+version_scheme = "pep440"
 
 
 [tool.poetry]
