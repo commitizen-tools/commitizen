@@ -13,22 +13,19 @@ except ImportError as error:
     exit(1)
 
 
-def prepare_commit_msg(commit_msg_file: Path) -> int:
+def prepare_commit_msg(commit_msg_file: str) -> int:
     # check if the commit message needs to be generated using commitizen
-    if (
-        subprocess.run(
-            [
-                "cz",
-                "check",
-                "--commit-msg-file",
-                commit_msg_file,
-            ],
-            capture_output=True,
-        ).returncode
-        != 0
-    ):
+    exit_code = subprocess.run(
+        [
+            "cz",
+            "check",
+            "--commit-msg-file",
+            commit_msg_file,
+        ],
+        capture_output=True,
+    ).returncode
+    if exit_code != 0:
         backup_file = Path(get_backup_file_path())
-
         if backup_file.is_file():
             # confirm if commit message from backup file should be reused
             answer = input("retry with previous message? [y/N]: ")
@@ -54,6 +51,7 @@ def prepare_commit_msg(commit_msg_file: Path) -> int:
 
         # write message to backup file
         shutil.copyfile(commit_msg_file, backup_file)
+    return 0
 
 
 if __name__ == "__main__":

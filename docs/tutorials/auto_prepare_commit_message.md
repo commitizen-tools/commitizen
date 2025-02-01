@@ -25,7 +25,7 @@ commitizen and use the generated commit message for the commit.
 
 ## Installation
 
-Copy the hooks from [here](https://github.com/commitizen-tools/hooks) into the `.git/hooks` folder and make them
+Copy the hooks from [here](https://github.com/commitizen-tools/commitizen/tree/master/hooks) into the `.git/hooks` folder and make them
   executable by running the following commands from the root of your Git repository:
 
 ```bash
