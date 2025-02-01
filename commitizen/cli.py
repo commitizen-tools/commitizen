@@ -371,6 +371,12 @@ data = {
                         "help": "Determine the next version and write to stdout",
                         "default": False,
                     },
+                    {
+                        "name": ["--allow-no-commit"],
+                        "default": False,
+                        "help": "bump version without eligible commits",
+                        "action": "store_true",
+                    },
                 ],
             },
             {

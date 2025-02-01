@@ -52,7 +52,6 @@ Some examples of pep440:
 
 ![cz bump --help](../images/cli_help/cz_bump___help.svg)
 
-
 ### `--files-only`
 
 Bumps the version in the files defined in `version_files` without creating a commit and tag on the git repository,
@@ -178,6 +177,7 @@ If `--local-version` is used, it will bump only the local version `0.1.0` and ke
 If `--annotated-tag` is used, commitizen will create annotated tags. Also available via configuration, in `pyproject.toml` or `.cz.toml`.
 
 ### `--annotated-tag-message`
+
 If `--annotated-tag-message` is used, commitizen will create annotated tags with the given message.
 
 ### `--changelog-to-stdout`
@@ -276,14 +276,14 @@ cz bump --build-metadata yourmetadata
 
 Will create a version like `1.1.2+yourmetadata`.
 This can be useful for multiple things
-* Git hash in version
-* Labeling the version with additional metadata.
+- Git hash in version
+- Labeling the version with additional metadata.
 
 Note that Commitizen ignores everything after `+` when it bumps the version. It is therefore safe to write different build-metadata between versions.
 
 You should normally not use this functionality, but if you decide to do, keep in mind that
-* Version `1.2.3+a`, and `1.2.3+b` are the same version! Tools should not use the string after `+` for version calculation. This is probably not a guarantee (example in helm) even tho it is in the spec.
-* It might be problematic having the metadata in place when doing upgrades depending on what tool you use.
+- Version `1.2.3+a`, and `1.2.3+b` are the same version! Tools should not use the string after `+` for version calculation. This is probably not a guarantee (example in helm) even tho it is in the spec.
+- It might be problematic having the metadata in place when doing upgrades depending on what tool you use.
 
 ### `--get-next`
 
@@ -317,6 +317,18 @@ The following output is the result of `cz bump --get-next`:
 The `--get-next` flag will raise a `NoneIncrementExit` if the found commits are not eligible for a version bump.
 
 For information on how to suppress this exit, see [avoid raising errors](#avoid-raising-errors).
+
+### `--allow-no-commit`
+
+Allow the project version to be bumped even when there's no eligible version. This is most useful when used with `--increment {MAJOR,MINOR,PATCH}` or `[MANUL_VERSION]`
+
+```sh
+# bump a minor version even when there's only bug fixes, documentation changes or even no commits
+cz bump --incremental MINOR --allow-no-commit
+
+# bump version to 2.0.0 even when there's no breaking changes changes or even no commits
+cz bump --allow-no-commit 2.0.0
+```
 
 ## Avoid raising errors
 
@@ -389,13 +401,13 @@ cz -nr 21 bump
 
 These are used in:
 
-* `cz bump`: Find previous release tag (exact match) and generate new tag.
-* Find previous release tags in `cz changelog`.
-  * If `--incremental`: Using latest version found in the changelog, scan existing Git tags with 89\% similarity match.
-  * `--rev-range` is converted to Git tag names with `tag_format` before searching Git history.
-* If the `scm` `version_provider` is used, it uses different regexes to find the previous version tags:
-  * If `tag_format` is set to `$version` (default): `VersionProtocol.parser` (allows `v` prefix)
-  * If `tag_format` is set: Custom regex similar to SemVer (not as lenient as PEP440 e.g. on dev-releases)
+- `cz bump`: Find previous release tag (exact match) and generate new tag.
+- Find previous release tags in `cz changelog`.
+  - If `--incremental`: Using latest version found in the changelog, scan existing Git tags with 89\% similarity match.
+  - `--rev-range` is converted to Git tag names with `tag_format` before searching Git history.
+- If the `scm` `version_provider` is used, it uses different regexes to find the previous version tags:
+  - If `tag_format` is set to `$version` (default): `VersionProtocol.parser` (allows `v` prefix)
+  - If `tag_format` is set: Custom regex similar to SemVer (not as lenient as PEP440 e.g. on dev-releases)
 
 Commitizen supports 2 types of formats, a simple and a more complex.
 

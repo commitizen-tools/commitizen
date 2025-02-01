@@ -1543,3 +1543,104 @@ def test_bump_get_next__no_eligible_commits_raises(mocker: MockFixture):
 
     with pytest.raises(NoneIncrementExit):
         cli.main()
+
+
+def test_bump_allow_no_commit_with_no_commit(mocker, tmp_commitizen_project, capsys):
+    with tmp_commitizen_project.as_cwd():
+        # Create the first commit and bump to 1.0.0
+        create_file_and_commit("feat(user)!: new file")
+        testargs = ["cz", "bump", "--yes"]
+        mocker.patch.object(sys, "argv", testargs)
+        cli.main()
+
+        # Verify NoCommitsFoundError should be raised
+        # when there's no new commit and "--allow-no-commit" is not set
+        with pytest.raises(NoCommitsFoundError):
+            testargs = ["cz", "bump"]
+            mocker.patch.object(sys, "argv", testargs)
+            cli.main()
+
+        # bump to 1.0.1 with new commit when "--allow-no-commit" is set
+        testargs = ["cz", "bump", "--allow-no-commit"]
+        mocker.patch.object(sys, "argv", testargs)
+        cli.main()
+        out, _ = capsys.readouterr()
+        assert "bump: version 1.0.0 → 1.0.1" in out
+
+
+def test_bump_allow_no_commit_with_no_eligible_commit(
+    mocker, tmp_commitizen_project, capsys
+):
+    with tmp_commitizen_project.as_cwd():
+        # Create the first commit and bump to 1.0.0
+        create_file_and_commit("feat(user)!: new file")
+        testargs = ["cz", "bump", "--yes"]
+        mocker.patch.object(sys, "argv", testargs)
+        cli.main()
+
+        # Create a commit that is ineligible to bump
+        create_file_and_commit("docs(bump): add description for allow no commit")
+
+        # Verify NoneIncrementExit should be raised
+        # when there's no eligible bumping commit and "--allow-no-commit" is not set
+        with pytest.raises(NoneIncrementExit):
+            testargs = ["cz", "bump", "--yes"]
+            mocker.patch.object(sys, "argv", testargs)
+            cli.main()
+
+        # bump to 1.0.1 with ineligible commit when "--allow-no-commit" is set
+        testargs = ["cz", "bump", "--allow-no-commit"]
+        mocker.patch.object(sys, "argv", testargs)
+        cli.main()
+        out, _ = capsys.readouterr()
+        assert "bump: version 1.0.0 → 1.0.1" in out
+
+
+def test_bump_allow_no_commit_with_increment(mocker, tmp_commitizen_project, capsys):
+    with tmp_commitizen_project.as_cwd():
+        # # Create the first commit and bump to 1.0.0
+        create_file_and_commit("feat(user)!: new file")
+        testargs = ["cz", "bump", "--yes"]
+        mocker.patch.object(sys, "argv", testargs)
+        cli.main()
+
+        # Verify NoCommitsFoundError should be raised
+        # when there's no new commit and "--allow-no-commit" is not set
+        with pytest.raises(NoCommitsFoundError):
+            testargs = ["cz", "bump", "--yes"]
+            mocker.patch.object(sys, "argv", testargs)
+            cli.main()
+
+        # bump to 1.1.0 with no new commit when "--allow-no-commit" is set
+        # and increment is specified
+        testargs = ["cz", "bump", "--yes", "--allow-no-commit", "--increment", "MINOR"]
+        mocker.patch.object(sys, "argv", testargs)
+        cli.main()
+        out, _ = capsys.readouterr()
+        assert "bump: version 1.0.0 → 1.1.0" in out
+
+
+def test_bump_allow_no_commit_with_manual_version(
+    mocker, tmp_commitizen_project, capsys
+):
+    with tmp_commitizen_project.as_cwd():
+        # # Create the first commit and bump to 1.0.0
+        create_file_and_commit("feat(user)!: new file")
+        testargs = ["cz", "bump", "--yes"]
+        mocker.patch.object(sys, "argv", testargs)
+        cli.main()
+
+        # Verify NoCommitsFoundError should be raised
+        # when there's no new commit and "--allow-no-commit" is not set
+        with pytest.raises(NoCommitsFoundError):
+            testargs = ["cz", "bump", "--yes"]
+            mocker.patch.object(sys, "argv", testargs)
+            cli.main()
+
+        # bump to 1.1.0 with no new commit when "--allow-no-commit" is set
+        # and increment is specified
+        testargs = ["cz", "bump", "--yes", "--allow-no-commit", "2.0.0"]
+        mocker.patch.object(sys, "argv", testargs)
+        cli.main()
+        out, _ = capsys.readouterr()
+        assert "bump: version 1.0.0 → 2.0.0" in out
