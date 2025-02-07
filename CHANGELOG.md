@@ -1,3 +1,13 @@
+## v4.2.0 (2025-02-07)
+
+### Feat
+
+- draft of the --empty parameter
+
+### Refactor
+
+- **bump**: rename --empty as --allow-no-commit
+
 ## v4.1.1 (2025-01-26)
 
 ### Fix
