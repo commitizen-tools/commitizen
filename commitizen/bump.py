@@ -4,6 +4,7 @@ import os
 import re
 from collections import OrderedDict
 from glob import iglob
+from logging import getLogger
 from string import Template
 from typing import cast
 
@@ -13,6 +14,8 @@ from commitizen.git import GitCommit, smart_open
 from commitizen.version_schemes import DEFAULT_SCHEME, Increment, Version, VersionScheme
 
 VERSION_TYPES = [None, PATCH, MINOR, MAJOR]
+
+logger = getLogger("commitizen")
 
 
 def find_increment(
@@ -38,7 +41,15 @@ def find_increment(
                         new_increment = increments_map[match_pattern]
                         break
 
+                if new_increment is None:
+                    logger.debug(
+                        f"no increment needed for '{found_keyword}' in '{message}'"
+                    )
+
                 if VERSION_TYPES.index(increment) < VERSION_TYPES.index(new_increment):
+                    logger.debug(
+                        f"increment detected is '{new_increment}' due to '{found_keyword}' in '{message}'"
+                    )
                     increment = new_increment
 
                 if increment == MAJOR:
