@@ -16,16 +16,16 @@ If you're a first-time contributor, you can check the issues with [good first is
 1. Fork [the repository](https://github.com/commitizen-tools/commitizen).
 2. Clone the repository from your GitHub.
 3. Setup development environment through [poetry](https://python-poetry.org/) (`poetry install`).
-4. Setup [pre-commit](https://pre-commit.com/) hook (`poetry run pre-commit install`)
+4. Setup [pre-commit](https://pre-commit.com/) hook (`poetry setup-pre-commit`)
 5. Check out a new branch and add your modification.
 6. Add test cases for all your changes.
    (We use [CodeCov](https://codecov.io/) to ensure our test coverage does not drop.)
 7. Use [commitizen](https://github.com/commitizen-tools/commitizen) to do git commit. We follow [conventional commits](https://www.conventionalcommits.org/).
-8. Run `./scripts/format` and `./scripts/test` to ensure you follow the coding style and the tests pass.
-9. Optionally, update the `./docs/README.md` or `docs/images/cli_help` (through running `scripts/gen_cli_help_screenshots.py`).
+8. Run `poetry all` to ensure you follow the coding style and the tests pass.
+9. Optionally, update the `./docs/README.md` or `docs/images/cli_help` (through running `poetry doc:screenshots`).
 9. **Do not** update the `CHANGELOG.md`, it will be automatically created after merging to `master`.
 10. **Do not** update the versions in the project, they will be automatically updated.
-10. If your changes are about documentation. Run `poetry run mkdocs serve` to serve documentation locally and check whether there is any warning or error.
+10. If your changes are about documentation. Run `poetry doc` to serve documentation locally and check whether there is any warning or error.
 11. Send a [pull request](https://github.com/commitizen-tools/commitizen/pulls) 🙏
 
 ## Use of GitHub Labels

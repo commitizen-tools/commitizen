@@ -19,14 +19,14 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
-          python -m pip install -U pip poetry
+          python -m pip install -U pip poetry poethepoet
           poetry --version
-          poetry install
+          poetry install --only main,linters,test
       - name: Run tests and linters
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
-          SKIP=no-commit-to-branch,commitizen-branch poetry run pre-commit run --all-files --hook-stage pre-push
+          poetry ci
         shell: bash
       - name: Upload coverage to Codecov
         if: runner.os == 'Linux'

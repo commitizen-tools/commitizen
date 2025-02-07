@@ -99,6 +99,9 @@ version_scheme = "pep440"
 [tool.poetry]
 packages = [{ include = "commitizen" }, { include = "commitizen/py.typed" }]
 
+[tool.poetry.requires-plugins]
+"poethepoet" = ">=0.32.2"
+
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.0"
 
@@ -161,6 +164,9 @@ omit = [
 
 [tool.pytest.ini_options]
 addopts = "--strict-markers"
+testpaths = [
+    "tests/",
+]
 
 [tool.ruff]
 line-length = 88
@@ -202,3 +208,51 @@ ignore_missing_imports = true
 skip = '.git*,*.svg,*.lock'
 check-hidden = true
 ignore-words-list = 'asend'
+
+[tool.poe]
+poetry_command = ""
+
+[tool.poe.tasks]
+format.help = "Format the code"
+format.sequence = [
+    {cmd = "ruff check --fix commitizen tests"},
+    {cmd = "ruff format commitizen tests"},
+]
+
+lint.help = "Lint the code"
+lint.sequence = [
+    {cmd = "ruff check commitizen/ tests/ --fix"},
+    {cmd = "mypy commitizen/ tests/"},
+]
+
+test.help = "Run the test suite"
+test.cmd = "pytest -n 3 --dist=loadfile"
+
+cover.help = "Run the test suite with coverage"
+cover.ref = "test --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen"
+
+all.help = "Run all tasks"
+all.sequence = [
+    "format",
+    "lint",
+    "cover",
+]
+
+"doc:screenshots".help = "Render documentation screeenshots"
+"doc:screenshots".script = "scripts.gen_cli_help_screenshots:gen_cli_help_screenshots"
+
+"doc:build".help = "Build the documentation"
+"doc:build".cmd = "mkdocs build"
+
+doc.help = "Live documentation server"
+doc.cmd = "mkdocs serve"
+
+ci.help = "Run all tasks in CI"
+ci.sequence = [
+    {cmd="pre-commit run --all-files"},
+    "cover",
+]
+ci.env = {SKIP = "no-commit-to-branch"}
+
+setup-pre-commit.help = "Install pre-commit hooks"
+setup-pre-commit.cmd = "pre-commit install"

@@ -19,12 +19,12 @@ jobs:
           python-version: "3.x"
       - name: Install dependencies
         run: |
-          python -m pip install -U pip poetry
+          python -m pip install -U pip poetry poethepoet
           poetry --version
-          poetry install
+          poetry install --only main,script
       - name: Update CLI screenshots
         run: |
-          poetry run python scripts/gen_cli_help_screenshots.py
+          poetry doc:screenshots
       - name: Commit and push updated CLI screenshots
         run: |
           git config --global user.name "github-actions[bot]"
@@ -55,12 +55,14 @@ jobs:
           python-version: "3.x"
       - name: Install dependencies
         run: |
-          python -m pip install -U mkdocs mkdocs-material
+          python -m pip install -U pip poetry poethepoet
+          poetry --version
+          poetry install --no-root --only documentation
       - name: Build docs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python -m mkdocs build
+          poetry doc:build
       - name: Generate Sponsors 💖
         uses: JamesIves/github-sponsors-readme-action@v1
         with:
