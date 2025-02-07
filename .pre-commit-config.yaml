@@ -5,7 +5,6 @@ default_install_hook_types:
 
 default_stages:
   - pre-commit
-  - pre-push
 
 repos:
   - repo: meta
@@ -55,21 +54,19 @@ repos:
       - id: commitizen-branch
         stages:
           - post-commit
-          - pre-push
 
   - repo: local
     hooks:
       - id: format
-        name: format
+        name: Format
         language: system
         pass_filenames: false
-        entry: ./scripts/format
+        entry: poetry format
         types: [ python ]
 
       - id: linter and test
-        name: linter and test
+        name: Linters
         language: system
         pass_filenames: false
-        stages: [ pre-push ]
-        entry: ./scripts/test
+        entry: poetry lint
         types: [ python ]

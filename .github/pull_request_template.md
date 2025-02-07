@@ -10,7 +10,7 @@ Please fill in the following content to let us know better about this change.
 ## Checklist
 
 - [ ] Add test cases to all the changes you introduce
-- [ ] Run `./scripts/format` and `./scripts/test` locally to ensure this change passes linter check and test
+- [ ] Run `poetry all` locally to ensure this change passes linter check and test
 - [ ] Test the changes on the local machine manually
 - [ ] Update the documentation for the changes
 
