@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.2">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.a40c8224.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.d7758b05.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -603,6 +603,15 @@
   <a href="#-get-next" class="md-nav__link">
     <span class="md-ellipsis">
       --get-next
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-allow-no-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      --allow-no-commit
     </span>
   </a>
   
@@ -1510,6 +1519,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#-allow-no-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      --allow-no-commit
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1971,12 +1989,12 @@ See <a href="../../customization/#customizing-the-changelog-template">the templa
 </code></pre></div>
 <p>Will create a version like <code>1.1.2+yourmetadata</code>.
 This can be useful for multiple things
-* Git hash in version
-* Labeling the version with additional metadata.</p>
+- Git hash in version
+- Labeling the version with additional metadata.</p>
 <p>Note that Commitizen ignores everything after <code>+</code> when it bumps the version. It is therefore safe to write different build-metadata between versions.</p>
 <p>You should normally not use this functionality, but if you decide to do, keep in mind that
-* Version <code>1.2.3+a</code>, and <code>1.2.3+b</code> are the same version! Tools should not use the string after <code>+</code> for version calculation. This is probably not a guarantee (example in helm) even tho it is in the spec.
-* It might be problematic having the metadata in place when doing upgrades depending on what tool you use.</p>
+- Version <code>1.2.3+a</code>, and <code>1.2.3+b</code> are the same version! Tools should not use the string after <code>+</code> for version calculation. This is probably not a guarantee (example in helm) even tho it is in the spec.
+- It might be problematic having the metadata in place when doing upgrades depending on what tool you use.</p>
 <h3 id="-get-next"><code>--get-next</code><a class="headerlink" href="#-get-next" title="Permanent link">&para;</a></h3>
 <p>Provides a way to determine the next version and write it to stdout. This parameter is not compatible with <code>--changelog</code>
 and <code>manual version</code>.</p>
@@ -1996,6 +2014,14 @@ increment detected: MINOR
 </code></pre></div>
 <p>The <code>--get-next</code> flag will raise a <code>NoneIncrementExit</code> if the found commits are not eligible for a version bump.</p>
 <p>For information on how to suppress this exit, see <a href="#avoid-raising-errors">avoid raising errors</a>.</p>
+<h3 id="-allow-no-commit"><code>--allow-no-commit</code><a class="headerlink" href="#-allow-no-commit" title="Permanent link">&para;</a></h3>
+<p>Allow the project version to be bumped even when there's no eligible version. This is most useful when used with <code>--increment {MAJOR,MINOR,PATCH}</code> or <code>[MANUL_VERSION]</code></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># bump a minor version even when there&#39;s only bug fixes, documentation changes or even no commits</span>
+cz<span class="w"> </span>bump<span class="w"> </span>--incremental<span class="w"> </span>MINOR<span class="w"> </span>--allow-no-commit
+
+<span class="c1"># bump version to 2.0.0 even when there&#39;s no breaking changes changes or even no commits</span>
+cz<span class="w"> </span>bump<span class="w"> </span>--allow-no-commit<span class="w"> </span><span class="m">2</span>.0.0
+</code></pre></div>
 <h2 id="avoid-raising-errors">Avoid raising errors<a class="headerlink" href="#avoid-raising-errors" title="Permanent link">&para;</a></h2>
 <p>Some situations from commitizen raise an exit code different than 0.
 If the error code is different than 0, any CI or script running commitizen might be interrupted.</p>
@@ -2382,7 +2408,7 @@ release. During execution of the script, some environment variables are availabl
     <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.5090c770.min.js"></script>
+      <script src="../../assets/javascripts/bundle.f13b1293.min.js"></script>
       
     
   </body>
