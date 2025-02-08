@@ -1,3 +1,9 @@
+## v4.2.1 (2025-02-08)
+
+### Fix
+
+- **bump**: add debugging to bump
+
 ## v4.2.0 (2025-02-07)
 
 ### Feat
