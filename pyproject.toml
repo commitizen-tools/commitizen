@@ -104,6 +104,7 @@ packages = [{ include = "commitizen" }, { include = "commitizen/py.typed" }]
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.0"
+tox = ">4"
 
 [tool.poetry.group.test.dependencies]
 pytest = ">=7.2,<9.0"
@@ -168,6 +169,17 @@ testpaths = [
     "tests/",
 ]
 
+[tool.tox]
+requires = ["tox>=4.22"]
+env_list = ["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+[tool.tox.env_run_base]
+description = "Run tests suite against Python {base_python}"
+skip_install = true
+deps = ["poetry>=2.0"]
+commands_pre = [["poetry", "install", "--only", "main,test"]]
+commands = [["pytest", { replace = "posargs", extend = true}]]
+
 [tool.ruff]
 line-length = 88
 
@@ -227,6 +239,9 @@ lint.sequence = [
 
 test.help = "Run the test suite"
 test.cmd = "pytest -n 3 --dist=loadfile"
+
+"test:all".help = "Run the test suite on all supported Python versions"
+"test:all".cmd = "tox --parallel"
 
 cover.help = "Run the test suite with coverage"
 cover.ref = "test --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen"
