@@ -47,6 +47,7 @@ nav:
   - Customization: "customization.md"
   - Tutorials:
       - Writing commits: "tutorials/writing_commits.md"
+      - Managing tags formats: "tutorials/tag_format.md"
       - Auto check commits: "tutorials/auto_check.md"
       - Auto prepare commit message: "tutorials/auto_prepare_commit_message.md"
       - GitLab CI: "tutorials/gitlab_ci.md"

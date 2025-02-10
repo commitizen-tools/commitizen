@@ -6,7 +6,7 @@ from operator import itemgetter
 from pathlib import Path
 from typing import Callable, cast
 
-from commitizen import bump, changelog, defaults, factory, git, out
+from commitizen import changelog, defaults, factory, git, out
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.config import BaseConfig
 from commitizen.cz.base import ChangelogReleaseHook, MessageBuilderHook
@@ -20,6 +20,7 @@ from commitizen.exceptions import (
     NotAllowed,
 )
 from commitizen.git import GitTag, smart_open
+from commitizen.tags import TagRules
 from commitizen.version_schemes import get_version_scheme
 
 
@@ -53,7 +54,9 @@ class Changelog:
         )
         self.dry_run = args["dry_run"]
 
-        self.scheme = get_version_scheme(self.config, args.get("version_scheme"))
+        self.scheme = get_version_scheme(
+            self.config.settings, args.get("version_scheme")
+        )
 
         current_version = (
             args.get("current_version", config.settings.get("version")) or ""
@@ -73,9 +76,14 @@ class Changelog:
         self.tag_format: str = (
             args.get("tag_format") or self.config.settings["tag_format"]
         )
-        self.merge_prerelease = args.get(
-            "merge_prerelease"
-        ) or self.config.settings.get("changelog_merge_prerelease")
+        self.tag_rules = TagRules(
+            scheme=self.scheme,
+            tag_format=self.tag_format,
+            legacy_tag_formats=self.config.settings["legacy_tag_formats"],
+            ignored_tag_formats=self.config.settings["ignored_tag_formats"],
+            merge_prereleases=args.get("merge_prerelease")
+            or self.config.settings["changelog_merge_prerelease"],
+        )
 
         self.template = (
             args.get("template")
@@ -152,7 +160,6 @@ class Changelog:
         changelog_release_hook: ChangelogReleaseHook | None = (
             self.cz.changelog_release_hook
         )
-        merge_prerelease = self.merge_prerelease
 
         if self.export_template_to:
             return self.export_template()
@@ -168,28 +175,19 @@ class Changelog:
         # Don't continue if no `file_name` specified.
         assert self.file_name
 
-        tags = (
-            changelog.get_version_tags(self.scheme, git.get_tags(), self.tag_format)
-            or []
-        )
+        tags = self.tag_rules.get_version_tags(git.get_tags(), warn=True)
         end_rev = ""
         if self.incremental:
             changelog_meta = self.changelog_format.get_metadata(self.file_name)
             if changelog_meta.latest_version:
-                latest_tag_version: str = bump.normalize_tag(
-                    changelog_meta.latest_version,
-                    tag_format=self.tag_format,
-                    scheme=self.scheme,
-                )
                 start_rev = self._find_incremental_rev(
-                    strip_local_version(latest_tag_version), tags
+                    strip_local_version(changelog_meta.latest_version_tag), tags
                 )
         if self.rev_range:
             start_rev, end_rev = changelog.get_oldest_and_newest_rev(
                 tags,
-                version=self.rev_range,
-                tag_format=self.tag_format,
-                scheme=self.scheme,
+                self.rev_range,
+                self.tag_rules,
             )
         commits = git.get_commits(start=start_rev, end=end_rev, args="--topo-order")
         if not commits and (
@@ -205,8 +203,7 @@ class Changelog:
             change_type_map=change_type_map,
             changelog_message_builder_hook=changelog_message_builder_hook,
             changelog_release_hook=changelog_release_hook,
-            merge_prerelease=merge_prerelease,
-            scheme=self.scheme,
+            rules=self.tag_rules,
         )
         if self.change_type_order:
             tree = changelog.order_changelog_tree(tree, self.change_type_order)

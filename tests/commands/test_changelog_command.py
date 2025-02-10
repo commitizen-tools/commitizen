@@ -8,6 +8,7 @@ import pytest
 from dateutil import relativedelta
 from jinja2 import FileSystemLoader
 from pytest_mock import MockFixture
+from pytest_regressions.file_regression import FileRegressionFixture
 
 from commitizen import __file__ as commitizen_init
 from commitizen import cli, git
@@ -954,8 +955,17 @@ def test_changelog_from_rev_latest_version_from_arg(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
-def test_changelog_from_rev_single_version_not_found(
-    mocker: MockFixture, config_path, changelog_path
+@pytest.mark.parametrize(
+    "rev_range,tag",
+    (
+        pytest.param("0.8.0", "0.2.0", id="single-not-found"),
+        pytest.param("0.1.0..0.3.0", "0.3.0", id="lower-bound-not-found"),
+        pytest.param("0.1.0..0.3.0", "0.1.0", id="upper-bound-not-found"),
+        pytest.param("0.3.0..0.4.0", "0.2.0", id="none-found"),
+    ),
+)
+def test_changelog_from_rev_range_not_found(
+    mocker: MockFixture, config_path, rev_range: str, tag: str
 ):
     """Provides an invalid revision ID to changelog command"""
     with open(config_path, "a", encoding="utf-8") as f:
@@ -963,26 +973,46 @@ def test_changelog_from_rev_single_version_not_found(
 
     # create commit and tag
     create_file_and_commit("feat: new file")
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    create_tag(tag)
+    create_file_and_commit("feat: new file")
+    create_tag("1.0.0")
 
-    wait_for_tag()
-
-    create_file_and_commit("feat: after 0.2.0")
-    create_file_and_commit("feat: another feature")
-
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
-
-    testargs = ["cz", "changelog", "0.8.0"]  # it shouldn't exist
+    testargs = ["cz", "changelog", rev_range]  # it shouldn't exist
     mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(NoCommitsFoundError) as excinfo:
         cli.main()
 
     assert "Could not find a valid revision" in str(excinfo)
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
+def test_changelog_multiple_matching_tags(
+    mocker: MockFixture, config_path, changelog_path
+):
+    with open(config_path, "a", encoding="utf-8") as f:
+        f.write('tag_format = "new-$version"\nlegacy_tag_formats = ["legacy-$version"]')
+
+    create_file_and_commit("feat: new file")
+    create_tag("legacy-1.0.0")
+    create_file_and_commit("feat: new file")
+    create_tag("legacy-2.0.0")
+    create_tag("new-2.0.0")
+
+    testargs = ["cz", "changelog", "1.0.0..2.0.0"]  # it shouldn't exist
+    mocker.patch.object(sys, "argv", testargs)
+    with pytest.warns() as warnings:
+        cli.main()
+
+    assert len(warnings) == 1
+    warning = warnings[0]
+    assert "Multiple tags found for version 2.0.0" in str(warning.message)
+
+    with open(changelog_path) as f:
+        out = f.read()
+
+    # Ensure only one tag is rendered
+    assert out.count("2.0.0") == 1
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -1014,34 +1044,6 @@ def test_changelog_from_rev_range_default_tag_format(
         out = f.read()
 
     assert "new file" not in out
-
-
-@pytest.mark.usefixtures("tmp_commitizen_project")
-@pytest.mark.freeze_time("2022-02-13")
-def test_changelog_from_rev_range_version_not_found(mocker: MockFixture, config_path):
-    """Provides an invalid end revision ID to changelog command"""
-    with open(config_path, "a", encoding="utf-8") as f:
-        f.write('tag_format = "$version"\n')
-
-    # create commit and tag
-    create_file_and_commit("feat: new file")
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-
-    create_file_and_commit("feat: after 0.2.0")
-    create_file_and_commit("feat: another feature")
-
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-
-    testargs = ["cz", "changelog", "0.5.0..0.8.0"]  # it shouldn't exist
-    mocker.patch.object(sys, "argv", testargs)
-    with pytest.raises(NoCommitsFoundError) as excinfo:
-        cli.main()
-
-    assert "Could not find a valid revision" in str(excinfo)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -1114,6 +1116,41 @@ def test_changelog_from_rev_version_range_from_arg(
         out = f.read()
 
     file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
+def test_changelog_from_rev_version_range_with_legacy_tags(
+    mocker: MockFixture, config_path, changelog_path, file_regression
+):
+    mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
+
+    changelog = Path(changelog_path)
+    Path(config_path).write_text(
+        "\n".join(
+            [
+                "[tool.commitizen]",
+                'version_provider = "scm"',
+                'tag_format = "v$version"',
+                "legacy_tag_formats = [",
+                '  "legacy-${version}",',
+                '  "old-${version}",',
+                "]",
+            ]
+        ),
+    )
+
+    create_file_and_commit("feat: new file")
+    create_tag("old-0.2.0")
+    create_file_and_commit("feat: new file")
+    create_tag("legacy-0.3.0")
+    create_file_and_commit("feat: new file")
+    create_tag("legacy-0.4.0")
+
+    testargs = ["cz", "changelog", "0.2.0..0.4.0"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    file_regression.check(changelog.read_text(), extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -1637,6 +1674,127 @@ def test_changelog_only_tag_matching_tag_format_included_suffix_sep(
     assert out.startswith("## 0.3.0-custom (2021-06-11)")
     assert "## v0.2.0 (2021-06-11)" not in out
     assert "## 0.2.0  (2021-06-11)" not in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_legacy_tags(
+    mocker: MockFixture,
+    changelog_path: Path,
+    config_path: Path,
+):
+    with open(config_path, "a", encoding="utf-8") as f:
+        f.writelines(
+            [
+                'tag_format = "v${version}"\n',
+                "legacy_tag_formats = [\n",
+                '  "older-${version}",\n',
+                '  "oldest-${version}",\n',
+                "]\n",
+            ]
+        )
+    create_file_and_commit("feat: new file")
+    git.tag("oldest-0.1.0")
+    create_file_and_commit("feat: new file")
+    git.tag("older-0.2.0")
+    create_file_and_commit("feat: another new file")
+    git.tag("v0.3.0")
+    create_file_and_commit("feat: another new file")
+    git.tag("not-0.3.1")
+    testargs = ["cz", "bump", "--changelog", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    out = open(changelog_path).read()
+    assert "## v0.3.0" in out
+    assert "## older-0.2.0" in out
+    assert "## oldest-0.1.0" in out
+    assert "## v0.3.0" in out
+    assert "## not-0.3.1" not in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2024-11-18")
+def test_changelog_incremental_change_tag_format(
+    mocker: MockFixture,
+    changelog_path: Path,
+    config_path: Path,
+    file_regression: FileRegressionFixture,
+):
+    mocker.patch("commitizen.git.GitTag.date", "2024-11-18")
+    config = Path(config_path)
+    base_config = config.read_text()
+    config.write_text(
+        "\n".join(
+            (
+                base_config,
+                'tag_format = "older-${version}"',
+            )
+        )
+    )
+    create_file_and_commit("feat: new file")
+    git.tag("older-0.1.0")
+    create_file_and_commit("feat: new file")
+    git.tag("older-0.2.0")
+    mocker.patch.object(sys, "argv", ["cz", "changelog"])
+    cli.main()
+
+    config.write_text(
+        "\n".join(
+            (
+                base_config,
+                'tag_format = "v${version}"',
+                'legacy_tag_formats = ["older-${version}"]',
+            )
+        )
+    )
+    create_file_and_commit("feat: another new file")
+    git.tag("v0.3.0")
+    mocker.patch.object(sys, "argv", ["cz", "changelog", "--incremental"])
+    cli.main()
+    out = open(changelog_path).read()
+    assert "## v0.3.0" in out
+    assert "## older-0.2.0" in out
+    assert "## older-0.1.0" in out
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_ignored_tags(
+    mocker: MockFixture,
+    changelog_path: Path,
+    config_path: Path,
+    capsys: pytest.CaptureFixture,
+):
+    with open(config_path, "a", encoding="utf-8") as f:
+        f.writelines(
+            [
+                'tag_format = "v${version}"\n',
+                "ignored_tag_formats = [\n",
+                '  "ignored",\n',
+                '  "ignore-${version}",\n',
+                "]\n",
+            ]
+        )
+    create_file_and_commit("feat: new file")
+    git.tag("ignore-0.1.0")
+    create_file_and_commit("feat: new file")
+    git.tag("ignored")
+    create_file_and_commit("feat: another new file")
+    git.tag("v0.3.0")
+    create_file_and_commit("feat: another new file")
+    git.tag("not-ignored")
+    testargs = ["cz", "bump", "--changelog", "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+    out = open(changelog_path).read()
+    _, err = capsys.readouterr()
+    assert "## ignore-0.1.0" not in out
+    assert "InvalidVersion ignore-0.1.0" not in err
+    assert "## ignored" not in out
+    assert "InvalidVersion ignored" not in err
+    assert "## not-ignored" not in out
+    assert "InvalidVersion not-ignored" in err
+    assert "## v0.3.0" in out
+    assert "InvalidVersion v0.3.0" not in err
 
 
 def test_changelog_template_extra_quotes(

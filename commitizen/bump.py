@@ -11,7 +11,7 @@ from typing import cast
 from commitizen.defaults import MAJOR, MINOR, PATCH, bump_message, encoding
 from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import GitCommit, smart_open
-from commitizen.version_schemes import DEFAULT_SCHEME, Increment, Version, VersionScheme
+from commitizen.version_schemes import Increment, Version
 
 VERSION_TYPES = [None, PATCH, MINOR, MAJOR]
 
@@ -140,34 +140,6 @@ def _bump_with_regex(
 
 def _version_to_regex(version: str) -> str:
     return version.replace(".", r"\.").replace("+", r"\+")
-
-
-def normalize_tag(
-    version: Version | str,
-    tag_format: str,
-    scheme: VersionScheme | None = None,
-) -> str:
-    """The tag and the software version might be different.
-
-    That's why this function exists.
-
-    Example:
-    | tag | version (PEP 0440) |
-    | --- | ------- |
-    | v0.9.0 | 0.9.0 |
-    | ver1.0.0 | 1.0.0 |
-    | ver1.0.0.a0 | 1.0.0a0 |
-    """
-    scheme = scheme or DEFAULT_SCHEME
-    version = scheme(version) if isinstance(version, str) else version
-
-    major, minor, patch = version.release
-    prerelease = version.prerelease or ""
-
-    t = Template(tag_format)
-    return t.safe_substitute(
-        version=version, major=major, minor=minor, patch=patch, prerelease=prerelease
-    )
 
 
 def create_commit_message(

@@ -107,3 +107,36 @@ If you would like to learn more about both schemes, there are plenty of good res
 
 [#173]: https://github.com/commitizen-tools/commitizen/issues/173
 [#385]: https://github.com/commitizen-tools/commitizen/pull/385
+
+## How to change the tag format ?
+
+You can use the [`legacy_tag_formats`](config.md#legacy_tag_formats) to list old tag formats.
+New bumped tags will be in the new format but old ones will still work for:
+- changelog generation (full, incremental and version range)
+- bump new version computation (automatically guessed or increment given)
+
+
+So given if you change from `myproject-$version` to `${version}` and then `v${version}`,
+your commitizen configuration will look like this:
+
+```toml
+tag_format = "v${version}"
+legacy_tag_formats = [
+    "${version}",
+    "myproject-$version",
+]
+```
+
+## How to avoid warnings for expected non-version tags
+
+You can explicitly ignore them with [`ignored_tag_formats`](config.md#ignored_tag_formats).
+
+```toml
+tag_format = "v${version}"
+ignored_tag_formats = [
+    "stable",
+    "component-*",
+    "env/*",
+    "v${major}.${minor}",
+]
+```
