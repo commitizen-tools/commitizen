@@ -237,6 +237,9 @@ lint.sequence = [
     {cmd = "mypy commitizen/ tests/"},
 ]
 
+check-commit.help = "Check the commit message"
+check-commit.cmd = "cz -nr 3 check --rev-range origin/master.."
+
 test.help = "Run the test suite"
 test.cmd = "pytest -n 3 --dist=loadfile"
 
@@ -251,6 +254,7 @@ all.sequence = [
     "format",
     "lint",
     "cover",
+    "check-commit"
 ]
 
 "doc:screenshots".help = "Render documentation screeenshots"
