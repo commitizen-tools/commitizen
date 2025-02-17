@@ -187,11 +187,6 @@ class Bump:
                     "--major-version-zero cannot be combined with MANUAL_VERSION"
                 )
 
-            if prerelease_offset:
-                raise NotAllowed(
-                    "--prerelease-offset cannot be combined with MANUAL_VERSION"
-                )
-
             if get_next:
                 raise NotAllowed("--get-next cannot be combined with MANUAL_VERSION")
 
