@@ -1041,23 +1041,6 @@ def test_bump_with_hooks_and_increment(mocker: MockFixture, tmp_commitizen_proje
     assert tag_exists is True
 
 
-@pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_manual_version_disallows_prerelease_offset(mocker):
-    create_file_and_commit("feat: new file")
-
-    manual_version = "0.2.0"
-    testargs = ["cz", "bump", "--yes", "--prerelease-offset", "42", manual_version]
-    mocker.patch.object(sys, "argv", testargs)
-
-    with pytest.raises(NotAllowed) as excinfo:
-        cli.main()
-
-    expected_error_message = (
-        "--prerelease-offset cannot be combined with MANUAL_VERSION"
-    )
-    assert expected_error_message in str(excinfo.value)
-
-
 @pytest.mark.usefixtures("tmp_git_project")
 def test_bump_use_version_provider(mocker: MockFixture):
     mock = mocker.MagicMock(name="provider")

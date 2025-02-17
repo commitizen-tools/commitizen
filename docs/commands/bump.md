@@ -599,7 +599,7 @@ post_bump_hooks = [
 
 ### `prerelease_offset`
 
-Offset with which to start counting prereleses.
+Offset with which to start counting prereleases.
 
 Defaults to: `0`
 
