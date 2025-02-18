@@ -74,6 +74,7 @@ npm = "commitizen.providers:NpmProvider"
 pep621 = "commitizen.providers:Pep621Provider"
 poetry = "commitizen.providers:PoetryProvider"
 scm = "commitizen.providers:ScmProvider"
+uv = "commitizen.providers:UvProvider"
 
 [project.entry-points."commitizen.scheme"]
 pep440 = "commitizen.version_schemes:Pep440"
@@ -165,9 +166,7 @@ omit = [
 
 [tool.pytest.ini_options]
 addopts = "--strict-markers"
-testpaths = [
-    "tests/",
-]
+testpaths = ["tests/"]
 
 [tool.tox]
 requires = ["tox>=4.22"]
@@ -178,7 +177,7 @@ description = "Run tests suite against Python {base_python}"
 skip_install = true
 deps = ["poetry>=2.0"]
 commands_pre = [["poetry", "install", "--only", "main,test"]]
-commands = [["pytest", { replace = "posargs", extend = true}]]
+commands = [["pytest", { replace = "posargs", extend = true }]]
 
 [tool.ruff]
 line-length = 88
@@ -227,14 +226,14 @@ poetry_command = ""
 [tool.poe.tasks]
 format.help = "Format the code"
 format.sequence = [
-    {cmd = "ruff check --fix commitizen tests"},
-    {cmd = "ruff format commitizen tests"},
+    { cmd = "ruff check --fix commitizen tests" },
+    { cmd = "ruff format commitizen tests" },
 ]
 
 lint.help = "Lint the code"
 lint.sequence = [
-    {cmd = "ruff check commitizen/ tests/ --fix"},
-    {cmd = "mypy commitizen/ tests/"},
+    { cmd = "ruff check commitizen/ tests/ --fix" },
+    { cmd = "mypy commitizen/ tests/" },
 ]
 
 check-commit.help = "Check the commit message"
@@ -254,7 +253,7 @@ all.sequence = [
     "format",
     "lint",
     "cover",
-    "check-commit"
+    "check-commit",
 ]
 
 "doc:screenshots".help = "Render documentation screeenshots"
@@ -268,10 +267,10 @@ doc.cmd = "mkdocs serve"
 
 ci.help = "Run all tasks in CI"
 ci.sequence = [
-    {cmd="pre-commit run --all-files"},
+    { cmd = "pre-commit run --all-files" },
     "cover",
 ]
-ci.env = {SKIP = "no-commit-to-branch"}
+ci.env = { SKIP = "no-commit-to-branch" }
 
 setup-pre-commit.help = "Install pre-commit hooks"
 setup-pre-commit.cmd = "pre-commit install"

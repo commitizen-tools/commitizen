@@ -18,6 +18,7 @@ from commitizen.providers.npm_provider import NpmProvider
 from commitizen.providers.pep621_provider import Pep621Provider
 from commitizen.providers.poetry_provider import PoetryProvider
 from commitizen.providers.scm_provider import ScmProvider
+from commitizen.providers.uv_provider import UvProvider
 
 __all__ = [
     "get_provider",
@@ -28,6 +29,7 @@ __all__ = [
     "Pep621Provider",
     "PoetryProvider",
     "ScmProvider",
+    "UvProvider",
 ]
 
 PROVIDER_ENTRYPOINT = "commitizen.provider"
