@@ -1,3 +1,9 @@
+## v4.2.2 (2025-02-18)
+
+### Fix
+
+- **bump**: manual version bump if prerelease offset is configured
+
 ## v4.2.1 (2025-02-08)
 
 ### Fix
