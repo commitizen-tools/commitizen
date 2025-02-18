@@ -17,7 +17,7 @@ repos:
     hooks:
       - id: check-vcs-permalinks
       - id: end-of-file-fixer
-        exclude: "tests/((commands|data)/|test_).+"
+        exclude: "tests/((commands|data|providers/test_uv_provider)/|test_).+"
       - id: trailing-whitespace
         args: [ --markdown-linebreak-ext=md ]
         exclude: '\.svg$'
