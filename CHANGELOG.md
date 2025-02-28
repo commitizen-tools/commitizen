@@ -1,3 +1,9 @@
+## v4.3.0 (2025-02-28)
+
+### Feat
+
+- **providers**: add uv_provider
+
 ## v4.2.2 (2025-02-18)
 
 ### Fix
