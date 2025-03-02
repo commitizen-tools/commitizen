@@ -1,3 +1,13 @@
+## v4.4.0 (2025-03-02)
+
+### Feat
+
+- **tags**: adds `legacy_tag_formats` and `ignored_tag_formats` settings
+
+### Refactor
+
+- **get_tag_regexes**: dedup tag regexes definition
+
 ## v4.3.0 (2025-02-28)
 
 ### Feat
