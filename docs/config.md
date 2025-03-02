@@ -352,7 +352,7 @@ Commitizen provides some version providers for some well known formats:
 | `scm`        | Fetch the version from git and does not need to set it back                                                                                                                                                             |
 | `pep621`     | Get and set version from `pyproject.toml` `project.version` field                                                                                                                                                       |
 | `poetry`     | Get and set version from `pyproject.toml` `tool.poetry.version` field                                                                                                                                                   |
-| `uv`         | Get and set version from `pyproject.toml` `project.version` field and `uv.lock` `pacakge.version` field whose `package.name` field is the same as `pyproject.toml` `project.name` field                                 |
+| `uv`         | Get and set version from `pyproject.toml` `project.version` field and `uv.lock` `package.version` field whose `package.name` field is the same as `pyproject.toml` `project.name` field                                 |
 | `cargo`      | Get and set version from `Cargo.toml` `project.version` field                                                                                                                                                           |
 | `npm`        | Get and set version from `package.json` `version` field, `package-lock.json` `version,packages.''.version` fields if the file exists, and `npm-shrinkwrap.json` `version,packages.''.version` fields if the file exists |
 | `composer`   | Get and set version from `composer.json` `project.version` field                                                                                                                                                        |
@@ -386,22 +386,21 @@ class MyProvider(VersionProvider):
 
     def set_version(self, version: str):
         self.file.write_text(version)
-
 ```
 
 ```python title="setup.py"
 from setuptools import setup
 
 setup(
-    name='my-commitizen-provider',
-    version='0.1.0',
-    py_modules=['my_provider'],
-    install_requires=['commitizen'],
-    entry_points = {
-        'commitizen.provider': [
-            'my-provider = my_provider:MyProvider',
+    name="my-commitizen-provider",
+    version="0.1.0",
+    py_modules=["my_provider"],
+    install_requires=["commitizen"],
+    entry_points={
+        "commitizen.provider": [
+            "my-provider = my_provider:MyProvider",
         ]
-    }
+    },
 )
 ```
 
