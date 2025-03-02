@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../dev_releases/">
+        <link rel="prev" href="../writing_commits/">
       
       
-        <link rel="next" href="../../faq/">
+        <link rel="next" href="../auto_check/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Monorepo support - Commitizen</title>
+        <title>Managing tags formats - Commitizen</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#configuring-commitizen-in-a-monorepo" class="md-skip">
+        <a href="#managing-tag-formats" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Monorepo support
+              Managing tags formats
             
           </span>
         </div>
@@ -656,10 +656,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../tag_format/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Managing tags formats
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -668,6 +688,53 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tag-format-and-version-scheme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tag format and version scheme
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changing-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changing convention
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-tags-to-ignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      Known tags to ignore
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -803,30 +870,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Monorepo support
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../monorepo_guidance/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -835,50 +882,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#changelog-per-component" class="md-nav__link">
-    <span class="md-ellipsis">
-      Changelog per component
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Changelog per component">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example-with-scope-in-conventional-commits" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example with scope in conventional commits
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1018,26 +1021,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#changelog-per-component" class="md-nav__link">
+  <a href="#tag-format-and-version-scheme" class="md-nav__link">
     <span class="md-ellipsis">
-      Changelog per component
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Changelog per component">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example-with-scope-in-conventional-commits" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example with scope in conventional commits
+      Tag format and version scheme
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#changing-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changing convention
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-tags-to-ignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      Known tags to ignore
+    </span>
+  </a>
   
 </li>
       
@@ -1056,64 +1062,91 @@
                   
 
 
-<h1 id="configuring-commitizen-in-a-monorepo">Configuring commitizen in a monorepo<a class="headerlink" href="#configuring-commitizen-in-a-monorepo" title="Permanent link">&para;</a></h1>
-<p>This tutorial assumes the monorepo layout is designed with multiple components that can be released independently of each
-other, it also assumes that conventional commits with scopes are in use. Some suggested layouts:</p>
-<div class="highlight"><pre><span></span><code><span class="go">.</span>
-<span class="go">├── library-b</span>
-<span class="go">│   └── .cz.toml</span>
-<span class="go">└── library-z</span>
-<span class="go">    └── .cz.toml</span>
+<h1 id="managing-tag-formats">Managing tag formats<a class="headerlink" href="#managing-tag-formats" title="Permanent link">&para;</a></h1>
+<h2 id="tag-format-and-version-scheme">Tag format and version scheme<a class="headerlink" href="#tag-format-and-version-scheme" title="Permanent link">&para;</a></h2>
+<p>For most projects, the tag format is simply the version number which is set like this:</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">[</span><span class="nv">tool.commitizen</span><span class="p p-Indicator">]</span>
+<span class="nt">tag_format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$version</span>
+<span class="nt">version_scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pep440</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="go">src</span>
-<span class="go">├── library-b</span>
-<span class="go">│   └── .cz.toml</span>
-<span class="go">└── library-z</span>
-<span class="go">    └── .cz.toml</span>
-</code></pre></div>
-<p>Sample <code>.cz.toml</code> for each component:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># library-b/.cz.toml</span>
-<span class="k">[tool.commitizen]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cz_customize&quot;</span>
-<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0&quot;</span>
-<span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${version}-library-b&quot;</span><span class="w"> </span><span class="c1"># the component name can be a prefix or suffix with or without a separator</span>
-<span class="n">ignored_tag_formats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;${version}-library-*&quot;</span><span class="p">]</span><span class="w"> </span><span class="c1"># Avoid noise from other tags</span>
-<span class="n">update_changelog_on_bump</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1"># library-z/.cz.toml</span>
-<span class="k">[tool.commitizen]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cz_customize&quot;</span>
-<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0&quot;</span>
-<span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${version}-library-z&quot;</span>
-<span class="n">ignored_tag_formats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;${version}-library-*&quot;</span><span class="p">]</span><span class="w"> </span><span class="c1"># Avoid noise from other tags</span>
-<span class="n">update_changelog_on_bump</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-</code></pre></div>
-<p>And finally, to bump each of these:</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>--config<span class="w"> </span>library-b/.cz.toml<span class="w"> </span>bump<span class="w"> </span>--yes
-cz<span class="w"> </span>--config<span class="w"> </span>library-z/.cz.toml<span class="w"> </span>bump<span class="w"> </span>--yes
-</code></pre></div>
-<h2 id="changelog-per-component">Changelog per component<a class="headerlink" href="#changelog-per-component" title="Permanent link">&para;</a></h2>
-<p>In order to filter the correct commits for each component, you'll have to come up with a strategy.</p>
-<p>For example:</p>
+<p>As this is the default value so you don't have to specify it.</p>
+<p>This setting means that:</p>
 <ul>
-<li>Trigger the pipeline based on the changed path, which can have some downsides, as you'll rely on the developer not including files from other files<ul>
-<li><a href="https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore">github actions</a> uses <code>path</code></li>
-<li><a href="https://www.jenkins.io/doc/book/pipeline/syntax/#built-in-conditions">Jenkins</a> uses <code>changeset</code></li>
-<li><a href="https://docs.gitlab.com/ee/ci/yaml/#ruleschanges">Gitlab</a> uses <code>rules:changes</code></li>
+<li>The tag generated on bump will have this format: <code>1.0.0</code> :<ul>
+<li>the version is generated following PEP440 scheme</li>
+<li>the tag is exactly the generated version</li>
 </ul>
 </li>
-<li>Filter certain pattern of the commit message (recommended)</li>
+<li>All tags having this format will be recognized as version tag when:<ul>
+<li>searching the last while bumping a release</li>
+<li>searching previous versions while:<ul>
+<li>generating incremental changelog</li>
+<li>generating a changelog for a version range</li>
 </ul>
-<h3 id="example-with-scope-in-conventional-commits">Example with scope in conventional commits<a class="headerlink" href="#example-with-scope-in-conventional-commits" title="Permanent link">&para;</a></h3>
-<p>For this example, to include the message in the changelog, we will require commits to use a specific scope.
-This way, only relevant commits will be included in the appropriate change log for a given component, and any other commit will be ignored.</p>
-<p>Example config and commit for <code>library-b</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen.customize]</span>
-<span class="n">changelog_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;^(feat|fix)</span><span class="se">\\</span><span class="s2">(library-b</span><span class="se">\\</span><span class="s2">)(!)?:&quot;</span><span class="w"> </span><span class="c1">#the pattern on types can be a wild card or any types you wish to include</span>
+</li>
+</ul>
+</li>
+<li>The changelog versions (section titles) will have this format</li>
+<li>The <code>scm</code> version provider will identify the current version using this tag format</li>
+</ul>
+<p>The version format will change depending on your configured version scheme.
+For most, it will only impact pre-releases and <a href="../dev_releases/">developmental releases</a> formats (i.e. <code>1.0.0-rc.1</code> vs. <code>1.0.0.rc1</code>)</p>
+<p>But you may need a different tagging convention, let's say using <code>semver</code> and prefixed with a <code>v</code>.
+In this case you will define your settings like this:</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">[</span><span class="nv">tool.commitizen</span><span class="p p-Indicator">]</span>
+<span class="nt">tag_format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v${version}</span>
+<span class="nt">version_scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">semver</span>
 </code></pre></div>
-<p>A commit message looking like this, would be included:</p>
-<div class="highlight"><pre><span></span><code>fix:(library-b) Some awesome message
+<p>As a result, the tag generated on bump will have this format: <code>v1.0.0</code> and the version will be generated following <code>semver</code> scheme.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Both <code>$version</code> and <code>${version}</code> syntaxes are strictly equivalent. You can use the one you prefer.</p>
+</div>
+<p>See <a href="../../commands/bump/#version_scheme">the <code>version_scheme</code> section in <code>bump</code> command documentation</a> for more details on version schemes and how to define your own.
+See <a href="../../config/#tag_format"><code>tag_format</code></a> and <a href="../../config/#version_scheme"><code>version_scheme</code></a> settings in <a href="../../config/">Configuration reference</a> for more details on these settings.</p>
+<h2 id="changing-convention">Changing convention<a class="headerlink" href="#changing-convention" title="Permanent link">&para;</a></h2>
+<p>Now, let's say you need to change the tag format for some reason (company convention, <a href="../monorepo_guidance/">migration to a monorepo</a>...).
+You will obviously want to keep all those features working as expected.</p>
+<p>Commitizen can deal with it as long as you provide the legacy tag format in the configuration.</p>
+<p>Using the previous example, let say you want to move from <code>v${version}</code> to <code>component-${version}</code>.
+Then <code>component-${version}</code> will be the new tag format and <code>v${version}</code> the legacy one.</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">[</span><span class="nv">tool.commitizen</span><span class="p p-Indicator">]</span>
+<span class="nt">tag_format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">component-${version}</span>
+<span class="nt">legacy_tag_formats</span><span class="p">:</span>
+<span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v${version}</span>
 </code></pre></div>
+<p>This way, you won't loose your version history, you'll still be able to generate you changelog properly
+and on the next version bump, your last version in the form <code>v${version}</code> will be properly recognizef if you use the <code>scm</code> version provider.
+Your new tag will be in the form <code>component-${version}</code>.</p>
+<h2 id="known-tags-to-ignore">Known tags to ignore<a class="headerlink" href="#known-tags-to-ignore" title="Permanent link">&para;</a></h2>
+<p>Now let's say you have some known tags you want to ignore, either because they are not versions, either because they are not versions of the component you are dealing with.
+As a consequence, you don't want them to trigger a warning because Commitizen detected an unknown tag format:</p>
+<p>Then you can tell Commitizen about it using the <a href="../../config/#ignored_tag_formats"><code>ignored_tag_formats</code></a> setting:</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">[</span><span class="nv">tool.commitizen</span><span class="p p-Indicator">]</span>
+<span class="nt">ignored_tag_formats</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">other-component-${version}</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prefix-*</span>
+</code></pre></div>
+<p>This will ignore:</p>
+<ul>
+<li>The <code>prod</code> tag</li>
+<li>Any version tag prefixed with <code>other-component-</code></li>
+<li>Any tag prefixed with <code>prefix-</code></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Note the <code>*</code> in the <code>prefix-*</code> pattern. This is a wildcard and only exists for <code>ignored_tag_formats</code>.
+It will match any string from any length. This allows to exclude by prefix, whether it is followed by a version or not.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you don't want to be warned when Commitizen detect an unknown tag, you can by setting:
+<div class="highlight"><pre><span></span><code>[tool.commitizen]
+ignored_tag_formats = [&quot;*&quot;]
+</code></pre></div>
+But be aware that you will not be warned if you have a typo in your tag formats.</p>
+</div>
 
 
 

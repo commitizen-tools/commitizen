@@ -671,6 +671,24 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#legacy_tag_formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      legacy_tag_formats
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignored_tag_formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      ignored_tag_formats
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#update_changelog_on_bump" class="md-nav__link">
     <span class="md-ellipsis">
       update_changelog_on_bump
@@ -1030,6 +1048,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../tutorials/tag_format/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Managing tags formats
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../tutorials/auto_check/" class="md-nav__link">
         
   
@@ -1368,6 +1407,24 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#legacy_tag_formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      legacy_tag_formats
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignored_tag_formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      ignored_tag_formats
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#update_changelog_on_bump" class="md-nav__link">
     <span class="md-ellipsis">
       update_changelog_on_bump
@@ -1678,6 +1735,18 @@ Useful for non-python projects. <a href="../commands/bump/#version-scheme">Read 
 <p>Type: <code>str</code></p>
 <p>Default: <code>$version</code></p>
 <p>Format for the git tag, useful for old projects, that use a convention like <code>"v1.2.1"</code>. <a href="../commands/bump/#tag_format">Read more</a></p>
+<h3 id="legacy_tag_formats"><code>legacy_tag_formats</code><a class="headerlink" href="#legacy_tag_formats" title="Permanent link">&para;</a></h3>
+<p>Type: <code>list</code></p>
+<p>Default: <code>[ ]</code></p>
+<p>Legacy git tag formats, useful for old projects that changed tag format.
+Tags matching those formats will be recognized as version tags and be included in the changelog.
+Each entry use the the syntax as <a href="#tag_format"><code>tag_format</code></a>. <a href="../commands/bump/#tag_format">Read more</a></p>
+<h3 id="ignored_tag_formats"><code>ignored_tag_formats</code><a class="headerlink" href="#ignored_tag_formats" title="Permanent link">&para;</a></h3>
+<p>Type: <code>list</code></p>
+<p>Default: <code>[ ]</code></p>
+<p>Tags matching those formats will be totally ignored and won't raise a warning.
+Each entry use the the syntax as <a href="#tag_format"><code>tag_format</code></a> with the addition of <code>*</code>
+that will match everything (non-greedy). <a href="../commands/bump/#tag_format">Read more</a></p>
 <h3 id="update_changelog_on_bump"><code>update_changelog_on_bump</code><a class="headerlink" href="#update_changelog_on_bump" title="Permanent link">&para;</a></h3>
 <p>Type: <code>bool</code></p>
 <p>Default: <code>false</code></p>
@@ -1873,6 +1942,10 @@ But you can use any <code>commitizen.provider</code> entrypoint as value for <co
 <tr>
 <td><code>poetry</code></td>
 <td>Get and set version from <code>pyproject.toml</code> <code>tool.poetry.version</code> field</td>
+</tr>
+<tr>
+<td><code>uv</code></td>
+<td>Get and set version from <code>pyproject.toml</code> <code>project.version</code> field and <code>uv.lock</code> <code>pacakge.version</code> field whose <code>package.name</code> field is the same as <code>pyproject.toml</code> <code>project.name</code> field</td>
 </tr>
 <tr>
 <td><code>cargo</code></td>

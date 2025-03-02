@@ -657,6 +657,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../tutorials/tag_format/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Managing tags formats
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../tutorials/auto_check/" class="md-nav__link">
         
   
@@ -915,6 +936,24 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#how-to-change-the-tag-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to change the tag format ?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-avoid-warnings-for-expected-non-version-tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to avoid warnings for expected non-version tags
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1090,6 +1129,24 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#how-to-change-the-tag-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to change the tag format ?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-avoid-warnings-for-expected-non-version-tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to avoid warnings for expected non-version tags
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1178,6 +1235,29 @@ of writing, there are no plans to implement the feature (<a href="https://github
 <li><a href="https://hynek.me/articles/semver-will-not-save-you/">Semver Will Not Save You</a></li>
 <li><a href="https://snarky.ca/why-i-dont-like-semver/">Why I Don't Like SemVer</a></li>
 </ul>
+<h2 id="how-to-change-the-tag-format">How to change the tag format ?<a class="headerlink" href="#how-to-change-the-tag-format" title="Permanent link">&para;</a></h2>
+<p>You can use the <a href="../config/#legacy_tag_formats"><code>legacy_tag_formats</code></a> to list old tag formats.
+New bumped tags will be in the new format but old ones will still work for:
+- changelog generation (full, incremental and version range)
+- bump new version computation (automatically guessed or increment given)</p>
+<p>So given if you change from <code>myproject-$version</code> to <code>${version}</code> and then <code>v${version}</code>,
+your commitizen configuration will look like this:</p>
+<div class="highlight"><pre><span></span><code><span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;v${version}&quot;</span>
+<span class="n">legacy_tag_formats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;${version}&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;myproject-$version&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
+<h2 id="how-to-avoid-warnings-for-expected-non-version-tags">How to avoid warnings for expected non-version tags<a class="headerlink" href="#how-to-avoid-warnings-for-expected-non-version-tags" title="Permanent link">&para;</a></h2>
+<p>You can explicitly ignore them with <a href="../config/#ignored_tag_formats"><code>ignored_tag_formats</code></a>.</p>
+<div class="highlight"><pre><span></span><code><span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;v${version}&quot;</span>
+<span class="n">ignored_tag_formats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;stable&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;component-*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;env/*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;v${major}.${minor}&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
 
 
 
