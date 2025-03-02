@@ -8,8 +8,6 @@ from functools import cached_property
 from string import Template
 from typing import TYPE_CHECKING, NamedTuple
 
-from typing_extensions import Self
-
 from commitizen import out
 from commitizen.defaults import DEFAULT_SETTINGS, Settings, get_tag_regexes
 from commitizen.git import GitTag
@@ -22,7 +20,15 @@ from commitizen.version_schemes import (
 )
 
 if TYPE_CHECKING:
+    import sys
+
     from commitizen.version_schemes import VersionScheme
+
+    # Self is Python 3.11+ but backported in typing-extensions
+    if sys.version_info < (3, 11):
+        from typing_extensions import Self
+    else:
+        from typing import Self
 
 
 class VersionTag(NamedTuple):
