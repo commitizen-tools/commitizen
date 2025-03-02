@@ -55,28 +55,30 @@ class TagRules:
 
     Example:
 
-    ```py
+    ```python
     settings = DEFAULT_SETTINGS.clone()
-    settings.update({
-        "tag_format": "v{version}"
-        "legacy_tag_formats": ["version{version}", "ver{version}"],
-        "ignored_tag_formats": ["ignored{version}"],
-    })
+    settings.update(
+        {
+            "tag_format": "v{version}",
+            "legacy_tag_formats": ["version{version}", "ver{version}"],
+            "ignored_tag_formats": ["ignored{version}"],
+        }
+    )
 
     rules = TagRules.from_settings(settings)
 
     assert rules.is_version_tag("v1.0.0")
     assert rules.is_version_tag("version1.0.0")
     assert rules.is_version_tag("ver1.0.0")
-    assert not rules.is_version_tag("ignored1.0.0", warn=True) # Does not warn
-    assert not rules.is_version_tag("warn1.0.0", warn=True) # Does warn
+    assert not rules.is_version_tag("ignored1.0.0", warn=True)  # Does not warn
+    assert not rules.is_version_tag("warn1.0.0", warn=True)  # Does warn
 
     assert rules.search_version("# My v1.0.0 version").version == "1.0.0"
     assert rules.extract_version("v1.0.0") == Version("1.0.0")
     try:
         assert rules.extract_version("not-a-v1.0.0")
     except InvalidVersion:
-        print "Does not match a tag format"
+        print("Does not match a tag format")
     ```
     """
 

@@ -13,7 +13,7 @@ repos:
       - id: check-useless-excludes
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v5.0.0
     hooks:
       - id: check-vcs-permalinks
       - id: end-of-file-fixer
@@ -30,13 +30,13 @@ repos:
       - id: detect-private-key
 
   - repo: https://github.com/asottile/blacken-docs
-    rev: 1.13.0
+    rev: 1.19.1
     hooks:
       - id: blacken-docs
         additional_dependencies: [ black~=23.11 ]
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.4
+    rev: v2.4.1
     hooks:
       - id: codespell
         name: Run codespell to check for common misspellings in files
