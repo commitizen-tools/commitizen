@@ -1945,7 +1945,7 @@ But you can use any <code>commitizen.provider</code> entrypoint as value for <co
 </tr>
 <tr>
 <td><code>uv</code></td>
-<td>Get and set version from <code>pyproject.toml</code> <code>project.version</code> field and <code>uv.lock</code> <code>pacakge.version</code> field whose <code>package.name</code> field is the same as <code>pyproject.toml</code> <code>project.name</code> field</td>
+<td>Get and set version from <code>pyproject.toml</code> <code>project.version</code> field and <code>uv.lock</code> <code>package.version</code> field whose <code>package.name</code> field is the same as <code>pyproject.toml</code> <code>project.name</code> field</td>
 </tr>
 <tr>
 <td><code>cargo</code></td>
@@ -1988,15 +1988,15 @@ But you can use any <code>commitizen.provider</code> entrypoint as value for <co
 <div class="highlight"><span class="filename">setup.py</span><pre><span></span><code><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span>
 
 <span class="n">setup</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my-commitizen-provider&#39;</span><span class="p">,</span>
-    <span class="n">version</span><span class="o">=</span><span class="s1">&#39;0.1.0&#39;</span><span class="p">,</span>
-    <span class="n">py_modules</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;my_provider&#39;</span><span class="p">],</span>
-    <span class="n">install_requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;commitizen&#39;</span><span class="p">],</span>
-    <span class="n">entry_points</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;commitizen.provider&#39;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s1">&#39;my-provider = my_provider:MyProvider&#39;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my-commitizen-provider&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
+    <span class="n">py_modules</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;my_provider&quot;</span><span class="p">],</span>
+    <span class="n">install_requires</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;commitizen&quot;</span><span class="p">],</span>
+    <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;commitizen.provider&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;my-provider = my_provider:MyProvider&quot;</span><span class="p">,</span>
         <span class="p">]</span>
-    <span class="p">}</span>
+    <span class="p">},</span>
 <span class="p">)</span>
 </code></pre></div>
 
