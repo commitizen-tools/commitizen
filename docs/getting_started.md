@@ -94,7 +94,7 @@ repos:
     hooks:
       - id: commitizen
       - id: commitizen-branch
-        stages: [push]
+        stages: [pre-push]
 ```
 
 After the configuration is added, you'll need to run:
