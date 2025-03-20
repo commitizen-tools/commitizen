@@ -7,7 +7,7 @@ maintainers = [
     { name = "Wei Lee", email = "weilee.rx@gmail.com" },
     { name = "Axel H.", email = "noirbizarre@gmail.com" },
 ]
-license = { text = "LICENSE" }
+license = { file = "LICENSE" }
 readme = "docs/README.md"
 requires-python = ">=3.9,<4.0"
 dependencies = [
@@ -42,6 +42,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
+    "License :: OSI Approved :: MIT License",
 ]
 
 [project.urls]
