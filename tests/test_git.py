@@ -132,11 +132,13 @@ def test_get_commits_author_and_email():
 def test_get_commits_without_email(mocker: MockFixture):
     raw_commit = (
         "a515bb8f71c403f6f7d1c17b9d8ebf2ce3959395\n"
+        "95bbfc703eb99cb49ba0d6ffd8469911303dbe63 12d3b4bdaa996ea7067a07660bb5df4772297bdd\n"
         "\n"
         "user name\n"
         "\n"
         "----------commit-delimiter----------\n"
         "12d3b4bdaa996ea7067a07660bb5df4772297bdd\n"
+        "de33bc5070de19600f2f00262b3c15efea762408\n"
         "feat(users): add username\n"
         "user name\n"
         "\n"
@@ -159,16 +161,19 @@ def test_get_commits_without_email(mocker: MockFixture):
 def test_get_commits_without_breakline_in_each_commit(mocker: MockFixture):
     raw_commit = (
         "ae9ba6fc5526cf478f52ef901418d85505109744\n"
+        "ff2f56ca844de72a9d59590831087bf5a97bac84\n"
         "bump: version 2.13.0 → 2.14.0\n"
         "GitHub Action\n"
         "action@github.com\n"
         "----------commit-delimiter----------\n"
         "ff2f56ca844de72a9d59590831087bf5a97bac84\n"
+        "b4dc83284dc8c9729032a774a037df1d1f2397d5 20a54bf1b82cd7b573351db4d1e8814dd0be205d\n"
         "Merge pull request #332 from cliles/feature/271-redux\n"
         "User\n"
         "user@email.com\n"
         "Feature/271 redux----------commit-delimiter----------\n"
         "20a54bf1b82cd7b573351db4d1e8814dd0be205d\n"
+        "658f38c3fe832cdab63ed4fb1f7b3a0969a583be\n"
         "feat(#271): enable creation of annotated tags when bumping\n"
         "User 2\n"
         "user@email.edu\n"
@@ -191,6 +196,55 @@ def test_get_commits_without_breakline_in_each_commit(mocker: MockFixture):
     assert (
         commits[2].title == "feat(#271): enable creation of annotated tags when bumping"
     )
+
+
+def test_get_commits_with_and_without_parents(mocker: MockFixture):
+    raw_commit = (
+        "4206e661bacf9643373255965f34bbdb382cb2b9\n"
+        "ae9ba6fc5526cf478f52ef901418d85505109744 bf8479e7aa1a5b9d2f491b79e3a4d4015519903e\n"
+        "Merge pull request from someone\n"
+        "Maintainer\n"
+        "maintainer@email.com\n"
+        "This is a much needed feature----------commit-delimiter----------\n"
+        "ae9ba6fc5526cf478f52ef901418d85505109744\n"
+        "ff2f56ca844de72a9d59590831087bf5a97bac84\n"
+        "Release 0.1.0\n"
+        "GitHub Action\n"
+        "action@github.com\n"
+        "----------commit-delimiter----------\n"
+        "ff2f56ca844de72a9d59590831087bf5a97bac84\n"
+        "\n"
+        "Initial commit\n"
+        "User\n"
+        "user@email.com\n"
+        "----------commit-delimiter----------\n"
+    )
+    mocker.patch("commitizen.cmd.run", return_value=FakeCommand(out=raw_commit))
+
+    commits = git.get_commits()
+
+    assert commits[0].author == "Maintainer"
+    assert commits[1].author == "GitHub Action"
+    assert commits[2].author == "User"
+
+    assert commits[0].author_email == "maintainer@email.com"
+    assert commits[1].author_email == "action@github.com"
+    assert commits[2].author_email == "user@email.com"
+
+    assert commits[0].title == "Merge pull request from someone"
+    assert commits[1].title == "Release 0.1.0"
+    assert commits[2].title == "Initial commit"
+
+    assert commits[0].body == "This is a much needed feature"
+    assert commits[1].body == ""
+    assert commits[2].body == ""
+
+    assert commits[0].parents == [
+        "ae9ba6fc5526cf478f52ef901418d85505109744",
+        "bf8479e7aa1a5b9d2f491b79e3a4d4015519903e",
+    ]
+    assert commits[1].parents == ["ff2f56ca844de72a9d59590831087bf5a97bac84"]
+    assert commits[2].parents == []
 
 
 def test_get_commits_with_signature():
