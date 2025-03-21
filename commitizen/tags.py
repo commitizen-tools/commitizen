@@ -146,7 +146,8 @@ class TagRules:
             m for regex in self.version_regexes if (m := regex.fullmatch(tag.name))
         )
         if not (m := next(candidates, None)):
-            raise InvalidVersion()
+            regexes = ", ".join([str(r) for r in self.version_regexes])
+            raise InvalidVersion(f"Invalid version tag: '{tag.name}' does not match any configured tag format: {regexes}")
         if "version" in m.groupdict():
             return self.scheme(m.group("version"))
 
