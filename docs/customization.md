@@ -507,6 +507,7 @@ Each `Change` has the following fields:
 | scope | `str | None` | An optional scope |
 | message | `str` | The commit message body |
 | sha1 | `str` | The commit `sha1` |
+| parents | `list[str]` | The parent commit(s) `sha1`(s) |
 | author | `str` | The commit author name |
 | author_email | `str` | The commit author email |
 
