@@ -228,6 +228,7 @@ class Init:
             "npm": "npm: Get and set version from package.json:project.version field",
             "pep621": "pep621: Get and set version from pyproject.toml:project.version field",
             "poetry": "poetry: Get and set version from pyproject.toml:tool.poetry.version field",
+            "uv": "uv: Get and Get and set version from pyproject.toml and uv.lock",
             "scm": "scm: Fetch the version from git and does not need to set it back",
         }
 
