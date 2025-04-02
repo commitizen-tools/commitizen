@@ -25,6 +25,10 @@ class ProjectInfo:
         return os.path.isfile("pyproject.toml")
 
     @property
+    def has_uv(self) -> bool:
+        return os.path.isfile("uv.toml")
+
+    @property
     def has_setup(self) -> bool:
         return os.path.isfile("setup.py")
 
@@ -229,6 +233,7 @@ class Init:
             "pep621": "pep621: Get and set version from pyproject.toml:project.version field",
             "poetry": "poetry: Get and set version from pyproject.toml:tool.poetry.version field",
             "scm": "scm: Fetch the version from git and does not need to set it back",
+            "uv": "uv: Get and set version from pyproject.toml:project.version field and uv.lock:package.version field where package.name matches pyproject.toml:project.name"
         }
 
         default_val = "commitizen"
@@ -243,6 +248,8 @@ class Init:
             default_val = "npm"
         elif self.project_info.is_php_composer:
             default_val = "composer"
+        elif self.project_info.is_uv:
+            default_val = "uv"
 
         choices = [
             questionary.Choice(title=title, value=value)
