@@ -1,3 +1,13 @@
+## v4.5.0 (2025-04-04)
+
+### Feat
+
+- **init**: set uv to default value if both pyproject.toml and uv.lock present
+
+### Fix
+
+- **commands/init**: add missing uv provider to "cz init"
+
 ## v4.4.1 (2025-03-02)
 
 ### Fix
