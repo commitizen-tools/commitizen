@@ -170,13 +170,15 @@ commitizen:
 
 | Parameter   | Type   | Default | Description                                                                                                                                                                                     |
 | ----------- | ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `type`      | `str`  | `None`  | The type of questions. Valid type: `list`, `input` and etc. [See More][different-question-types]                                                                                                |
+| `type`      | `str`  | `None`  | The type of questions. Valid types: `list`, `select`, `input` and etc. The `select` type provides an interactive searchable list interface. [See More][different-question-types]                  |
 | `name`      | `str`  | `None`  | The key for the value answered by user. It's used in `message_template`                                                                                                                         |
 | `message`   | `str`  | `None`  | Detail description for the question.                                                                                                                                                            |
-| `choices`   | `list` | `None`  | (OPTIONAL) The choices when `type = list`. Either use a list of values or a list of dictionaries with `name` and `value` keys. Keyboard shortcuts can be defined via `key`. See examples above. |
+| `choices`   | `list` | `None`  | (OPTIONAL) The choices when `type = list` or `type = select`. Either use a list of values or a list of dictionaries with `name` and `value` keys. Keyboard shortcuts can be defined via `key`. See examples above. |
 | `default`   | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                                                                 |
 | `filter`    | `str`  | `None`  | (OPTIONAL) Validator for user's answer. **(Work in Progress)**                                                                                                                                  |
-| `multiline` | `bool` | `False` | (OPTIONAL) Enable multiline support when `type = input`.                                                                                                                                            |
+| `multiline` | `bool` | `False` | (OPTIONAL) Enable multiline support when `type = input`.                                                                                                                                        |
+| `use_search_filter` | `bool` | `False` | (OPTIONAL) Enable search/filter functionality for list/select type questions. This allows users to type and filter through the choices.                                                  |
+| `use_jk_keys` | `bool` | `True` | (OPTIONAL) Enable/disable j/k keys for navigation in list/select type questions. Set to false if you prefer arrow keys only.                                                                    |
 
 [different-question-types]: https://github.com/tmbo/questionary#different-question-types
 
@@ -445,8 +447,8 @@ Commitizen gives you the possibility to provide your own changelog template, by:
 
 - providing one with your customization class
 - providing one from the current working directory and setting it:
-    - as [configuration][template-config]
-    - as `--template` parameter to both `bump` and `changelog` commands
+  - as [configuration][template-config]
+  - as `--template` parameter to both `bump` and `changelog` commands
 - either by providing a template with the same name as the default template
 
 By default, the template used is the `CHANGELOG.md.j2` file from the commitizen repository.
