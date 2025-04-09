@@ -1,3 +1,9 @@
+## v4.5.1 (2025-04-09)
+
+### Fix
+
+- print which tag is invalid
+
 ## v4.5.0 (2025-04-04)
 
 ### Feat
