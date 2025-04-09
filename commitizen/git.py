@@ -44,13 +44,20 @@ class GitObject:
 
 class GitCommit(GitObject):
     def __init__(
-        self, rev, title, body: str = "", author: str = "", author_email: str = ""
+        self,
+        rev,
+        title,
+        body: str = "",
+        author: str = "",
+        author_email: str = "",
+        parents: list[str] | None = None,
     ):
         self.rev = rev.strip()
         self.title = title.strip()
         self.body = body.strip()
         self.author = author.strip()
         self.author_email = author_email.strip()
+        self.parents = parents or []
 
     @property
     def message(self):
@@ -137,7 +144,9 @@ def get_commits(
     for rev_and_commit in git_log_entries:
         if not rev_and_commit:
             continue
-        rev, title, author, author_email, *body_list = rev_and_commit.split("\n")
+        rev, parents, title, author, author_email, *body_list = rev_and_commit.split(
+            "\n"
+        )
         if rev_and_commit:
             git_commit = GitCommit(
                 rev=rev.strip(),
@@ -145,6 +154,7 @@ def get_commits(
                 body="\n".join(body_list).strip(),
                 author=author,
                 author_email=author_email,
+                parents=[p for p in parents.strip().split(" ") if p],
             )
             git_commits.append(git_commit)
     return git_commits
@@ -286,7 +296,7 @@ def smart_open(*args, **kargs):
 def _get_log_as_str_list(start: str | None, end: str, args: str) -> list[str]:
     """Get string representation of each log entry"""
     delimiter = "----------commit-delimiter----------"
-    log_format: str = "%H%n%s%n%an%n%ae%n%b"
+    log_format: str = "%H%n%P%n%s%n%an%n%ae%n%b"
     git_log_cmd = (
         f"git -c log.showSignature=False log --pretty={log_format}{delimiter} {args}"
     )
