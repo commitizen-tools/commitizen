@@ -2010,6 +2010,11 @@ Migration should be straight-forward for legacy plugins:</p>
 <td>The commit <code>sha1</code></td>
 </tr>
 <tr>
+<td>parents</td>
+<td><code>list[str]</code></td>
+<td>The parent commit(s) <code>sha1</code>(s)</td>
+</tr>
+<tr>
 <td>author</td>
 <td><code>str</code></td>
 <td>The commit author name</td>
@@ -2025,6 +2030,8 @@ Migration should be straight-forward for legacy plugins:</p>
 <p class="admonition-title">Note</p>
 <p>The field values depend on the customization class and/or the settings you provide</p>
 </div>
+<p>The <code>parents</code> field can be used to identify merge commits and generate a changelog based on those. Another use case
+is listing commits that belong to the same pull request.</p>
 <p>When using another template (either provided by a plugin or by yourself), you can also pass extra template variables
 by:</p>
 <ul>
