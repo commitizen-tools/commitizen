@@ -1,3 +1,10 @@
+## v4.6.0 (2025-04-13)
+
+### Feat
+
+- **changelog**: expose commit parents' digests when processing commits
+- **git**: add parents' digests in commit information
+
 ## v4.5.1 (2025-04-09)
 
 ### Fix
