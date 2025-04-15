@@ -32,21 +32,28 @@ class Changelog:
             raise NotAGitProjectError()
 
         self.config: BaseConfig = config
+        changelog_file_name = args.get("file_name") or cast(
+            str, self.config.settings.get("changelog_file")
+        )
+        if not isinstance(changelog_file_name, str):
+            raise NotAllowed(
+                "Changelog file name is broken.\n"
+                "Check the flag `--file-name` in the terminal "
+                f"or the setting `changelog_file` in {self.config.path}"
+            )
+        self.file_name = (
+            str(Path(self.config.path.parent) / changelog_file_name)
+            if self.config.path is not None
+            else changelog_file_name
+        )
+
         self.encoding = self.config.settings["encoding"]
         self.cz = factory.commiter_factory(self.config)
 
         self.start_rev = args.get("start_rev") or self.config.settings.get(
             "changelog_start_rev"
         )
-        self.file_name = args.get("file_name") or cast(
-            str, self.config.settings.get("changelog_file")
-        )
-        if not isinstance(self.file_name, str):
-            raise NotAllowed(
-                "Changelog file name is broken.\n"
-                "Check the flag `--file-name` in the terminal "
-                f"or the setting `changelog_file` in {self.config.path}"
-            )
+
         self.changelog_format = get_changelog_format(self.config, self.file_name)
 
         self.incremental = args["incremental"] or self.config.settings.get(
