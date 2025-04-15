@@ -1,13 +1,18 @@
+from __future__ import annotations
+
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
+from unittest.mock import Mock
 
 import pytest
 from jinja2 import FileSystemLoader
 
 from commitizen import changelog, git
 from commitizen.changelog_formats import ChangelogFormat
+from commitizen.commands.changelog import Changelog
+from commitizen.config import BaseConfig
 from commitizen.cz.conventional_commits.conventional_commits import (
     ConventionalCommitsCz,
 )
@@ -1499,7 +1504,7 @@ def test_changelog_message_builder_hook_can_access_and_modify_change_type(
 def test_render_changelog_with_changelog_release_hook(
     gitcommits, tags, any_changelog_format: ChangelogFormat
 ):
-    def changelog_release_hook(release: dict, tag: Optional[git.GitTag]) -> dict:
+    def changelog_release_hook(release: dict, tag: git.GitTag | None) -> dict:
         release["extra"] = "whatever"
         return release
 
@@ -1631,3 +1636,32 @@ def test_tags_rules_get_version_tags(capsys: pytest.CaptureFixture):
     captured = capsys.readouterr()
     assert captured.err.count("InvalidVersion") == 2
     assert captured.err.count("not-a-version") == 2
+
+
+def test_changelog_file_name_from_args_and_config():
+    mock_config = Mock(spec=BaseConfig)
+    mock_config.path.parent = "/my/project/"
+    mock_config.settings = {
+        "name": "cz_conventional_commits",
+        "changelog_file": "CHANGELOG.md",
+        "encoding": "utf-8",
+        "changelog_start_rev": "v1.0.0",
+        "tag_format": "$version",
+        "legacy_tag_formats": [],
+        "ignored_tag_formats": [],
+        "incremental": True,
+        "changelog_merge_prerelease": True,
+    }
+
+    args = {
+        "file_name": "CUSTOM.md",
+        "incremental": None,
+        "dry_run": False,
+        "unreleased_version": "1.0.1",
+    }
+    changelog = Changelog(mock_config, args)
+    assert changelog.file_name == "/my/project/CUSTOM.md"
+
+    args = {"incremental": None, "dry_run": False, "unreleased_version": "1.0.1"}
+    changelog = Changelog(mock_config, args)
+    assert changelog.file_name == "/my/project/CHANGELOG.md"
