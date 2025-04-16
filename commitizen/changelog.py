@@ -172,6 +172,7 @@ def process_commit_message(
 ):
     message: dict = {
         "sha1": commit.rev,
+        "parents": commit.parents,
         "author": commit.author,
         "author_email": commit.author_email,
         **parsed.groupdict(),

@@ -1,8 +1,8 @@
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
 from unittest.mock import Mock
+from typing import Any, Optional
 
 import pytest
 from jinja2 import FileSystemLoader
@@ -17,9 +17,10 @@ from commitizen.cz.conventional_commits.conventional_commits import (
 from commitizen.exceptions import InvalidConfigurationError
 from commitizen.version_schemes import Pep440
 
-COMMITS_DATA = [
+COMMITS_DATA: list[dict[str, Any]] = [
     {
         "rev": "141ee441c9c9da0809c554103a558eb17c30ed17",
+        "parents": ["6c4948501031b7d6405b54b21d3d635827f9421b"],
         "title": "bump: version 1.1.1 → 1.2.0",
         "body": "",
         "author": "Commitizen",
@@ -27,6 +28,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "6c4948501031b7d6405b54b21d3d635827f9421b",
+        "parents": ["ddd220ad515502200fe2dde443614c1075d26238"],
         "title": "docs: how to create custom bumps",
         "body": "",
         "author": "Commitizen",
@@ -34,6 +36,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "ddd220ad515502200fe2dde443614c1075d26238",
+        "parents": ["ad17acff2e3a2e141cbc3c6efd7705e4e6de9bfc"],
         "title": "feat: custom cz plugins now support bumping version",
         "body": "",
         "author": "Commitizen",
@@ -41,6 +44,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "ad17acff2e3a2e141cbc3c6efd7705e4e6de9bfc",
+        "parents": ["56c8a8da84e42b526bcbe130bd194306f7c7e813"],
         "title": "docs: added bump gif",
         "body": "",
         "author": "Commitizen",
@@ -48,6 +52,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "56c8a8da84e42b526bcbe130bd194306f7c7e813",
+        "parents": ["74c6134b1b2e6bb8b07ed53410faabe99b204f36"],
         "title": "bump: version 1.1.0 → 1.1.1",
         "body": "",
         "author": "Commitizen",
@@ -55,6 +60,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "74c6134b1b2e6bb8b07ed53410faabe99b204f36",
+        "parents": ["cbc7b5f22c4e74deff4bc92d14e19bd93524711e"],
         "title": "refactor: changed stdout statements",
         "body": "",
         "author": "Commitizen",
@@ -62,6 +68,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "cbc7b5f22c4e74deff4bc92d14e19bd93524711e",
+        "parents": ["1ba46f2a63cb9d6e7472eaece21528c8cd28b118"],
         "title": "fix(bump): commit message now fits better with semver",
         "body": "",
         "author": "Commitizen",
@@ -69,6 +76,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "1ba46f2a63cb9d6e7472eaece21528c8cd28b118",
+        "parents": ["c35dbffd1bb98bb0b3d1593797e79d1c3366af8f"],
         "title": "fix: conventional commit 'breaking change' in body instead of title",
         "body": "closes #16",
         "author": "Commitizen",
@@ -76,6 +84,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "c35dbffd1bb98bb0b3d1593797e79d1c3366af8f",
+        "parents": ["25313397a4ac3dc5b5c986017bee2a614399509d"],
         "title": "refactor(schema): command logic removed from commitizen base",
         "body": "",
         "author": "Commitizen",
@@ -83,6 +92,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "25313397a4ac3dc5b5c986017bee2a614399509d",
+        "parents": ["d2f13ac41b4e48995b3b619d931c82451886e6ff"],
         "title": "refactor(info): command logic removed from commitizen base",
         "body": "",
         "author": "Commitizen",
@@ -90,6 +100,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "d2f13ac41b4e48995b3b619d931c82451886e6ff",
+        "parents": ["d839e317e5b26671b010584ad8cc6bf362400fa1"],
         "title": "refactor(example): command logic removed from commitizen base",
         "body": "",
         "author": "Commitizen",
@@ -97,6 +108,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "d839e317e5b26671b010584ad8cc6bf362400fa1",
+        "parents": ["12d0e65beda969f7983c444ceedc2a01584f4e08"],
         "title": "refactor(commit): moved most of the commit logic to the commit command",
         "body": "",
         "author": "Commitizen",
@@ -104,6 +116,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "12d0e65beda969f7983c444ceedc2a01584f4e08",
+        "parents": ["fb4c85abe51c228e50773e424cbd885a8b6c610d"],
         "title": "docs(README): updated documentation url)",
         "body": "",
         "author": "Commitizen",
@@ -111,6 +124,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "fb4c85abe51c228e50773e424cbd885a8b6c610d",
+        "parents": ["17efb44d2cd16f6621413691a543e467c7d2dda6"],
         "title": "docs: mkdocs documentation",
         "body": "",
         "author": "Commitizen",
@@ -118,6 +132,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "17efb44d2cd16f6621413691a543e467c7d2dda6",
+        "parents": ["6012d9eecfce8163d75c8fff179788e9ad5347da"],
         "title": "Bump version 1.0.0 → 1.1.0",
         "body": "",
         "author": "Commitizen",
@@ -125,6 +140,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "6012d9eecfce8163d75c8fff179788e9ad5347da",
+        "parents": ["0c7fb0ca0168864dfc55d83c210da57771a18319"],
         "title": "test: fixed issues with conf",
         "body": "",
         "author": "Commitizen",
@@ -132,6 +148,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "0c7fb0ca0168864dfc55d83c210da57771a18319",
+        "parents": ["cb1dd2019d522644da5bdc2594dd6dee17122d7f"],
         "title": "docs(README): some new information about bump",
         "body": "",
         "author": "Commitizen",
@@ -139,6 +156,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "cb1dd2019d522644da5bdc2594dd6dee17122d7f",
+        "parents": ["9c7450f85df6bf6be508e79abf00855a30c3c73c"],
         "title": "feat: new working bump command",
         "body": "",
         "author": "Commitizen",
@@ -146,6 +164,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "9c7450f85df6bf6be508e79abf00855a30c3c73c",
+        "parents": ["9f3af3772baab167e3fd8775d37f041440184251"],
         "title": "feat: create version tag",
         "body": "",
         "author": "Commitizen",
@@ -153,6 +172,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "9f3af3772baab167e3fd8775d37f041440184251",
+        "parents": ["b0d6a3defbfde14e676e7eb34946409297d0221b"],
         "title": "docs: added new changelog",
         "body": "",
         "author": "Commitizen",
@@ -160,6 +180,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "b0d6a3defbfde14e676e7eb34946409297d0221b",
+        "parents": ["d630d07d912e420f0880551f3ac94e933f9d3beb"],
         "title": "feat: update given files with new version",
         "body": "",
         "author": "Commitizen",
@@ -167,6 +188,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "d630d07d912e420f0880551f3ac94e933f9d3beb",
+        "parents": ["1792b8980c58787906dbe6836f93f31971b1ec2d"],
         "title": "fix: removed all from commit",
         "body": "",
         "author": "Commitizen",
@@ -174,6 +196,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "1792b8980c58787906dbe6836f93f31971b1ec2d",
+        "parents": ["52def1ea3555185ba4b936b463311949907e31ec"],
         "title": "feat(config): new set key, used to set version to cfg",
         "body": "",
         "author": "Commitizen",
@@ -181,6 +204,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "52def1ea3555185ba4b936b463311949907e31ec",
+        "parents": ["3127e05077288a5e2b62893345590bf1096141b7"],
         "title": "feat: support for pyproject.toml",
         "body": "",
         "author": "Commitizen",
@@ -188,6 +212,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "3127e05077288a5e2b62893345590bf1096141b7",
+        "parents": ["fd480ed90a80a6ffa540549408403d5b60d0e90c"],
         "title": "feat: first semantic version bump implementation",
         "body": "",
         "author": "Commitizen",
@@ -195,6 +220,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "fd480ed90a80a6ffa540549408403d5b60d0e90c",
+        "parents": ["e4840a059731c0bf488381ffc77e989e85dd81ad"],
         "title": "fix: fix config file not working",
         "body": "",
         "author": "Commitizen",
@@ -202,6 +228,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "e4840a059731c0bf488381ffc77e989e85dd81ad",
+        "parents": ["aa44a92d68014d0da98965c0c2cb8c07957d4362"],
         "title": "refactor: added commands folder, better integration with decli",
         "body": "",
         "author": "Commitizen",
@@ -209,6 +236,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "aa44a92d68014d0da98965c0c2cb8c07957d4362",
+        "parents": ["58bb709765380dbd46b74ce6e8978515764eb955"],
         "title": "Bump version: 1.0.0b2 → 1.0.0",
         "body": "",
         "author": "Commitizen",
@@ -216,6 +244,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "58bb709765380dbd46b74ce6e8978515764eb955",
+        "parents": ["97afb0bb48e72b6feca793091a8a23c706693257"],
         "title": "docs(README): new badges",
         "body": "",
         "author": "Commitizen",
@@ -223,6 +252,10 @@ COMMITS_DATA = [
     },
     {
         "rev": "97afb0bb48e72b6feca793091a8a23c706693257",
+        "parents": [
+            "9cecb9224aa7fa68d4afeac37eba2a25770ef251",
+            "e004a90b81ea5b374f118759bce5951202d03d69",
+        ],
         "title": "Merge pull request #10 from Woile/feat/decli",
         "body": "Feat/decli",
         "author": "Commitizen",
@@ -230,6 +263,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "9cecb9224aa7fa68d4afeac37eba2a25770ef251",
+        "parents": ["f5781d1a2954d71c14ade2a6a1a95b91310b2577"],
         "title": "style: black to files",
         "body": "",
         "author": "Commitizen",
@@ -237,6 +271,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "f5781d1a2954d71c14ade2a6a1a95b91310b2577",
+        "parents": ["80105fb3c6d45369bc0cbf787bd329fba603864c"],
         "title": "ci: added travis",
         "body": "",
         "author": "Commitizen",
@@ -244,6 +279,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "80105fb3c6d45369bc0cbf787bd329fba603864c",
+        "parents": ["a96008496ffefb6b1dd9b251cb479eac6a0487f7"],
         "title": "refactor: removed delegator, added decli and many tests",
         "body": "BREAKING CHANGE: API is stable",
         "author": "Commitizen",
@@ -251,6 +287,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "a96008496ffefb6b1dd9b251cb479eac6a0487f7",
+        "parents": ["aab33d13110f26604fb786878856ec0b9e5fc32b"],
         "title": "docs: updated test command",
         "body": "",
         "author": "Commitizen",
@@ -258,6 +295,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "aab33d13110f26604fb786878856ec0b9e5fc32b",
+        "parents": ["b73791563d2f218806786090fb49ef70faa51a3a"],
         "title": "Bump version: 1.0.0b1 → 1.0.0b2",
         "body": "",
         "author": "Commitizen",
@@ -265,6 +303,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "b73791563d2f218806786090fb49ef70faa51a3a",
+        "parents": ["7aa06a454fb717408b3657faa590731fb4ab3719"],
         "title": "docs(README): updated to reflect current state",
         "body": "",
         "author": "Commitizen",
@@ -272,6 +311,10 @@ COMMITS_DATA = [
     },
     {
         "rev": "7aa06a454fb717408b3657faa590731fb4ab3719",
+        "parents": [
+            "7c7e96b723c2aaa1aec3a52561f680adf0b60e97",
+            "9589a65880016996cff156b920472b9d28d771ca",
+        ],
         "title": "Merge pull request #9 from Woile/dev",
         "body": "feat: py3 only, tests and conventional commits 1.0",
         "author": "Commitizen",
@@ -279,6 +322,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "7c7e96b723c2aaa1aec3a52561f680adf0b60e97",
+        "parents": ["ed830019581c83ba633bfd734720e6758eca6061"],
         "title": "Bump version: 0.9.11 → 1.0.0b1",
         "body": "",
         "author": "Commitizen",
@@ -286,6 +330,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "ed830019581c83ba633bfd734720e6758eca6061",
+        "parents": ["c52eca6f74f844ab3ffbde61d98ef96071e132b7"],
         "title": "feat: py3 only, tests and conventional commits 1.0",
         "body": "more tests\npyproject instead of Pipfile\nquestionary instead of whaaaaat (promptkit 2.0.0 support)",
         "author": "Commitizen",
@@ -293,6 +338,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "c52eca6f74f844ab3ffbde61d98ef96071e132b7",
+        "parents": ["0326652b2657083929507ee66d4d1a0899e861ba"],
         "title": "Bump version: 0.9.10 → 0.9.11",
         "body": "",
         "author": "Commitizen",
@@ -300,6 +346,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "0326652b2657083929507ee66d4d1a0899e861ba",
+        "parents": ["b3f89892222340150e32631ae6b7aab65230036f"],
         "title": "fix(config): load config reads in order without failing if there is no commitizen section",
         "body": "Closes #8",
         "author": "Commitizen",
@@ -307,6 +354,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "b3f89892222340150e32631ae6b7aab65230036f",
+        "parents": ["5e837bf8ef0735193597372cd2d85e31a8f715b9"],
         "title": "Bump version: 0.9.9 → 0.9.10",
         "body": "",
         "author": "Commitizen",
@@ -314,6 +362,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "5e837bf8ef0735193597372cd2d85e31a8f715b9",
+        "parents": ["684e0259cc95c7c5e94854608cd3dcebbd53219e"],
         "title": "fix: parse scope (this is my punishment for not having tests)",
         "body": "",
         "author": "Commitizen",
@@ -321,6 +370,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "684e0259cc95c7c5e94854608cd3dcebbd53219e",
+        "parents": ["ca38eac6ff09870851b5c76a6ff0a2a8e5ecda15"],
         "title": "Bump version: 0.9.8 → 0.9.9",
         "body": "",
         "author": "Commitizen",
@@ -328,6 +378,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "ca38eac6ff09870851b5c76a6ff0a2a8e5ecda15",
+        "parents": ["64168f18d4628718c49689ee16430549e96c5d4b"],
         "title": "fix: parse scope empty",
         "body": "",
         "author": "Commitizen",
@@ -335,6 +386,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "64168f18d4628718c49689ee16430549e96c5d4b",
+        "parents": ["9d4def716ef235a1fa5ae61614366423fbc8256f"],
         "title": "Bump version: 0.9.7 → 0.9.8",
         "body": "",
         "author": "Commitizen",
@@ -342,6 +394,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "9d4def716ef235a1fa5ae61614366423fbc8256f",
+        "parents": ["33b0bf1a0a4dc60aac45ed47476d2e5473add09e"],
         "title": "fix(scope): parse correctly again",
         "body": "",
         "author": "Commitizen",
@@ -349,6 +402,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "33b0bf1a0a4dc60aac45ed47476d2e5473add09e",
+        "parents": ["696885e891ec35775daeb5fec3ba2ab92c2629e1"],
         "title": "Bump version: 0.9.6 → 0.9.7",
         "body": "",
         "author": "Commitizen",
@@ -356,6 +410,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "696885e891ec35775daeb5fec3ba2ab92c2629e1",
+        "parents": ["bef4a86761a3bda309c962bae5d22ce9b57119e4"],
         "title": "fix(scope): parse correctly",
         "body": "",
         "author": "Commitizen",
@@ -363,6 +418,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "bef4a86761a3bda309c962bae5d22ce9b57119e4",
+        "parents": ["72472efb80f08ee3fd844660afa012c8cb256e4b"],
         "title": "Bump version: 0.9.5 → 0.9.6",
         "body": "",
         "author": "Commitizen",
@@ -370,6 +426,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "72472efb80f08ee3fd844660afa012c8cb256e4b",
+        "parents": ["b5561ce0ab3b56bb87712c8f90bcf37cf2474f1b"],
         "title": "refactor(conventionalCommit): moved filters to questions instead of message",
         "body": "",
         "author": "Commitizen",
@@ -377,6 +434,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "b5561ce0ab3b56bb87712c8f90bcf37cf2474f1b",
+        "parents": ["3e31714dc737029d96898f412e4ecd2be1bcd0ce"],
         "title": "fix(manifest): included missing files",
         "body": "",
         "author": "Commitizen",
@@ -384,6 +442,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "3e31714dc737029d96898f412e4ecd2be1bcd0ce",
+        "parents": ["9df721e06595fdd216884c36a28770438b4f4a39"],
         "title": "Bump version: 0.9.4 → 0.9.5",
         "body": "",
         "author": "Commitizen",
@@ -391,6 +450,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "9df721e06595fdd216884c36a28770438b4f4a39",
+        "parents": ["0cf6ada372470c8d09e6c9e68ebf94bbd5a1656f"],
         "title": "fix(config): home path for python versions between 3.0 and 3.5",
         "body": "",
         "author": "Commitizen",
@@ -398,6 +458,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "0cf6ada372470c8d09e6c9e68ebf94bbd5a1656f",
+        "parents": ["973c6b3e100f6f69a3fe48bd8ee55c135b96c318"],
         "title": "Bump version: 0.9.3 → 0.9.4",
         "body": "",
         "author": "Commitizen",
@@ -405,6 +466,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "973c6b3e100f6f69a3fe48bd8ee55c135b96c318",
+        "parents": ["dacc86159b260ee98eb5f57941c99ba731a01399"],
         "title": "feat(cli): added version",
         "body": "",
         "author": "Commitizen",
@@ -412,6 +474,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "dacc86159b260ee98eb5f57941c99ba731a01399",
+        "parents": ["4368f3c3cbfd4a1ced339212230d854bc5bab496"],
         "title": "Bump version: 0.9.2 → 0.9.3",
         "body": "",
         "author": "Commitizen",
@@ -419,6 +482,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "4368f3c3cbfd4a1ced339212230d854bc5bab496",
+        "parents": ["da94133288727d35dae9b91866a25045038f2d38"],
         "title": "feat(committer): conventional commit is a bit more intelligent now",
         "body": "",
         "author": "Commitizen",
@@ -426,6 +490,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "da94133288727d35dae9b91866a25045038f2d38",
+        "parents": ["1541f54503d2e1cf39bd777c0ca5ab5eb78772ba"],
         "title": "docs(README): motivation",
         "body": "",
         "author": "Commitizen",
@@ -433,6 +498,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "1541f54503d2e1cf39bd777c0ca5ab5eb78772ba",
+        "parents": ["ddc855a637b7879108308b8dbd85a0fd27c7e0e7"],
         "title": "Bump version: 0.9.1 → 0.9.2",
         "body": "",
         "author": "Commitizen",
@@ -440,6 +506,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "ddc855a637b7879108308b8dbd85a0fd27c7e0e7",
+        "parents": ["46e9032e18a819e466618c7a014bcb0e9981af9e"],
         "title": "refactor: renamed conventional_changelog to conventional_commits, not backward compatible",
         "body": "",
         "author": "Commitizen",
@@ -447,6 +514,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "46e9032e18a819e466618c7a014bcb0e9981af9e",
+        "parents": ["0fef73cd7dc77a25b82e197e7c1d3144a58c1350"],
         "title": "Bump version: 0.9.0 → 0.9.1",
         "body": "",
         "author": "Commitizen",
@@ -454,6 +522,7 @@ COMMITS_DATA = [
     },
     {
         "rev": "0fef73cd7dc77a25b82e197e7c1d3144a58c1350",
+        "parents": [],
         "title": "fix(setup.py): future is now required for every python version",
         "body": "",
         "author": "Commitizen",
@@ -492,6 +561,7 @@ def gitcommits() -> list:
             commit["body"],
             commit["author"],
             commit["author_email"],
+            commit["parents"],
         )
         for commit in COMMITS_DATA
     ]
@@ -1111,6 +1181,7 @@ def test_generate_tree_from_commits(gitcommits, tags, merge_prereleases):
                 assert change["author"] == "Commitizen"
                 assert change["author_email"] in "author@cz.dev"
                 assert "sha1" in change
+                assert "parents" in change
 
 
 def test_generate_tree_from_commits_with_no_commits(tags):

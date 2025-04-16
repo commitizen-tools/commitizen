@@ -25,12 +25,20 @@ class ProjectInfo:
         return os.path.isfile("pyproject.toml")
 
     @property
+    def has_uv_lock(self) -> bool:
+        return os.path.isfile("uv.lock")
+
+    @property
     def has_setup(self) -> bool:
         return os.path.isfile("setup.py")
 
     @property
     def has_pre_commit_config(self) -> bool:
         return os.path.isfile(".pre-commit-config.yaml")
+
+    @property
+    def is_python_uv(self) -> bool:
+        return self.has_pyproject and self.has_uv_lock
 
     @property
     def is_python_poetry(self) -> bool:
@@ -228,6 +236,7 @@ class Init:
             "npm": "npm: Get and set version from package.json:project.version field",
             "pep621": "pep621: Get and set version from pyproject.toml:project.version field",
             "poetry": "poetry: Get and set version from pyproject.toml:tool.poetry.version field",
+            "uv": "uv: Get and Get and set version from pyproject.toml and uv.lock",
             "scm": "scm: Fetch the version from git and does not need to set it back",
         }
 
@@ -235,6 +244,8 @@ class Init:
         if self.project_info.is_python:
             if self.project_info.is_python_poetry:
                 default_val = "poetry"
+            elif self.project_info.is_python_uv:
+                default_val = "uv"
             else:
                 default_val = "pep621"
         elif self.project_info.is_rust_cargo:

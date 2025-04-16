@@ -1,3 +1,26 @@
+## v4.6.0 (2025-04-13)
+
+### Feat
+
+- **changelog**: expose commit parents' digests when processing commits
+- **git**: add parents' digests in commit information
+
+## v4.5.1 (2025-04-09)
+
+### Fix
+
+- print which tag is invalid
+
+## v4.5.0 (2025-04-04)
+
+### Feat
+
+- **init**: set uv to default value if both pyproject.toml and uv.lock present
+
+### Fix
+
+- **commands/init**: add missing uv provider to "cz init"
+
 ## v4.4.1 (2025-03-02)
 
 ### Fix
