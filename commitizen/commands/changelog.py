@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import os.path
 from difflib import SequenceMatcher
 from operator import itemgetter
@@ -42,7 +43,7 @@ class Changelog:
                 f"or the setting `changelog_file` in {self.config.path}"
             )
         self.file_name = (
-            str(Path(self.config.path.parent) / changelog_file_name)
+            os.path.join(str(self.config.path.parent), changelog_file_name)
             if self.config.path is not None
             else changelog_file_name
         )
