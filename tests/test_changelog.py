@@ -1,8 +1,9 @@
+import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from unittest.mock import Mock
 from typing import Any, Optional
+from unittest.mock import Mock
 
 import pytest
 from jinja2 import FileSystemLoader
@@ -1638,7 +1639,7 @@ def test_tags_rules_get_version_tags(capsys: pytest.CaptureFixture):
 
 def test_changelog_file_name_from_args_and_config():
     mock_config = Mock(spec=BaseConfig)
-    mock_config.path.parent = "/my/project/"
+    mock_config.path.parent = "/my/project"
     mock_config.settings = {
         "name": "cz_conventional_commits",
         "changelog_file": "CHANGELOG.md",
@@ -1658,8 +1659,12 @@ def test_changelog_file_name_from_args_and_config():
         "unreleased_version": "1.0.1",
     }
     changelog = Changelog(mock_config, args)
-    assert changelog.file_name == "/my/project/CUSTOM.md"
+    assert os.path.normpath(changelog.file_name) == os.path.normpath(
+        os.path.join("/my/project", "CUSTOM.md")
+    )
 
     args = {"incremental": None, "dry_run": False, "unreleased_version": "1.0.1"}
     changelog = Changelog(mock_config, args)
-    assert changelog.file_name == "/my/project/CHANGELOG.md"
+    assert os.path.normpath(changelog.file_name) == os.path.normpath(
+        os.path.join("/my/project", "CHANGELOG.md")
+    )
