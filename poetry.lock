@@ -2,14 +2,14 @@
 
 [[package]]
 name = "argcomplete"
-version = "3.5.3"
+version = "3.6.2"
 description = "Bash tab completion for argparse"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "argcomplete-3.5.3-py3-none-any.whl", hash = "sha256:2ab2c4a215c59fd6caaff41a869480a23e8f6a5f910b266c1808037f4e375b61"},
-    {file = "argcomplete-3.5.3.tar.gz", hash = "sha256:c12bf50eded8aebb298c7b7da7a5ff3ee24dffd9f5281867dfe1424b58c55392"},
+    {file = "argcomplete-3.6.2-py3-none-any.whl", hash = "sha256:65b3133a29ad53fb42c48cf5114752c7ab66c1c38544fdf6460f450c09b42591"},
+    {file = "argcomplete-3.6.2.tar.gz", hash = "sha256:d0519b1bc867f5f4f4713c41ad0aba73a4a5f007449716b16f385f2166dc6adf"},
 ]
 
 [package.extras]
@@ -1965,4 +1965,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<4.0"
-content-hash = "b0f8544806163bc0dddc039eb313f9d82119b845b3a19dedc381e9c88e8f4466"
+content-hash = "e15b424a0569f939e297c8abfcf09753f1fbcc5b4ad891163cc0982accd3b372"
