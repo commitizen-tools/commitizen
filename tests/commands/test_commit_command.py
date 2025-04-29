@@ -511,8 +511,6 @@ def test_manual_edit(editor, config, mocker: MockFixture, tmp_path):
 
         assert edited_message == test_message.strip()
 
-        temp_file.unlink()
-
 
 @skip_below_py_3_13
 def test_commit_command_shows_description_when_use_help_option(

@@ -89,7 +89,7 @@ class Commit:
         subprocess.call(argv)
         with open(file_path) as temp_file:
             message = temp_file.read().strip()
-        file.unlink()
+        os.unlink(file.name)
         return message
 
     def __call__(self):
