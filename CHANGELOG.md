@@ -1,3 +1,9 @@
+## v4.6.1 (2025-05-05)
+
+### Fix
+
+- **commit**: use os.unlink to remove temp file
+
 ## v4.6.0 (2025-04-13)
 
 ### Feat
