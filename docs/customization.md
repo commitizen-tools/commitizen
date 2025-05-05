@@ -177,6 +177,7 @@ commitizen:
 | `default`   | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                                                                 |
 | `filter`    | `str`  | `None`  | (OPTIONAL) Validator for user's answer. **(Work in Progress)**                                                                                                                                  |
 | `multiline` | `bool` | `False` | (OPTIONAL) Enable multiline support when `type = input`.                                                                                                                                            |
+
 [different-question-types]: https://github.com/tmbo/questionary#different-question-types
 
 #### Shortcut keys
