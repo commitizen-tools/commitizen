@@ -164,7 +164,7 @@ commitizen:
 | `change_type_map`   | `dict` | `None`  | (OPTIONAL) Dictionary mapping the type of the commit to a changelog entry                                                                                                                                                        |
 
 [jinja2]: https://jinja.palletsprojects.com/en/2.10.x/
-[changelog-spec]: https://commitizen-tools.github.io/commitizen/changelog/
+[changelog-spec]: https://commitizen-tools.github.io/commitizen/commands/changelog/
 
 #### Detailed `questions` content
 
@@ -177,6 +177,7 @@ commitizen:
 | `default`   | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                                                                 |
 | `filter`    | `str`  | `None`  | (OPTIONAL) Validator for user's answer. **(Work in Progress)**                                                                                                                                  |
 | `multiline` | `bool` | `False` | (OPTIONAL) Enable multiline support when `type = input`.                                                                                                                                            |
+
 [different-question-types]: https://github.com/tmbo/questionary#different-question-types
 
 #### Shortcut keys
