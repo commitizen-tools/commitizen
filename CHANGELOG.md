@@ -1,3 +1,9 @@
+## v4.6.2 (2025-05-05)
+
+### Fix
+
+- **docs**: fix url link and table formatting in the customization docs (#1399)
+
 ## v4.6.1 (2025-05-05)
 
 ### Fix
