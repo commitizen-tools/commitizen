@@ -1109,10 +1109,10 @@ cz<span class="w"> </span>--config<span class="w"> </span>library-z/.cz.toml<spa
 This way, only relevant commits will be included in the appropriate change log for a given component, and any other commit will be ignored.</p>
 <p>Example config and commit for <code>library-b</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen.customize]</span>
-<span class="n">changelog_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;^(feat|fix)</span><span class="se">\\</span><span class="s2">(library-b</span><span class="se">\\</span><span class="s2">)(!)?:&quot;</span><span class="w"> </span><span class="c1">#the pattern on types can be a wild card or any types you wish to include</span>
+<span class="n">changelog_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;^(feat|fix)</span><span class="se">\(</span><span class="s2">library-b</span><span class="se">\)</span><span class="s2">(!)?:&quot;</span><span class="w"> </span><span class="c1">#the pattern on types can be a wild card or any types you wish to include</span>
 </code></pre></div>
 <p>A commit message looking like this, would be included:</p>
-<div class="highlight"><pre><span></span><code>fix:(library-b) Some awesome message
+<div class="highlight"><pre><span></span><code>fix(library-b): Some awesome message
 </code></pre></div>
 
 
