@@ -71,7 +71,7 @@ Example config and commit for `library-b`:
 
 ```toml
 [tool.commitizen.customize]
-changelog_pattern = "^(feat|fix)\(library-b\)(!)?:" #the pattern on types can be a wild card or any types you wish to include
+changelog_pattern = "^(feat|fix)\\(library-b\\)(!)?:" #the pattern on types can be a wild card or any types you wish to include
 ```
 
 A commit message looking like this, would be included:
