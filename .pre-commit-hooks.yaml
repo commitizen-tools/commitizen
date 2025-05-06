@@ -18,7 +18,8 @@
     default branch on the origin repository. Useful for checking messages after
     the fact (e.g., pre-push or in CI) without an expensive check of the entire
     repository history.
-  entry: cz check
+  entry: cz -nr 3 check
+  # FIXME: origin/HEAD seems to be wrong. it probably should be origin/master or origin/main instead
   args: [--rev-range, origin/HEAD..HEAD]
   always_run: true
   pass_filenames: false
