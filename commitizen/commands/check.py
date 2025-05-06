@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 import sys
+from collections.abc import Generator
 from typing import Any
 
 from commitizen import factory, git, out
@@ -32,7 +33,6 @@ class Check:
         self.max_msg_length: int = arguments.get("message_length_limit", 0)
 
         # we need to distinguish between None and [], which is a valid value
-
         allowed_prefixes = arguments.get("allowed_prefixes")
         self.allowed_prefixes: list[str] = (
             allowed_prefixes
@@ -46,7 +46,7 @@ class Check:
         self.encoding = config.settings["encoding"]
         self.cz = factory.commiter_factory(self.config)
 
-    def _valid_command_argument(self):
+    def _valid_command_argument(self) -> None:
         num_exclusive_args_provided = sum(
             arg is not None
             for arg in (self.commit_msg_file, self.commit_msg, self.rev_range)
@@ -59,7 +59,7 @@ class Check:
                 "See 'cz check -h' for more information"
             )
 
-    def __call__(self):
+    def __call__(self) -> None:
         """Validate if commit messages follows the conventional pattern.
 
         Raises:
@@ -70,12 +70,12 @@ class Check:
             raise NoCommitsFoundError(f"No commit found with range: '{self.rev_range}'")
 
         pattern = self.cz.schema_pattern()
-        ill_formated_commits = [
+        ill_formated_commits: Generator[git.GitCommit] = (
             commit
             for commit in commits
             if not self.validate_commit_message(commit.message, pattern)
-        ]
-        displayed_msgs_content = "\n".join(
+        )
+        displayed_msgs_content: str = "\n".join(
             [
                 f'commit "{commit.rev}": "{commit.message}"'
                 for commit in ill_formated_commits
@@ -90,7 +90,8 @@ class Check:
             )
         out.success("Commit validation: successful!")
 
-    def _get_commits(self):
+    def _get_commits(self) -> list[git.GitCommit]:
+        # TODO: this method seems to do a few different things. probably would be better if we could split it to smaller functions
         msg = None
         # Get commit message from file (--commit-msg-file)
         if self.commit_msg_file is not None:
