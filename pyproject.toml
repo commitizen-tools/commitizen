@@ -1,6 +1,6 @@
 [project]
 name = "commitizen"
-version = "4.6.2"
+version = "4.6.3"
 description = "Python commitizen client tool"
 authors = [{ name = "Santiago Fraire", email = "santiwilly@gmail.com" }]
 maintainers = [
@@ -88,7 +88,7 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.commitizen]
-version = "4.6.2"
+version = "4.6.3"
 tag_format = "v$version"
 version_files = [
     "pyproject.toml:version",
