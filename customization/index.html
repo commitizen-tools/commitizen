@@ -1574,7 +1574,7 @@ We have two different ways to do so.</p>
 <td><code>type</code></td>
 <td><code>str</code></td>
 <td><code>None</code></td>
-<td>The type of questions. Valid type: <code>list</code>, <code>input</code> and etc. <a href="https://github.com/tmbo/questionary#different-question-types">See More</a></td>
+<td>The type of questions. Valid types: <code>list</code>, <code>select</code>, <code>input</code> and etc. The <code>select</code> type provides an interactive searchable list interface. <a href="https://github.com/tmbo/questionary#different-question-types">See More</a></td>
 </tr>
 <tr>
 <td><code>name</code></td>
@@ -1592,7 +1592,7 @@ We have two different ways to do so.</p>
 <td><code>choices</code></td>
 <td><code>list</code></td>
 <td><code>None</code></td>
-<td>(OPTIONAL) The choices when <code>type = list</code>. Either use a list of values or a list of dictionaries with <code>name</code> and <code>value</code> keys. Keyboard shortcuts can be defined via <code>key</code>. See examples above.</td>
+<td>(OPTIONAL) The choices when <code>type = list</code> or <code>type = select</code>. Either use a list of values or a list of dictionaries with <code>name</code> and <code>value</code> keys. Keyboard shortcuts can be defined via <code>key</code>. See examples above.</td>
 </tr>
 <tr>
 <td><code>default</code></td>
@@ -1611,6 +1611,18 @@ We have two different ways to do so.</p>
 <td><code>bool</code></td>
 <td><code>False</code></td>
 <td>(OPTIONAL) Enable multiline support when <code>type = input</code>.</td>
+</tr>
+<tr>
+<td><code>use_search_filter</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>(OPTIONAL) Enable search/filter functionality for list/select type questions. This allows users to type and filter through the choices.</td>
+</tr>
+<tr>
+<td><code>use_jk_keys</code></td>
+<td><code>bool</code></td>
+<td><code>True</code></td>
+<td>(OPTIONAL) Enable/disable j/k keys for navigation in list/select type questions. Set to false if you prefer arrow keys only.</td>
 </tr>
 </tbody>
 </table>
@@ -1883,11 +1895,9 @@ Migration should be straight-forward for legacy plugins:</p>
 <p>Commitizen gives you the possibility to provide your own changelog template, by:</p>
 <ul>
 <li>providing one with your customization class</li>
-<li>providing one from the current working directory and setting it:<ul>
+<li>providing one from the current working directory and setting it:</li>
 <li>as <a href="../config/#template">configuration</a></li>
 <li>as <code>--template</code> parameter to both <code>bump</code> and <code>changelog</code> commands</li>
-</ul>
-</li>
 <li>either by providing a template with the same name as the default template</li>
 </ul>
 <p>By default, the template used is the <code>CHANGELOG.md.j2</code> file from the commitizen repository.</p>
