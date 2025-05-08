@@ -15,7 +15,7 @@ name = "whatever"
 version = "0.1.0"
 """
 
-CARGO_EXPECTED = """\
+CARGO_TOML_EXPECTED = """\
 [package]
 name = "whatever"
 version = "42.1"
@@ -27,7 +27,7 @@ name = "whatever"
 version = "0.1.0"
 """
 
-CARGO_WORKSPACE_EXPECTED = """\
+CARGO_WORKSPACE_TOML_EXPECTED = """\
 [workspace.package]
 name = "whatever"
 version = "42.1"
@@ -37,8 +37,8 @@ version = "42.1"
 @pytest.mark.parametrize(
     "content, expected",
     (
-        (CARGO_TOML, CARGO_EXPECTED),
-        (CARGO_WORKSPACE_TOML, CARGO_WORKSPACE_EXPECTED),
+        (CARGO_TOML, CARGO_TOML_EXPECTED),
+        (CARGO_WORKSPACE_TOML, CARGO_WORKSPACE_TOML_EXPECTED),
     ),
 )
 def test_cargo_provider(
