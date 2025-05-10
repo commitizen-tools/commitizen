@@ -1,3 +1,13 @@
+## v4.7.0 (2025-05-10)
+
+### Feat
+
+- **providers**: add support for `Cargo.lock`
+
+### Refactor
+
+- **tests**: increase verbosity of variables
+
 ## v4.6.3 (2025-05-07)
 
 ### Fix
