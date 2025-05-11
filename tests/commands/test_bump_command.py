@@ -209,7 +209,7 @@ def test_bump_command_increment_option(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_command_prelease(mocker: MockFixture):
+def test_bump_command_prerelease(mocker: MockFixture):
     create_file_and_commit("feat: location")
 
     # Create an alpha pre-release.
@@ -281,7 +281,7 @@ def test_bump_command_prelease(mocker: MockFixture):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_command_prelease_increment(mocker: MockFixture):
+def test_bump_command_prerelease_increment(mocker: MockFixture):
     # FINAL RELEASE
     create_file_and_commit("fix: location")
 
@@ -317,7 +317,7 @@ def test_bump_command_prelease_increment(mocker: MockFixture):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_command_prelease_exact_mode(mocker: MockFixture):
+def test_bump_command_prerelease_exact_mode(mocker: MockFixture):
     # PRERELEASE
     create_file_and_commit("feat: location")
 
@@ -1062,7 +1062,7 @@ def test_bump_use_version_provider(mocker: MockFixture):
     mock.set_version.assert_called_once_with("0.0.1")
 
 
-def test_bump_command_prelease_scheme_via_cli(
+def test_bump_command_prerelease_scheme_via_cli(
     tmp_commitizen_project_initial, mocker: MockFixture
 ):
     tmp_commitizen_project = tmp_commitizen_project_initial()
@@ -1101,7 +1101,7 @@ def test_bump_command_prelease_scheme_via_cli(
             assert "0.2.0" in f.read()
 
 
-def test_bump_command_prelease_scheme_via_config(
+def test_bump_command_prerelease_scheme_via_config(
     tmp_commitizen_project_initial, mocker: MockFixture
 ):
     tmp_commitizen_project = tmp_commitizen_project_initial(
@@ -1145,7 +1145,7 @@ def test_bump_command_prelease_scheme_via_config(
             assert "0.2.0" in f.read()
 
 
-def test_bump_command_prelease_scheme_check_old_tags(
+def test_bump_command_prerelease_scheme_check_old_tags(
     tmp_commitizen_project_initial, mocker: MockFixture
 ):
     tmp_commitizen_project = tmp_commitizen_project_initial(
