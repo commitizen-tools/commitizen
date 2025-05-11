@@ -56,7 +56,7 @@ These are the variables used by the changelog generator.
 It will create a full block like above per version found in the tags.
 And it will create a list of the commits found.
 The `change_type` and the `scope` are optional, they don't need to be provided,
-but if your regex does they will be rendered.
+but if your regex does, they will be rendered.
 
 The format followed by the changelog is the one from [keep a changelog][keepachangelog]
 and the following variables are expected:
@@ -108,7 +108,7 @@ cz bump --changelog
 
 This value can be updated in the `toml` file with the key `changelog_file` under `tools.commitizen`
 
-Specify the name of the output file, remember that changelog only works with markdown.
+Specify the name of the output file, remember that changelog only works with Markdown.
 
 ```bash
 cz changelog --file-name="CHANGES.md"
@@ -120,7 +120,7 @@ This flag can be set in the `toml` file with the key `changelog_incremental` und
 
 Benefits:
 
-- Build from latest version found in changelog, this is useful if you have a different changelog and want to use commitizen
+- Build from the latest version found in changelog, this is useful if you have a different changelog and want to use commitizen
 - Update unreleased area
 - Allows users to manually touch the changelog without being rewritten.
 
@@ -185,8 +185,8 @@ See [the template customization section](../customization.md#customizing-the-cha
 
 Supported hook methods:
 
-- per parsed message: useful to add links
-- end of changelog generation: useful to send slack or chat message, or notify another department
+- Per parsed message: Useful to add links
+- End of changelog generation: Useful to send Slack or chat messages, or notify another department
 
 Read more about hooks in the [customization page][customization]
 

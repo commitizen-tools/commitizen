@@ -341,7 +341,7 @@ commitizen:
 ## Version providers
 
 Commitizen can read and write version from different sources.
-By default, it use the `commitizen` one which is using the `version` field from the commitizen settings.
+By default, it uses the `commitizen` one which is using the `version` field from the commitizen settings.
 But you can use any `commitizen.provider` entrypoint as value for `version_provider`.
 
 Commitizen provides some version providers for some well known formats:
@@ -369,9 +369,9 @@ version_provider = "pep621"
 
 ### Custom version provider
 
-You can add you own version provider by extending `VersionProvider` and exposing it on the `commitizen.provider` entrypoint.
+You can add your own version provider by extending `VersionProvider` and exposing it on the `commitizen.provider` entrypoint.
 
-Here a quick example of a `my-provider` provider reading and writing version in a `VERSION` file.
+Here is a quick example of a `my-provider` provider reading and writing version in a `VERSION` file.
 
 ```python title="my_provider.py"
 from pathlib import Path
