@@ -18,16 +18,16 @@
 
 ## About
 
-Commitizen is release management tool designed for teams.
+Commitizen is a release management tool designed for teams.
 
 Commitizen assumes your team uses a standard way of committing rules
 and from that foundation, it can bump your project's version, create
 the changelog, and update files.
 
 By default, commitizen uses [conventional commits][conventional_commits], but you
-can build your own set of rules, and publish them.
+can build your own set of rules and publish them.
 
-Using a standardized set of rules to write commits, makes commits easier to read, and enforces writing
+Using a standardized set of rules to write commits makes commits easier to read and enforces writing
 descriptive commits.
 
 ### Features
@@ -55,7 +55,7 @@ pipx install commitizen
 pipx upgrade commitizen
 ```
 
-Install commitizen using `pip` with `--user` flag:
+Install commitizen using `pip` with the `--user` flag:
 
 ```bash
 pip install --user -U commitizen
@@ -63,7 +63,7 @@ pip install --user -U commitizen
 
 ### Python project
 
-You can add it to your local project using one of the following.
+You can add it to your local project using one of the following methods.
 
 With `pip`:
 
@@ -99,7 +99,7 @@ brew install commitizen
 
 ## Usage
 
-Most of the time this is the only command you'll run:
+Most of the time, this is the only command you'll run:
 
 ```sh
 cz bump
@@ -120,7 +120,7 @@ $ cz --help
 usage: cz [-h] [--debug] [-n NAME] [-nr NO_RAISE] {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version} ...
 
 Commitizen is a cli tool to generate conventional commits.
-For more information about the topic go to https://conventionalcommits.org/
+For more information about the topic, go to https://conventionalcommits.org/
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -128,7 +128,7 @@ optional arguments:
   --debug               use debug mode
   -n NAME, --name NAME  use the given commitizen (default: cz_conventional_commits)
   -nr NO_RAISE, --no-raise NO_RAISE
-                        comma separated error codes that won't rise error, e.g: cz -nr 1,2,3 bump. See codes at https://commitizen-
+                        comma separated error codes that won't raise error, e.g: cz -nr 1,2,3 bump. See codes at https://commitizen-
                         tools.github.io/commitizen/exit_codes/
 
 commands:
@@ -147,7 +147,7 @@ commands:
 
 ## Setting up bash completion
 
-When using bash as your shell (limited support for zsh, fish, and tcsh is available), Commitizen can use [argcomplete](https://kislyuk.github.io/argcomplete/) for auto-completion. For this argcomplete needs to be enabled.
+When using bash as your shell (limited support for zsh, fish, and tcsh is available), Commitizen can use [argcomplete](https://kislyuk.github.io/argcomplete/) for auto-completion. For this, argcomplete needs to be enabled.
 
 argcomplete is installed when you install Commitizen since it's a dependency.
 
