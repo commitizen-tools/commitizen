@@ -209,7 +209,11 @@ pre-commit install --hook-type commit-msg --hook-type pre-push
 
 For more details about commit validation, see the [check command documentation](commands/check.md).
 
-## Usage
+## Help & Reference
+
+### Command Line Interface
+
+Commitizen provides a comprehensive CLI with various commands. Here's the complete reference:
 
 <!-- Please manually update the following section after changing `cz --help` command output. -->
 
@@ -242,31 +246,85 @@ commands:
     version             get the version of the installed commitizen or the current project (default: installed commitizen)
 ```
 
+### Quick Reference
+
+| Command | Description | Alias |
+|---------|-------------|-------|
+| `cz init` | Initialize Commitizen configuration | - |
+| `cz commit` | Create a new commit | `cz c` |
+| `cz bump` | Bump version and update changelog | - |
+| `cz changelog` | Generate changelog | `cz ch` |
+| `cz check` | Validate commit messages | - |
+| `cz version` | Show version information | - |
+
+### Additional Resources
+
+- [Conventional Commits Specification][conventional_commits]
+- [Exit Codes Reference](./exit_codes.md)
+- [Configuration Guide](./config.md)
+- [Command Documentation](./commands/init.md)
+
+### Getting Help
+
+For each command, you can get detailed help by adding `--help`:
+
+```sh
+cz commit --help
+cz bump --help
+cz changelog --help
+```
+
+For more detailed documentation, visit our [documentation site](https://commitizen-tools.github.io/commitizen/).
+
 ## Setting up bash completion
 
-When using bash as your shell (limited support for zsh, fish, and tcsh is available), Commitizen can use [argcomplete](https://kislyuk.github.io/argcomplete/) for auto-completion. For this, argcomplete needs to be enabled.
+Commitizen supports command-line completion through [argcomplete](https://kislyuk.github.io/argcomplete/), which is automatically installed as a dependency. This feature provides intelligent auto-completion for all Commitizen commands and options.
 
-argcomplete is installed when you install Commitizen since it's a dependency.
+### Supported Shells
 
-If Commitizen is installed globally, global activation can be executed:
+- **Bash**: Full support
+- **Zsh**: Limited support
+- **Fish**: Limited support
+- **Tcsh**: Limited support
+
+### Installation Methods
+
+#### Global Installation (Recommended)
+
+If you installed Commitizen globally (e.g., using `pipx` or `brew`), you can enable global completion:
 
 ```bash
+# Enable global completion for all Python applications
 sudo activate-global-python-argcomplete
 ```
 
-For permanent (but not global) Commitizen activation, use:
+#### User-Specific Installation
+
+For a user-specific installation that persists across sessions:
 
 ```bash
+# Add to your shell's startup file (e.g., ~/.bashrc, ~/.zshrc)
 register-python-argcomplete cz >> ~/.bashrc
 ```
 
-For one-time activation of argcomplete for Commitizen only, use:
+#### Temporary Installation
+
+For one-time activation in your current shell session:
 
 ```bash
+# Activate completion for current session only
 eval "$(register-python-argcomplete cz)"
 ```
 
-For further information on activation, please visit the [argcomplete website](https://kislyuk.github.io/argcomplete/).
+### Verification
+
+After installation, you can verify the completion is working by:
+
+1. Opening a new terminal session
+2. Typing `cz` followed by a space and pressing `TAB` twice
+3. You should see a list of available commands
+
+For more detailed information about argcomplete configuration and troubleshooting, visit the [argcomplete documentation](https://kislyuk.github.io/argcomplete/).
 
 ## Sponsors
 
