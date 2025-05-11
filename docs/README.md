@@ -221,8 +221,8 @@ Commitizen provides a comprehensive CLI with various commands. Here's the comple
 $ cz --help
 usage: cz [-h] [--config CONFIG] [--debug] [-n NAME] [-nr NO_RAISE] {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version} ...
 
-Commitizen is a cli tool to generate conventional commits.
-For more information about the topic go to https://conventionalcommits.org/
+Commitizen is a powerful release management tool that helps teams maintain consistent and meaningful commit messages while automating version management.
+For more information, please visit https://commitizen-tools.github.io/commitizen
 
 options:
   -h, --help            show this help message and exit

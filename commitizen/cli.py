@@ -86,9 +86,8 @@ tpl_arguments = (
 data = {
     "prog": "cz",
     "description": (
-        "Commitizen is a cli tool to generate conventional commits.\n"
-        "For more information about the topic go to "
-        "https://conventionalcommits.org/"
+        "Commitizen is a powerful release management tool that helps teams maintain consistent and meaningful commit messages while automating version management.\n"
+        "For more information, please visit https://commitizen-tools.github.io/commitizen"
     ),
     "formatter_class": argparse.RawDescriptionHelpFormatter,
     "arguments": [
