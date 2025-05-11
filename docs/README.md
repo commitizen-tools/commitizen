@@ -48,81 +48,168 @@ This standardization makes your commit history more readable and meaningful, whi
 - Display information about your commit rules (commands: schema, example, info)
 - Create your own set of rules and publish them to pip. Read more on [Customization](./customization.md)
 
-## Requirements
+## Getting Started
 
-[Python](https://www.python.org/downloads/) `3.9+`
+### Requirements
 
-[Git][gitscm] `1.8.5.2+`
+Before installing Commitizen, ensure you have:
 
-## Installation
+- [Python](https://www.python.org/downloads/) `3.9+`
+- [Git][gitscm] `1.8.5.2+`
 
-Install commitizen in your system using `pipx` (Recommended, <https://pypa.github.io/pipx/installation/>):
+### Installation
+
+#### Global Installation (Recommended)
+
+The recommended way to install Commitizen is using `pipx`, which ensures a clean, isolated installation:
 
 ```bash
+# Install pipx if you haven't already
 pipx ensurepath
+
+# Install Commitizen
 pipx install commitizen
+
+# Keep it updated
 pipx upgrade commitizen
 ```
 
-Install commitizen using `pip` with the `--user` flag:
-
-```bash
-pip install --user -U commitizen
-```
-
-### Python project
-
-You can add it to your local project using one of the following methods.
-
-With `pip`:
-
-```bash
-pip install -U commitizen
-```
-
-With `conda`:
-
-```bash
-conda install -c conda-forge commitizen
-```
-
-With Poetry >= 1.2.0:
-
-```bash
-poetry add commitizen --group dev
-```
-
-With Poetry < 1.2.0:
-
-```bash
-poetry add commitizen --dev
-```
-
-### macOS
-
-via [homebrew](https://formulae.brew.sh/formula/commitizen):
+If you're on macOS, you can also install Commitizen using Homebrew:
 
 ```bash
 brew install commitizen
 ```
 
-## Usage
+#### Project-Specific Installation
 
-Most of the time, this is the only command you'll run:
+You can add Commitizen to your Python project using any of these package managers:
 
+**Using pip:**
+
+```bash
+pip install -U commitizen
+```
+
+**Using conda:**
+
+```bash
+conda install -c conda-forge commitizen
+```
+
+**Using Poetry:**
+
+```bash
+# For Poetry >= 1.2.0
+poetry add commitizen --group dev
+
+# For Poetry < 1.2.0
+poetry add commitizen --dev
+```
+
+### Basic Commands
+
+#### Initialize Commitizen
+
+To get started, you'll need to set up your configuration. You have two options:
+
+1. Use the interactive setup:
+```sh
+cz init
+```
+
+2. Manually create a configuration file (`.cz.toml` or `cz.toml`):
+```toml
+[tool.commitizen]
+version = "0.1.0"
+update_changelog_on_bump = true
+```
+
+#### Create Commits
+
+Create standardized commits using:
+```sh
+cz commit
+# or use the shortcut
+cz c
+```
+
+To sign off your commits:
+```sh
+cz commit -- --signoff
+# or use the shortcut
+cz commit -- -s
+```
+
+For more commit options, run `cz commit --help`.
+
+#### Version Management
+
+The most common command you'll use is:
 ```sh
 cz bump
 ```
 
-On top of that, you can use commitizen to assist you with the creation of commits:
+This command:
+- Bumps your project's version
+- Creates a git tag
+- Updates the changelog (if `update_changelog_on_bump` is enabled)
+- Updates version files
 
+You can customize:
+- [Version files](./commands/bump.md#version_files)
+- [Version scheme](./commands/bump.md#version_scheme)
+- [Version provider](./config.md#version-providers)
+
+For all available options, see the [bump command documentation](./commands/bump.md).
+
+### Advanced Usage
+
+#### Get Project Version
+
+To get your project's version (instead of Commitizen's version):
 ```sh
-cz commit
+cz version -p
 ```
 
-Read more in the section [Getting Started](./getting_started.md).
+This is particularly useful for automation. For example, to preview changelog changes for Slack:
+```sh
+cz changelog --dry-run "$(cz version -p)"
+```
 
-### Help
+#### Pre-commit Integration
+
+Commitizen can automatically validate your commit messages using pre-commit hooks.
+
+1. Add to your `.pre-commit-config.yaml`:
+```yaml
+---
+repos:
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: master  # Replace with latest tag
+    hooks:
+      - id: commitizen
+      - id: commitizen-branch
+        stages: [pre-push]
+```
+
+2. Install the hooks:
+```sh
+pre-commit install --hook-type commit-msg --hook-type pre-push
+```
+
+| Hook              | Recommended Stage |
+| ----------------- | ----------------- |
+| commitizen        | commit-msg        |
+| commitizen-branch | pre-push          |
+
+> **Note**: Replace `master` with the [latest tag](https://github.com/commitizen-tools/commitizen/tags) to avoid warnings. You can automatically update this with:
+> ```sh
+> pre-commit autoupdate
+> ```
+
+For more details about commit validation, see the [check command documentation](commands/check.md).
+
+## Usage
 
 <!-- Please manually update the following section after changing `cz --help` command output. -->
 
