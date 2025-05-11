@@ -105,7 +105,7 @@ data = {
             "name": ["-nr", "--no-raise"],
             "type": str,
             "required": False,
-            "help": "comma separated error codes that won't rise error, e.g: cz -nr 1,2,3 bump. See codes at https://commitizen-tools.github.io/commitizen/exit_codes/",
+            "help": "comma separated error codes that won't raise error, e.g: cz -nr 1,2,3 bump. See codes at https://commitizen-tools.github.io/commitizen/exit_codes/",
         },
     ],
     "subcommands": {
