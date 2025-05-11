@@ -257,7 +257,7 @@ all.sequence = [
     "check-commit",
 ]
 
-"doc:screenshots".help = "Render documentation screeenshots"
+"doc:screenshots".help = "Render documentation screenshots"
 "doc:screenshots".script = "scripts.gen_cli_help_screenshots:gen_cli_help_screenshots"
 
 "doc:build".help = "Build the documentation"
