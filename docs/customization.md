@@ -170,7 +170,7 @@ commitizen:
 
 | Parameter   | Type   | Default | Description                                                                                                                                                                                     |
 | ----------- | ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `type`      | `str`  | `None`  | The type of questions. Valid types: `list`, `select`, `input` and etc. The `select` type provides an interactive searchable list interface. [See More][different-question-types]                  |
+| `type`      | `str`  | `None`  | The type of questions. Valid types: `list`, `select`, `input`, etc. The `select` type provides an interactive searchable list interface. [See More][different-question-types]                  |
 | `name`      | `str`  | `None`  | The key for the value answered by user. It's used in `message_template`                                                                                                                         |
 | `message`   | `str`  | `None`  | Detail description for the question.                                                                                                                                                            |
 | `choices`   | `list` | `None`  | (OPTIONAL) The choices when `type = list` or `type = select`. Either use a list of values or a list of dictionaries with `name` and `value` keys. Keyboard shortcuts can be defined via `key`. See examples above. |
@@ -192,10 +192,10 @@ To specify keyboard shortcuts for your custom choices, provide the shortcut usin
 
 The basic steps are:
 
-1. Inheriting from `BaseCommitizen`
+1. Inheriting from `BaseCommitizen`.
 2. Give a name to your rules.
-3. Create a python package using `setup.py`, `poetry`, etc
-4. Expose the class as a `commitizen.plugin` entrypoint
+3. Create a python package using `setup.py`, `poetry`, etc.
+4. Expose the class as a `commitizen.plugin` entrypoint.
 
 Check an [example][convcomms] on how to configure `BaseCommitizen`.
 
@@ -322,9 +322,9 @@ You can customize it of course, and this are the variables you need to add to yo
 | `commit_parser`                  | `str`                                                                    | NO       | Regex which should provide the variables explained in the [changelog description][changelog-des]                                                                                                                    |
 | `changelog_pattern`              | `str`                                                                    | NO       | Regex to validate the commits, this is useful to skip commits that don't meet your ruling standards like a Merge. Usually the same as bump_pattern                                                                  |
 | `change_type_map`                | `dict`                                                                   | NO       | Convert the title of the change type that will appear in the changelog, if a value is not found, the original will be provided                                                                                      |
-| `changelog_message_builder_hook` | `method: (dict, git.GitCommit) -> dict | list | None`                                  | NO       | Customize with extra information your message output, like adding links, this function is executed per parsed commit. Each GitCommit contains the following attrs: `rev`, `title`, `body`, `author`, `author_email`. Returning a falsy value ignore the commit. |
+| `changelog_message_builder_hook` | `method: (dict, git.GitCommit) -> dict | list | None`                  | NO       | Customize with extra information your message output, like adding links, this function is executed per parsed commit. Each GitCommit contains the following attrs: `rev`, `title`, `body`, `author`, `author_email`. Returning a falsy value ignore the commit. |
 | `changelog_hook`                 | `method: (full_changelog: str, partial_changelog: Optional[str]) -> str` | NO       | Receives the whole and partial (if used incremental) changelog. Useful to send slack messages or notify a compliance department. Must return the full_changelog                                                     |
-| `changelog_release_hook` | `method: (release: dict, tag: git.GitTag) -> dict` | NO | Receives each generated changelog release and its associated tag. Useful to enrich a releases before they are rendered. Must return the update release
+| `changelog_release_hook` | `method: (release: dict, tag: git.GitTag) -> dict` | NO | Receives each generated changelog release and its associated tag. Useful to enrich releases before they are rendered. Must return the update release
 
 ```python
 from commitizen.cz.base import BaseCommitizen
@@ -395,7 +395,7 @@ class NoSubjectProvidedException(CzException):
 Commitizen migrated to a new plugin format relying on `importlib.metadata.EntryPoint`.
 Migration should be straight-forward for legacy plugins:
 
-- Remove the `discover_this` line from you plugin module
+- Remove the `discover_this` line from your plugin module
 - Expose the plugin class under as a `commitizen.plugin` entrypoint.
 
 The name of the plugin is now determined by the name of the entrypoint.
@@ -455,12 +455,12 @@ By default, the template used is the `CHANGELOG.md.j2` file from the commitizen 
 
 ### Providing a template with your customization class
 
-There is 3 parameters available to change the template rendering from your custom `BaseCommitizen`.
+There are 3 parameters available to change the template rendering from your custom `BaseCommitizen`.
 
 | Parameter         | Type   | Default | Description                                                                                           |
 | ----------------- | ------ | ------- | ----------------------------------------------------------------------------------------------------- |
-| `template`        | `str`  | `None`  | Provide your own template name (default to `CHANGELOG.md.j2`)                            |
-| `template_loader` | `str`  | `None`  | Override the default template loader (so you can provide template from you customization class)       |
+| `template`        | `str`  | `None`  | Provide your own template name (default to `CHANGELOG.md.j2`)                                         |
+| `template_loader` | `str`  | `None`  | Override the default template loader (so you can provide template from your customization class)      |
 | `template_extras` | `dict` | `None`  | Provide some extra template parameters                                                                |
 
 Let's see an example.
@@ -484,14 +484,14 @@ This snippet will:
 
 ### Providing a template from the current working directory
 
-Users can provides their own template from their current working directory (your project root) by:
+Users can provide their own template from their current working directory (your project root) by:
 
 - providing a template with the same name (`CHANGELOG.md.j2` unless overridden by your custom class)
 - setting your template path as `template` configuration
 - giving your template path as `--template` parameter to `bump` and `changelog` commands
 
 !!! Note
-    The path is relative to the current working directory, aka. your project root most of the time.
+    The path is relative to the current working directory, aka your project root most of the time.
 
 ### Template variables
 
@@ -524,7 +524,7 @@ When using another template (either provided by a plugin or by yourself), you ca
 by:
 
 - defining them in your configuration with the [`extras` settings][extras-config]
-- providing them on the commandline with the `--extra/-e` parameter to `bump` and `changelog` commands
+- providing them on the command line with the `--extra/-e` parameter to `bump` and `changelog` commands
 
 [template-config]: config.md#template
 [extras-config]: config.md#extras

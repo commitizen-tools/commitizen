@@ -52,7 +52,7 @@ It is not affiliated.
 Both are used for similar purposes, parsing commits, generating changelog and version we presume.
 This one is written in python to make integration easier for python projects and the other serves the JS packages.
 
-They differ a bit in design, not sure if cz-js does any of this, but these are some of the stuff you can do with this repo (python's commitizen):
+They differ a bit in design, not sure if cz-js does any of this, but these are some things you can do with this repo (python's commitizen):
 
 - create custom rules, version bumps and changelog generation, by default we use the popular conventional commits (I think cz-js allows this).
 - single package, install one thing and it will work (cz-js is a monorepo, but you have to install different dependencies AFAIK)
@@ -83,14 +83,14 @@ More discussion can be found in issue [#318](https://github.com/commitizen-tools
 ## Why does commitizen not support CalVer?
 
 `commitizen` could support CalVer alongside SemVer, but in practice implementing CalVer
-creates numerous edge cases that are difficult to maintain ([#385]) and more generally
+creates numerous edge cases that are difficult to maintain ([#385]) and more generally,
 mixing the two version schemes may not be a good idea. If CalVer or other custom
 versioning scheme is needed, `commitizen` could still be used to standardize commits
 and create changelogs, but a separate package should be used for version increments.
 
 Mixing CalVer and SemVer is generally not recommended because each versioning scheme
-serves a different purposes. Diverging from either specification can be confusing to
-users and cause errors with third party tools that don't expect the non-standard format.
+serves a different purpose. Diverging from either specification can be confusing to
+users and cause errors with third-party tools that don't expect the non-standard format.
 
 In the future, `commitizen` may support some implementation of CalVer, but at the time
 of writing, there are no plans to implement the feature ([#173]).

@@ -101,7 +101,7 @@ See the [README][1] for instructions on configuration
 
 ## Third-Party Commitizen Providers
 
-Commitizen can read and write version from different sources.  In addition to the native providers, some alternative version sources are available as PyPI packages (installable with `pip`).
+Commitizen can read and write version from different sources. In addition to the native providers, some alternative version sources are available as PyPI packages (installable with `pip`).
 
 ### [commitizen-deno-provider](https://pypi.org/project/commitizen-deno-provider/)
 

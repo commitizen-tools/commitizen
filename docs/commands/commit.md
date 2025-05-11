@@ -45,7 +45,7 @@ a new commit message to be prompted.
 The argument `-l` (or `--message-length-limit`) followed by a positive number can limit the length of commit messages.
 An exception would be raised when the message length exceeds the limit.
 For example, `cz commit -l 72` will limit the length of commit messages to 72 characters.
-By default the limit is set to 0, which means no limit on the length.
+By default, the limit is set to 0, which means no limit on the length.
 
 **Note that the limit applies only to the first line of the message.**
 Specifically, for `ConventionalCommitsCz` the length only counts from the type of change to the subject,
