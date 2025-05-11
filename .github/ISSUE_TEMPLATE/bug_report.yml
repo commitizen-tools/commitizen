@@ -48,14 +48,14 @@ body:
     attributes:
       label: Environment
       description: |
-        For older commitizen versions, please include the output of the following commands manually
-      placeholder: |
-        - commitizen version: `cz version`
-        - python version: `python --version`
-        - operating system: `python3 -c "import platform; print(platform.system())"`
+        For older commitizen versions, please include the output of the following command manually:
 
         ```bash
         cz version --report
         ```
+      placeholder: |
+        Commitizen Version: 4.0.0
+        Python Version: 3.13.3 (main, Apr  8 2025, 13:54:08) [Clang 16.0.0 (clang-1600.0.26.6)]
+        Operating System: Darwin
     validations:
       required: true
