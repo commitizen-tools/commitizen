@@ -48,7 +48,7 @@ body:
     attributes:
       label: Environment
       description: |
-        For older commitizen versions, please include the output of the following command manually:
+        Please use the following command to retrieve environment information
 
         ```bash
         cz version --report
