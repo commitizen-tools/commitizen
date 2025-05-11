@@ -49,7 +49,7 @@ class Changelog:
         )
 
         self.encoding = self.config.settings["encoding"]
-        self.cz = factory.commiter_factory(self.config)
+        self.cz = factory.committer_factory(self.config)
 
         self.start_rev = args.get("start_rev") or self.config.settings.get(
             "changelog_start_rev"

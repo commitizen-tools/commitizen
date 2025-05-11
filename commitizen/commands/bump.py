@@ -68,7 +68,7 @@ class Bump:
                 if arguments[key] is not None
             },
         }
-        self.cz = factory.commiter_factory(self.config)
+        self.cz = factory.committer_factory(self.config)
         self.changelog_flag = arguments["changelog"]
         self.changelog_config = self.config.settings.get("update_changelog_on_bump")
         self.changelog_to_stdout = arguments["changelog_to_stdout"]

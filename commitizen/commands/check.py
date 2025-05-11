@@ -46,7 +46,7 @@ class Check:
 
         self.config: BaseConfig = config
         self.encoding = config.settings["encoding"]
-        self.cz = factory.commiter_factory(self.config)
+        self.cz = factory.committer_factory(self.config)
 
     def _valid_command_argument(self):
         num_exclusive_args_provided = sum(
