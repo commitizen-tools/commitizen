@@ -115,21 +115,22 @@ Read more in the section [Getting Started](./getting_started.md).
 
 ### Help
 
+<!-- Please manually update the following section after changing `cz --help` command output. -->
+
 ```sh
 $ cz --help
-usage: cz [-h] [--debug] [-n NAME] [-nr NO_RAISE] {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version} ...
+usage: cz [-h] [--config CONFIG] [--debug] [-n NAME] [-nr NO_RAISE] {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version} ...
 
 Commitizen is a cli tool to generate conventional commits.
-For more information about the topic, go to https://conventionalcommits.org/
+For more information about the topic go to https://conventionalcommits.org/
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
-  --config              the path of configuration file
+  --config CONFIG       the path of configuration file
   --debug               use debug mode
-  -n NAME, --name NAME  use the given commitizen (default: cz_conventional_commits)
-  -nr NO_RAISE, --no-raise NO_RAISE
-                        comma separated error codes that won't raise error, e.g: cz -nr 1,2,3 bump. See codes at https://commitizen-
-                        tools.github.io/commitizen/exit_codes/
+  -n, --name NAME       use the given commitizen (default: cz_conventional_commits)
+  -nr, --no-raise NO_RAISE
+                        comma separated error codes that won't raise error, e.g: cz -nr 1,2,3 bump. See codes at https://commitizen-tools.github.io/commitizen/exit_codes/
 
 commands:
   {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version}
