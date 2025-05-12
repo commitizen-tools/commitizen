@@ -23,6 +23,7 @@ from tests.utils import (
         ("$version", "0.1.0", "0.1.0"),
         ("$version", "v0.1.0", "0.1.0"),
         ("$version", "v-0.1.0", "0.0.0"),
+        ("$version", "1.0.0.xxxx", "0.0.0"),
         # If tag_format is not None or $version, TAG_FORMAT_REGEXS are used, which are
         # much more lenient but require a v prefix.
         ("v$version", "v0.1.0", "0.1.0"),

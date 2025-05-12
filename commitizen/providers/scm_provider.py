@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from packaging.version import InvalidVersion
+
 from commitizen.git import get_tags
 from commitizen.providers.base_provider import VersionProvider
 from commitizen.tags import TagRules
@@ -18,7 +20,13 @@ class ScmProvider(VersionProvider):
         rules = TagRules.from_settings(self.config.settings)
         tags = get_tags(reachable_only=True)
         version_tags = rules.get_version_tags(tags)
-        versions = sorted(rules.extract_version(t) for t in version_tags)
+        versions = []
+        for t in version_tags:
+            try:
+                versions.append(rules.extract_version(t))
+            except InvalidVersion:
+                continue
+        versions = sorted(versions)
         if not versions:
             return "0.0.0"
         return str(versions[-1])
