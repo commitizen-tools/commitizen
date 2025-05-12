@@ -166,15 +166,15 @@ For all available options, see the [bump command documentation](./commands/bump.
 
 #### Get Project Version
 
-To get your project's version (instead of Commitizen's version):
 ```sh
+# Get your project's version (instead of Commitizen's version)
 cz version -p
-```
-
-This is particularly useful for automation. For example, to preview changelog changes for Slack:
-```sh
+# Preview changelog changes
 cz changelog --dry-run "$(cz version -p)"
 ```
+
+This command is particularly useful for automation scripts and CI/CD pipelines.
+For example, you can use the output of the command `cz changelog --dry-run "$(cz version -p)"` to notify your team about a new release in Slack.
 
 #### Pre-commit Integration
 
