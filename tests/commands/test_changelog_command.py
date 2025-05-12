@@ -1481,7 +1481,7 @@ def test_changelog_from_current_version_tag_with_nonversion_tag(
         ),
     ),
 )
-def test_changelog_template_option_precedance(
+def test_changelog_template_option_precedence(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
     any_changelog_format: ChangelogFormat,
@@ -1523,7 +1523,7 @@ def test_changelog_template_option_precedance(
     assert out == expected
 
 
-def test_changelog_template_extras_precedance(
+def test_changelog_template_extras_precedence(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
     mock_plugin: BaseCommitizen,

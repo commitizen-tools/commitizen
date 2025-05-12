@@ -183,7 +183,7 @@ def check_pre_commit_config(expected: list[dict[str, Any]]):
 
 @pytest.mark.usefixtures("pre_commit_installed")
 class TestPreCommitCases:
-    def test_no_existing_pre_commit_conifg(_, default_choice, tmpdir, config):
+    def test_no_existing_pre_commit_config(_, default_choice, tmpdir, config):
         with tmpdir.as_cwd():
             commands.Init(config)()
             check_cz_config(default_choice)

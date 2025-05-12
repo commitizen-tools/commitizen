@@ -437,7 +437,7 @@ def test_bump_on_git_with_hooks_no_verify_enabled(mocker: MockFixture):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_when_bumpping_is_not_support(mocker: MockFixture):
+def test_bump_when_bumping_is_not_support(mocker: MockFixture):
     create_file_and_commit(
         "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported"
     )
@@ -1285,7 +1285,7 @@ def test_bump_command_version_scheme_priority_over_version_type(mocker: MockFixt
         ),
     ),
 )
-def test_bump_template_option_precedance(
+def test_bump_template_option_precedence(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
     any_changelog_format: ChangelogFormat,
@@ -1327,7 +1327,7 @@ def test_bump_template_option_precedance(
     assert out == expected
 
 
-def test_bump_template_extras_precedance(
+def test_bump_template_extras_precedence(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
     any_changelog_format: ChangelogFormat,
