@@ -33,35 +33,17 @@ class CustomizeCommitsCz(BaseCommitizen):
             raise MissingCzCustomizeConfigError()
         self.custom_settings = self.config.settings["customize"]
 
-        custom_bump_pattern = self.custom_settings.get("bump_pattern")
-        if custom_bump_pattern:
-            self.bump_pattern = custom_bump_pattern
-
-        custom_bump_map = self.custom_settings.get("bump_map")
-        if custom_bump_map:
-            self.bump_map = custom_bump_map
-
-        custom_bump_map_major_version_zero = self.custom_settings.get(
-            "bump_map_major_version_zero"
-        )
-        if custom_bump_map_major_version_zero:
-            self.bump_map_major_version_zero = custom_bump_map_major_version_zero
-
-        custom_change_type_order = self.custom_settings.get("change_type_order")
-        if custom_change_type_order:
-            self.change_type_order = custom_change_type_order
-
-        commit_parser = self.custom_settings.get("commit_parser")
-        if commit_parser:
-            self.commit_parser = commit_parser
-
-        changelog_pattern = self.custom_settings.get("changelog_pattern")
-        if changelog_pattern:
-            self.changelog_pattern = changelog_pattern
-
-        change_type_map = self.custom_settings.get("change_type_map")
-        if change_type_map:
-            self.change_type_map = change_type_map
+        for attr_name in [
+            "bump_pattern",
+            "bump_map",
+            "bump_map_major_version_zero",
+            "change_type_order",
+            "commit_parser",
+            "changelog_pattern",
+            "change_type_map",
+        ]:
+            if value := self.custom_settings.get(attr_name):
+                setattr(self, attr_name, value)
 
     def questions(self) -> Questions:
         return self.custom_settings.get("questions", [{}])
@@ -70,8 +52,7 @@ class CustomizeCommitsCz(BaseCommitizen):
         message_template = Template(self.custom_settings.get("message_template", ""))
         if getattr(Template, "substitute", None):
             return message_template.substitute(**answers)  # type: ignore
-        else:
-            return message_template.render(**answers)
+        return message_template.render(**answers)
 
     def example(self) -> str:
         return self.custom_settings.get("example") or ""
@@ -83,12 +64,7 @@ class CustomizeCommitsCz(BaseCommitizen):
         return self.custom_settings.get("schema") or ""
 
     def info(self) -> str:
-        info_path = self.custom_settings.get("info_path")
-        info = self.custom_settings.get("info")
-        if info_path:
+        if info_path := self.custom_settings.get("info_path"):
             with open(info_path, encoding=self.config.settings["encoding"]) as f:
-                content = f.read()
-            return content
-        elif info:
-            return info
-        return ""
+                return f.read()
+        return self.custom_settings.get("info") or ""
