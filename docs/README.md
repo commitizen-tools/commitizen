@@ -61,12 +61,9 @@ Before installing Commitizen, ensure you have:
 
 #### Global Installation (Recommended)
 
-The recommended way to install Commitizen is using `pipx`, which ensures a clean, isolated installation:
-
+The recommended way to install Commitizen is using [`pipx`](https://pipx.pypa.io/) or [`uv`](https://docs.astral.sh/uv/), which ensures a clean, isolated installation:
+**Using pipx:**
 ```bash
-# Install pipx if you haven't already
-pipx ensurepath
-
 # Install Commitizen
 pipx install commitizen
 
@@ -74,8 +71,16 @@ pipx install commitizen
 pipx upgrade commitizen
 ```
 
-If you're on macOS, you can also install Commitizen using Homebrew:
+**Using uv:**
+```bash
+# Install commitizen
+uv tool install commitizen
 
+# Keep it updated
+uv tool upgrade commitizen
+```
+
+**(For macOS users) Using Homebrew:**
 ```bash
 brew install commitizen
 ```
@@ -85,19 +90,16 @@ brew install commitizen
 You can add Commitizen to your Python project using any of these package managers:
 
 **Using pip:**
-
 ```bash
 pip install -U commitizen
 ```
 
 **Using conda:**
-
 ```bash
 conda install -c conda-forge commitizen
 ```
 
 **Using Poetry:**
-
 ```bash
 # For Poetry >= 1.2.0
 poetry add commitizen --group dev
