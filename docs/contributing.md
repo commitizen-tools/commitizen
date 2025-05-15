@@ -58,7 +58,7 @@ If you're a first-time contributor, you can check the issues with the [good firs
     - Follow the existing code style
 3. **Testing**
     - Run the full test suite: `poetry all`
-    - Ensure test coverage doesn't drop (we use [CodeCov](https://codecov.io/))
+    - Ensure test coverage doesn't drop (we use [CodeCov](https://app.codecov.io/gh/commitizen-tools/commitizen))
     - For documentation changes, run `poetry doc` to check for warnings/errors
 4. **Committing Changes**
     - Use commitizen to make commits (we follow [conventional commits](https://www.conventionalcommits.org/))
