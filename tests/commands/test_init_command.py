@@ -26,8 +26,8 @@ class FakeQuestion:
         return self.expected_return
 
 
-pre_commit_config_filename = ".pre-commit-config.yaml"
-cz_hook_config = {
+PRE_COMMIT_CONFIG_FILENAME = ".pre-commit-config.yaml"
+CZ_HOOK_CONFIG = {
     "repo": "https://github.com/commitizen-tools/commitizen",
     "rev": f"v{__version__}",
     "hooks": [
@@ -36,14 +36,14 @@ cz_hook_config = {
     ],
 }
 
-expected_config = (
+EXPECTED_CONFIG = (
     "[tool.commitizen]\n"
     'name = "cz_conventional_commits"\n'
     'tag_format = "$version"\n'
     'version_scheme = "semver"\n'
-    'version = "0.0.1"\n'
     "update_changelog_on_bump = true\n"
     "major_version_zero = true\n"
+    'version = "0.0.1"\n'
 )
 
 EXPECTED_DICT_CONFIG = {
@@ -77,10 +77,9 @@ def test_init_without_setup_pre_commit_hook(tmpdir, mocker: MockFixture, config)
         commands.Init(config)()
 
         with open("pyproject.toml", encoding="utf-8") as toml_file:
-            config_data = toml_file.read()
-        assert config_data == expected_config
+            assert EXPECTED_CONFIG == toml_file.read()
 
-        assert not os.path.isfile(pre_commit_config_filename)
+        assert not os.path.isfile(PRE_COMMIT_CONFIG_FILENAME)
 
 
 def test_init_when_config_already_exists(config, capsys):
@@ -169,16 +168,15 @@ def check_cz_config(config: str):
             assert yaml.load(file, Loader=yaml.FullLoader) == EXPECTED_DICT_CONFIG
         else:
             config_data = file.read()
-            assert config_data == expected_config
+            assert config_data == EXPECTED_CONFIG
 
 
 def check_pre_commit_config(expected: list[dict[str, Any]]):
     """
     Check the content of pre-commit config is as expected
     """
-    with open(pre_commit_config_filename) as pre_commit_file:
-        pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
-    assert pre_commit_config_data == {"repos": expected}
+    with open(PRE_COMMIT_CONFIG_FILENAME) as pre_commit_file:
+        assert {"repos": expected} == yaml.safe_load(pre_commit_file.read())
 
 
 @pytest.mark.usefixtures("pre_commit_installed")
@@ -187,16 +185,16 @@ class TestPreCommitCases:
         with tmpdir.as_cwd():
             commands.Init(config)()
             check_cz_config(default_choice)
-            check_pre_commit_config([cz_hook_config])
+            check_pre_commit_config([CZ_HOOK_CONFIG])
 
     def test_empty_pre_commit_config(_, default_choice, tmpdir, config):
         with tmpdir.as_cwd():
-            p = tmpdir.join(pre_commit_config_filename)
+            p = tmpdir.join(PRE_COMMIT_CONFIG_FILENAME)
             p.write("")
 
             commands.Init(config)()
             check_cz_config(default_choice)
-            check_pre_commit_config([cz_hook_config])
+            check_pre_commit_config([CZ_HOOK_CONFIG])
 
     def test_pre_commit_config_without_cz_hook(_, default_choice, tmpdir, config):
         existing_hook_config = {
@@ -206,22 +204,22 @@ class TestPreCommitCases:
         }
 
         with tmpdir.as_cwd():
-            p = tmpdir.join(pre_commit_config_filename)
+            p = tmpdir.join(PRE_COMMIT_CONFIG_FILENAME)
             p.write(yaml.safe_dump({"repos": [existing_hook_config]}))
 
             commands.Init(config)()
             check_cz_config(default_choice)
-            check_pre_commit_config([existing_hook_config, cz_hook_config])
+            check_pre_commit_config([existing_hook_config, CZ_HOOK_CONFIG])
 
     def test_cz_hook_exists_in_pre_commit_config(_, default_choice, tmpdir, config):
         with tmpdir.as_cwd():
-            p = tmpdir.join(pre_commit_config_filename)
-            p.write(yaml.safe_dump({"repos": [cz_hook_config]}))
+            p = tmpdir.join(PRE_COMMIT_CONFIG_FILENAME)
+            p.write(yaml.safe_dump({"repos": [CZ_HOOK_CONFIG]}))
 
             commands.Init(config)()
             check_cz_config(default_choice)
             # check that config is not duplicated
-            check_pre_commit_config([cz_hook_config])
+            check_pre_commit_config([CZ_HOOK_CONFIG])
 
 
 class TestNoPreCommitInstalled:
@@ -266,3 +264,198 @@ def test_init_command_shows_description_when_use_help_option(
 
     out, _ = capsys.readouterr()
     file_regression.check(out, extension=".txt")
+
+
+def test_init_with_confirmed_tag_format(config, mocker: MockFixture, tmpdir):
+    mocker.patch(
+        "commitizen.commands.init.get_tag_names", return_value=["v0.0.2", "v0.0.1"]
+    )
+    mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value="v0.0.2")
+    mocker.patch(
+        "questionary.select",
+        side_effect=[
+            FakeQuestion("pyproject.toml"),
+            FakeQuestion("cz_conventional_commits"),
+            FakeQuestion("commitizen"),
+            FakeQuestion("semver"),
+        ],
+    )
+    mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+    mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+    mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
+
+    with tmpdir.as_cwd():
+        commands.Init(config)()
+        with open("pyproject.toml", encoding="utf-8") as toml_file:
+            assert 'tag_format = "v$version"' in toml_file.read()
+
+
+def test_init_with_no_existing_tags(config, mocker: MockFixture, tmpdir):
+    mocker.patch("commitizen.commands.init.get_tag_names", return_value=[])
+    mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value="v1.0.0")
+    mocker.patch(
+        "questionary.select",
+        side_effect=[
+            FakeQuestion("pyproject.toml"),
+            FakeQuestion("cz_conventional_commits"),
+            FakeQuestion("commitizen"),
+            FakeQuestion("semver"),
+        ],
+    )
+    mocker.patch("questionary.confirm", return_value=FakeQuestion(False))
+    mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+    mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
+
+    with tmpdir.as_cwd():
+        commands.Init(config)()
+        with open("pyproject.toml", encoding="utf-8") as toml_file:
+            assert 'version = "0.0.1"' in toml_file.read()
+
+
+def test_init_with_no_existing_latest_tag(config, mocker: MockFixture, tmpdir):
+    mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value=None)
+    mocker.patch(
+        "questionary.select",
+        side_effect=[
+            FakeQuestion("pyproject.toml"),
+            FakeQuestion("cz_conventional_commits"),
+            FakeQuestion("commitizen"),
+            FakeQuestion("semver"),
+        ],
+    )
+    mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+    mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+    mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
+
+    with tmpdir.as_cwd():
+        commands.Init(config)()
+        with open("pyproject.toml", encoding="utf-8") as toml_file:
+            assert 'version = "0.0.1"' in toml_file.read()
+
+
+def test_init_with_existing_tags(config, mocker: MockFixture, tmpdir):
+    expected_tags = ["v1.0.0", "v0.9.0", "v0.8.0"]
+    mocker.patch("commitizen.commands.init.get_tag_names", return_value=expected_tags)
+    mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value="v1.0.0")
+    mocker.patch(
+        "questionary.select",
+        side_effect=[
+            FakeQuestion("pyproject.toml"),
+            FakeQuestion("cz_conventional_commits"),
+            FakeQuestion("commitizen"),
+            FakeQuestion("semver"),  # Select version scheme first
+            FakeQuestion("v1.0.0"),  # Then select the latest tag
+        ],
+    )
+    mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+    mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+    mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
+
+    with tmpdir.as_cwd():
+        commands.Init(config)()
+        with open("pyproject.toml", encoding="utf-8") as toml_file:
+            assert 'version = "1.0.0"' in toml_file.read()
+
+
+def test_init_with_non_commitizen_version_provider(config, mocker: MockFixture, tmpdir):
+    mocker.patch(
+        "questionary.select",
+        side_effect=[
+            FakeQuestion("pyproject.toml"),
+            FakeQuestion("cz_conventional_commits"),
+            FakeQuestion("pep621"),  # Select a non-commitizen version provider
+            FakeQuestion("semver"),
+        ],
+    )
+    mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+    mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+    mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
+
+    with tmpdir.as_cwd():
+        commands.Init(config)()
+        with open("pyproject.toml", encoding="utf-8") as toml_file:
+            content = toml_file.read()
+            assert 'version_provider = "pep621"' in content
+            assert (
+                'version = "0.0.1"' not in content
+            )  # Version should not be set for non-commitizen providers
+
+
+class TestVersionProviderDefault:
+    def test_default_for_python_poetry(self, config, mocker: MockFixture):
+        mock_project_info = mocker.Mock()
+        mock_project_info.is_python = True
+        mock_project_info.is_python_poetry = True
+        mock_project_info.is_python_uv = False
+        mocker.patch(
+            "commitizen.commands.init.ProjectInfo", return_value=mock_project_info
+        )
+        init = commands.Init(config)
+        assert init._version_provider_default_val == "poetry"
+
+    def test_default_for_python_uv(self, config, mocker: MockFixture):
+        mock_project_info = mocker.Mock()
+        mock_project_info.is_python = True
+        mock_project_info.is_python_poetry = False
+        mock_project_info.is_python_uv = True
+        mocker.patch(
+            "commitizen.commands.init.ProjectInfo", return_value=mock_project_info
+        )
+        init = commands.Init(config)
+        assert init._version_provider_default_val == "uv"
+
+    def test_default_for_python_pep621(self, config, mocker: MockFixture):
+        mock_project_info = mocker.Mock()
+        mock_project_info.is_python = True
+        mock_project_info.is_python_poetry = False
+        mock_project_info.is_python_uv = False
+        mocker.patch(
+            "commitizen.commands.init.ProjectInfo", return_value=mock_project_info
+        )
+        init = commands.Init(config)
+        assert init._version_provider_default_val == "pep621"
+
+    def test_default_for_rust_cargo(self, config, mocker: MockFixture):
+        mock_project_info = mocker.Mock()
+        mock_project_info.is_python = False
+        mock_project_info.is_rust_cargo = True
+        mocker.patch(
+            "commitizen.commands.init.ProjectInfo", return_value=mock_project_info
+        )
+        init = commands.Init(config)
+        assert init._version_provider_default_val == "cargo"
+
+    def test_default_for_npm_package(self, config, mocker: MockFixture):
+        mock_project_info = mocker.Mock()
+        mock_project_info.is_python = False
+        mock_project_info.is_rust_cargo = False
+        mock_project_info.is_npm_package = True
+        mocker.patch(
+            "commitizen.commands.init.ProjectInfo", return_value=mock_project_info
+        )
+        init = commands.Init(config)
+        assert init._version_provider_default_val == "npm"
+
+    def test_default_for_php_composer(self, config, mocker: MockFixture):
+        mock_project_info = mocker.Mock()
+        mock_project_info.is_python = False
+        mock_project_info.is_rust_cargo = False
+        mock_project_info.is_npm_package = False
+        mock_project_info.is_php_composer = True
+        mocker.patch(
+            "commitizen.commands.init.ProjectInfo", return_value=mock_project_info
+        )
+        init = commands.Init(config)
+        assert init._version_provider_default_val == "composer"
+
+    def test_default_fallback_to_commitizen(self, config, mocker: MockFixture):
+        mock_project_info = mocker.Mock()
+        mock_project_info.is_python = False
+        mock_project_info.is_rust_cargo = False
+        mock_project_info.is_npm_package = False
+        mock_project_info.is_php_composer = False
+        mocker.patch(
+            "commitizen.commands.init.ProjectInfo", return_value=mock_project_info
+        )
+        init = commands.Init(config)
+        assert init._version_provider_default_val == "commitizen"
