@@ -76,7 +76,7 @@ def update_version_in_files(
     """
     # TODO: separate check step and write step
     updated = []
-    for path, regex in files_and_regexs(files, current_version):
+    for path, regex in _files_and_regexes(files, current_version):
         current_version_found, version_file = _bump_with_regex(
             path,
             current_version,
@@ -99,7 +99,7 @@ def update_version_in_files(
     return updated
 
 
-def files_and_regexs(patterns: list[str], version: str) -> list[tuple[str, str]]:
+def _files_and_regexes(patterns: list[str], version: str) -> list[tuple[str, str]]:
     """
     Resolve all distinct files with their regexp from a list of glob patterns with optional regexp
     """
@@ -128,13 +128,15 @@ def _bump_with_regex(
     pattern = re.compile(regex)
     with open(version_filepath, encoding=encoding) as f:
         for line in f:
-            if pattern.search(line):
-                bumped_line = line.replace(current_version, new_version)
-                if bumped_line != line:
-                    current_version_found = True
-                lines.append(bumped_line)
-            else:
+            if not pattern.search(line):
                 lines.append(line)
+                continue
+
+            bumped_line = line.replace(current_version, new_version)
+            if bumped_line != line:
+                current_version_found = True
+            lines.append(bumped_line)
+
     return current_version_found, "".join(lines)
 
 
