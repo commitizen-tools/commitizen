@@ -452,3 +452,44 @@ def test_check_command_with_message_length_limit_exceeded(config, mocker: MockFi
     with pytest.raises(InvalidCommitMessageError):
         check_cmd()
         error_mock.assert_called_once()
+
+
+@pytest.mark.usefixtures("use_cz_custom_validator")
+def test_check_command_with_custom_validator_succeed(mocker: MockFixture, capsys):
+    testargs = [
+        "cz",
+        "--name",
+        "cz_custom_validator",
+        "check",
+        "--commit-msg-file",
+        "some_file",
+    ]
+    mocker.patch.object(sys, "argv", testargs)
+    mocker.patch(
+        "commitizen.commands.check.open",
+        mocker.mock_open(read_data="ABC-123: add commitizen pre-commit hook"),
+    )
+    cli.main()
+    out, _ = capsys.readouterr()
+    assert "Commit validation: successful!" in out
+
+
+@pytest.mark.usefixtures("use_cz_custom_validator")
+def test_check_command_with_custom_validator_failed(mocker: MockFixture):
+    testargs = [
+        "cz",
+        "--name",
+        "cz_custom_validator",
+        "check",
+        "--commit-msg-file",
+        "some_file",
+    ]
+    mocker.patch.object(sys, "argv", testargs)
+    mocker.patch(
+        "commitizen.commands.check.open",
+        mocker.mock_open(read_data="ABC-123 add commitizen pre-commit hook"),
+    )
+    with pytest.raises(InvalidCommitMessageError) as excinfo:
+        cli.main()
+    assert "commit validation: failed!" in str(excinfo.value)
+    assert "commit message does not match pattern" in str(excinfo.value)
