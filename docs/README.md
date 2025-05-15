@@ -108,6 +108,16 @@ poetry add commitizen --group dev
 poetry add commitizen --dev
 ```
 
+**Using uv:**
+```bash
+uv add commitizen
+```
+
+**Using pdm:**
+```bash
+pdm add -d commitizen
+```
+
 ### Basic Commands
 
 #### Initialize Commitizen
