@@ -190,7 +190,7 @@ def process_commit_message(
 def order_changelog_tree(tree: Iterable, change_type_order: list[str]) -> Iterable:
     if len(set(change_type_order)) != len(change_type_order):
         raise InvalidConfigurationError(
-            f"Change types contain duplicates types ({change_type_order})"
+            f"Change types contain duplicated types ({change_type_order})"
         )
 
     sorted_tree = []
