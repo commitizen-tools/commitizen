@@ -79,8 +79,7 @@ def test_get_reachable_tags_with_commits(
     monkeypatch.setenv("LANGUAGE", f"{locale}.UTF-8")
     monkeypatch.setenv("LC_ALL", f"{locale}.UTF-8")
     with tmp_commitizen_project.as_cwd():
-        tags = git.get_tags(reachable_only=True)
-        assert tags == []
+        assert git.get_tags(reachable_only=True) == []
 
 
 def test_get_tag_names(mocker: MockFixture):
@@ -271,7 +270,7 @@ def test_get_commits_with_signature():
 def test_get_tag_names_has_correct_arrow_annotation():
     arrow_annotation = inspect.getfullargspec(git.get_tag_names).annotations["return"]
 
-    assert arrow_annotation == "list[str | None]"
+    assert arrow_annotation == "list[str]"
 
 
 def test_get_latest_tag_name(tmp_commitizen_project):
@@ -317,24 +316,18 @@ def test_is_staging_clean_when_updating_file(tmp_commitizen_project):
         assert git.is_staging_clean() is False
 
 
-def test_git_eol_style(tmp_commitizen_project):
+def test_get_eol_for_open(tmp_commitizen_project):
     with tmp_commitizen_project.as_cwd():
-        assert git.get_eol_style() == git.EOLTypes.NATIVE
+        assert git.get_eol_for_open() == os.linesep
 
         cmd.run("git config core.eol lf")
-        assert git.get_eol_style() == git.EOLTypes.LF
+        assert git.get_eol_for_open() == "\n"
 
         cmd.run("git config core.eol crlf")
-        assert git.get_eol_style() == git.EOLTypes.CRLF
+        assert git.get_eol_for_open() == "\r\n"
 
         cmd.run("git config core.eol native")
-        assert git.get_eol_style() == git.EOLTypes.NATIVE
-
-
-def test_eoltypes_get_eol_for_open():
-    assert git.EOLTypes.get_eol_for_open(git.EOLTypes.NATIVE) == os.linesep
-    assert git.EOLTypes.get_eol_for_open(git.EOLTypes.LF) == "\n"
-    assert git.EOLTypes.get_eol_for_open(git.EOLTypes.CRLF) == "\r\n"
+        assert git.get_eol_for_open() == os.linesep
 
 
 def test_get_core_editor(mocker):
@@ -401,3 +394,14 @@ def test_commit_with_spaces_in_path(mocker, file_path, expected_cmd):
 
     mock_run.assert_called_once_with(expected_cmd)
     mock_unlink.assert_called_once_with(file_path)
+
+
+def test_get_filenames_in_commit_error(mocker: MockFixture):
+    """Test that GitCommandError is raised when git command fails."""
+    mocker.patch(
+        "commitizen.cmd.run",
+        return_value=FakeCommand(out="", err="fatal: bad object HEAD", return_code=1),
+    )
+    with pytest.raises(exceptions.GitCommandError) as excinfo:
+        git.get_filenames_in_commit()
+    assert str(excinfo.value) == "fatal: bad object HEAD"
