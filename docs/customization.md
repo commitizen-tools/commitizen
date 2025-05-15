@@ -1,4 +1,4 @@
-Customizing commitizen is not hard at all.
+Customizing Commitizen is not hard at all.
 We have two different ways to do so.
 
 ## 1. Customize in configuration file
@@ -6,7 +6,7 @@ We have two different ways to do so.
 The basic steps are:
 
 1. Define your custom committing or bumping rules in the configuration file.
-2. Declare `name = "cz_customize"` in your configuration file, or add `-n cz_customize` when running commitizen.
+2. Declare `name = "cz_customize"` in your configuration file, or add `-n cz_customize` when running Commitizen.
 
 Example:
 
@@ -184,8 +184,8 @@ commitizen:
 
 #### Shortcut keys
 
-When the [`use_shortcuts`](config.md#settings) config option is enabled, commitizen can show and use keyboard shortcuts to select items from lists directly.
-For example, when using the `cz_conventional_commits` commitizen template, shortcut keys are shown when selecting the commit type. Unless otherwise defined, keyboard shortcuts will be numbered automatically.
+When the [`use_shortcuts`](config.md#settings) config option is enabled, Commitizen can show and use keyboard shortcuts to select items from lists directly.
+For example, when using the `cz_conventional_commits` Commitizen template, shortcut keys are shown when selecting the commit type. Unless otherwise defined, keyboard shortcuts will be numbered automatically.
 To specify keyboard shortcuts for your custom choices, provide the shortcut using the `key` parameter in dictionary form for each choice you would like to customize.
 
 ## 2. Customize through customizing a class
@@ -304,7 +304,7 @@ class StrangeCommitizen(BaseCommitizen):
     bump_map = {"break": "MAJOR", "new": "MINOR", "fix": "PATCH", "hotfix": "PATCH"}
 ```
 
-That's it, your commitizen now supports custom rules, and you can run.
+That's it, your Commitizen now supports custom rules, and you can run.
 
 ```bash
 cz -n cz_strange bump
@@ -451,7 +451,7 @@ Commitizen gives you the possibility to provide your own changelog template, by:
   - as `--template` parameter to both `bump` and `changelog` commands
 - either by providing a template with the same name as the default template
 
-By default, the template used is the `CHANGELOG.md.j2` file from the commitizen repository.
+By default, the template used is the `CHANGELOG.md.j2` file from the Commitizen repository.
 
 ### Providing a template with your customization class
 

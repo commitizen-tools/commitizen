@@ -50,7 +50,7 @@ where to output the content of the changelog for the newly created version.
 
 And then add a step using a GitHub action to create the release: `softprops/action-gh-release`
 
-The commitizen action creates an env variable called `REVISION`, containing the
+Commitizen action creates an env variable called `REVISION`, containing the
 newly created version.
 
 ```yaml
@@ -119,7 +119,7 @@ jobs:
           ./scripts/publish
 ```
 
-Notice that we are using poetry, and we are calling a bash script in `./scripts/publish`. You should configure the action, and publish with your tools (twine, poetry, etc.). Check [commitizen example](https://github.com/commitizen-tools/commitizen/blob/master/scripts/publish)
+Notice that we are using poetry, and we are calling a bash script in `./scripts/publish`. You should configure the action, and publish with your tools (twine, poetry, etc.). Check [Commitizen example](https://github.com/commitizen-tools/commitizen/blob/master/scripts/publish)
 You can also use [pypa/gh-action-pypi-publish](https://github.com/pypa/gh-action-pypi-publish) to publish your package.
 
 Push the changes and that's it.

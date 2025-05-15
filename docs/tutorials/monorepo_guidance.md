@@ -1,4 +1,4 @@
-# Configuring commitizen in a monorepo
+# Configuring Commitizen in a monorepo
 
 This tutorial assumes the monorepo layout is designed with multiple components that can be released independently of each
 other, it also assumes that conventional commits with scopes are in use. Some suggested layouts:

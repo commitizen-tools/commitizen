@@ -116,7 +116,7 @@ Below are some examples that illustrate the difference in behavior:
 
 ### `--check-consistency`
 
-Check whether the versions defined in `version_files` and the version in commitizen
+Check whether the versions defined in `version_files` and the version in Commitizen
 configuration are consistent before bumping version.
 
 ```bash
@@ -148,7 +148,7 @@ from setuptools import setup
 setup(..., version="1.0.5", ...)
 ```
 
-If `--check-consistency` is used, commitizen will check whether the current version in `pyproject.toml`
+If `--check-consistency` is used, Commitizen will check whether the current version in `pyproject.toml`
 exists in all version_files and find out it does not exist in `setup.py` and fails.
 However, it will still update `pyproject.toml` and `src/__version__.py`.
 
@@ -174,11 +174,11 @@ If `--local-version` is used, it will bump only the local version `0.1.0` and ke
 
 ### `--annotated-tag`
 
-If `--annotated-tag` is used, commitizen will create annotated tags. Also available via configuration, in `pyproject.toml` or `.cz.toml`.
+If `--annotated-tag` is used, Commitizen will create annotated tags. It is also available via configuration, in `pyproject.toml` or `.cz.toml`.
 
 ### `--annotated-tag-message`
 
-If `--annotated-tag-message` is used, commitizen will create annotated tags with the given message.
+If `--annotated-tag-message` is used, Commitizen will create annotated tags with the given message.
 
 ### `--changelog-to-stdout`
 
@@ -332,11 +332,11 @@ cz bump --allow-no-commit 2.0.0
 
 ## Avoid raising errors
 
-Some situations from commitizen raise an exit code different than 0.
-If the error code is different than 0, any CI or script running commitizen might be interrupted.
+Some situations from Commitizen raise an exit code different from 0.
+If the error code is different from 0, any CI or script running Commitizen might be interrupted.
 
 If you have a special use case, where you don't want to raise one of this error codes, you can
-tell commitizen to not raise them.
+tell Commitizen to not raise them.
 
 ### Recommended use case
 
@@ -355,7 +355,7 @@ cz -nr 21 bump
 
 ### Easy way
 
-Check which error code was raised by commitizen by running in the terminal
+Check which error code was raised by Commitizen by running in the terminal
 
 ```sh
 echo $?
@@ -367,13 +367,13 @@ The output should be an integer like this
 3
 ```
 
-And then you can tell commitizen to ignore it:
+And then you can tell Commitizen to ignore it:
 
 ```sh
 cz --no-raise 3
 ```
 
-You can tell commitizen to skip more than one if needed:
+You can tell Commitizen to skip more than one if needed:
 
 ```sh
 cz --no-raise 3,4,5
@@ -510,7 +510,7 @@ update_changelog_on_bump = true
 
 ### `annotated_tag`
 
-When set to `true` commitizen will create annotated tags.
+When set to `true`, Commitizen will create annotated tags.
 
 ```toml
 [tool.commitizen]
@@ -521,7 +521,7 @@ annotated_tag = true
 
 ### `gpg_sign`
 
-When set to `true` commitizen will create gpg signed tags.
+When set to `true`, Commitizen will create gpg signed tags.
 
 ```toml
 [tool.commitizen]
@@ -532,7 +532,7 @@ gpg_sign = true
 
 ### `major_version_zero`
 
-When set to `true` commitizen will keep the major version at zero.
+When set to `true`, Commitizen will keep the major version at zero.
 Useful during the initial development stage of your project.
 
 Defaults to: `false`
