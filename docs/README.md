@@ -217,36 +217,7 @@ For more details about commit validation, see the [check command documentation](
 
 Commitizen provides a comprehensive CLI with various commands. Here's the complete reference:
 
-<!-- Please manually update the following section after changing `cz --help` command output. -->
-
-```sh
-$ cz --help
-usage: cz [-h] [--config CONFIG] [--debug] [-n NAME] [-nr NO_RAISE] {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version} ...
-
-Commitizen is a powerful release management tool that helps teams maintain consistent and meaningful commit messages while automating version management.
-For more information, please visit https://commitizen-tools.github.io/commitizen
-
-options:
-  -h, --help            show this help message and exit
-  --config CONFIG       the path of configuration file
-  --debug               use debug mode
-  -n, --name NAME       use the given commitizen (default: cz_conventional_commits)
-  -nr, --no-raise NO_RAISE
-                        comma separated error codes that won't raise error, e.g: cz -nr 1,2,3 bump. See codes at https://commitizen-tools.github.io/commitizen/exit_codes/
-
-commands:
-  {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version}
-    init                init commitizen configuration
-    commit (c)          create new commit
-    ls                  show available commitizens
-    example             show commit example
-    info                show information about the cz
-    schema              show commit schema
-    bump                bump semantic version based on the git log
-    changelog (ch)      generate changelog (note that it will overwrite existing file)
-    check               validates that a commit message matches the commitizen schema
-    version             get the version of the installed commitizen or the current project (default: installed commitizen)
-```
+![cz --help](images/cli_help/cz___help.svg)
 
 ### Quick Reference
 
