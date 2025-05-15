@@ -556,8 +556,8 @@ TAGS = [
 
 
 @pytest.fixture
-def gitcommits() -> list:
-    commits = [
+def gitcommits() -> list[git.GitCommit]:
+    return [
         git.GitCommit(
             commit["rev"],
             commit["title"],
@@ -568,13 +568,11 @@ def gitcommits() -> list:
         )
         for commit in COMMITS_DATA
     ]
-    return commits
 
 
 @pytest.fixture
-def tags() -> list:
-    tags = [git.GitTag(*tag) for tag in TAGS]
-    return tags
+def tags() -> list[git.GitTag]:
+    return [git.GitTag(*tag) for tag in TAGS]
 
 
 @pytest.fixture
