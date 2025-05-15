@@ -63,7 +63,7 @@ Where do they cross paths?
 
 If you are using conventional commits in your git history, then you could swap one with the other in theory.
 
-Regarding the name, [cz-js][cz-js] came first, they used the word commitizen first. When this project was created originally, the creator read "be a good commitizen", and thought it was just a cool word that made sense, and this would be a package that helps you be a good "commit citizen".
+Regarding the name, [cz-js][cz-js] came first, they used the word Commitizen first. When this project was created originally, the creator read "be a good commitizen", and thought it was just a cool word that made sense, and this would be a package that helps you be a good "commit citizen".
 
 [cz-js]: https://github.com/commitizen/cz-cli
 
@@ -80,7 +80,7 @@ This error was caused by a Python bug on Windows. It's been fixed by [this PR](h
 
 More discussion can be found in issue [#318](https://github.com/commitizen-tools/commitizen/issues/318).
 
-## Why does commitizen not support CalVer?
+## Why does Commitizen not support CalVer?
 
 `commitizen` could support CalVer alongside SemVer, but in practice implementing CalVer
 creates numerous edge cases that are difficult to maintain ([#385]) and more generally,
@@ -117,7 +117,7 @@ New bumped tags will be in the new format but old ones will still work for:
 
 
 So given if you change from `myproject-$version` to `${version}` and then `v${version}`,
-your commitizen configuration will look like this:
+your Commitizen configuration will look like this:
 
 ```toml
 tag_format = "v${version}"

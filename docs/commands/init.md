@@ -4,7 +4,7 @@
 
 ## Example
 
-To start using commitizen, the recommended approach is to run
+To start using Commitizen, the recommended approach is to run
 
 ```sh
 cz init

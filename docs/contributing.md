@@ -61,7 +61,7 @@ If you're a first-time contributor, you can check the issues with the [good firs
     - Ensure test coverage doesn't drop (we use [CodeCov](https://app.codecov.io/gh/commitizen-tools/commitizen))
     - For documentation changes, run `poetry doc` to check for warnings/errors
 4. **Committing Changes**
-    - Use commitizen to make commits (we follow [conventional commits](https://www.conventionalcommits.org/))
+    - Use Commitizen to make commits (we follow [conventional commits](https://www.conventionalcommits.org/))
     - Example: `cz commit`
 5. **Documentation**
     - Update `docs/README.md` if needed

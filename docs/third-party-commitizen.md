@@ -33,9 +33,9 @@ pip install conventional-JIRA
 
 ### [GitHub JIRA Conventional](https://pypi.org/project/cz-github-jira-conventional/)
 
-This plugin extends the commitizen tools by:
+This plugin extends the Commitizen tools by:
 
-- requiring a JIRA issue id in the commit message
+- requiring a JIRA issue ID in the commit message
 - creating links to GitHub commits in the CHANGELOG.md
 - creating links to JIRA issues in the CHANGELOG.md
 

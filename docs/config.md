@@ -187,7 +187,7 @@ Type: `bool`
 
 Default: `false`
 
-If enabled, commitizen will show keyboard shortcuts when selecting from a list. Define a `key` for each of your choices to set the key. [Read more][shortcuts]
+If enabled, Commitizen will show keyboard shortcuts when selecting from a list. Define a `key` for each of your choices to set the key. [Read more][shortcuts]
 
 ### `major_version_zero`
 
@@ -341,14 +341,14 @@ commitizen:
 ## Version providers
 
 Commitizen can read and write version from different sources.
-By default, it uses the `commitizen` one which is using the `version` field from the commitizen settings.
+By default, it uses the `commitizen` one which is using the `version` field from the Commitizen settings.
 But you can use any `commitizen.provider` entrypoint as value for `version_provider`.
 
 Commitizen provides some version providers for some well known formats:
 
 | name         | description                                                                                                                                                                                                             |
 | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `commitizen` | Default version provider: Fetch and set version in commitizen config.                                                                                                                                                   |
+| `commitizen` | Default version provider: Fetch and set version in Commitizen config.                                                                                                                                                   |
 | `scm`        | Fetch the version from git and does not need to set it back                                                                                                                                                             |
 | `pep621`     | Get and set version from `pyproject.toml` `project.version` field                                                                                                                                                       |
 | `poetry`     | Get and set version from `pyproject.toml` `tool.poetry.version` field                                                                                                                                                   |

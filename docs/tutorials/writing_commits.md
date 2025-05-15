@@ -1,6 +1,6 @@
 For this project to work well in your pipeline, a commit convention must be followed.
 
-By default, commitizen uses the known [conventional commits][conventional_commits], but
+By default, Commitizen uses the known [conventional commits][conventional_commits], but
 you can create your own following the documentation information over at
 [customization][customization].
 

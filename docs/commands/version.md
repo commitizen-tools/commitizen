@@ -1,4 +1,4 @@
-Get the version of the installed commitizen or the current project (default: installed commitizen)
+Get the version of the installed Commitizen or the current project (default: installed commitizen)
 
 ## Usage
 

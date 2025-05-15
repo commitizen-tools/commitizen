@@ -1,4 +1,4 @@
-![Using commitizen cli](../images/demo.gif)
+![Using Commitizen cli](../images/demo.gif)
 
 ## About
 
@@ -20,14 +20,14 @@ case for this is to [automatically prepare a commit message](../tutorials/auto_p
 
 ### git options
 
-`git` command options that are not implemented by commitizen can be use via the `--` syntax for the `commit` command.
-The syntax separates commitizen arguments from `git commit` arguments by a double dash. This is the resulting syntax:
+`git` command options that are not implemented by Commitizen can be use via the `--` syntax for the `commit` command.
+The syntax separates Commitizen arguments from `git commit` arguments by a double dash. This is the resulting syntax:
 ```sh
 cz commit <commitizen-args> -- <git-cli-args>
 
 # e.g., cz commit --dry-run -- -a -S
 ```
-For example, using the `-S` option on `git commit` to sign a commit is now commitizen compatible: `cz c -- -S`
+For example, using the `-S` option on `git commit` to sign a commit is now Commitizen compatible: `cz c -- -S`
 
 !!! note
     Deprecation warning: A commit can be signed off using `cz commit --signoff` or the shortcut `cz commit -s`.
@@ -37,7 +37,7 @@ For example, using the `-S` option on `git commit` to sign a commit is now commi
 
 You can use `cz commit --retry` to reuse the last commit message when the previous commit attempt failed.
 To automatically retry when running `cz commit`, you can set the `retry_after_failure`
-configuration option to `true`. Running `cz commit --no-retry` makes commitizen ignore `retry_after_failure`, forcing
+configuration option to `true`. Running `cz commit --no-retry` makes Commitizen ignore `retry_after_failure`, forcing
 a new commit message to be prompted.
 
 ### Commit message length limit

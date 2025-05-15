@@ -20,7 +20,7 @@ These exit codes can be found in `commitizen/exceptions.py::ExitCode`.
 | NoCommitBackupError         | 10        | Commit back up file cannot be found                                                                         |
 | NothingToCommitError        | 11        | Nothing in staging to be committed                                                                          |
 | CustomError                 | 12        | `CzException` raised                                                                                        |
-| NoCommandFoundError         | 13        | No command found when running commitizen cli (e.g., `cz --debug`)                                           |
+| NoCommandFoundError         | 13        | No command found when running Commitizen cli (e.g., `cz --debug`)                                           |
 | InvalidCommitMessageError   | 14        | The commit message does not pass `cz check`                                                                 |
 | MissingConfigError          | 15        | Configuration missed for `cz_customize`                                                                     |
 | NoRevisionError             | 16        | No revision found                                                                                           |

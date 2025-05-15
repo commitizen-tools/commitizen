@@ -1,4 +1,4 @@
-> If you have written over commitizen, make a PR and add the link here 💪
+> If you have written over Commitizen, make a PR and add the link here 💪
 
 ## Talks
 
