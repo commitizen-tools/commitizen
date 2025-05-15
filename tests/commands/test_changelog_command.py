@@ -1788,13 +1788,13 @@ def test_changelog_ignored_tags(
     out = open(changelog_path).read()
     _, err = capsys.readouterr()
     assert "## ignore-0.1.0" not in out
-    assert "InvalidVersion ignore-0.1.0" not in err
+    assert "Invalid version tag: 'ignore-0.1.0'" not in err
     assert "## ignored" not in out
-    assert "InvalidVersion ignored" not in err
+    assert "Invalid version tag: 'ignored'" not in err
     assert "## not-ignored" not in out
-    assert "InvalidVersion not-ignored" in err
+    assert "Invalid version tag: 'not-ignored'" in err
     assert "## v0.3.0" in out
-    assert "InvalidVersion v0.3.0" not in err
+    assert "Invalid version tag: 'v0.3.0'" not in err
 
 
 def test_changelog_template_extra_quotes(

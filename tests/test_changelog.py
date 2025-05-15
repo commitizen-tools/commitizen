@@ -1635,7 +1635,7 @@ def test_tags_rules_get_version_tags(capsys: pytest.CaptureFixture):
     }
 
     captured = capsys.readouterr()
-    assert captured.err.count("InvalidVersion") == 2
+    assert captured.err.count("Invalid version tag:") == 2
     assert captured.err.count("not-a-version") == 2
 
 

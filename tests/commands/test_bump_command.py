@@ -1656,3 +1656,35 @@ def test_bump_detect_legacy_tags_from_scm(
     cli.main()
 
     assert git.tag_exist("v0.4.3")
+
+
+def test_bump_warn_but_dont_fail_on_invalid_tags(
+    tmp_commitizen_project: py.path.local,
+    mocker: MockFixture,
+    capsys: pytest.CaptureFixture,
+):
+    project_root = Path(tmp_commitizen_project)
+    tmp_commitizen_cfg_file = project_root / "pyproject.toml"
+    tmp_commitizen_cfg_file.write_text(
+        "\n".join(
+            [
+                "[tool.commitizen]",
+                'version_provider = "scm"',
+                'version_scheme = "pep440"',
+            ]
+        ),
+    )
+    create_file_and_commit("feat: new file")
+    create_tag("0.4.2")
+    create_file_and_commit("feat: new file")
+    create_tag("0.4.3.deadbeaf")
+    create_file_and_commit("feat: new file")
+
+    testargs = ["cz", "bump", "--increment", "patch", "--changelog"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    _, err = capsys.readouterr()
+
+    assert err.count("Invalid version tag: '0.4.3.deadbeaf'") == 1
+    assert git.tag_exist("0.4.3")
