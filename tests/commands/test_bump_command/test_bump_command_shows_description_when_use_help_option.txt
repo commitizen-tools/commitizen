@@ -51,8 +51,8 @@ options:
                         log) without interpretation, such that the increment
                         and pre-release are always honored
   --check-consistency, -cc
-                        check consistency among versions defined in commitizen
-                        configuration and version_files
+                        check consistency between versions defined in
+                        commitizen configuration and version_files
   --annotated-tag, -at  create annotated tag instead of lightweight one
   --annotated-tag-message, -atm ANNOTATED_TAG_MESSAGE
                         create annotated tag message
