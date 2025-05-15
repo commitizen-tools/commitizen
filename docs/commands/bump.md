@@ -72,7 +72,7 @@ cz bump --changelog
 
 The bump is a pre-release bump, meaning that in addition to a possible version bump the new version receives a
 pre-release segment compatible with the bump’s version scheme, where the segment consist of a _phase_ and a
-non-negative number. Supported options for `--prerelease` are the following phase names  `alpha`, `beta`, or
+non-negative number. Supported options for `--prerelease` are the following phase names `alpha`, `beta`, or
 `rc` (release candidate). For more details, refer to the
 [Python Packaging User Guide](https://packaging.python.org/en/latest/specifications/version-specifiers/#pre-releases).
 
@@ -387,7 +387,7 @@ to skip and why.
 Remember to document somewhere this, because you'll forget.
 
 For example if the system raises a `NoneIncrementExit` error, you look it up
-on the list and then you can use the exit code:
+on the list, and then you can use the exit code:
 
 ```sh
 cz -nr 21 bump
@@ -403,7 +403,7 @@ These are used in:
 
 - `cz bump`: Find previous release tag (exact match) and generate new tag.
 - Find previous release tags in `cz changelog`.
-  - If `--incremental`: Using latest version found in the changelog, scan existing Git tags with 89\% similarity match.
+  - If `--incremental`: Using the latest version found in the changelog, scan existing Git tags with 89\% similarity match.
   - `--rev-range` is converted to Git tag names with `tag_format` before searching Git history.
 - If the `scm` `version_provider` is used, it uses different regexes to find the previous version tags:
   - If `tag_format` is set to `$version` (default): `VersionProtocol.parser` (allows `v` prefix)
@@ -477,7 +477,7 @@ in a line containing the `version` substring.
 
 Template used to specify the commit message generated when bumping.
 
-defaults to: `bump: version $current_version → $new_version`
+Defaults to: `bump: version $current_version → $new_version`
 
 | Variable           | Description                         |
 | ------------------ | ----------------------------------- |
@@ -499,7 +499,7 @@ bump_message = "release $current_version → $new_version [skip-ci]"
 
 When set to `true` the changelog is always updated incrementally when running `cz bump`, so the user does not have to provide the `--changelog` flag every time.
 
-defaults to: `false`
+Defaults to: `false`
 
 ```toml
 [tool.commitizen]

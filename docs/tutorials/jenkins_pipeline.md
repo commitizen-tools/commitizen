@@ -47,7 +47,7 @@ def useCz(String authorName = 'Jenkins CI Server', String authorEmail = 'your-je
 ```
 
 !!! warning
-    Using jenkins pipeline with any git plugin may require many different configurations,
+    Using jenkins pipeline with any git plugin may require many configurations,
     you'll have to tinker with it until your pipelines properly detects git events. Check your
     webhook in your git repository and check the "behaviors" and "build strategies" in
     your pipeline settings.

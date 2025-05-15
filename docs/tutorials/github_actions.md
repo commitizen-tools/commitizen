@@ -41,14 +41,14 @@ jobs:
 
 Push to master and that's it.
 
-### Creating a github release
+### Creating a GitHub release
 
 You can modify the previous action.
 
 Add the variable `changelog_increment_filename` in the `commitizen-action`, specifying
 where to output the content of the changelog for the newly created version.
 
-And then add a step using a github action to create the release: `softprops/action-gh-release`
+And then add a step using a GitHub action to create the release: `softprops/action-gh-release`
 
 The commitizen action creates an env variable called `REVISION`, containing the
 newly created version.

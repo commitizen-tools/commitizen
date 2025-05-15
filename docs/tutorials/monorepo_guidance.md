@@ -56,9 +56,9 @@ In order to filter the correct commits for each component, you'll have to come u
 For example:
 
 - Trigger the pipeline based on the changed path, which can have some downsides, as you'll rely on the developer not including files from other files
-    - [github actions](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore) uses `path`
+    - [GitHub actions](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore) uses `path`
     - [Jenkins](https://www.jenkins.io/doc/book/pipeline/syntax/#built-in-conditions) uses `changeset`
-    - [Gitlab](https://docs.gitlab.com/ee/ci/yaml/#ruleschanges) uses `rules:changes`
+    - [GitLab](https://docs.gitlab.com/ee/ci/yaml/#ruleschanges) uses `rules:changes`
 - Filter certain pattern of the commit message (recommended)
 
 

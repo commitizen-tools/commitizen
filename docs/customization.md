@@ -490,7 +490,7 @@ Users can provide their own template from their current working directory (your 
 - setting your template path as `template` configuration
 - giving your template path as `--template` parameter to `bump` and `changelog` commands
 
-!!! Note
+!!! note
     The path is relative to the current working directory, aka your project root most of the time.
 
 ### Template variables
@@ -514,7 +514,7 @@ Each `Change` has the following fields:
 | author | `str` | The commit author name |
 | author_email | `str` | The commit author email |
 
-!!! Note
+!!! note
     The field values depend on the customization class and/or the settings you provide
 
 The `parents` field can be used to identify merge commits and generate a changelog based on those. Another use case

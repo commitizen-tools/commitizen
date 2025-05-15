@@ -59,7 +59,7 @@ Default: `[ ]`
 
 Legacy git tag formats, useful for old projects that changed tag format.
 Tags matching those formats will be recognized as version tags and be included in the changelog.
-Each entry use the the syntax as [`tag_format`](#tag_format). [Read more][tag_format]
+Each entry uses the syntax as [`tag_format`](#tag_format). [Read more][tag_format]
 
 ### `ignored_tag_formats`
 
@@ -68,7 +68,7 @@ Type: `list`
 Default: `[ ]`
 
 Tags matching those formats will be totally ignored and won't raise a warning.
-Each entry use the the syntax as [`tag_format`](#tag_format) with the addition of `*`
+Each entry uses the syntax as [`tag_format`](#tag_format) with the addition of `*`
 that will match everything (non-greedy). [Read more][tag_format]
 
 ### `update_changelog_on_bump`
@@ -101,7 +101,7 @@ Type: `str`
 
 Default: `None`
 
-Create custom commit message, useful to skip ci. [Read more][bump_message]
+Create custom commit message, useful to skip CI. [Read more][bump_message]
 
 ### `retry_after_failure`
 
@@ -117,7 +117,7 @@ Type: `bool`
 
 Default: `false`
 
-Disallow empty commit messages, useful in ci. [Read more][allow_abort]
+Disallow empty commit messages, useful in CI. [Read more][allow_abort]
 
 ### `allowed_prefixes`
 
@@ -195,7 +195,7 @@ Type: `bool`
 
 Default: `false`
 
-When true, breaking changes on a `0.x` will remain as a `0.x` version. On `false`, a breaking change will bump a `0.x` version to `1.0`. [major-version-zero]
+When true, breaking changes on a `0.x` will remain as a `0.x` version. On `false`, a breaking change will bump a `0.x` version to `1.0`. [Read more][major-version-zero]
 
 ### `prerelease_offset`
 
@@ -203,7 +203,7 @@ Type: `int`
 
 Default: `0`
 
-In some circumstances, a prerelease cannot start with a 0, e.g. in an embedded project individual characters are encoded as bytes. This can be done by specifying an offset from which to start counting. [prerelease-offset]
+In some circumstances, a prerelease cannot start with a 0, e.g. in an embedded project individual characters are encoded as bytes. This can be done by specifying an offset from which to start counting. [Read more][prerelease-offset]
 
 ### `pre_bump_hooks`
 
@@ -247,7 +247,7 @@ Provide extra variables to the changelog template. [Read more][template-customiz
 
 ## Configuration file
 
-### pyproject.toml, .cz.toml or cz.toml
+### `pyproject.toml`, `.cz.toml` or `cz.toml`
 
 Default and recommended configuration format for a project.
 For a **python** project, we recommend adding an entry to your `pyproject.toml`.
@@ -278,7 +278,7 @@ style = [
 ]
 ```
 
-### .cz.json or cz.json
+### `.cz.json` or `cz.json`
 
 Commitizen has support for JSON configuration. Recommended for `NodeJS` projects.
 
@@ -304,7 +304,7 @@ Commitizen has support for JSON configuration. Recommended for `NodeJS` projects
 }
 ```
 
-### .cz.yaml or cz.yaml
+### `.cz.yaml` or `cz.yaml`
 
 YAML configuration is supported by Commitizen. Recommended for `Go`, `ansible`, or even `helm` charts projects.
 
@@ -358,7 +358,7 @@ Commitizen provides some version providers for some well known formats:
 | `composer`   | Get and set version from `composer.json` `project.version` field                                                                                                                                                        |
 
 !!! note
-The `scm` provider is meant to be used with `setuptools-scm` or any packager `*-scm` plugin.
+    The `scm` provider is meant to be used with `setuptools-scm` or any packager `*-scm` plugin.
 
 An example in your `.cz.toml` or `cz.toml` would look like this:
 
@@ -408,10 +408,10 @@ setup(
 [tag_format]: commands/bump.md#tag_format
 [bump_message]: commands/bump.md#bump_message
 [major-version-zero]: commands/bump.md#-major-version-zero
-[prerelease-offset]: commands/bump.md#-prerelease_offset
+[prerelease-offset]: commands/bump.md#prerelease_offset
 [retry_after_failure]: commands/commit.md#retry
 [allow_abort]: commands/check.md#allow-abort
-[version-scheme]: commands/bump.md#version-scheme
+[version-scheme]: commands/bump.md#-version-scheme
 [pre_bump_hooks]: commands/bump.md#pre_bump_hooks
 [post_bump_hooks]: commands/bump.md#post_bump_hooks
 [allowed_prefixes]: commands/check.md#allowed-prefixes
