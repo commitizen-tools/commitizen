@@ -7,7 +7,7 @@ class Info:
 
     def __init__(self, config: BaseConfig, *args):
         self.config: BaseConfig = config
-        self.cz = factory.commiter_factory(self.config)
+        self.cz = factory.committer_factory(self.config)
 
     def __call__(self):
         out.write(self.cz.info())

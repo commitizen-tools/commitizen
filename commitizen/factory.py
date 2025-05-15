@@ -4,7 +4,7 @@ from commitizen.cz import registry
 from commitizen.exceptions import NoCommitizenFoundException
 
 
-def commiter_factory(config: BaseConfig) -> BaseCommitizen:
+def committer_factory(config: BaseConfig) -> BaseCommitizen:
     """Return the correct commitizen existing in the registry."""
     name: str = config.settings["name"]
     try:

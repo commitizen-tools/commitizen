@@ -311,7 +311,7 @@ def format_with_tags(config: BaseConfig, request) -> RestructuredText:
 
 
 @pytest.mark.parametrize("content, expected", CASES)
-def test_get_matadata(
+def test_get_metadata(
     tmp_path: Path, format: RestructuredText, content: str, expected: Metadata
 ):
     changelog = tmp_path / format.default_changelog_file

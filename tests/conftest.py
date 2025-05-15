@@ -232,7 +232,7 @@ class MockPlugin(BaseCommitizen):
 @pytest.fixture
 def mock_plugin(mocker: MockerFixture, config: BaseConfig) -> BaseCommitizen:
     mock = MockPlugin(config)
-    mocker.patch("commitizen.factory.commiter_factory", return_value=mock)
+    mocker.patch("commitizen.factory.committer_factory", return_value=mock)
     return mock
 
 

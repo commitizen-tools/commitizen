@@ -82,7 +82,7 @@ class Init:
     def __init__(self, config: BaseConfig, *args):
         self.config: BaseConfig = config
         self.encoding = config.settings["encoding"]
-        self.cz = factory.commiter_factory(self.config)
+        self.cz = factory.committer_factory(self.config)
         self.project_info = ProjectInfo()
 
     def __call__(self):

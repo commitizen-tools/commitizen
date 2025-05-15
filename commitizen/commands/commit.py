@@ -35,7 +35,7 @@ class Commit:
 
         self.config: BaseConfig = config
         self.encoding = config.settings["encoding"]
-        self.cz = factory.commiter_factory(self.config)
+        self.cz = factory.committer_factory(self.config)
         self.arguments = arguments
         self.temp_file: str = get_backup_file_path()
 

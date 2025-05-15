@@ -160,7 +160,7 @@ def test_parse_title_type_of_line(
         pytest.param(CHANGELOG_D, EXPECTED_D, id="D"),
     ),
 )
-def test_get_matadata(
+def test_get_metadata(
     tmp_path: Path, format: AsciiDoc, content: str, expected: Metadata
 ):
     changelog = tmp_path / format.default_changelog_file

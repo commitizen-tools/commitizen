@@ -19,7 +19,7 @@ if sys.version_info >= (3, 10):
 else:
     import importlib_metadata as metadata
 
-from packaging.version import InvalidVersion  # noqa: F401: Rexpose the common exception
+from packaging.version import InvalidVersion  # noqa: F401: expose the common exception
 from packaging.version import Version as _BaseVersion
 
 from commitizen.defaults import MAJOR, MINOR, PATCH, Settings
@@ -78,7 +78,7 @@ class VersionProtocol(Protocol):
 
     @property
     def prerelease(self) -> str | None:
-        """The prelease potion of the version is this is a prerelease."""
+        """The prerelease potion of the version is this is a prerelease."""
         raise NotImplementedError("must be implemented")
 
     @property
@@ -142,7 +142,7 @@ class VersionProtocol(Protocol):
             prerelease: The type of prerelease, if Any
             is_local_version: Whether to increment the local version instead
             exact_increment: Treat the increment and prerelease arguments explicitly.  Disables logic
-                that attempts to deduce the correct increment when a prelease suffix is present.
+                that attempts to deduce the correct increment when a prerelease suffix is present.
         """
 
 
@@ -351,7 +351,7 @@ class SemVer2(SemVer):
     See: https://semver.org/spec/v2.0.0.html
     """
 
-    _STD_PRELEASES = {
+    _STD_PRERELEASES = {
         "a": "alpha",
         "b": "beta",
     }
@@ -359,7 +359,7 @@ class SemVer2(SemVer):
     @property
     def prerelease(self) -> str | None:
         if self.is_prerelease and self.pre:
-            prerelease_type = self._STD_PRELEASES.get(self.pre[0], self.pre[0])
+            prerelease_type = self._STD_PRERELEASES.get(self.pre[0], self.pre[0])
             return f"{prerelease_type}.{self.pre[1]}"
         return None
 

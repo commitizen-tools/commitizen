@@ -365,7 +365,7 @@ def test_check_command_with_pipe_message_and_failed(mocker: MockFixture):
     assert "commit validation: failed!" in str(excinfo.value)
 
 
-def test_check_command_with_comment_in_messege_file(mocker: MockFixture, capsys):
+def test_check_command_with_comment_in_message_file(mocker: MockFixture, capsys):
     testargs = ["cz", "check", "--commit-msg-file", "some_file"]
     mocker.patch.object(sys, "argv", testargs)
     mocker.patch(
