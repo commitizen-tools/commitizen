@@ -636,14 +636,10 @@ def main():
         extra_args = " ".join(unknown_args[1:])
         arguments["extra_cli_args"] = extra_args
 
-    if args.config:
-        conf = config.read_cfg(args.config)
-    else:
-        conf = config.read_cfg()
-
+    conf = config.read_cfg(args.config)
     if args.name:
         conf.update({"name": args.name})
-    elif not args.name and not conf.path:
+    elif not conf.path:
         conf.update({"name": "cz_conventional_commits"})
 
     if args.debug:
