@@ -1238,7 +1238,7 @@ def test_order_changelog_tree_raises():
     with pytest.raises(InvalidConfigurationError) as excinfo:
         changelog.order_changelog_tree(COMMITS_TREE, change_type_order)
 
-    assert "Change types contain duplicates types" in str(excinfo)
+    assert "Change types contain duplicated types" in str(excinfo)
 
 
 def test_render_changelog(

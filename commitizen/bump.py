@@ -31,15 +31,17 @@ def find_increment(
 
     for commit in commits:
         for message in commit.message.split("\n"):
-            result = select_pattern.search(message)
-
-            if result:
+            if result := select_pattern.search(message):
                 found_keyword = result.group(1)
-                new_increment = None
-                for match_pattern in increments_map.keys():
-                    if re.match(match_pattern, found_keyword):
-                        new_increment = increments_map[match_pattern]
-                        break
+
+                new_increment = next(
+                    (
+                        increment_type
+                        for match_pattern, increment_type in increments_map.items()
+                        if re.match(match_pattern, found_keyword)
+                    ),
+                    None,
+                )
 
                 if new_increment is None:
                     logger.debug(
@@ -76,7 +78,7 @@ def update_version_in_files(
     """
     # TODO: separate check step and write step
     updated = []
-    for path, regex in files_and_regexs(files, current_version):
+    for path, regex in _files_and_regexes(files, current_version):
         current_version_found, version_file = _bump_with_regex(
             path,
             current_version,
@@ -99,7 +101,7 @@ def update_version_in_files(
     return updated
 
 
-def files_and_regexs(patterns: list[str], version: str) -> list[tuple[str, str]]:
+def _files_and_regexes(patterns: list[str], version: str) -> list[tuple[str, str]]:
     """
     Resolve all distinct files with their regexp from a list of glob patterns with optional regexp
     """
