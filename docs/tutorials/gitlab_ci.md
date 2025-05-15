@@ -12,9 +12,9 @@ _Goal_: Bump a new version every time that a change occurs on the `master` branc
 4. For simplification, we store the software version in a file called `VERSION`. You can use any file that you want as `commitizen` supports it.
 5. The commit message executed automatically by the `CI` must include `[skip-ci]` in the message; otherwise, the process will generate a loop. You can define the message structure in [commitizen](../commands/bump.md) as well.
 
-### Gitlab Configuration
+### GitLab Configuration
 
-To be able to change files and push new changes with `Gitlab CI` runners, we need to have a `ssh` key and configure a git user.
+To be able to change files and push new changes with `GitLab CI` runners, we need to have a `ssh` key and configure a git user.
 
 First, let's create a `ssh key`. The only requirement is to create it without a passphrase:
 
