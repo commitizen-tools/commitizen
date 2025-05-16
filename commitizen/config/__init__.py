@@ -28,7 +28,7 @@ def read_cfg(filepath: str | None = None) -> BaseConfig:
         cfg_paths = (
             path / Path(filename)
             for path in cfg_search_paths
-            for filename in defaults.config_files
+            for filename in defaults.CONFIG_FILES
         )
 
     for filename in cfg_paths:

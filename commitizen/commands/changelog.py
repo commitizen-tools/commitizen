@@ -78,7 +78,7 @@ class Changelog:
         self.change_type_order = (
             self.config.settings.get("change_type_order")
             or self.cz.change_type_order
-            or defaults.change_type_order
+            or defaults.CHANGE_TYPE_ORDER
         )
         self.rev_range = args.get("rev_range")
         self.tag_format: str = (
