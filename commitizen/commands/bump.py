@@ -133,10 +133,7 @@ class Bump:
             raise NoPatternMapError(
                 f"'{self.config.settings['name']}' rule does not support bump"
             )
-        increment = bump.find_increment(
-            commits, regex=bump_pattern, increments_map=bump_map
-        )
-        return increment
+        return bump.find_increment(commits, regex=bump_pattern, increments_map=bump_map)
 
     def __call__(self) -> None:  # noqa: C901
         """Steps executed to bump."""
