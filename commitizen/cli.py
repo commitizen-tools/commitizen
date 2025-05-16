@@ -450,6 +450,10 @@ data = {
                         "help": "Export the changelog template into this file instead of rendering it",
                     },
                     *deepcopy(tpl_arguments),
+                    {
+                        "name": "--tag-format",
+                        "help": "The format of the tag, wrap around simple quotes",
+                    },
                 ],
             },
             {

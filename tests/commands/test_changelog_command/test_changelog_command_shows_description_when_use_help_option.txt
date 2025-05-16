@@ -3,7 +3,7 @@ usage: cz changelog [-h] [--dry-run] [--file-name FILE_NAME]
                     [--start-rev START_REV] [--merge-prerelease]
                     [--version-scheme {pep440,semver,semver2}]
                     [--export-template EXPORT_TEMPLATE] [--template TEMPLATE]
-                    [--extra EXTRA]
+                    [--extra EXTRA] [--tag-format TAG_FORMAT]
                     [rev_range]
 
 generate changelog (note that it will overwrite existing file)
@@ -37,3 +37,5 @@ options:
                         changelog template file name (relative to the current
                         working directory)
   --extra, -e EXTRA     a changelog extra variable (in the form 'key=value')
+  --tag-format TAG_FORMAT
+                        The format of the tag, wrap around simple quotes
