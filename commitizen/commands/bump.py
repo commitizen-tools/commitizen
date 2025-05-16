@@ -65,7 +65,7 @@ class Bump:
                     "template",
                     "file_name",
                 ]
-                if arguments[key] is not None
+                if arguments.get(key) is not None
             },
         }
         self.cz = factory.committer_factory(self.config)
