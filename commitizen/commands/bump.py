@@ -105,19 +105,18 @@ class Bump:
         self, current_tag: git.GitTag | None, is_yes: bool = False
     ) -> bool:
         """Check if reading the whole git tree up to HEAD is needed."""
-        is_initial = False
-        if not current_tag:
-            if is_yes:
-                is_initial = True
-            else:
-                out.info("No tag matching configuration could not be found.")
-                out.info(
-                    "Possible causes:\n"
-                    "- version in configuration is not the current version\n"
-                    "- tag_format or legacy_tag_formats is missing, check them using 'git tag --list'\n"
-                )
-                is_initial = questionary.confirm("Is this the first tag created?").ask()
-        return is_initial
+        if current_tag:
+            return False
+        if is_yes:
+            return True
+
+        out.info("No tag matching configuration could not be found.")
+        out.info(
+            "Possible causes:\n"
+            "- version in configuration is not the current version\n"
+            "- tag_format or legacy_tag_formats is missing, check them using 'git tag --list'\n"
+        )
+        return bool(questionary.confirm("Is this the first tag created?").ask())
 
     def find_increment(self, commits: list[git.GitCommit]) -> Increment | None:
         # Update the bump map to ensure major version doesn't increment.
@@ -134,10 +133,7 @@ class Bump:
             raise NoPatternMapError(
                 f"'{self.config.settings['name']}' rule does not support bump"
             )
-        increment = bump.find_increment(
-            commits, regex=bump_pattern, increments_map=bump_map
-        )
-        return increment
+        return bump.find_increment(commits, regex=bump_pattern, increments_map=bump_map)
 
     def __call__(self) -> None:  # noqa: C901
         """Steps executed to bump."""
@@ -148,7 +144,7 @@ class Bump:
         except TypeError:
             raise NoVersionSpecifiedError()
 
-        bump_commit_message: str = self.bump_settings["bump_message"]
+        bump_commit_message: str | None = self.bump_settings["bump_message"]
         version_files: list[str] = self.bump_settings["version_files"]
         major_version_zero: bool = self.bump_settings["major_version_zero"]
         prerelease_offset: int = self.bump_settings["prerelease_offset"]
