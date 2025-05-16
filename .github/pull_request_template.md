@@ -25,6 +25,13 @@ Please fill in the following content to let us know better about this change.
 ### Documentation Changes
 
 - [ ] Run `poetry doc` locally to ensure the documentation pages renders correctly
+  - [ ] Check if there are any broken links in the documentation
+
+> When running `poetry doc`, any broken internal documentation links will be reported in the console output like this:
+>
+> ```text
+> INFO    -  Doc file 'config.md' contains a link 'commands/bump.md#-post_bump_hooks', but the doc 'commands/bump.md' does not contain an anchor '#-post_bump_hooks'.
+> ```
 
 ## Expected Behavior
 <!-- A clear and concise description of what you expected to happen -->

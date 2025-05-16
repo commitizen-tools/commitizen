@@ -17,9 +17,9 @@ pip install conventional-JIRA
 
 ### [GitHub JIRA Conventional](https://pypi.org/project/cz-github-jira-conventional/)
 
-This plugin extends the commitizen tools by:
+This plugin extends the Commitizen tools by:
 
-- requiring a JIRA issue id in the commit message
+- requiring a JIRA issue ID in the commit message
 - creating links to GitHub commits in the CHANGELOG.md
 - creating links to JIRA issues in the CHANGELOG.md
 
@@ -101,7 +101,7 @@ See the [README][1] for instructions on configuration
 
 ## Third-Party Commitizen Providers
 
-Commitizen can read and write version from different sources.  In addition to the native providers, some alternative version sources are available as PyPI packages (installable with `pip`).
+Commitizen can read and write version from different sources. In addition to the native providers, some alternative version sources are available as PyPI packages (installable with `pip`).
 
 ### [commitizen-deno-provider](https://pypi.org/project/commitizen-deno-provider/)
 

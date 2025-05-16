@@ -5,9 +5,7 @@
 To make use of a `.dev` suffix, as per
 [PEP440](https://peps.python.org/pep-0440/#developmental-releases).
 
-If more than one active branch attempts to create a tag, relative to the main
-branch, there is the possibility that each will attempt to create the _same_
-tag, resulting in a collision.
+If multiple active branches attempt to create a tag relative to the main branch, there is a possibility that they will attempt to create the _same_ tag, resulting in a collision.
 
 Developmental releases aim to avoid this by including a `.dev` segment which
 includes a non-negative integer unique to that workflow:
@@ -19,9 +17,7 @@ X.Y.devN
 !!! note
     As noted in
     [PEP440](https://peps.python.org/pep-0440/#developmental-releases),
-    although developmental releases are useful in avoiding the situation
-    described above, depending on the value passed as the developmental
-    release, they can be _"difficult to parse for human readers"_.
+    while developmental releases help avoid the situation described above, they can be _"difficult to parse for human readers"_ depending on the value passed as the developmental release.
 
 ## How to
 
@@ -64,8 +60,7 @@ Equally, as the developmental release needs only a non-negative integer, it is
 possible to use the Unix time (i.e. the number of seconds since 1st January
 1970 UTC).
 
-This would create the possibility of a collision if two builds occur at
-precisely the same second but this may be sufficient for many cases:
+This approach could potentially create a collision if two builds occur at precisely the same second, but it may be sufficient for many use cases:
 
 ```sh
 --devrelease $(date +%s)

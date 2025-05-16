@@ -8,7 +8,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/commitizen-tools/commitizen.svg?style=flat-square)](https://codecov.io/gh/commitizen-tools/commitizen)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?style=flat-square&logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 
-![Using commitizen cli](images/demo.gif)
+![Using Commitizen cli](images/demo.gif)
 
 ---
 
@@ -18,17 +18,26 @@
 
 ## About
 
-Commitizen is release management tool designed for teams.
+Commitizen is a powerful release management tool that helps teams maintain consistent and meaningful commit messages while automating version management.
 
-Commitizen assumes your team uses a standard way of committing rules
-and from that foundation, it can bump your project's version, create
-the changelog, and update files.
+### What Commitizen Does
 
-By default, commitizen uses [conventional commits][conventional_commits], but you
-can build your own set of rules, and publish them.
+By enforcing standardized commit conventions (defaulting to [Conventional Commits][conventional_commits]), Commitizen helps teams:
 
-Using a standardized set of rules to write commits, makes commits easier to read, and enforces writing
-descriptive commits.
+- Write clear, structured commit messages
+- Automatically manage version numbers using semantic versioning
+- Generate and maintain changelogs
+- Streamline the release process
+
+### Key Benefits
+
+With just a simple `cz bump` command, Commitizen handles:
+
+1. **Version Management**: Automatically bumps version numbers and updates version files based on your commit history
+2. **Changelog Generation**: Creates and updates changelogs following the [Keep a changelog][keepchangelog] format
+3. **Commit Standardization**: Enforces consistent commit message formats across your team
+
+This standardization makes your commit history more readable and meaningful, while the automation reduces manual work and potential errors in the release process.
 
 ### Features
 
@@ -39,137 +48,266 @@ descriptive commits.
 - Display information about your commit rules (commands: schema, example, info)
 - Create your own set of rules and publish them to pip. Read more on [Customization](./customization.md)
 
-## Requirements
+## Getting Started
 
-[Python](https://www.python.org/downloads/) `3.9+`
+### Requirements
 
-[Git][gitscm] `1.8.5.2+`
+Before installing Commitizen, ensure you have:
 
-## Installation
+- [Python](https://www.python.org/downloads/) `3.9+`
+- [Git][gitscm] `1.8.5.2+`
 
-Install commitizen in your system using `pipx` (Recommended, <https://pypa.github.io/pipx/installation/>):
+### Installation
 
+#### Global Installation (Recommended)
+
+The recommended way to install Commitizen is using [`pipx`](https://pipx.pypa.io/) or [`uv`](https://docs.astral.sh/uv/), which ensures a clean, isolated installation:
+**Using pipx:**
 ```bash
-pipx ensurepath
+# Install Commitizen
 pipx install commitizen
+
+# Keep it updated
 pipx upgrade commitizen
 ```
 
-Install commitizen using `pip` with `--user` flag:
-
+**Using uv:**
 ```bash
-pip install --user -U commitizen
+# Install commitizen
+uv tool install commitizen
+
+# Keep it updated
+uv tool upgrade commitizen
 ```
 
-### Python project
-
-You can add it to your local project using one of the following.
-
-With `pip`:
-
-```bash
-pip install -U commitizen
-```
-
-With `conda`:
-
-```bash
-conda install -c conda-forge commitizen
-```
-
-With Poetry >= 1.2.0:
-
-```bash
-poetry add commitizen --group dev
-```
-
-With Poetry < 1.2.0:
-
-```bash
-poetry add commitizen --dev
-```
-
-### macOS
-
-via [homebrew](https://formulae.brew.sh/formula/commitizen):
-
+**(For macOS users) Using Homebrew:**
 ```bash
 brew install commitizen
 ```
 
-## Usage
+#### Project-Specific Installation
 
-Most of the time this is the only command you'll run:
+You can add Commitizen to your Python project using any of these package managers:
 
+**Using pip:**
+```bash
+pip install -U commitizen
+```
+
+**Using conda:**
+```bash
+conda install -c conda-forge commitizen
+```
+
+**Using Poetry:**
+```bash
+# For Poetry >= 1.2.0
+poetry add commitizen --group dev
+
+# For Poetry < 1.2.0
+poetry add commitizen --dev
+```
+
+**Using uv:**
+```bash
+uv add commitizen
+```
+
+**Using pdm:**
+```bash
+pdm add -d commitizen
+```
+
+### Basic Commands
+
+#### Initialize Commitizen
+
+To get started, you'll need to set up your configuration. You have two options:
+
+1. Use the interactive setup:
+```sh
+cz init
+```
+
+2. Manually create a configuration file (`.cz.toml` or `cz.toml`):
+```toml
+[tool.commitizen]
+version = "0.1.0"
+update_changelog_on_bump = true
+```
+
+#### Create Commits
+
+Create standardized commits using:
+```sh
+cz commit
+# or use the shortcut
+cz c
+```
+
+To sign off your commits:
+```sh
+cz commit -- --signoff
+# or use the shortcut
+cz commit -- -s
+```
+
+For more commit options, run `cz commit --help`.
+
+#### Version Management
+
+The most common command you'll use is:
 ```sh
 cz bump
 ```
 
-On top of that, you can use commitizen to assist you with the creation of commits:
+This command:
+- Bumps your project's version
+- Creates a git tag
+- Updates the changelog (if `update_changelog_on_bump` is enabled)
+- Updates version files
+
+You can customize:
+- [Version files](./commands/bump.md#version_files)
+- [Version scheme](./commands/bump.md#version_scheme)
+- [Version provider](./config.md#version-providers)
+
+For all available options, see the [bump command documentation](./commands/bump.md).
+
+### Advanced Usage
+
+#### Get Project Version
 
 ```sh
-cz commit
+# Get your project's version (instead of Commitizen's version)
+cz version -p
+# Preview changelog changes
+cz changelog --dry-run "$(cz version -p)"
 ```
 
-Read more in the section [Getting Started](./getting_started.md).
+This command is particularly useful for automation scripts and CI/CD pipelines.
+For example, you can use the output of the command `cz changelog --dry-run "$(cz version -p)"` to notify your team about a new release in Slack.
 
-### Help
+#### Pre-commit Integration
+
+Commitizen can automatically validate your commit messages using pre-commit hooks.
+
+1. Add to your `.pre-commit-config.yaml`:
+```yaml
+---
+repos:
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: master  # Replace with latest tag
+    hooks:
+      - id: commitizen
+      - id: commitizen-branch
+        stages: [pre-push]
+```
+
+2. Install the hooks:
+```sh
+pre-commit install --hook-type commit-msg --hook-type pre-push
+```
+
+| Hook              | Recommended Stage |
+| ----------------- | ----------------- |
+| commitizen        | commit-msg        |
+| commitizen-branch | pre-push          |
+
+> **Note**: Replace `master` with the [latest tag](https://github.com/commitizen-tools/commitizen/tags) to avoid warnings. You can automatically update this with:
+> ```sh
+> pre-commit autoupdate
+> ```
+
+For more details about commit validation, see the [check command documentation](commands/check.md).
+
+## Help & Reference
+
+### Command Line Interface
+
+Commitizen provides a comprehensive CLI with various commands. Here's the complete reference:
+
+![cz --help](images/cli_help/cz___help.svg)
+
+### Quick Reference
+
+| Command | Description | Alias |
+|---------|-------------|-------|
+| `cz init` | Initialize Commitizen configuration | - |
+| `cz commit` | Create a new commit | `cz c` |
+| `cz bump` | Bump version and update changelog | - |
+| `cz changelog` | Generate changelog | `cz ch` |
+| `cz check` | Validate commit messages | - |
+| `cz version` | Show version information | - |
+
+### Additional Resources
+
+- [Conventional Commits Specification][conventional_commits]
+- [Exit Codes Reference](./exit_codes.md)
+- [Configuration Guide](./config.md)
+- [Command Documentation](./commands/init.md)
+
+### Getting Help
+
+For each command, you can get detailed help by adding `--help`:
 
 ```sh
-$ cz --help
-usage: cz [-h] [--debug] [-n NAME] [-nr NO_RAISE] {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version} ...
-
-Commitizen is a cli tool to generate conventional commits.
-For more information about the topic go to https://conventionalcommits.org/
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --config              the path of configuration file
-  --debug               use debug mode
-  -n NAME, --name NAME  use the given commitizen (default: cz_conventional_commits)
-  -nr NO_RAISE, --no-raise NO_RAISE
-                        comma separated error codes that won't rise error, e.g: cz -nr 1,2,3 bump. See codes at https://commitizen-
-                        tools.github.io/commitizen/exit_codes/
-
-commands:
-  {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version}
-    init                init commitizen configuration
-    commit (c)          create new commit
-    ls                  show available commitizens
-    example             show commit example
-    info                show information about the cz
-    schema              show commit schema
-    bump                bump semantic version based on the git log
-    changelog (ch)      generate changelog (note that it will overwrite existing file)
-    check               validates that a commit message matches the commitizen schema
-    version             get the version of the installed commitizen or the current project (default: installed commitizen)
+cz commit --help
+cz bump --help
+cz changelog --help
 ```
+
+For more detailed documentation, visit our [documentation site](https://commitizen-tools.github.io/commitizen/).
 
 ## Setting up bash completion
 
-When using bash as your shell (limited support for zsh, fish, and tcsh is available), Commitizen can use [argcomplete](https://kislyuk.github.io/argcomplete/) for auto-completion. For this argcomplete needs to be enabled.
+Commitizen supports command-line completion through [argcomplete](https://kislyuk.github.io/argcomplete/), which is automatically installed as a dependency. This feature provides intelligent auto-completion for all Commitizen commands and options.
 
-argcomplete is installed when you install Commitizen since it's a dependency.
+### Supported Shells
 
-If Commitizen is installed globally, global activation can be executed:
+- **Bash**: Full support
+- **Zsh**: Limited support
+- **Fish**: Limited support
+- **Tcsh**: Limited support
+
+### Installation Methods
+
+#### Global Installation (Recommended)
+
+If you installed Commitizen globally (e.g., using `pipx` or `brew`), you can enable global completion:
 
 ```bash
+# Enable global completion for all Python applications
 sudo activate-global-python-argcomplete
 ```
 
-For permanent (but not global) Commitizen activation, use:
+#### User-Specific Installation
+
+For a user-specific installation that persists across sessions:
 
 ```bash
+# Add to your shell's startup file (e.g., ~/.bashrc, ~/.zshrc)
 register-python-argcomplete cz >> ~/.bashrc
 ```
 
-For one-time activation of argcomplete for Commitizen only, use:
+#### Temporary Installation
+
+For one-time activation in your current shell session:
 
 ```bash
+# Activate completion for current session only
 eval "$(register-python-argcomplete cz)"
 ```
 
-For further information on activation, please visit the [argcomplete website](https://kislyuk.github.io/argcomplete/).
+### Verification
+
+After installation, you can verify the completion is working by:
+
+1. Opening a new terminal session
+2. Typing `cz` followed by a space and pressing `TAB` twice
+3. You should see a list of available commands
+
+For more detailed information about argcomplete configuration and troubleshooting, visit the [argcomplete documentation](https://kislyuk.github.io/argcomplete/).
 
 ## Sponsors
 
