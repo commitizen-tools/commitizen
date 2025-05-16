@@ -105,19 +105,18 @@ class Bump:
         self, current_tag: git.GitTag | None, is_yes: bool = False
     ) -> bool:
         """Check if reading the whole git tree up to HEAD is needed."""
-        is_initial = False
-        if not current_tag:
-            if is_yes:
-                is_initial = True
-            else:
-                out.info("No tag matching configuration could not be found.")
-                out.info(
-                    "Possible causes:\n"
-                    "- version in configuration is not the current version\n"
-                    "- tag_format or legacy_tag_formats is missing, check them using 'git tag --list'\n"
-                )
-                is_initial = questionary.confirm("Is this the first tag created?").ask()
-        return is_initial
+        if current_tag:
+            return False
+        if is_yes:
+            return True
+
+        out.info("No tag matching configuration could not be found.")
+        out.info(
+            "Possible causes:\n"
+            "- version in configuration is not the current version\n"
+            "- tag_format or legacy_tag_formats is missing, check them using 'git tag --list'\n"
+        )
+        return bool(questionary.confirm("Is this the first tag created?").ask())
 
     def find_increment(self, commits: list[git.GitCommit]) -> Increment | None:
         # Update the bump map to ensure major version doesn't increment.
