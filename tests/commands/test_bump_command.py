@@ -12,8 +12,9 @@ import pytest
 from pytest_mock import MockFixture
 
 import commitizen.commands.bump as bump
-from commitizen import cli, cmd, git, hooks
+from commitizen import cli, cmd, defaults, git, hooks
 from commitizen.changelog_formats import ChangelogFormat
+from commitizen.config.base_config import BaseConfig
 from commitizen.cz.base import BaseCommitizen
 from commitizen.exceptions import (
     BumpTagFailedError,
@@ -41,8 +42,8 @@ from tests.utils import create_file_and_commit, create_tag, skip_below_py_3_13
         "fix(user): username exception",
         "refactor: remove ini configuration support",
         "refactor(config): remove ini configuration support",
-        "perf: update to use multiproess",
-        "perf(worker): update to use multiproess",
+        "perf: update to use multiprocess",
+        "perf(worker): update to use multiprocess",
     ),
 )
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -1688,3 +1689,51 @@ def test_bump_warn_but_dont_fail_on_invalid_tags(
 
     assert err.count("Invalid version tag: '0.4.3.deadbeaf'") == 1
     assert git.tag_exist("0.4.3")
+
+
+def test_is_initial_tag(mocker: MockFixture, tmp_commitizen_project):
+    """Test the is_initial_tag method behavior."""
+    # Create a commit but no tags
+    create_file_and_commit("feat: initial commit")
+
+    # Initialize Bump with minimal config
+    config = BaseConfig()
+    config.settings.update(
+        {
+            "name": defaults.DEFAULT_SETTINGS["name"],
+            "encoding": "utf-8",
+            "pre_bump_hooks": [],
+            "post_bump_hooks": [],
+        }
+    )
+
+    # Initialize with required arguments
+    arguments = {
+        "changelog": False,
+        "changelog_to_stdout": False,
+        "git_output_to_stderr": False,
+        "no_verify": False,
+        "check_consistency": False,
+        "retry": False,
+        "version_scheme": None,
+        "file_name": None,
+        "template": None,
+        "extras": None,
+    }
+
+    bump_cmd = bump.Bump(config, arguments)
+
+    # Test case 1: No current tag, not yes mode
+    mocker.patch("questionary.confirm", return_value=mocker.Mock(ask=lambda: True))
+    assert bump_cmd.is_initial_tag(None, is_yes=False) is True
+
+    # Test case 2: No current tag, yes mode
+    assert bump_cmd.is_initial_tag(None, is_yes=True) is True
+
+    # Test case 3: Has current tag
+    mock_tag = mocker.Mock()
+    assert bump_cmd.is_initial_tag(mock_tag, is_yes=False) is False
+
+    # Test case 4: No current tag, user denies
+    mocker.patch("questionary.confirm", return_value=mocker.Mock(ask=lambda: False))
+    assert bump_cmd.is_initial_tag(None, is_yes=False) is False
