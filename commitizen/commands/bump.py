@@ -110,7 +110,7 @@ class Bump:
         if is_yes:
             return True
 
-        out.info("No tag matching configuration could not be found.")
+        out.info("No tag matching configuration could be found.")
         out.info(
             "Possible causes:\n"
             "- version in configuration is not the current version\n"
