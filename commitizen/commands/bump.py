@@ -147,7 +147,7 @@ class Bump:
         except TypeError:
             raise NoVersionSpecifiedError()
 
-        bump_commit_message: str = self.bump_settings["bump_message"]
+        bump_commit_message: str | None = self.bump_settings["bump_message"]
         version_files: list[str] = self.bump_settings["version_files"]
         major_version_zero: bool = self.bump_settings["major_version_zero"]
         prerelease_offset: int = self.bump_settings["prerelease_offset"]
