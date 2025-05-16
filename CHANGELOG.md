@@ -1,3 +1,9 @@
+## v4.7.1 (2025-05-16)
+
+### Fix
+
+- **bump**: don't fail if an invalid version tag is present (fix #1410) (#1418)
+
 ## v4.7.0 (2025-05-10)
 
 ### Feat
