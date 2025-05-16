@@ -28,9 +28,9 @@ def parse_subject(text):
 
 
 class ConventionalCommitsCz(BaseCommitizen):
-    bump_pattern = defaults.bump_pattern
-    bump_map = defaults.bump_map
-    bump_map_major_version_zero = defaults.bump_map_major_version_zero
+    bump_pattern = defaults.BUMP_PATTERN
+    bump_map = defaults.BUMP_MAP
+    bump_map_major_version_zero = defaults.BUMP_MAP_MAJOR_VERSION_ZERO
     commit_parser = r"^((?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?|\w+!):\s(?P<message>.*)?"  # noqa
     change_type_map = {
         "feat": "Feat",
@@ -38,7 +38,7 @@ class ConventionalCommitsCz(BaseCommitizen):
         "refactor": "Refactor",
         "perf": "Perf",
     }
-    changelog_pattern = defaults.bump_pattern
+    changelog_pattern = defaults.BUMP_PATTERN
 
     def questions(self) -> Questions:
         questions: Questions = [

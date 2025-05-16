@@ -60,8 +60,7 @@ class Settings(TypedDict, total=False):
     extras: dict[str, Any]
 
 
-name: str = "cz_conventional_commits"
-config_files: list[str] = [
+CONFIG_FILES: list[str] = [
     "pyproject.toml",
     ".cz.toml",
     ".cz.json",
@@ -70,10 +69,10 @@ config_files: list[str] = [
     "cz.yaml",
     "cz.toml",
 ]
-encoding: str = "utf-8"
+ENCODING = "utf-8"
 
 DEFAULT_SETTINGS: Settings = {
-    "name": name,
+    "name": "cz_conventional_commits",
     "version": None,
     "version_files": [],
     "version_provider": "commitizen",
@@ -102,7 +101,7 @@ DEFAULT_SETTINGS: Settings = {
     "pre_bump_hooks": [],
     "post_bump_hooks": [],
     "prerelease_offset": 0,
-    "encoding": encoding,
+    "encoding": ENCODING,
     "always_signoff": False,
     "template": None,  # default provided by plugin
     "extras": {},
@@ -114,8 +113,8 @@ PATCH = "PATCH"
 
 CHANGELOG_FORMAT = "markdown"
 
-bump_pattern = r"^((BREAKING[\-\ ]CHANGE|\w+)(\(.+\))?!?):"
-bump_map = OrderedDict(
+BUMP_PATTERN = r"^((BREAKING[\-\ ]CHANGE|\w+)(\(.+\))?!?):"
+BUMP_MAP = OrderedDict(
     (
         (r"^.+!$", MAJOR),
         (r"^BREAKING[\-\ ]CHANGE", MAJOR),
@@ -125,7 +124,7 @@ bump_map = OrderedDict(
         (r"^perf", PATCH),
     )
 )
-bump_map_major_version_zero = OrderedDict(
+BUMP_MAP_MAJOR_VERSION_ZERO = OrderedDict(
     (
         (r"^.+!$", MINOR),
         (r"^BREAKING[\-\ ]CHANGE", MINOR),
@@ -135,8 +134,8 @@ bump_map_major_version_zero = OrderedDict(
         (r"^perf", PATCH),
     )
 )
-change_type_order = ["BREAKING CHANGE", "Feat", "Fix", "Refactor", "Perf"]
-bump_message = "bump: version $current_version → $new_version"
+CHANGE_TYPE_ORDER = ["BREAKING CHANGE", "Feat", "Fix", "Refactor", "Perf"]
+BUMP_MESSAGE = "bump: version $current_version → $new_version"
 
 
 def get_tag_regexes(

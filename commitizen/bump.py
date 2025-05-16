@@ -8,7 +8,7 @@ from logging import getLogger
 from string import Template
 from typing import cast
 
-from commitizen.defaults import MAJOR, MINOR, PATCH, bump_message, encoding
+from commitizen.defaults import BUMP_MESSAGE, ENCODING, MAJOR, MINOR, PATCH
 from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import GitCommit, smart_open
 from commitizen.version_schemes import Increment, Version
@@ -64,7 +64,7 @@ def update_version_in_files(
     files: list[str],
     *,
     check_consistency: bool = False,
-    encoding: str = encoding,
+    encoding: str = ENCODING,
 ) -> list[str]:
     """Change old version to the new one in every file given.
 
@@ -121,7 +121,7 @@ def _bump_with_regex(
     current_version: str,
     new_version: str,
     regex: str,
-    encoding: str = encoding,
+    encoding: str = ENCODING,
 ) -> tuple[bool, str]:
     current_version_found = False
     lines = []
@@ -148,6 +148,6 @@ def create_commit_message(
     message_template: str | None = None,
 ) -> str:
     if message_template is None:
-        message_template = bump_message
+        message_template = BUMP_MESSAGE
     t = Template(message_template)
     return t.safe_substitute(current_version=current_version, new_version=new_version)

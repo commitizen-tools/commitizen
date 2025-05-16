@@ -11,7 +11,7 @@ from commitizen import cmd, factory, out
 from commitizen.__version__ import __version__
 from commitizen.config import BaseConfig, JsonConfig, TomlConfig, YAMLConfig
 from commitizen.cz import registry
-from commitizen.defaults import DEFAULT_SETTINGS, config_files
+from commitizen.defaults import CONFIG_FILES, DEFAULT_SETTINGS
 from commitizen.exceptions import InitFailedError, NoAnswersError
 from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
 from commitizen.version_schemes import KNOWN_SCHEMES, Version, get_version_scheme
@@ -165,7 +165,7 @@ class Init:
 
         name: str = questionary.select(
             "Please choose a supported config file: ",
-            choices=config_files,
+            choices=CONFIG_FILES,
             default=default_path,
             style=self.cz.style,
         ).unsafe_ask()
