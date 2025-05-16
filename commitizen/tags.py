@@ -113,6 +113,10 @@ class TagRules:
             format_regex = format_regex.replace(pattern, regex)
         return format_regex
 
+    def _version_tag_error(self, tag: str) -> str:
+        """Format the error message for an invalid version tag"""
+        return f"Invalid version tag: '{tag}' does not match any configured tag format"
+
     def is_version_tag(self, tag: str | GitTag, warn: bool = False) -> bool:
         """
         True if a given tag is a legit version tag.
@@ -120,9 +124,9 @@ class TagRules:
         if `warn` is `True`, it will print a warning message if the tag is not a version tag.
         """
         tag = tag.name if isinstance(tag, GitTag) else tag
-        is_legit = any(regex.match(tag) for regex in self.version_regexes)
+        is_legit = any(regex.fullmatch(tag) for regex in self.version_regexes)
         if warn and not is_legit and not self.is_ignored_tag(tag):
-            out.warn(f"InvalidVersion {tag} doesn't match any configured tag format")
+            out.warn(self._version_tag_error(tag))
         return is_legit
 
     def is_ignored_tag(self, tag: str | GitTag) -> bool:
@@ -146,9 +150,7 @@ class TagRules:
             m for regex in self.version_regexes if (m := regex.fullmatch(tag.name))
         )
         if not (m := next(candidates, None)):
-            raise InvalidVersion(
-                f"Invalid version tag: '{tag.name}' does not match any configured tag format"
-            )
+            raise InvalidVersion(self._version_tag_error(tag.name))
         if "version" in m.groupdict():
             return self.scheme(m.group("version"))
 
