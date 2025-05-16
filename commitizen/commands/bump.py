@@ -65,7 +65,7 @@ class Bump:
                     "template",
                     "file_name",
                 ]
-                if arguments[key] is not None
+                if arguments.get(key) is not None
             },
         }
         self.cz = factory.committer_factory(self.config)
@@ -110,7 +110,7 @@ class Bump:
         if is_yes:
             return True
 
-        out.info("No tag matching configuration could not be found.")
+        out.info("No tag matching configuration could be found.")
         out.info(
             "Possible causes:\n"
             "- version in configuration is not the current version\n"
