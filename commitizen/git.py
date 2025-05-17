@@ -43,6 +43,48 @@ class GitCommit(GitObject):
 
     @classmethod
     def from_rev_and_commit(cls, rev_and_commit: str) -> GitCommit:
+        """Create a GitCommit instance from a formatted commit string.
+
+        This method parses a multi-line string containing commit information in the following format:
+        ```
+        <rev>
+        <parents>
+        <title>
+        <author>
+        <author_email>
+        <body_line_1>
+        <body_line_2>
+        ...
+        ```
+
+        Args:
+            rev_and_commit (str): A string containing commit information with fields separated by newlines.
+                - rev: The commit hash/revision
+                - parents: Space-separated list of parent commit hashes
+                - title: The commit title/message
+                - author: The commit author's name
+                - author_email: The commit author's email
+                - body: Optional multi-line commit body
+
+        Returns:
+            GitCommit: A new GitCommit instance with the parsed information.
+
+        Example:
+            >>> commit_str = '''abc123
+            ... def456 ghi789
+            ... feat: add new feature
+            ... John Doe
+            ... john@example.com
+            ... This is a detailed description
+            ... of the new feature'''
+            >>> commit = GitCommit.from_rev_and_commit(commit_str)
+            >>> commit.rev
+            'abc123'
+            >>> commit.title
+            'feat: add new feature'
+            >>> commit.parents
+            ['def456', 'ghi789']
+        """
         rev, parents, title, author, author_email, *body_list = rev_and_commit.split(
             "\n"
         )
