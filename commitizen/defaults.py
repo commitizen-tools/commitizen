@@ -6,6 +6,7 @@ from collections import OrderedDict
 from collections.abc import Iterable, MutableMapping, Sequence
 from typing import Any, TypedDict
 
+from commitizen.bump_rule import VersionIncrement
 from commitizen.question import CzQuestion
 
 # Type
@@ -113,31 +114,27 @@ DEFAULT_SETTINGS: Settings = {
     "extras": {},
 }
 
-MAJOR = "MAJOR"
-MINOR = "MINOR"
-PATCH = "PATCH"
-
 CHANGELOG_FORMAT = "markdown"
 
 BUMP_PATTERN = r"^((BREAKING[\-\ ]CHANGE|\w+)(\(.+\))?!?):"
-BUMP_MAP = OrderedDict(
+BUMP_MAP = dict(
     (
-        (r"^.+!$", MAJOR),
-        (r"^BREAKING[\-\ ]CHANGE", MAJOR),
-        (r"^feat", MINOR),
-        (r"^fix", PATCH),
-        (r"^refactor", PATCH),
-        (r"^perf", PATCH),
+        (r"^.+!$", str(VersionIncrement.MAJOR)),
+        (r"^BREAKING[\-\ ]CHANGE", str(VersionIncrement.MAJOR)),
+        (r"^feat", str(VersionIncrement.MINOR)),
+        (r"^fix", str(VersionIncrement.PATCH)),
+        (r"^refactor", str(VersionIncrement.PATCH)),
+        (r"^perf", str(VersionIncrement.PATCH)),
     )
 )
-BUMP_MAP_MAJOR_VERSION_ZERO = OrderedDict(
+BUMP_MAP_MAJOR_VERSION_ZERO = dict(
     (
-        (r"^.+!$", MINOR),
-        (r"^BREAKING[\-\ ]CHANGE", MINOR),
-        (r"^feat", MINOR),
-        (r"^fix", PATCH),
-        (r"^refactor", PATCH),
-        (r"^perf", PATCH),
+        (r"^.+!$", str(VersionIncrement.MINOR)),
+        (r"^BREAKING[\-\ ]CHANGE", str(VersionIncrement.MINOR)),
+        (r"^feat", str(VersionIncrement.MINOR)),
+        (r"^fix", str(VersionIncrement.PATCH)),
+        (r"^refactor", str(VersionIncrement.PATCH)),
+        (r"^perf", str(VersionIncrement.PATCH)),
     )
 )
 CHANGE_TYPE_ORDER = ["BREAKING CHANGE", "Feat", "Fix", "Refactor", "Perf"]
@@ -176,6 +173,9 @@ def __getattr__(name: str) -> Any:
         "change_type_order": (CHANGE_TYPE_ORDER, "CHANGE_TYPE_ORDER"),
         "encoding": (ENCODING, "ENCODING"),
         "name": (DEFAULT_SETTINGS["name"], "DEFAULT_SETTINGS['name']"),
+        "MAJOR": str(VersionIncrement.MAJOR),
+        "MINOR": str(VersionIncrement.MINOR),
+        "PATCH": str(VersionIncrement.PATCH),
     }
     if name in deprecated_vars:
         value, replacement = deprecated_vars[name]

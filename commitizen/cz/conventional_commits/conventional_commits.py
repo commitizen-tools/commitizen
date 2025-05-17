@@ -2,6 +2,7 @@ import os
 from typing import TypedDict
 
 from commitizen import defaults
+from commitizen.bump_rule import ConventionalCommitBumpRule
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.utils import multiple_line_breaker, required_validator
 from commitizen.question import CzQuestion
@@ -27,6 +28,8 @@ class ConventionalCommitsAnswers(TypedDict):
 
 
 class ConventionalCommitsCz(BaseCommitizen):
+    _bump_rule = ConventionalCommitBumpRule()
+
     bump_pattern = defaults.BUMP_PATTERN
     bump_map = defaults.BUMP_MAP
     bump_map_major_version_zero = defaults.BUMP_MAP_MAJOR_VERSION_ZERO
