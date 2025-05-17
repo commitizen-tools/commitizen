@@ -305,27 +305,37 @@ def incremental_build(
 def get_smart_tag_range(
     tags: Sequence[GitTag], newest: str, oldest: str | None = None
 ) -> list[GitTag]:
-    """Smart because it finds the N+1 tag.
+    """Get a range of tags including the next tag after the oldest tag.
 
-    This is because we need to find until the next tag
+    Args:
+        tags: List of git tags
+        newest: Name of the newest tag to include
+        oldest: Name of the oldest tag to include. If None, same as newest.
+
+    Returns:
+        List of tags from newest to oldest, plus one tag after oldest if it exists.
+        For nonexistent end tag, returns all tags.
+        For nonexistent start tag, returns tags starting from second tag.
+        For nonexistent start and end tags, returns empty list.
     """
-    accumulator = []
-    keep = False
-    if not oldest:
-        oldest = newest
-    for index, tag in enumerate(tags):
-        if tag.name == newest:
-            keep = True
-        if keep:
-            accumulator.append(tag)
-        if tag.name == oldest:
-            keep = False
-            try:
-                accumulator.append(tags[index + 1])
-            except IndexError:
-                pass
-            break
-    return accumulator
+    oldest = oldest or newest
+
+    names = set(tag.name for tag in tags)
+    has_newest = newest in names
+    has_oldest = oldest in names
+    if not has_newest and not has_oldest:
+        return []
+
+    if not has_newest:
+        return tags[1:]
+
+    if not has_oldest:
+        return tags
+
+    newest_idx = next(i for i, tag in enumerate(tags) if tag.name == newest)
+    oldest_idx = next(i for i, tag in enumerate(tags) if tag.name == oldest)
+
+    return tags[newest_idx : oldest_idx + 2]
 
 
 def get_oldest_and_newest_rev(
