@@ -103,13 +103,13 @@ def _files_and_regexes(patterns: list[str], version: str) -> list[tuple[str, str
     """
     Resolve all distinct files with their regexp from a list of glob patterns with optional regexp
     """
-    out = []
+    out: list[tuple[str, str]] = []
     for pattern in patterns:
         drive, tail = os.path.splitdrive(pattern)
         path, _, regex = tail.partition(":")
         filepath = drive + path
         if not regex:
-            regex = _version_to_regex(version)
+            regex = re.escape(version)
 
         for path in iglob(filepath):
             out.append((path, regex))
@@ -138,10 +138,6 @@ def _bump_with_regex(
             lines.append(bumped_line)
 
     return current_version_found, "".join(lines)
-
-
-def _version_to_regex(version: str) -> str:
-    return version.replace(".", r"\.").replace("+", r"\+")
 
 
 def create_commit_message(
