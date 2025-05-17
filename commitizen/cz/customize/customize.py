@@ -21,9 +21,9 @@ __all__ = ["CustomizeCommitsCz"]
 
 
 class CustomizeCommitsCz(BaseCommitizen):
-    bump_pattern = defaults.bump_pattern
-    bump_map = defaults.bump_map
-    bump_map_major_version_zero = defaults.bump_map_major_version_zero
+    bump_pattern = defaults.BUMP_PATTERN
+    bump_map = defaults.BUMP_MAP
+    bump_map_major_version_zero = defaults.BUMP_MAP_MAJOR_VERSION_ZERO
     change_type_order = defaults.change_type_order
 
     def __init__(self, config: BaseConfig):
