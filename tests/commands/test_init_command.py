@@ -4,6 +4,7 @@ import json
 import os
 import sys
 from typing import Any
+from unittest import mock
 
 import pytest
 import yaml
@@ -125,6 +126,7 @@ def pre_commit_installed(mocker: MockFixture):
     # Assume the `pre-commit` is installed
     mocker.patch(
         "commitizen.commands.init.ProjectInfo.is_pre_commit_installed",
+        new_callable=mock.PropertyMock,
         return_value=True,
     )
     # And installation success (i.e. no exception raised)
@@ -229,6 +231,7 @@ class TestNoPreCommitInstalled:
         # Assume `pre-commit` is not installed
         mocker.patch(
             "commitizen.commands.init.ProjectInfo.is_pre_commit_installed",
+            new_callable=mock.PropertyMock,
             return_value=False,
         )
         with tmpdir.as_cwd():
@@ -241,6 +244,7 @@ class TestNoPreCommitInstalled:
         # Assume `pre-commit` is installed
         mocker.patch(
             "commitizen.commands.init.ProjectInfo.is_pre_commit_installed",
+            new_callable=mock.PropertyMock,
             return_value=True,
         )
         # But pre-commit installation will fail
