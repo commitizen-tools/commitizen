@@ -88,24 +88,21 @@ class Check:
             )
         out.success("Commit validation: successful!")
 
+    def _get_commit_message(self) -> str | None:
+        if self.commit_msg_file is None:
+            # Get commit message from command line (--message)
+            return self.commit_msg
+
+        with open(self.commit_msg_file, encoding=self.encoding) as commit_file:
+            # Get commit message from file (--commit-msg-file)
+            return commit_file.read()
+
     def _get_commits(self):
-        msg = None
-        # Get commit message from file (--commit-msg-file)
-        if self.commit_msg_file is not None:
-            # Enter this branch if commit_msg_file is "".
-            with open(self.commit_msg_file, encoding=self.encoding) as commit_file:
-                msg = commit_file.read()
-        # Get commit message from command line (--message)
-        elif self.commit_msg is not None:
-            msg = self.commit_msg
-        if msg is not None:
-            msg = self._filter_comments(msg)
-            return [git.GitCommit(rev="", title="", body=msg)]
+        if (msg := self._get_commit_message()) is not None:
+            return [git.GitCommit(rev="", title="", body=self._filter_comments(msg))]
 
         # Get commit messages from git log (--rev-range)
-        if self.rev_range:
-            return git.get_commits(end=self.rev_range)
-        return git.get_commits()
+        return git.get_commits(end=self.rev_range or "HEAD")
 
     @staticmethod
     def _filter_comments(msg: str) -> str:
