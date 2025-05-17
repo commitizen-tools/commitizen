@@ -13,7 +13,7 @@ from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import GitCommit, smart_open
 from commitizen.version_schemes import Increment, Version
 
-VERSION_TYPES = [None, PATCH, MINOR, MAJOR]
+_INCREMENT_TYPES = (None, PATCH, MINOR, MAJOR)
 
 logger = getLogger("commitizen")
 
@@ -27,35 +27,42 @@ def find_increment(
     # Most important cases are major and minor.
     # Everything else will be considered patch.
     select_pattern = re.compile(regex)
-    increment: str | None = None
+    increment: Increment | None = None
 
     for commit in commits:
         for message in commit.message.split("\n"):
-            result = select_pattern.search(message)
+            if not (result := select_pattern.search(message)):
+                continue
 
-            if result:
-                found_keyword = result.group(1)
-                new_increment = None
-                for match_pattern in increments_map.keys():
-                    if re.match(match_pattern, found_keyword):
-                        new_increment = increments_map[match_pattern]
-                        break
+            found_keyword = result.group(1)
+            new_increment: Increment | None = next(
+                (
+                    cast(Increment, increment_type)
+                    for match_pattern, increment_type in increments_map.items()
+                    if re.match(match_pattern, found_keyword)
+                ),
+                None,
+            )
 
-                if new_increment is None:
-                    logger.debug(
-                        f"no increment needed for '{found_keyword}' in '{message}'"
-                    )
+            if new_increment is None:
+                logger.debug(
+                    f"no increment needed for '{found_keyword}' in '{message}'"
+                )
 
-                if VERSION_TYPES.index(increment) < VERSION_TYPES.index(new_increment):
-                    logger.debug(
-                        f"increment detected is '{new_increment}' due to '{found_keyword}' in '{message}'"
-                    )
-                    increment = new_increment
+            if _INCREMENT_TYPES.index(increment) >= _INCREMENT_TYPES.index(
+                new_increment
+            ):
+                continue
 
-                if increment == MAJOR:
-                    break
+            logger.debug(
+                f"increment detected is '{new_increment}' due to '{found_keyword}' in '{message}'"
+            )
+            if new_increment == MAJOR:
+                return new_increment
 
-    return cast(Increment, increment)
+            increment = new_increment
+
+    return increment
 
 
 def update_version_in_files(
@@ -76,7 +83,7 @@ def update_version_in_files(
     """
     # TODO: separate check step and write step
     updated = []
-    for path, regex in files_and_regexs(files, current_version):
+    for path, regex in _files_and_regexes(files, current_version):
         current_version_found, version_file = _bump_with_regex(
             path,
             current_version,
@@ -99,7 +106,7 @@ def update_version_in_files(
     return updated
 
 
-def files_and_regexs(patterns: list[str], version: str) -> list[tuple[str, str]]:
+def _files_and_regexes(patterns: list[str], version: str) -> list[tuple[str, str]]:
     """
     Resolve all distinct files with their regexp from a list of glob patterns with optional regexp
     """
@@ -128,13 +135,15 @@ def _bump_with_regex(
     pattern = re.compile(regex)
     with open(version_filepath, encoding=encoding) as f:
         for line in f:
-            if pattern.search(line):
-                bumped_line = line.replace(current_version, new_version)
-                if bumped_line != line:
-                    current_version_found = True
-                lines.append(bumped_line)
-            else:
+            if not pattern.search(line):
                 lines.append(line)
+                continue
+
+            bumped_line = line.replace(current_version, new_version)
+            if bumped_line != line:
+                current_version_found = True
+            lines.append(bumped_line)
+
     return current_version_found, "".join(lines)
 
 
