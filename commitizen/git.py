@@ -41,6 +41,9 @@ class GitObject:
             return False
         return self.rev == other.rev  # type: ignore
 
+    def __hash__(self):
+        return hash(self.rev)
+
 
 class GitCommit(GitObject):
     def __init__(

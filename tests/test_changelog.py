@@ -1529,6 +1529,22 @@ def test_get_smart_tag_range_returns_an_extra_for_a_range(tags):
     assert 4 == len(res)
 
 
+def test_get_smart_tag_range_returns_all_tags_for_a_range(tags):
+    start = tags[0]
+
+    end = tags[-1]
+    res = changelog.get_smart_tag_range(tags, start.name, end.name)
+    assert len(tags) == len(res)
+
+    end = tags[-2]
+    res = changelog.get_smart_tag_range(tags, start.name, end.name)
+    assert len(tags) == len(res)
+
+    end = tags[-3]
+    res = changelog.get_smart_tag_range(tags, start.name, end.name)
+    assert len(tags) - 1 == len(res)
+
+
 def test_get_smart_tag_range_returns_an_extra_for_a_single_tag(tags):
     start = tags[0]  # len here is 1, but we expect one more tag as designed
     res = changelog.get_smart_tag_range(tags, start.name)
