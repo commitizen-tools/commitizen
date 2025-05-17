@@ -226,6 +226,19 @@ class TestPreCommitCases:
             # Should use DEFAULT_CONFIG since the file content doesn't have 'repos' key
             check_pre_commit_config([CZ_HOOK_CONFIG])
 
+    def test_pre_commit_config_yaml_not_a_dict(_, default_choice, tmpdir, config):
+        with tmpdir.as_cwd():
+            # Write a dictionary YAML content without 'repos' key
+            p = tmpdir.join(PRE_COMMIT_CONFIG_FILENAME)
+            p.write(
+                yaml.safe_dump(["item1", "item2"])
+            )  # Dictionary without 'repos' key
+
+            commands.Init(config)()
+            check_cz_config(default_choice)
+            # Should use DEFAULT_CONFIG since the file content doesn't have 'repos' key
+            check_pre_commit_config([CZ_HOOK_CONFIG])
+
     def test_cz_hook_exists_in_pre_commit_config(_, default_choice, tmpdir, config):
         with tmpdir.as_cwd():
             p = tmpdir.join(PRE_COMMIT_CONFIG_FILENAME)
