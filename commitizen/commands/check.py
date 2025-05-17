@@ -72,15 +72,11 @@ class Check:
             raise NoCommitsFoundError(f"No commit found with range: '{self.rev_range}'")
 
         pattern = self.cz.schema_pattern()
-        ill_formatted_commits = [
-            commit
-            for commit in commits
-            if not self.validate_commit_message(commit.message, pattern)
-        ]
         displayed_msgs_content = "\n".join(
             [
                 f'commit "{commit.rev}": "{commit.message}"'
-                for commit in ill_formatted_commits
+                for commit in commits
+                if not self.validate_commit_message(commit.message, pattern)
             ]
         )
         if displayed_msgs_content:
