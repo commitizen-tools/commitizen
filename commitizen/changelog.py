@@ -88,24 +88,21 @@ def generate_tree_from_commits(
     pat = re.compile(changelog_pattern)
     map_pat = re.compile(commit_parser, re.MULTILINE)
     body_map_pat = re.compile(commit_parser, re.MULTILINE | re.DOTALL)
-    current_tag: GitTag | None = None
     rules = rules or TagRules()
 
     # Check if the latest commit is not tagged
-    if commits:
-        latest_commit = commits[0]
-        current_tag = get_commit_tag(latest_commit, tags)
+    current_tag = get_commit_tag(commits[0], tags) if commits else None
 
-    current_tag_name: str = unreleased_version or "Unreleased"
-    current_tag_date: str = ""
-    if unreleased_version is not None:
-        current_tag_date = date.today().isoformat()
+    current_tag_name = unreleased_version or "Unreleased"
+    current_tag_date = (
+        date.today().isoformat() if unreleased_version is not None else ""
+    )
     if current_tag is not None and current_tag.name:
         current_tag_name = current_tag.name
         current_tag_date = current_tag.date
 
-    changes: dict = defaultdict(list)
-    used_tags: list = [current_tag]
+    changes: defaultdict[str | None, list] = defaultdict(list)
+    used_tags: set[GitTag | None] = set([current_tag])
     for commit in commits:
         commit_tag = get_commit_tag(commit, tags)
 
@@ -114,7 +111,7 @@ def generate_tree_from_commits(
             and commit_tag not in used_tags
             and rules.include_in_changelog(commit_tag)
         ):
-            used_tags.append(commit_tag)
+            used_tags.add(commit_tag)
             release = {
                 "version": current_tag_name,
                 "date": current_tag_date,
@@ -170,21 +167,23 @@ def process_commit_message(
     changes: dict[str | None, list],
     change_type_map: dict[str, str] | None = None,
 ):
-    message: dict = {
+    message = {
         "sha1": commit.rev,
         "parents": commit.parents,
         "author": commit.author,
         "author_email": commit.author_email,
         **parsed.groupdict(),
     }
+    processed = hook(message, commit) if hook else message
+    if not processed:
+        return
 
-    if processed := hook(message, commit) if hook else message:
-        messages = [processed] if isinstance(processed, dict) else processed
-        for msg in messages:
-            change_type = msg.pop("change_type", None)
-            if change_type_map:
-                change_type = change_type_map.get(change_type, change_type)
-            changes[change_type].append(msg)
+    processed_messages = [processed] if isinstance(processed, dict) else processed
+    for msg in processed_messages:
+        change_type = msg.pop("change_type", None)
+        if change_type_map:
+            change_type = change_type_map.get(change_type, change_type)
+        changes[change_type].append(msg)
 
 
 def order_changelog_tree(tree: Iterable, change_type_order: list[str]) -> Iterable:
@@ -225,8 +224,7 @@ def render_changelog(
     **kwargs,
 ) -> str:
     jinja_template = get_changelog_template(loader, template)
-    changelog: str = jinja_template.render(tree=tree, **kwargs)
-    return changelog
+    return jinja_template.render(tree=tree, **kwargs)
 
 
 def incremental_build(
@@ -253,7 +251,9 @@ def incremental_build(
     for index, line in enumerate(lines):
         if index == unreleased_start:
             skip = True
-        elif index == unreleased_end:
+            continue
+
+        if index == unreleased_end:
             skip = False
             if (
                 latest_version_position is None
@@ -268,40 +268,52 @@ def incremental_build(
 
         if index == latest_version_position:
             output_lines.extend([new_content, "\n"])
-
         output_lines.append(line)
-    if not isinstance(latest_version_position, int):
-        if output_lines and output_lines[-1].strip():
-            # Ensure at least one blank line between existing and new content.
-            output_lines.append("\n")
-        output_lines.append(new_content)
+
+    if isinstance(latest_version_position, int):
+        return output_lines
+
+    if output_lines and output_lines[-1].strip():
+        # Ensure at least one blank line between existing and new content.
+        output_lines.append("\n")
+    output_lines.append(new_content)
     return output_lines
 
 
 def get_smart_tag_range(
     tags: list[GitTag], newest: str, oldest: str | None = None
 ) -> list[GitTag]:
-    """Smart because it finds the N+1 tag.
+    """Get a range of tags including the next tag after the oldest tag.
 
-    This is because we need to find until the next tag
+    Args:
+        tags: List of git tags
+        newest: Name of the newest tag to include
+        oldest: Name of the oldest tag to include. If None, same as newest.
+
+    Returns:
+        List of tags from newest to oldest, plus one tag after oldest if it exists.
+        For nonexistent end tag, returns all tags.
+        For nonexistent start tag, returns tags starting from second tag.
+        For nonexistent start and end tags, returns empty list.
     """
-    accumulator = []
-    keep = False
-    if not oldest:
-        oldest = newest
-    for index, tag in enumerate(tags):
-        if tag.name == newest:
-            keep = True
-        if keep:
-            accumulator.append(tag)
-        if tag.name == oldest:
-            keep = False
-            try:
-                accumulator.append(tags[index + 1])
-            except IndexError:
-                pass
-            break
-    return accumulator
+    oldest = oldest or newest
+
+    names = set(tag.name for tag in tags)
+    has_newest = newest in names
+    has_oldest = oldest in names
+    if not has_newest and not has_oldest:
+        return []
+
+    if not has_newest:
+        return tags[1:]
+
+    if not has_oldest:
+        return tags
+
+    newest_idx = next(i for i, tag in enumerate(tags) if tag.name == newest)
+    oldest_idx = next(i for i, tag in enumerate(tags) if tag.name == oldest)
+
+    return tags[newest_idx : oldest_idx + 2]
 
 
 def get_oldest_and_newest_rev(
@@ -337,17 +349,17 @@ def get_oldest_and_newest_rev(
     if not tags_range:
         raise NoCommitsFoundError("Could not find a valid revision range.")
 
-    oldest_rev: str | None = tags_range[-1].name
+    oldest_rev = tags_range[-1].name
     newest_rev = newest_tag.name
 
-    # check if it's the first tag created
-    # and it's also being requested as part of the range
-    if oldest_rev == tags[-1].name and oldest_rev == oldest_tag_name:
-        return None, newest_rev
-
-    # when they are the same, and it's also the
-    # first tag created
-    if oldest_rev == newest_rev:
+    # Return None for oldest_rev if:
+    # 1. The oldest tag is the last tag in the list and matches the requested oldest tag, or
+    # 2. The oldest and newest tags are the same
+    if (
+        oldest_rev == tags[-1].name
+        and oldest_rev == oldest_tag_name
+        or oldest_rev == newest_rev
+    ):
         return None, newest_rev
 
     return oldest_rev, newest_rev
