@@ -18,6 +18,7 @@ VERSION_TYPES = [None, PATCH, MINOR, MAJOR]
 logger = getLogger("commitizen")
 
 
+# TODO: replace this with find_increment_by_callable?
 def find_increment(
     commits: list[GitCommit], regex: str, increments_map: dict | OrderedDict
 ) -> Increment | None:

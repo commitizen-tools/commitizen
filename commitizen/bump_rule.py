@@ -2,9 +2,40 @@ from __future__ import annotations
 
 import re
 from functools import cached_property
-from typing import Protocol
+from typing import Callable, Protocol
 
 from commitizen.version_schemes import Increment
+
+_VERSION_ORDERING = dict(zip((None, "PATCH", "MINOR", "MAJOR"), range(4)))
+
+
+def find_increment_by_callable(
+    commit_messages: list[str], get_increment: Callable[[str], Increment | None]
+) -> Increment | None:
+    """Find the highest version increment from a list of messages.
+
+    This function processes a list of messages and determines the highest version
+    increment needed based on the commit messages. It splits multi-line commit messages
+    and evaluates each line using the provided get_increment callable.
+
+    Args:
+        commit_messages: A list of messages to analyze.
+        get_increment: A callable that takes a commit message string and returns an
+            Increment value (MAJOR, MINOR, PATCH) or None if no increment is needed.
+
+    Returns:
+        The highest version increment needed (MAJOR, MINOR, PATCH) or None if no
+        increment is needed. The order of precedence is MAJOR > MINOR > PATCH.
+
+    Example:
+        >>> commit_messages = ["feat: new feature", "fix: bug fix"]
+        >>> rule = DefaultBumpRule()
+        >>> find_increment_by_callable(commit_messages, lambda x: rule.get_increment(x, False))
+        'MINOR'
+    """
+    lines = (line for message in commit_messages for line in message.split("\n"))
+    increments = map(get_increment, lines)
+    return max(increments, key=lambda x: _VERSION_ORDERING[x], default=None)
 
 
 class BumpRule(Protocol):

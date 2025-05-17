@@ -1,6 +1,6 @@
 import pytest
 
-from commitizen.bump_rule import DefaultBumpRule
+from commitizen.bump_rule import DefaultBumpRule, find_increment_by_callable
 from commitizen.defaults import MAJOR, MINOR, PATCH
 
 
@@ -93,3 +93,75 @@ class TestDefaultBumpRule:
         assert bump_rule.get_increment("test: add unit tests", False) is None
         assert bump_rule.get_increment("build: update build config", False) is None
         assert bump_rule.get_increment("ci: update CI pipeline", False) is None
+
+
+class TestFindIncrementByCallable:
+    @pytest.fixture
+    def get_increment(self, bump_rule):
+        return lambda x: bump_rule.get_increment(x, False)
+
+    def test_single_commit(self, get_increment):
+        commit_messages = ["feat: add new feature"]
+        assert find_increment_by_callable(commit_messages, get_increment) == MINOR
+
+    def test_multiple_commits(self, get_increment):
+        commit_messages = [
+            "feat: new feature",
+            "fix: bug fix",
+            "docs: update readme",
+        ]
+        assert find_increment_by_callable(commit_messages, get_increment) == MINOR
+
+    def test_breaking_change(self, get_increment):
+        commit_messages = [
+            "feat: new feature",
+            "feat!: breaking change",
+        ]
+        assert find_increment_by_callable(commit_messages, get_increment) == MINOR
+
+    def test_multi_line_commit(self, get_increment):
+        commit_messages = [
+            "feat: new feature\n\nBREAKING CHANGE: major change",
+        ]
+        assert find_increment_by_callable(commit_messages, get_increment) == MINOR
+
+    def test_no_increment_needed(self, get_increment):
+        commit_messages = [
+            "docs: update documentation",
+            "style: format code",
+        ]
+        assert find_increment_by_callable(commit_messages, get_increment) is None
+
+    def test_empty_commits(self, get_increment):
+        commit_messages = []
+        assert find_increment_by_callable(commit_messages, get_increment) is None
+
+    def test_major_version_zero(self):
+        bump_rule = DefaultBumpRule()
+
+        commit_messages = [
+            "feat!: breaking change",
+            "BREAKING CHANGE: major change",
+        ]
+        assert (
+            find_increment_by_callable(
+                commit_messages, lambda x: bump_rule.get_increment(x, True)
+            )
+            == MAJOR
+        )
+
+    def test_mixed_commit_types(self, get_increment):
+        commit_messages = [
+            "feat: new feature",
+            "fix: bug fix",
+            "perf: improve performance",
+            "refactor: restructure code",
+        ]
+        assert find_increment_by_callable(commit_messages, get_increment) == MINOR
+
+    def test_commit_with_scope(self, get_increment):
+        commit_messages = [
+            "feat(api): add new endpoint",
+            "fix(ui): fix button alignment",
+        ]
+        assert find_increment_by_callable(commit_messages, get_increment) == MINOR
