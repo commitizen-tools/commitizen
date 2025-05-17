@@ -7,6 +7,7 @@ from typing import cast
 import questionary
 
 from commitizen import bump, factory, git, hooks, out
+from commitizen.bump_rule import find_increment_by_callable
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
@@ -122,7 +123,13 @@ class Bump:
     def find_increment(self, commits: list[git.GitCommit]) -> Increment | None:
         # Update the bump map to ensure major version doesn't increment.
         is_major_version_zero: bool = self.bump_settings["major_version_zero"]
-        # self.cz.bump_map = defaults.bump_map_major_version_zero
+
+        if rule := self.cz.bump_rule:
+            return find_increment_by_callable(
+                (commit.message for commit in commits),
+                lambda x: rule.get_increment(x, is_major_version_zero),
+            )
+
         bump_map = (
             self.cz.bump_map_major_version_zero
             if is_major_version_zero

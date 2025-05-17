@@ -2,6 +2,7 @@ import os
 import re
 
 from commitizen import defaults
+from commitizen.bump_rule import ConventionalCommitBumpRule
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.utils import multiple_line_breaker, required_validator
 from commitizen.defaults import Questions
@@ -28,6 +29,8 @@ def parse_subject(text):
 
 
 class ConventionalCommitsCz(BaseCommitizen):
+    bump_rule = ConventionalCommitBumpRule()
+
     bump_pattern = defaults.BUMP_PATTERN
     bump_map = defaults.BUMP_MAP
     bump_map_major_version_zero = defaults.BUMP_MAP_MAJOR_VERSION_ZERO

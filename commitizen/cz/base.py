@@ -8,6 +8,7 @@ from jinja2 import BaseLoader, PackageLoader
 from prompt_toolkit.styles import Style, merge_styles
 
 from commitizen import git
+from commitizen.bump_rule import BumpRule
 from commitizen.config.base_config import BaseConfig
 from commitizen.defaults import Questions
 
@@ -25,9 +26,13 @@ class ChangelogReleaseHook(Protocol):
 
 
 class BaseCommitizen(metaclass=ABCMeta):
+    bump_rule: BumpRule | None = None
+
+    # TODO: deprecate these
     bump_pattern: str | None = None
     bump_map: dict[str, str] | None = None
     bump_map_major_version_zero: dict[str, str] | None = None
+
     default_style_config: list[tuple[str, str]] = [
         ("qmark", "fg:#ff9d00 bold"),
         ("question", "bold"),

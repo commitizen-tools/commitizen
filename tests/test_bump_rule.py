@@ -1,15 +1,15 @@
 import pytest
 
-from commitizen.bump_rule import DefaultBumpRule, find_increment_by_callable
+from commitizen.bump_rule import ConventionalCommitBumpRule, find_increment_by_callable
 from commitizen.defaults import MAJOR, MINOR, PATCH
 
 
 @pytest.fixture
 def bump_rule():
-    return DefaultBumpRule()
+    return ConventionalCommitBumpRule()
 
 
-class TestDefaultBumpRule:
+class TestConventionalCommitBumpRule:
     def test_feat_commit(self, bump_rule):
         assert bump_rule.get_increment("feat: add new feature", False) == MINOR
         assert bump_rule.get_increment("feat: add new feature", True) == MINOR
@@ -137,7 +137,7 @@ class TestFindIncrementByCallable:
         assert find_increment_by_callable(commit_messages, get_increment) is None
 
     def test_major_version_zero(self):
-        bump_rule = DefaultBumpRule()
+        bump_rule = ConventionalCommitBumpRule()
 
         commit_messages = [
             "feat!: breaking change",

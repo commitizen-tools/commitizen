@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Iterable
 from functools import cached_property
 from typing import Callable, Protocol
 
@@ -10,7 +11,7 @@ _VERSION_ORDERING = dict(zip((None, "PATCH", "MINOR", "MAJOR"), range(4)))
 
 
 def find_increment_by_callable(
-    commit_messages: list[str], get_increment: Callable[[str], Increment | None]
+    commit_messages: Iterable[str], get_increment: Callable[[str], Increment | None]
 ) -> Increment | None:
     """Find the highest version increment from a list of messages.
 
@@ -29,7 +30,7 @@ def find_increment_by_callable(
 
     Example:
         >>> commit_messages = ["feat: new feature", "fix: bug fix"]
-        >>> rule = DefaultBumpRule()
+        >>> rule = ConventionalCommitBumpRule()
         >>> find_increment_by_callable(commit_messages, lambda x: rule.get_increment(x, False))
         'MINOR'
     """
@@ -44,7 +45,7 @@ class BumpRule(Protocol):
     ) -> Increment | None: ...
 
 
-class DefaultBumpRule(BumpRule):
+class ConventionalCommitBumpRule(BumpRule):
     _PATCH_CHANGE_TYPES = set(["fix", "perf", "refactor"])
 
     def get_increment(
@@ -85,10 +86,4 @@ class DefaultBumpRule(BumpRule):
         return re.compile(f"^{re_change_type}{re_scope}{re_bang}:")
 
 
-class CustomBumpRule(BumpRule):
-    """TODO: Implement"""
-
-    def get_increment(
-        self, commit_message: str, major_version_zero: bool
-    ) -> Increment | None:
-        return None
+# TODO: Implement CustomBumpRule
