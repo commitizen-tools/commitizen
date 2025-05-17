@@ -114,8 +114,8 @@ PATCH = "PATCH"
 
 CHANGELOG_FORMAT = "markdown"
 
-bump_pattern = r"^((BREAKING[\-\ ]CHANGE|\w+)(\(.+\))?!?):"
-bump_map = OrderedDict(
+BUMP_PATTERN = r"^((BREAKING[\-\ ]CHANGE|\w+)(\(.+\))?!?):"
+BUMP_MAP = OrderedDict(
     (
         (r"^.+!$", MAJOR),
         (r"^BREAKING[\-\ ]CHANGE", MAJOR),
@@ -125,7 +125,7 @@ bump_map = OrderedDict(
         (r"^perf", PATCH),
     )
 )
-bump_map_major_version_zero = OrderedDict(
+BUMP_MAP_MAJOR_VERSION_ZERO = OrderedDict(
     (
         (r"^.+!$", MINOR),
         (r"^BREAKING[\-\ ]CHANGE", MINOR),
