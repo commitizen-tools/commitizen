@@ -102,7 +102,7 @@ def generate_tree_from_commits(
         current_tag_date = current_tag.date
 
     changes: defaultdict[str | None, list] = defaultdict(list)
-    used_tags = [current_tag]
+    used_tags: set[GitTag | None] = set([current_tag])
     for commit in commits:
         commit_tag = get_commit_tag(commit, tags)
 
@@ -111,7 +111,7 @@ def generate_tree_from_commits(
             and commit_tag not in used_tags
             and rules.include_in_changelog(commit_tag)
         ):
-            used_tags.append(commit_tag)
+            used_tags.add(commit_tag)
             release = {
                 "version": current_tag_name,
                 "date": current_tag_date,
@@ -298,7 +298,7 @@ def get_smart_tag_range(
     """
     oldest = oldest or newest
 
-    names = [tag.name for tag in tags]
+    names = set(tag.name for tag in tags)
     has_newest = newest in names
     has_oldest = oldest in names
     if not has_newest and not has_oldest:
