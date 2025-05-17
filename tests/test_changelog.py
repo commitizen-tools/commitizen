@@ -1532,7 +1532,27 @@ def test_get_smart_tag_range_returns_an_extra_for_a_range(tags):
 def test_get_smart_tag_range_returns_an_extra_for_a_single_tag(tags):
     start = tags[0]  # len here is 1, but we expect one more tag as designed
     res = changelog.get_smart_tag_range(tags, start.name)
-    assert 2 == len(res)
+    assert res[0].name == tags[0].name
+    assert res[1].name == tags[1].name
+
+
+def test_get_smart_tag_range_returns_an_empty_list_for_nonexistent_end_tag(tags):
+    start = tags[0]
+    res = changelog.get_smart_tag_range(tags, start.name, "nonexistent")
+    assert len(tags) == len(res)
+
+
+def test_get_smart_tag_range_returns_an_empty_list_for_nonexistent_start_tag(tags):
+    end = tags[0]
+    res = changelog.get_smart_tag_range(tags, "nonexistent", end.name)
+    assert res[0].name == tags[1].name
+
+
+def test_get_smart_tag_range_returns_an_empty_list_for_nonexistent_start_and_end_tags(
+    tags,
+):
+    res = changelog.get_smart_tag_range(tags, "nonexistent", "nonexistent")
+    assert 0 == len(res)
 
 
 @dataclass
