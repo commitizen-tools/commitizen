@@ -96,9 +96,9 @@ class OldSchoolBumpRule(BumpRule):
         bump_map: dict[str, Increment],
         bump_map_major_version_zero: dict[str, Increment],
     ):
-        if not bump_map or not bump_pattern:
+        if not bump_map or not bump_pattern or not bump_map_major_version_zero:
             raise NoPatternMapError(
-                f"Invalid bump rule: {bump_pattern=} and {bump_map=}"
+                f"Invalid bump rule: {bump_pattern=} and {bump_map=} and {bump_map_major_version_zero=}"
             )
 
         self.bump_pattern = re.compile(bump_pattern)

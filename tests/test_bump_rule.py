@@ -244,6 +244,26 @@ class TestOldSchoolBumpRule:
         with pytest.raises(NoPatternMapError):
             OldSchoolBumpRule(bump_pattern, {}, {})
 
+    def test_invalid_bump_map_major_version_zero(self, bump_pattern, bump_map):
+        with pytest.raises(NoPatternMapError):
+            OldSchoolBumpRule(bump_pattern, bump_map, {})
+
+    def test_all_invalid(self):
+        with pytest.raises(NoPatternMapError):
+            OldSchoolBumpRule("", {}, {})
+
+    def test_none_values(self):
+        with pytest.raises(NoPatternMapError):
+            OldSchoolBumpRule(None, {}, {})
+
+    def test_empty_pattern_with_valid_maps(self, bump_map, bump_map_major_version_zero):
+        with pytest.raises(NoPatternMapError):
+            OldSchoolBumpRule("", bump_map, bump_map_major_version_zero)
+
+    def test_empty_maps_with_valid_pattern(self, bump_pattern):
+        with pytest.raises(NoPatternMapError):
+            OldSchoolBumpRule(bump_pattern, {}, {})
+
     def test_complex_pattern(self):
         pattern = r"^.*?\[(.*?)\].*?\[(.*?)\].*$"
         bump_map = {
