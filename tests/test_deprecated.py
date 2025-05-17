@@ -16,6 +16,9 @@ from commitizen import changelog_formats, defaults
         (lambda: defaults.change_type_order, defaults.CHANGE_TYPE_ORDER),
         (lambda: defaults.encoding, defaults.ENCODING),
         (lambda: defaults.name, defaults.DEFAULT_SETTINGS["name"]),
+        (lambda: defaults.MAJOR, "MAJOR"),
+        (lambda: defaults.MINOR, "MINOR"),
+        (lambda: defaults.PATCH, "PATCH"),
         (
             lambda: changelog_formats.guess_changelog_format,
             changelog_formats._guess_changelog_format,

@@ -11,7 +11,7 @@ from commitizen.exceptions import NoVersionSpecifiedError, VersionSchemeUnknown
 from commitizen.providers import get_provider
 from commitizen.tags import TagRules
 from commitizen.version_increment import VersionIncrement
-from commitizen.version_schemes import Increment, get_version_scheme
+from commitizen.version_schemes import get_version_scheme
 
 
 class VersionArgs(TypedDict, total=False):
@@ -91,16 +91,7 @@ class Version:
                     return
 
                 next_increment = VersionIncrement.from_value(next_increment_str)
-                increment: Increment | None
-                if next_increment == VersionIncrement.NONE:
-                    increment = None
-                elif next_increment == VersionIncrement.PATCH:
-                    increment = "PATCH"
-                elif next_increment == VersionIncrement.MINOR:
-                    increment = "MINOR"
-                else:
-                    increment = "MAJOR"
-                version = version.bump(increment=increment)
+                version = version.bump(increment=next_increment)
 
             if self.arguments.get("major"):
                 out.write(version.major)

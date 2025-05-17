@@ -11,6 +11,7 @@ import pytest
 
 import commitizen.commands.bump as bump
 from commitizen import cmd, defaults, git, hooks
+from commitizen.bump_rule import VersionIncrement
 from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import (
     BumpTagFailedError,
@@ -836,7 +837,7 @@ def test_bump_with_pre_bump_hooks(
                 new_version="0.2.0",
                 new_tag_version="0.2.0",
                 message="bump: version 0.1.0 → 0.2.0",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 changelog_file_name=None,
             ),
             call(
@@ -848,7 +849,7 @@ def test_bump_with_pre_bump_hooks(
                 current_version="0.2.0",
                 current_tag_version="0.2.0",
                 message="bump: version 0.1.0 → 0.2.0",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 changelog_file_name=None,
             ),
         ]
