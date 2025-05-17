@@ -43,7 +43,26 @@ def find_increment_by_callable(
 class BumpRule(Protocol):
     def get_increment(
         self, commit_message: str, major_version_zero: bool
-    ) -> Increment | None: ...
+    ) -> Increment | None:
+        """Determine the version increment based on a commit message.
+
+        This method analyzes a commit message to determine what kind of version increment
+        is needed according to the Conventional Commits specification. It handles special
+        cases for breaking changes and respects the major_version_zero flag.
+
+        Args:
+            commit_message: The commit message to analyze. Should follow conventional commit format.
+            major_version_zero: If True, breaking changes will result in a MINOR version bump
+                              instead of MAJOR. This is useful for projects in 0.x.x versions.
+
+        Returns:
+            Increment | None: The type of version increment needed:
+                - "MAJOR": For breaking changes when major_version_zero is False
+                - "MINOR": For breaking changes when major_version_zero is True, or for new features
+                - "PATCH": For bug fixes, performance improvements, or refactors
+                - None: For commits that don't require a version bump (docs, style, etc.)
+        """
+        ...
 
 
 class ConventionalCommitBumpRule(BumpRule):
@@ -122,6 +141,3 @@ class OldSchoolBumpRule(BumpRule):
             if re.match(match_pattern, found_keyword):
                 return increment
         return None
-
-
-# TODO: Implement CustomBumpRule
