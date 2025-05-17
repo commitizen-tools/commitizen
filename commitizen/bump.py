@@ -13,7 +13,7 @@ from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import GitCommit, smart_open
 from commitizen.version_schemes import Increment, Version
 
-VERSION_TYPES = [None, PATCH, MINOR, MAJOR]
+_INCREMENT_TYPES = (None, PATCH, MINOR, MAJOR)
 
 logger = getLogger("commitizen")
 
@@ -27,37 +27,42 @@ def find_increment(
     # Most important cases are major and minor.
     # Everything else will be considered patch.
     select_pattern = re.compile(regex)
-    increment: str | None = None
+    increment: Increment | None = None
 
     for commit in commits:
         for message in commit.message.split("\n"):
-            if result := select_pattern.search(message):
-                found_keyword = result.group(1)
+            if not (result := select_pattern.search(message)):
+                continue
 
-                new_increment = next(
-                    (
-                        increment_type
-                        for match_pattern, increment_type in increments_map.items()
-                        if re.match(match_pattern, found_keyword)
-                    ),
-                    None,
+            found_keyword = result.group(1)
+            new_increment: Increment | None = next(
+                (
+                    cast(Increment, increment_type)
+                    for match_pattern, increment_type in increments_map.items()
+                    if re.match(match_pattern, found_keyword)
+                ),
+                None,
+            )
+
+            if new_increment is None:
+                logger.debug(
+                    f"no increment needed for '{found_keyword}' in '{message}'"
                 )
 
-                if new_increment is None:
-                    logger.debug(
-                        f"no increment needed for '{found_keyword}' in '{message}'"
-                    )
+            if _INCREMENT_TYPES.index(increment) >= _INCREMENT_TYPES.index(
+                new_increment
+            ):
+                continue
 
-                if VERSION_TYPES.index(increment) < VERSION_TYPES.index(new_increment):
-                    logger.debug(
-                        f"increment detected is '{new_increment}' due to '{found_keyword}' in '{message}'"
-                    )
-                    increment = new_increment
+            logger.debug(
+                f"increment detected is '{new_increment}' due to '{found_keyword}' in '{message}'"
+            )
+            if new_increment == MAJOR:
+                return new_increment
 
-                if increment == MAJOR:
-                    break
+            increment = new_increment
 
-    return cast(Increment, increment)
+    return increment
 
 
 def update_version_in_files(
