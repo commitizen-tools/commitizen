@@ -41,7 +41,7 @@ class ConventionalCommitsCz(BaseCommitizen):
     changelog_pattern = defaults.BUMP_PATTERN
 
     def questions(self) -> Questions:
-        questions: Questions = [
+        return [
             {
                 "type": "list",
                 "name": "prefix",
@@ -146,7 +146,6 @@ class ConventionalCommitsCz(BaseCommitizen):
                 ),
             },
         ]
-        return questions
 
     def message(self, answers: dict) -> str:
         prefix = answers["prefix"]
@@ -165,9 +164,7 @@ class ConventionalCommitsCz(BaseCommitizen):
         if footer:
             footer = f"\n\n{footer}"
 
-        message = f"{prefix}{scope}: {subject}{body}{footer}"
-
-        return message
+        return f"{prefix}{scope}: {subject}{body}{footer}"
 
     def example(self) -> str:
         return (
@@ -188,25 +185,21 @@ class ConventionalCommitsCz(BaseCommitizen):
         )
 
     def schema_pattern(self) -> str:
-        PATTERN = (
+        return (
             r"(?s)"  # To explicitly make . match new line
             r"(build|ci|docs|feat|fix|perf|refactor|style|test|chore|revert|bump)"  # type
             r"(\(\S+\))?!?:"  # scope
             r"( [^\n\r]+)"  # subject
             r"((\n\n.*)|(\s*))?$"
         )
-        return PATTERN
 
     def info(self) -> str:
         dir_path = os.path.dirname(os.path.realpath(__file__))
         filepath = os.path.join(dir_path, "conventional_commits_info.txt")
         with open(filepath, encoding=self.config.settings["encoding"]) as f:
-            content = f.read()
-        return content
+            return f.read()
 
     def process_commit(self, commit: str) -> str:
-        pat = re.compile(self.schema_pattern())
-        m = re.match(pat, commit)
-        if m is None:
-            return ""
-        return m.group(3).strip()
+        if m := re.match(self.schema_pattern(), commit):
+            return m.group(3).strip()
+        return ""
