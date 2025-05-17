@@ -135,13 +135,15 @@ def _bump_with_regex(
     pattern = re.compile(regex)
     with open(version_filepath, encoding=encoding) as f:
         for line in f:
-            if pattern.search(line):
-                bumped_line = line.replace(current_version, new_version)
-                if bumped_line != line:
-                    current_version_found = True
-                lines.append(bumped_line)
-            else:
+            if not pattern.search(line):
                 lines.append(line)
+                continue
+
+            bumped_line = line.replace(current_version, new_version)
+            if bumped_line != line:
+                current_version_found = True
+            lines.append(bumped_line)
+
     return current_version_found, "".join(lines)
 
 
