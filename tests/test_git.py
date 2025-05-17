@@ -405,3 +405,47 @@ def test_get_filenames_in_commit_error(mocker: MockFixture):
     with pytest.raises(exceptions.GitCommandError) as excinfo:
         git.get_filenames_in_commit()
     assert str(excinfo.value) == "fatal: bad object HEAD"
+
+
+def test_git_commit_from_rev_and_commit():
+    # Test data with all fields populated
+    rev_and_commit = (
+        "abc123\n"  # rev
+        "def456 ghi789\n"  # parents
+        "feat: add new feature\n"  # title
+        "John Doe\n"  # author
+        "john@example.com\n"  # author_email
+        "This is a detailed description\n"  # body
+        "of the new feature\n"
+        "with multiple lines"
+    )
+
+    commit = git.GitCommit.from_rev_and_commit(rev_and_commit)
+
+    assert commit.rev == "abc123"
+    assert commit.title == "feat: add new feature"
+    assert (
+        commit.body
+        == "This is a detailed description\nof the new feature\nwith multiple lines"
+    )
+    assert commit.author == "John Doe"
+    assert commit.author_email == "john@example.com"
+    assert commit.parents == ["def456", "ghi789"]
+
+    # Test with minimal data
+    minimal_commit = (
+        "abc123\n"  # rev
+        "\n"  # no parents
+        "feat: minimal commit\n"  # title
+        "John Doe\n"  # author
+        "john@example.com\n"  # author_email
+    )
+
+    commit = git.GitCommit.from_rev_and_commit(minimal_commit)
+
+    assert commit.rev == "abc123"
+    assert commit.title == "feat: minimal commit"
+    assert commit.body == ""
+    assert commit.author == "John Doe"
+    assert commit.author_email == "john@example.com"
+    assert commit.parents == []
