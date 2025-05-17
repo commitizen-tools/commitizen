@@ -92,41 +92,36 @@ class Commit:
         os.unlink(file.name)
         return message
 
+    def _get_message(self) -> str:
+        if self.arguments.get("retry"):
+            m = self.read_backup_message()
+            if m is None:
+                raise NoCommitBackupError()
+            return m
+
+        if self.config.settings.get("retry_after_failure") and not self.arguments.get(
+            "no_retry"
+        ):
+            return self.read_backup_message() or self.prompt_commit_questions()
+        return self.prompt_commit_questions()
+
     def __call__(self):
         extra_args: str = self.arguments.get("extra_cli_args", "")
-
-        allow_empty: bool = "--allow-empty" in extra_args
-
         dry_run: bool = self.arguments.get("dry_run")
         write_message_to_file: bool = self.arguments.get("write_message_to_file")
-        manual_edit: bool = self.arguments.get("edit")
+        signoff: bool = self.arguments.get("signoff")
 
-        is_all: bool = self.arguments.get("all")
-        if is_all:
-            c = git.add("-u")
+        if self.arguments.get("all"):
+            git.add("-u")
 
-        if git.is_staging_clean() and not (dry_run or allow_empty):
+        if git.is_staging_clean() and not (dry_run or "--allow-empty" in extra_args):
             raise NothingToCommitError("No files added to staging!")
 
         if write_message_to_file is not None and write_message_to_file.is_dir():
             raise NotAllowed(f"{write_message_to_file} is a directory")
 
-        retry: bool = self.arguments.get("retry")
-        no_retry: bool = self.arguments.get("no_retry")
-        retry_after_failure: bool = self.config.settings.get("retry_after_failure")
-
-        if retry:
-            m = self.read_backup_message()
-            if m is None:
-                raise NoCommitBackupError()
-        elif retry_after_failure and not no_retry:
-            m = self.read_backup_message()
-            if m is None:
-                m = self.prompt_commit_questions()
-        else:
-            m = self.prompt_commit_questions()
-
-        if manual_edit:
+        m = self._get_message()
+        if self.arguments.get("edit"):
             m = self.manual_edit(m)
 
         out.info(f"\n{m}\n")
@@ -138,19 +133,15 @@ class Commit:
         if dry_run:
             raise DryRunExit()
 
-        always_signoff: bool = self.config.settings["always_signoff"]
-        signoff: bool = self.arguments.get("signoff")
-
         if signoff:
             out.warn(
                 "signoff mechanic is deprecated, please use `cz commit -- -s` instead."
             )
 
-        if always_signoff or signoff:
+        if self.config.settings["always_signoff"] or signoff:
             extra_args = f"{extra_args} -s".strip()
 
         c = git.commit(m, args=extra_args)
-
         if c.return_code != 0:
             out.error(c.err)
 
@@ -160,11 +151,12 @@ class Commit:
 
             raise CommitError()
 
-        if "nothing added" in c.out or "no changes added to commit" in c.out:
+        if any(s in c.out for s in ("nothing added", "no changes added to commit")):
             out.error(c.out)
-        else:
-            with contextlib.suppress(FileNotFoundError):
-                os.remove(self.temp_file)
-            out.write(c.err)
-            out.write(c.out)
-            out.success("Commit successful!")
+            return
+
+        with contextlib.suppress(FileNotFoundError):
+            os.remove(self.temp_file)
+        out.write(c.err)
+        out.write(c.out)
+        out.success("Commit successful!")
