@@ -2,61 +2,18 @@ from __future__ import annotations
 
 import os
 import re
-from collections import OrderedDict
 from glob import iglob
 from logging import getLogger
 from string import Template
-from typing import cast
 
 from commitizen.defaults import MAJOR, MINOR, PATCH, bump_message, encoding
 from commitizen.exceptions import CurrentVersionNotFoundError
-from commitizen.git import GitCommit, smart_open
-from commitizen.version_schemes import Increment, Version
+from commitizen.git import smart_open
+from commitizen.version_schemes import Version
 
 VERSION_TYPES = [None, PATCH, MINOR, MAJOR]
 
 logger = getLogger("commitizen")
-
-
-# TODO: replace this with find_increment_by_callable?
-def find_increment(
-    commits: list[GitCommit], regex: str, increments_map: dict | OrderedDict
-) -> Increment | None:
-    if isinstance(increments_map, dict):
-        increments_map = OrderedDict(increments_map)
-
-    # Most important cases are major and minor.
-    # Everything else will be considered patch.
-    select_pattern = re.compile(regex)
-    increment: str | None = None
-
-    for commit in commits:
-        for message in commit.message.split("\n"):
-            result = select_pattern.search(message)
-
-            if result:
-                found_keyword = result.group(1)
-                new_increment = None
-                for match_pattern in increments_map.keys():
-                    if re.match(match_pattern, found_keyword):
-                        new_increment = increments_map[match_pattern]
-                        break
-
-                if new_increment is None:
-                    logger.debug(
-                        f"no increment needed for '{found_keyword}' in '{message}'"
-                    )
-
-                if VERSION_TYPES.index(increment) < VERSION_TYPES.index(new_increment):
-                    logger.debug(
-                        f"increment detected is '{new_increment}' due to '{found_keyword}' in '{message}'"
-                    )
-                    increment = new_increment
-
-                if increment == MAJOR:
-                    break
-
-    return cast(Increment, increment)
 
 
 def update_version_in_files(

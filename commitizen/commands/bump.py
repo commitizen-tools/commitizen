@@ -7,7 +7,7 @@ from typing import cast
 import questionary
 
 from commitizen import bump, factory, git, hooks, out
-from commitizen.bump_rule import find_increment_by_callable
+from commitizen.bump_rule import OldSchoolBumpRule, find_increment_by_callable
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
@@ -124,27 +124,31 @@ class Bump:
         # Update the bump map to ensure major version doesn't increment.
         is_major_version_zero: bool = self.bump_settings["major_version_zero"]
 
-        if rule := self.cz.bump_rule:
-            return find_increment_by_callable(
-                (commit.message for commit in commits),
-                lambda x: rule.get_increment(x, is_major_version_zero),
-            )
-
-        bump_map = (
-            self.cz.bump_map_major_version_zero
-            if is_major_version_zero
-            else self.cz.bump_map
+        # Fallback to old school bump rule if no bump rule is provided
+        rule = self.cz.bump_rule or OldSchoolBumpRule(
+            *self._get_validated_cz_bump(),
         )
-        bump_pattern = self.cz.bump_pattern
+        return find_increment_by_callable(
+            (commit.message for commit in commits),
+            lambda x: rule.get_increment(x, is_major_version_zero),
+        )
 
-        if not bump_map or not bump_pattern:
+    def _get_validated_cz_bump(
+        self,
+    ) -> tuple[str, dict[str, Increment], dict[str, Increment]]:
+        """For fixing the type errors"""
+        bump_pattern = self.cz.bump_pattern
+        bump_map = self.cz.bump_map
+        bump_map_major_version_zero = self.cz.bump_map_major_version_zero
+        if not bump_pattern or not bump_map or not bump_map_major_version_zero:
             raise NoPatternMapError(
                 f"'{self.config.settings['name']}' rule does not support bump"
             )
-        increment = bump.find_increment(
-            commits, regex=bump_pattern, increments_map=bump_map
+
+        return cast(
+            tuple[str, dict[str, Increment], dict[str, Increment]],
+            (bump_pattern, bump_map, bump_map_major_version_zero),
         )
-        return increment
 
     def __call__(self) -> None:  # noqa: C901
         """Steps executed to bump."""

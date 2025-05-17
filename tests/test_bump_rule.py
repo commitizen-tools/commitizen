@@ -39,12 +39,12 @@ class TestConventionalCommitBumpRule:
         assert bump_rule.get_increment("refactor: restructure code", True) == PATCH
 
     def test_breaking_change_with_bang(self, bump_rule):
-        assert bump_rule.get_increment("feat!: breaking change", False) == MINOR
-        assert bump_rule.get_increment("feat!: breaking change", True) == MAJOR
+        assert bump_rule.get_increment("feat!: breaking change", False) == MAJOR
+        assert bump_rule.get_increment("feat!: breaking change", True) == MINOR
 
     def test_breaking_change_type(self, bump_rule):
-        assert bump_rule.get_increment("BREAKING CHANGE: major change", False) == MINOR
-        assert bump_rule.get_increment("BREAKING CHANGE: major change", True) == MAJOR
+        assert bump_rule.get_increment("BREAKING CHANGE: major change", False) == MAJOR
+        assert bump_rule.get_increment("BREAKING CHANGE: major change", True) == MINOR
 
     def test_commit_with_scope(self, bump_rule):
         assert bump_rule.get_increment("feat(api): add new endpoint", False) == MINOR
@@ -72,11 +72,11 @@ class TestConventionalCommitBumpRule:
         # Test with breaking changes and scopes
         assert (
             bump_rule.get_increment("feat(api)!: remove deprecated endpoints", False)
-            == MINOR
+            == MAJOR
         )
         assert (
             bump_rule.get_increment("feat(api)!: remove deprecated endpoints", True)
-            == MAJOR
+            == MINOR
         )
 
         # Test with BREAKING CHANGE and scopes
@@ -84,13 +84,13 @@ class TestConventionalCommitBumpRule:
             bump_rule.get_increment(
                 "BREAKING CHANGE(api): remove deprecated endpoints", False
             )
-            == MINOR
+            == MAJOR
         )
         assert (
             bump_rule.get_increment(
                 "BREAKING CHANGE(api): remove deprecated endpoints", True
             )
-            == MAJOR
+            == MINOR
         )
 
     def test_invalid_commit_message(self, bump_rule):
@@ -129,13 +129,13 @@ class TestFindIncrementByCallable:
             "feat: new feature",
             "feat!: breaking change",
         ]
-        assert find_increment_by_callable(commit_messages, get_increment) == MINOR
+        assert find_increment_by_callable(commit_messages, get_increment) == MAJOR
 
     def test_multi_line_commit(self, get_increment):
         commit_messages = [
             "feat: new feature\n\nBREAKING CHANGE: major change",
         ]
-        assert find_increment_by_callable(commit_messages, get_increment) == MINOR
+        assert find_increment_by_callable(commit_messages, get_increment) == MAJOR
 
     def test_no_increment_needed(self, get_increment):
         commit_messages = [
@@ -159,7 +159,7 @@ class TestFindIncrementByCallable:
             find_increment_by_callable(
                 commit_messages, lambda x: bump_rule.get_increment(x, True)
             )
-            == MAJOR
+            == MINOR
         )
 
     def test_mixed_commit_types(self, get_increment):
