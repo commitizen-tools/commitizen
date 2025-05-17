@@ -523,3 +523,34 @@ def test_commit_command_shows_description_when_use_help_option(
 
     out, _ = capsys.readouterr()
     file_regression.check(out, extension=".txt")
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+@pytest.mark.parametrize(
+    "out", ["no changes added to commit", "nothing added to commit"]
+)
+def test_commit_when_nothing_added_to_commit(config, mocker: MockFixture, out):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "",
+        "footer": "",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command(
+        out=out,
+        err="",
+        stdout=out.encode(),
+        stderr=b"",
+        return_code=0,
+    )
+    error_mock = mocker.patch("commitizen.out.error")
+
+    commands.Commit(config, {})()
+
+    commit_mock.assert_called_once()
+    error_mock.assert_called_once_with(out)
