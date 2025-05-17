@@ -7,6 +7,9 @@ from typing import cast
 import questionary
 
 from commitizen import bump, factory, git, hooks, out
+from commitizen.bump_rule import (
+    VersionIncrement,
+)
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
@@ -20,14 +23,12 @@ from commitizen.exceptions import (
     InvalidManualVersion,
     NoCommitsFoundError,
     NoneIncrementExit,
-    NoPatternMapError,
     NotAGitProjectError,
     NotAllowed,
 )
 from commitizen.providers import get_provider
 from commitizen.tags import TagRules
 from commitizen.version_schemes import (
-    Increment,
     InvalidVersion,
     Prerelease,
     get_version_scheme,
@@ -50,7 +51,7 @@ class BumpArgs(Settings, total=False):
     get_next: bool
     git_output_to_stderr: bool
     increment_mode: str
-    increment: Increment | None
+    increment: VersionIncrement | None
     local_version: bool
     manual_version: str | None
     no_verify: bool
@@ -142,29 +143,22 @@ class Bump:
         )
         return bool(questionary.confirm("Is this the first tag created?").ask())
 
-    def _find_increment(self, commits: list[git.GitCommit]) -> Increment | None:
+    def _find_increment(self, commits: list[git.GitCommit]) -> VersionIncrement:
         # Update the bump map to ensure major version doesn't increment.
-        # self.cz.bump_map = defaults.bump_map_major_version_zero
-        bump_map = (
-            self.cz.bump_map_major_version_zero
-            if self.bump_settings["major_version_zero"]
-            else self.cz.bump_map
-        )
-        bump_pattern = self.cz.bump_pattern
+        is_major_version_zero = self.bump_settings["major_version_zero"]
 
-        if not bump_map or not bump_pattern:
-            raise NoPatternMapError(
-                f"'{self.config.settings['name']}' rule does not support bump"
-            )
-        return bump.find_increment(commits, regex=bump_pattern, increments_map=bump_map)
+        return VersionIncrement.get_highest_by_messages(
+            (commit.message for commit in commits),
+            lambda x: self.cz.bump_rule.extract_increment(x, is_major_version_zero),
+        )
 
     def __call__(self) -> None:
         """Steps executed to bump."""
         provider = get_provider(self.config)
         current_version = self.scheme(provider.get_version())
 
-        increment = self.arguments["increment"]
-        prerelease = self.arguments["prerelease"]
+        increment = VersionIncrement.safe_cast(self.arguments["increment"])
+        prerelease = Prerelease.safe_cast(self.arguments["prerelease"])
         devrelease = self.arguments["devrelease"]
         is_local_version = self.arguments["local_version"]
         manual_version = self.arguments["manual_version"]
@@ -175,7 +169,7 @@ class Bump:
 
         if manual_version:
             for val, option in (
-                (increment, "--increment"),
+                (increment != VersionIncrement.NONE, "--increment"),
                 (prerelease, "--prerelease"),
                 (devrelease is not None, "--devrelease"),
                 (is_local_version, "--local-version"),
@@ -230,7 +224,7 @@ class Bump:
                     f"Invalid manual version: '{manual_version}'"
                 ) from exc
         else:
-            if increment is None:
+            if increment == VersionIncrement.NONE:
                 commits = git.get_commits(current_tag.name if current_tag else None)
 
                 # No commits, there is no need to create an empty tag.
@@ -248,7 +242,11 @@ class Bump:
 
             # It may happen that there are commits, but they are not eligible
             # for an increment, this generates a problem when using prerelease (#281)
-            if prerelease and increment is None and not current_version.is_prerelease:
+            if (
+                prerelease
+                and increment == VersionIncrement.NONE
+                and not current_version.is_prerelease
+            ):
                 raise NoCommitsFoundError(
                     "[NO_COMMITS_FOUND]\n"
                     "No commits found to generate a pre-release.\n"
@@ -256,8 +254,8 @@ class Bump:
                 )
 
             # we create an empty PATCH increment for empty tag
-            if increment is None and allow_no_commit:
-                increment = "PATCH"
+            if allow_no_commit:
+                increment = max(increment, VersionIncrement.PATCH)
 
             new_version = current_version.bump(
                 increment,
@@ -275,7 +273,10 @@ class Bump:
         )
 
         if get_next:
-            if increment is None and new_tag_version == current_tag_version:
+            if (
+                increment == VersionIncrement.NONE
+                and new_tag_version == current_tag_version
+            ):
                 raise NoneIncrementExit(
                     "[NO_COMMITS_TO_BUMP]\n"
                     "The commits found are not eligible to be bumped"
@@ -297,7 +298,10 @@ class Bump:
         else:
             out.write(information)
 
-        if increment is None and new_tag_version == current_tag_version:
+        if (
+            increment == VersionIncrement.NONE
+            and new_tag_version == current_tag_version
+        ):
             raise NoneIncrementExit(
                 "[NO_COMMITS_TO_BUMP]\nThe commits found are not eligible to be bumped"
             )
