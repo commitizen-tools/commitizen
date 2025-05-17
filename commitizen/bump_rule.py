@@ -37,6 +37,10 @@ def find_increment_by_callable(
     """
     lines = (line for message in commit_messages for line in message.split("\n"))
     increments = map(get_increment, lines)
+    return _find_highest_increment(increments)
+
+
+def _find_highest_increment(increments: Iterable[Increment | None]) -> Increment | None:
     return max(increments, key=lambda x: _VERSION_ORDERING[x], default=None)
 
 
@@ -136,17 +140,16 @@ class OldSchoolBumpRule(BumpRule):
             self.bump_map_major_version_zero if major_version_zero else self.bump_map
         )
 
-        # TODO: need more flexibility for the pattern
-        # "refactor!: drop support for Python 2.7" => MAJOR
-        # bump_pattern = r"^((?P<major>major)|(?P<minor>minor)|(?P<patch>patch))(?P<scope>\(.+\))?(?P<bang>!)?:"
-        # bump_map = {
-        #     "major": "MAJOR",
-        #     "bang": "MAJOR",
-        #     "minor": "MINOR",
-        #     "patch": "PATCH",
-        # }
-        # bump_map_major_version_zero = { ... }
+        try:
+            if ret := _find_highest_increment(
+                (increment for name, increment in bump_map.items() if m.group(name))
+            ):
+                return ret
+        except IndexError:
+            # Fallback to old school bump rule
+            pass
 
+        # Fallback to old school bump rule
         found_keyword = m.group(1)
         for match_pattern, increment in bump_map.items():
             if re.match(match_pattern, found_keyword):

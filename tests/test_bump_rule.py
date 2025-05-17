@@ -3,6 +3,7 @@ import pytest
 from commitizen.bump_rule import (
     ConventionalCommitBumpRule,
     OldSchoolBumpRule,
+    _find_highest_increment,
     find_increment_by_callable,
 )
 from commitizen.defaults import (
@@ -105,6 +106,38 @@ class TestConventionalCommitBumpRule:
         assert bump_rule.get_increment("test: add unit tests", False) is None
         assert bump_rule.get_increment("build: update build config", False) is None
         assert bump_rule.get_increment("ci: update CI pipeline", False) is None
+
+    def test_breaking_change_with_refactor(self, bump_rule):
+        """Test breaking changes with refactor type commit messages."""
+        # Breaking change with refactor type
+        assert (
+            bump_rule.get_increment("refactor!: drop support for Python 2.7", False)
+            == MAJOR
+        )
+        assert (
+            bump_rule.get_increment("refactor!: drop support for Python 2.7", True)
+            == MINOR
+        )
+
+        # Breaking change with refactor type and scope
+        assert (
+            bump_rule.get_increment(
+                "refactor(api)!: remove deprecated endpoints", False
+            )
+            == MAJOR
+        )
+        assert (
+            bump_rule.get_increment("refactor(api)!: remove deprecated endpoints", True)
+            == MINOR
+        )
+
+        # Regular refactor (should be PATCH)
+        assert (
+            bump_rule.get_increment("refactor: improve code structure", False) == PATCH
+        )
+        assert (
+            bump_rule.get_increment("refactor: improve code structure", True) == PATCH
+        )
 
 
 class TestFindIncrementByCallable:
@@ -291,6 +324,38 @@ class TestOldSchoolBumpRule:
             == MAJOR
         )
 
+    def test_flexible_bump_map(self, old_school_rule):
+        """Test that _find_highest_increment is used correctly in bump map processing."""
+        # Test with multiple matching patterns
+        pattern = r"^((?P<major>major)|(?P<minor>minor)|(?P<patch>patch))(?P<scope>\(.+\))?(?P<bang>!)?:"
+        bump_map = {
+            "major": MAJOR,
+            "bang": MAJOR,
+            "minor": MINOR,
+            "patch": PATCH,
+        }
+        bump_map_major_version_zero = {
+            "major": MINOR,
+            "bang": MINOR,
+            "minor": MINOR,
+            "patch": PATCH,
+        }
+        rule = OldSchoolBumpRule(pattern, bump_map, bump_map_major_version_zero)
+
+        # Test with multiple version tags
+        assert rule.get_increment("major!: drop support for Python 2.7", False) == MAJOR
+        assert rule.get_increment("major!: drop support for Python 2.7", True) == MINOR
+        assert rule.get_increment("major: drop support for Python 2.7", False) == MAJOR
+        assert rule.get_increment("major: drop support for Python 2.7", True) == MINOR
+        assert rule.get_increment("patch!: drop support for Python 2.7", False) == MAJOR
+        assert rule.get_increment("patch!: drop support for Python 2.7", True) == MINOR
+        assert rule.get_increment("patch: drop support for Python 2.7", False) == PATCH
+        assert rule.get_increment("patch: drop support for Python 2.7", True) == PATCH
+        assert rule.get_increment("minor: add new feature", False) == MINOR
+        assert rule.get_increment("minor: add new feature", True) == MINOR
+        assert rule.get_increment("patch: fix bug", False) == PATCH
+        assert rule.get_increment("patch: fix bug", True) == PATCH
+
 
 class TestOldSchoolBumpRuleWithDefault:
     @pytest.fixture
@@ -378,3 +443,33 @@ class TestOldSchoolBumpRuleWithDefault:
             )
             == MAJOR
         )
+
+
+def test_find_highest_increment():
+    """Test the _find_highest_increment function."""
+    # Test with single increment
+    assert _find_highest_increment([MAJOR]) == MAJOR
+    assert _find_highest_increment([MINOR]) == MINOR
+    assert _find_highest_increment([PATCH]) == PATCH
+
+    # Test with multiple increments
+    assert _find_highest_increment([PATCH, MINOR, MAJOR]) == MAJOR
+    assert _find_highest_increment([PATCH, MINOR]) == MINOR
+    assert _find_highest_increment([PATCH, PATCH]) == PATCH
+
+    # Test with None values
+    assert _find_highest_increment([None, PATCH]) == PATCH
+    assert _find_highest_increment([None, None]) is None
+    assert _find_highest_increment([]) is None
+
+    # Test with mixed values
+    assert _find_highest_increment([None, PATCH, MINOR, MAJOR]) == MAJOR
+    assert _find_highest_increment([None, PATCH, MINOR]) == MINOR
+    assert _find_highest_increment([None, PATCH]) == PATCH
+
+    # Test with empty iterator
+    assert _find_highest_increment(iter([])) is None
+
+    # Test with generator expression
+    assert _find_highest_increment(x for x in [PATCH, MINOR, MAJOR]) == MAJOR
+    assert _find_highest_increment(x for x in [None, PATCH, MINOR]) == MINOR
