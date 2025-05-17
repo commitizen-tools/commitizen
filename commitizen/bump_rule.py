@@ -5,6 +5,7 @@ from collections.abc import Iterable
 from functools import cached_property
 from typing import Callable, Protocol
 
+from commitizen.exceptions import NoPatternMapError
 from commitizen.version_schemes import Increment
 
 _VERSION_ORDERING = dict(zip((None, "PATCH", "MINOR", "MAJOR"), range(4)))
@@ -84,6 +85,41 @@ class ConventionalCommitBumpRule(BumpRule):
         re_scope = r"(?P<scope>\(.+\))?"
         re_bang = r"(?P<bang>!)?"
         return re.compile(f"^{re_change_type}{re_scope}{re_bang}:")
+
+
+class OldSchoolBumpRule(BumpRule):
+    """TODO: rename?"""
+
+    def __init__(
+        self,
+        bump_pattern: str,
+        bump_map: dict[str, Increment],
+        bump_map_major_version_zero: dict[str, Increment],
+    ):
+        if not bump_map or not bump_pattern:
+            raise NoPatternMapError(
+                f"Invalid bump rule: {bump_pattern=} and {bump_map=}"
+            )
+
+        self.bump_pattern = re.compile(bump_pattern)
+        self.bump_map = bump_map
+        self.bump_map_major_version_zero = bump_map_major_version_zero
+
+    def get_increment(
+        self, commit_message: str, major_version_zero: bool
+    ) -> Increment | None:
+        if not (m := self.bump_pattern.search(commit_message)):
+            return None
+
+        bump_map = (
+            self.bump_map_major_version_zero if major_version_zero else self.bump_map
+        )
+
+        found_keyword = m.group(1)
+        for match_pattern, increment in bump_map.items():
+            if re.match(match_pattern, found_keyword):
+                return increment
+        return None
 
 
 # TODO: Implement CustomBumpRule

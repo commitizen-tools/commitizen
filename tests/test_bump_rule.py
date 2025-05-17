@@ -1,7 +1,19 @@
 import pytest
 
-from commitizen.bump_rule import ConventionalCommitBumpRule, find_increment_by_callable
-from commitizen.defaults import MAJOR, MINOR, PATCH
+from commitizen.bump_rule import (
+    ConventionalCommitBumpRule,
+    OldSchoolBumpRule,
+    find_increment_by_callable,
+)
+from commitizen.defaults import (
+    BUMP_MAP,
+    BUMP_MAP_MAJOR_VERSION_ZERO,
+    BUMP_PATTERN,
+    MAJOR,
+    MINOR,
+    PATCH,
+)
+from commitizen.exceptions import NoPatternMapError
 
 
 @pytest.fixture
@@ -165,3 +177,184 @@ class TestFindIncrementByCallable:
             "fix(ui): fix button alignment",
         ]
         assert find_increment_by_callable(commit_messages, get_increment) == MINOR
+
+
+class TestOldSchoolBumpRule:
+    @pytest.fixture
+    def bump_pattern(self):
+        return r"^.*?\[(.*?)\].*$"
+
+    @pytest.fixture
+    def bump_map(self):
+        return {
+            "MAJOR": MAJOR,
+            "MINOR": MINOR,
+            "PATCH": PATCH,
+        }
+
+    @pytest.fixture
+    def bump_map_major_version_zero(self):
+        return {
+            "MAJOR": MINOR,  # MAJOR becomes MINOR in version zero
+            "MINOR": MINOR,
+            "PATCH": PATCH,
+        }
+
+    @pytest.fixture
+    def old_school_rule(self, bump_pattern, bump_map, bump_map_major_version_zero):
+        return OldSchoolBumpRule(bump_pattern, bump_map, bump_map_major_version_zero)
+
+    def test_major_version(self, old_school_rule):
+        assert (
+            old_school_rule.get_increment("feat: add new feature [MAJOR]", False)
+            == MAJOR
+        )
+        assert old_school_rule.get_increment("fix: bug fix [MAJOR]", False) == MAJOR
+
+    def test_minor_version(self, old_school_rule):
+        assert (
+            old_school_rule.get_increment("feat: add new feature [MINOR]", False)
+            == MINOR
+        )
+        assert old_school_rule.get_increment("fix: bug fix [MINOR]", False) == MINOR
+
+    def test_patch_version(self, old_school_rule):
+        assert (
+            old_school_rule.get_increment("feat: add new feature [PATCH]", False)
+            == PATCH
+        )
+        assert old_school_rule.get_increment("fix: bug fix [PATCH]", False) == PATCH
+
+    def test_major_version_zero(self, old_school_rule):
+        assert (
+            old_school_rule.get_increment("feat: add new feature [MAJOR]", True)
+            == MINOR
+        )
+        assert old_school_rule.get_increment("fix: bug fix [MAJOR]", True) == MINOR
+
+    def test_no_match(self, old_school_rule):
+        assert old_school_rule.get_increment("feat: add new feature", False) is None
+        assert old_school_rule.get_increment("fix: bug fix", False) is None
+
+    def test_invalid_pattern(self, bump_map, bump_map_major_version_zero):
+        with pytest.raises(NoPatternMapError):
+            OldSchoolBumpRule("", bump_map, bump_map_major_version_zero)
+
+    def test_invalid_bump_map(self, bump_pattern):
+        with pytest.raises(NoPatternMapError):
+            OldSchoolBumpRule(bump_pattern, {}, {})
+
+    def test_complex_pattern(self):
+        pattern = r"^.*?\[(.*?)\].*?\[(.*?)\].*$"
+        bump_map = {
+            "MAJOR": MAJOR,
+            "MINOR": MINOR,
+            "PATCH": PATCH,
+        }
+        rule = OldSchoolBumpRule(pattern, bump_map, bump_map)
+
+        assert (
+            rule.get_increment("feat: add new feature [MAJOR] [MINOR]", False) == MAJOR
+        )
+        assert rule.get_increment("fix: bug fix [MINOR] [PATCH]", False) == MINOR
+
+    def test_with_find_increment_by_callable(self, old_school_rule):
+        commit_messages = [
+            "feat: add new feature [MAJOR]",
+            "fix: bug fix [PATCH]",
+            "docs: update readme [MINOR]",
+        ]
+        assert (
+            find_increment_by_callable(
+                commit_messages, lambda x: old_school_rule.get_increment(x, False)
+            )
+            == MAJOR
+        )
+
+
+class TestOldSchoolBumpRuleWithDefault:
+    @pytest.fixture
+    def old_school_rule(self):
+        return OldSchoolBumpRule(BUMP_PATTERN, BUMP_MAP, BUMP_MAP_MAJOR_VERSION_ZERO)
+
+    def test_breaking_change_with_bang(self, old_school_rule):
+        assert old_school_rule.get_increment("feat!: breaking change", False) == MAJOR
+        assert old_school_rule.get_increment("fix!: breaking change", False) == MAJOR
+        assert old_school_rule.get_increment("feat!: breaking change", True) == MINOR
+        assert old_school_rule.get_increment("fix!: breaking change", True) == MINOR
+
+    def test_breaking_change_type(self, old_school_rule):
+        assert (
+            old_school_rule.get_increment("BREAKING CHANGE: major change", False)
+            == MAJOR
+        )
+        assert (
+            old_school_rule.get_increment("BREAKING-CHANGE: major change", False)
+            == MAJOR
+        )
+        assert (
+            old_school_rule.get_increment("BREAKING CHANGE: major change", True)
+            == MINOR
+        )
+        assert (
+            old_school_rule.get_increment("BREAKING-CHANGE: major change", True)
+            == MINOR
+        )
+
+    def test_feat_commit(self, old_school_rule):
+        assert old_school_rule.get_increment("feat: add new feature", False) == MINOR
+        assert old_school_rule.get_increment("feat: add new feature", True) == MINOR
+
+    def test_fix_commit(self, old_school_rule):
+        assert old_school_rule.get_increment("fix: fix bug", False) == PATCH
+        assert old_school_rule.get_increment("fix: fix bug", True) == PATCH
+
+    def test_refactor_commit(self, old_school_rule):
+        assert (
+            old_school_rule.get_increment("refactor: restructure code", False) == PATCH
+        )
+        assert (
+            old_school_rule.get_increment("refactor: restructure code", True) == PATCH
+        )
+
+    def test_perf_commit(self, old_school_rule):
+        assert (
+            old_school_rule.get_increment("perf: improve performance", False) == PATCH
+        )
+        assert old_school_rule.get_increment("perf: improve performance", True) == PATCH
+
+    def test_commit_with_scope(self, old_school_rule):
+        assert (
+            old_school_rule.get_increment("feat(api): add new endpoint", False) == MINOR
+        )
+        assert (
+            old_school_rule.get_increment("fix(ui): fix button alignment", False)
+            == PATCH
+        )
+        assert (
+            old_school_rule.get_increment("refactor(core): restructure", False) == PATCH
+        )
+
+    def test_no_match(self, old_school_rule):
+        assert (
+            old_school_rule.get_increment("docs: update documentation", False) is None
+        )
+        assert old_school_rule.get_increment("style: format code", False) is None
+        assert old_school_rule.get_increment("test: add unit tests", False) is None
+        assert (
+            old_school_rule.get_increment("build: update build config", False) is None
+        )
+        assert old_school_rule.get_increment("ci: update CI pipeline", False) is None
+
+    def test_with_find_increment_by_callable(self, old_school_rule):
+        commit_messages = [
+            "feat!: breaking change",
+            "fix: bug fix",
+            "perf: improve performance",
+        ]
+        assert (
+            find_increment_by_callable(
+                commit_messages, lambda x: old_school_rule.get_increment(x, False)
+            )
+            == MAJOR
+        )
