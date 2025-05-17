@@ -134,12 +134,14 @@ class Init:
             "pyproject.toml" if self.project_info.has_pyproject else ".cz.toml"
         )
 
-        return questionary.select(
-            "Please choose a supported config file: ",
-            choices=CONFIG_FILES,
-            default=default_path,
-            style=self.cz.style,
-        ).unsafe_ask()
+        return str(
+            questionary.select(
+                "Please choose a supported config file: ",
+                choices=CONFIG_FILES,
+                default=default_path,
+                style=self.cz.style,
+            ).unsafe_ask()
+        )
 
     def _ask_name(self) -> str:
         return str(
