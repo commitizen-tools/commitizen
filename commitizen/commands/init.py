@@ -366,9 +366,9 @@ class Init:
 
             if any("commitizen" in hook["repo"] for hook in repos):
                 out.write("commitizen already in pre-commit config")
-            else:
-                config_data["repos"].append(CZ_HOOK_CONFIG)
+                return config_data
 
+            config_data["repos"].append(CZ_HOOK_CONFIG)
             return config_data
 
     def _update_config_file(
