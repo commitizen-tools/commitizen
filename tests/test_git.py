@@ -269,9 +269,9 @@ def test_get_commits_with_signature():
 
 
 def test_get_tag_names_has_correct_arrow_annotation():
-    arrow_annotation = inspect.getfullargspec(git.get_tag_names).annotations["return"]
-
-    assert arrow_annotation == "list[str | None]"
+    assert (
+        "list[str]" == inspect.getfullargspec(git.get_tag_names).annotations["return"]
+    )
 
 
 def test_get_latest_tag_name(tmp_commitizen_project):

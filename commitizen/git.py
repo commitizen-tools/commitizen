@@ -231,7 +231,7 @@ def get_tag_message(tag: str) -> str | None:
     return c.out.strip()
 
 
-def get_tag_names() -> list[str | None]:
+def get_tag_names() -> list[str]:
     c = cmd.run("git tag --list")
     if c.err:
         return []
