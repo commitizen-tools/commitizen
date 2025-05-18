@@ -240,13 +240,13 @@ class BaseVersion(_BaseVersion):
         return f"+{build_metadata}"
 
     def increment_base(self, increment: SemVerIncrement | None = None) -> str:
-        prev_release = list(self.release)
-        increments = [
-            SemVerIncrement.MAJOR,
-            SemVerIncrement.MINOR,
-            SemVerIncrement.PATCH,
-        ]
-        base = dict(zip_longest(increments, prev_release, fillvalue=0))
+        base = dict(
+            zip_longest(
+                (SemVerIncrement.MAJOR, SemVerIncrement.MINOR, SemVerIncrement.PATCH),
+                self.release,
+                fillvalue=0,
+            )
+        )
 
         if increment == SemVerIncrement.MAJOR:
             base[SemVerIncrement.MAJOR] += 1
