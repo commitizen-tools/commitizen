@@ -151,7 +151,7 @@ def test_find_git_project_root(tmpdir):
 
 
 @pytest.mark.parametrize(
-    "config_files_manager", defaults.config_files.copy(), indirect=True
+    "config_files_manager", defaults.CONFIG_FILES.copy(), indirect=True
 )
 def test_set_key(config_files_manager):
     _conf = config.read_cfg()
@@ -162,7 +162,7 @@ def test_set_key(config_files_manager):
 
 class TestReadCfg:
     @pytest.mark.parametrize(
-        "config_files_manager", defaults.config_files.copy(), indirect=True
+        "config_files_manager", defaults.CONFIG_FILES.copy(), indirect=True
     )
     def test_load_conf(_, config_files_manager):
         cfg = config.read_cfg()
