@@ -3,17 +3,12 @@ from __future__ import annotations
 import os
 import re
 from glob import iglob
-from logging import getLogger
 from string import Template
 
-from commitizen.defaults import MAJOR, MINOR, PATCH, bump_message, encoding
+from commitizen.defaults import bump_message, encoding
 from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import smart_open
 from commitizen.version_schemes import Version
-
-VERSION_TYPES = [None, PATCH, MINOR, MAJOR]
-
-logger = getLogger("commitizen")
 
 
 def update_version_in_files(
