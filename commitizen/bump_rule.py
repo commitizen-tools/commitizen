@@ -10,6 +10,14 @@ from commitizen.exceptions import NoPatternMapError
 
 
 class SemVerIncrement(Enum):
+    """An enumeration representing semantic versioning increments.
+
+    This class defines the three types of version increments according to semantic versioning:
+    - MAJOR: For incompatible API changes
+    - MINOR: For backwards-compatible functionality additions
+    - PATCH: For backwards-compatible bug fixes
+    """
+
     MAJOR = auto()
     MINOR = auto()
     PATCH = auto()
@@ -80,6 +88,16 @@ def _find_highest_increment(
 
 
 class BumpRule(Protocol):
+    """A protocol defining the interface for version bump rules.
+
+    This protocol specifies the contract that all version bump rule implementations must follow.
+    It defines how commit messages should be analyzed to determine the appropriate semantic
+    version increment.
+
+    The protocol is used to ensure consistent behavior across different bump rule implementations,
+    such as conventional commits or custom rules.
+    """
+
     def get_increment(
         self, commit_message: str, major_version_zero: bool
     ) -> SemVerIncrement | None:
