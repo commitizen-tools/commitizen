@@ -1,3 +1,9 @@
+## v4.7.2 (2025-05-18)
+
+### Refactor
+
+- **default**: capitalize all constants and remove unnecessary variable
+
 ## v4.7.1 (2025-05-16)
 
 ### Fix
