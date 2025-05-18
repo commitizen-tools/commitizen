@@ -318,16 +318,16 @@ def test_is_staging_clean_when_updating_file(tmp_commitizen_project):
 
 def test_get_eol_for_open(tmp_commitizen_project):
     with tmp_commitizen_project.as_cwd():
-        assert git.get_eol_for_open() == os.linesep
+        assert git.EOLType.for_open() == os.linesep
 
         cmd.run("git config core.eol lf")
-        assert git.get_eol_for_open() == "\n"
+        assert git.EOLType.for_open() == "\n"
 
         cmd.run("git config core.eol crlf")
-        assert git.get_eol_for_open() == "\r\n"
+        assert git.EOLType.for_open() == "\r\n"
 
         cmd.run("git config core.eol native")
-        assert git.get_eol_for_open() == os.linesep
+        assert git.EOLType.for_open() == os.linesep
 
 
 def test_get_core_editor(mocker):
