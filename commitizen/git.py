@@ -1,14 +1,44 @@
 from __future__ import annotations
 
 import os
+from enum import Enum
+from functools import lru_cache
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 from commitizen import cmd, out
 from commitizen.exceptions import GitCommandError
 
-_UNIX_EOL = "\n"
-_WINDOWS_EOL = "\r\n"
+
+class EOLType(Enum):
+    """The EOL type from `git config core.eol`."""
+
+    LF = "lf"
+    CRLF = "crlf"
+    NATIVE = "native"
+
+    @classmethod
+    def for_open(cls) -> str:
+        c = cmd.run("git config core.eol")
+        eol = c.out.strip().upper()
+        return cls._char_for_open()[cls._safe_cast(eol)]
+
+    @classmethod
+    def _safe_cast(cls, eol: str) -> EOLType:
+        try:
+            return cls[eol]
+        except KeyError:
+            return cls.NATIVE
+
+    @classmethod
+    @lru_cache
+    def _char_for_open(cls) -> dict[EOLType, str]:
+        """Get the EOL character for `open()`."""
+        return {
+            cls.LF: "\n",
+            cls.CRLF: "\r\n",
+            cls.NATIVE: os.linesep,
+        }
 
 
 class GitObject:
@@ -268,18 +298,6 @@ def is_git_project() -> bool:
     return c.out.strip() == "true"
 
 
-def get_eol_for_open() -> str:
-    # See: https://git-scm.com/docs/git-config#Documentation/git-config.txt-coreeol
-    c = cmd.run("git config core.eol")
-    eol = c.out.strip().lower()
-
-    if eol == "lf":
-        return _UNIX_EOL
-    if eol == "crlf":
-        return _WINDOWS_EOL
-    return os.linesep
-
-
 def get_core_editor() -> str | None:
     c = cmd.run("git var GIT_EDITOR")
     if c.out:
@@ -289,7 +307,7 @@ def get_core_editor() -> str | None:
 
 def smart_open(*args, **kwargs):
     """Open a file with the EOL style determined from Git."""
-    return open(*args, newline=get_eol_for_open(), **kwargs)
+    return open(*args, newline=EOLType.for_open(), **kwargs)
 
 
 def _get_log_as_str_list(start: str | None, end: str, args: str) -> list[str]:
