@@ -5,6 +5,8 @@ from collections import OrderedDict
 from collections.abc import Iterable, MutableMapping, Sequence
 from typing import Any, TypedDict
 
+from commitizen.bump_rule import SemVerIncrement
+
 # Type
 Questions = Iterable[MutableMapping[str, Any]]
 
@@ -108,31 +110,27 @@ DEFAULT_SETTINGS: Settings = {
     "extras": {},
 }
 
-MAJOR = "MAJOR"
-MINOR = "MINOR"
-PATCH = "PATCH"
-
 CHANGELOG_FORMAT = "markdown"
 
 BUMP_PATTERN = r"^((BREAKING[\-\ ]CHANGE|\w+)(\(.+\))?!?):"
-BUMP_MAP = OrderedDict(
+BUMP_MAP = dict(
     (
-        (r"^.+!$", MAJOR),
-        (r"^BREAKING[\-\ ]CHANGE", MAJOR),
-        (r"^feat", MINOR),
-        (r"^fix", PATCH),
-        (r"^refactor", PATCH),
-        (r"^perf", PATCH),
+        (r"^.+!$", str(SemVerIncrement.MAJOR)),
+        (r"^BREAKING[\-\ ]CHANGE", str(SemVerIncrement.MAJOR)),
+        (r"^feat", str(SemVerIncrement.MINOR)),
+        (r"^fix", str(SemVerIncrement.PATCH)),
+        (r"^refactor", str(SemVerIncrement.PATCH)),
+        (r"^perf", str(SemVerIncrement.PATCH)),
     )
 )
-BUMP_MAP_MAJOR_VERSION_ZERO = OrderedDict(
+BUMP_MAP_MAJOR_VERSION_ZERO = dict(
     (
-        (r"^.+!$", MINOR),
-        (r"^BREAKING[\-\ ]CHANGE", MINOR),
-        (r"^feat", MINOR),
-        (r"^fix", PATCH),
-        (r"^refactor", PATCH),
-        (r"^perf", PATCH),
+        (r"^.+!$", str(SemVerIncrement.MINOR)),
+        (r"^BREAKING[\-\ ]CHANGE", str(SemVerIncrement.MINOR)),
+        (r"^feat", str(SemVerIncrement.MINOR)),
+        (r"^fix", str(SemVerIncrement.PATCH)),
+        (r"^refactor", str(SemVerIncrement.PATCH)),
+        (r"^perf", str(SemVerIncrement.PATCH)),
     )
 )
 change_type_order = ["BREAKING CHANGE", "Feat", "Fix", "Refactor", "Perf"]

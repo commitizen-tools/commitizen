@@ -2,18 +2,51 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterable
+from enum import Enum, auto
 from functools import cached_property
-from typing import Callable, Protocol
+from typing import Any, Callable, Protocol
 
 from commitizen.exceptions import NoPatternMapError
-from commitizen.version_schemes import Increment
 
-_VERSION_ORDERING = dict(zip((None, "PATCH", "MINOR", "MAJOR"), range(4)))
+
+class SemVerIncrement(Enum):
+    MAJOR = auto()
+    MINOR = auto()
+    PATCH = auto()
+
+    def __str__(self) -> str:
+        return self.name
+
+    @classmethod
+    def safe_cast(cls, value: str | None) -> SemVerIncrement | None:
+        if value is None:
+            return None
+        try:
+            return cls[value]
+        except ValueError:
+            return None
+
+    @classmethod
+    def safe_cast_dict(cls, d: dict[str, Any]) -> dict[str, SemVerIncrement]:
+        return {
+            k: v
+            for k, v in ((k, SemVerIncrement.safe_cast(v)) for k, v in d.items())
+            if v is not None
+        }
+
+
+_VERSION_ORDERING = dict(
+    zip(
+        (None, SemVerIncrement.PATCH, SemVerIncrement.MINOR, SemVerIncrement.MAJOR),
+        range(4),
+    )
+)
 
 
 def find_increment_by_callable(
-    commit_messages: Iterable[str], get_increment: Callable[[str], Increment | None]
-) -> Increment | None:
+    commit_messages: Iterable[str],
+    get_increment: Callable[[str], SemVerIncrement | None],
+) -> SemVerIncrement | None:
     """Find the highest version increment from a list of messages.
 
     This function processes a list of messages and determines the highest version
@@ -23,7 +56,7 @@ def find_increment_by_callable(
     Args:
         commit_messages: A list of messages to analyze.
         get_increment: A callable that takes a commit message string and returns an
-            Increment value (MAJOR, MINOR, PATCH) or None if no increment is needed.
+            SemVerIncrement value (MAJOR, MINOR, PATCH) or None if no increment is needed.
 
     Returns:
         The highest version increment needed (MAJOR, MINOR, PATCH) or None if no
@@ -40,14 +73,16 @@ def find_increment_by_callable(
     return _find_highest_increment(increments)
 
 
-def _find_highest_increment(increments: Iterable[Increment | None]) -> Increment | None:
+def _find_highest_increment(
+    increments: Iterable[SemVerIncrement | None],
+) -> SemVerIncrement | None:
     return max(increments, key=lambda x: _VERSION_ORDERING[x], default=None)
 
 
 class BumpRule(Protocol):
     def get_increment(
         self, commit_message: str, major_version_zero: bool
-    ) -> Increment | None:
+    ) -> SemVerIncrement | None:
         """Determine the version increment based on a commit message.
 
         This method analyzes a commit message to determine what kind of version increment
@@ -60,7 +95,7 @@ class BumpRule(Protocol):
                               instead of MAJOR. This is useful for projects in 0.x.x versions.
 
         Returns:
-            Increment | None: The type of version increment needed:
+            SemVerIncrement | None: The type of version increment needed:
                 - "MAJOR": For breaking changes when major_version_zero is False
                 - "MINOR": For breaking changes when major_version_zero is True, or for new features
                 - "PATCH": For bug fixes, performance improvements, or refactors
@@ -76,19 +111,21 @@ class ConventionalCommitBumpRule(BumpRule):
 
     def get_increment(
         self, commit_message: str, major_version_zero: bool
-    ) -> Increment | None:
+    ) -> SemVerIncrement | None:
         if not (m := self._head_pattern.match(commit_message)):
             return None
 
         change_type = m.group("change_type")
         if m.group("bang") or self._RE_BREAKING_CHANGE.match(change_type):
-            return "MINOR" if major_version_zero else "MAJOR"
+            return (
+                SemVerIncrement.MINOR if major_version_zero else SemVerIncrement.MAJOR
+            )
 
         if change_type == "feat":
-            return "MINOR"
+            return SemVerIncrement.MINOR
 
         if change_type in self._PATCH_CHANGE_TYPES:
-            return "PATCH"
+            return SemVerIncrement.PATCH
 
         return None
 
@@ -118,8 +155,8 @@ class OldSchoolBumpRule(BumpRule):
     def __init__(
         self,
         bump_pattern: str,
-        bump_map: dict[str, Increment],
-        bump_map_major_version_zero: dict[str, Increment],
+        bump_map: dict[str, SemVerIncrement],
+        bump_map_major_version_zero: dict[str, SemVerIncrement],
     ):
         if not bump_map or not bump_pattern or not bump_map_major_version_zero:
             raise NoPatternMapError(
@@ -132,7 +169,7 @@ class OldSchoolBumpRule(BumpRule):
 
     def get_increment(
         self, commit_message: str, major_version_zero: bool
-    ) -> Increment | None:
+    ) -> SemVerIncrement | None:
         if not (m := self.bump_pattern.search(commit_message)):
             return None
 

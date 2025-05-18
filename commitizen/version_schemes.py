@@ -14,6 +14,8 @@ from typing import (
     runtime_checkable,
 )
 
+from commitizen.bump_rule import SemVerIncrement
+
 if sys.version_info >= (3, 10):
     from importlib import metadata
 else:
@@ -22,7 +24,7 @@ else:
 from packaging.version import InvalidVersion  # noqa: F401: expose the common exception
 from packaging.version import Version as _BaseVersion
 
-from commitizen.defaults import MAJOR, MINOR, PATCH, Settings
+from commitizen.defaults import Settings
 from commitizen.exceptions import VersionSchemeUnknown
 
 if TYPE_CHECKING:
@@ -39,7 +41,6 @@ if TYPE_CHECKING:
         from typing import Self
 
 
-Increment: TypeAlias = Literal["MAJOR", "MINOR", "PATCH"]
 Prerelease: TypeAlias = Literal["alpha", "beta", "rc"]
 DEFAULT_VERSION_PARSER = r"v?(?P<version>([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z.]+)?(\w+)?)"
 
@@ -126,7 +127,7 @@ class VersionProtocol(Protocol):
 
     def bump(
         self,
-        increment: Increment | None,
+        increment: SemVerIncrement | None,
         prerelease: Prerelease | None = None,
         prerelease_offset: int = 0,
         devrelease: int | None = None,
@@ -223,26 +224,30 @@ class BaseVersion(_BaseVersion):
 
         return f"+{build_metadata}"
 
-    def increment_base(self, increment: Increment | None = None) -> str:
+    def increment_base(self, increment: SemVerIncrement | None = None) -> str:
         prev_release = list(self.release)
-        increments = [MAJOR, MINOR, PATCH]
+        increments = [
+            SemVerIncrement.MAJOR,
+            SemVerIncrement.MINOR,
+            SemVerIncrement.PATCH,
+        ]
         base = dict(zip_longest(increments, prev_release, fillvalue=0))
 
-        if increment == MAJOR:
-            base[MAJOR] += 1
-            base[MINOR] = 0
-            base[PATCH] = 0
-        elif increment == MINOR:
-            base[MINOR] += 1
-            base[PATCH] = 0
-        elif increment == PATCH:
-            base[PATCH] += 1
+        if increment == SemVerIncrement.MAJOR:
+            base[SemVerIncrement.MAJOR] += 1
+            base[SemVerIncrement.MINOR] = 0
+            base[SemVerIncrement.PATCH] = 0
+        elif increment == SemVerIncrement.MINOR:
+            base[SemVerIncrement.MINOR] += 1
+            base[SemVerIncrement.PATCH] = 0
+        elif increment == SemVerIncrement.PATCH:
+            base[SemVerIncrement.PATCH] += 1
 
-        return f"{base[MAJOR]}.{base[MINOR]}.{base[PATCH]}"
+        return f"{base[SemVerIncrement.MAJOR]}.{base[SemVerIncrement.MINOR]}.{base[SemVerIncrement.PATCH]}"
 
     def bump(
         self,
-        increment: Increment | None,
+        increment: SemVerIncrement | None,
         prerelease: Prerelease | None = None,
         prerelease_offset: int = 0,
         devrelease: int | None = None,
@@ -272,12 +277,12 @@ class BaseVersion(_BaseVersion):
                 base = self.increment_base(increment)
             else:
                 base = f"{self.major}.{self.minor}.{self.micro}"
-                if increment == PATCH:
+                if increment == SemVerIncrement.PATCH:
                     pass
-                elif increment == MINOR:
+                elif increment == SemVerIncrement.MINOR:
                     if self.micro != 0:
                         base = self.increment_base(increment)
-                elif increment == MAJOR:
+                elif increment == SemVerIncrement.MAJOR:
                     if self.minor != 0 or self.micro != 0:
                         base = self.increment_base(increment)
             dev_version = self.generate_devrelease(devrelease)

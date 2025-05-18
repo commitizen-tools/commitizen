@@ -3,22 +3,23 @@ import random
 
 import pytest
 
+from commitizen.bump_rule import SemVerIncrement
 from commitizen.version_schemes import SemVer2, VersionProtocol
 
 simple_flow = [
-    (("0.1.0", "PATCH", None, 0, None), "0.1.1"),
-    (("0.1.0", "PATCH", None, 0, 1), "0.1.1-dev.1"),
-    (("0.1.1", "MINOR", None, 0, None), "0.2.0"),
-    (("0.2.0", "MINOR", None, 0, None), "0.3.0"),
-    (("0.2.0", "MINOR", None, 0, 1), "0.3.0-dev.1"),
-    (("0.3.0", "PATCH", None, 0, None), "0.3.1"),
-    (("0.3.0", "PATCH", "alpha", 0, None), "0.3.1-alpha.0"),
+    (("0.1.0", SemVerIncrement.PATCH, None, 0, None), "0.1.1"),
+    (("0.1.0", SemVerIncrement.PATCH, None, 0, 1), "0.1.1-dev.1"),
+    (("0.1.1", SemVerIncrement.MINOR, None, 0, None), "0.2.0"),
+    (("0.2.0", SemVerIncrement.MINOR, None, 0, None), "0.3.0"),
+    (("0.2.0", SemVerIncrement.MINOR, None, 0, 1), "0.3.0-dev.1"),
+    (("0.3.0", SemVerIncrement.PATCH, None, 0, None), "0.3.1"),
+    (("0.3.0", SemVerIncrement.PATCH, "alpha", 0, None), "0.3.1-alpha.0"),
     (("0.3.1-alpha.0", None, "alpha", 0, None), "0.3.1-alpha.1"),
-    (("0.3.0", "PATCH", "alpha", 1, None), "0.3.1-alpha.1"),
+    (("0.3.0", SemVerIncrement.PATCH, "alpha", 1, None), "0.3.1-alpha.1"),
     (("0.3.1-alpha.0", None, "alpha", 1, None), "0.3.1-alpha.1"),
     (("0.3.1-alpha.0", None, None, 0, None), "0.3.1"),
-    (("0.3.1", "PATCH", None, 0, None), "0.3.2"),
-    (("0.4.2", "MAJOR", "alpha", 0, None), "1.0.0-alpha.0"),
+    (("0.3.1", SemVerIncrement.PATCH, None, 0, None), "0.3.2"),
+    (("0.4.2", SemVerIncrement.MAJOR, "alpha", 0, None), "1.0.0-alpha.0"),
     (("1.0.0-alpha.0", None, "alpha", 0, None), "1.0.0-alpha.1"),
     (("1.0.0-alpha.1", None, "alpha", 0, None), "1.0.0-alpha.2"),
     (("1.0.0-alpha.1", None, "alpha", 0, 1), "1.0.0-alpha.2.dev.1"),
@@ -29,20 +30,20 @@ simple_flow = [
     (("1.0.0-beta.1", None, "rc", 0, None), "1.0.0-rc.0"),
     (("1.0.0-rc.0", None, "rc", 0, None), "1.0.0-rc.1"),
     (("1.0.0-rc.0", None, "rc", 0, 1), "1.0.0-rc.1.dev.1"),
-    (("1.0.0-rc.0", "PATCH", None, 0, None), "1.0.0"),
+    (("1.0.0-rc.0", SemVerIncrement.PATCH, None, 0, None), "1.0.0"),
     (("1.0.0-alpha.3.dev.0", None, "beta", 0, None), "1.0.0-beta.0"),
-    (("1.0.0", "PATCH", None, 0, None), "1.0.1"),
-    (("1.0.1", "PATCH", None, 0, None), "1.0.2"),
-    (("1.0.2", "MINOR", None, 0, None), "1.1.0"),
-    (("1.1.0", "MINOR", None, 0, None), "1.2.0"),
-    (("1.2.0", "PATCH", None, 0, None), "1.2.1"),
-    (("1.2.1", "MAJOR", None, 0, None), "2.0.0"),
+    (("1.0.0", SemVerIncrement.PATCH, None, 0, None), "1.0.1"),
+    (("1.0.1", SemVerIncrement.PATCH, None, 0, None), "1.0.2"),
+    (("1.0.2", SemVerIncrement.MINOR, None, 0, None), "1.1.0"),
+    (("1.1.0", SemVerIncrement.MINOR, None, 0, None), "1.2.0"),
+    (("1.2.0", SemVerIncrement.PATCH, None, 0, None), "1.2.1"),
+    (("1.2.1", SemVerIncrement.MAJOR, None, 0, None), "2.0.0"),
 ]
 
 local_versions = [
-    (("4.5.0+0.1.0", "PATCH", None, 0, None), "4.5.0+0.1.1"),
-    (("4.5.0+0.1.1", "MINOR", None, 0, None), "4.5.0+0.2.0"),
-    (("4.5.0+0.2.0", "MAJOR", None, 0, None), "4.5.0+1.0.0"),
+    (("4.5.0+0.1.0", SemVerIncrement.PATCH, None, 0, None), "4.5.0+0.1.1"),
+    (("4.5.0+0.1.1", SemVerIncrement.MINOR, None, 0, None), "4.5.0+0.2.0"),
+    (("4.5.0+0.2.0", SemVerIncrement.MAJOR, None, 0, None), "4.5.0+1.0.0"),
 ]
 
 # never bump backwards on pre-releases
@@ -53,9 +54,9 @@ linear_prerelease_cases = [
 ]
 
 weird_cases = [
-    (("1.1", "PATCH", None, 0, None), "1.1.1"),
-    (("1", "MINOR", None, 0, None), "1.1.0"),
-    (("1", "MAJOR", None, 0, None), "2.0.0"),
+    (("1.1", SemVerIncrement.PATCH, None, 0, None), "1.1.1"),
+    (("1", SemVerIncrement.MINOR, None, 0, None), "1.1.0"),
+    (("1", SemVerIncrement.MAJOR, None, 0, None), "2.0.0"),
     (("1-alpha.0", None, "alpha", 0, None), "1.0.0-alpha.1"),
     (("1-alpha.0", None, "alpha", 1, None), "1.0.0-alpha.1"),
     (("1", None, "beta", 0, None), "1.0.0-beta.0"),
@@ -63,18 +64,18 @@ weird_cases = [
     (("1-beta", None, "beta", 0, None), "1.0.0-beta.1"),
     (("1.0.0-alpha.1", None, "alpha", 0, None), "1.0.0-alpha.2"),
     (("1", None, "rc", 0, None), "1.0.0-rc.0"),
-    (("1.0.0-rc.1+e20d7b57f3eb", "PATCH", None, 0, None), "1.0.0"),
+    (("1.0.0-rc.1+e20d7b57f3eb", SemVerIncrement.PATCH, None, 0, None), "1.0.0"),
 ]
 
 # test driven development
 tdd_cases = [
-    (("0.1.1", "PATCH", None, 0, None), "0.1.2"),
-    (("0.1.1", "MINOR", None, 0, None), "0.2.0"),
-    (("2.1.1", "MAJOR", None, 0, None), "3.0.0"),
-    (("0.9.0", "PATCH", "alpha", 0, None), "0.9.1-alpha.0"),
-    (("0.9.0", "MINOR", "alpha", 0, None), "0.10.0-alpha.0"),
-    (("0.9.0", "MAJOR", "alpha", 0, None), "1.0.0-alpha.0"),
-    (("0.9.0", "MAJOR", "alpha", 1, None), "1.0.0-alpha.1"),
+    (("0.1.1", SemVerIncrement.PATCH, None, 0, None), "0.1.2"),
+    (("0.1.1", SemVerIncrement.MINOR, None, 0, None), "0.2.0"),
+    (("2.1.1", SemVerIncrement.MAJOR, None, 0, None), "3.0.0"),
+    (("0.9.0", SemVerIncrement.PATCH, "alpha", 0, None), "0.9.1-alpha.0"),
+    (("0.9.0", SemVerIncrement.MINOR, "alpha", 0, None), "0.10.0-alpha.0"),
+    (("0.9.0", SemVerIncrement.MAJOR, "alpha", 0, None), "1.0.0-alpha.0"),
+    (("0.9.0", SemVerIncrement.MAJOR, "alpha", 1, None), "1.0.0-alpha.1"),
     (("1.0.0-alpha.2", None, "beta", 0, None), "1.0.0-beta.0"),
     (("1.0.0-alpha.2", None, "beta", 1, None), "1.0.0-beta.1"),
     (("1.0.0-beta.1", None, "rc", 0, None), "1.0.0-rc.0"),

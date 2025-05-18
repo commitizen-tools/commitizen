@@ -7,7 +7,11 @@ from typing import cast
 import questionary
 
 from commitizen import bump, factory, git, hooks, out
-from commitizen.bump_rule import OldSchoolBumpRule, find_increment_by_callable
+from commitizen.bump_rule import (
+    OldSchoolBumpRule,
+    SemVerIncrement,
+    find_increment_by_callable,
+)
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
@@ -29,7 +33,6 @@ from commitizen.exceptions import (
 from commitizen.providers import get_provider
 from commitizen.tags import TagRules
 from commitizen.version_schemes import (
-    Increment,
     InvalidVersion,
     Prerelease,
     get_version_scheme,
@@ -120,7 +123,7 @@ class Bump:
                 is_initial = questionary.confirm("Is this the first tag created?").ask()
         return is_initial
 
-    def find_increment(self, commits: list[git.GitCommit]) -> Increment | None:
+    def find_increment(self, commits: list[git.GitCommit]) -> SemVerIncrement | None:
         # Update the bump map to ensure major version doesn't increment.
         is_major_version_zero: bool = self.bump_settings["major_version_zero"]
 
@@ -128,6 +131,7 @@ class Bump:
         rule = self.cz.bump_rule or OldSchoolBumpRule(
             *self._get_validated_cz_bump(),
         )
+
         return find_increment_by_callable(
             (commit.message for commit in commits),
             lambda x: rule.get_increment(x, is_major_version_zero),
@@ -135,7 +139,7 @@ class Bump:
 
     def _get_validated_cz_bump(
         self,
-    ) -> tuple[str, dict[str, Increment], dict[str, Increment]]:
+    ) -> tuple[str, dict[str, SemVerIncrement], dict[str, SemVerIncrement]]:
         """For fixing the type errors"""
         bump_pattern = self.cz.bump_pattern
         bump_map = self.cz.bump_map
@@ -145,9 +149,10 @@ class Bump:
                 f"'{self.config.settings['name']}' rule does not support bump"
             )
 
-        return cast(
-            tuple[str, dict[str, Increment], dict[str, Increment]],
-            (bump_pattern, bump_map, bump_map_major_version_zero),
+        return (
+            bump_pattern,
+            SemVerIncrement.safe_cast_dict(bump_map),
+            SemVerIncrement.safe_cast_dict(bump_map_major_version_zero),
         )
 
     def __call__(self) -> None:  # noqa: C901
@@ -166,7 +171,9 @@ class Bump:
 
         dry_run: bool = self.arguments["dry_run"]
         is_yes: bool = self.arguments["yes"]
-        increment: Increment | None = self.arguments["increment"]
+        increment: SemVerIncrement | None = SemVerIncrement.safe_cast(
+            self.arguments["increment"]
+        )
         prerelease: Prerelease | None = self.arguments["prerelease"]
         devrelease: int | None = self.arguments["devrelease"]
         is_files_only: bool | None = self.arguments["files_only"]
@@ -283,7 +290,7 @@ class Bump:
 
             # we create an empty PATCH increment for empty tag
             if increment is None and allow_no_commit:
-                increment = "PATCH"
+                increment = SemVerIncrement.PATCH
 
             new_version = current_version.bump(
                 increment,
