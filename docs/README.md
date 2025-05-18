@@ -41,12 +41,13 @@ This standardization makes your commit history more readable and meaningful, whi
 
 ### Features
 
-- Command-line utility to create commits with your rules. Defaults: [Conventional commits][conventional_commits]
-- Bump version automatically using [semantic versioning][semver] based on the commits. [Read More](https://commitizen-tools.github.io/commitizen/commands/bump/)
-- Generate a changelog using [Keep a changelog][keepchangelog]
-- Update your project's version files automatically
-- Display information about your commit rules (commands: schema, example, info)
-- Create your own set of rules and publish them to pip. Read more on [Customization](https://commitizen-tools.github.io/commitizen/customization/)
+- Interactive CLI for standardized commits with default [Conventional Commits][conventional_commits] support
+- Intelligent [version bumping](https://commitizen-tools.github.io/commitizen/commands/bump/) using [Semantic Versioning][semver]
+- Automatic [keep a changelog][keepchangelog] generation
+- Built-in commit validation with pre-commit hooks
+- [Customizable](https://commitizen-tools.github.io/commitizen/customization/) commit rules and templates
+- Multi-format version file support
+- Custom rules and plugins via pip
 
 ## Getting Started
 
