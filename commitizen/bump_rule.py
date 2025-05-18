@@ -18,7 +18,7 @@ class SemVerIncrement(Enum):
         return self.name
 
     def __repr__(self) -> str:
-        return self.name
+        return f"'{self.name}'"
 
     @classmethod
     def safe_cast(cls, value: Any) -> SemVerIncrement | None:
