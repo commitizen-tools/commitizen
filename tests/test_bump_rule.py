@@ -624,3 +624,25 @@ class TestGetHighest:
     def test_get_highest_with_none_values(self):
         increments = [None, SemVerIncrement.MINOR, None, SemVerIncrement.PATCH]
         assert SemVerIncrement.get_highest(increments) == SemVerIncrement.MINOR
+
+
+class TestSafeCast:
+    def test_safe_cast_valid_strings(self):
+        assert SemVerIncrement.safe_cast("MAJOR") == SemVerIncrement.MAJOR
+        assert SemVerIncrement.safe_cast("MINOR") == SemVerIncrement.MINOR
+        assert SemVerIncrement.safe_cast("PATCH") == SemVerIncrement.PATCH
+
+    def test_safe_cast_invalid_strings(self):
+        assert SemVerIncrement.safe_cast("invalid") is None
+        assert SemVerIncrement.safe_cast("major") is None  # case sensitive
+        assert SemVerIncrement.safe_cast("") is None
+
+    def test_safe_cast_non_string_values(self):
+        assert SemVerIncrement.safe_cast(None) is None
+        assert SemVerIncrement.safe_cast(1) is None
+        assert SemVerIncrement.safe_cast(True) is None
+        assert SemVerIncrement.safe_cast([]) is None
+        assert SemVerIncrement.safe_cast({}) is None
+        assert (
+            SemVerIncrement.safe_cast(SemVerIncrement.MAJOR) is None
+        )  # enum value itself
