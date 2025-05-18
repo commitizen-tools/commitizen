@@ -12,7 +12,7 @@
 
 ---
 
-**Documentation:** [https://commitizen-tools.github.io/commitizen/](https://commitizen-tools.github.io/commitizen/)
+[**Commitizen Documentation Site**](https://commitizen-tools.github.io/commitizen/)
 
 ---
 
