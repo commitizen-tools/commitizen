@@ -46,12 +46,9 @@ class Prerelease(Enum):
     BETA = "beta"
     RC = "rc"
 
-    def __str__(self) -> str:
-        return self.value
-
     @classmethod
-    def safe_cast(cls, value: str | None) -> Prerelease | None:
-        if not value:
+    def safe_cast(cls, value: object) -> Prerelease | None:
+        if not isinstance(value, str):
             return None
         try:
             return cls[value.upper()]
