@@ -119,7 +119,6 @@ class BumpRule(Protocol):
                 - PATCH: For bug fixes, performance improvements, or refactors
                 - None: For commits that don't require a version bump (docs, style, etc.)
         """
-        ...
 
 
 class ConventionalCommitBumpRule(BumpRule):
