@@ -102,7 +102,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         bump_map_major_version_zero = self.bump_map_major_version_zero
         if not bump_pattern or not bump_map or not bump_map_major_version_zero:
             raise NoPatternMapError(
-                f"Rule does not support bump: {bump_pattern=}, {bump_map=}, {bump_map_major_version_zero=}"
+                f"'{self.config.settings['name']}' rule does not support bump: {bump_pattern=}, {bump_map=}, {bump_map_major_version_zero=}"
             )
         return CustomBumpRule(
             bump_pattern,
