@@ -123,9 +123,9 @@ class BumpRule(Protocol):
 
 
 class ConventionalCommitBumpRule(BumpRule):
+    _BREAKING_CHANGE_TYPES = set(["BREAKING CHANGE", "BREAKING-CHANGE"])
+    _MINOR_CHANGE_TYPES = set(["feat"])
     _PATCH_CHANGE_TYPES = set(["fix", "perf", "refactor"])
-    _BREAKING_CHANGE = r"BREAKING[\-\ ]CHANGE"
-    _RE_BREAKING_CHANGE = re.compile(_BREAKING_CHANGE)
 
     def get_increment(
         self, commit_message: str, major_version_zero: bool
@@ -134,12 +134,12 @@ class ConventionalCommitBumpRule(BumpRule):
             return None
 
         change_type = m.group("change_type")
-        if m.group("bang") or self._RE_BREAKING_CHANGE.match(change_type):
+        if m.group("bang") or change_type in self._BREAKING_CHANGE_TYPES:
             return (
                 SemVerIncrement.MINOR if major_version_zero else SemVerIncrement.MAJOR
             )
 
-        if change_type == "feat":
+        if change_type in self._MINOR_CHANGE_TYPES:
             return SemVerIncrement.MINOR
 
         if change_type in self._PATCH_CHANGE_TYPES:
@@ -150,13 +150,11 @@ class ConventionalCommitBumpRule(BumpRule):
     @cached_property
     def _head_pattern(self) -> re.Pattern:
         change_types = [
-            self._BREAKING_CHANGE,
-            "fix",
-            "feat",
+            *self._BREAKING_CHANGE_TYPES,
+            *self._PATCH_CHANGE_TYPES,
+            *self._MINOR_CHANGE_TYPES,
             "docs",
             "style",
-            "refactor",
-            "perf",
             "test",
             "build",
             "ci",
