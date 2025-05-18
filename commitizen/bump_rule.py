@@ -68,9 +68,11 @@ class SemVerIncrement(Enum):
             >>> SemVerIncrement.get_highest_by_messages(commit_messages, lambda x: rule.get_increment(x, False))
             'MINOR'
         """
-        lines = (line for message in commit_messages for line in message.split("\n"))
-        increments = map(get_increment, lines)
-        return _find_highest_increment(increments)
+        return _find_highest_increment(
+            get_increment(line)
+            for message in commit_messages
+            for line in message.split("\n")
+        )
 
 
 _VERSION_ORDERING = dict(
