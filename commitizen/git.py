@@ -277,7 +277,7 @@ def get_tag_names() -> list[str]:
     c = cmd.run("git tag --list")
     if c.err:
         return []
-    return list(filter(None, (tag.strip() for tag in c.out.split("\n"))))
+    return [tag for raw in c.out.split("\n") if (tag := raw.strip())]
 
 
 def find_git_project_root() -> Path | None:
