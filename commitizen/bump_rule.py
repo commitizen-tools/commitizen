@@ -96,9 +96,9 @@ class BumpRule(Protocol):
 
         Returns:
             SemVerIncrement | None: The type of version increment needed:
-                - "MAJOR": For breaking changes when major_version_zero is False
-                - "MINOR": For breaking changes when major_version_zero is True, or for new features
-                - "PATCH": For bug fixes, performance improvements, or refactors
+                - MAJOR: For breaking changes when major_version_zero is False
+                - MINOR: For breaking changes when major_version_zero is True, or for new features
+                - PATCH: For bug fixes, performance improvements, or refactors
                 - None: For commits that don't require a version bump (docs, style, etc.)
         """
         ...
@@ -149,9 +149,7 @@ class ConventionalCommitBumpRule(BumpRule):
         return re.compile(f"^{re_change_type}{re_scope}{re_bang}:")
 
 
-class OldSchoolBumpRule(BumpRule):
-    """TODO: rename?"""
-
+class CustomBumpRule(BumpRule):
     def __init__(
         self,
         bump_pattern: str,

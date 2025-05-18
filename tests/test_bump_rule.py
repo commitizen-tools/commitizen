@@ -2,7 +2,7 @@ import pytest
 
 from commitizen.bump_rule import (
     ConventionalCommitBumpRule,
-    OldSchoolBumpRule,
+    CustomBumpRule,
     SemVerIncrement,
     _find_highest_increment,
     find_increment_by_callable,
@@ -268,7 +268,7 @@ class TestFindIncrementByCallable:
         )
 
 
-class TestOldSchoolBumpRule:
+class TestCustomBumpRule:
     @pytest.fixture
     def bump_pattern(self):
         return r"^.*?\[(.*?)\].*$"
@@ -276,140 +276,130 @@ class TestOldSchoolBumpRule:
     @pytest.fixture
     def bump_map(self):
         return {
-            "SemVerIncrement.MAJOR": SemVerIncrement.MAJOR,
-            "SemVerIncrement.MINOR": SemVerIncrement.MINOR,
-            "SemVerIncrement.PATCH": SemVerIncrement.PATCH,
+            "MAJOR": SemVerIncrement.MAJOR,
+            "MINOR": SemVerIncrement.MINOR,
+            "PATCH": SemVerIncrement.PATCH,
         }
 
     @pytest.fixture
     def bump_map_major_version_zero(self):
         return {
-            "SemVerIncrement.MAJOR": SemVerIncrement.MINOR,  # SemVerIncrement.MAJOR becomes SemVerIncrement.MINOR in version zero
-            "SemVerIncrement.MINOR": SemVerIncrement.MINOR,
-            "SemVerIncrement.PATCH": SemVerIncrement.PATCH,
+            "MAJOR": SemVerIncrement.MINOR,  # SemVerIncrement.MAJOR becomes SemVerIncrement.MINOR in version zero
+            "MINOR": SemVerIncrement.MINOR,
+            "PATCH": SemVerIncrement.PATCH,
         }
 
     @pytest.fixture
-    def old_school_rule(self, bump_pattern, bump_map, bump_map_major_version_zero):
-        return OldSchoolBumpRule(bump_pattern, bump_map, bump_map_major_version_zero)
+    def custom_bump_rule(self, bump_pattern, bump_map, bump_map_major_version_zero):
+        return CustomBumpRule(bump_pattern, bump_map, bump_map_major_version_zero)
 
-    def test_major_version(self, old_school_rule):
+    def test_major_version(self, custom_bump_rule):
         assert (
-            old_school_rule.get_increment(
-                "feat: add new feature [SemVerIncrement.MAJOR]", False
-            )
+            custom_bump_rule.get_increment("feat: add new feature [MAJOR]", False)
             == SemVerIncrement.MAJOR
         )
         assert (
-            old_school_rule.get_increment("fix: bug fix [SemVerIncrement.MAJOR]", False)
+            custom_bump_rule.get_increment("fix: bug fix [MAJOR]", False)
             == SemVerIncrement.MAJOR
         )
 
-    def test_minor_version(self, old_school_rule):
+    def test_minor_version(self, custom_bump_rule):
         assert (
-            old_school_rule.get_increment(
-                "feat: add new feature [SemVerIncrement.MINOR]", False
-            )
+            custom_bump_rule.get_increment("feat: add new feature [MINOR]", False)
             == SemVerIncrement.MINOR
         )
         assert (
-            old_school_rule.get_increment("fix: bug fix [SemVerIncrement.MINOR]", False)
+            custom_bump_rule.get_increment("fix: bug fix [MINOR]", False)
             == SemVerIncrement.MINOR
         )
 
-    def test_patch_version(self, old_school_rule):
+    def test_patch_version(self, custom_bump_rule):
         assert (
-            old_school_rule.get_increment(
-                "feat: add new feature [SemVerIncrement.PATCH]", False
-            )
+            custom_bump_rule.get_increment("feat: add new feature [PATCH]", False)
             == SemVerIncrement.PATCH
         )
         assert (
-            old_school_rule.get_increment("fix: bug fix [SemVerIncrement.PATCH]", False)
+            custom_bump_rule.get_increment("fix: bug fix [PATCH]", False)
             == SemVerIncrement.PATCH
         )
 
-    def test_major_version_zero(self, old_school_rule):
+    def test_major_version_zero(self, custom_bump_rule):
         assert (
-            old_school_rule.get_increment(
-                "feat: add new feature [SemVerIncrement.MAJOR]", True
-            )
+            custom_bump_rule.get_increment("feat: add new feature [MAJOR]", True)
             == SemVerIncrement.MINOR
         )
         assert (
-            old_school_rule.get_increment("fix: bug fix [SemVerIncrement.MAJOR]", True)
+            custom_bump_rule.get_increment("fix: bug fix [MAJOR]", True)
             == SemVerIncrement.MINOR
         )
 
-    def test_no_match(self, old_school_rule):
-        assert old_school_rule.get_increment("feat: add new feature", False) is None
-        assert old_school_rule.get_increment("fix: bug fix", False) is None
+    def test_no_match(self, custom_bump_rule):
+        assert custom_bump_rule.get_increment("feat: add new feature", False) is None
+        assert custom_bump_rule.get_increment("fix: bug fix", False) is None
 
     def test_invalid_pattern(self, bump_map, bump_map_major_version_zero):
         with pytest.raises(NoPatternMapError):
-            OldSchoolBumpRule("", bump_map, bump_map_major_version_zero)
+            CustomBumpRule("", bump_map, bump_map_major_version_zero)
 
     def test_invalid_bump_map(self, bump_pattern):
         with pytest.raises(NoPatternMapError):
-            OldSchoolBumpRule(bump_pattern, {}, {})
+            CustomBumpRule(bump_pattern, {}, {})
 
     def test_invalid_bump_map_major_version_zero(self, bump_pattern, bump_map):
         with pytest.raises(NoPatternMapError):
-            OldSchoolBumpRule(bump_pattern, bump_map, {})
+            CustomBumpRule(bump_pattern, bump_map, {})
 
     def test_all_invalid(self):
         with pytest.raises(NoPatternMapError):
-            OldSchoolBumpRule("", {}, {})
+            CustomBumpRule("", {}, {})
 
     def test_none_values(self):
         with pytest.raises(NoPatternMapError):
-            OldSchoolBumpRule(None, {}, {})
+            CustomBumpRule(None, {}, {})
 
     def test_empty_pattern_with_valid_maps(self, bump_map, bump_map_major_version_zero):
         with pytest.raises(NoPatternMapError):
-            OldSchoolBumpRule("", bump_map, bump_map_major_version_zero)
+            CustomBumpRule("", bump_map, bump_map_major_version_zero)
 
     def test_empty_maps_with_valid_pattern(self, bump_pattern):
         with pytest.raises(NoPatternMapError):
-            OldSchoolBumpRule(bump_pattern, {}, {})
+            CustomBumpRule(bump_pattern, {}, {})
 
     def test_complex_pattern(self):
         pattern = r"^.*?\[(.*?)\].*?\[(.*?)\].*$"
         bump_map = {
-            "SemVerIncrement.MAJOR": SemVerIncrement.MAJOR,
-            "SemVerIncrement.MINOR": SemVerIncrement.MINOR,
-            "SemVerIncrement.PATCH": SemVerIncrement.PATCH,
+            "MAJOR": SemVerIncrement.MAJOR,
+            "MINOR": SemVerIncrement.MINOR,
+            "PATCH": SemVerIncrement.PATCH,
         }
-        rule = OldSchoolBumpRule(pattern, bump_map, bump_map)
+        rule = CustomBumpRule(pattern, bump_map, bump_map)
 
         assert (
             rule.get_increment(
-                "feat: add new feature [SemVerIncrement.MAJOR] [SemVerIncrement.MINOR]",
+                "feat: add new feature [MAJOR] [MINOR]",
                 False,
             )
             == SemVerIncrement.MAJOR
         )
         assert (
-            rule.get_increment(
-                "fix: bug fix [SemVerIncrement.MINOR] [SemVerIncrement.PATCH]", False
-            )
+            rule.get_increment("fix: bug fix [MINOR] [PATCH]", False)
             == SemVerIncrement.MINOR
         )
 
-    def test_with_find_increment_by_callable(self, old_school_rule):
+    def test_with_find_increment_by_callable(self, custom_bump_rule):
         commit_messages = [
-            "feat: add new feature [SemVerIncrement.MAJOR]",
-            "fix: bug fix [SemVerIncrement.PATCH]",
-            "docs: update readme [SemVerIncrement.MINOR]",
+            "feat: add new feature [MAJOR]",
+            "fix: bug fix [PATCH]",
+            "docs: update readme [MINOR]",
         ]
         assert (
             find_increment_by_callable(
-                commit_messages, lambda x: old_school_rule.get_increment(x, False)
+                commit_messages, lambda x: custom_bump_rule.get_increment(x, False)
             )
             == SemVerIncrement.MAJOR
         )
 
-    def test_flexible_bump_map(self, old_school_rule):
+    def test_flexible_bump_map(self, custom_bump_rule):
         """Test that _find_highest_increment is used correctly in bump map processing."""
         # Test with multiple matching patterns
         pattern = r"^((?P<major>major)|(?P<minor>minor)|(?P<patch>patch))(?P<scope>\(.+\))?(?P<bang>!)?:"
@@ -425,7 +415,7 @@ class TestOldSchoolBumpRule:
             "minor": SemVerIncrement.MINOR,
             "patch": SemVerIncrement.PATCH,
         }
-        rule = OldSchoolBumpRule(pattern, bump_map, bump_map_major_version_zero)
+        rule = CustomBumpRule(pattern, bump_map, bump_map_major_version_zero)
 
         # Test with multiple version tags
         assert (
@@ -470,112 +460,117 @@ class TestOldSchoolBumpRule:
         assert rule.get_increment("patch: fix bug", True) == SemVerIncrement.PATCH
 
 
-class TestOldSchoolBumpRuleWithDefault:
+class TestCustomBumpRuleWithDefault:
     @pytest.fixture
-    def old_school_rule(self):
-        return OldSchoolBumpRule(BUMP_PATTERN, BUMP_MAP, BUMP_MAP_MAJOR_VERSION_ZERO)
+    def custom_bump_rule(self):
+        return CustomBumpRule(
+            BUMP_PATTERN,
+            SemVerIncrement.safe_cast_dict(BUMP_MAP),
+            SemVerIncrement.safe_cast_dict(BUMP_MAP_MAJOR_VERSION_ZERO),
+        )
 
-    def test_breaking_change_with_bang(self, old_school_rule):
+    def test_breaking_change_with_bang(self, custom_bump_rule):
         assert (
-            old_school_rule.get_increment("feat!: breaking change", False)
+            custom_bump_rule.get_increment("feat!: breaking change", False)
             == SemVerIncrement.MAJOR
         )
         assert (
-            old_school_rule.get_increment("fix!: breaking change", False)
+            custom_bump_rule.get_increment("fix!: breaking change", False)
             == SemVerIncrement.MAJOR
         )
         assert (
-            old_school_rule.get_increment("feat!: breaking change", True)
+            custom_bump_rule.get_increment("feat!: breaking change", True)
             == SemVerIncrement.MINOR
         )
         assert (
-            old_school_rule.get_increment("fix!: breaking change", True)
+            custom_bump_rule.get_increment("fix!: breaking change", True)
             == SemVerIncrement.MINOR
         )
 
-    def test_breaking_change_type(self, old_school_rule):
+    def test_breaking_change_type(self, custom_bump_rule):
         assert (
-            old_school_rule.get_increment("BREAKING CHANGE: major change", False)
+            custom_bump_rule.get_increment("BREAKING CHANGE: major change", False)
             == SemVerIncrement.MAJOR
         )
         assert (
-            old_school_rule.get_increment("BREAKING-CHANGE: major change", False)
+            custom_bump_rule.get_increment("BREAKING-CHANGE: major change", False)
             == SemVerIncrement.MAJOR
         )
         assert (
-            old_school_rule.get_increment("BREAKING CHANGE: major change", True)
+            custom_bump_rule.get_increment("BREAKING CHANGE: major change", True)
             == SemVerIncrement.MINOR
         )
         assert (
-            old_school_rule.get_increment("BREAKING-CHANGE: major change", True)
+            custom_bump_rule.get_increment("BREAKING-CHANGE: major change", True)
             == SemVerIncrement.MINOR
         )
 
-    def test_feat_commit(self, old_school_rule):
+    def test_feat_commit(self, custom_bump_rule):
         assert (
-            old_school_rule.get_increment("feat: add new feature", False)
+            custom_bump_rule.get_increment("feat: add new feature", False)
             == SemVerIncrement.MINOR
         )
         assert (
-            old_school_rule.get_increment("feat: add new feature", True)
+            custom_bump_rule.get_increment("feat: add new feature", True)
             == SemVerIncrement.MINOR
         )
 
-    def test_fix_commit(self, old_school_rule):
+    def test_fix_commit(self, custom_bump_rule):
         assert (
-            old_school_rule.get_increment("fix: fix bug", False)
+            custom_bump_rule.get_increment("fix: fix bug", False)
             == SemVerIncrement.PATCH
         )
         assert (
-            old_school_rule.get_increment("fix: fix bug", True) == SemVerIncrement.PATCH
-        )
-
-    def test_refactor_commit(self, old_school_rule):
-        assert (
-            old_school_rule.get_increment("refactor: restructure code", False)
-            == SemVerIncrement.PATCH
-        )
-        assert (
-            old_school_rule.get_increment("refactor: restructure code", True)
+            custom_bump_rule.get_increment("fix: fix bug", True)
             == SemVerIncrement.PATCH
         )
 
-    def test_perf_commit(self, old_school_rule):
+    def test_refactor_commit(self, custom_bump_rule):
         assert (
-            old_school_rule.get_increment("perf: improve performance", False)
+            custom_bump_rule.get_increment("refactor: restructure code", False)
             == SemVerIncrement.PATCH
         )
         assert (
-            old_school_rule.get_increment("perf: improve performance", True)
+            custom_bump_rule.get_increment("refactor: restructure code", True)
             == SemVerIncrement.PATCH
         )
 
-    def test_commit_with_scope(self, old_school_rule):
+    def test_perf_commit(self, custom_bump_rule):
         assert (
-            old_school_rule.get_increment("feat(api): add new endpoint", False)
+            custom_bump_rule.get_increment("perf: improve performance", False)
+            == SemVerIncrement.PATCH
+        )
+        assert (
+            custom_bump_rule.get_increment("perf: improve performance", True)
+            == SemVerIncrement.PATCH
+        )
+
+    def test_commit_with_scope(self, custom_bump_rule):
+        assert (
+            custom_bump_rule.get_increment("feat(api): add new endpoint", False)
             == SemVerIncrement.MINOR
         )
         assert (
-            old_school_rule.get_increment("fix(ui): fix button alignment", False)
+            custom_bump_rule.get_increment("fix(ui): fix button alignment", False)
             == SemVerIncrement.PATCH
         )
         assert (
-            old_school_rule.get_increment("refactor(core): restructure", False)
+            custom_bump_rule.get_increment("refactor(core): restructure", False)
             == SemVerIncrement.PATCH
         )
 
-    def test_no_match(self, old_school_rule):
+    def test_no_match(self, custom_bump_rule):
         assert (
-            old_school_rule.get_increment("docs: update documentation", False) is None
+            custom_bump_rule.get_increment("docs: update documentation", False) is None
         )
-        assert old_school_rule.get_increment("style: format code", False) is None
-        assert old_school_rule.get_increment("test: add unit tests", False) is None
+        assert custom_bump_rule.get_increment("style: format code", False) is None
+        assert custom_bump_rule.get_increment("test: add unit tests", False) is None
         assert (
-            old_school_rule.get_increment("build: update build config", False) is None
+            custom_bump_rule.get_increment("build: update build config", False) is None
         )
-        assert old_school_rule.get_increment("ci: update CI pipeline", False) is None
+        assert custom_bump_rule.get_increment("ci: update CI pipeline", False) is None
 
-    def test_with_find_increment_by_callable(self, old_school_rule):
+    def test_with_find_increment_by_callable(self, custom_bump_rule):
         commit_messages = [
             "feat!: breaking change",
             "fix: bug fix",
@@ -583,7 +578,7 @@ class TestOldSchoolBumpRuleWithDefault:
         ]
         assert (
             find_increment_by_callable(
-                commit_messages, lambda x: old_school_rule.get_increment(x, False)
+                commit_messages, lambda x: custom_bump_rule.get_increment(x, False)
             )
             == SemVerIncrement.MAJOR
         )

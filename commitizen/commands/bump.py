@@ -8,7 +8,7 @@ import questionary
 
 from commitizen import bump, factory, git, hooks, out
 from commitizen.bump_rule import (
-    OldSchoolBumpRule,
+    CustomBumpRule,
     SemVerIncrement,
     find_increment_by_callable,
 )
@@ -127,8 +127,8 @@ class Bump:
         # Update the bump map to ensure major version doesn't increment.
         is_major_version_zero: bool = self.bump_settings["major_version_zero"]
 
-        # Fallback to old school bump rule if no bump rule is provided
-        rule = self.cz.bump_rule or OldSchoolBumpRule(
+        # Fallback to custom bump rule if no bump rule is provided
+        rule = self.cz.bump_rule or CustomBumpRule(
             *self._get_validated_cz_bump(),
         )
 
