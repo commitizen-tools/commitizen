@@ -5,7 +5,6 @@ from commitizen.bump_rule import (
     CustomBumpRule,
     SemVerIncrement,
     _find_highest_increment,
-    find_increment_by_callable,
 )
 from commitizen.defaults import (
     BUMP_MAP,
@@ -186,7 +185,7 @@ class TestFindIncrementByCallable:
     def test_single_commit(self, get_increment):
         commit_messages = ["feat: add new feature"]
         assert (
-            find_increment_by_callable(commit_messages, get_increment)
+            SemVerIncrement.get_highest_by_messages(commit_messages, get_increment)
             == SemVerIncrement.MINOR
         )
 
@@ -197,7 +196,7 @@ class TestFindIncrementByCallable:
             "docs: update readme",
         ]
         assert (
-            find_increment_by_callable(commit_messages, get_increment)
+            SemVerIncrement.get_highest_by_messages(commit_messages, get_increment)
             == SemVerIncrement.MINOR
         )
 
@@ -207,7 +206,7 @@ class TestFindIncrementByCallable:
             "feat!: breaking change",
         ]
         assert (
-            find_increment_by_callable(commit_messages, get_increment)
+            SemVerIncrement.get_highest_by_messages(commit_messages, get_increment)
             == SemVerIncrement.MAJOR
         )
 
@@ -216,7 +215,7 @@ class TestFindIncrementByCallable:
             "feat: new feature\n\nBREAKING CHANGE: major change",
         ]
         assert (
-            find_increment_by_callable(commit_messages, get_increment)
+            SemVerIncrement.get_highest_by_messages(commit_messages, get_increment)
             == SemVerIncrement.MAJOR
         )
 
@@ -225,11 +224,17 @@ class TestFindIncrementByCallable:
             "docs: update documentation",
             "style: format code",
         ]
-        assert find_increment_by_callable(commit_messages, get_increment) is None
+        assert (
+            SemVerIncrement.get_highest_by_messages(commit_messages, get_increment)
+            is None
+        )
 
     def test_empty_commits(self, get_increment):
         commit_messages = []
-        assert find_increment_by_callable(commit_messages, get_increment) is None
+        assert (
+            SemVerIncrement.get_highest_by_messages(commit_messages, get_increment)
+            is None
+        )
 
     def test_major_version_zero(self):
         bump_rule = ConventionalCommitBumpRule()
@@ -239,7 +244,7 @@ class TestFindIncrementByCallable:
             "BREAKING CHANGE: major change",
         ]
         assert (
-            find_increment_by_callable(
+            SemVerIncrement.get_highest_by_messages(
                 commit_messages, lambda x: bump_rule.get_increment(x, True)
             )
             == SemVerIncrement.MINOR
@@ -253,7 +258,7 @@ class TestFindIncrementByCallable:
             "refactor: restructure code",
         ]
         assert (
-            find_increment_by_callable(commit_messages, get_increment)
+            SemVerIncrement.get_highest_by_messages(commit_messages, get_increment)
             == SemVerIncrement.MINOR
         )
 
@@ -263,7 +268,7 @@ class TestFindIncrementByCallable:
             "fix(ui): fix button alignment",
         ]
         assert (
-            find_increment_by_callable(commit_messages, get_increment)
+            SemVerIncrement.get_highest_by_messages(commit_messages, get_increment)
             == SemVerIncrement.MINOR
         )
 
@@ -393,7 +398,7 @@ class TestCustomBumpRule:
             "docs: update readme [MINOR]",
         ]
         assert (
-            find_increment_by_callable(
+            SemVerIncrement.get_highest_by_messages(
                 commit_messages, lambda x: custom_bump_rule.get_increment(x, False)
             )
             == SemVerIncrement.MAJOR
@@ -577,7 +582,7 @@ class TestCustomBumpRuleWithDefault:
             "perf: improve performance",
         ]
         assert (
-            find_increment_by_callable(
+            SemVerIncrement.get_highest_by_messages(
                 commit_messages, lambda x: custom_bump_rule.get_increment(x, False)
             )
             == SemVerIncrement.MAJOR

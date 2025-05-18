@@ -34,6 +34,36 @@ class SemVerIncrement(Enum):
             if v is not None
         }
 
+    @staticmethod
+    def get_highest_by_messages(
+        commit_messages: Iterable[str],
+        get_increment: Callable[[str], SemVerIncrement | None],
+    ) -> SemVerIncrement | None:
+        """Find the highest version increment from a list of messages.
+
+        This function processes a list of messages and determines the highest version
+        increment needed based on the commit messages. It splits multi-line commit messages
+        and evaluates each line using the provided get_increment callable.
+
+        Args:
+            commit_messages: A list of messages to analyze.
+            get_increment: A callable that takes a commit message string and returns an
+                SemVerIncrement value (MAJOR, MINOR, PATCH) or None if no increment is needed.
+
+        Returns:
+            The highest version increment needed (MAJOR, MINOR, PATCH) or None if no
+            increment is needed. The order of precedence is MAJOR > MINOR > PATCH.
+
+        Example:
+            >>> commit_messages = ["feat: new feature", "fix: bug fix"]
+            >>> rule = ConventionalCommitBumpRule()
+            >>> SemVerIncrement.get_highest_by_messages(commit_messages, lambda x: rule.get_increment(x, False))
+            'MINOR'
+        """
+        lines = (line for message in commit_messages for line in message.split("\n"))
+        increments = map(get_increment, lines)
+        return _find_highest_increment(increments)
+
 
 _VERSION_ORDERING = dict(
     zip(
@@ -41,36 +71,6 @@ _VERSION_ORDERING = dict(
         range(4),
     )
 )
-
-
-def find_increment_by_callable(
-    commit_messages: Iterable[str],
-    get_increment: Callable[[str], SemVerIncrement | None],
-) -> SemVerIncrement | None:
-    """Find the highest version increment from a list of messages.
-
-    This function processes a list of messages and determines the highest version
-    increment needed based on the commit messages. It splits multi-line commit messages
-    and evaluates each line using the provided get_increment callable.
-
-    Args:
-        commit_messages: A list of messages to analyze.
-        get_increment: A callable that takes a commit message string and returns an
-            SemVerIncrement value (MAJOR, MINOR, PATCH) or None if no increment is needed.
-
-    Returns:
-        The highest version increment needed (MAJOR, MINOR, PATCH) or None if no
-        increment is needed. The order of precedence is MAJOR > MINOR > PATCH.
-
-    Example:
-        >>> commit_messages = ["feat: new feature", "fix: bug fix"]
-        >>> rule = ConventionalCommitBumpRule()
-        >>> find_increment_by_callable(commit_messages, lambda x: rule.get_increment(x, False))
-        'MINOR'
-    """
-    lines = (line for message in commit_messages for line in message.split("\n"))
-    increments = map(get_increment, lines)
-    return _find_highest_increment(increments)
 
 
 def _find_highest_increment(

@@ -10,7 +10,6 @@ from commitizen import bump, factory, git, hooks, out
 from commitizen.bump_rule import (
     CustomBumpRule,
     SemVerIncrement,
-    find_increment_by_callable,
 )
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.commands.changelog import Changelog
@@ -132,7 +131,7 @@ class Bump:
             *self._get_validated_cz_bump(),
         )
 
-        return find_increment_by_callable(
+        return SemVerIncrement.get_highest_by_messages(
             (commit.message for commit in commits),
             lambda x: rule.get_increment(x, is_major_version_zero),
         )
