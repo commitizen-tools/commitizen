@@ -23,7 +23,7 @@ class SemVerIncrement(Enum):
             return None
         try:
             return cls[value]
-        except ValueError:
+        except KeyError:
             return None
 
     @classmethod

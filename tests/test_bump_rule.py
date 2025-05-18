@@ -655,3 +655,38 @@ def test_find_highest_increment():
         )
         == SemVerIncrement.MINOR
     )
+
+
+class TestSemVerIncrementSafeCast:
+    def test_safe_cast_valid_values(self):
+        """Test safe_cast with valid enum values."""
+        assert SemVerIncrement.safe_cast("MAJOR") == SemVerIncrement.MAJOR
+        assert SemVerIncrement.safe_cast("MINOR") == SemVerIncrement.MINOR
+        assert SemVerIncrement.safe_cast("PATCH") == SemVerIncrement.PATCH
+
+    def test_safe_cast_invalid_values(self):
+        """Test safe_cast with invalid values."""
+        assert SemVerIncrement.safe_cast("INVALID") is None
+        assert SemVerIncrement.safe_cast("") is None
+        assert SemVerIncrement.safe_cast(123) is None
+        assert SemVerIncrement.safe_cast(None) is None
+
+    def test_safe_cast_dict(self):
+        """Test safe_cast_dict method."""
+        test_dict = {
+            "MAJOR": "MAJOR",
+            "MINOR": "MINOR",
+            "PATCH": "PATCH",
+            "INVALID": "INVALID",
+            "empty": "",
+            "number": 123,
+            "none": None,
+        }
+
+        expected_dict = {
+            "MAJOR": SemVerIncrement.MAJOR,
+            "MINOR": SemVerIncrement.MINOR,
+            "PATCH": SemVerIncrement.PATCH,
+        }
+
+        assert SemVerIncrement.safe_cast_dict(test_dict) == expected_dict
