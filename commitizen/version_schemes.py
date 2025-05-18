@@ -3,12 +3,12 @@ from __future__ import annotations
 import re
 import sys
 import warnings
+from enum import Enum
 from itertools import zip_longest
 from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Literal,
     Protocol,
     cast,
     runtime_checkable,
@@ -41,7 +41,24 @@ if TYPE_CHECKING:
         from typing import Self
 
 
-Prerelease: TypeAlias = Literal["alpha", "beta", "rc"]
+class Prerelease(Enum):
+    ALPHA = "alpha"
+    BETA = "beta"
+    RC = "rc"
+
+    def __str__(self) -> str:
+        return self.value
+
+    @classmethod
+    def safe_cast(cls, value: str | None) -> Prerelease | None:
+        if not value:
+            return None
+        try:
+            return cls[value.upper()]
+        except KeyError:
+            return None
+
+
 DEFAULT_VERSION_PARSER = r"v?(?P<version>([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z.]+)?(\w+)?)"
 
 
@@ -172,7 +189,7 @@ class BaseVersion(_BaseVersion):
         return None
 
     def generate_prerelease(
-        self, prerelease: str | None = None, offset: int = 0
+        self, prerelease: Prerelease | None = None, offset: int = 0
     ) -> str:
         """Generate prerelease
 
@@ -187,20 +204,18 @@ class BaseVersion(_BaseVersion):
         if not prerelease:
             return ""
 
+        prerelease_value = prerelease.value
+        new_prerelease_number = offset
+
         # prevent down-bumping the pre-release phase, e.g. from 'b1' to 'a2'
         # https://packaging.python.org/en/latest/specifications/version-specifiers/#pre-releases
         # https://semver.org/#spec-item-11
         if self.is_prerelease and self.pre:
-            prerelease = max(prerelease, self.pre[0])
+            prerelease_value = max(prerelease_value, self.pre[0])
+            if prerelease_value.startswith(self.pre[0]):
+                new_prerelease_number = self.pre[1] + 1
 
-        # version.pre is needed for mypy check
-        if self.is_prerelease and self.pre and prerelease.startswith(self.pre[0]):
-            prev_prerelease: int = self.pre[1]
-            new_prerelease_number = prev_prerelease + 1
-        else:
-            new_prerelease_number = offset
-        pre_version = f"{prerelease}{new_prerelease_number}"
-        return pre_version
+        return f"{prerelease_value}{new_prerelease_number}"
 
     def generate_devrelease(self, devrelease: int | None) -> str:
         """Generate devrelease

@@ -4,7 +4,7 @@ import random
 import pytest
 
 from commitizen.bump_rule import SemVerIncrement
-from commitizen.version_schemes import SemVer2, VersionProtocol
+from commitizen.version_schemes import Prerelease, SemVer2, VersionProtocol
 
 simple_flow = [
     (("0.1.0", SemVerIncrement.PATCH, None, 0, None), "0.1.1"),
@@ -13,25 +13,25 @@ simple_flow = [
     (("0.2.0", SemVerIncrement.MINOR, None, 0, None), "0.3.0"),
     (("0.2.0", SemVerIncrement.MINOR, None, 0, 1), "0.3.0-dev.1"),
     (("0.3.0", SemVerIncrement.PATCH, None, 0, None), "0.3.1"),
-    (("0.3.0", SemVerIncrement.PATCH, "alpha", 0, None), "0.3.1-alpha.0"),
-    (("0.3.1-alpha.0", None, "alpha", 0, None), "0.3.1-alpha.1"),
-    (("0.3.0", SemVerIncrement.PATCH, "alpha", 1, None), "0.3.1-alpha.1"),
-    (("0.3.1-alpha.0", None, "alpha", 1, None), "0.3.1-alpha.1"),
+    (("0.3.0", SemVerIncrement.PATCH, Prerelease.ALPHA, 0, None), "0.3.1-alpha.0"),
+    (("0.3.1-alpha.0", None, Prerelease.ALPHA, 0, None), "0.3.1-alpha.1"),
+    (("0.3.0", SemVerIncrement.PATCH, Prerelease.ALPHA, 1, None), "0.3.1-alpha.1"),
+    (("0.3.1-alpha.0", None, Prerelease.ALPHA, 1, None), "0.3.1-alpha.1"),
     (("0.3.1-alpha.0", None, None, 0, None), "0.3.1"),
     (("0.3.1", SemVerIncrement.PATCH, None, 0, None), "0.3.2"),
-    (("0.4.2", SemVerIncrement.MAJOR, "alpha", 0, None), "1.0.0-alpha.0"),
-    (("1.0.0-alpha.0", None, "alpha", 0, None), "1.0.0-alpha.1"),
-    (("1.0.0-alpha.1", None, "alpha", 0, None), "1.0.0-alpha.2"),
-    (("1.0.0-alpha.1", None, "alpha", 0, 1), "1.0.0-alpha.2.dev.1"),
-    (("1.0.0-alpha.2.dev.0", None, "alpha", 0, 1), "1.0.0-alpha.3.dev.1"),
-    (("1.0.0-alpha.2.dev.0", None, "alpha", 0, 0), "1.0.0-alpha.3.dev.0"),
-    (("1.0.0-alpha.1", None, "beta", 0, None), "1.0.0-beta.0"),
-    (("1.0.0-beta.0", None, "beta", 0, None), "1.0.0-beta.1"),
-    (("1.0.0-beta.1", None, "rc", 0, None), "1.0.0-rc.0"),
-    (("1.0.0-rc.0", None, "rc", 0, None), "1.0.0-rc.1"),
-    (("1.0.0-rc.0", None, "rc", 0, 1), "1.0.0-rc.1.dev.1"),
+    (("0.4.2", SemVerIncrement.MAJOR, Prerelease.ALPHA, 0, None), "1.0.0-alpha.0"),
+    (("1.0.0-alpha.0", None, Prerelease.ALPHA, 0, None), "1.0.0-alpha.1"),
+    (("1.0.0-alpha.1", None, Prerelease.ALPHA, 0, None), "1.0.0-alpha.2"),
+    (("1.0.0-alpha.1", None, Prerelease.ALPHA, 0, 1), "1.0.0-alpha.2.dev.1"),
+    (("1.0.0-alpha.2.dev.0", None, Prerelease.ALPHA, 0, 1), "1.0.0-alpha.3.dev.1"),
+    (("1.0.0-alpha.2.dev.0", None, Prerelease.ALPHA, 0, 0), "1.0.0-alpha.3.dev.0"),
+    (("1.0.0-alpha.1", None, Prerelease.BETA, 0, None), "1.0.0-beta.0"),
+    (("1.0.0-beta.0", None, Prerelease.BETA, 0, None), "1.0.0-beta.1"),
+    (("1.0.0-beta.1", None, Prerelease.RC, 0, None), "1.0.0-rc.0"),
+    (("1.0.0-rc.0", None, Prerelease.RC, 0, None), "1.0.0-rc.1"),
+    (("1.0.0-rc.0", None, Prerelease.RC, 0, 1), "1.0.0-rc.1.dev.1"),
     (("1.0.0-rc.0", SemVerIncrement.PATCH, None, 0, None), "1.0.0"),
-    (("1.0.0-alpha.3.dev.0", None, "beta", 0, None), "1.0.0-beta.0"),
+    (("1.0.0-alpha.3.dev.0", None, Prerelease.BETA, 0, None), "1.0.0-beta.0"),
     (("1.0.0", SemVerIncrement.PATCH, None, 0, None), "1.0.1"),
     (("1.0.1", SemVerIncrement.PATCH, None, 0, None), "1.0.2"),
     (("1.0.2", SemVerIncrement.MINOR, None, 0, None), "1.1.0"),
@@ -48,22 +48,22 @@ local_versions = [
 
 # never bump backwards on pre-releases
 linear_prerelease_cases = [
-    (("0.1.1-beta.1", None, "alpha", 0, None), "0.1.1-beta.2"),
-    (("0.1.1-rc.0", None, "alpha", 0, None), "0.1.1-rc.1"),
-    (("0.1.1-rc.0", None, "beta", 0, None), "0.1.1-rc.1"),
+    (("0.1.1-beta.1", None, Prerelease.ALPHA, 0, None), "0.1.1-beta.2"),
+    (("0.1.1-rc.0", None, Prerelease.ALPHA, 0, None), "0.1.1-rc.1"),
+    (("0.1.1-rc.0", None, Prerelease.BETA, 0, None), "0.1.1-rc.1"),
 ]
 
 weird_cases = [
     (("1.1", SemVerIncrement.PATCH, None, 0, None), "1.1.1"),
     (("1", SemVerIncrement.MINOR, None, 0, None), "1.1.0"),
     (("1", SemVerIncrement.MAJOR, None, 0, None), "2.0.0"),
-    (("1-alpha.0", None, "alpha", 0, None), "1.0.0-alpha.1"),
-    (("1-alpha.0", None, "alpha", 1, None), "1.0.0-alpha.1"),
-    (("1", None, "beta", 0, None), "1.0.0-beta.0"),
-    (("1", None, "beta", 1, None), "1.0.0-beta.1"),
-    (("1-beta", None, "beta", 0, None), "1.0.0-beta.1"),
-    (("1.0.0-alpha.1", None, "alpha", 0, None), "1.0.0-alpha.2"),
-    (("1", None, "rc", 0, None), "1.0.0-rc.0"),
+    (("1-alpha.0", None, Prerelease.ALPHA, 0, None), "1.0.0-alpha.1"),
+    (("1-alpha.0", None, Prerelease.ALPHA, 1, None), "1.0.0-alpha.1"),
+    (("1", None, Prerelease.BETA, 0, None), "1.0.0-beta.0"),
+    (("1", None, Prerelease.BETA, 1, None), "1.0.0-beta.1"),
+    (("1-beta", None, Prerelease.BETA, 0, None), "1.0.0-beta.1"),
+    (("1.0.0-alpha.1", None, Prerelease.ALPHA, 0, None), "1.0.0-alpha.2"),
+    (("1", None, Prerelease.RC, 0, None), "1.0.0-rc.0"),
     (("1.0.0-rc.1+e20d7b57f3eb", SemVerIncrement.PATCH, None, 0, None), "1.0.0"),
 ]
 
@@ -72,16 +72,16 @@ tdd_cases = [
     (("0.1.1", SemVerIncrement.PATCH, None, 0, None), "0.1.2"),
     (("0.1.1", SemVerIncrement.MINOR, None, 0, None), "0.2.0"),
     (("2.1.1", SemVerIncrement.MAJOR, None, 0, None), "3.0.0"),
-    (("0.9.0", SemVerIncrement.PATCH, "alpha", 0, None), "0.9.1-alpha.0"),
-    (("0.9.0", SemVerIncrement.MINOR, "alpha", 0, None), "0.10.0-alpha.0"),
-    (("0.9.0", SemVerIncrement.MAJOR, "alpha", 0, None), "1.0.0-alpha.0"),
-    (("0.9.0", SemVerIncrement.MAJOR, "alpha", 1, None), "1.0.0-alpha.1"),
-    (("1.0.0-alpha.2", None, "beta", 0, None), "1.0.0-beta.0"),
-    (("1.0.0-alpha.2", None, "beta", 1, None), "1.0.0-beta.1"),
-    (("1.0.0-beta.1", None, "rc", 0, None), "1.0.0-rc.0"),
-    (("1.0.0-rc.1", None, "rc", 0, None), "1.0.0-rc.2"),
-    (("1.0.0-alpha.0", None, "rc", 0, None), "1.0.0-rc.0"),
-    (("1.0.0-alpha.1", None, "alpha", 0, None), "1.0.0-alpha.2"),
+    (("0.9.0", SemVerIncrement.PATCH, Prerelease.ALPHA, 0, None), "0.9.1-alpha.0"),
+    (("0.9.0", SemVerIncrement.MINOR, Prerelease.ALPHA, 0, None), "0.10.0-alpha.0"),
+    (("0.9.0", SemVerIncrement.MAJOR, Prerelease.ALPHA, 0, None), "1.0.0-alpha.0"),
+    (("0.9.0", SemVerIncrement.MAJOR, Prerelease.ALPHA, 1, None), "1.0.0-alpha.1"),
+    (("1.0.0-alpha.2", None, Prerelease.BETA, 0, None), "1.0.0-beta.0"),
+    (("1.0.0-alpha.2", None, Prerelease.BETA, 1, None), "1.0.0-beta.1"),
+    (("1.0.0-beta.1", None, Prerelease.RC, 0, None), "1.0.0-rc.0"),
+    (("1.0.0-rc.1", None, Prerelease.RC, 0, None), "1.0.0-rc.2"),
+    (("1.0.0-alpha.0", None, Prerelease.RC, 0, None), "1.0.0-rc.0"),
+    (("1.0.0-alpha.1", None, Prerelease.ALPHA, 0, None), "1.0.0-alpha.2"),
 ]
 
 

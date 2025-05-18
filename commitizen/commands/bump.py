@@ -173,7 +173,7 @@ class Bump:
         increment: SemVerIncrement | None = SemVerIncrement.safe_cast(
             self.arguments["increment"]
         )
-        prerelease: Prerelease | None = self.arguments["prerelease"]
+        prerelease = Prerelease.safe_cast(self.arguments["prerelease"])
         devrelease: int | None = self.arguments["devrelease"]
         is_files_only: bool | None = self.arguments["files_only"]
         is_local_version: bool = self.arguments["local_version"]
