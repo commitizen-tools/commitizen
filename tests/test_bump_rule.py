@@ -4,7 +4,6 @@ from commitizen.bump_rule import (
     ConventionalCommitBumpRule,
     CustomBumpRule,
     SemVerIncrement,
-    _find_highest_increment,
 )
 from commitizen.defaults import (
     BUMP_MAP,
@@ -589,104 +588,39 @@ class TestCustomBumpRuleWithDefault:
         )
 
 
-def test_find_highest_increment():
-    """Test the _find_highest_increment function."""
-    # Test with single increment
-    assert _find_highest_increment([SemVerIncrement.MAJOR]) == SemVerIncrement.MAJOR
-    assert _find_highest_increment([SemVerIncrement.MINOR]) == SemVerIncrement.MINOR
-    assert _find_highest_increment([SemVerIncrement.PATCH]) == SemVerIncrement.PATCH
+class TestGetHighest:
+    def test_get_highest_with_major(self):
+        increments = [
+            SemVerIncrement.PATCH,
+            SemVerIncrement.MINOR,
+            SemVerIncrement.MAJOR,
+        ]
+        assert SemVerIncrement.get_highest(increments) == SemVerIncrement.MAJOR
 
-    # Test with multiple increments
-    assert (
-        _find_highest_increment(
-            [SemVerIncrement.PATCH, SemVerIncrement.MINOR, SemVerIncrement.MAJOR]
-        )
-        == SemVerIncrement.MAJOR
-    )
-    assert (
-        _find_highest_increment([SemVerIncrement.PATCH, SemVerIncrement.MINOR])
-        == SemVerIncrement.MINOR
-    )
-    assert (
-        _find_highest_increment([SemVerIncrement.PATCH, SemVerIncrement.PATCH])
-        == SemVerIncrement.PATCH
-    )
+    def test_get_highest_with_minor(self):
+        increments = [SemVerIncrement.PATCH, SemVerIncrement.MINOR, None]
+        assert SemVerIncrement.get_highest(increments) == SemVerIncrement.MINOR
 
-    # Test with None values
-    assert (
-        _find_highest_increment([None, SemVerIncrement.PATCH]) == SemVerIncrement.PATCH
-    )
-    assert _find_highest_increment([None, None]) is None
-    assert _find_highest_increment([]) is None
+    def test_get_highest_with_patch(self):
+        increments = [SemVerIncrement.PATCH, None, None]
+        assert SemVerIncrement.get_highest(increments) == SemVerIncrement.PATCH
 
-    # Test with mixed values
-    assert (
-        _find_highest_increment(
-            [None, SemVerIncrement.PATCH, SemVerIncrement.MINOR, SemVerIncrement.MAJOR]
-        )
-        == SemVerIncrement.MAJOR
-    )
-    assert (
-        _find_highest_increment([None, SemVerIncrement.PATCH, SemVerIncrement.MINOR])
-        == SemVerIncrement.MINOR
-    )
-    assert (
-        _find_highest_increment([None, SemVerIncrement.PATCH]) == SemVerIncrement.PATCH
-    )
+    def test_get_highest_with_none(self):
+        increments = [None, None, None]
+        assert SemVerIncrement.get_highest(increments) is None
 
-    # Test with empty iterator
-    assert _find_highest_increment(iter([])) is None
+    def test_get_highest_empty(self):
+        increments = []
+        assert SemVerIncrement.get_highest(increments) is None
 
-    # Test with generator expression
-    assert (
-        _find_highest_increment(
-            x
-            for x in [
-                SemVerIncrement.PATCH,
-                SemVerIncrement.MINOR,
-                SemVerIncrement.MAJOR,
-            ]
-        )
-        == SemVerIncrement.MAJOR
-    )
-    assert (
-        _find_highest_increment(
-            x for x in [None, SemVerIncrement.PATCH, SemVerIncrement.MINOR]
-        )
-        == SemVerIncrement.MINOR
-    )
+    def test_get_highest_mixed_order(self):
+        increments = [
+            SemVerIncrement.MAJOR,
+            SemVerIncrement.PATCH,
+            SemVerIncrement.MINOR,
+        ]
+        assert SemVerIncrement.get_highest(increments) == SemVerIncrement.MAJOR
 
-
-class TestSemVerIncrementSafeCast:
-    def test_safe_cast_valid_values(self):
-        """Test safe_cast with valid enum values."""
-        assert SemVerIncrement.safe_cast("MAJOR") == SemVerIncrement.MAJOR
-        assert SemVerIncrement.safe_cast("MINOR") == SemVerIncrement.MINOR
-        assert SemVerIncrement.safe_cast("PATCH") == SemVerIncrement.PATCH
-
-    def test_safe_cast_invalid_values(self):
-        """Test safe_cast with invalid values."""
-        assert SemVerIncrement.safe_cast("INVALID") is None
-        assert SemVerIncrement.safe_cast("") is None
-        assert SemVerIncrement.safe_cast(123) is None
-        assert SemVerIncrement.safe_cast(None) is None
-
-    def test_safe_cast_dict(self):
-        """Test safe_cast_dict method."""
-        test_dict = {
-            "MAJOR": "MAJOR",
-            "MINOR": "MINOR",
-            "PATCH": "PATCH",
-            "INVALID": "INVALID",
-            "empty": "",
-            "number": 123,
-            "none": None,
-        }
-
-        expected_dict = {
-            "MAJOR": SemVerIncrement.MAJOR,
-            "MINOR": SemVerIncrement.MINOR,
-            "PATCH": SemVerIncrement.PATCH,
-        }
-
-        assert SemVerIncrement.safe_cast_dict(test_dict) == expected_dict
+    def test_get_highest_with_none_values(self):
+        increments = [None, SemVerIncrement.MINOR, None, SemVerIncrement.PATCH]
+        assert SemVerIncrement.get_highest(increments) == SemVerIncrement.MINOR

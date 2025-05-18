@@ -1,33 +1,33 @@
 from __future__ import annotations
 
 import re
-from collections.abc import Iterable
-from enum import Enum, auto
+from collections.abc import Iterable, Mapping
+from enum import IntEnum, auto
 from functools import cached_property
-from typing import Any, Callable, Protocol
+from typing import Callable, Protocol
 
 from commitizen.exceptions import NoPatternMapError
 
 
-class SemVerIncrement(Enum):
+class SemVerIncrement(IntEnum):
     """An enumeration representing semantic versioning increments.
 
     This class defines the three types of version increments according to semantic versioning:
-    - MAJOR: For incompatible API changes
-    - MINOR: For backwards-compatible functionality additions
     - PATCH: For backwards-compatible bug fixes
+    - MINOR: For backwards-compatible functionality additions
+    - MAJOR: For incompatible API changes
     """
 
-    MAJOR = auto()
-    MINOR = auto()
     PATCH = auto()
+    MINOR = auto()
+    MAJOR = auto()
 
     def __str__(self) -> str:
         return self.name
 
     @classmethod
-    def safe_cast(cls, value: Any) -> SemVerIncrement | None:
-        if value is None:
+    def safe_cast(cls, value: object) -> SemVerIncrement | None:
+        if not isinstance(value, str):
             return None
         try:
             return cls[value]
@@ -35,7 +35,7 @@ class SemVerIncrement(Enum):
             return None
 
     @classmethod
-    def safe_cast_dict(cls, d: dict[str, Any]) -> dict[str, SemVerIncrement]:
+    def safe_cast_dict(cls, d: Mapping[str, object]) -> dict[str, SemVerIncrement]:
         return {
             k: v
             for k, v in ((k, SemVerIncrement.safe_cast(v)) for k, v in d.items())
@@ -68,25 +68,17 @@ class SemVerIncrement(Enum):
             >>> SemVerIncrement.get_highest_by_messages(commit_messages, lambda x: rule.get_increment(x, False))
             'MINOR'
         """
-        return _find_highest_increment(
+        return SemVerIncrement.get_highest(
             get_increment(line)
             for message in commit_messages
             for line in message.split("\n")
         )
 
-
-_VERSION_ORDERING = dict(
-    zip(
-        (None, SemVerIncrement.PATCH, SemVerIncrement.MINOR, SemVerIncrement.MAJOR),
-        range(4),
-    )
-)
-
-
-def _find_highest_increment(
-    increments: Iterable[SemVerIncrement | None],
-) -> SemVerIncrement | None:
-    return max(increments, key=lambda x: _VERSION_ORDERING[x], default=None)
+    @staticmethod
+    def get_highest(
+        increments: Iterable[SemVerIncrement | None],
+    ) -> SemVerIncrement | None:
+        return max(filter(None, increments), default=None)
 
 
 class BumpRule(Protocol):
@@ -193,8 +185,8 @@ class CustomBumpRule(BumpRule):
         )
 
         try:
-            if ret := _find_highest_increment(
-                (increment for name, increment in bump_map.items() if m.group(name))
+            if ret := SemVerIncrement.get_highest(
+                (increment for name, increment in bump_map.items() if m.group(name)),
             ):
                 return ret
         except IndexError:
