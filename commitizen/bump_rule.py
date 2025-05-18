@@ -18,7 +18,7 @@ class SemVerIncrement(Enum):
         return self.name
 
     @classmethod
-    def safe_cast(cls, value: str | None) -> SemVerIncrement | None:
+    def safe_cast(cls, value: Any) -> SemVerIncrement | None:
         if value is None:
             return None
         try:
