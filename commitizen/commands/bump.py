@@ -8,7 +8,6 @@ import questionary
 
 from commitizen import bump, factory, git, hooks, out
 from commitizen.bump_rule import (
-    CustomBumpRule,
     SemVerIncrement,
 )
 from commitizen.changelog_formats import get_changelog_format
@@ -24,7 +23,6 @@ from commitizen.exceptions import (
     InvalidManualVersion,
     NoCommitsFoundError,
     NoneIncrementExit,
-    NoPatternMapError,
     NotAGitProjectError,
     NotAllowed,
     NoVersionSpecifiedError,
@@ -124,34 +122,11 @@ class Bump:
 
     def find_increment(self, commits: list[git.GitCommit]) -> SemVerIncrement | None:
         # Update the bump map to ensure major version doesn't increment.
-        is_major_version_zero: bool = self.bump_settings["major_version_zero"]
-
-        # Fallback to custom bump rule if no bump rule is provided
-        rule = self.cz.bump_rule or CustomBumpRule(
-            *self._get_validated_cz_bump(),
-        )
+        is_major_version_zero = bool(self.bump_settings["major_version_zero"])
 
         return SemVerIncrement.get_highest_by_messages(
             (commit.message for commit in commits),
-            lambda x: rule.get_increment(x, is_major_version_zero),
-        )
-
-    def _get_validated_cz_bump(
-        self,
-    ) -> tuple[str, dict[str, SemVerIncrement], dict[str, SemVerIncrement]]:
-        """For fixing the type errors"""
-        bump_pattern = self.cz.bump_pattern
-        bump_map = self.cz.bump_map
-        bump_map_major_version_zero = self.cz.bump_map_major_version_zero
-        if not bump_pattern or not bump_map or not bump_map_major_version_zero:
-            raise NoPatternMapError(
-                f"'{self.config.settings['name']}' rule does not support bump"
-            )
-
-        return (
-            bump_pattern,
-            SemVerIncrement.safe_cast_dict(bump_map),
-            SemVerIncrement.safe_cast_dict(bump_map_major_version_zero),
+            lambda x: self.cz.bump_rule.get_increment(x, is_major_version_zero),
         )
 
     def __call__(self) -> None:  # noqa: C901

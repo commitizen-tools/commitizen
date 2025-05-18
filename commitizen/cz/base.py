@@ -2,15 +2,17 @@ from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
 from collections.abc import Iterable
+from functools import cached_property
 from typing import Any, Callable, Protocol
 
 from jinja2 import BaseLoader, PackageLoader
 from prompt_toolkit.styles import Style, merge_styles
 
 from commitizen import git
-from commitizen.bump_rule import BumpRule
+from commitizen.bump_rule import BumpRule, CustomBumpRule, SemVerIncrement
 from commitizen.config.base_config import BaseConfig
 from commitizen.defaults import Questions
+from commitizen.exceptions import NoPatternMapError
 
 
 class MessageBuilderHook(Protocol):
@@ -26,9 +28,9 @@ class ChangelogReleaseHook(Protocol):
 
 
 class BaseCommitizen(metaclass=ABCMeta):
-    bump_rule: BumpRule | None = None
+    _bump_rule: BumpRule | None = None
 
-    # TODO: deprecate these
+    # TODO: decide if these should be removed
     bump_pattern: str | None = None
     bump_map: dict[str, str] | None = None
     bump_map_major_version_zero: dict[str, str] | None = None
@@ -87,6 +89,25 @@ class BaseCommitizen(metaclass=ABCMeta):
                 Style(BaseCommitizen.default_style_config),
                 Style(self.config.settings["style"]),
             ]
+        )
+
+    @cached_property
+    def bump_rule(self) -> BumpRule:
+        if self._bump_rule:
+            return self._bump_rule
+
+        # Fallback to custom bump rule if no bump rule is provided
+        bump_pattern = self.bump_pattern
+        bump_map = self.bump_map
+        bump_map_major_version_zero = self.bump_map_major_version_zero
+        if not bump_pattern or not bump_map or not bump_map_major_version_zero:
+            raise NoPatternMapError(
+                f"Rule does not support bump: {bump_pattern=}, {bump_map=}, {bump_map_major_version_zero=}"
+            )
+        return CustomBumpRule(
+            bump_pattern,
+            SemVerIncrement.safe_cast_dict(bump_map),
+            SemVerIncrement.safe_cast_dict(bump_map_major_version_zero),
         )
 
     def example(self) -> str:

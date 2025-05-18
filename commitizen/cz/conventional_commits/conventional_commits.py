@@ -29,7 +29,7 @@ def parse_subject(text):
 
 
 class ConventionalCommitsCz(BaseCommitizen):
-    bump_rule = ConventionalCommitBumpRule()
+    _bump_rule = ConventionalCommitBumpRule()
 
     bump_pattern = defaults.BUMP_PATTERN
     bump_map = defaults.BUMP_MAP
