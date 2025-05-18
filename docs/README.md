@@ -42,11 +42,11 @@ This standardization makes your commit history more readable and meaningful, whi
 ### Features
 
 - Command-line utility to create commits with your rules. Defaults: [Conventional commits][conventional_commits]
-- Bump version automatically using [semantic versioning][semver] based on the commits. [Read More](./commands/bump.md)
+- Bump version automatically using [semantic versioning][semver] based on the commits. [Read More](https://commitizen-tools.github.io/commitizen/commands/bump/)
 - Generate a changelog using [Keep a changelog][keepchangelog]
 - Update your project's version files automatically
 - Display information about your commit rules (commands: schema, example, info)
-- Create your own set of rules and publish them to pip. Read more on [Customization](./customization.md)
+- Create your own set of rules and publish them to pip. Read more on [Customization](https://commitizen-tools.github.io/commitizen/customization/)
 
 ## Getting Started
 
@@ -168,11 +168,11 @@ This command:
 - Updates version files
 
 You can customize:
-- [Version files](./commands/bump.md#version_files)
-- [Version scheme](./commands/bump.md#version_scheme)
-- [Version provider](./config.md#version-providers)
+- [Version files](https://commitizen-tools.github.io/commitizen/commands/bump/#version_files)
+- [Version scheme](https://commitizen-tools.github.io/commitizen/commands/bump/#version_scheme)
+- [Version provider](https://commitizen-tools.github.io/commitizen/config/#version-providers)
 
-For all available options, see the [bump command documentation](./commands/bump.md).
+For all available options, see the [bump command documentation](https://commitizen-tools.github.io/commitizen/commands/bump/).
 
 ### Advanced Usage
 
@@ -219,7 +219,7 @@ pre-commit install --hook-type commit-msg --hook-type pre-push
 > pre-commit autoupdate
 > ```
 
-For more details about commit validation, see the [check command documentation](commands/check.md).
+For more details about commit validation, see the [check command documentation](https://commitizen-tools.github.io/commitizen/commands/check/).
 
 ## Help & Reference
 
@@ -243,9 +243,9 @@ Commitizen provides a comprehensive CLI with various commands. Here's the comple
 ### Additional Resources
 
 - [Conventional Commits Specification][conventional_commits]
-- [Exit Codes Reference](./exit_codes.md)
-- [Configuration Guide](./config.md)
-- [Command Documentation](./commands/init.md)
+- [Exit Codes Reference](https://commitizen-tools.github.io/commitizen/exit_codes/)
+- [Configuration Guide](https://commitizen-tools.github.io/commitizen/config/)
+- [Command Documentation](https://commitizen-tools.github.io/commitizen/commands/init/)
 
 ### Getting Help
 
@@ -257,7 +257,7 @@ cz bump --help
 cz changelog --help
 ```
 
-For more detailed documentation, visit our [documentation site](https://commitizen-tools.github.io/commitizen/).
+For more details, visit our [documentation site](https://commitizen-tools.github.io/commitizen/).
 
 ## Setting up bash completion
 
