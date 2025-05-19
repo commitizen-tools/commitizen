@@ -165,6 +165,55 @@ class CustomBumpRule(BumpRule):
         bump_map: Mapping[str, SemVerIncrement],
         bump_map_major_version_zero: Mapping[str, SemVerIncrement],
     ):
+        """Initialize a custom bump rule for version incrementing.
+
+        This constructor creates a rule that determines how version numbers should be
+        incremented based on commit messages. It validates and compiles the provided
+        pattern and maps for use in version bumping.
+
+        The fallback logic is used for backward compatibility.
+
+        Args:
+            bump_pattern: A regex pattern string used to match commit messages.
+                Example: r"^((?P<major>major)|(?P<minor>minor)|(?P<patch>patch))(?P<scope>\(.+\))?(?P<bang>!)?:"
+                Or with fallback regex: r"^((BREAKING[\-\ ]CHANGE|\w+)(\(.+\))?!?):"  # First group is type
+            bump_map: A mapping of commit types to their corresponding version increments.
+                Example: {
+                    "major": SemVerIncrement.MAJOR,
+                    "bang": SemVerIncrement.MAJOR,
+                    "minor": SemVerIncrement.MINOR,
+                    "patch": SemVerIncrement.PATCH
+                }
+                Or with fallback: {
+                    (r"^.+!$", SemVerIncrement.MAJOR),
+                    (r"^BREAKING[\-\ ]CHANGE", SemVerIncrement.MAJOR),
+                    (r"^feat", SemVerIncrement.MINOR),
+                    (r"^fix", SemVerIncrement.PATCH),
+                    (r"^refactor", SemVerIncrement.PATCH),
+                    (r"^perf", SemVerIncrement.PATCH),
+                }
+            bump_map_major_version_zero: A mapping of commit types to version increments
+                specifically for when the major version is 0. This allows for different
+                versioning behavior during initial development.
+                The format is the same as bump_map.
+                Example: {
+                    "major": SemVerIncrement.MINOR,  # MAJOR becomes MINOR in version zero
+                    "bang": SemVerIncrement.MINOR,   # Breaking changes become MINOR in version zero
+                    "minor": SemVerIncrement.MINOR,
+                    "patch": SemVerIncrement.PATCH
+                }
+                Or with fallback: {
+                    (r"^.+!$", SemVerIncrement.MINOR),
+                    (r"^BREAKING[\-\ ]CHANGE", SemVerIncrement.MINOR),
+                    (r"^feat", SemVerIncrement.MINOR),
+                    (r"^fix", SemVerIncrement.PATCH),
+                    (r"^refactor", SemVerIncrement.PATCH),
+                    (r"^perf", SemVerIncrement.PATCH),
+                }
+
+        Raises:
+            NoPatternMapError: If any of the required parameters are empty or None
+        """
         if not bump_map or not bump_pattern or not bump_map_major_version_zero:
             raise NoPatternMapError(
                 f"Invalid bump rule: {bump_pattern=} and {bump_map=} and {bump_map_major_version_zero=}"
@@ -194,10 +243,9 @@ class CustomBumpRule(BumpRule):
             ):
                 return ret
         except IndexError:
-            # Fallback to old school bump rule
             pass
 
-        # Fallback to old school bump rule
+        # Fallback to old school bump rule, for backward compatibility
         found_keyword = m.group(1)
         for match_pattern, increment in effective_bump_map.items():
             if re.match(match_pattern, found_keyword):
