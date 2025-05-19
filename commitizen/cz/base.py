@@ -93,6 +93,24 @@ class BaseCommitizen(metaclass=ABCMeta):
 
     @cached_property
     def bump_rule(self) -> BumpRule:
+        """Get the bump rule for version incrementing.
+
+        This property returns a BumpRule instance that determines how version numbers
+        should be incremented based on commit messages. It first checks if a custom
+        bump rule was set via `_bump_rule`. If not, it falls back to creating a
+        CustomBumpRule using the class's bump pattern and maps.
+
+        The CustomBumpRule requires three components to be defined:
+        - bump_pattern: A regex pattern to match commit messages
+        - bump_map: A mapping of commit types to version increments
+        - bump_map_major_version_zero: A mapping for version increments when major version is 0
+
+        Returns:
+            BumpRule: A rule instance that determines version increments
+
+        Raises:
+            NoPatternMapError: If the required bump pattern or maps are not defined
+        """
         if self._bump_rule:
             return self._bump_rule
 
