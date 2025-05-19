@@ -145,9 +145,7 @@ class Bump:
 
         dry_run: bool = self.arguments["dry_run"]
         is_yes: bool = self.arguments["yes"]
-        increment: SemVerIncrement | None = SemVerIncrement.safe_cast(
-            self.arguments["increment"]
-        )
+        increment = SemVerIncrement.safe_cast(self.arguments["increment"])
         prerelease = Prerelease.safe_cast(self.arguments["prerelease"])
         devrelease: int | None = self.arguments["devrelease"]
         is_files_only: bool | None = self.arguments["files_only"]
