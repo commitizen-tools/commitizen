@@ -1,7 +1,7 @@
 name: 🛠 Bug report
 description: Create a report to help us improve
 title: Good bug title tells us about precise symptom, not about the root cause.
-labels: [bug]
+labels: ['type: bug']
 body:
   - type: textarea
     id: description
