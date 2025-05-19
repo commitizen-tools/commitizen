@@ -181,17 +181,20 @@ def commit(
     f.write(message.encode("utf-8"))
     f.close()
 
-    command = f'git commit {args} -F "{f.name}"'
-
-    if committer_date and os.name == "nt":  # pragma: no cover
-        # Using `cmd /v /c "{command}"` sets environment variables only for that command
-        command = f'cmd /v /c "set GIT_COMMITTER_DATE={committer_date}&& {command}"'
-    elif committer_date:
-        command = f"GIT_COMMITTER_DATE={committer_date} {command}"
-
+    command = _create_commit_cmd_string(args, committer_date, f.name)
     c = cmd.run(command)
     os.unlink(f.name)
     return c
+
+
+def _create_commit_cmd_string(args: str, committer_date: str | None, name: str) -> str:
+    command = f'git commit {args} -F "{name}"'
+    if not committer_date:
+        return command
+    if os.name != "nt":
+        return f"GIT_COMMITTER_DATE={committer_date} {command}"
+    # Using `cmd /v /c "{command}"` sets environment variables only for that command
+    return f'cmd /v /c "set GIT_COMMITTER_DATE={committer_date}&& {command}"'
 
 
 def get_commits(
