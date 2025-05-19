@@ -115,17 +115,18 @@ class BaseCommitizen(metaclass=ABCMeta):
             return self._bump_rule
 
         # Fallback to custom bump rule if no bump rule is provided
-        bump_pattern = self.bump_pattern
-        bump_map = self.bump_map
-        bump_map_major_version_zero = self.bump_map_major_version_zero
-        if not bump_pattern or not bump_map or not bump_map_major_version_zero:
+        if (
+            not self.bump_pattern
+            or not self.bump_map
+            or not self.bump_map_major_version_zero
+        ):
             raise NoPatternMapError(
-                f"'{self.config.settings['name']}' rule does not support bump: {bump_pattern=}, {bump_map=}, {bump_map_major_version_zero=}"
+                f"'{self.config.settings['name']}' rule does not support bump: {self.bump_pattern=}, {self.bump_map=}, {self.bump_map_major_version_zero=}"
             )
         return CustomBumpRule(
-            bump_pattern,
-            SemVerIncrement.safe_cast_dict(bump_map),
-            SemVerIncrement.safe_cast_dict(bump_map_major_version_zero),
+            self.bump_pattern,
+            SemVerIncrement.safe_cast_dict(self.bump_map),
+            SemVerIncrement.safe_cast_dict(self.bump_map_major_version_zero),
         )
 
     def example(self) -> str:
