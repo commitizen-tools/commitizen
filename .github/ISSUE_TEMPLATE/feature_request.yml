@@ -1,7 +1,7 @@
 name: 🚀 Feature request
 description: Suggest an idea for this project
 title: "<One feature request per issue>"
-labels: [feature]
+labels: ['type: feature']
 body:
   - type: textarea
     id: description
