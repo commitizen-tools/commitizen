@@ -162,8 +162,8 @@ class CustomBumpRule(BumpRule):
     def __init__(
         self,
         bump_pattern: str,
-        bump_map: dict[str, SemVerIncrement],
-        bump_map_major_version_zero: dict[str, SemVerIncrement],
+        bump_map: Mapping[str, SemVerIncrement],
+        bump_map_major_version_zero: Mapping[str, SemVerIncrement],
     ):
         if not bump_map or not bump_pattern or not bump_map_major_version_zero:
             raise NoPatternMapError(
