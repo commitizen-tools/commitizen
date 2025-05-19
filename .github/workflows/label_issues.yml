@@ -25,6 +25,7 @@ jobs:
 
             const osLabels = new Set(); // Use a Set to avoid duplicates
 
+            // Parse the "Environment" section, output of `cz version --report`
             if (body.includes('Operating System: Darwin')) {
               osLabels.add('os: macOS');
             }
