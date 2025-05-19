@@ -180,13 +180,17 @@ class CustomBumpRule(BumpRule):
         if not (m := self.bump_pattern.search(commit_message)):
             return None
 
-        bump_map = (
+        effective_bump_map = (
             self.bump_map_major_version_zero if major_version_zero else self.bump_map
         )
 
         try:
             if ret := SemVerIncrement.get_highest(
-                (increment for name, increment in bump_map.items() if m.group(name)),
+                (
+                    increment
+                    for name, increment in effective_bump_map.items()
+                    if m.group(name)
+                ),
             ):
                 return ret
         except IndexError:
@@ -195,7 +199,7 @@ class CustomBumpRule(BumpRule):
 
         # Fallback to old school bump rule
         found_keyword = m.group(1)
-        for match_pattern, increment in bump_map.items():
+        for match_pattern, increment in effective_bump_map.items():
             if re.match(match_pattern, found_keyword):
                 return increment
         return None
