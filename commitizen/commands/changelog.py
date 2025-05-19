@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import os
 import os.path
+from collections.abc import Generator
 from difflib import SequenceMatcher
 from operator import itemgetter
 from pathlib import Path
-from typing import Callable, cast
 
 from commitizen import changelog, defaults, factory, git, out
 from commitizen.changelog_formats import get_changelog_format
@@ -32,9 +32,10 @@ class Changelog:
         if not git.is_git_project():
             raise NotAGitProjectError()
 
-        self.config: BaseConfig = config
-        changelog_file_name = args.get("file_name") or cast(
-            str, self.config.settings.get("changelog_file")
+        self.config = config
+
+        changelog_file_name = args.get("file_name") or self.config.settings.get(
+            "changelog_file"
         )
         if not isinstance(changelog_file_name, str):
             raise NotAllowed(
@@ -114,28 +115,28 @@ class Changelog:
         on our experience.
         """
         SIMILARITY_THRESHOLD = 0.89
-        tag_ratio = map(
-            lambda tag: (
-                SequenceMatcher(
+        scores_and_tag_names: Generator[tuple[float, str]] = (
+            (
+                score,
+                tag.name,
+            )
+            for tag in tags
+            if (
+                score := SequenceMatcher(
                     None, latest_version, strip_local_version(tag.name)
-                ).ratio(),
-                tag,
-            ),
-            tags,
+                ).ratio()
+            )
+            >= SIMILARITY_THRESHOLD
         )
         try:
-            score, tag = max(tag_ratio, key=itemgetter(0))
+            _, start_rev = max(scores_and_tag_names, key=itemgetter(0))
         except ValueError:
             raise NoRevisionError()
-        if score < SIMILARITY_THRESHOLD:
-            raise NoRevisionError()
-        start_rev = tag.name
         return start_rev
 
     def write_changelog(
         self, changelog_out: str, lines: list[str], changelog_meta: changelog.Metadata
     ):
-        changelog_hook: Callable | None = self.cz.changelog_hook
         with smart_open(self.file_name, "w", encoding=self.encoding) as changelog_file:
             partial_changelog: str | None = None
             if self.incremental:
@@ -145,8 +146,8 @@ class Changelog:
                 changelog_out = "".join(new_lines)
                 partial_changelog = changelog_out
 
-            if changelog_hook:
-                changelog_out = changelog_hook(changelog_out, partial_changelog)
+            if self.cz.changelog_hook:
+                changelog_out = self.cz.changelog_hook(changelog_out, partial_changelog)
 
             changelog_file.write(changelog_out)
 
@@ -221,14 +222,12 @@ class Changelog:
         extras.update(self.extras)
         changelog_out = changelog.render_changelog(
             tree, loader=self.cz.template_loader, template=self.template, **extras
-        )
-        changelog_out = changelog_out.lstrip("\n")
+        ).lstrip("\n")
 
         # Dry_run is executed here to avoid checking and reading the files
         if self.dry_run:
-            changelog_hook: Callable | None = self.cz.changelog_hook
-            if changelog_hook:
-                changelog_out = changelog_hook(changelog_out, "")
+            if self.cz.changelog_hook:
+                changelog_out = self.cz.changelog_hook(changelog_out, "")
             out.write(changelog_out)
             raise DryRunExit()
 
