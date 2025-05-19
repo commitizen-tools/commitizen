@@ -53,6 +53,14 @@ body:
         ```bash
         cz version --report
         ```
+
+        If `cz version --report` is not available, please run the following commands to retrieve your environment information:
+
+        ```bash
+        echo "Commitizen Version: $(cz version)"
+        echo "Python Version: $(python3 -c 'import sys; print(sys.version)')"
+        echo "Operating System: $(python3 -c 'import platform; print(platform.system())')"
+        ```
       placeholder: |
         Commitizen Version: 4.0.0
         Python Version: 3.13.3 (main, Apr  8 2025, 13:54:08) [Clang 16.0.0 (clang-1600.0.26.6)]
