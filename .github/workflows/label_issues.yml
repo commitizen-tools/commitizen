@@ -15,9 +15,31 @@ jobs:
       - uses: actions/github-script@v7
         with:
           script: |
-            github.rest.issues.addLabels({
+            const issue = await github.rest.issues.get({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              labels: ['issue-status: needs-triage']
-            })
+            });
+
+            const body = issue.data.body || '';
+
+            const osLabels = new Set(); // Use a Set to avoid duplicates
+
+            if (body.includes('Operating System: Darwin')) {
+              osLabels.add('os: macOS');
+            }
+
+            if (body.includes('Operating System: Linux')) {
+              osLabels.add('os: Linux');
+            }
+
+            if (body.includes('Operating System: Windows')) {
+              osLabels.add('os: Windows');
+            }
+
+            await github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['issue-status: needs-triage', ...osLabels],
+            });
