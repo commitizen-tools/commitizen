@@ -1641,7 +1641,9 @@ def test_tags_rules_get_version_tags(capsys: pytest.CaptureFixture):
 
 def test_changelog_file_name_from_args_and_config():
     mock_config = Mock(spec=BaseConfig)
-    mock_config.path.parent = "/my/project"
+    mock_path = Mock(spec=Path)
+    mock_path.parent = Path("/my/project")
+    mock_config.path = mock_path
     mock_config.settings = {
         "name": "cz_conventional_commits",
         "changelog_file": "CHANGELOG.md",
