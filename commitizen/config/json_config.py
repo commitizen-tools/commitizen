@@ -13,7 +13,7 @@ class JsonConfig(BaseConfig):
     def __init__(self, *, data: bytes | str, path: Path | str):
         super().__init__()
         self.is_empty_config = False
-        self.add_path(path)
+        self.path = path  # type: ignore
         self._parse_setting(data)
 
     def init_empty_config_content(self):
