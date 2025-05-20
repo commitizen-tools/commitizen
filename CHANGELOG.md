@@ -1,3 +1,9 @@
+## v4.8.0 (2025-05-20)
+
+### Feat
+
+- **cli**: add --tag-format argument to changelog command
+
 ## v4.7.2 (2025-05-18)
 
 ### Refactor
