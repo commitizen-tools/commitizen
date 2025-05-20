@@ -120,7 +120,7 @@ deprecated = "^1.2.13"
 [tool.poetry.group.linters.dependencies]
 ruff = ">=0.5.0,<0.10.0"
 pre-commit = ">=2.18,<5.0"
-mypy = "^1.4"
+mypy = "^1.15.0"
 types-deprecated = "^1.2.9.2"
 types-python-dateutil = "^2.8.19.13"
 types-PyYAML = ">=5.4.3,<7.0.0"
@@ -250,12 +250,7 @@ cover.help = "Run the test suite with coverage"
 cover.ref = "test --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen"
 
 all.help = "Run all tasks"
-all.sequence = [
-    "format",
-    "lint",
-    "cover",
-    "check-commit",
-]
+all.sequence = ["format", "lint", "cover", "check-commit"]
 
 "doc:screenshots".help = "Render documentation screenshots"
 "doc:screenshots".script = "scripts.gen_cli_help_screenshots:gen_cli_help_screenshots"
@@ -267,10 +262,7 @@ doc.help = "Live documentation server"
 doc.cmd = "mkdocs serve"
 
 ci.help = "Run all tasks in CI"
-ci.sequence = [
-    { cmd = "pre-commit run --all-files" },
-    "cover",
-]
+ci.sequence = [{ cmd = "pre-commit run --all-files" }, "cover"]
 ci.env = { SKIP = "no-commit-to-branch" }
 
 setup-pre-commit.help = "Install pre-commit hooks"
