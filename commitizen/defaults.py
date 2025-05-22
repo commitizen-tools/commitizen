@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pathlib
+import warnings
 from collections import OrderedDict
 from collections.abc import Iterable, MutableMapping, Sequence
 from typing import Any, TypedDict
@@ -153,3 +154,31 @@ def get_tag_regexes(
         **{f"${k}": v for k, v in regexes.items()},
         **{f"${{{k}}}": v for k, v in regexes.items()},
     }
+
+
+def __getattr__(name: str) -> Any:
+    # PEP-562: deprecate module-level variable
+
+    # {"deprecated key": (value, "new key")}
+    deprecated_vars = {
+        "bump_pattern": (BUMP_PATTERN, "BUMP_PATTERN"),
+        "bump_map": (BUMP_MAP, "BUMP_MAP"),
+        "bump_map_major_version_zero": (
+            BUMP_MAP_MAJOR_VERSION_ZERO,
+            "BUMP_MAP_MAJOR_VERSION_ZERO",
+        ),
+        "bump_message": (BUMP_MESSAGE, "BUMP_MESSAGE"),
+        "change_type_order": (CHANGE_TYPE_ORDER, "CHANGE_TYPE_ORDER"),
+        "encoding": (ENCODING, "ENCODING"),
+        "name": (DEFAULT_SETTINGS["name"], "DEFAULT_SETTINGS['name']"),
+    }
+    if name in deprecated_vars:
+        value, replacement = deprecated_vars[name]
+        warnings.warn(
+            f"{name} is deprecated and will be removed in a future version. "
+            f"Use {replacement} instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return value
+    raise AttributeError(f"{name} is not an attribute of {__name__}")
