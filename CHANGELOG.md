@@ -1,3 +1,10 @@
+## v4.8.2 (2025-05-22)
+
+### Refactor
+
+- **check**: simplify code
+- **check**: remove unnecessary variable
+
 ## v4.8.1 (2025-05-22)
 
 ### Refactor
