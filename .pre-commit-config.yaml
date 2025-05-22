@@ -48,7 +48,7 @@ repos:
           - tomli
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.8.0 # automatically updated by Commitizen
+    rev: v4.8.1 # automatically updated by Commitizen
     hooks:
       - id: commitizen
       - id: commitizen-branch

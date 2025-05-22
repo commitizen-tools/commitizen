@@ -1,3 +1,9 @@
+## v4.8.1 (2025-05-22)
+
+### Refactor
+
+- **customize**: improve code readability
+
 ## v4.8.0 (2025-05-20)
 
 ### Feat
