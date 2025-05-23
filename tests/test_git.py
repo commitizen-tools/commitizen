@@ -449,3 +449,27 @@ def test_git_commit_from_rev_and_commit():
     assert commit.author == "John Doe"
     assert commit.author_email == "john@example.com"
     assert commit.parents == []
+
+
+@pytest.mark.parametrize(
+    "os_name,committer_date,expected_cmd",
+    [
+        (
+            "nt",
+            "2024-03-20",
+            'cmd /v /c "set GIT_COMMITTER_DATE=2024-03-20&& git commit  -F "temp.txt""',
+        ),
+        (
+            "posix",
+            "2024-03-20",
+            'GIT_COMMITTER_DATE=2024-03-20 git commit  -F "temp.txt"',
+        ),
+        ("nt", None, 'git commit  -F "temp.txt"'),
+        ("posix", None, 'git commit  -F "temp.txt"'),
+    ],
+)
+def test_create_commit_cmd_string(mocker, os_name, committer_date, expected_cmd):
+    """Test the OS-specific behavior of _create_commit_cmd_string"""
+    mocker.patch("os.name", os_name)
+    result = git._create_commit_cmd_string("", committer_date, "temp.txt")
+    assert result == expected_cmd
