@@ -553,19 +553,20 @@ def commitizen_excepthook(
     type, value, traceback, debug=False, no_raise: list[int] | None = None
 ):
     traceback = traceback if isinstance(traceback, TracebackType) else None
+    if not isinstance(value, CommitizenException):
+        original_excepthook(type, value, traceback)
+        return
+
     if not no_raise:
         no_raise = []
-    if isinstance(value, CommitizenException):
-        if value.message:
-            value.output_method(value.message)
-        if debug:
-            original_excepthook(type, value, traceback)
-        exit_code = value.exit_code
-        if exit_code in no_raise:
-            exit_code = ExitCode.EXPECTED_EXIT
-        sys.exit(exit_code)
-    else:
+    if value.message:
+        value.output_method(value.message)
+    if debug:
         original_excepthook(type, value, traceback)
+    exit_code = value.exit_code
+    if exit_code in no_raise:
+        exit_code = ExitCode.EXPECTED_EXIT
+    sys.exit(exit_code)
 
 
 commitizen_debug_excepthook = partial(commitizen_excepthook, debug=True)
