@@ -2,51 +2,79 @@
 
 ## About
 
-`cz bump` **automatically** increases the version, based on the commits.
+`cz bump` is a powerful command that **automatically** determines and increases your project's version number based on your commit history. It analyzes your commits to determine the appropriate version increment according to semantic versioning principles.
 
-The commits should follow the rules established by the committer in order to be parsed correctly.
+### Key Features
 
-**prerelease** versions are supported (alpha, beta, release candidate).
+- **Automatic Version Detection**: Analyzes commit history to determine the appropriate version bump
+- **Manual Version Control**: Supports manual version specification when needed
+- **Pre-release Support**: Handles alpha, beta, and release candidate versions
+- **Multiple Version Schemes**: Supports both [PEP 0440][pep440] and [semantic versioning][semver] formats
 
-The version can also be **manually** bumped.
+### Version Increment Rules
 
-The version format follows [PEP 0440][pep440] and [semantic versioning][semver].
-
-This means `MAJOR.MINOR.PATCH`
+The version follows the `MAJOR.MINOR.PATCH` format, with increments determined by your commit types:
 
 | Increment | Description                 | Conventional commit map |
 | --------- | --------------------------- | ----------------------- |
-| `MAJOR`   | Breaking changes introduced | `BREAKING CHANGE`       |
+| `MAJOR`   | Breaking changes introduced | `BREAKING CHANGE`, bang (e.g. `feat!`)|
 | `MINOR`   | New features                | `feat`                  |
-| `PATCH`   | Fixes                       | `fix` + everything else |
+| `PATCH`   | Fixes and improvements      | `fix`, `perf`, `refactor`|
 
-[PEP 0440][pep440] is the default, you can switch by using the setting `version_scheme` or the cli:
+### Version Schemes
 
+By default, Commitizen uses [PEP 0440][pep440] for version formatting. You can switch to semantic versioning using either:
+
+1. Command line:
 ```sh
 cz bump --version-scheme semver
 ```
 
-Some examples of pep440:
-
-```bash
-0.9.0
-0.9.1
-0.9.2
-0.9.10
-0.9.11
-1.0.0a0  # alpha
-1.0.0a1
-1.0.0b0  # beta
-1.0.0rc0 # release candidate
-1.0.0rc1
-1.0.0
-1.0.1
-1.1.0
-2.0.0
-2.0.1a
+2. Configuration file:
+```toml
+[tool.commitizen]
+version_scheme = "semver"
 ```
 
-`post` releases are not supported yet.
+### PEP440 Version Examples
+
+Commitizen supports the [PEP 440][pep440] version format, which includes several version types. Here are examples of each:
+
+#### Standard Releases
+```text
+0.9.0    # Initial development release
+0.9.1    # Patch release
+0.9.2    # Another patch release
+0.9.10   # Tenth patch release
+0.9.11   # Eleventh patch release
+1.0.0    # First stable release
+1.0.1    # Patch release after stable
+1.1.0    # Minor feature release
+2.0.0    # Major version release
+```
+
+#### Pre-releases
+```text
+1.0.0a0  # Alpha release 0
+1.0.0a1  # Alpha release 1
+1.0.0b0  # Beta release 0
+1.0.0rc0 # Release candidate 0
+1.0.0rc1 # Release candidate 1
+```
+
+#### Development Releases
+```text
+1.0.0.dev0  # Development release 0
+1.0.0.dev1  # Development release 1
+```
+
+#### Combined Pre-release and Development
+```text
+1.0.0a1.dev0  # Development release 0 of alpha 1
+1.0.0b2.dev1  # Development release 1 of beta 2
+```
+
+> **Note**: `post` releases (e.g., `1.0.0.post1`) are not currently supported.
 
 ## Usage
 
@@ -97,7 +125,7 @@ by their precedence and showcase how a release might flow through a development 
 By default, `--increment-mode` is set to `linear`, which ensures that bumping pre-releases _maintains linearity_:
 bumping of a pre-release with lower precedence than the current pre-release phase maintains the current phase of
 higher precedence. For example, if the current version is `1.0.0b1` then bumping with `--prerelease alpha` will
-continue to bump the “beta” phase.
+continue to bump the "beta" phase.
 
 Setting `--increment-mode` to `exact` instructs `cz bump` to instead apply the
 exact changes that have been specified with `--increment` or determined from the commit log. For example,
@@ -223,7 +251,7 @@ If used together with a manual version the command also fails.
 
 We recommend setting `major_version_zero = true` in your configuration file while a project
 is in its initial development. Remove that configuration using a breaking-change commit to bump
-your project’s major version to `v1.0.0` once your project has reached maturity.
+your project's major version to `v1.0.0` once your project has reached maturity.
 
 ### `--version-scheme`
 
