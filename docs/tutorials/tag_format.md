@@ -10,7 +10,7 @@ tag_format: $version
 version_scheme: pep440
 ```
 
-As this is the default value so you don't have to specify it.
+As this is the default value, you don't have to specify it.
 
 This setting means that:
 
@@ -52,7 +52,7 @@ You will obviously want to keep all those features working as expected.
 
 Commitizen can deal with it as long as you provide the legacy tag format in the configuration.
 
-Using the previous example, let say you want to move from `v${version}` to `component-${version}`.
+Using the previous example, let's say you want to move from `v${version}` to `component-${version}`.
 Then `component-${version}` will be the new tag format and `v${version}` the legacy one.
 
 ```yaml
@@ -62,14 +62,14 @@ legacy_tag_formats:
  - v${version}
 ```
 
-This way, you won't loose your version history, you'll still be able to generate you changelog properly
-and on the next version bump, your last version in the form `v${version}` will be properly recognizef if you use the `scm` version provider.
+This way, you won't lose your version history, you'll still be able to generate your changelog properly,
+and on the next version bump, your last version in the form `v${version}` will be properly recognized if you use the `scm` version provider.
 Your new tag will be in the form `component-${version}`.
 
 ## Known tags to ignore
 
-Now let's say you have some known tags you want to ignore, either because they are not versions, either because they are not versions of the component you are dealing with.
-As a consequence, you don't want them to trigger a warning because Commitizen detected an unknown tag format:
+Now let's say you have some known tags you want to ignore, either because they are not versions, or because they are not versions of the component you are dealing with.
+As a consequence, you don't want them to trigger a warning because Commitizen detected an unknown tag format.
 
 Then you can tell Commitizen about it using the [`ignored_tag_formats`](../config.md#ignored_tag_formats) setting:
 
@@ -93,7 +93,7 @@ This will ignore:
     It will match any string from any length. This allows to exclude by prefix, whether it is followed by a version or not.
 
 !!! tip
-    If you don't want to be warned when Commitizen detect an unknown tag, you can by setting:
+    If you don't want to be warned when Commitizen detects an unknown tag, you can do so by setting:
     ```
     [tool.commitizen]
     ignored_tag_formats = ["*"]

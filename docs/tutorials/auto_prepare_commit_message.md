@@ -2,7 +2,7 @@
 
 ## About
 
-It can be desirable to use commitizen for all types of commits (i.e. regular, merge,
+It can be desirable to use Commitizen for all types of commits (i.e. regular, merge,
 squash) so that the complete git history adheres to the commit message convention
 without ever having to call `cz commit`.
 
@@ -18,10 +18,10 @@ To automatically perform arbitrary cleanup steps after a successful commit you c
 > This hook is invoked by git-commit. It takes no parameters, and is invoked after a
 > commit is made.
 
-A combination of these two hooks allows for enforcing the usage of commitizen so that
-whenever a commit is about to be created, commitizen is used for creating the commit
+A combination of these two hooks allows for enforcing the usage of Commitizen so that
+whenever a commit is about to be created, Commitizen is used for creating the commit
 message. Running `git commit` or `git commit -m "..."` for example, would trigger
-commitizen and use the generated commit message for the commit.
+Commitizen and use the generated commit message for the commit.
 
 ## Installation
 

@@ -41,17 +41,17 @@ jobs:
 
 Push to master and that's it.
 
-### Creating a github release
+### Creating a GitHub release
 
 You can modify the previous action.
 
 Add the variable `changelog_increment_filename` in the `commitizen-action`, specifying
 where to output the content of the changelog for the newly created version.
 
-And then add a step using a github action to create the release: `softprops/action-gh-release`
+And then add a step using a GitHub action to create the release: `softprops/action-gh-release`
 
-The commitizen action creates an env variable called `REVISION`, containing the
-newely created version.
+Commitizen action creates an env variable called `REVISION`, containing the
+newly created version.
 
 ```yaml
 - name: Create bump and changelog
@@ -119,7 +119,7 @@ jobs:
           ./scripts/publish
 ```
 
-Notice that we are using poetry, and we are calling a bash script in `./scripts/publish`. You should configure the action, and the publish with your tools (twine, poetry, etc.). Check [commitizen example](https://github.com/commitizen-tools/commitizen/blob/master/scripts/publish)
+Notice that we are using poetry, and we are calling a bash script in `./scripts/publish`. You should configure the action, and publish with your tools (twine, poetry, etc.). Check [Commitizen example](https://github.com/commitizen-tools/commitizen/blob/master/scripts/publish)
 You can also use [pypa/gh-action-pypi-publish](https://github.com/pypa/gh-action-pypi-publish) to publish your package.
 
 Push the changes and that's it.
