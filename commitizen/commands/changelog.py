@@ -10,6 +10,7 @@ from typing import Callable, cast
 from commitizen import changelog, defaults, factory, git, out
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.config import BaseConfig
+from commitizen.containers import UniqueList
 from commitizen.cz.base import ChangelogReleaseHook, MessageBuilderHook
 from commitizen.cz.utils import strip_local_version
 from commitizen.exceptions import (
@@ -75,11 +76,6 @@ class Changelog:
         self.change_type_map = (
             self.config.settings.get("change_type_map") or self.cz.change_type_map
         )
-        self.change_type_order = (
-            self.config.settings.get("change_type_order")
-            or self.cz.change_type_order
-            or defaults.CHANGE_TYPE_ORDER
-        )
         self.rev_range = args.get("rev_range")
         self.tag_format: str = (
             args.get("tag_format") or self.config.settings["tag_format"]
@@ -100,6 +96,14 @@ class Changelog:
         )
         self.extras = args.get("extras") or {}
         self.export_template_to = args.get("export_template")
+
+    @property
+    def change_type_order(self) -> UniqueList[str]:
+        return UniqueList(
+            self.config.settings.get("change_type_order")  # type: ignore
+            or self.cz.change_type_order
+            or defaults.CHANGE_TYPE_ORDER
+        )
 
     def _find_incremental_rev(self, latest_version: str, tags: list[GitTag]) -> str:
         """Try to find the 'start_rev'.
