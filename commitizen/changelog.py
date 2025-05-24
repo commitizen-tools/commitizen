@@ -29,10 +29,10 @@ from __future__ import annotations
 
 import re
 from collections import OrderedDict, defaultdict
-from collections.abc import Iterable
+from collections.abc import Generator, Iterable, Mapping
 from dataclasses import dataclass
 from datetime import date
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from jinja2 import (
     BaseLoader,
@@ -84,7 +84,7 @@ def generate_tree_from_commits(
     changelog_message_builder_hook: MessageBuilderHook | None = None,
     changelog_release_hook: ChangelogReleaseHook | None = None,
     rules: TagRules | None = None,
-) -> Iterable[dict]:
+) -> Generator[dict[str, Any], None, None]:
     pat = re.compile(changelog_pattern)
     map_pat = re.compile(commit_parser, re.MULTILINE)
     body_map_pat = re.compile(commit_parser, re.MULTILINE | re.DOTALL)
@@ -187,24 +187,24 @@ def process_commit_message(
             changes[change_type].append(msg)
 
 
-def order_changelog_tree(tree: Iterable, change_type_order: list[str]) -> Iterable:
+def order_changelog_tree(
+    tree: Iterable[Mapping[str, Any]], change_type_order: list[str]
+) -> Generator[dict[str, Any], None, None]:
     if len(set(change_type_order)) != len(change_type_order):
         raise InvalidConfigurationError(
             f"Change types contain duplicates types ({change_type_order})"
         )
 
-    sorted_tree = []
     for entry in tree:
-        ordered_change_types = change_type_order + sorted(
-            set(entry["changes"].keys()) - set(change_type_order)
-        )
-        changes = [
-            (ct, entry["changes"][ct])
-            for ct in ordered_change_types
-            if ct in entry["changes"]
-        ]
-        sorted_tree.append({**entry, **{"changes": OrderedDict(changes)}})
-    return sorted_tree
+        yield {
+            **entry,
+            "changes": OrderedDict(
+                (ct, entry["changes"][ct])
+                for ct in change_type_order
+                + sorted(set(entry["changes"].keys()) - set(change_type_order))
+                if ct in entry["changes"]
+            ),
+        }
 
 
 def get_changelog_template(loader: BaseLoader, template: str) -> Template:
