@@ -214,7 +214,9 @@ class Changelog:
             rules=self.tag_rules,
         )
         if self.change_type_order:
-            tree = changelog.order_changelog_tree(tree, self.change_type_order)
+            tree = changelog.generate_ordered_changelog_tree(
+                tree, self.change_type_order
+            )
 
         extras = self.cz.template_extras.copy()
         extras.update(self.config.settings["extras"])
