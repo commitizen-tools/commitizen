@@ -17,7 +17,6 @@ from commitizen.config import BaseConfig
 from commitizen.cz.conventional_commits.conventional_commits import (
     ConventionalCommitsCz,
 )
-from commitizen.exceptions import InvalidConfigurationError
 from commitizen.version_schemes import Pep440
 
 COMMITS_DATA: list[dict[str, Any]] = [
@@ -1229,14 +1228,6 @@ def test_order_changelog_tree(change_type_order, expected_reordering):
             assert [*COMMITS_TREE[index]["changes"].keys()] == expected["original"]
         else:
             assert [*entry["changes"].keys()] == [*entry["changes"].keys()]
-
-
-def test_order_changelog_tree_raises():
-    change_type_order = ["BREAKING CHANGE", "feat", "refactor", "feat"]
-    with pytest.raises(InvalidConfigurationError) as excinfo:
-        list(changelog.order_changelog_tree(COMMITS_TREE, change_type_order))
-
-    assert "Change types contain duplicates types" in str(excinfo)
 
 
 def test_render_changelog(

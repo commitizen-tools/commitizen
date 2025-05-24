@@ -42,8 +42,9 @@ from jinja2 import (
     Template,
 )
 
+from commitizen.containers import UniqueList
 from commitizen.cz.base import ChangelogReleaseHook
-from commitizen.exceptions import InvalidConfigurationError, NoCommitsFoundError
+from commitizen.exceptions import NoCommitsFoundError
 from commitizen.git import GitCommit, GitTag
 from commitizen.tags import TagRules
 
@@ -188,13 +189,8 @@ def process_commit_message(
 
 
 def order_changelog_tree(
-    tree: Iterable[Mapping[str, Any]], change_type_order: list[str]
+    tree: Iterable[Mapping[str, Any]], change_type_order: UniqueList[str]
 ) -> Generator[dict[str, Any], None, None]:
-    if len(set(change_type_order)) != len(change_type_order):
-        raise InvalidConfigurationError(
-            f"Change types contain duplicates types ({change_type_order})"
-        )
-
     for entry in tree:
         yield {
             **entry,
