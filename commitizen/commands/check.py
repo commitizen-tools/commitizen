@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import re
 import sys
+from itertools import islice
 from typing import Any
 
 from commitizen import factory, git, out
@@ -34,7 +35,6 @@ class Check:
         self.max_msg_length: int = arguments.get("message_length_limit", 0)
 
         # we need to distinguish between None and [], which is a valid value
-
         allowed_prefixes = arguments.get("allowed_prefixes")
         self.allowed_prefixes: list[str] = (
             allowed_prefixes
@@ -44,7 +44,7 @@ class Check:
 
         self._valid_command_argument()
 
-        self.config: BaseConfig = config
+        self.config = config
         self.encoding = config.settings["encoding"]
         self.cz = factory.committer_factory(self.config)
 
@@ -73,11 +73,9 @@ class Check:
 
         pattern = self.cz.schema_pattern()
         displayed_msgs_content = "\n".join(
-            [
-                f'commit "{commit.rev}": "{commit.message}"'
-                for commit in commits
-                if not self.validate_commit_message(commit.message, pattern)
-            ]
+            f'commit "{commit.rev}": "{commit.message}"'
+            for commit in commits
+            if not self.validate_commit_message(commit.message, pattern)
         )
         if displayed_msgs_content:
             raise InvalidCommitMessageError(
@@ -126,14 +124,18 @@ class Check:
         Returns:
             The filtered commit message without comments.
         """
-
-        lines = []
-        for line in msg.split("\n"):
-            if "# ------------------------ >8 ------------------------" in line:
-                break
-            if not line.startswith("#"):
-                lines.append(line)
-        return "\n".join(lines)
+        msg_lines = msg.split("\n")
+        cutoff = next(
+            (
+                i
+                for i, line in enumerate(msg_lines)
+                if "# ------------------------ >8 ------------------------" in line
+            ),
+            len(msg_lines),
+        )
+        return "\n".join(
+            line for line in islice(msg_lines, cutoff) if not line.startswith("#")
+        )
 
     def validate_commit_message(self, commit_msg: str, pattern: str) -> bool:
         if not commit_msg:
