@@ -3,6 +3,22 @@
 In addition to the native templates, some alternative commit format templates
 are available as PyPI packages (installable with `pip`).
 
+### [cz-ai](https://github.com/watadarkstar/cz_ai)
+
+A Commitizen plugin that leverages OpenAI's GPT-4o to automatically generate clear, concise, and conventional commit messages based on your staged git changes.
+
+#### Installation
+
+```sh
+pip install cz-ai
+```
+
+#### Usage
+
+```sh
+cz --name cz_ai commit
+```
+
 ### [Conventional JIRA](https://pypi.org/project/conventional-JIRA/)
 
 Just like _conventional commit_ format, but the scope has been restricted to a
