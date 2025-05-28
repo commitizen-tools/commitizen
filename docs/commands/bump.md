@@ -191,7 +191,7 @@ understand that the user wants to create a changelog. It is recommended to be
 explicit and use `--changelog` (or the setting `update_changelog_on_bump`).
 
 This command is useful to "transport" the newly created changelog.
-It can be sent to an auditing system, or to create a Github Release.
+It can be sent to an auditing system, or to create a GitHub Release.
 
 Example:
 

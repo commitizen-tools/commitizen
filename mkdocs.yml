@@ -50,7 +50,7 @@ nav:
       - Auto check commits: "tutorials/auto_check.md"
       - Auto prepare commit message: "tutorials/auto_prepare_commit_message.md"
       - GitLab CI: "tutorials/gitlab_ci.md"
-      - Github Actions: "tutorials/github_actions.md"
+      - GitHub Actions: "tutorials/github_actions.md"
       - Jenkins pipeline: "tutorials/jenkins_pipeline.md"
       - Developmental releases: "tutorials/dev_releases.md"
       - Monorepo support: "tutorials/monorepo_guidance.md"
