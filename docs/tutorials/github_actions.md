@@ -1,4 +1,4 @@
-## Create a new release with Github Actions
+## Create a new release with GitHub Actions
 
 ### Automatic bumping of version
 
