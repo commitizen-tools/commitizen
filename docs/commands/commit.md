@@ -1,52 +1,65 @@
-![Using Commitizen cli](../images/demo.gif)
-
-## About
-
-In your terminal run `cz commit` or the shortcut `cz c` to generate a guided git commit.
-
-You can run `cz commit --write-message-to-file COMMIT_MSG_FILE` to additionally save the
-generated message to a file. This can be combined with the `--dry-run` flag to only
-write the message to a file and not modify files and create a commit. A possible use
-case for this is to [automatically prepare a commit message](../tutorials/auto_prepare_commit_message.md).
-
-
-!!! note
-    To maintain platform compatibility, the `commit` command disable ANSI escaping in its output.
-    In particular pre-commit hooks coloring will be deactivated as discussed in [commitizen-tools/commitizen#417](https://github.com/commitizen-tools/commitizen/issues/417).
-
 ## Usage
 
 ![cz commit --help](../images/cli_help/cz_commit___help.svg)
 
-### git options
+## Overview
 
-`git` command options that are not implemented by Commitizen can be use via the `--` syntax for the `commit` command.
-The syntax separates Commitizen arguments from `git commit` arguments by a double dash. This is the resulting syntax:
+![Using Commitizen cli](../images/demo.gif)
+
+The `commit` command provides an interactive way to create structured commits. Use either:
+
+- `cz commit`
+- `cz c` (shortcut)
+
+By default, Commitizen uses conventional commits, but you can customize the commit rules to match your project's needs. See the [customization guide](../customization.md) for details.
+
+## Basic Usage
+
+### Interactive Commit Creation
+
+Simply run `cz commit` in your terminal to start the interactive commit creation process. The command will guide you through creating a properly formatted commit message according to your configured rules.
+
+### Writing Messages to File
+
+You can save the generated commit message to a file using:
+```sh
+cz commit --write-message-to-file COMMIT_MSG_FILE
+```
+
+This can be combined with `--dry-run` to only write the message without creating a commit. This is particularly useful for [automatically preparing commit messages](../tutorials/auto_prepare_commit_message.md).
+
+## Advanced Features
+
+### Git Command Options
+
+You can pass any git commit options using the `--` syntax:
 ```sh
 cz commit <commitizen-args> -- <git-cli-args>
 
-# e.g., cz commit --dry-run -- -a -S
+# Examples:
+cz c --dry-run -- -a -S  # Stage all changes and sign the commit
+cz c -a -- -n            # Stage all changes and skip the pre-commit and commit-msg hooks
 ```
-For example, using the `-S` option on `git commit` to sign a commit is now Commitizen compatible: `cz c -- -S`
 
-!!! note
-    Deprecation warning: A commit can be signed off using `cz commit --signoff` or the shortcut `cz commit -s`.
-    This syntax is now deprecated in favor of the new `cz commit -- -s` syntax.
+!!! warning
+    The `--signoff` option (or `-s`) is now recommended being used with the new syntax: `cz commit -- -s`. The old syntax `cz commit --signoff` is deprecated.
 
 ### Retry
 
-You can use `cz commit --retry` to reuse the last commit message when the previous commit attempt failed.
-To automatically retry when running `cz commit`, you can set the `retry_after_failure`
-configuration option to `true`. Running `cz commit --no-retry` makes Commitizen ignore `retry_after_failure`, forcing
-a new commit message to be prompted.
+- Use `cz commit --retry` to reuse the last commit message after a failed commit attempt
+- Set `retry_after_failure: true` in your configuration to automatically retry
+- Use `cz commit --no-retry` to force a new commit message prompt
 
-### Commit message length limit
+### Message Length Control
 
-The argument `-l` (or `--message-length-limit`) followed by a positive number can limit the length of commit messages.
-An exception would be raised when the message length exceeds the limit.
-For example, `cz commit -l 72` will limit the length of commit messages to 72 characters.
-By default, the limit is set to 0, which means no limit on the length.
+Control the length of your commit messages using the `-l` or `--message-length-limit` option:
+```sh
+cz commit -l 72  # Limits message length to 72 characters
+```
 
-**Note that the limit applies only to the first line of the message.**
-Specifically, for `ConventionalCommitsCz` the length only counts from the type of change to the subject,
-while the body and the footer are not counted.
+!!! note
+    The length limit only applies to the first line of the commit message. For conventional commits, this means the limit applies from the type of change through the subject. The body and footer are not counted.
+
+## Technical Notes
+
+For platform compatibility, the `commit` command disables ANSI escaping in its output. This means pre-commit hooks coloring will be deactivated as discussed in [commitizen-tools/commitizen#417](https://github.com/commitizen-tools/commitizen/issues/417).
