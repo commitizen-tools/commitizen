@@ -377,9 +377,54 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#command" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interactive-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactive Configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration File
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration Options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#example" class="md-nav__link">
     <span class="md-ellipsis">
       Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next Steps
     </span>
   </a>
   
@@ -781,7 +826,7 @@
         
   
   <span class="md-ellipsis">
-    Github Actions
+    GitHub Actions
   </span>
   
 
@@ -995,9 +1040,54 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#command" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interactive-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactive Configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration File
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration Options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#example" class="md-nav__link">
     <span class="md-ellipsis">
       Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next Steps
     </span>
   </a>
   
@@ -1020,25 +1110,60 @@
 
   <h1>init</h1>
 
+<p>The <code>cz init</code> command helps you set up Commitizen in your project by creating a configuration file with your preferred settings.</p>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <p><img alt="cz init --help" src="../../images/cli_help/cz_init___help.svg" /></p>
-<h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h2>
-<p>To start using Commitizen, the recommended approach is to run</p>
+<h2 id="command">Command<a class="headerlink" href="#command" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>cz<span class="w"> </span>init
 </code></pre></div>
+<h2 id="interactive-configuration">Interactive Configuration<a class="headerlink" href="#interactive-configuration" title="Permanent link">&para;</a></h2>
+<p>When you run <code>cz init</code>, Commitizen will guide you through an interactive setup process:</p>
 <p><img alt="init" src="../../images/init.gif" /></p>
-<p>This command will ask you for information about the project and will
-configure the selected file type (<code>pyproject.toml</code>, <code>.cz.toml</code>, etc.).</p>
-<p>The <code>init</code> will help you with</p>
+<h2 id="configuration-file">Configuration File<a class="headerlink" href="#configuration-file" title="Permanent link">&para;</a></h2>
+<p>The initialization process will create a configuration file in your project root.</p>
+<p>Choose the configuration file format based on your project type:</p>
+<ul>
+<li>Use <code>pyproject.toml</code> for Python projects</li>
+<li>Use <code>.cz.toml</code>, <code>.cz.yaml</code>, <code>.cz.json</code>, etc. for other projects.</li>
+</ul>
+<h2 id="configuration-options">Configuration Options<a class="headerlink" href="#configuration-options" title="Permanent link">&para;</a></h2>
+<p>During the initialization process, you'll be prompted to configure the following settings:</p>
 <ol>
-<li>Choose a convention rules (<code>name</code>)</li>
-<li>Choosing a version provider (<code>commitizen</code> or for example <code>Cargo.toml</code>)</li>
-<li>Detecting your project's version</li>
-<li>Detecting the tag format used</li>
-<li>Choosing a version type (<code>semver</code> or <code>pep440</code>)</li>
-<li>Whether to create the changelog automatically or not during bump</li>
-<li>Whether you want to keep the major as zero while building alpha software.</li>
-<li>Whether to setup pre-commit hooks.</li>
+<li><strong>Convention Rules</strong>: Select the commit message convention to follow (e.g., conventional commits)</li>
+<li><strong>Version Provider</strong>: Choose how to manage versioning in your project. Commitizen supports multiple version management systems:<ul>
+<li><code>commitizen</code>: Uses Commitizen's built-in version management system</li>
+<li><code>npm</code>: Manages version in <code>package.json</code> for Node.js projects</li>
+<li><code>cargo</code>: Manages version in <code>Cargo.toml</code> for Rust projects</li>
+<li><code>composer</code>: Manages version in <code>composer.json</code> for PHP projects</li>
+<li><code>pep621</code>: Uses <code>pyproject.toml</code> with PEP 621 standard</li>
+<li><code>poetry</code>: Uses <code>pyproject.toml</code> with Poetry configuration</li>
+<li><code>uv</code>: Uses <code>pyproject.toml</code> and <code>uv.lock</code> for Python projects</li>
+<li><code>scm</code>: Reads version directly from git tags without modifying files</li>
+</ul>
+</li>
+<li><strong>Project Version</strong>: The current version of your project will be detected automatically</li>
+<li><strong>Tag Format</strong>: The format used for version tags in your repository</li>
+<li><strong>Version Type</strong>: Choose between:<ul>
+<li><code>semver</code> or <code>semver2</code>: Semantic Versioning (MAJOR.MINOR.PATCH)</li>
+<li><code>pep440</code>: Python Package Versioning</li>
+</ul>
+</li>
+<li><strong>Changelog Generation</strong>: Configure whether to automatically generate changelog during version bumps</li>
+<li><strong>Alpha Versioning</strong>: Option to keep major version at 0 for alpha/beta software</li>
+<li><strong>Pre-commit Hooks</strong>: Set up Git pre-commit hooks for automated commit message validation</li>
+</ol>
+<h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># Start the initialization process</span>
+cz<span class="w"> </span>init
+
+<span class="c1"># Follow the interactive prompts to configure your project</span>
+</code></pre></div>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<p>After initialization, you can:</p>
+<ol>
+<li>Start using <code>cz commit</code> to create conventional commits</li>
+<li>Use <code>cz bump</code> to manage versioning</li>
+<li>Configure additional settings in your project's configuration file</li>
 </ol>
 
 
