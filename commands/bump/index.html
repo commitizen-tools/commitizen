@@ -416,6 +416,90 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="About">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-increment-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version Increment Rules
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-schemes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version Schemes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pep440-version-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      PEP440 Version Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PEP440 Version Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-releases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Standard Releases
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-releases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pre-releases
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development-releases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Development Releases
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combined-pre-release-and-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Combined Pre-release and Development
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1325,6 +1409,90 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="About">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-increment-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version Increment Rules
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-schemes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Version Schemes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pep440-version-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      PEP440 Version Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PEP440 Version Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-releases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Standard Releases
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-releases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pre-releases
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development-releases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Development Releases
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combined-pre-release-and-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Combined Pre-release and Development
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1688,12 +1856,16 @@
 
 <p><img alt="Bump version" src="../../images/bump.gif" /></p>
 <h2 id="about">About<a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
-<p><code>cz bump</code> <strong>automatically</strong> increases the version, based on the commits.</p>
-<p>The commits should follow the rules established by the committer in order to be parsed correctly.</p>
-<p><strong>prerelease</strong> versions are supported (alpha, beta, release candidate).</p>
-<p>The version can also be <strong>manually</strong> bumped.</p>
-<p>The version format follows <a href="https://www.python.org/dev/peps/pep-0440/">PEP 0440</a> and <a href="https://semver.org/">semantic versioning</a>.</p>
-<p>This means <code>MAJOR.MINOR.PATCH</code></p>
+<p><code>cz bump</code> is a powerful command that <strong>automatically</strong> determines and increases your project's version number based on your commit history. It analyzes your commits to determine the appropriate version increment according to semantic versioning principles.</p>
+<h3 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Automatic Version Detection</strong>: Analyzes commit history to determine the appropriate version bump</li>
+<li><strong>Manual Version Control</strong>: Supports manual version specification when needed</li>
+<li><strong>Pre-release Support</strong>: Handles alpha, beta, and release candidate versions</li>
+<li><strong>Multiple Version Schemes</strong>: Supports both <a href="https://www.python.org/dev/peps/pep-0440/">PEP 0440</a> and <a href="https://semver.org/">semantic versioning</a> formats</li>
+</ul>
+<h3 id="version-increment-rules">Version Increment Rules<a class="headerlink" href="#version-increment-rules" title="Permanent link">&para;</a></h3>
+<p>The version follows the <code>MAJOR.MINOR.PATCH</code> format, with increments determined by your commit types:</p>
 <table>
 <thead>
 <tr>
@@ -1706,7 +1878,7 @@
 <tr>
 <td><code>MAJOR</code></td>
 <td>Breaking changes introduced</td>
-<td><code>BREAKING CHANGE</code></td>
+<td><code>BREAKING CHANGE</code>, bang (e.g. <code>feat!</code>)</td>
 </tr>
 <tr>
 <td><code>MINOR</code></td>
@@ -1715,32 +1887,57 @@
 </tr>
 <tr>
 <td><code>PATCH</code></td>
-<td>Fixes</td>
-<td><code>fix</code> + everything else</td>
+<td>Fixes and improvements</td>
+<td><code>fix</code>, <code>perf</code>, <code>refactor</code></td>
 </tr>
 </tbody>
 </table>
-<p><a href="https://www.python.org/dev/peps/pep-0440/">PEP 0440</a> is the default, you can switch by using the setting <code>version_scheme</code> or the cli:</p>
+<h3 id="version-schemes">Version Schemes<a class="headerlink" href="#version-schemes" title="Permanent link">&para;</a></h3>
+<p>By default, Commitizen uses <a href="https://www.python.org/dev/peps/pep-0440/">PEP 0440</a> for version formatting. You can switch to semantic versioning using either:</p>
+<ol>
+<li>
+<p>Command line:
 <div class="highlight"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--version-scheme<span class="w"> </span>semver
+</code></pre></div></p>
+</li>
+<li>
+<p>Configuration file:
+<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version_scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;semver&quot;</span>
+</code></pre></div></p>
+</li>
+</ol>
+<h3 id="pep440-version-examples">PEP440 Version Examples<a class="headerlink" href="#pep440-version-examples" title="Permanent link">&para;</a></h3>
+<p>Commitizen supports the <a href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a> version format, which includes several version types. Here are examples of each:</p>
+<h4 id="standard-releases">Standard Releases<a class="headerlink" href="#standard-releases" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>0.9.0    # Initial development release
+0.9.1    # Patch release
+0.9.2    # Another patch release
+0.9.10   # Tenth patch release
+0.9.11   # Eleventh patch release
+1.0.0    # First stable release
+1.0.1    # Patch release after stable
+1.1.0    # Minor feature release
+2.0.0    # Major version release
 </code></pre></div>
-<p>Some examples of pep440:</p>
-<div class="highlight"><pre><span></span><code><span class="m">0</span>.9.0
-<span class="m">0</span>.9.1
-<span class="m">0</span>.9.2
-<span class="m">0</span>.9.10
-<span class="m">0</span>.9.11
-<span class="m">1</span>.0.0a0<span class="w">  </span><span class="c1"># alpha</span>
-<span class="m">1</span>.0.0a1
-<span class="m">1</span>.0.0b0<span class="w">  </span><span class="c1"># beta</span>
-<span class="m">1</span>.0.0rc0<span class="w"> </span><span class="c1"># release candidate</span>
-<span class="m">1</span>.0.0rc1
-<span class="m">1</span>.0.0
-<span class="m">1</span>.0.1
-<span class="m">1</span>.1.0
-<span class="m">2</span>.0.0
-<span class="m">2</span>.0.1a
+<h4 id="pre-releases">Pre-releases<a class="headerlink" href="#pre-releases" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>1.0.0a0  # Alpha release 0
+1.0.0a1  # Alpha release 1
+1.0.0b0  # Beta release 0
+1.0.0rc0 # Release candidate 0
+1.0.0rc1 # Release candidate 1
 </code></pre></div>
-<p><code>post</code> releases are not supported yet.</p>
+<h4 id="development-releases">Development Releases<a class="headerlink" href="#development-releases" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>1.0.0.dev0  # Development release 0
+1.0.0.dev1  # Development release 1
+</code></pre></div>
+<h4 id="combined-pre-release-and-development">Combined Pre-release and Development<a class="headerlink" href="#combined-pre-release-and-development" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>1.0.0a1.dev0  # Development release 0 of alpha 1
+1.0.0b2.dev1  # Development release 1 of beta 2
+</code></pre></div>
+<blockquote>
+<p><strong>Note</strong>: <code>post</code> releases (e.g., <code>1.0.0.post1</code>) are not currently supported.</p>
+</blockquote>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <p><img alt="cz bump --help" src="../../images/cli_help/cz_bump___help.svg" /></p>
 <h3 id="-files-only"><code>--files-only</code><a class="headerlink" href="#-files-only" title="Permanent link">&para;</a></h3>
@@ -1777,7 +1974,7 @@ by their precedence and showcase how a release might flow through a development 
 <p>By default, <code>--increment-mode</code> is set to <code>linear</code>, which ensures that bumping pre-releases <em>maintains linearity</em>:
 bumping of a pre-release with lower precedence than the current pre-release phase maintains the current phase of
 higher precedence. For example, if the current version is <code>1.0.0b1</code> then bumping with <code>--prerelease alpha</code> will
-continue to bump the “beta” phase.</p>
+continue to bump the "beta" phase.</p>
 <p>Setting <code>--increment-mode</code> to <code>exact</code> instructs <code>cz bump</code> to instead apply the
 exact changes that have been specified with <code>--increment</code> or determined from the commit log. For example,
 <code>--prerelease beta</code> will always result in a <code>b</code> tag, and <code>--increment PATCH</code> will always increase the patch component.</p>
@@ -1903,7 +2100,7 @@ should not bump that major version from zero. This command ensures that behavior
 If used together with a manual version the command also fails.</p>
 <p>We recommend setting <code>major_version_zero = true</code> in your configuration file while a project
 is in its initial development. Remove that configuration using a breaking-change commit to bump
-your project’s major version to <code>v1.0.0</code> once your project has reached maturity.</p>
+your project's major version to <code>v1.0.0</code> once your project has reached maturity.</p>
 <h3 id="-version-scheme"><code>--version-scheme</code><a class="headerlink" href="#-version-scheme" title="Permanent link">&para;</a></h3>
 <p>Choose the version format, options: <code>pep440</code>, <code>semver</code>.</p>
 <p>Default: <code>pep440</code></p>
