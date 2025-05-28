@@ -163,12 +163,14 @@ cz bump
 ```
 
 This command:
+
 - Bumps your project's version
 - Creates a git tag
 - Updates the changelog (if `update_changelog_on_bump` is enabled)
 - Updates version files
 
 You can customize:
+
 - [Version files](https://commitizen-tools.github.io/commitizen/commands/bump/#version_files)
 - [Version scheme](https://commitizen-tools.github.io/commitizen/commands/bump/#version_scheme)
 - [Version provider](https://commitizen-tools.github.io/commitizen/config/#version-providers)
@@ -187,6 +189,7 @@ cz changelog --dry-run "$(cz version -p)"
 ```
 
 This command is particularly useful for automation scripts and CI/CD pipelines.
+
 For example, you can use the output of the command `cz changelog --dry-run "$(cz version -p)"` to notify your team about a new release in Slack.
 
 #### Pre-commit Integration
