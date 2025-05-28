@@ -75,15 +75,15 @@ def get_commit_tag(commit: GitCommit, tags: list[GitTag]) -> GitTag | None:
 
 
 def _get_release_info(
-    current_tag_name: str,
-    current_tag_date: str,
+    prev_tag_name: str,
+    prev_tag_date: str,
     changes: dict[str | None, list],
     changelog_release_hook: ChangelogReleaseHook | None,
     commit_tag: GitTag | None,
 ) -> dict[str, Any]:
     release = {
-        "version": current_tag_name,
-        "date": current_tag_date,
+        "version": prev_tag_name,
+        "date": prev_tag_date,
         "changes": changes,
     }
     if changelog_release_hook:
@@ -108,41 +108,38 @@ def generate_tree_from_commits(
     rules = rules or TagRules()
 
     used_tags: set[GitTag] = set()
-    current_tag_name = unreleased_version or "Unreleased"
-    current_tag_date = (
-        date.today().isoformat() if unreleased_version is not None else ""
-    )
+    prev_tag_name = unreleased_version or "Unreleased"
+    prev_tag_date = date.today().isoformat() if unreleased_version is not None else ""
 
     # Check if the latest commit is not tagged
     current_tag = get_commit_tag(commits[0], tags) if commits else None
     if current_tag is not None:
         used_tags.add(current_tag)
         if current_tag.name:
-            current_tag_name = current_tag.name
-            current_tag_date = current_tag.date
+            prev_tag_name = current_tag.name
+            prev_tag_date = current_tag.date
 
     changes: defaultdict[str | None, list] = defaultdict(list)
-    commit_tag: GitTag | None = None
     for commit in commits:
-        commit_tag = get_commit_tag(commit, tags)
+        current_tag = get_commit_tag(commit, tags)
 
         if (
-            commit_tag
-            and commit_tag not in used_tags
-            and rules.include_in_changelog(commit_tag)
+            current_tag
+            and current_tag not in used_tags
+            and rules.include_in_changelog(current_tag)
         ):
-            used_tags.add(commit_tag)
+            used_tags.add(current_tag)
 
             yield _get_release_info(
-                current_tag_name,
-                current_tag_date,
+                prev_tag_name,
+                prev_tag_date,
                 changes,
                 changelog_release_hook,
-                commit_tag,
+                current_tag,
             )
 
-            current_tag_name = commit_tag.name
-            current_tag_date = commit_tag.date
+            prev_tag_name = current_tag.name
+            prev_tag_date = current_tag.date
             changes = defaultdict(list)
 
         if not pat.match(commit.message):
@@ -171,11 +168,11 @@ def generate_tree_from_commits(
                 )
 
     yield _get_release_info(
-        current_tag_name,
-        current_tag_date,
+        prev_tag_name,
+        prev_tag_date,
         changes,
         changelog_release_hook,
-        commit_tag,
+        current_tag,
     )
 
 
