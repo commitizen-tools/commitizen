@@ -1720,15 +1720,19 @@ cz<span class="w"> </span>commit<span class="w"> </span>--<span class="w"> </spa
 <p>The most common command you'll use is:
 <div class="highlight"><pre><span></span><code>cz<span class="w"> </span>bump
 </code></pre></div></p>
-<p>This command:
-- Bumps your project's version
-- Creates a git tag
-- Updates the changelog (if <code>update_changelog_on_bump</code> is enabled)
-- Updates version files</p>
-<p>You can customize:
-- <a href="https://commitizen-tools.github.io/commitizen/commands/bump/#version_files">Version files</a>
-- <a href="https://commitizen-tools.github.io/commitizen/commands/bump/#version_scheme">Version scheme</a>
-- <a href="https://commitizen-tools.github.io/commitizen/config/#version-providers">Version provider</a></p>
+<p>This command:</p>
+<ul>
+<li>Bumps your project's version</li>
+<li>Creates a git tag</li>
+<li>Updates the changelog (if <code>update_changelog_on_bump</code> is enabled)</li>
+<li>Updates version files</li>
+</ul>
+<p>You can customize:</p>
+<ul>
+<li><a href="https://commitizen-tools.github.io/commitizen/commands/bump/#version_files">Version files</a></li>
+<li><a href="https://commitizen-tools.github.io/commitizen/commands/bump/#version_scheme">Version scheme</a></li>
+<li><a href="https://commitizen-tools.github.io/commitizen/config/#version-providers">Version provider</a></li>
+</ul>
 <p>For all available options, see the <a href="https://commitizen-tools.github.io/commitizen/commands/bump/">bump command documentation</a>.</p>
 <h3 id="advanced-usage">Advanced Usage<a class="headerlink" href="#advanced-usage" title="Permanent link">&para;</a></h3>
 <h4 id="get-project-version">Get Project Version<a class="headerlink" href="#get-project-version" title="Permanent link">&para;</a></h4>
@@ -1737,8 +1741,8 @@ cz<span class="w"> </span>version<span class="w"> </span>-p
 <span class="c1"># Preview changelog changes</span>
 cz<span class="w"> </span>changelog<span class="w"> </span>--dry-run<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>cz<span class="w"> </span>version<span class="w"> </span>-p<span class="k">)</span><span class="s2">&quot;</span>
 </code></pre></div>
-<p>This command is particularly useful for automation scripts and CI/CD pipelines.
-For example, you can use the output of the command <code>cz changelog --dry-run "$(cz version -p)"</code> to notify your team about a new release in Slack.</p>
+<p>This command is particularly useful for automation scripts and CI/CD pipelines.</p>
+<p>For example, you can use the output of the command <code>cz changelog --dry-run "$(cz version -p)"</code> to notify your team about a new release in Slack.</p>
 <h4 id="pre-commit-integration">Pre-commit Integration<a class="headerlink" href="#pre-commit-integration" title="Permanent link">&para;</a></h4>
 <p>Commitizen can automatically validate your commit messages using pre-commit hooks.</p>
 <ol>
