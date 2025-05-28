@@ -4,7 +4,7 @@
 
 | Name                                                                      | Speaker         | Occasion                                             | Language | Extra                                                                                                                            |
 | ------------------------------------------------------------------------- | --------------- | ---------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| commitizen-tools: What can we gain from crafting a git message convention | Wei Lee         | Taipey.py 2020 June Meetup, Remote Python Pizza 2020 | English  | [slides](https://speakerdeck.com/leew/commitizen-tools-what-can-we-gain-from-crafting-a-git-message-convention-at-taipey-dot-py) |
+| commitizen-tools: What can we gain from crafting a git message convention | Wei Lee         | Taipei.py 2020 June Meetup, Remote Python Pizza 2020 | English  | [slides](https://speakerdeck.com/leew/commitizen-tools-what-can-we-gain-from-crafting-a-git-message-convention-at-taipey-dot-py) |
 | Automating release cycles                                                 | Santiago Fraire | PyAmsterdam June 24, 2020, Online                    | English  | [slides](https://woile.github.io/commitizen-presentation/)                                                                       |
 | [Automatizando Releases con Commitizen y Github Actions][automatizando]   | Santiago Fraire | PyConAr 2020, Remote                                 | Español  | [slides](https://woile.github.io/automating-releases-github-actions-presentation/#/)                                             |
 
