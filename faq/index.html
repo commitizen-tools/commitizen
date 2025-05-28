@@ -288,26 +288,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../getting_started/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Getting Started
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     
     
     
@@ -316,10 +296,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -330,8 +310,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Commands
           </label>
@@ -608,10 +588,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -622,8 +602,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
           </label>
@@ -930,7 +910,7 @@
         <li class="md-nav__item">
   <a href="#why-does-commitizen-not-support-calver" class="md-nav__link">
     <span class="md-ellipsis">
-      Why does commitizen not support CalVer?
+      Why does Commitizen not support CalVer?
     </span>
   </a>
   
@@ -1123,7 +1103,7 @@
         <li class="md-nav__item">
   <a href="#why-does-commitizen-not-support-calver" class="md-nav__link">
     <span class="md-ellipsis">
-      Why does commitizen not support CalVer?
+      Why does Commitizen not support CalVer?
     </span>
   </a>
   
@@ -1197,7 +1177,7 @@ git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> <
 <p>It is not affiliated.</p>
 <p>Both are used for similar purposes, parsing commits, generating changelog and version we presume.
 This one is written in python to make integration easier for python projects and the other serves the JS packages.</p>
-<p>They differ a bit in design, not sure if cz-js does any of this, but these are some of the stuff you can do with this repo (python's commitizen):</p>
+<p>They differ a bit in design, not sure if cz-js does any of this, but these are some things you can do with this repo (python's commitizen):</p>
 <ul>
 <li>create custom rules, version bumps and changelog generation, by default we use the popular conventional commits (I think cz-js allows this).</li>
 <li>single package, install one thing and it will work (cz-js is a monorepo, but you have to install different dependencies AFAIK)</li>
@@ -1206,7 +1186,7 @@ This one is written in python to make integration easier for python projects and
 </ul>
 <p>Where do they cross paths?</p>
 <p>If you are using conventional commits in your git history, then you could swap one with the other in theory.</p>
-<p>Regarding the name, <a href="https://github.com/commitizen/cz-cli">cz-js</a> came first, they used the word commitizen first. When this project was created originally, the creator read "be a good commitizen", and thought it was just a cool word that made sense, and this would be a package that helps you be a good "commit citizen".</p>
+<p>Regarding the name, <a href="https://github.com/commitizen/cz-cli">cz-js</a> came first, they used the word Commitizen first. When this project was created originally, the creator read "be a good commitizen", and thought it was just a cool word that made sense, and this would be a package that helps you be a good "commit citizen".</p>
 <h2 id="how-to-handle-revert-commits">How to handle revert commits?<a class="headerlink" href="#how-to-handle-revert-commits" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>revert<span class="w"> </span>--no-commit<span class="w"> </span>&lt;SHA&gt;
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;revert: foo bar&quot;</span>
@@ -1214,15 +1194,15 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <h2 id="i-got-exception-winerror-995-the-io-operation-error">I got <code>Exception [WinError 995] The I/O operation ...</code> error<a class="headerlink" href="#i-got-exception-winerror-995-the-io-operation-error" title="Permanent link">&para;</a></h2>
 <p>This error was caused by a Python bug on Windows. It's been fixed by <a href="https://github.com/python/cpython/pull/22017">this PR</a>, and according to Python's changelog, <a href="https://docs.python.org/3.8/whatsnew/changelog.html#python-3-8-6-release-candidate-1">3.8.6rc1</a> and <a href="https://docs.python.org/3.9/whatsnew/changelog.html#python-3-9-0-release-candidate-2">3.9.0rc2</a> should be the accurate versions first contain this fix. In conclusion, upgrade your Python version might solve this issue.</p>
 <p>More discussion can be found in issue <a href="https://github.com/commitizen-tools/commitizen/issues/318">#318</a>.</p>
-<h2 id="why-does-commitizen-not-support-calver">Why does commitizen not support CalVer?<a class="headerlink" href="#why-does-commitizen-not-support-calver" title="Permanent link">&para;</a></h2>
+<h2 id="why-does-commitizen-not-support-calver">Why does Commitizen not support CalVer?<a class="headerlink" href="#why-does-commitizen-not-support-calver" title="Permanent link">&para;</a></h2>
 <p><code>commitizen</code> could support CalVer alongside SemVer, but in practice implementing CalVer
-creates numerous edge cases that are difficult to maintain (<a href="https://github.com/commitizen-tools/commitizen/pull/385">#385</a>) and more generally
+creates numerous edge cases that are difficult to maintain (<a href="https://github.com/commitizen-tools/commitizen/pull/385">#385</a>) and more generally,
 mixing the two version schemes may not be a good idea. If CalVer or other custom
 versioning scheme is needed, <code>commitizen</code> could still be used to standardize commits
 and create changelogs, but a separate package should be used for version increments.</p>
 <p>Mixing CalVer and SemVer is generally not recommended because each versioning scheme
-serves a different purposes. Diverging from either specification can be confusing to
-users and cause errors with third party tools that don't expect the non-standard format.</p>
+serves a different purpose. Diverging from either specification can be confusing to
+users and cause errors with third-party tools that don't expect the non-standard format.</p>
 <p>In the future, <code>commitizen</code> may support some implementation of CalVer, but at the time
 of writing, there are no plans to implement the feature (<a href="https://github.com/commitizen-tools/commitizen/issues/173">#173</a>).</p>
 <p>If you would like to learn more about both schemes, there are plenty of good resources:</p>
@@ -1241,7 +1221,7 @@ New bumped tags will be in the new format but old ones will still work for:
 - changelog generation (full, incremental and version range)
 - bump new version computation (automatically guessed or increment given)</p>
 <p>So given if you change from <code>myproject-$version</code> to <code>${version}</code> and then <code>v${version}</code>,
-your commitizen configuration will look like this:</p>
+your Commitizen configuration will look like this:</p>
 <div class="highlight"><pre><span></span><code><span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;v${version}&quot;</span>
 <span class="n">legacy_tag_formats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="s2">&quot;${version}&quot;</span><span class="p">,</span>

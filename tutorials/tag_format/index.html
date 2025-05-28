@@ -288,26 +288,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../getting_started/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Getting Started
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     
     
     
@@ -316,10 +296,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -330,8 +310,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Commands
           </label>
@@ -610,10 +590,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -624,8 +604,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
           </label>
@@ -1069,7 +1049,7 @@
 <span class="nt">tag_format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$version</span>
 <span class="nt">version_scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pep440</span>
 </code></pre></div>
-<p>As this is the default value so you don't have to specify it.</p>
+<p>As this is the default value, you don't have to specify it.</p>
 <p>This setting means that:</p>
 <ul>
 <li>The tag generated on bump will have this format: <code>1.0.0</code> :<ul>
@@ -1108,19 +1088,19 @@ See <a href="../../config/#tag_format"><code>tag_format</code></a> and <a href="
 <p>Now, let's say you need to change the tag format for some reason (company convention, <a href="../monorepo_guidance/">migration to a monorepo</a>...).
 You will obviously want to keep all those features working as expected.</p>
 <p>Commitizen can deal with it as long as you provide the legacy tag format in the configuration.</p>
-<p>Using the previous example, let say you want to move from <code>v${version}</code> to <code>component-${version}</code>.
+<p>Using the previous example, let's say you want to move from <code>v${version}</code> to <code>component-${version}</code>.
 Then <code>component-${version}</code> will be the new tag format and <code>v${version}</code> the legacy one.</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">[</span><span class="nv">tool.commitizen</span><span class="p p-Indicator">]</span>
 <span class="nt">tag_format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">component-${version}</span>
 <span class="nt">legacy_tag_formats</span><span class="p">:</span>
 <span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v${version}</span>
 </code></pre></div>
-<p>This way, you won't loose your version history, you'll still be able to generate you changelog properly
-and on the next version bump, your last version in the form <code>v${version}</code> will be properly recognizef if you use the <code>scm</code> version provider.
+<p>This way, you won't lose your version history, you'll still be able to generate your changelog properly,
+and on the next version bump, your last version in the form <code>v${version}</code> will be properly recognized if you use the <code>scm</code> version provider.
 Your new tag will be in the form <code>component-${version}</code>.</p>
 <h2 id="known-tags-to-ignore">Known tags to ignore<a class="headerlink" href="#known-tags-to-ignore" title="Permanent link">&para;</a></h2>
-<p>Now let's say you have some known tags you want to ignore, either because they are not versions, either because they are not versions of the component you are dealing with.
-As a consequence, you don't want them to trigger a warning because Commitizen detected an unknown tag format:</p>
+<p>Now let's say you have some known tags you want to ignore, either because they are not versions, or because they are not versions of the component you are dealing with.
+As a consequence, you don't want them to trigger a warning because Commitizen detected an unknown tag format.</p>
 <p>Then you can tell Commitizen about it using the <a href="../../config/#ignored_tag_formats"><code>ignored_tag_formats</code></a> setting:</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">[</span><span class="nv">tool.commitizen</span><span class="p p-Indicator">]</span>
 <span class="nt">ignored_tag_formats</span><span class="p">:</span>
@@ -1141,7 +1121,7 @@ It will match any string from any length. This allows to exclude by prefix, whet
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>If you don't want to be warned when Commitizen detect an unknown tag, you can by setting:
+<p>If you don't want to be warned when Commitizen detects an unknown tag, you can do so by setting:
 <div class="highlight"><pre><span></span><code>[tool.commitizen]
 ignored_tag_formats = [&quot;*&quot;]
 </code></pre></div>

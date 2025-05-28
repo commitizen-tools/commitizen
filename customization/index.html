@@ -288,26 +288,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../getting_started/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Getting Started
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     
     
     
@@ -316,10 +296,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -330,8 +310,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Commands
           </label>
@@ -809,10 +789,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -823,8 +803,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
           </label>
@@ -1332,13 +1312,13 @@
 
   <h1>Customization</h1>
 
-<p>Customizing commitizen is not hard at all.
+<p>Customizing Commitizen is not hard at all.
 We have two different ways to do so.</p>
 <h2 id="1-customize-in-configuration-file">1. Customize in configuration file<a class="headerlink" href="#1-customize-in-configuration-file" title="Permanent link">&para;</a></h2>
 <p>The basic steps are:</p>
 <ol>
 <li>Define your custom committing or bumping rules in the configuration file.</li>
-<li>Declare <code>name = "cz_customize"</code> in your configuration file, or add <code>-n cz_customize</code> when running commitizen.</li>
+<li>Declare <code>name = "cz_customize"</code> in your configuration file, or add <code>-n cz_customize</code> when running Commitizen.</li>
 </ol>
 <p>Example:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
@@ -1574,7 +1554,7 @@ We have two different ways to do so.</p>
 <td><code>type</code></td>
 <td><code>str</code></td>
 <td><code>None</code></td>
-<td>The type of questions. Valid types: <code>list</code>, <code>select</code>, <code>input</code> and etc. The <code>select</code> type provides an interactive searchable list interface. <a href="https://github.com/tmbo/questionary#different-question-types">See More</a></td>
+<td>The type of questions. Valid types: <code>list</code>, <code>select</code>, <code>input</code>, etc. The <code>select</code> type provides an interactive searchable list interface. <a href="https://github.com/tmbo/questionary#different-question-types">See More</a></td>
 </tr>
 <tr>
 <td><code>name</code></td>
@@ -1627,16 +1607,16 @@ We have two different ways to do so.</p>
 </tbody>
 </table>
 <h4 id="shortcut-keys">Shortcut keys<a class="headerlink" href="#shortcut-keys" title="Permanent link">&para;</a></h4>
-<p>When the <a href="../config/#settings"><code>use_shortcuts</code></a> config option is enabled, commitizen can show and use keyboard shortcuts to select items from lists directly.
-For example, when using the <code>cz_conventional_commits</code> commitizen template, shortcut keys are shown when selecting the commit type. Unless otherwise defined, keyboard shortcuts will be numbered automatically.
+<p>When the <a href="../config/#settings"><code>use_shortcuts</code></a> config option is enabled, Commitizen can show and use keyboard shortcuts to select items from lists directly.
+For example, when using the <code>cz_conventional_commits</code> Commitizen template, shortcut keys are shown when selecting the commit type. Unless otherwise defined, keyboard shortcuts will be numbered automatically.
 To specify keyboard shortcuts for your custom choices, provide the shortcut using the <code>key</code> parameter in dictionary form for each choice you would like to customize.</p>
 <h2 id="2-customize-through-customizing-a-class">2. Customize through customizing a class<a class="headerlink" href="#2-customize-through-customizing-a-class" title="Permanent link">&para;</a></h2>
 <p>The basic steps are:</p>
 <ol>
-<li>Inheriting from <code>BaseCommitizen</code></li>
+<li>Inheriting from <code>BaseCommitizen</code>.</li>
 <li>Give a name to your rules.</li>
-<li>Create a python package using <code>setup.py</code>, <code>poetry</code>, etc</li>
-<li>Expose the class as a <code>commitizen.plugin</code> entrypoint</li>
+<li>Create a python package using <code>setup.py</code>, <code>poetry</code>, etc.</li>
+<li>Expose the class as a <code>commitizen.plugin</code> entrypoint.</li>
 </ol>
 <p>Check an <a href="https://github.com/commitizen-tools/commitizen/blob/master/commitizen/cz/conventional_commits/conventional_commits.py">example</a> on how to configure <code>BaseCommitizen</code>.</p>
 <p>You can also automate the steps above through <a href="https://cookiecutter.readthedocs.io/en/1.7.0/">cookiecutter</a>.</p>
@@ -1743,7 +1723,7 @@ doing <code>pip install .</code></p>
     <span class="n">bump_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^(break|new|fix|hotfix)&quot;</span>
     <span class="n">bump_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;break&quot;</span><span class="p">:</span> <span class="s2">&quot;MAJOR&quot;</span><span class="p">,</span> <span class="s2">&quot;new&quot;</span><span class="p">:</span> <span class="s2">&quot;MINOR&quot;</span><span class="p">,</span> <span class="s2">&quot;fix&quot;</span><span class="p">:</span> <span class="s2">&quot;PATCH&quot;</span><span class="p">,</span> <span class="s2">&quot;hotfix&quot;</span><span class="p">:</span> <span class="s2">&quot;PATCH&quot;</span><span class="p">}</span>
 </code></pre></div>
-<p>That's it, your commitizen now supports custom rules, and you can run.</p>
+<p>That's it, your Commitizen now supports custom rules, and you can run.</p>
 <div class="highlight"><pre><span></span><code>cz<span class="w"> </span>-n<span class="w"> </span>cz_strange<span class="w"> </span>bump
 </code></pre></div>
 <h3 id="custom-changelog-generator">Custom changelog generator<a class="headerlink" href="#custom-changelog-generator" title="Permanent link">&para;</a></h3>
@@ -1793,7 +1773,7 @@ You can customize it of course, and this are the variables you need to add to yo
 <td><code>changelog_release_hook</code></td>
 <td><code>method: (release: dict, tag: git.GitTag) -&gt; dict</code></td>
 <td>NO</td>
-<td>Receives each generated changelog release and its associated tag. Useful to enrich a releases before they are rendered. Must return the update release</td>
+<td>Receives each generated changelog release and its associated tag. Useful to enrich releases before they are rendered. Must return the update release</td>
 </tr>
 </tbody>
 </table>
@@ -1857,7 +1837,7 @@ You can customize it of course, and this are the variables you need to add to yo
 <p>Commitizen migrated to a new plugin format relying on <code>importlib.metadata.EntryPoint</code>.
 Migration should be straight-forward for legacy plugins:</p>
 <ul>
-<li>Remove the <code>discover_this</code> line from you plugin module</li>
+<li>Remove the <code>discover_this</code> line from your plugin module</li>
 <li>Expose the plugin class under as a <code>commitizen.plugin</code> entrypoint.</li>
 </ul>
 <p>The name of the plugin is now determined by the name of the entrypoint.</p>
@@ -1900,9 +1880,9 @@ Migration should be straight-forward for legacy plugins:</p>
 <li>as <code>--template</code> parameter to both <code>bump</code> and <code>changelog</code> commands</li>
 <li>either by providing a template with the same name as the default template</li>
 </ul>
-<p>By default, the template used is the <code>CHANGELOG.md.j2</code> file from the commitizen repository.</p>
+<p>By default, the template used is the <code>CHANGELOG.md.j2</code> file from the Commitizen repository.</p>
 <h3 id="providing-a-template-with-your-customization-class">Providing a template with your customization class<a class="headerlink" href="#providing-a-template-with-your-customization-class" title="Permanent link">&para;</a></h3>
-<p>There is 3 parameters available to change the template rendering from your custom <code>BaseCommitizen</code>.</p>
+<p>There are 3 parameters available to change the template rendering from your custom <code>BaseCommitizen</code>.</p>
 <table>
 <thead>
 <tr>
@@ -1923,7 +1903,7 @@ Migration should be straight-forward for legacy plugins:</p>
 <td><code>template_loader</code></td>
 <td><code>str</code></td>
 <td><code>None</code></td>
-<td>Override the default template loader (so you can provide template from you customization class)</td>
+<td>Override the default template loader (so you can provide template from your customization class)</td>
 </tr>
 <tr>
 <td><code>template_extras</code></td>
@@ -1950,7 +1930,7 @@ Migration should be straight-forward for legacy plugins:</p>
 <li>add the <code>key=value</code> variable in the template</li>
 </ul>
 <h3 id="providing-a-template-from-the-current-working-directory">Providing a template from the current working directory<a class="headerlink" href="#providing-a-template-from-the-current-working-directory" title="Permanent link">&para;</a></h3>
-<p>Users can provides their own template from their current working directory (your project root) by:</p>
+<p>Users can provide their own template from their current working directory (your project root) by:</p>
 <ul>
 <li>providing a template with the same name (<code>CHANGELOG.md.j2</code> unless overridden by your custom class)</li>
 <li>setting your template path as <code>template</code> configuration</li>
@@ -1958,7 +1938,7 @@ Migration should be straight-forward for legacy plugins:</p>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The path is relative to the current working directory, aka. your project root most of the time.</p>
+<p>The path is relative to the current working directory, aka your project root most of the time.</p>
 </div>
 <h3 id="template-variables">Template variables<a class="headerlink" href="#template-variables" title="Permanent link">&para;</a></h3>
 <p>The default template use a single <code>tree</code> variable which is a list of entries (a release) with the following format:</p>
@@ -2040,7 +2020,7 @@ is listing commits that belong to the same pull request.</p>
 by:</p>
 <ul>
 <li>defining them in your configuration with the <a href="../config/#extras"><code>extras</code> settings</a></li>
-<li>providing them on the commandline with the <code>--extra/-e</code> parameter to <code>bump</code> and <code>changelog</code> commands</li>
+<li>providing them on the command line with the <code>--extra/-e</code> parameter to <code>bump</code> and <code>changelog</code> commands</li>
 </ul>
 
 

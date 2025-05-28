@@ -288,26 +288,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../getting_started/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Getting Started
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     
     
     
@@ -316,10 +296,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -330,8 +310,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Commands
           </label>
@@ -610,10 +590,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -624,8 +604,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
           </label>
@@ -1064,7 +1044,7 @@
 
 <h1 id="automatically-prepare-message-before-commit">Automatically prepare message before commit<a class="headerlink" href="#automatically-prepare-message-before-commit" title="Permanent link">&para;</a></h1>
 <h2 id="about">About<a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
-<p>It can be desirable to use commitizen for all types of commits (i.e. regular, merge,
+<p>It can be desirable to use Commitizen for all types of commits (i.e. regular, merge,
 squash) so that the complete git history adheres to the commit message convention
 without ever having to call <code>cz commit</code>.</p>
 <p>To automatically prepare a commit message prior to committing, you can
@@ -1079,10 +1059,10 @@ default log message, and before the editor is started.</p>
 <p>This hook is invoked by git-commit. It takes no parameters, and is invoked after a
 commit is made.</p>
 </blockquote>
-<p>A combination of these two hooks allows for enforcing the usage of commitizen so that
-whenever a commit is about to be created, commitizen is used for creating the commit
+<p>A combination of these two hooks allows for enforcing the usage of Commitizen so that
+whenever a commit is about to be created, Commitizen is used for creating the commit
 message. Running <code>git commit</code> or <code>git commit -m "..."</code> for example, would trigger
-commitizen and use the generated commit message for the commit.</p>
+Commitizen and use the generated commit message for the commit.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <p>Copy the hooks from <a href="https://github.com/commitizen-tools/commitizen/tree/master/hooks">here</a> into the <code>.git/hooks</code> folder and make them
   executable by running the following commands from the root of your Git repository:</p>

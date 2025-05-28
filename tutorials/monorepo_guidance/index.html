@@ -288,26 +288,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../getting_started/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Getting Started
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     
     
     
@@ -316,10 +296,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -330,8 +310,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Commands
           </label>
@@ -610,10 +590,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -624,8 +604,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
           </label>
@@ -1056,7 +1036,7 @@
                   
 
 
-<h1 id="configuring-commitizen-in-a-monorepo">Configuring commitizen in a monorepo<a class="headerlink" href="#configuring-commitizen-in-a-monorepo" title="Permanent link">&para;</a></h1>
+<h1 id="configuring-commitizen-in-a-monorepo">Configuring Commitizen in a monorepo<a class="headerlink" href="#configuring-commitizen-in-a-monorepo" title="Permanent link">&para;</a></h1>
 <p>This tutorial assumes the monorepo layout is designed with multiple components that can be released independently of each
 other, it also assumes that conventional commits with scopes are in use. Some suggested layouts:</p>
 <div class="highlight"><pre><span></span><code><span class="go">.</span>
@@ -1097,9 +1077,9 @@ cz<span class="w"> </span>--config<span class="w"> </span>library-z/.cz.toml<spa
 <p>For example:</p>
 <ul>
 <li>Trigger the pipeline based on the changed path, which can have some downsides, as you'll rely on the developer not including files from other files<ul>
-<li><a href="https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore">github actions</a> uses <code>path</code></li>
+<li><a href="https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore">GitHub actions</a> uses <code>path</code></li>
 <li><a href="https://www.jenkins.io/doc/book/pipeline/syntax/#built-in-conditions">Jenkins</a> uses <code>changeset</code></li>
-<li><a href="https://docs.gitlab.com/ee/ci/yaml/#ruleschanges">Gitlab</a> uses <code>rules:changes</code></li>
+<li><a href="https://docs.gitlab.com/ee/ci/yaml/#ruleschanges">GitLab</a> uses <code>rules:changes</code></li>
 </ul>
 </li>
 <li>Filter certain pattern of the commit message (recommended)</li>

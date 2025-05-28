@@ -286,26 +286,6 @@
       
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../../getting_started/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Getting Started
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
     
   
   
@@ -318,10 +298,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -332,8 +312,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Commands
           </label>
@@ -817,10 +797,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -831,8 +811,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
           </label>
@@ -1379,7 +1359,7 @@
 <p>It will create a full block like above per version found in the tags.
 And it will create a list of the commits found.
 The <code>change_type</code> and the <code>scope</code> are optional, they don't need to be provided,
-but if your regex does they will be rendered.</p>
+but if your regex does, they will be rendered.</p>
 <p>The format followed by the changelog is the one from <a href="https://keepachangelog.com/">keep a changelog</a>
 and the following variables are expected:</p>
 <table>
@@ -1447,14 +1427,14 @@ if your tag is the same as the raw version, then ignore this.</p>
 </code></pre></div>
 <h3 id="file-name"><code>file-name</code><a class="headerlink" href="#file-name" title="Permanent link">&para;</a></h3>
 <p>This value can be updated in the <code>toml</code> file with the key <code>changelog_file</code> under <code>tools.commitizen</code></p>
-<p>Specify the name of the output file, remember that changelog only works with markdown.</p>
+<p>Specify the name of the output file, remember that changelog only works with Markdown.</p>
 <div class="highlight"><pre><span></span><code>cz<span class="w"> </span>changelog<span class="w"> </span>--file-name<span class="o">=</span><span class="s2">&quot;CHANGES.md&quot;</span>
 </code></pre></div>
 <h3 id="incremental"><code>incremental</code><a class="headerlink" href="#incremental" title="Permanent link">&para;</a></h3>
 <p>This flag can be set in the <code>toml</code> file with the key <code>changelog_incremental</code> under <code>tools.commitizen</code></p>
 <p>Benefits:</p>
 <ul>
-<li>Build from latest version found in changelog, this is useful if you have a different changelog and want to use commitizen</li>
+<li>Build from the latest version found in changelog, this is useful if you have a different changelog and want to use commitizen</li>
 <li>Update unreleased area</li>
 <li>Allows users to manually touch the changelog without being rewritten.</li>
 </ul>
@@ -1493,8 +1473,8 @@ See <a href="../../customization/#customizing-the-changelog-template">the templa
 <h2 id="hooks">Hooks<a class="headerlink" href="#hooks" title="Permanent link">&para;</a></h2>
 <p>Supported hook methods:</p>
 <ul>
-<li>per parsed message: useful to add links</li>
-<li>end of changelog generation: useful to send slack or chat message, or notify another department</li>
+<li>Per parsed message: Useful to add links</li>
+<li>End of changelog generation: Useful to send Slack or chat messages, or notify another department</li>
 </ul>
 <p>Read more about hooks in the <a href="../../customization/">customization page</a></p>
 

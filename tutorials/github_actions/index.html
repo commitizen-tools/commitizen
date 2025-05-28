@@ -288,26 +288,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../getting_started/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Getting Started
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     
     
     
@@ -316,10 +296,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -330,8 +310,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Commands
           </label>
@@ -610,10 +590,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -624,8 +604,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
           </label>
@@ -806,7 +786,7 @@
           <li class="md-nav__item">
   <a href="#creating-a-github-release" class="md-nav__link">
     <span class="md-ellipsis">
-      Creating a github release
+      Creating a GitHub release
     </span>
   </a>
   
@@ -1051,7 +1031,7 @@
           <li class="md-nav__item">
   <a href="#creating-a-github-release" class="md-nav__link">
     <span class="md-ellipsis">
-      Creating a github release
+      Creating a GitHub release
     </span>
   </a>
   
@@ -1127,13 +1107,13 @@ the new tag, back to your master branch, we have to:</p>
 <span class="w">          </span><span class="nt">github_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.PERSONAL_ACCESS_TOKEN }}</span>
 </code></pre></div>
 <p>Push to master and that's it.</p>
-<h3 id="creating-a-github-release">Creating a github release<a class="headerlink" href="#creating-a-github-release" title="Permanent link">&para;</a></h3>
+<h3 id="creating-a-github-release">Creating a GitHub release<a class="headerlink" href="#creating-a-github-release" title="Permanent link">&para;</a></h3>
 <p>You can modify the previous action.</p>
 <p>Add the variable <code>changelog_increment_filename</code> in the <code>commitizen-action</code>, specifying
 where to output the content of the changelog for the newly created version.</p>
-<p>And then add a step using a github action to create the release: <code>softprops/action-gh-release</code></p>
-<p>The commitizen action creates an env variable called <code>REVISION</code>, containing the
-newely created version.</p>
+<p>And then add a step using a GitHub action to create the release: <code>softprops/action-gh-release</code></p>
+<p>Commitizen action creates an env variable called <code>REVISION</code>, containing the
+newly created version.</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create bump and changelog</span>
 <span class="w">  </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">commitizen-tools/commitizen-action@master</span>
 <span class="w">  </span><span class="nt">with</span><span class="p">:</span>
@@ -1189,7 +1169,7 @@ newely created version.</p>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">          </span><span class="no">./scripts/publish</span>
 </code></pre></div>
-<p>Notice that we are using poetry, and we are calling a bash script in <code>./scripts/publish</code>. You should configure the action, and the publish with your tools (twine, poetry, etc.). Check <a href="https://github.com/commitizen-tools/commitizen/blob/master/scripts/publish">commitizen example</a>
+<p>Notice that we are using poetry, and we are calling a bash script in <code>./scripts/publish</code>. You should configure the action, and publish with your tools (twine, poetry, etc.). Check <a href="https://github.com/commitizen-tools/commitizen/blob/master/scripts/publish">Commitizen example</a>
 You can also use <a href="https://github.com/pypa/gh-action-pypi-publish">pypa/gh-action-pypi-publish</a> to publish your package.</p>
 <p>Push the changes and that's it.</p>
 

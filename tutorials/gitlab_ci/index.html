@@ -288,26 +288,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../getting_started/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Getting Started
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     
     
     
@@ -316,10 +296,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -330,8 +310,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Commands
           </label>
@@ -610,10 +590,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -624,8 +604,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
           </label>
@@ -785,7 +765,7 @@
           <li class="md-nav__item">
   <a href="#gitlab-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Gitlab Configuration
+      GitLab Configuration
     </span>
   </a>
   
@@ -1060,7 +1040,7 @@
           <li class="md-nav__item">
   <a href="#gitlab-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Gitlab Configuration
+      GitLab Configuration
     </span>
   </a>
   
@@ -1117,8 +1097,8 @@
 <li>For simplification, we store the software version in a file called <code>VERSION</code>. You can use any file that you want as <code>commitizen</code> supports it.</li>
 <li>The commit message executed automatically by the <code>CI</code> must include <code>[skip-ci]</code> in the message; otherwise, the process will generate a loop. You can define the message structure in <a href="../../commands/bump/">commitizen</a> as well.</li>
 </ol>
-<h3 id="gitlab-configuration">Gitlab Configuration<a class="headerlink" href="#gitlab-configuration" title="Permanent link">&para;</a></h3>
-<p>To be able to change files and push new changes with <code>Gitlab CI</code> runners, we need to have a <code>ssh</code> key and configure a git user.</p>
+<h3 id="gitlab-configuration">GitLab Configuration<a class="headerlink" href="#gitlab-configuration" title="Permanent link">&para;</a></h3>
+<p>To be able to change files and push new changes with <code>GitLab CI</code> runners, we need to have a <code>ssh</code> key and configure a git user.</p>
 <p>First, let's create a <code>ssh key</code>. The only requirement is to create it without a passphrase:</p>
 <div class="highlight"><pre><span></span><code>ssh-keygen<span class="w"> </span>-f<span class="w"> </span>deploy_key<span class="w"> </span>-N<span class="w"> </span><span class="s2">&quot;&quot;</span>
 </code></pre></div>
@@ -1130,7 +1110,7 @@
 <p>The latest step is to create a <code>deploy key.</code> To do this, we should create it under the section <code>settings/repository</code> and fill it with the <code>public key</code> generated before. Check <code>Write access allowed</code>; otherwise, the runner won't be able to write the changes to the repository.</p>
 <p><img alt="gitlab deploy key" src="../../images/gitlab_ci/gitlab_deploy_key.png" /></p>
 <p>If you have more projects under the same organization, you can reuse the deploy key created before, but you will have to repeat the step where we have created the environment variables (ssh key, email, and username).</p>
-<p>tip: If the CI raise some errors, try to unprotected the private key.</p>
+<p>Tip: If the CI raise some errors, try to unprotect the private key.</p>
 <h3 id="defining-gitlab-ci-pipeline">Defining GitLab CI Pipeline<a class="headerlink" href="#defining-gitlab-ci-pipeline" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
@@ -1196,9 +1176,9 @@
 <span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">variables</span>
 </code></pre></div>
-<p>So, every time that a developer push to any branch, the <code>test</code> job is executed. If the branch is <code>master</code> and the test jobs success, the <code>auto-bump</code> takes place.
-To be able to push using the Gitlab runner, we have to set the ssh key, configure git, and finally execute the auto bump.</p>
-<p>After merging the new changed into master, we have the final result:</p>
+<p>So, every time that a developer pushes to any branch, the <code>test</code> job is executed. If the branch is <code>master</code> and the test jobs succeed, the <code>auto-bump</code> takes place.
+To be able to push using the GitLab runner, we have to set the SSH key, configure git, and finally execute the auto bump.</p>
+<p>After merging the new changes into master, we have the final result:</p>
 <p><img alt="gitlab final ci result" src="../../images/gitlab_ci/gitlab_final_ci_result.png" /></p>
 
 

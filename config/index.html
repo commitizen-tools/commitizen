@@ -288,26 +288,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../getting_started/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Getting Started
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     
     
     
@@ -316,10 +296,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -330,8 +310,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Commands
           </label>
@@ -999,10 +979,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1013,8 +993,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
           </label>
@@ -1730,7 +1710,7 @@
 <p>Type: <code>str</code></p>
 <p>Default: <code>pep440</code></p>
 <p>Select a version scheme from the following options [<code>pep440</code>, <code>semver</code>, <code>semver2</code>].
-Useful for non-python projects. <a href="../commands/bump/#version-scheme">Read more</a></p>
+Useful for non-python projects. <a href="../commands/bump/#-version-scheme">Read more</a></p>
 <h3 id="tag_format"><code>tag_format</code><a class="headerlink" href="#tag_format" title="Permanent link">&para;</a></h3>
 <p>Type: <code>str</code></p>
 <p>Default: <code>$version</code></p>
@@ -1740,12 +1720,12 @@ Useful for non-python projects. <a href="../commands/bump/#version-scheme">Read 
 <p>Default: <code>[ ]</code></p>
 <p>Legacy git tag formats, useful for old projects that changed tag format.
 Tags matching those formats will be recognized as version tags and be included in the changelog.
-Each entry use the the syntax as <a href="#tag_format"><code>tag_format</code></a>. <a href="../commands/bump/#tag_format">Read more</a></p>
+Each entry uses the syntax as <a href="#tag_format"><code>tag_format</code></a>. <a href="../commands/bump/#tag_format">Read more</a></p>
 <h3 id="ignored_tag_formats"><code>ignored_tag_formats</code><a class="headerlink" href="#ignored_tag_formats" title="Permanent link">&para;</a></h3>
 <p>Type: <code>list</code></p>
 <p>Default: <code>[ ]</code></p>
 <p>Tags matching those formats will be totally ignored and won't raise a warning.
-Each entry use the the syntax as <a href="#tag_format"><code>tag_format</code></a> with the addition of <code>*</code>
+Each entry uses the syntax as <a href="#tag_format"><code>tag_format</code></a> with the addition of <code>*</code>
 that will match everything (non-greedy). <a href="../commands/bump/#tag_format">Read more</a></p>
 <h3 id="update_changelog_on_bump"><code>update_changelog_on_bump</code><a class="headerlink" href="#update_changelog_on_bump" title="Permanent link">&para;</a></h3>
 <p>Type: <code>bool</code></p>
@@ -1762,7 +1742,7 @@ that will match everything (non-greedy). <a href="../commands/bump/#tag_format">
 <h3 id="bump_message"><code>bump_message</code><a class="headerlink" href="#bump_message" title="Permanent link">&para;</a></h3>
 <p>Type: <code>str</code></p>
 <p>Default: <code>None</code></p>
-<p>Create custom commit message, useful to skip ci. <a href="../commands/bump/#bump_message">Read more</a></p>
+<p>Create custom commit message, useful to skip CI. <a href="../commands/bump/#bump_message">Read more</a></p>
 <h3 id="retry_after_failure"><code>retry_after_failure</code><a class="headerlink" href="#retry_after_failure" title="Permanent link">&para;</a></h3>
 <p>Type: <code>bool</code></p>
 <p>Default: <code>false</code></p>
@@ -1770,7 +1750,7 @@ that will match everything (non-greedy). <a href="../commands/bump/#tag_format">
 <h3 id="allow_abort"><code>allow_abort</code><a class="headerlink" href="#allow_abort" title="Permanent link">&para;</a></h3>
 <p>Type: <code>bool</code></p>
 <p>Default: <code>false</code></p>
-<p>Disallow empty commit messages, useful in ci. <a href="../commands/check/#allow-abort">Read more</a></p>
+<p>Disallow empty commit messages, useful in CI. <a href="../commands/check/#allow-abort">Read more</a></p>
 <h3 id="allowed_prefixes"><code>allowed_prefixes</code><a class="headerlink" href="#allowed_prefixes" title="Permanent link">&para;</a></h3>
 <p>Type: <code>list</code>
 Default: <code>[ "Merge", "Revert", "Pull request", "fixup!", "squash!"]</code>
@@ -1806,15 +1786,15 @@ Allow some prefixes and do not try to match the regex when checking the message 
 <h3 id="use_shortcuts"><code>use_shortcuts</code><a class="headerlink" href="#use_shortcuts" title="Permanent link">&para;</a></h3>
 <p>Type: <code>bool</code></p>
 <p>Default: <code>false</code></p>
-<p>If enabled, commitizen will show keyboard shortcuts when selecting from a list. Define a <code>key</code> for each of your choices to set the key. <a href="../customization/#shortcut-keys">Read more</a></p>
+<p>If enabled, Commitizen will show keyboard shortcuts when selecting from a list. Define a <code>key</code> for each of your choices to set the key. <a href="../customization/#shortcut-keys">Read more</a></p>
 <h3 id="major_version_zero"><code>major_version_zero</code><a class="headerlink" href="#major_version_zero" title="Permanent link">&para;</a></h3>
 <p>Type: <code>bool</code></p>
 <p>Default: <code>false</code></p>
-<p>When true, breaking changes on a <code>0.x</code> will remain as a <code>0.x</code> version. On <code>false</code>, a breaking change will bump a <code>0.x</code> version to <code>1.0</code>. <a href="../commands/bump/#-major-version-zero">major-version-zero</a></p>
+<p>When true, breaking changes on a <code>0.x</code> will remain as a <code>0.x</code> version. On <code>false</code>, a breaking change will bump a <code>0.x</code> version to <code>1.0</code>. <a href="../commands/bump/#-major-version-zero">Read more</a></p>
 <h3 id="prerelease_offset"><code>prerelease_offset</code><a class="headerlink" href="#prerelease_offset" title="Permanent link">&para;</a></h3>
 <p>Type: <code>int</code></p>
 <p>Default: <code>0</code></p>
-<p>In some circumstances, a prerelease cannot start with a 0, e.g. in an embedded project individual characters are encoded as bytes. This can be done by specifying an offset from which to start counting. <a href="../commands/bump/#-prerelease_offset">prerelease-offset</a></p>
+<p>In some circumstances, a prerelease cannot start with a 0, e.g. in an embedded project individual characters are encoded as bytes. This can be done by specifying an offset from which to start counting. <a href="../commands/bump/#prerelease_offset">Read more</a></p>
 <h3 id="pre_bump_hooks"><code>pre_bump_hooks</code><a class="headerlink" href="#pre_bump_hooks" title="Permanent link">&para;</a></h3>
 <p>Type: <code>list[str]</code></p>
 <p>Default: <code>[]</code></p>
@@ -1836,7 +1816,7 @@ Allow some prefixes and do not try to match the regex when checking the message 
 <p>Default: <code>{}</code></p>
 <p>Provide extra variables to the changelog template. <a href="../customization/#customizing-the-changelog-template">Read more</a></p>
 <h2 id="configuration-file">Configuration file<a class="headerlink" href="#configuration-file" title="Permanent link">&para;</a></h2>
-<h3 id="pyprojecttoml-cztoml-or-cztoml">pyproject.toml, .cz.toml or cz.toml<a class="headerlink" href="#pyprojecttoml-cztoml-or-cztoml" title="Permanent link">&para;</a></h3>
+<h3 id="pyprojecttoml-cztoml-or-cztoml"><code>pyproject.toml</code>, <code>.cz.toml</code> or <code>cz.toml</code><a class="headerlink" href="#pyprojecttoml-cztoml-or-cztoml" title="Permanent link">&para;</a></h3>
 <p>Default and recommended configuration format for a project.
 For a <strong>python</strong> project, we recommend adding an entry to your <code>pyproject.toml</code>.
 You can also create a <code>.cz.toml</code> or <code>cz.toml</code> file at the root of your project folder.</p>
@@ -1862,7 +1842,7 @@ You can also create a <code>.cz.toml</code> or <code>cz.toml</code> file at the 
 <span class="w">    </span><span class="p">[</span><span class="s2">&quot;disabled&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fg:#858585 italic&quot;</span><span class="p">]</span>
 <span class="p">]</span>
 </code></pre></div>
-<h3 id="czjson-or-czjson">.cz.json or cz.json<a class="headerlink" href="#czjson-or-czjson" title="Permanent link">&para;</a></h3>
+<h3 id="czjson-or-czjson"><code>.cz.json</code> or <code>cz.json</code><a class="headerlink" href="#czjson-or-czjson" title="Permanent link">&para;</a></h3>
 <p>Commitizen has support for JSON configuration. Recommended for <code>NodeJS</code> projects.</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;commitizen&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -1884,7 +1864,7 @@ You can also create a <code>.cz.toml</code> or <code>cz.toml</code> file at the 
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="czyaml-or-czyaml">.cz.yaml or cz.yaml<a class="headerlink" href="#czyaml-or-czyaml" title="Permanent link">&para;</a></h3>
+<h3 id="czyaml-or-czyaml"><code>.cz.yaml</code> or <code>cz.yaml</code><a class="headerlink" href="#czyaml-or-czyaml" title="Permanent link">&para;</a></h3>
 <p>YAML configuration is supported by Commitizen. Recommended for <code>Go</code>, <code>ansible</code>, or even <code>helm</code> charts projects.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">commitizen</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cz_conventional_commits</span>
@@ -1916,7 +1896,7 @@ You can also create a <code>.cz.toml</code> or <code>cz.toml</code> file at the 
 </code></pre></div>
 <h2 id="version-providers">Version providers<a class="headerlink" href="#version-providers" title="Permanent link">&para;</a></h2>
 <p>Commitizen can read and write version from different sources.
-By default, it use the <code>commitizen</code> one which is using the <code>version</code> field from the commitizen settings.
+By default, it uses the <code>commitizen</code> one which is using the <code>version</code> field from the Commitizen settings.
 But you can use any <code>commitizen.provider</code> entrypoint as value for <code>version_provider</code>.</p>
 <p>Commitizen provides some version providers for some well known formats:</p>
 <table>
@@ -1929,7 +1909,7 @@ But you can use any <code>commitizen.provider</code> entrypoint as value for <co
 <tbody>
 <tr>
 <td><code>commitizen</code></td>
-<td>Default version provider: Fetch and set version in commitizen config.</td>
+<td>Default version provider: Fetch and set version in Commitizen config.</td>
 </tr>
 <tr>
 <td><code>scm</code></td>
@@ -1963,15 +1943,15 @@ But you can use any <code>commitizen.provider</code> entrypoint as value for <co
 </table>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-</div>
 <p>The <code>scm</code> provider is meant to be used with <code>setuptools-scm</code> or any packager <code>*-scm</code> plugin.</p>
+</div>
 <p>An example in your <code>.cz.toml</code> or <code>cz.toml</code> would look like this:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;pep621&quot;</span>
 </code></pre></div>
 <h3 id="custom-version-provider">Custom version provider<a class="headerlink" href="#custom-version-provider" title="Permanent link">&para;</a></h3>
-<p>You can add you own version provider by extending <code>VersionProvider</code> and exposing it on the <code>commitizen.provider</code> entrypoint.</p>
-<p>Here a quick example of a <code>my-provider</code> provider reading and writing version in a <code>VERSION</code> file.</p>
+<p>You can add your own version provider by extending <code>VersionProvider</code> and exposing it on the <code>commitizen.provider</code> entrypoint.</p>
+<p>Here is a quick example of a <code>my-provider</code> provider reading and writing version in a <code>VERSION</code> file.</p>
 <div class="highlight"><span class="filename">my_provider.py</span><pre><span></span><code><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">commitizen.providers</span> <span class="kn">import</span> <span class="n">VersionProvider</span>
 

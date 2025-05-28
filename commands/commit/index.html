@@ -286,26 +286,6 @@
       
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../../getting_started/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Getting Started
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
     
   
   
@@ -318,10 +298,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -332,8 +312,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Commands
           </label>
@@ -697,10 +677,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -711,8 +691,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
           </label>
@@ -1106,7 +1086,7 @@
 
   <h1>commit</h1>
 
-<p><img alt="Using commitizen cli" src="../../images/demo.gif" /></p>
+<p><img alt="Using Commitizen cli" src="../../images/demo.gif" /></p>
 <h2 id="about">About<a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
 <p>In your terminal run <code>cz commit</code> or the shortcut <code>cz c</code> to generate a guided git commit.</p>
 <p>You can run <code>cz commit --write-message-to-file COMMIT_MSG_FILE</code> to additionally save the
@@ -1121,13 +1101,13 @@ In particular pre-commit hooks coloring will be deactivated as discussed in <a h
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <p><img alt="cz commit --help" src="../../images/cli_help/cz_commit___help.svg" /></p>
 <h3 id="git-options">git options<a class="headerlink" href="#git-options" title="Permanent link">&para;</a></h3>
-<p><code>git</code> command options that are not implemented by commitizen can be use via the <code>--</code> syntax for the <code>commit</code> command.
-The syntax separates commitizen arguments from <code>git commit</code> arguments by a double dash. This is the resulting syntax:
+<p><code>git</code> command options that are not implemented by Commitizen can be use via the <code>--</code> syntax for the <code>commit</code> command.
+The syntax separates Commitizen arguments from <code>git commit</code> arguments by a double dash. This is the resulting syntax:
 <div class="highlight"><pre><span></span><code>cz<span class="w"> </span>commit<span class="w"> </span>&lt;commitizen-args&gt;<span class="w"> </span>--<span class="w"> </span>&lt;git-cli-args&gt;
 
 <span class="c1"># e.g., cz commit --dry-run -- -a -S</span>
 </code></pre></div>
-For example, using the <code>-S</code> option on <code>git commit</code> to sign a commit is now commitizen compatible: <code>cz c -- -S</code></p>
+For example, using the <code>-S</code> option on <code>git commit</code> to sign a commit is now Commitizen compatible: <code>cz c -- -S</code></p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Deprecation warning: A commit can be signed off using <code>cz commit --signoff</code> or the shortcut <code>cz commit -s</code>.
@@ -1136,13 +1116,13 @@ This syntax is now deprecated in favor of the new <code>cz commit -- -s</code> s
 <h3 id="retry">Retry<a class="headerlink" href="#retry" title="Permanent link">&para;</a></h3>
 <p>You can use <code>cz commit --retry</code> to reuse the last commit message when the previous commit attempt failed.
 To automatically retry when running <code>cz commit</code>, you can set the <code>retry_after_failure</code>
-configuration option to <code>true</code>. Running <code>cz commit --no-retry</code> makes commitizen ignore <code>retry_after_failure</code>, forcing
+configuration option to <code>true</code>. Running <code>cz commit --no-retry</code> makes Commitizen ignore <code>retry_after_failure</code>, forcing
 a new commit message to be prompted.</p>
 <h3 id="commit-message-length-limit">Commit message length limit<a class="headerlink" href="#commit-message-length-limit" title="Permanent link">&para;</a></h3>
 <p>The argument <code>-l</code> (or <code>--message-length-limit</code>) followed by a positive number can limit the length of commit messages.
 An exception would be raised when the message length exceeds the limit.
 For example, <code>cz commit -l 72</code> will limit the length of commit messages to 72 characters.
-By default the limit is set to 0, which means no limit on the length.</p>
+By default, the limit is set to 0, which means no limit on the length.</p>
 <p><strong>Note that the limit applies only to the first line of the message.</strong>
 Specifically, for <code>ConventionalCommitsCz</code> the length only counts from the type of change to the subject,
 while the body and the footer are not counted.</p>

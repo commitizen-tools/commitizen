@@ -288,26 +288,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../getting_started/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Getting Started
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     
     
     
@@ -316,10 +296,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -330,8 +310,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Commands
           </label>
@@ -610,10 +590,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -624,8 +604,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
           </label>
@@ -745,18 +725,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#method-1-add-git-hook-through-pre-commit" class="md-nav__link">
+  <a href="#method-1-add-a-git-hook-through-pre-commit" class="md-nav__link">
     <span class="md-ellipsis">
-      Method 1: Add git hook through pre-commit
+      Method 1: Add a git hook through pre-commit
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#method-2-manually-add-git-hook" class="md-nav__link">
+  <a href="#method-2-manually-add-a-git-hook" class="md-nav__link">
     <span class="md-ellipsis">
-      Method 2: Manually add git hook
+      Method 2: Manually add a git hook
     </span>
   </a>
   
@@ -1055,18 +1035,18 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#method-1-add-git-hook-through-pre-commit" class="md-nav__link">
+  <a href="#method-1-add-a-git-hook-through-pre-commit" class="md-nav__link">
     <span class="md-ellipsis">
-      Method 1: Add git hook through pre-commit
+      Method 1: Add a git hook through pre-commit
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#method-2-manually-add-git-hook" class="md-nav__link">
+  <a href="#method-2-manually-add-a-git-hook" class="md-nav__link">
     <span class="md-ellipsis">
-      Method 2: Manually add git hook
+      Method 2: Manually add a git hook
     </span>
   </a>
   
@@ -1096,15 +1076,15 @@
 <h2 id="about">About<a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
 <p>To automatically check a commit message prior to committing, you can use a <a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks">git hook</a>.</p>
 <h2 id="how-to">How to<a class="headerlink" href="#how-to" title="Permanent link">&para;</a></h2>
-<p>There are two common methods for installing the hook:</p>
-<h3 id="method-1-add-git-hook-through-pre-commit">Method 1: Add git hook through <a href="https://pre-commit.com/">pre-commit</a><a class="headerlink" href="#method-1-add-git-hook-through-pre-commit" title="Permanent link">&para;</a></h3>
+<p>There are two common methods for installing the hooks:</p>
+<h3 id="method-1-add-a-git-hook-through-pre-commit">Method 1: Add a git hook through <a href="https://pre-commit.com/">pre-commit</a><a class="headerlink" href="#method-1-add-a-git-hook-through-pre-commit" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Step 1: Install <a href="https://pre-commit.com/">pre-commit</a></li>
 </ul>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>pre-commit
 </code></pre></div>
 <ul>
-<li>Step 2: Create <code>.pre-commit-config.yaml</code> at your root directory with the following content</li>
+<li>Step 2: Create <code>.pre-commit-config.yaml</code> in your root directory with the following content</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="nn">---</span>
 <span class="nt">repos</span><span class="p">:</span>
@@ -1115,14 +1095,14 @@
 <span class="w">        </span><span class="nt">stages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">commit-msg</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <ul>
-<li>Step 3: Install the configuration into git hook through <code>pre-commit</code></li>
+<li>Step 3: Install the configuration into the git hook through <code>pre-commit</code></li>
 </ul>
 <div class="highlight"><pre><span></span><code>pre-commit<span class="w"> </span>install<span class="w"> </span>--hook-type<span class="w"> </span>commit-msg
 </code></pre></div>
-<h3 id="method-2-manually-add-git-hook">Method 2: Manually add git hook<a class="headerlink" href="#method-2-manually-add-git-hook" title="Permanent link">&para;</a></h3>
-<p>The command might be included inside of a Git hook (inside of <code>.git/hooks/</code> at the root of the project).</p>
+<h3 id="method-2-manually-add-a-git-hook">Method 2: Manually add a git hook<a class="headerlink" href="#method-2-manually-add-a-git-hook" title="Permanent link">&para;</a></h3>
+<p>The command might be included inside a Git hook (inside <code>.git/hooks/</code> at the root of the project).</p>
 <p>The selected hook might be the file called commit-msg.</p>
-<p>This example shows how to use the check command inside of commit-msg.</p>
+<p>This example shows how to use the check command inside commit-msg.</p>
 <p>At the root of the project:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>.git/hooks
 touch<span class="w"> </span>commit-msg
@@ -1135,8 +1115,8 @@ cz<span class="w"> </span>check<span class="w"> </span>--allow-abort<span class=
 </code></pre></div>
 <p>Where <code>$1</code> is the name of the temporary file that contains the current commit message. To be more explicit, the previous variable is stored in another variable called <code>$MSG_FILE</code>, for didactic purposes.</p>
 <p>The <code>--commit-msg-file</code> flag is required, not optional.</p>
-<p>Each time you create a commit, automatically, this hook will analyze it.
-If the commit message is invalid, it'll be rejected.</p>
+<p>Each time you create a commit, this hook will automatically analyze it.
+If the commit message is invalid, it will be rejected.</p>
 <p>The commit should follow the given committing rules; otherwise, it won't be accepted.</p>
 
 

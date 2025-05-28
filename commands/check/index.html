@@ -286,26 +286,6 @@
       
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../../getting_started/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Getting Started
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
     
   
   
@@ -318,10 +298,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -332,8 +312,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Commands
           </label>
@@ -752,10 +732,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -766,8 +746,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
           </label>
@@ -1214,8 +1194,8 @@
 
 <h1 id="check">Check<a class="headerlink" href="#check" title="Permanent link">&para;</a></h1>
 <h2 id="about">About<a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
-<p>This feature checks whether the commit message follows the given committing rules. And comment in git message will be ignored.</p>
-<p>If you want to setup an automatic check before every git commit, please refer to
+<p>This feature checks whether the commit message follows the given committing rules. Comments in git messages will be ignored.</p>
+<p>If you want to set up an automatic check before every git commit, please refer to
 <a href="../../tutorials/auto_check/">Automatically check message before commit</a>.</p>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <p><img alt="cz check --help" src="../../images/cli_help/cz_check___help.svg" /></p>
@@ -1230,7 +1210,7 @@
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>cz<span class="w"> </span>check<span class="w"> </span>--rev-range<span class="w"> </span>REV_RANGE
 </code></pre></div>
 <p>For example, if you'd like to check all commits on a branch, you can use <code>--rev-range master..HEAD</code>. Or, if you'd like to check all commits starting from when you first implemented commit message linting, you can use <code>--rev-range &lt;first_commit_sha&gt;..HEAD</code>.</p>
-<p>For more info on how git commit ranges work, you can check the <a href="https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection#_commit_ranges">git documentation</a>.</p>
+<p>For more information on how git commit ranges work, you can check the <a href="https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection#_commit_ranges">git documentation</a>.</p>
 <h3 id="commit-message">Commit Message<a class="headerlink" href="#commit-message" title="Permanent link">&para;</a></h3>
 <p>There are two ways you can provide your plain message and check it.</p>
 <h4 id="method-1-use-m-or-message">Method 1: use -m or --message<a class="headerlink" href="#method-1-use-m-or-message" title="Permanent link">&para;</a></h4>
@@ -1240,29 +1220,29 @@
 <h4 id="method-2-use-pipe-to-pipe-it-to-cz-check">Method 2: use pipe to pipe it to <code>cz check</code><a class="headerlink" href="#method-2-use-pipe-to-pipe-it-to-cz-check" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span>MESSAGE<span class="w"> </span><span class="p">|</span><span class="w"> </span>cz<span class="w"> </span>check
 </code></pre></div>
-<p>In this option, MESSAGE is piped to cz check and would be checked.</p>
+<p>In this option, MESSAGE is piped to cz check and will be checked.</p>
 <h3 id="commit-message-file">Commit Message File<a class="headerlink" href="#commit-message-file" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>cz<span class="w"> </span>check<span class="w"> </span>--commit-msg-file<span class="w"> </span>COMMIT_MSG_FILE
 </code></pre></div>
-<p>In this option, COMMIT_MSG_FILE is the path of the temporal file that contains the commit message.
-This argument can be useful when cooperating with git hook, please check <a href="../../tutorials/auto_check/">Automatically check message before commit</a> for more information about how to use this argument with git hook.</p>
+<p>In this option, COMMIT_MSG_FILE is the path of the temporary file that contains the commit message.
+This argument can be useful when cooperating with git hooks. Please check <a href="../../tutorials/auto_check/">Automatically check message before commit</a> for more information about how to use this argument with git hooks.</p>
 <h3 id="allow-abort">Allow Abort<a class="headerlink" href="#allow-abort" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>cz<span class="w"> </span>check<span class="w"> </span>--message<span class="w"> </span>MESSAGE<span class="w"> </span>--allow-abort
 </code></pre></div>
 <p>Empty commit messages typically instruct Git to abort a commit, so you can pass <code>--allow-abort</code> to
 permit them. Since <code>git commit</code> accepts an <code>--allow-empty-message</code> flag (primarily for wrapper scripts), you may wish to disallow such commits in CI. <code>--allow-abort</code> may be used in conjunction with any of the other options.</p>
 <h3 id="allowed-prefixes">Allowed Prefixes<a class="headerlink" href="#allowed-prefixes" title="Permanent link">&para;</a></h3>
-<p>If the commit message starts by some specific prefixes, <code>cz check</code> returns <code>True</code> without checkign the regex.
-By default, the the following prefixes are allowed: <code>Merge</code>, <code>Revert</code>, <code>Pull request</code>, <code>fixup!</code> and <code>squash!</code>.</p>
+<p>If the commit message starts with some specific prefixes, <code>cz check</code> returns <code>True</code> without checking the regex.
+By default, the following prefixes are allowed: <code>Merge</code>, <code>Revert</code>, <code>Pull request</code>, <code>fixup!</code> and <code>squash!</code>.</p>
 <div class="highlight"><pre><span></span><code>cz<span class="w"> </span>check<span class="w"> </span>--message<span class="w"> </span>MESSAGE<span class="w"> </span>--allowed-prefixes<span class="w"> </span><span class="s1">&#39;Merge&#39;</span><span class="w"> </span><span class="s1">&#39;Revert&#39;</span><span class="w"> </span><span class="s1">&#39;Custom Prefix&#39;</span>
 </code></pre></div>
 <h3 id="commit-message-length-limit">Commit message length limit<a class="headerlink" href="#commit-message-length-limit" title="Permanent link">&para;</a></h3>
-<p>The argument <code>-l</code> (or <code>--message-length-limmit</code>) followed by a positive number, can limit the length of commit messages.
+<p>The argument <code>-l</code> (or <code>--message-length-limit</code>) followed by a positive number can limit the length of commit messages.
 For example, <code>cz check --message MESSAGE -l 3</code> would fail the check, since <code>MESSAGE</code> is more than 3 characters long.
 By default, the limit is set to 0, which means no limit on the length.</p>
-<p><strong>Note that the limit applies only to the first line of the message.</strong>*
+<p><strong>Note that the limit applies only to the first line of the message.</strong>
 Specifically, for <code>ConventionalCommitsCz</code> the length only counts from the type of change to the subject,
-while the body, and the footer are not counted.</p>
+while the body and the footer are not counted.</p>
 
 
 

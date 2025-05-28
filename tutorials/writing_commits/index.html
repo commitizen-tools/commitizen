@@ -288,26 +288,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../getting_started/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Getting Started
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     
     
     
@@ -316,10 +296,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -330,8 +310,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Commands
           </label>
@@ -610,10 +590,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -624,8 +604,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
           </label>
@@ -1071,33 +1051,33 @@
   <h1>Writing commits</h1>
 
 <p>For this project to work well in your pipeline, a commit convention must be followed.</p>
-<p>By default commitizen uses the known <a href="https://www.conventionalcommits.org">conventional commits</a>, but
-you can create your own following the docs information over at
+<p>By default, Commitizen uses the known <a href="https://www.conventionalcommits.org">conventional commits</a>, but
+you can create your own following the documentation information over at
 <a href="../../customization/">customization</a>.</p>
 <h2 id="conventional-commits">Conventional commits<a class="headerlink" href="#conventional-commits" title="Permanent link">&para;</a></h2>
 <p>If you are using <a href="https://www.conventionalcommits.org">conventional commits</a>, the most important
 thing to know is that you must begin your commits with at least one of these tags:
-<code>fix</code>, <code>feat</code>. And if you introduce a breaking change, then, you must
+<code>fix</code>, <code>feat</code>. And if you introduce a breaking change, then you must
 add to your commit body the following <code>BREAKING CHANGE</code>.
-Using these 3 keywords will allow the proper identification of the semantic version.
+Using these three keywords will allow the proper identification of the semantic version.
 Of course, there are other keywords, but I'll leave it to the reader to explore them.</p>
 <h2 id="writing-commits">Writing commits<a class="headerlink" href="#writing-commits" title="Permanent link">&para;</a></h2>
-<p>Now to the important part, when writing commits, it's important to think about:</p>
+<p>Now to the important part: when writing commits, it's important to think about:</p>
 <ul>
 <li>Your future self</li>
 <li>Your colleagues</li>
 </ul>
 <p>You may think this is trivial, but it's not. It's important for the reader to
 understand what happened.</p>
-<p>Emojis may be added as well (e.g. see <a href="https://commitizen-tools.github.io/commitizen/third-party-commitizen/#cz-emoji">cz-emoji</a>), which requires the <code>utf-8</code>, or equivalent, character encoding to support unicode characters. By default, <code>commitizen</code> uses the <code>utf-8</code> character encoding, but a different encoding may be set through the <code>encoding</code> <a href="../../config/#encoding">configuration option</a>.</p>
+<p>Emojis may be added as well (e.g., see <a href="https://commitizen-tools.github.io/commitizen/third-party-commitizen/#cz-emoji">cz-emoji</a>), which requires the <code>utf-8</code>, or equivalent, character encoding to support unicode characters. By default, <code>commitizen</code> uses the <code>utf-8</code> character encoding, but a different encoding may be set through the <code>encoding</code> <a href="../../config/#encoding">configuration option</a>.</p>
 <h3 id="recommendations">Recommendations<a class="headerlink" href="#recommendations" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Keep the message short</strong>: Makes the list of commits more readable (~50 chars).</li>
 <li><strong>Talk imperative</strong>: Follow this rule: <code>If applied, this commit will &lt;commit message&gt;</code></li>
-<li><strong>Think about the CHANGELOG</strong>: Your commits will probably end up in the changelog
+<li><strong>Think about the CHANGELOG</strong>: Your commits will probably end up in the changelog,
   so try writing for it, but also keep in mind that you can skip sending commits to the
   CHANGELOG by using different keywords (like <code>build</code>).</li>
-<li><strong>Use a commit per new feature</strong>: if you introduce multiple things related to the same
+<li><strong>Use a commit per new feature</strong>: If you introduce multiple things related to the same
   commit, squash them. This is useful for auto-generating CHANGELOG.</li>
 </ul>
 <table>
