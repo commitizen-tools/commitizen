@@ -9,22 +9,12 @@ from commitizen.defaults import Questions
 __all__ = ["ConventionalCommitsCz"]
 
 
-def parse_scope(text: str) -> str:
-    if not text:
-        return ""
-
-    scope = text.strip().split()
-    if len(scope) == 1:
-        return scope[0]
-
-    return "-".join(scope)
+def _parse_scope(text: str) -> str:
+    return "-".join(text.strip().split())
 
 
-def parse_subject(text: str) -> str:
-    if isinstance(text, str):
-        text = text.strip(".").strip()
-
-    return required_validator(text, msg="Subject is required.")
+def _parse_subject(text: str) -> str:
+    return required_validator(text.strip(".").strip(), msg="Subject is required.")
 
 
 class ConventionalCommitsCz(BaseCommitizen):
@@ -113,12 +103,12 @@ class ConventionalCommitsCz(BaseCommitizen):
                 "message": (
                     "What is the scope of this change? (class or file name): (press [enter] to skip)\n"
                 ),
-                "filter": parse_scope,
+                "filter": _parse_scope,
             },
             {
                 "type": "input",
                 "name": "subject",
-                "filter": parse_subject,
+                "filter": _parse_subject,
                 "message": (
                     "Write a short and imperative summary of the code changes: (lower case and no period)\n"
                 ),
