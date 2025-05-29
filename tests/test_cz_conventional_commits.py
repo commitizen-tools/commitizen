@@ -2,48 +2,42 @@ import pytest
 
 from commitizen.cz.conventional_commits.conventional_commits import (
     ConventionalCommitsCz,
-    parse_scope,
-    parse_subject,
+    _parse_scope,
+    _parse_subject,
 )
 from commitizen.cz.exceptions import AnswerRequiredError
 
-valid_scopes = ["", "simple", "dash-separated", "camelCaseUPPERCASE"]
 
-scopes_transformations = [["with spaces", "with-spaces"], [None, ""]]
-
-valid_subjects = ["this is a normal text", "aword"]
-
-subjects_transformations = [["with dot.", "with dot"]]
-
-invalid_subjects = ["", "   ", ".", "   .", "", None]
+@pytest.mark.parametrize(
+    "valid_scope", ["", "simple", "dash-separated", "camelCaseUPPERCASE"]
+)
+def test_parse_scope_valid_values(valid_scope):
+    assert valid_scope == _parse_scope(valid_scope)
 
 
-def test_parse_scope_valid_values():
-    for valid_scope in valid_scopes:
-        assert valid_scope == parse_scope(valid_scope)
+@pytest.mark.parametrize(
+    "scopes_transformation", [["with spaces", "with-spaces"], ["", ""]]
+)
+def test_scopes_transformations(scopes_transformation):
+    invalid_scope, transformed_scope = scopes_transformation
+    assert transformed_scope == _parse_scope(invalid_scope)
 
 
-def test_scopes_transformations():
-    for scopes_transformation in scopes_transformations:
-        invalid_scope, transformed_scope = scopes_transformation
-        assert transformed_scope == parse_scope(invalid_scope)
+@pytest.mark.parametrize("valid_subject", ["this is a normal text", "aword"])
+def test_parse_subject_valid_values(valid_subject):
+    assert valid_subject == _parse_subject(valid_subject)
 
 
-def test_parse_subject_valid_values():
-    for valid_subject in valid_subjects:
-        assert valid_subject == parse_subject(valid_subject)
+@pytest.mark.parametrize("invalid_subject", ["", "   ", ".", "   .", "\t\t."])
+def test_parse_subject_invalid_values(invalid_subject):
+    with pytest.raises(AnswerRequiredError):
+        _parse_subject(invalid_subject)
 
 
-def test_parse_subject_invalid_values():
-    for valid_subject in invalid_subjects:
-        with pytest.raises(AnswerRequiredError):
-            parse_subject(valid_subject)
-
-
-def test_subject_transformations():
-    for subject_transformation in subjects_transformations:
-        invalid_subject, transformed_subject = subject_transformation
-        assert transformed_subject == parse_subject(invalid_subject)
+@pytest.mark.parametrize("subject_transformation", [["with dot.", "with dot"]])
+def test_subject_transformations(subject_transformation):
+    invalid_subject, transformed_subject = subject_transformation
+    assert transformed_subject == _parse_subject(invalid_subject)
 
 
 def test_questions(config):
