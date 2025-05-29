@@ -1,6 +1,7 @@
 import os
 import re
 import tempfile
+from typing import Union
 
 from commitizen import git
 from commitizen.cz import exceptions
@@ -8,13 +9,13 @@ from commitizen.cz import exceptions
 _RE_LOCAL_VERSION = re.compile(r"\+.+")
 
 
-def required_validator(answer, msg=None):
+def required_validator(answer: str, msg: Union[str, None] = None) -> str:
     if not answer:
         raise exceptions.AnswerRequiredError(msg)
     return answer
 
 
-def multiple_line_breaker(answer, sep="|"):
+def multiple_line_breaker(answer: str, sep: str = "|") -> str:
     return "\n".join(line.strip() for line in answer.split(sep) if line)
 
 

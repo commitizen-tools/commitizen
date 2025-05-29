@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import os
 import os.path
-from collections.abc import Generator
+from collections.abc import Generator, Iterable, Mapping
 from difflib import SequenceMatcher
 from operator import itemgetter
 from pathlib import Path
+from typing import Any, cast
 
 from commitizen import changelog, defaults, factory, git, out
 from commitizen.changelog_formats import get_changelog_format
@@ -28,7 +29,7 @@ from commitizen.version_schemes import get_version_scheme
 class Changelog:
     """Generate a changelog based on the commit history."""
 
-    def __init__(self, config: BaseConfig, args):
+    def __init__(self, config: BaseConfig, args: Mapping[str, Any]):
         if not git.is_git_project():
             raise NotAGitProjectError()
 
@@ -76,10 +77,11 @@ class Changelog:
         self.change_type_map = (
             self.config.settings.get("change_type_map") or self.cz.change_type_map
         )
-        self.change_type_order = (
+        self.change_type_order = cast(
+            list[str],
             self.config.settings.get("change_type_order")
             or self.cz.change_type_order
-            or defaults.CHANGE_TYPE_ORDER
+            or defaults.CHANGE_TYPE_ORDER,
         )
         self.rev_range = args.get("rev_range")
         self.tag_format: str = (
@@ -102,7 +104,7 @@ class Changelog:
         self.extras = args.get("extras") or {}
         self.export_template_to = args.get("export_template")
 
-    def _find_incremental_rev(self, latest_version: str, tags: list[GitTag]) -> str:
+    def _find_incremental_rev(self, latest_version: str, tags: Iterable[GitTag]) -> str:
         """Try to find the 'start_rev'.
 
         We use a similarity approach. We know how to parse the version from the markdown
@@ -151,18 +153,18 @@ class Changelog:
 
             changelog_file.write(changelog_out)
 
-    def export_template(self):
+    def export_template(self) -> None:
         tpl = changelog.get_changelog_template(self.cz.template_loader, self.template)
-        src = Path(tpl.filename)
-        Path(self.export_template_to).write_text(src.read_text())
+        src = Path(tpl.filename)  # type: ignore
+        Path(self.export_template_to).write_text(src.read_text())  # type: ignore
 
-    def __call__(self):
+    def __call__(self) -> None:
         commit_parser = self.cz.commit_parser
         changelog_pattern = self.cz.changelog_pattern
         start_rev = self.start_rev
         unreleased_version = self.unreleased_version
         changelog_meta = changelog.Metadata()
-        change_type_map: dict | None = self.change_type_map
+        change_type_map: dict[str, str] | None = self.change_type_map  # type: ignore
         changelog_message_builder_hook: MessageBuilderHook | None = (
             self.cz.changelog_message_builder_hook
         )
@@ -190,7 +192,7 @@ class Changelog:
             changelog_meta = self.changelog_format.get_metadata(self.file_name)
             if changelog_meta.latest_version:
                 start_rev = self._find_incremental_rev(
-                    strip_local_version(changelog_meta.latest_version_tag), tags
+                    strip_local_version(changelog_meta.latest_version_tag or ""), tags
                 )
         if self.rev_range:
             start_rev, end_rev = changelog.get_oldest_and_newest_rev(

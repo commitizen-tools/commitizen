@@ -5,6 +5,8 @@ import os
 import shutil
 import subprocess
 import tempfile
+from pathlib import Path
+from typing import Union, cast
 
 import questionary
 
@@ -105,11 +107,13 @@ class Commit:
             return self.read_backup_message() or self.prompt_commit_questions()
         return self.prompt_commit_questions()
 
-    def __call__(self):
-        extra_args: str = self.arguments.get("extra_cli_args", "")
-        dry_run: bool = self.arguments.get("dry_run")
-        write_message_to_file: bool = self.arguments.get("write_message_to_file")
-        signoff: bool = self.arguments.get("signoff")
+    def __call__(self) -> None:
+        extra_args = cast(str, self.arguments.get("extra_cli_args", ""))
+        dry_run = cast(bool, self.arguments.get("dry_run"))
+        write_message_to_file = cast(
+            Union[Path, None], self.arguments.get("write_message_to_file")
+        )
+        signoff = cast(bool, self.arguments.get("signoff"))
 
         if self.arguments.get("all"):
             git.add("-u")
