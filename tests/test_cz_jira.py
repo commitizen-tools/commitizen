@@ -5,7 +5,6 @@ def test_questions(config):
     cz = JiraSmartCz(config)
     questions = cz.questions()
     assert isinstance(questions, list)
-    assert isinstance(questions[0], dict)
 
 
 def test_answer(config):

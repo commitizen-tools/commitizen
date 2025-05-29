@@ -7,7 +7,7 @@ from collections.abc import Iterable, MutableMapping, Sequence
 from typing import Any, TypedDict
 
 # Type
-Questions = Iterable[MutableMapping[str, Any]]
+Questions = Iterable[MutableMapping[str, Any]]  # TODO: deprecate this?
 
 
 class CzSettings(TypedDict, total=False):

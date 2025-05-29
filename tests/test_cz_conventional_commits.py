@@ -6,6 +6,7 @@ from commitizen.cz.conventional_commits.conventional_commits import (
     parse_subject,
 )
 from commitizen.cz.exceptions import AnswerRequiredError
+from commitizen.question import ListQuestion
 
 valid_scopes = ["", "simple", "dash-separated", "camelCaseUPPERCASE"]
 
@@ -50,16 +51,15 @@ def test_questions(config):
     conventional_commits = ConventionalCommitsCz(config)
     questions = conventional_commits.questions()
     assert isinstance(questions, list)
-    assert isinstance(questions[0], dict)
 
 
 def test_choices_all_have_keyboard_shortcuts(config):
     conventional_commits = ConventionalCommitsCz(config)
     questions = conventional_commits.questions()
 
-    list_questions = (q for q in questions if q["type"] == "list")
+    list_questions = (q for q in questions if isinstance(q, ListQuestion))
     for select in list_questions:
-        assert all("key" in choice for choice in select["choices"])
+        assert all(choice.key is not None for choice in select.choices)
 
 
 def test_small_answer(config):

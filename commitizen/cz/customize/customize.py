@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from commitizen.question import CzQuestion, CzQuestionModel
+
 if TYPE_CHECKING:
     from jinja2 import Template
 else:
@@ -14,7 +16,6 @@ else:
 from commitizen import defaults
 from commitizen.config import BaseConfig
 from commitizen.cz.base import BaseCommitizen
-from commitizen.defaults import Questions
 from commitizen.exceptions import MissingCzCustomizeConfigError
 
 __all__ = ["CustomizeCommitsCz"]
@@ -45,8 +46,11 @@ class CustomizeCommitsCz(BaseCommitizen):
             if value := self.custom_settings.get(attr_name):
                 setattr(self, attr_name, value)
 
-    def questions(self) -> Questions:
-        return self.custom_settings.get("questions", [{}])
+    def questions(self) -> list[CzQuestion]:
+        questions = self.custom_settings.get("questions", [{}])
+        return [
+            CzQuestionModel.model_validate({"question": q}).question for q in questions
+        ]
 
     def message(self, answers: dict) -> str:
         message_template = Template(self.custom_settings.get("message_template", ""))

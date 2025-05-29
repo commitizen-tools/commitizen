@@ -4,7 +4,7 @@ import re
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.utils import multiple_line_breaker, required_validator
-from commitizen.defaults import Questions
+from commitizen.question import CzQuestion, CzQuestionModel
 
 __all__ = ["ConventionalCommitsCz"]
 
@@ -40,8 +40,8 @@ class ConventionalCommitsCz(BaseCommitizen):
     }
     changelog_pattern = defaults.BUMP_PATTERN
 
-    def questions(self) -> Questions:
-        return [
+    def questions(self) -> list[CzQuestion]:
+        questions = [
             {
                 "type": "list",
                 "name": "prefix",
@@ -145,6 +145,9 @@ class ConventionalCommitsCz(BaseCommitizen):
                     "reference issues that this commit closes: (press [enter] to skip)\n"
                 ),
             },
+        ]
+        return [
+            CzQuestionModel.model_validate({"question": q}).question for q in questions
         ]
 
     def message(self, answers: dict) -> str:

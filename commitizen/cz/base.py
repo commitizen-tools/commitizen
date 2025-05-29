@@ -9,7 +9,7 @@ from prompt_toolkit.styles import Style, merge_styles
 
 from commitizen import git
 from commitizen.config.base_config import BaseConfig
-from commitizen.defaults import Questions
+from commitizen.question import CzQuestion
 
 
 class MessageBuilderHook(Protocol):
@@ -68,7 +68,7 @@ class BaseCommitizen(metaclass=ABCMeta):
             self.config.settings.update({"style": BaseCommitizen.default_style_config})
 
     @abstractmethod
-    def questions(self) -> Questions:
+    def questions(self) -> list[CzQuestion]:
         """Questions regarding the commit message."""
 
     @abstractmethod

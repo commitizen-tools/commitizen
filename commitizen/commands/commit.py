@@ -24,6 +24,7 @@ from commitizen.exceptions import (
     NothingToCommitError,
 )
 from commitizen.git import smart_open
+from commitizen.question import ListQuestion
 
 
 class Commit:
@@ -52,10 +53,12 @@ class Commit:
         # Prompt user for the commit message
         cz = self.cz
         questions = cz.questions()
-        for question in filter(lambda q: q["type"] == "list", questions):
-            question["use_shortcuts"] = self.config.settings["use_shortcuts"]
+        for question in (q for q in questions if isinstance(q, ListQuestion)):
+            question.use_shortcuts = self.config.settings["use_shortcuts"]
         try:
-            answers = questionary.prompt(questions, style=cz.style)
+            answers = questionary.prompt(
+                (q.model_dump() for q in questions), style=cz.style
+            )
         except ValueError as err:
             root_err = err.__context__
             if isinstance(root_err, CzException):

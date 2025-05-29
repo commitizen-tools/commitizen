@@ -1,14 +1,14 @@
 import os
 
 from commitizen.cz.base import BaseCommitizen
-from commitizen.defaults import Questions
+from commitizen.question import CzQuestion, CzQuestionModel
 
 __all__ = ["JiraSmartCz"]
 
 
 class JiraSmartCz(BaseCommitizen):
-    def questions(self) -> Questions:
-        return [
+    def questions(self) -> list[CzQuestion]:
+        questions = [
             {
                 "type": "input",
                 "name": "message",
@@ -41,6 +41,9 @@ class JiraSmartCz(BaseCommitizen):
                 "message": "Jira comment (optional):\n",
                 "filter": lambda x: "#comment " + x if x else "",
             },
+        ]
+        return [
+            CzQuestionModel.model_validate({"question": q}).question for q in questions
         ]
 
     def message(self, answers: dict) -> str:

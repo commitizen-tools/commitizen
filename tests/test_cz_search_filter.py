@@ -2,6 +2,7 @@ import pytest
 
 from commitizen.config import TomlConfig
 from commitizen.cz.customize import CustomizeCommitsCz
+from commitizen.question import SelectQuestion
 
 TOML_WITH_SEARCH_FILTER = r"""
 [tool.commitizen]
@@ -48,19 +49,21 @@ def config():
 def test_questions_with_search_filter(config):
     """Test that questions are properly configured with search filter"""
     cz = CustomizeCommitsCz(config)
-    questions = cz.questions()
+    question = cz.questions()[0]
+
+    assert isinstance(question, SelectQuestion)
 
     # Test that the first question (change_type) has search filter enabled
-    assert questions[0]["type"] == "select"
-    assert questions[0]["name"] == "change_type"
-    assert questions[0]["use_search_filter"] is True
-    assert questions[0]["use_jk_keys"] is False
+    assert question.type == "select"
+    assert question.name == "change_type"
+    assert question.use_search_filter is True
+    assert question.use_jk_keys is False
 
     # Test that the choices are properly configured
-    choices = questions[0]["choices"]
+    choices = question.choices
     assert len(choices) == 9  # We have 9 commit types
-    assert choices[0]["value"] == "fix"
-    assert choices[1]["value"] == "feat"
+    assert choices[0].value == "fix"
+    assert choices[1].value == "feat"
 
 
 def test_message_template(config):

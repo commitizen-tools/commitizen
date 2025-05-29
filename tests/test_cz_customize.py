@@ -443,7 +443,7 @@ def test_questions(config):
             "message": "Do you want to add body message in commit?",
         },
     ]
-    assert list(questions) == expected_questions
+    assert [q.model_dump() for q in questions] == expected_questions
 
 
 def test_questions_unicode(config_with_unicode):
@@ -466,7 +466,7 @@ def test_questions_unicode(config_with_unicode):
             "message": "Do you want to add body message in commit?",
         },
     ]
-    assert list(questions) == expected_questions
+    assert [q.model_dump() for q in questions] == expected_questions
 
 
 def test_answer(config):
