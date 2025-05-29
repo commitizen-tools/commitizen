@@ -1,6 +1,7 @@
 import os
 import subprocess
-from typing import NamedTuple
+from collections.abc import Mapping
+from typing import NamedTuple, Union
 
 from charset_normalizer import from_bytes
 
@@ -28,7 +29,7 @@ def _try_decode(bytes_: bytes) -> str:
             raise CharacterSetDecodeError() from e
 
 
-def run(cmd: str, env=None) -> Command:
+def run(cmd: str, env: Union[Mapping[str, str], None] = None) -> Command:
     if env is not None:
         env = {**os.environ, **env}
     process = subprocess.Popen(

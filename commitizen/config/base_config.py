@@ -6,7 +6,7 @@ from commitizen.defaults import DEFAULT_SETTINGS, Settings
 
 
 class BaseConfig:
-    def __init__(self):
+    def __init__(self) -> None:
         self._settings: Settings = DEFAULT_SETTINGS.copy()
         self.encoding = self.settings["encoding"]
         self._path: Path | None = None
