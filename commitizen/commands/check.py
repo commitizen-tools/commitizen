@@ -17,7 +17,9 @@ from commitizen.exceptions import (
 class Check:
     """Check if the current commit msg matches the commitizen format."""
 
-    def __init__(self, config: BaseConfig, arguments: dict[str, Any], cwd=os.getcwd()):
+    def __init__(
+        self, config: BaseConfig, arguments: dict[str, Any], cwd: str = os.getcwd()
+    ):
         """Initial check command.
 
         Args:
@@ -48,7 +50,7 @@ class Check:
         self.encoding = config.settings["encoding"]
         self.cz = factory.committer_factory(self.config)
 
-    def _valid_command_argument(self):
+    def _valid_command_argument(self) -> None:
         num_exclusive_args_provided = sum(
             arg is not None
             for arg in (self.commit_msg_file, self.commit_msg, self.rev_range)
@@ -61,7 +63,7 @@ class Check:
                 "See 'cz check -h' for more information"
             )
 
-    def __call__(self):
+    def __call__(self) -> None:
         """Validate if commit messages follows the conventional pattern.
 
         Raises:
@@ -97,7 +99,7 @@ class Check:
             # Get commit message from file (--commit-msg-file)
             return commit_file.read()
 
-    def _get_commits(self):
+    def _get_commits(self) -> list[git.GitCommit]:
         if (msg := self._get_commit_message()) is not None:
             return [git.GitCommit(rev="", title="", body=self._filter_comments(msg))]
 

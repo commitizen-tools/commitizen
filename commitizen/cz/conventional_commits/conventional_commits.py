@@ -8,7 +8,7 @@ from commitizen.defaults import Questions
 __all__ = ["ConventionalCommitsCz"]
 
 
-def parse_scope(text):
+def parse_scope(text: str) -> str:
     if not text:
         return ""
 
@@ -19,7 +19,7 @@ def parse_scope(text):
     return "-".join(scope)
 
 
-def parse_subject(text):
+def parse_subject(text: str) -> str:
     if isinstance(text, str):
         text = text.strip(".").strip()
 

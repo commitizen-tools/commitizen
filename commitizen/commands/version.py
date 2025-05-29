@@ -1,5 +1,7 @@
 import platform
 import sys
+from collections.abc import Mapping
+from typing import Any
 
 from commitizen import out
 from commitizen.__version__ import __version__
@@ -10,13 +12,13 @@ from commitizen.providers import get_provider
 class Version:
     """Get the version of the installed commitizen or the current project."""
 
-    def __init__(self, config: BaseConfig, *args):
+    def __init__(self, config: BaseConfig, *args: Mapping[str, Any]):
         self.config: BaseConfig = config
         self.parameter = args[0]
         self.operating_system = platform.system()
         self.python_version = sys.version
 
-    def __call__(self):
+    def __call__(self) -> None:
         if self.parameter.get("report"):
             out.write(f"Commitizen Version: {__version__}")
             out.write(f"Python Version: {self.python_version}")

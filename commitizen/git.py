@@ -46,15 +46,15 @@ class GitObject:
     name: str
     date: str
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: object) -> bool:
         return hasattr(other, "rev") and self.rev == other.rev
 
 
 class GitCommit(GitObject):
     def __init__(
         self,
-        rev,
-        title,
+        rev: str,
+        title: str,
         body: str = "",
         author: str = "",
         author_email: str = "",
@@ -68,7 +68,7 @@ class GitCommit(GitObject):
         self.parents = parents or []
 
     @property
-    def message(self):
+    def message(self) -> str:
         return f"{self.title}\n\n{self.body}".strip()
 
     @classmethod
@@ -127,22 +127,26 @@ class GitCommit(GitObject):
             parents=[p for p in parents.strip().split(" ") if p],
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{self.title} ({self.rev})"
 
 
 class GitTag(GitObject):
-    def __init__(self, name, rev, date):
+    def __init__(self, name: str, rev: str, date: str):
         self.rev = rev.strip()
         self.name = name.strip()
         self._date = date.strip()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"GitTag('{self.name}', '{self.rev}', '{self.date}')"
 
     @property
-    def date(self):
+    def date(self) -> str:
         return self._date
+
+    @date.setter
+    def date(self, value: str) -> None:
+        self._date = value
 
     @classmethod
     def from_line(cls, line: str, inner_delimiter: str) -> GitTag:
