@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 import warnings
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from functools import cached_property
 from string import Template
@@ -89,14 +89,14 @@ class TagRules:
     merge_prereleases: bool = False
 
     @cached_property
-    def version_regexes(self) -> Sequence[re.Pattern]:
+    def version_regexes(self) -> list[re.Pattern]:
         """Regexes for all legit tag formats, current and legacy"""
         tag_formats = [self.tag_format, *self.legacy_tag_formats]
         regexes = (self._format_regex(p) for p in tag_formats)
         return [re.compile(r) for r in regexes]
 
     @cached_property
-    def ignored_regexes(self) -> Sequence[re.Pattern]:
+    def ignored_regexes(self) -> list[re.Pattern]:
         """Regexes for known but ignored tag formats"""
         regexes = (self._format_regex(p, star=True) for p in self.ignored_tag_formats)
         return [re.compile(r) for r in regexes]
@@ -135,8 +135,8 @@ class TagRules:
         return any(regex.match(tag) for regex in self.ignored_regexes)
 
     def get_version_tags(
-        self, tags: Sequence[GitTag], warn: bool = False
-    ) -> Sequence[GitTag]:
+        self, tags: Iterable[GitTag], warn: bool = False
+    ) -> list[GitTag]:
         """Filter in version tags and warn on unexpected tags"""
         return [tag for tag in tags if self.is_version_tag(tag, warn)]
 
@@ -236,7 +236,7 @@ class TagRules:
         )
 
     def find_tag_for(
-        self, tags: Sequence[GitTag], version: Version | str
+        self, tags: Iterable[GitTag], version: Version | str
     ) -> GitTag | None:
         """Find the first matching tag for a given version."""
         version = self.scheme(version) if isinstance(version, str) else version
