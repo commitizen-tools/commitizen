@@ -8,7 +8,7 @@ from copy import deepcopy
 from functools import partial
 from pathlib import Path
 from types import TracebackType
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import argcomplete
 from decli import cli
@@ -50,7 +50,7 @@ class ParseKwargs(argparse.Action):
         namespace: argparse.Namespace,
         kwarg: str | Sequence[Any] | None,
         option_string: str | None = None,
-    ):
+    ) -> None:
         if not isinstance(kwarg, str):
             return
         if "=" not in kwarg:
@@ -550,8 +550,12 @@ original_excepthook = sys.excepthook
 
 
 def commitizen_excepthook(
-    type, value, traceback, debug=False, no_raise: list[int] | None = None
-):
+    type: type[BaseException],
+    value: BaseException,
+    traceback: TracebackType | None,
+    debug: bool = False,
+    no_raise: list[int] | None = None,
+) -> None:
     traceback = traceback if isinstance(traceback, TracebackType) else None
     if not isinstance(value, CommitizenException):
         original_excepthook(type, value, traceback)
@@ -581,7 +585,7 @@ def parse_no_raise(comma_separated_no_raise: str) -> list[int]:
     represents the exit code found in exceptions.
     """
     no_raise_items: list[str] = comma_separated_no_raise.split(",")
-    no_raise_codes = []
+    no_raise_codes: list[int] = []
     for item in no_raise_items:
         if item.isdecimal():
             no_raise_codes.append(int(item))
@@ -596,8 +600,33 @@ def parse_no_raise(comma_separated_no_raise: str) -> list[int]:
     return no_raise_codes
 
 
-def main():
-    parser = cli(data)
+if TYPE_CHECKING:
+
+    class Args(argparse.Namespace):
+        config: str | None = None
+        debug: bool = False
+        name: str | None = None
+        no_raise: str | None = None  # comma-separated string, later parsed as list[int]
+        report: bool = False
+        project: bool = False
+        commitizen: bool = False
+        verbose: bool = False
+        func: type[
+            commands.Init  # init
+            | commands.Commit  # commit (c)
+            | commands.ListCz  # ls
+            | commands.Example  # example
+            | commands.Info  # info
+            | commands.Schema  # schema
+            | commands.Bump  # bump
+            | commands.Changelog  # changelog (ch)
+            | commands.Check  # check
+            | commands.Version  # version
+        ]
+
+
+def main() -> None:
+    parser: argparse.ArgumentParser = cli(data)
     argcomplete.autocomplete(parser)
     # Show help if no arg provided
     if len(sys.argv) == 1:
