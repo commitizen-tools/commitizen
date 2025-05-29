@@ -240,11 +240,11 @@ class TagRules:
     ) -> GitTag | None:
         """Find the first matching tag for a given version."""
         version = self.scheme(version) if isinstance(version, str) else version
-        possible_tags = [
+        possible_tags = set(
             self.normalize_tag(version, f)
             for f in (self.tag_format, *self.legacy_tag_formats)
-        ]
-        candidates = [t for t in tags if any(t.name == p for p in possible_tags)]
+        )
+        candidates = [t for t in tags if t.name in possible_tags]
         if len(candidates) > 1:
             warnings.warn(
                 UserWarning(
