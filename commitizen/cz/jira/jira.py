@@ -43,18 +43,11 @@ class JiraSmartCz(BaseCommitizen):
             },
         ]
 
-    def message(self, answers: dict) -> str:
+    def message(self, answers: dict[str, str]) -> str:
         return " ".join(
-            filter(
-                bool,
-                [
-                    answers["message"],
-                    answers["issues"],
-                    answers["workflow"],
-                    answers["time"],
-                    answers["comment"],
-                ],
-            )
+            x
+            for k in ("message", "issues", "workflow", "time", "comment")
+            if (x := answers.get(k))
         )
 
     def example(self) -> str:
