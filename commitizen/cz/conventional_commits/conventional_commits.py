@@ -1,5 +1,6 @@
 import os
 import re
+from typing import TypedDict
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
@@ -25,6 +26,15 @@ def parse_subject(text):
         text = text.strip(".").strip()
 
     return required_validator(text, msg="Subject is required.")
+
+
+class ConventionalCommitsAnswers(TypedDict):
+    prefix: str
+    scope: str
+    subject: str
+    body: str
+    footer: str
+    is_breaking_change: bool
 
 
 class ConventionalCommitsCz(BaseCommitizen):
@@ -147,7 +157,7 @@ class ConventionalCommitsCz(BaseCommitizen):
             },
         ]
 
-    def message(self, answers: dict) -> str:
+    def message(self, answers: ConventionalCommitsAnswers) -> str:  # type: ignore[override]
         prefix = answers["prefix"]
         scope = answers["scope"]
         subject = answers["subject"]
