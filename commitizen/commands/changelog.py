@@ -136,7 +136,7 @@ class Changelog:
             raise NoRevisionError()
         return start_rev
 
-    def write_changelog(
+    def _write_changelog(
         self, changelog_out: str, lines: list[str], changelog_meta: changelog.Metadata
     ):
         with smart_open(self.file_name, "w", encoding=self.encoding) as changelog_file:
@@ -153,7 +153,7 @@ class Changelog:
 
             changelog_file.write(changelog_out)
 
-    def export_template(self) -> None:
+    def _export_template(self) -> None:
         tpl = changelog.get_changelog_template(self.cz.template_loader, self.template)
         src = Path(tpl.filename)  # type: ignore
         Path(self.export_template_to).write_text(src.read_text())  # type: ignore
@@ -173,7 +173,7 @@ class Changelog:
         )
 
         if self.export_template_to:
-            return self.export_template()
+            return self._export_template()
 
         if not changelog_pattern or not commit_parser:
             raise NoPatternMapError(
@@ -240,4 +240,4 @@ class Changelog:
             with open(self.file_name, encoding=self.encoding) as changelog_file:
                 lines = changelog_file.readlines()
 
-        self.write_changelog(changelog_out, lines, changelog_meta)
+        self._write_changelog(changelog_out, lines, changelog_meta)
