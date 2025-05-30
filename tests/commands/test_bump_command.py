@@ -1692,7 +1692,7 @@ def test_bump_warn_but_dont_fail_on_invalid_tags(
 
 
 def test_is_initial_tag(mocker: MockFixture, tmp_commitizen_project):
-    """Test the is_initial_tag method behavior."""
+    """Test the _is_initial_tag method behavior."""
     # Create a commit but no tags
     create_file_and_commit("feat: initial commit")
 
@@ -1725,15 +1725,15 @@ def test_is_initial_tag(mocker: MockFixture, tmp_commitizen_project):
 
     # Test case 1: No current tag, not yes mode
     mocker.patch("questionary.confirm", return_value=mocker.Mock(ask=lambda: True))
-    assert bump_cmd.is_initial_tag(None, is_yes=False) is True
+    assert bump_cmd._is_initial_tag(None, is_yes=False) is True
 
     # Test case 2: No current tag, yes mode
-    assert bump_cmd.is_initial_tag(None, is_yes=True) is True
+    assert bump_cmd._is_initial_tag(None, is_yes=True) is True
 
     # Test case 3: Has current tag
     mock_tag = mocker.Mock()
-    assert bump_cmd.is_initial_tag(mock_tag, is_yes=False) is False
+    assert bump_cmd._is_initial_tag(mock_tag, is_yes=False) is False
 
     # Test case 4: No current tag, user denies
     mocker.patch("questionary.confirm", return_value=mocker.Mock(ask=lambda: False))
-    assert bump_cmd.is_initial_tag(None, is_yes=False) is False
+    assert bump_cmd._is_initial_tag(None, is_yes=False) is False
