@@ -29,7 +29,7 @@ from commitizen.version_schemes import get_version_scheme
 class Changelog:
     """Generate a changelog based on the commit history."""
 
-    def __init__(self, config: BaseConfig, args: Mapping[str, Any]):
+    def __init__(self, config: BaseConfig, args: Mapping[str, Any]) -> None:
         if not git.is_git_project():
             raise NotAGitProjectError()
 

@@ -5,7 +5,7 @@ from commitizen.config import BaseConfig
 class Info:
     """Show in depth explanation of your rules."""
 
-    def __init__(self, config: BaseConfig, *args: object):
+    def __init__(self, config: BaseConfig, *args: object) -> None:
         self.config: BaseConfig = config
         self.cz = factory.committer_factory(self.config)
 

@@ -25,7 +25,7 @@ class ChangelogFormat(Protocol):
 
     config: BaseConfig
 
-    def __init__(self, config: BaseConfig):
+    def __init__(self, config: BaseConfig) -> None:
         self.config = config
 
     @property

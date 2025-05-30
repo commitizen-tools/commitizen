@@ -59,7 +59,7 @@ class GitCommit(GitObject):
         author: str = "",
         author_email: str = "",
         parents: list[str] | None = None,
-    ):
+    ) -> None:
         self.rev = rev.strip()
         self.title = title.strip()
         self.body = body.strip()
@@ -132,7 +132,7 @@ class GitCommit(GitObject):
 
 
 class GitTag(GitObject):
-    def __init__(self, name: str, rev: str, date: str):
+    def __init__(self, name: str, rev: str, date: str) -> None:
         self.rev = rev.strip()
         self.name = name.strip()
         self._date = date.strip()

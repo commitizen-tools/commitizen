@@ -31,7 +31,7 @@ from commitizen.git import smart_open
 class Commit:
     """Show prompt for the user to create a guided commit."""
 
-    def __init__(self, config: BaseConfig, arguments: dict):
+    def __init__(self, config: BaseConfig, arguments: dict) -> None:
         if not git.is_git_project():
             raise NotAGitProjectError()
 
