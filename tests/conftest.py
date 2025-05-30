@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import re
 import tempfile
-from collections.abc import Iterator
+from collections.abc import Iterator, Mapping
 from pathlib import Path
 
 import pytest
@@ -210,7 +210,7 @@ class SemverCommitizen(BaseCommitizen):
             },
         ]
 
-    def message(self, answers: dict) -> str:
+    def message(self, answers: Mapping) -> str:
         prefix = answers["prefix"]
         subject = answers.get("subject", "default message").trim()
         return f"{prefix}: {subject}"
@@ -226,7 +226,7 @@ class MockPlugin(BaseCommitizen):
     def questions(self) -> list[CzQuestion]:
         return []
 
-    def message(self, answers: dict) -> str:
+    def message(self, answers: Mapping) -> str:
         return ""
 
 
