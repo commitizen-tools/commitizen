@@ -185,6 +185,9 @@ line-length = 88
 
 [tool.ruff.lint]
 select = [
+    # flake8-annotations
+    "ANN001",
+    "ANN2",
     # pycodestyle
     "E",
     # Pyflakes
@@ -196,6 +199,9 @@ select = [
 ]
 ignore = ["E501", "D1", "D415"]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ANN"]
+
 [tool.ruff.lint.isort]
 known-first-party = ["commitizen", "tests"]
 
@@ -203,13 +209,18 @@ known-first-party = ["commitizen", "tests"]
 convention = "google"
 
 [tool.mypy]
-files = "commitizen"
+files = ["commitizen", "tests"]
+disallow_untyped_defs = true
 disallow_untyped_decorators = true
 disallow_subclassing_any = true
 warn_return_any = true
 warn_redundant_casts = true
 warn_unused_ignores = true
 warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = "tests/*"
+disallow_untyped_defs = false
 
 [[tool.mypy.overrides]]
 module = "py.*"               # Legacy pytest dependencies
@@ -227,14 +238,14 @@ poetry_command = ""
 [tool.poe.tasks]
 format.help = "Format the code"
 format.sequence = [
-    { cmd = "ruff check --fix commitizen tests" },
-    { cmd = "ruff format commitizen tests" },
+    { cmd = "ruff check --fix" },
+    { cmd = "ruff format" },
 ]
 
 lint.help = "Lint the code"
 lint.sequence = [
-    { cmd = "ruff check commitizen/ tests/ --fix" },
-    { cmd = "mypy commitizen/ tests/" },
+    { cmd = "ruff check" },
+    { cmd = "mypy" },
 ]
 
 check-commit.help = "Check the commit message"
