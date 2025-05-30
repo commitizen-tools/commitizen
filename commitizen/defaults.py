@@ -29,36 +29,36 @@ class CzSettings(TypedDict, total=False):
 
 
 class Settings(TypedDict, total=False):
+    allow_abort: bool
+    allowed_prefixes: list[str]
+    always_signoff: bool
+    bump_message: str | None
+    changelog_file: str
+    changelog_format: str | None
+    changelog_incremental: bool
+    changelog_merge_prerelease: bool
+    changelog_start_rev: str | None
+    customize: CzSettings
+    encoding: str
+    extras: dict[str, Any]
+    ignored_tag_formats: Sequence[str]
+    legacy_tag_formats: Sequence[str]
+    major_version_zero: bool
     name: str
-    version: str | None
+    post_bump_hooks: list[str] | None
+    pre_bump_hooks: list[str] | None
+    prerelease_offset: int
+    retry_after_failure: bool
+    style: list[tuple[str, str]]
+    tag_format: str
+    template: str | None
+    update_changelog_on_bump: bool
+    use_shortcuts: bool
     version_files: list[str]
     version_provider: str | None
     version_scheme: str | None
     version_type: str | None
-    tag_format: str
-    legacy_tag_formats: Sequence[str]
-    ignored_tag_formats: Sequence[str]
-    bump_message: str | None
-    retry_after_failure: bool
-    allow_abort: bool
-    allowed_prefixes: list[str]
-    changelog_file: str
-    changelog_format: str | None
-    changelog_incremental: bool
-    changelog_start_rev: str | None
-    changelog_merge_prerelease: bool
-    update_changelog_on_bump: bool
-    use_shortcuts: bool
-    style: list[tuple[str, str]]
-    customize: CzSettings
-    major_version_zero: bool
-    pre_bump_hooks: list[str] | None
-    post_bump_hooks: list[str] | None
-    prerelease_offset: int
-    encoding: str
-    always_signoff: bool
-    template: str | None
-    extras: dict[str, Any]
+    version: str | None
 
 
 CONFIG_FILES: list[str] = [
