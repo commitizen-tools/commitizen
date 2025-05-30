@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 
 class JsonConfig(BaseConfig):
-    def __init__(self, *, data: bytes | str, path: Path | str):
+    def __init__(self, *, data: bytes | str, path: Path | str) -> None:
         super().__init__()
         self.is_empty_config = False
         self.path = path

@@ -79,7 +79,7 @@ class ProjectInfo:
 
 
 class Init:
-    def __init__(self, config: BaseConfig, *args: object):
+    def __init__(self, config: BaseConfig, *args: object) -> None:
         self.config: BaseConfig = config
         self.encoding = config.settings["encoding"]
         self.cz = factory.committer_factory(self.config)
