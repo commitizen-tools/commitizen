@@ -79,20 +79,19 @@ class Check:
         if not commits:
             raise NoCommitsFoundError(f"No commit found with range: '{self.rev_range}'")
 
-        pattern = self.cz.schema_pattern()
-        displayed_msgs_content = "\n".join(
-            [
-                f'commit "{commit.rev}": "{commit.message}"'
-                for commit in commits
-                if not self.validate_commit_message(commit.message, pattern)
-            ]
+        pattern = re.compile(self.cz.schema_pattern())
+        invalid_msgs_content = "\n".join(
+            f'commit "{commit.rev}": "{commit.message}"'
+            for commit in commits
+            if not self._validate_commit_message(commit.message, pattern)
         )
-        if displayed_msgs_content:
+        if invalid_msgs_content:
+            # TODO: capitalize the first letter of the error message for consistency in v5
             raise InvalidCommitMessageError(
                 "commit validation: failed!\n"
                 "please enter a commit message in the commitizen format.\n"
-                f"{displayed_msgs_content}\n"
-                f"pattern: {pattern}"
+                f"{invalid_msgs_content}\n"
+                f"pattern: {pattern.pattern}"
             )
         out.success("Commit validation: successful!")
 
@@ -143,14 +142,18 @@ class Check:
                 lines.append(line)
         return "\n".join(lines)
 
-    def validate_commit_message(self, commit_msg: str, pattern: str) -> bool:
+    def _validate_commit_message(
+        self, commit_msg: str, pattern: re.Pattern[str]
+    ) -> bool:
         if not commit_msg:
             return self.allow_abort
 
         if any(map(commit_msg.startswith, self.allowed_prefixes)):
             return True
+
         if self.max_msg_length:
             msg_len = len(commit_msg.partition("\n")[0].strip())
             if msg_len > self.max_msg_length:
                 return False
-        return bool(re.match(pattern, commit_msg))
+
+        return bool(pattern.match(commit_msg))
