@@ -25,7 +25,7 @@ dependencies = [
     # Use the Python 3.11 and 3.12 compatible API: https://github.com/python/importlib_metadata#compatibility
     "importlib-metadata >=8.0.0,!=8.7.0,<9.0.0 ; python_version == '3.9'", # importlib-metadata@8.7.0 + python3.9 breaks our unit test
     "importlib-metadata >=8.0.0,<9.0.0 ; python_version != '3.9'",
-    "pydantic (>=2.11.5,<3.0.0)",
+    "pydantic (>=1.10,<3.0.0)",
 ]
 keywords = ["commitizen", "conventional", "commits", "git"]
 # See also: https://pypi.org/classifiers/

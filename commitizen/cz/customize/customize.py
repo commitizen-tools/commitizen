@@ -48,9 +48,7 @@ class CustomizeCommitsCz(BaseCommitizen):
 
     def questions(self) -> list[CzQuestion]:
         questions = self.custom_settings.get("questions", [{}])
-        return [
-            CzQuestionModel.model_validate({"question": q}).question for q in questions
-        ]
+        return [CzQuestionModel.parse_obj({"question": q}).question for q in questions]
 
     def message(self, answers: dict) -> str:
         message_template = Template(self.custom_settings.get("message_template", ""))

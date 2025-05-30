@@ -4,8 +4,8 @@ from pydantic import BaseModel, Field
 
 
 class CzModel(BaseModel):
-    def model_dump(self, **kwargs):
-        return super().model_dump(exclude_unset=True, **kwargs)
+    def dict(self, **kwargs):
+        return super().dict(**{"exclude_unset": True, **kwargs})
 
 
 class Choice(CzModel):

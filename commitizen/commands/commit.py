@@ -56,9 +56,7 @@ class Commit:
         for question in (q for q in questions if isinstance(q, ListQuestion)):
             question.use_shortcuts = self.config.settings["use_shortcuts"]
         try:
-            answers = questionary.prompt(
-                (q.model_dump() for q in questions), style=cz.style
-            )
+            answers = questionary.prompt((q.dict() for q in questions), style=cz.style)
         except ValueError as err:
             root_err = err.__context__
             if isinstance(root_err, CzException):

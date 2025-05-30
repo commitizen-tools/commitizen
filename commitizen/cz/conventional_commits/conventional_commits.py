@@ -146,9 +146,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                 ),
             },
         ]
-        return [
-            CzQuestionModel.model_validate({"question": q}).question for q in questions
-        ]
+        return [CzQuestionModel.parse_obj({"question": q}).question for q in questions]
 
     def message(self, answers: dict) -> str:
         prefix = answers["prefix"]
