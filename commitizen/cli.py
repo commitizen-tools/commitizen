@@ -8,7 +8,7 @@ from copy import deepcopy
 from functools import partial
 from pathlib import Path
 from types import TracebackType
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 import argcomplete
 from decli import cli
@@ -48,7 +48,7 @@ class ParseKwargs(argparse.Action):
         self,
         parser: argparse.ArgumentParser,
         namespace: argparse.Namespace,
-        kwarg: str | Sequence[Any] | None,
+        kwarg: str | Sequence[object] | None,
         option_string: str | None = None,
     ) -> None:
         if not isinstance(kwarg, str):
