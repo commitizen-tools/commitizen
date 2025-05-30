@@ -138,7 +138,7 @@ class Changelog:
 
     def _write_changelog(
         self, changelog_out: str, lines: list[str], changelog_meta: changelog.Metadata
-    ):
+    ) -> None:
         with smart_open(self.file_name, "w", encoding=self.encoding) as changelog_file:
             partial_changelog: str | None = None
             if self.incremental:

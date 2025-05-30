@@ -215,7 +215,7 @@ def get_commits(
     ]
 
 
-def get_filenames_in_commit(git_reference: str = ""):
+def get_filenames_in_commit(git_reference: str = "") -> list[str]:
     """Get the list of files that were committed in the requested git reference.
 
     :param git_reference: a git reference as accepted by `git show`, default: the last commit
@@ -312,7 +312,7 @@ def get_core_editor() -> str | None:
     return None
 
 
-def smart_open(*args, **kwargs):
+def smart_open(*args, **kwargs):  # type: ignore[no-untyped-def,unused-ignore]
     """Open a file with the EOL style determined from Git."""
     return open(*args, newline=EOLType.for_open(), **kwargs)
 
