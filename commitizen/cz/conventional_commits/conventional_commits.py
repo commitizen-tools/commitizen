@@ -174,11 +174,27 @@ class ConventionalCommitsCz(BaseCommitizen):
         )
 
     def schema_pattern(self) -> str:
+        change_types = (
+            "build",
+            "bump",
+            "chore",
+            "ci",
+            "docs",
+            "feat",
+            "fix",
+            "perf",
+            "refactor",
+            "revert",
+            "style",
+            "test",
+        )
         return (
             r"(?s)"  # To explicitly make . match new line
-            r"(build|ci|docs|feat|fix|perf|refactor|style|test|chore|revert|bump)"  # type
-            r"(\(\S+\))?!?:"  # scope
-            r"( [^\n\r]+)"  # subject
+            r"(" + "|".join(change_types) + r")"  # type
+            r"(\(\S+\))?"  # scope
+            r"!?"
+            r": "
+            r"([^\n\r]+)"  # subject
             r"((\n\n.*)|(\s*))?$"
         )
 
