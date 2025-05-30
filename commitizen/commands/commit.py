@@ -41,7 +41,7 @@ class Commit:
         self.arguments = arguments
         self.temp_file: str = get_backup_file_path()
 
-    def read_backup_message(self) -> str | None:
+    def _read_backup_message(self) -> str | None:
         # Check the commit backup file exists
         if not os.path.isfile(self.temp_file):
             return None
@@ -50,7 +50,7 @@ class Commit:
         with open(self.temp_file, encoding=self.encoding) as f:
             return f.read().strip()
 
-    def prompt_commit_questions(self) -> str:
+    def _prompt_commit_questions(self) -> str:
         # Prompt user for the commit message
         cz = self.cz
         questions = cz.questions()
@@ -96,7 +96,7 @@ class Commit:
 
     def _get_message(self) -> str:
         if self.arguments.get("retry"):
-            m = self.read_backup_message()
+            m = self._read_backup_message()
             if m is None:
                 raise NoCommitBackupError()
             return m
@@ -104,8 +104,8 @@ class Commit:
         if self.config.settings.get("retry_after_failure") and not self.arguments.get(
             "no_retry"
         ):
-            return self.read_backup_message() or self.prompt_commit_questions()
-        return self.prompt_commit_questions()
+            return self._read_backup_message() or self._prompt_commit_questions()
+        return self._prompt_commit_questions()
 
     def __call__(self) -> None:
         extra_args = cast(str, self.arguments.get("extra_cli_args", ""))

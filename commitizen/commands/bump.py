@@ -101,7 +101,7 @@ class Bump:
         )
         self.extras = arguments["extras"]
 
-    def is_initial_tag(
+    def _is_initial_tag(
         self, current_tag: git.GitTag | None, is_yes: bool = False
     ) -> bool:
         """Check if reading the whole git tree up to HEAD is needed."""
@@ -118,7 +118,7 @@ class Bump:
         )
         return bool(questionary.confirm("Is this the first tag created?").ask())
 
-    def find_increment(self, commits: list[git.GitCommit]) -> Increment | None:
+    def _find_increment(self, commits: list[git.GitCommit]) -> Increment | None:
         # Update the bump map to ensure major version doesn't increment.
         is_major_version_zero: bool = self.bump_settings["major_version_zero"]
         # self.cz.bump_map = defaults.bump_map_major_version_zero
@@ -135,7 +135,7 @@ class Bump:
             )
         return bump.find_increment(commits, regex=bump_pattern, increments_map=bump_map)
 
-    def __call__(self) -> None:  # noqa: C901
+    def __call__(self) -> None:
         """Steps executed to bump."""
         provider = get_provider(self.config)
 
@@ -227,7 +227,7 @@ class Bump:
             current_tag, "name", rules.normalize_tag(current_version)
         )
 
-        is_initial = self.is_initial_tag(current_tag, is_yes)
+        is_initial = self._is_initial_tag(current_tag, is_yes)
 
         if manual_version:
             try:
@@ -255,7 +255,7 @@ class Bump:
                         "[NO_COMMITS_FOUND]\nNo new commits found."
                     )
 
-                increment = self.find_increment(commits)
+                increment = self._find_increment(commits)
 
             # It may happen that there are commits, but they are not eligible
             # for an increment, this generates a problem when using prerelease (#281)

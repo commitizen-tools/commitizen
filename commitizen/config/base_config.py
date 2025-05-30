@@ -41,3 +41,6 @@ class BaseConfig:
 
     def _parse_setting(self, data: bytes | str) -> None:
         raise NotImplementedError()
+
+    def init_empty_config_content(self) -> None:
+        raise NotImplementedError()
