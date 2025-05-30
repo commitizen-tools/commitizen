@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 import yaml
 
@@ -8,6 +9,15 @@ from commitizen.exceptions import InvalidConfigurationError
 from commitizen.git import smart_open
 
 from .base_config import BaseConfig
+
+if TYPE_CHECKING:
+    import sys
+
+    # Self is Python 3.11+ but backported in typing-extensions
+    if sys.version_info < (3, 11):
+        from typing_extensions import Self
+    else:
+        from typing import Self
 
 
 class YAMLConfig(BaseConfig):
@@ -17,7 +27,7 @@ class YAMLConfig(BaseConfig):
         self.path = path
         self._parse_setting(data)
 
-    def init_empty_config_content(self):
+    def init_empty_config_content(self) -> None:
         with smart_open(self.path, "a", encoding=self.encoding) as json_file:
             yaml.dump({"commitizen": {}}, json_file, explicit_start=True)
 
@@ -41,7 +51,7 @@ class YAMLConfig(BaseConfig):
         except (KeyError, TypeError):
             self.is_empty_config = True
 
-    def set_key(self, key, value):
+    def set_key(self, key: str, value: Any) -> Self:
         """Set or update a key in the conf.
 
         For now only strings are supported.

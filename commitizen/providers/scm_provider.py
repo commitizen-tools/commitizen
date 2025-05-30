@@ -23,6 +23,6 @@ class ScmProvider(VersionProvider):
             return "0.0.0"
         return str(versions[-1])
 
-    def set_version(self, version: str):
+    def set_version(self, version: str) -> None:
         # Not necessary
         pass

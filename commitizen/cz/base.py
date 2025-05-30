@@ -76,13 +76,13 @@ class BaseCommitizen(metaclass=ABCMeta):
         """Format your git message."""
 
     @property
-    def style(self):
+    def style(self) -> Style:
         return merge_styles(
             [
                 Style(BaseCommitizen.default_style_config),
                 Style(self.config.settings["style"]),
             ]
-        )
+        )  # type: ignore[return-value]
 
     def example(self) -> str:
         """Example of the commit message."""

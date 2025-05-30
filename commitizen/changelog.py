@@ -63,7 +63,7 @@ class Metadata:
     latest_version_position: int | None = None
     latest_version_tag: str | None = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         if self.latest_version and not self.latest_version_tag:
             # Test syntactic sugar
             # latest version tag is optional if same as latest version
@@ -169,8 +169,8 @@ def process_commit_message(
     commit: GitCommit,
     changes: dict[str | None, list],
     change_type_map: dict[str, str] | None = None,
-):
-    message: dict = {
+) -> None:
+    message: dict[str, Any] = {
         "sha1": commit.rev,
         "parents": commit.parents,
         "author": commit.author,

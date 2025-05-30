@@ -28,7 +28,7 @@ class CargoProvider(TomlProvider):
             ...
         return document["workspace"]["package"]["version"]  # type: ignore
 
-    def set(self, document: tomlkit.TOMLDocument, version: str):
+    def set(self, document: tomlkit.TOMLDocument, version: str) -> None:
         try:
             document["workspace"]["package"]["version"] = version  # type: ignore
             return

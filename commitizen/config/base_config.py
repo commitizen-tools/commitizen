@@ -1,8 +1,18 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 from commitizen.defaults import DEFAULT_SETTINGS, Settings
+
+if TYPE_CHECKING:
+    import sys
+
+    # Self is Python 3.11+ but backported in typing-extensions
+    if sys.version_info < (3, 11):
+        from typing_extensions import Self
+    else:
+        from typing import Self
 
 
 class BaseConfig:
@@ -28,7 +38,7 @@ class BaseConfig:
         """
         self._path = Path(path)
 
-    def set_key(self, key, value):
+    def set_key(self, key: str, value: Any) -> Self:
         """Set or update a key in the conf.
 
         For now only strings are supported.
