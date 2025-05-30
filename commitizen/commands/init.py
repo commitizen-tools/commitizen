@@ -85,7 +85,7 @@ class Init:
         self.cz = factory.committer_factory(self.config)
         self.project_info = ProjectInfo()
 
-    def __call__(self):
+    def __call__(self) -> None:
         if self.config.path:
             out.line(f"Config file {self.config.path} already exists")
             return
@@ -120,7 +120,7 @@ class Init:
             self.config = JsonConfig(data="{}", path=config_path)
         elif "yaml" in config_path:
             self.config = YAMLConfig(data="", path=config_path)
-        values_to_add = {}
+        values_to_add: dict[str, Any] = {}
         values_to_add["name"] = cz_name
         values_to_add["tag_format"] = tag_format
         values_to_add["version_scheme"] = version_scheme
