@@ -41,7 +41,7 @@ class ExitCode(enum.IntEnum):
 
 
 class CommitizenException(Exception):
-    def __init__(self, *args: str, **kwargs: Any):
+    def __init__(self, *args: str, **kwargs: Any) -> None:
         self.output_method = kwargs.get("output_method") or out.error
         self.exit_code: ExitCode = self.__class__.exit_code
         if args:
@@ -58,7 +58,7 @@ class CommitizenException(Exception):
 class ExpectedExit(CommitizenException):
     exit_code = ExitCode.EXPECTED_EXIT
 
-    def __init__(self, *args: str, **kwargs: Any):
+    def __init__(self, *args: str, **kwargs: Any) -> None:
         output_method = kwargs.get("output_method") or out.write
         kwargs["output_method"] = output_method
         super().__init__(*args, **kwargs)

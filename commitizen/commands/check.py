@@ -19,7 +19,7 @@ class Check:
 
     def __init__(
         self, config: BaseConfig, arguments: dict[str, Any], cwd: str = os.getcwd()
-    ):
+    ) -> None:
         """Initial check command.
 
         Args:
