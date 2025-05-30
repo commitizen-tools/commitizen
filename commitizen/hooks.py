@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import os
+from collections.abc import Mapping
 
 from commitizen import cmd, out
 from commitizen.exceptions import RunHookError
 
 
-def run(hooks, _env_prefix="CZ_", **env):
+def run(hooks: str | list[str], _env_prefix: str = "CZ_", **env: object) -> None:
     if isinstance(hooks, str):
         hooks = [hooks]
 
@@ -24,7 +25,7 @@ def run(hooks, _env_prefix="CZ_", **env):
             raise RunHookError(f"Running hook '{hook}' failed")
 
 
-def _format_env(prefix: str, env: dict[str, str]) -> dict[str, str]:
+def _format_env(prefix: str, env: Mapping[str, object]) -> dict[str, str]:
     """_format_env() prefixes all given environment variables with the given
     prefix so it can be passed directly to cmd.run()."""
     penv = dict(os.environ)
