@@ -37,37 +37,65 @@ from commitizen.version_schemes import (
 logger = getLogger("commitizen")
 
 
+class BumpArguments(Settings, total=False):
+    allow_no_commit: bool | None
+    annotated_tag_message: str | None
+    annotated_tag: bool
+    build_metadata: str | None
+    changelog_to_stdout: bool
+    changelog: bool
+    check_consistency: bool
+    devrelease: int | None
+    dry_run: bool
+    file_name: str
+    files_only: bool | None
+    get_next: bool
+    git_output_to_stderr: bool
+    gpg_sign: bool
+    increment_mode: str
+    increment: Increment | None
+    local_version: bool
+    manual_version: str | None
+    no_verify: bool
+    prerelease: Prerelease | None
+    retry: bool
+    yes: bool
+
+
 class Bump:
     """Show prompt for the user to create a guided commit."""
 
-    def __init__(self, config: BaseConfig, arguments: dict) -> None:
+    def __init__(self, config: BaseConfig, arguments: BumpArguments) -> None:
         if not git.is_git_project():
             raise NotAGitProjectError()
 
         self.config: BaseConfig = config
         self.encoding = config.settings["encoding"]
-        self.arguments: dict = arguments
-        self.bump_settings: dict = {
-            **config.settings,
-            **{
-                key: arguments[key]
-                for key in [
-                    "tag_format",
-                    "prerelease",
-                    "increment",
-                    "increment_mode",
-                    "bump_message",
-                    "gpg_sign",
-                    "annotated_tag",
-                    "annotated_tag_message",
-                    "major_version_zero",
-                    "prerelease_offset",
-                    "template",
-                    "file_name",
-                ]
-                if arguments.get(key) is not None
+        self.arguments = arguments
+        self.bump_settings = cast(
+            BumpArguments,
+            {
+                **config.settings,
+                **{
+                    k: v
+                    for k, v in {
+                        "annotated_tag_message": arguments.get("annotated_tag_message"),
+                        "annotated_tag": arguments.get("annotated_tag"),
+                        "bump_message": arguments.get("bump_message"),
+                        "file_name": arguments.get("file_name"),
+                        "gpg_sign": arguments.get("gpg_sign"),
+                        "increment_mode": arguments.get("increment_mode"),
+                        "increment": arguments.get("increment"),
+                        "major_version_zero": arguments.get("major_version_zero"),
+                        "prerelease_offset": arguments.get("prerelease_offset"),
+                        "prerelease": arguments.get("prerelease"),
+                        "tag_format": arguments.get("tag_format"),
+                        "template": arguments.get("template"),
+                    }.items()
+                    if v is not None
+                },
             },
-        }
+        )
         self.cz = factory.committer_factory(self.config)
         self.changelog_flag = arguments["changelog"]
         self.changelog_config = self.config.settings.get("update_changelog_on_bump")
@@ -120,11 +148,10 @@ class Bump:
 
     def _find_increment(self, commits: list[git.GitCommit]) -> Increment | None:
         # Update the bump map to ensure major version doesn't increment.
-        is_major_version_zero: bool = self.bump_settings["major_version_zero"]
         # self.cz.bump_map = defaults.bump_map_major_version_zero
         bump_map = (
             self.cz.bump_map_major_version_zero
-            if is_major_version_zero
+            if self.bump_settings["major_version_zero"]
             else self.cz.bump_map
         )
         bump_pattern = self.cz.bump_pattern
@@ -144,23 +171,14 @@ class Bump:
         except TypeError:
             raise NoVersionSpecifiedError()
 
-        bump_commit_message: str | None = self.bump_settings["bump_message"]
-        version_files: list[str] = self.bump_settings["version_files"]
-        major_version_zero: bool = self.bump_settings["major_version_zero"]
-        prerelease_offset: int = self.bump_settings["prerelease_offset"]
-
-        dry_run: bool = self.arguments["dry_run"]
-        is_yes: bool = self.arguments["yes"]
-        increment: Increment | None = self.arguments["increment"]
-        prerelease: Prerelease | None = self.arguments["prerelease"]
-        devrelease: int | None = self.arguments["devrelease"]
-        is_files_only: bool | None = self.arguments["files_only"]
-        is_local_version: bool = self.arguments["local_version"]
+        increment = self.arguments["increment"]
+        prerelease = self.arguments["prerelease"]
+        devrelease = self.arguments["devrelease"]
+        is_local_version = self.arguments["local_version"]
         manual_version = self.arguments["manual_version"]
         build_metadata = self.arguments["build_metadata"]
-        increment_mode: str = self.arguments["increment_mode"]
-        get_next: bool = self.arguments["get_next"]
-        allow_no_commit: bool | None = self.arguments["allow_no_commit"]
+        get_next = self.arguments["get_next"]
+        allow_no_commit = self.arguments["allow_no_commit"]
 
         if manual_version:
             if increment:
@@ -182,7 +200,7 @@ class Bump:
                     "--build-metadata cannot be combined with MANUAL_VERSION"
                 )
 
-            if major_version_zero:
+            if self.bump_settings["major_version_zero"]:
                 raise NotAllowed(
                     "--major-version-zero cannot be combined with MANUAL_VERSION"
                 )
@@ -190,7 +208,7 @@ class Bump:
             if get_next:
                 raise NotAllowed("--get-next cannot be combined with MANUAL_VERSION")
 
-        if major_version_zero:
+        if self.bump_settings["major_version_zero"]:
             if not current_version.release[0] == 0:
                 raise NotAllowed(
                     f"--major-version-zero is meaningless for current version {current_version}"
@@ -215,7 +233,7 @@ class Bump:
         else:
             # If user specified changelog_to_stdout, they probably want the
             # changelog to be generated as well, this is the most intuitive solution
-            self.changelog_flag = (
+            self.changelog_flag = bool(
                 self.changelog_flag
                 or bool(self.changelog_to_stdout)
                 or self.changelog_config
@@ -227,7 +245,7 @@ class Bump:
             current_tag, "name", rules.normalize_tag(current_version)
         )
 
-        is_initial = self._is_initial_tag(current_tag, is_yes)
+        is_initial = self._is_initial_tag(current_tag, self.arguments["yes"])
 
         if manual_version:
             try:
@@ -273,16 +291,16 @@ class Bump:
             new_version = current_version.bump(
                 increment,
                 prerelease=prerelease,
-                prerelease_offset=prerelease_offset,
+                prerelease_offset=self.bump_settings["prerelease_offset"],
                 devrelease=devrelease,
                 is_local_version=is_local_version,
                 build_metadata=build_metadata,
-                exact_increment=increment_mode == "exact",
+                exact_increment=self.arguments["increment_mode"] == "exact",
             )
 
         new_tag_version = rules.normalize_tag(new_version)
         message = bump.create_commit_message(
-            current_version, new_version, bump_commit_message
+            current_version, new_version, self.bump_settings["bump_message"]
         )
 
         if get_next:
@@ -314,6 +332,7 @@ class Bump:
             )
 
         files: list[str] = []
+        dry_run = self.arguments["dry_run"]
         if self.changelog_flag:
             args = {
                 "unreleased_version": new_tag_version,
@@ -342,7 +361,7 @@ class Bump:
             bump.update_version_in_files(
                 str(current_version),
                 str(new_version),
-                version_files,
+                self.bump_settings["version_files"],
                 check_consistency=self.check_consistency,
                 encoding=self.encoding,
             )
@@ -366,7 +385,7 @@ class Bump:
                 else None,
             )
 
-        if is_files_only:
+        if self.arguments["files_only"]:
             raise ExpectedExit()
 
         # FIXME: check if any changes have been staged
@@ -395,11 +414,15 @@ class Bump:
 
         c = git.tag(
             new_tag_version,
-            signed=self.bump_settings.get("gpg_sign", False)
-            or bool(self.config.settings.get("gpg_sign", False)),
-            annotated=self.bump_settings.get("annotated_tag", False)
-            or bool(self.config.settings.get("annotated_tag", False))
-            or bool(self.bump_settings.get("annotated_tag_message", False)),
+            signed=bool(
+                self.bump_settings.get("gpg_sign")
+                or self.config.settings.get("gpg_sign")
+            ),
+            annotated=bool(
+                self.bump_settings.get("annotated_tag")
+                or self.config.settings.get("annotated_tag")
+                or self.bump_settings.get("annotated_tag_message")
+            ),
             msg=self.bump_settings.get("annotated_tag_message", None),
             # TODO: also get from self.config.settings?
         )
