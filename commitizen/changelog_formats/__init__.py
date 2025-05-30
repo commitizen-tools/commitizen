@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import sys
-from typing import ClassVar, Protocol
+from typing import Callable, ClassVar, Protocol
 
 if sys.version_info >= (3, 10):
     from importlib import metadata
@@ -64,10 +64,9 @@ def get_changelog_format(
     :raises FormatUnknown: if a non-empty name is provided but cannot be found in the known formats
     """
     name: str | None = config.settings.get("changelog_format")
-    format: type[ChangelogFormat] | None = guess_changelog_format(filename)
-
-    if name and name in KNOWN_CHANGELOG_FORMATS:
-        format = KNOWN_CHANGELOG_FORMATS[name]
+    format = (
+        name and KNOWN_CHANGELOG_FORMATS.get(name) or _guess_changelog_format(filename)
+    )
 
     if not format:
         raise ChangelogFormatUnknown(f"Unknown changelog format '{name}'")
@@ -75,7 +74,7 @@ def get_changelog_format(
     return format(config)
 
 
-def guess_changelog_format(filename: str | None) -> type[ChangelogFormat] | None:
+def _guess_changelog_format(filename: str | None) -> type[ChangelogFormat] | None:
     """
     Try guessing the file format from the filename.
 
@@ -91,3 +90,9 @@ def guess_changelog_format(filename: str | None) -> type[ChangelogFormat] | None
             if filename.endswith(f".{alt_extension}"):
                 return format
     return None
+
+
+def __getattr__(name: str) -> Callable[[str], type[ChangelogFormat] | None]:
+    if name == "guess_changelog_format":
+        return _guess_changelog_format
+    raise AttributeError(f"module {__name__} has no attribute {name}")

@@ -6,8 +6,8 @@ from commitizen import defaults
 from commitizen.changelog_formats import (
     KNOWN_CHANGELOG_FORMATS,
     ChangelogFormat,
+    _guess_changelog_format,
     get_changelog_format,
-    guess_changelog_format,
 )
 from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import ChangelogFormatUnknown
@@ -15,14 +15,14 @@ from commitizen.exceptions import ChangelogFormatUnknown
 
 @pytest.mark.parametrize("format", KNOWN_CHANGELOG_FORMATS.values())
 def test_guess_format(format: type[ChangelogFormat]):
-    assert guess_changelog_format(f"CHANGELOG.{format.extension}") is format
+    assert _guess_changelog_format(f"CHANGELOG.{format.extension}") is format
     for ext in format.alternative_extensions:
-        assert guess_changelog_format(f"CHANGELOG.{ext}") is format
+        assert _guess_changelog_format(f"CHANGELOG.{ext}") is format
 
 
 @pytest.mark.parametrize("filename", ("CHANGELOG", "NEWS", "file.unknown", None))
 def test_guess_format_unknown(filename: str):
-    assert guess_changelog_format(filename) is None
+    assert _guess_changelog_format(filename) is None
 
 
 @pytest.mark.parametrize(
