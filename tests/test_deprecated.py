@@ -1,6 +1,6 @@
 import pytest
 
-from commitizen import defaults
+from commitizen import changelog_formats, defaults
 
 
 def test_getattr_deprecated_vars():
@@ -15,6 +15,10 @@ def test_getattr_deprecated_vars():
         assert defaults.change_type_order == defaults.CHANGE_TYPE_ORDER
         assert defaults.encoding == defaults.ENCODING
         assert defaults.name == defaults.DEFAULT_SETTINGS["name"]
+        assert (
+            changelog_formats._guess_changelog_format
+            == changelog_formats.guess_changelog_format
+        )
 
     # Verify warning messages
     assert len(record) == 7
