@@ -12,7 +12,7 @@ from commitizen.providers import get_provider
 class Version:
     """Get the version of the installed commitizen or the current project."""
 
-    def __init__(self, config: BaseConfig, *args: Mapping[str, Any]):
+    def __init__(self, config: BaseConfig, *args: Mapping[str, Any]) -> None:
         self.config: BaseConfig = config
         self.parameter = args[0]
         self.operating_system = platform.system()
