@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from abc import ABC, abstractmethod
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, ClassVar
 
@@ -63,8 +64,8 @@ class JsonProvider(FileProvider):
         self.set(document, version)
         self.file.write_text(json.dumps(document, indent=self.indent) + "\n")
 
-    def get(self, document: dict[str, Any]) -> str:
-        return document["version"]  # type: ignore
+    def get(self, document: Mapping[str, str]) -> str:
+        return document["version"]
 
     def set(self, document: dict[str, Any], version: str) -> None:
         document["version"] = version
