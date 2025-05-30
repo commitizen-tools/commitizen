@@ -1,4 +1,5 @@
 import os
+from collections.abc import Mapping
 
 from commitizen.cz.base import BaseCommitizen
 from commitizen.defaults import Questions
@@ -43,7 +44,7 @@ class JiraSmartCz(BaseCommitizen):
             },
         ]
 
-    def message(self, answers: dict[str, str]) -> str:
+    def message(self, answers: Mapping[str, str]) -> str:
         return " ".join(
             x
             for k in ("message", "issues", "workflow", "time", "comment")

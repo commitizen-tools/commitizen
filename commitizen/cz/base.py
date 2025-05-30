@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from typing import Any, Callable, Protocol
 
 from jinja2 import BaseLoader, PackageLoader
@@ -72,7 +72,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         """Questions regarding the commit message."""
 
     @abstractmethod
-    def message(self, answers: dict) -> str:
+    def message(self, answers: Mapping[str, Any]) -> str:
         """Format your git message."""
 
     @property
