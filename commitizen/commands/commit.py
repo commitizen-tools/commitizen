@@ -6,7 +6,7 @@ import shutil
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import Union, cast
+from typing import TypedDict
 
 import questionary
 
@@ -28,10 +28,22 @@ from commitizen.exceptions import (
 from commitizen.git import smart_open
 
 
+class CommitArgs(TypedDict, total=False):
+    all: bool
+    dry_run: bool
+    edit: bool
+    extra_cli_args: str
+    message_length_limit: int
+    no_retry: bool
+    signoff: bool
+    write_message_to_file: Path | None
+    retry: bool
+
+
 class Commit:
     """Show prompt for the user to create a guided commit."""
 
-    def __init__(self, config: BaseConfig, arguments: dict) -> None:
+    def __init__(self, config: BaseConfig, arguments: CommitArgs) -> None:
         if not git.is_git_project():
             raise NotAGitProjectError()
 
@@ -69,7 +81,7 @@ class Commit:
 
         message = cz.message(answers)
         message_len = len(message.partition("\n")[0].strip())
-        message_length_limit: int = self.arguments.get("message_length_limit", 0)
+        message_length_limit = self.arguments.get("message_length_limit", 0)
         if 0 < message_length_limit < message_len:
             raise CommitMessageLengthExceededError(
                 f"Length of commit message exceeds limit ({message_len}/{message_length_limit})"
@@ -108,12 +120,10 @@ class Commit:
         return self._prompt_commit_questions()
 
     def __call__(self) -> None:
-        extra_args = cast(str, self.arguments.get("extra_cli_args", ""))
-        dry_run = cast(bool, self.arguments.get("dry_run"))
-        write_message_to_file = cast(
-            Union[Path, None], self.arguments.get("write_message_to_file")
-        )
-        signoff = cast(bool, self.arguments.get("signoff"))
+        extra_args = self.arguments.get("extra_cli_args", "")
+        dry_run = bool(self.arguments.get("dry_run"))
+        write_message_to_file = self.arguments.get("write_message_to_file")
+        signoff = bool(self.arguments.get("signoff"))
 
         if self.arguments.get("all"):
             git.add("-u")
