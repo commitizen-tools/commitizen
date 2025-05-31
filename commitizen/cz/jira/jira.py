@@ -1,13 +1,13 @@
 import os
 
 from commitizen.cz.base import BaseCommitizen
-from commitizen.defaults import Questions
+from commitizen.question import CzQuestion
 
 __all__ = ["JiraSmartCz"]
 
 
 class JiraSmartCz(BaseCommitizen):
-    def questions(self) -> Questions:
+    def questions(self) -> list[CzQuestion]:
         return [
             {
                 "type": "input",
