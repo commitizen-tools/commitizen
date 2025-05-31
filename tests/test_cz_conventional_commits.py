@@ -89,7 +89,7 @@ def test_long_answer(config):
     message = conventional_commits.message(answers)
     assert (
         message
-        == "fix(users): email pattern corrected\n\ncomplete content\n\ncloses #24"  # noqa
+        == "fix(users): email pattern corrected\n\ncomplete content\n\ncloses #24"
     )
 
 
@@ -107,7 +107,7 @@ def test_breaking_change_in_footer(config):
     print(message)
     assert (
         message
-        == "fix(users): email pattern corrected\n\ncomplete content\n\nBREAKING CHANGE: migrate by renaming user to users"  # noqa
+        == "fix(users): email pattern corrected\n\ncomplete content\n\nBREAKING CHANGE: migrate by renaming user to users"
     )
 
 
