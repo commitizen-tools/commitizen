@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 import re
 import sys
 from typing import Any
@@ -17,9 +16,7 @@ from commitizen.exceptions import (
 class Check:
     """Check if the current commit msg matches the commitizen format."""
 
-    def __init__(
-        self, config: BaseConfig, arguments: dict[str, Any], cwd: str = os.getcwd()
-    ) -> None:
+    def __init__(self, config: BaseConfig, arguments: dict[str, Any]) -> None:
         """Initial check command.
 
         Args:
