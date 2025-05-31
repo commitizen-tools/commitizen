@@ -1,5 +1,4 @@
 import os
-import re
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
@@ -198,8 +197,3 @@ class ConventionalCommitsCz(BaseCommitizen):
         filepath = os.path.join(dir_path, "conventional_commits_info.txt")
         with open(filepath, encoding=self.config.settings["encoding"]) as f:
             return f.read()
-
-    def process_commit(self, commit: str) -> str:
-        if m := re.match(self.schema_pattern(), commit):
-            return m.group(3).strip()
-        return ""

@@ -42,9 +42,3 @@ def test_info(config):
     cz = DummyCz(config)
     with pytest.raises(NotImplementedError):
         cz.info()
-
-
-def test_process_commit(config):
-    cz = DummyCz(config)
-    message = cz.process_commit("test(test_scope): this is test msg")
-    assert message == "test(test_scope): this is test msg"

@@ -130,26 +130,3 @@ def test_info(config):
     conventional_commits = ConventionalCommitsCz(config)
     info = conventional_commits.info()
     assert isinstance(info, str)
-
-
-@pytest.mark.parametrize(
-    ("commit_message", "expected_message"),
-    [
-        (
-            "test(test_scope): this is test msg",
-            "this is test msg",
-        ),
-        (
-            "test(test_scope)!: this is test msg",
-            "this is test msg",
-        ),
-        (
-            "test!(test_scope): this is test msg",
-            "",
-        ),
-    ],
-)
-def test_process_commit(commit_message, expected_message, config):
-    conventional_commits = ConventionalCommitsCz(config)
-    message = conventional_commits.process_commit(commit_message)
-    assert message == expected_message
