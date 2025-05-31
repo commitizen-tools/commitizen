@@ -8,7 +8,7 @@ from copy import deepcopy
 from functools import partial
 from pathlib import Path
 from types import TracebackType
-from typing import Any
+from typing import TYPE_CHECKING, Any, cast
 
 import argcomplete
 from decli import cli
@@ -553,19 +553,20 @@ def commitizen_excepthook(
     type, value, traceback, debug=False, no_raise: list[int] | None = None
 ):
     traceback = traceback if isinstance(traceback, TracebackType) else None
+    if not isinstance(value, CommitizenException):
+        original_excepthook(type, value, traceback)
+        return
+
     if not no_raise:
         no_raise = []
-    if isinstance(value, CommitizenException):
-        if value.message:
-            value.output_method(value.message)
-        if debug:
-            original_excepthook(type, value, traceback)
-        exit_code = value.exit_code
-        if exit_code in no_raise:
-            exit_code = ExitCode.EXPECTED_EXIT
-        sys.exit(exit_code)
-    else:
+    if value.message:
+        value.output_method(value.message)
+    if debug:
         original_excepthook(type, value, traceback)
+    exit_code = value.exit_code
+    if exit_code in no_raise:
+        exit_code = ExitCode.EXPECTED_EXIT
+    sys.exit(exit_code)
 
 
 commitizen_debug_excepthook = partial(commitizen_excepthook, debug=True)
@@ -595,8 +596,33 @@ def parse_no_raise(comma_separated_no_raise: str) -> list[int]:
     return no_raise_codes
 
 
+if TYPE_CHECKING:
+
+    class Args(argparse.Namespace):
+        config: str | None = None
+        debug: bool = False
+        name: str | None = None
+        no_raise: str | None = None  # comma-separated string, later parsed as list[int]
+        report: bool = False
+        project: bool = False
+        commitizen: bool = False
+        verbose: bool = False
+        func: type[
+            commands.Init  # init
+            | commands.Commit  # commit (c)
+            | commands.ListCz  # ls
+            | commands.Example  # example
+            | commands.Info  # info
+            | commands.Schema  # schema
+            | commands.Bump  # bump
+            | commands.Changelog  # changelog (ch)
+            | commands.Check  # check
+            | commands.Version  # version
+        ]
+
+
 def main():
-    parser = cli(data)
+    parser: argparse.ArgumentParser = cli(data)
     argcomplete.autocomplete(parser)
     # Show help if no arg provided
     if len(sys.argv) == 1:
@@ -606,11 +632,8 @@ def main():
     # This is for the command required constraint in 2.0
     try:
         args, unknown_args = parser.parse_known_args()
-    except (TypeError, SystemExit) as e:
-        # https://github.com/commitizen-tools/commitizen/issues/429
-        # argparse raises TypeError when non exist command is provided on Python < 3.9
-        # but raise SystemExit with exit code == 2 on Python 3.9
-        if isinstance(e, TypeError) or (isinstance(e, SystemExit) and e.code == 2):
+    except SystemExit as e:
+        if e.code == 2:
             raise NoCommandFoundError()
         raise e
 
@@ -636,14 +659,11 @@ def main():
         extra_args = " ".join(unknown_args[1:])
         arguments["extra_cli_args"] = extra_args
 
-    if args.config:
-        conf = config.read_cfg(args.config)
-    else:
-        conf = config.read_cfg()
-
+    conf = config.read_cfg(args.config)
+    args = cast("Args", args)
     if args.name:
         conf.update({"name": args.name})
-    elif not args.name and not conf.path:
+    elif not conf.path:
         conf.update({"name": "cz_conventional_commits"})
 
     if args.debug:

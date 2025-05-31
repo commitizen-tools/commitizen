@@ -1215,28 +1215,28 @@ def test_generate_tree_from_commits_with_no_commits(tags):
         ),
     ),
 )
-def test_order_changelog_tree(change_type_order, expected_reordering):
-    tree = changelog.order_changelog_tree(COMMITS_TREE, change_type_order)
+def test_generate_ordered_changelog_tree(change_type_order, expected_reordering):
+    tree = changelog.generate_ordered_changelog_tree(COMMITS_TREE, change_type_order)
 
     for index, entry in enumerate(tuple(tree)):
-        version = tree[index]["version"]
+        version = entry["version"]
         if version in expected_reordering:
             # Verify that all keys are present
-            assert [*tree[index].keys()] == [*COMMITS_TREE[index].keys()]
+            assert [*entry.keys()] == [*COMMITS_TREE[index].keys()]
             # Verify that the reorder only impacted the returned dict and not the original
             expected = expected_reordering[version]
-            assert [*tree[index]["changes"].keys()] == expected["sorted"]
+            assert [*entry["changes"].keys()] == expected["sorted"]
             assert [*COMMITS_TREE[index]["changes"].keys()] == expected["original"]
         else:
-            assert [*entry["changes"].keys()] == [*tree[index]["changes"].keys()]
+            assert [*entry["changes"].keys()] == [*entry["changes"].keys()]
 
 
-def test_order_changelog_tree_raises():
+def test_generate_ordered_changelog_tree_raises():
     change_type_order = ["BREAKING CHANGE", "feat", "refactor", "feat"]
     with pytest.raises(InvalidConfigurationError) as excinfo:
-        changelog.order_changelog_tree(COMMITS_TREE, change_type_order)
+        list(changelog.generate_ordered_changelog_tree(COMMITS_TREE, change_type_order))
 
-    assert "Change types contain duplicates types" in str(excinfo)
+    assert "Change types contain duplicated types" in str(excinfo)
 
 
 def test_render_changelog(
@@ -1639,7 +1639,9 @@ def test_tags_rules_get_version_tags(capsys: pytest.CaptureFixture):
 
 def test_changelog_file_name_from_args_and_config():
     mock_config = Mock(spec=BaseConfig)
-    mock_config.path.parent = "/my/project"
+    mock_path = Mock(spec=Path)
+    mock_path.parent = Path("/my/project")
+    mock_config.path = mock_path
     mock_config.settings = {
         "name": "cz_conventional_commits",
         "changelog_file": "CHANGELOG.md",

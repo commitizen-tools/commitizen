@@ -19,6 +19,15 @@ class BaseConfig:
     def path(self) -> Path | None:
         return self._path
 
+    @path.setter
+    def path(self, path: str | Path) -> None:
+        """
+        mypy does not like this until 1.16
+        See https://github.com/python/mypy/pull/18510
+        TODO: remove "type: ignore" from the call sites when 1.16 is available
+        """
+        self._path = Path(path)
+
     def set_key(self, key, value):
         """Set or update a key in the conf.
 
@@ -29,9 +38,6 @@ class BaseConfig:
 
     def update(self, data: Settings) -> None:
         self._settings.update(data)
-
-    def add_path(self, path: str | Path) -> None:
-        self._path = Path(path)
 
     def _parse_setting(self, data: bytes | str) -> None:
         raise NotImplementedError()

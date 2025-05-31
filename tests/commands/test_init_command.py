@@ -86,7 +86,7 @@ def test_init_without_setup_pre_commit_hook(tmpdir, mocker: MockFixture, config)
 def test_init_when_config_already_exists(config, capsys):
     # Set config path
     path = os.sep.join(["tests", "pyproject.toml"])
-    config.add_path(path)
+    config.path = path
 
     commands.Init(config)()
     captured = capsys.readouterr()
