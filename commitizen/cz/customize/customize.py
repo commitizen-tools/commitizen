@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from collections.abc import Mapping
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from jinja2 import Template
@@ -48,7 +49,7 @@ class CustomizeCommitsCz(BaseCommitizen):
     def questions(self) -> Questions:
         return self.custom_settings.get("questions", [{}])
 
-    def message(self, answers: dict) -> str:
+    def message(self, answers: Mapping[str, Any]) -> str:
         message_template = Template(self.custom_settings.get("message_template", ""))
         if getattr(Template, "substitute", None):
             return message_template.substitute(**answers)  # type: ignore
