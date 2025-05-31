@@ -78,22 +78,21 @@ class Bump:
                 **config.settings,
                 **{
                     k: v
-                    for k, v in {
-                        # All these are for making mypy happy
-                        "annotated_tag_message": arguments.get("annotated_tag_message"),
-                        "annotated_tag": arguments.get("annotated_tag"),
-                        "bump_message": arguments.get("bump_message"),
-                        "file_name": arguments.get("file_name"),
-                        "gpg_sign": arguments.get("gpg_sign"),
-                        "increment_mode": arguments.get("increment_mode"),
-                        "increment": arguments.get("increment"),
-                        "major_version_zero": arguments.get("major_version_zero"),
-                        "prerelease_offset": arguments.get("prerelease_offset"),
-                        "prerelease": arguments.get("prerelease"),
-                        "tag_format": arguments.get("tag_format"),
-                        "template": arguments.get("template"),
-                    }.items()
-                    if v is not None
+                    for k in (
+                        "annotated_tag_message",
+                        "annotated_tag",
+                        "bump_message",
+                        "file_name",
+                        "gpg_sign",
+                        "increment_mode",
+                        "increment",
+                        "major_version_zero",
+                        "prerelease_offset",
+                        "prerelease",
+                        "tag_format",
+                        "template",
+                    )
+                    if (v := arguments.get(k)) is not None
                 },
             },
         )
