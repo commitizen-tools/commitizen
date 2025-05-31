@@ -26,7 +26,7 @@ class CheckArgs(TypedDict, total=False):
 class Check:
     """Check if the current commit msg matches the commitizen format."""
 
-    def __init__(self, config: BaseConfig, arguments: CheckArgs) -> None:
+    def __init__(self, config: BaseConfig, arguments: CheckArgs, *args: object) -> None:
         """Initial check command.
 
         Args:
