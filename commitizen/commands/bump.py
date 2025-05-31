@@ -79,6 +79,7 @@ class Bump:
                 **{
                     k: v
                     for k, v in {
+                        # All these are for making mypy happy
                         "annotated_tag_message": arguments.get("annotated_tag_message"),
                         "annotated_tag": arguments.get("annotated_tag"),
                         "bump_message": arguments.get("bump_message"),
