@@ -342,14 +342,14 @@ class Bump:
                 "dry_run": dry_run,
             }
             if self.changelog_to_stdout:
-                changelog_cmd = Changelog(self.config, {**args, "dry_run": True})
+                changelog_cmd = Changelog(self.config, {**args, "dry_run": True})  # type: ignore
                 try:
                     changelog_cmd()
                 except DryRunExit:
                     pass
 
             args["file_name"] = self.file_name
-            changelog_cmd = Changelog(self.config, args)
+            changelog_cmd = Changelog(self.config, args)  # type: ignore
             changelog_cmd()
             files.append(changelog_cmd.file_name)
 
