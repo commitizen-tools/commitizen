@@ -37,7 +37,7 @@ from commitizen.version_schemes import (
 logger = getLogger("commitizen")
 
 
-class BumpArguments(Settings, total=False):
+class BumpArgs(Settings, total=False):
     allow_no_commit: bool | None
     annotated_tag_message: str | None
     annotated_tag: bool
@@ -65,7 +65,7 @@ class BumpArguments(Settings, total=False):
 class Bump:
     """Show prompt for the user to create a guided commit."""
 
-    def __init__(self, config: BaseConfig, arguments: BumpArguments) -> None:
+    def __init__(self, config: BaseConfig, arguments: BumpArgs) -> None:
         if not git.is_git_project():
             raise NotAGitProjectError()
 
@@ -73,7 +73,7 @@ class Bump:
         self.encoding = config.settings["encoding"]
         self.arguments = arguments
         self.bump_settings = cast(
-            BumpArguments,
+            BumpArgs,
             {
                 **config.settings,
                 **{
