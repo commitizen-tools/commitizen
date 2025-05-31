@@ -8,7 +8,7 @@ from copy import deepcopy
 from functools import partial
 from pathlib import Path
 from types import TracebackType
-from typing import Any
+from typing import TYPE_CHECKING, Any, cast
 
 import argcomplete
 from decli import cli
@@ -596,8 +596,33 @@ def parse_no_raise(comma_separated_no_raise: str) -> list[int]:
     return no_raise_codes
 
 
+if TYPE_CHECKING:
+
+    class Args(argparse.Namespace):
+        config: str | None = None
+        debug: bool = False
+        name: str | None = None
+        no_raise: str | None = None
+        report: bool = False
+        project: bool = False
+        commitizen: bool = False
+        verbose: bool = False
+        func: type[
+            commands.Init  # init
+            | commands.Commit  # commit (c)
+            | commands.ListCz  # ls
+            | commands.Example  # example
+            | commands.Info  # info
+            | commands.Schema  # schema
+            | commands.Bump  # bump
+            | commands.Changelog  # changelog (ch)
+            | commands.Check  # check
+            | commands.Version  # version
+        ]
+
+
 def main():
-    parser = cli(data)
+    parser: argparse.ArgumentParser = cli(data)
     argcomplete.autocomplete(parser)
     # Show help if no arg provided
     if len(sys.argv) == 1:
@@ -611,7 +636,7 @@ def main():
         # https://github.com/commitizen-tools/commitizen/issues/429
         # argparse raises TypeError when non exist command is provided on Python < 3.9
         # but raise SystemExit with exit code == 2 on Python 3.9
-        if isinstance(e, TypeError) or (isinstance(e, SystemExit) and e.code == 2):
+        if isinstance(e, TypeError) or e.code == 2:
             raise NoCommandFoundError()
         raise e
 
@@ -638,6 +663,7 @@ def main():
         arguments["extra_cli_args"] = extra_args
 
     conf = config.read_cfg(args.config)
+    args = cast("Args", args)
     if args.name:
         conf.update({"name": args.name})
     elif not conf.path:
