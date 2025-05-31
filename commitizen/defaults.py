@@ -32,16 +32,18 @@ class Settings(TypedDict, total=False):
     allow_abort: bool
     allowed_prefixes: list[str]
     always_signoff: bool
+    annotated_tag: bool
     bump_message: str | None
+    change_type_map: dict[str, str]
     changelog_file: str
     changelog_format: str | None
     changelog_incremental: bool
     changelog_merge_prerelease: bool
-    change_type_map: dict[str, str]
     changelog_start_rev: str | None
     customize: CzSettings
     encoding: str
     extras: dict[str, Any]
+    gpg_sign: bool
     ignored_tag_formats: Sequence[str]
     legacy_tag_formats: Sequence[str]
     major_version_zero: bool
