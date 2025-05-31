@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 import sys
-from typing import Any
+from typing import TypedDict
 
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
@@ -13,10 +13,20 @@ from commitizen.exceptions import (
 )
 
 
+class CheckArgs(TypedDict, total=False):
+    commit_msg_file: str
+    commit_msg: str
+    rev_range: str
+    allow_abort: bool
+    message_length_limit: int
+    allowed_prefixes: list[str]
+    message: str
+
+
 class Check:
     """Check if the current commit msg matches the commitizen format."""
 
-    def __init__(self, config: BaseConfig, arguments: dict[str, Any]) -> None:
+    def __init__(self, config: BaseConfig, arguments: CheckArgs) -> None:
         """Initial check command.
 
         Args:
@@ -24,16 +34,15 @@ class Check:
             arguments: All the flags provided by the user
             cwd: Current work directory
         """
-        self.commit_msg_file: str | None = arguments.get("commit_msg_file")
-        self.commit_msg: str | None = arguments.get("message")
-        self.rev_range: str | None = arguments.get("rev_range")
-        self.allow_abort: bool = bool(
+        self.commit_msg_file = arguments.get("commit_msg_file")
+        self.commit_msg = arguments.get("message")
+        self.rev_range = arguments.get("rev_range")
+        self.allow_abort = bool(
             arguments.get("allow_abort", config.settings["allow_abort"])
         )
-        self.max_msg_length: int = arguments.get("message_length_limit", 0)
+        self.max_msg_length = arguments.get("message_length_limit", 0)
 
         # we need to distinguish between None and [], which is a valid value
-
         allowed_prefixes = arguments.get("allowed_prefixes")
         self.allowed_prefixes: list[str] = (
             allowed_prefixes
