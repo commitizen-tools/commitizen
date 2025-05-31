@@ -118,7 +118,7 @@ pytest-xdist = "^3.1.0"
 deprecated = "^1.2.13"
 
 [tool.poetry.group.linters.dependencies]
-ruff = ">=0.5.0,<0.10.0"
+ruff = "^0.11.5"
 pre-commit = ">=2.18,<5.0"
 mypy = "^1.16.0"
 types-deprecated = "^1.2.9.2"
@@ -181,6 +181,7 @@ commands_pre = [["poetry", "install", "--only", "main,test"]]
 commands = [["pytest", { replace = "posargs", extend = true }]]
 
 [tool.ruff]
+required-version = ">=0.11.5"
 line-length = 88
 
 [tool.ruff.lint]
