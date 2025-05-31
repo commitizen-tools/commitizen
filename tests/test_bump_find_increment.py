@@ -32,14 +32,14 @@ MINOR_INCREMENTS_CC = [
 MAJOR_INCREMENTS_BREAKING_CHANGE_CC = [
     "feat(cli): added version",
     "docs(README): motivation",
-    "BREAKING CHANGE: `extends` key in config file is now used for extending other config files",  # noqa
+    "BREAKING CHANGE: `extends` key in config file is now used for extending other config files",
     "fix(setup.py): future is now required for every python version",
 ]
 
 MAJOR_INCREMENTS_BREAKING_CHANGE_ALT_CC = [
     "feat(cli): added version",
     "docs(README): motivation",
-    "BREAKING-CHANGE: `extends` key in config file is now used for extending other config files",  # noqa
+    "BREAKING-CHANGE: `extends` key in config file is now used for extending other config files",
     "fix(setup.py): future is now required for every python version",
 ]
 

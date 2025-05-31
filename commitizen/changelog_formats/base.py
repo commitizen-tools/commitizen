@@ -20,7 +20,7 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
     extension: ClassVar[str] = ""
     alternative_extensions: ClassVar[set[str]] = set()
 
-    def __init__(self, config: BaseConfig):
+    def __init__(self, config: BaseConfig) -> None:
         # Constructor needs to be redefined because `Protocol` prevent instantiation by default
         # See: https://bugs.python.org/issue44807
         self.config = config

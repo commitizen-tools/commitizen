@@ -29,7 +29,7 @@ from __future__ import annotations
 
 import re
 from collections import OrderedDict, defaultdict
-from collections.abc import Generator, Iterable, Mapping
+from collections.abc import Generator, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date
 from typing import TYPE_CHECKING, Any
@@ -63,7 +63,7 @@ class Metadata:
     latest_version_position: int | None = None
     latest_version_tag: str | None = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         if self.latest_version and not self.latest_version_tag:
             # Test syntactic sugar
             # latest version tag is optional if same as latest version
@@ -169,8 +169,8 @@ def process_commit_message(
     commit: GitCommit,
     changes: dict[str | None, list],
     change_type_map: dict[str, str] | None = None,
-):
-    message: dict = {
+) -> None:
+    message: dict[str, Any] = {
         "sha1": commit.rev,
         "parents": commit.parents,
         "author": commit.author,
@@ -225,7 +225,7 @@ def render_changelog(
     tree: Iterable,
     loader: BaseLoader,
     template: str,
-    **kwargs,
+    **kwargs: Any,
 ) -> str:
     jinja_template = get_changelog_template(loader, template)
     changelog: str = jinja_template.render(tree=tree, **kwargs)
@@ -282,7 +282,7 @@ def incremental_build(
 
 
 def get_smart_tag_range(
-    tags: list[GitTag], newest: str, oldest: str | None = None
+    tags: Sequence[GitTag], newest: str, oldest: str | None = None
 ) -> list[GitTag]:
     """Smart because it finds the N+1 tag.
 
@@ -308,10 +308,10 @@ def get_smart_tag_range(
 
 
 def get_oldest_and_newest_rev(
-    tags: list[GitTag],
+    tags: Sequence[GitTag],
     version: str,
     rules: TagRules,
-) -> tuple[str | None, str | None]:
+) -> tuple[str | None, str]:
     """Find the tags for the given version.
 
     `version` may come in different formats:

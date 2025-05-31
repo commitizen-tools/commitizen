@@ -79,13 +79,13 @@ class ProjectInfo:
 
 
 class Init:
-    def __init__(self, config: BaseConfig, *args):
+    def __init__(self, config: BaseConfig, *args: object) -> None:
         self.config: BaseConfig = config
         self.encoding = config.settings["encoding"]
         self.cz = factory.committer_factory(self.config)
         self.project_info = ProjectInfo()
 
-    def __call__(self):
+    def __call__(self) -> None:
         if self.config.path:
             out.line(f"Config file {self.config.path} already exists")
             return
@@ -120,7 +120,7 @@ class Init:
             self.config = JsonConfig(data="{}", path=config_path)
         elif "yaml" in config_path:
             self.config = YAMLConfig(data="", path=config_path)
-        values_to_add = {}
+        values_to_add: dict[str, Any] = {}
         values_to_add["name"] = cz_name
         values_to_add["tag_format"] = tag_format
         values_to_add["version_scheme"] = version_scheme
@@ -207,7 +207,7 @@ class Init:
                 raise NoAnswersError("Tag is required!")
         return latest_tag
 
-    def _ask_tag_format(self, latest_tag) -> str:
+    def _ask_tag_format(self, latest_tag: str) -> str:
         is_correct_format = False
         if latest_tag.startswith("v"):
             tag_format = r"v$version"
@@ -302,7 +302,7 @@ class Init:
         ).unsafe_ask()
         return update_changelog_on_bump
 
-    def _exec_install_pre_commit_hook(self, hook_types: list[str]):
+    def _exec_install_pre_commit_hook(self, hook_types: list[str]) -> None:
         cmd_str = self._gen_pre_commit_cmd(hook_types)
         c = cmd.run(cmd_str)
         if c.return_code != 0:
@@ -323,7 +323,7 @@ class Init:
         )
         return cmd_str
 
-    def _install_pre_commit_hook(self, hook_types: list[str] | None = None):
+    def _install_pre_commit_hook(self, hook_types: list[str] | None = None) -> None:
         pre_commit_config_filename = ".pre-commit-config.yaml"
         cz_hook_config = {
             "repo": "https://github.com/commitizen-tools/commitizen",
@@ -369,6 +369,6 @@ class Init:
         self._exec_install_pre_commit_hook(hook_types)
         out.write("commitizen pre-commit hook is now installed in your '.git'\n")
 
-    def _update_config_file(self, values: dict[str, Any]):
+    def _update_config_file(self, values: dict[str, Any]) -> None:
         for key, value in values.items():
             self.config.set_key(key, value)
