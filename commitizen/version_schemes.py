@@ -19,7 +19,7 @@ if sys.version_info >= (3, 10):
 else:
     import importlib_metadata as metadata
 
-from packaging.version import InvalidVersion  # noqa: F401: expose the common exception
+from packaging.version import InvalidVersion  # noqa: F401 (expose the common exception)
 from packaging.version import Version as _BaseVersion
 
 from commitizen.defaults import MAJOR, MINOR, PATCH, Settings

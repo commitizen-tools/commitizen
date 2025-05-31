@@ -135,7 +135,7 @@ class Bump:
             )
         return bump.find_increment(commits, regex=bump_pattern, increments_map=bump_map)
 
-    def __call__(self) -> None:  # noqa: C901
+    def __call__(self) -> None:
         """Steps executed to bump."""
         provider = get_provider(self.config)
 

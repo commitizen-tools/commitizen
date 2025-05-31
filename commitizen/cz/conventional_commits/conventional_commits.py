@@ -31,7 +31,7 @@ class ConventionalCommitsCz(BaseCommitizen):
     bump_pattern = defaults.BUMP_PATTERN
     bump_map = defaults.BUMP_MAP
     bump_map_major_version_zero = defaults.BUMP_MAP_MAJOR_VERSION_ZERO
-    commit_parser = r"^((?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?|\w+!):\s(?P<message>.*)?"  # noqa
+    commit_parser = r"^((?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?|\w+!):\s(?P<message>.*)?"
     change_type_map = {
         "feat": "Feat",
         "fix": "Fix",
