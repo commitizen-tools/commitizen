@@ -47,13 +47,13 @@ class ChangelogArgs(TypedDict, total=False):
 class Changelog:
     """Generate a changelog based on the commit history."""
 
-    def __init__(self, config: BaseConfig, args: ChangelogArgs) -> None:
+    def __init__(self, config: BaseConfig, arguments: ChangelogArgs) -> None:
         if not git.is_git_project():
             raise NotAGitProjectError()
 
         self.config = config
 
-        changelog_file_name = args.get("file_name") or self.config.settings.get(
+        changelog_file_name = arguments.get("file_name") or self.config.settings.get(
             "changelog_file"
         )
         if not isinstance(changelog_file_name, str):
@@ -71,27 +71,30 @@ class Changelog:
         self.encoding = self.config.settings["encoding"]
         self.cz = factory.committer_factory(self.config)
 
-        self.start_rev = args.get("start_rev") or self.config.settings.get(
+        self.start_rev = arguments.get("start_rev") or self.config.settings.get(
             "changelog_start_rev"
         )
 
         self.changelog_format = get_changelog_format(self.config, self.file_name)
 
         self.incremental = bool(
-            args.get("incremental") or self.config.settings.get("changelog_incremental")
+            arguments.get("incremental")
+            or self.config.settings.get("changelog_incremental")
         )
-        self.dry_run = bool(args.get("dry_run"))
+        self.dry_run = bool(arguments.get("dry_run"))
 
         self.scheme = get_version_scheme(
-            self.config.settings, args.get("version_scheme")
+            self.config.settings, arguments.get("version_scheme")
         )
 
         current_version = (
-            args.get("current_version") or self.config.settings.get("version") or ""
+            arguments.get("current_version")
+            or self.config.settings.get("version")
+            or ""
         )
         self.current_version = self.scheme(current_version) if current_version else None
 
-        self.unreleased_version = args["unreleased_version"]
+        self.unreleased_version = arguments["unreleased_version"]
         self.change_type_map = (
             self.config.settings.get("change_type_map") or self.cz.change_type_map
         )
@@ -101,24 +104,26 @@ class Changelog:
             or self.cz.change_type_order
             or defaults.CHANGE_TYPE_ORDER,
         )
-        self.rev_range = args.get("rev_range")
-        self.tag_format = args.get("tag_format") or self.config.settings["tag_format"]
+        self.rev_range = arguments.get("rev_range")
+        self.tag_format = (
+            arguments.get("tag_format") or self.config.settings["tag_format"]
+        )
         self.tag_rules = TagRules(
             scheme=self.scheme,
             tag_format=self.tag_format,
             legacy_tag_formats=self.config.settings["legacy_tag_formats"],
             ignored_tag_formats=self.config.settings["ignored_tag_formats"],
-            merge_prereleases=args.get("merge_prerelease")
+            merge_prereleases=arguments.get("merge_prerelease")
             or self.config.settings["changelog_merge_prerelease"],
         )
 
         self.template = (
-            args.get("template")
+            arguments.get("template")
             or self.config.settings.get("template")
             or self.changelog_format.template
         )
-        self.extras = args.get("extras") or {}
-        self.export_template_to = args.get("export_template")
+        self.extras = arguments.get("extras") or {}
+        self.export_template_to = arguments.get("export_template")
 
     def _find_incremental_rev(self, latest_version: str, tags: Iterable[GitTag]) -> str:
         """Try to find the 'start_rev'.
