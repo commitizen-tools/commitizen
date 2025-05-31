@@ -3,7 +3,6 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
-from collections.abc import Sequence
 from copy import deepcopy
 from functools import partial
 from pathlib import Path
@@ -48,7 +47,7 @@ class ParseKwargs(argparse.Action):
         self,
         parser: argparse.ArgumentParser,
         namespace: argparse.Namespace,
-        kwarg: str | Sequence[object] | None,
+        kwarg: object,
         option_string: str | None = None,
     ) -> None:
         if not isinstance(kwarg, str):
