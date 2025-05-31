@@ -113,3 +113,10 @@ venv.bak/
 
 # ruff
 .ruff_cache
+
+# LSP config files
+pyrightconfig.json
+
+### Python Patch ###
+# Poetry local configuration file - https://python-poetry.org/docs/configuration/#local-configuration
+poetry.toml
