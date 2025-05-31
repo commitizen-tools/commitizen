@@ -602,7 +602,7 @@ if TYPE_CHECKING:
         config: str | None = None
         debug: bool = False
         name: str | None = None
-        no_raise: str | None = None
+        no_raise: str | None = None  # comma-separated string, later parsed as list[int]
         report: bool = False
         project: bool = False
         commitizen: bool = False
