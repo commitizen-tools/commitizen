@@ -6,8 +6,10 @@ from collections import OrderedDict
 from collections.abc import Iterable, MutableMapping, Sequence
 from typing import Any, TypedDict
 
+from commitizen.question import CzQuestion
+
 # Type
-Questions = Iterable[MutableMapping[str, Any]]
+Questions = Iterable[MutableMapping[str, Any]]  # TODO: deprecate this?
 
 
 class CzSettings(TypedDict, total=False):
@@ -16,7 +18,7 @@ class CzSettings(TypedDict, total=False):
     bump_map_major_version_zero: OrderedDict[str, str]
     change_type_order: list[str]
 
-    questions: Questions
+    questions: Iterable[CzQuestion]
     example: str | None
     schema_pattern: str | None
     schema: str | None
