@@ -21,7 +21,6 @@ from commitizen.providers.scm_provider import ScmProvider
 from commitizen.providers.uv_provider import UvProvider
 
 __all__ = [
-    "get_provider",
     "CargoProvider",
     "CommitizenProvider",
     "ComposerProvider",
@@ -30,6 +29,7 @@ __all__ = [
     "PoetryProvider",
     "ScmProvider",
     "UvProvider",
+    "get_provider",
 ]
 
 PROVIDER_ENTRYPOINT = "commitizen.provider"
