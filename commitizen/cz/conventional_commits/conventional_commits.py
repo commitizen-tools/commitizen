@@ -3,7 +3,7 @@ import os
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.utils import multiple_line_breaker, required_validator
-from commitizen.defaults import Questions
+from commitizen.question import CzQuestion
 
 __all__ = ["ConventionalCommitsCz"]
 
@@ -29,7 +29,7 @@ class ConventionalCommitsCz(BaseCommitizen):
     }
     changelog_pattern = defaults.BUMP_PATTERN
 
-    def questions(self) -> Questions:
+    def questions(self) -> list[CzQuestion]:
         return [
             {
                 "type": "list",
@@ -122,8 +122,8 @@ class ConventionalCommitsCz(BaseCommitizen):
             },
             {
                 "type": "confirm",
-                "message": "Is this a BREAKING CHANGE? Correlates with MAJOR in SemVer",
                 "name": "is_breaking_change",
+                "message": "Is this a BREAKING CHANGE? Correlates with MAJOR in SemVer",
                 "default": False,
             },
             {
