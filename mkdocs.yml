@@ -58,6 +58,7 @@ nav:
   - Exit Codes: "exit_codes.md"
   - Third-Party Commitizen Templates: "third-party-commitizen.md"
   - Contributing: "contributing.md"
+  - Contributing TL;DR: "contributing_tldr.md"
   - Resources: "external_links.md"
 
 markdown_extensions:
