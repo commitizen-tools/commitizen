@@ -7,6 +7,9 @@ from typing import cast
 import questionary
 
 from commitizen import bump, factory, git, hooks, out
+from commitizen.bump_rule import (
+    VersionIncrement,
+)
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
@@ -20,7 +23,6 @@ from commitizen.exceptions import (
     InvalidManualVersion,
     NoCommitsFoundError,
     NoneIncrementExit,
-    NoPatternMapError,
     NotAGitProjectError,
     NotAllowed,
     NoVersionSpecifiedError,
@@ -28,7 +30,6 @@ from commitizen.exceptions import (
 from commitizen.providers import get_provider
 from commitizen.tags import TagRules
 from commitizen.version_schemes import (
-    Increment,
     InvalidVersion,
     Prerelease,
     get_version_scheme,
@@ -118,22 +119,14 @@ class Bump:
         )
         return bool(questionary.confirm("Is this the first tag created?").ask())
 
-    def find_increment(self, commits: list[git.GitCommit]) -> Increment | None:
+    def find_increment(self, commits: list[git.GitCommit]) -> VersionIncrement | None:
         # Update the bump map to ensure major version doesn't increment.
-        is_major_version_zero: bool = self.bump_settings["major_version_zero"]
-        # self.cz.bump_map = defaults.bump_map_major_version_zero
-        bump_map = (
-            self.cz.bump_map_major_version_zero
-            if is_major_version_zero
-            else self.cz.bump_map
-        )
-        bump_pattern = self.cz.bump_pattern
+        is_major_version_zero = bool(self.bump_settings["major_version_zero"])
 
-        if not bump_map or not bump_pattern:
-            raise NoPatternMapError(
-                f"'{self.config.settings['name']}' rule does not support bump"
-            )
-        return bump.find_increment(commits, regex=bump_pattern, increments_map=bump_map)
+        return VersionIncrement.get_highest_by_messages(
+            (commit.message for commit in commits),
+            lambda x: self.cz.bump_rule.get_increment(x, is_major_version_zero),
+        )
 
     def __call__(self) -> None:  # noqa: C901
         """Steps executed to bump."""
@@ -151,8 +144,8 @@ class Bump:
 
         dry_run: bool = self.arguments["dry_run"]
         is_yes: bool = self.arguments["yes"]
-        increment: Increment | None = self.arguments["increment"]
-        prerelease: Prerelease | None = self.arguments["prerelease"]
+        increment = VersionIncrement.safe_cast(self.arguments["increment"])
+        prerelease = Prerelease.safe_cast(self.arguments["prerelease"])
         devrelease: int | None = self.arguments["devrelease"]
         is_files_only: bool | None = self.arguments["files_only"]
         is_local_version: bool = self.arguments["local_version"]
@@ -268,7 +261,7 @@ class Bump:
 
             # we create an empty PATCH increment for empty tag
             if increment is None and allow_no_commit:
-                increment = "PATCH"
+                increment = VersionIncrement.PATCH
 
             new_version = current_version.bump(
                 increment,
