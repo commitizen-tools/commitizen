@@ -195,6 +195,10 @@ select = [
     "UP",
     # isort
     "I",
+    # unsorted-dunder-all
+    "RUF022",
+    # unused-noqa
+    "RUF100",
 ]
 ignore = ["E501", "D1", "D415"]
 
