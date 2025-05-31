@@ -40,7 +40,6 @@ logger = getLogger("commitizen")
 class BumpArgs(Settings, total=False):
     allow_no_commit: bool | None
     annotated_tag_message: str | None
-    annotated_tag: bool
     build_metadata: str | None
     changelog_to_stdout: bool
     changelog: bool
@@ -51,7 +50,6 @@ class BumpArgs(Settings, total=False):
     files_only: bool | None
     get_next: bool
     git_output_to_stderr: bool
-    gpg_sign: bool
     increment_mode: str
     increment: Increment | None
     local_version: bool
@@ -222,7 +220,7 @@ class Bump:
 
         if get_next:
             # if trying to use --get-next, we should not allow --changelog or --changelog-to-stdout
-            if self.changelog_flag or bool(self.changelog_to_stdout):
+            if self.changelog_flag or self.changelog_to_stdout:
                 raise NotAllowed(
                     "--changelog or --changelog-to-stdout is not allowed with --get-next"
                 )
@@ -234,9 +232,7 @@ class Bump:
             # If user specified changelog_to_stdout, they probably want the
             # changelog to be generated as well, this is the most intuitive solution
             self.changelog_flag = bool(
-                self.changelog_flag
-                or bool(self.changelog_to_stdout)
-                or self.changelog_config
+                self.changelog_flag or self.changelog_to_stdout or self.changelog_config
             )
 
         rules = TagRules.from_settings(cast(Settings, self.bump_settings))
