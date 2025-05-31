@@ -26,16 +26,11 @@ class BaseConfig:
         return self._settings
 
     @property
-    def path(self) -> Path | None:
-        return self._path
+    def path(self) -> Path:
+        return self._path  # type: ignore
 
     @path.setter
     def path(self, path: str | Path) -> None:
-        """
-        mypy does not like this until 1.16
-        See https://github.com/python/mypy/pull/18510
-        TODO: remove "type: ignore" from the call sites when 1.16 is available
-        """
         self._path = Path(path)
 
     def set_key(self, key: str, value: Any) -> Self:
