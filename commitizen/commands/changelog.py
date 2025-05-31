@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import os
 import os.path
-from collections.abc import Generator, Iterable, Mapping
+from collections.abc import Generator, Iterable
 from difflib import SequenceMatcher
 from operator import itemgetter
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, TypedDict, cast
 
 from commitizen import changelog, defaults, factory, git, out
 from commitizen.changelog_formats import get_changelog_format
@@ -26,10 +26,28 @@ from commitizen.tags import TagRules
 from commitizen.version_schemes import get_version_scheme
 
 
+class ChangelogArgs(TypedDict, total=False):
+    change_type_map: dict[str, str]
+    change_type_order: list[str]
+    current_version: str
+    dry_run: bool
+    file_name: str
+    incremental: bool
+    merge_prerelease: bool
+    rev_range: str
+    start_rev: str
+    tag_format: str
+    unreleased_version: str | None
+    version_scheme: str
+    template: str
+    extras: dict[str, Any]
+    export_template: str
+
+
 class Changelog:
     """Generate a changelog based on the commit history."""
 
-    def __init__(self, config: BaseConfig, args: Mapping[str, Any]) -> None:
+    def __init__(self, config: BaseConfig, args: ChangelogArgs) -> None:
         if not git.is_git_project():
             raise NotAGitProjectError()
 
@@ -59,17 +77,17 @@ class Changelog:
 
         self.changelog_format = get_changelog_format(self.config, self.file_name)
 
-        self.incremental = args["incremental"] or self.config.settings.get(
-            "changelog_incremental"
+        self.incremental = bool(
+            args.get("incremental") or self.config.settings.get("changelog_incremental")
         )
-        self.dry_run = args["dry_run"]
+        self.dry_run = bool(args.get("dry_run"))
 
         self.scheme = get_version_scheme(
             self.config.settings, args.get("version_scheme")
         )
 
         current_version = (
-            args.get("current_version", config.settings.get("version")) or ""
+            args.get("current_version") or self.config.settings.get("version") or ""
         )
         self.current_version = self.scheme(current_version) if current_version else None
 
@@ -84,9 +102,7 @@ class Changelog:
             or defaults.CHANGE_TYPE_ORDER,
         )
         self.rev_range = args.get("rev_range")
-        self.tag_format: str = (
-            args.get("tag_format") or self.config.settings["tag_format"]
-        )
+        self.tag_format = args.get("tag_format") or self.config.settings["tag_format"]
         self.tag_rules = TagRules(
             scheme=self.scheme,
             tag_format=self.tag_format,
@@ -164,7 +180,7 @@ class Changelog:
         start_rev = self.start_rev
         unreleased_version = self.unreleased_version
         changelog_meta = changelog.Metadata()
-        change_type_map: dict[str, str] | None = self.change_type_map  # type: ignore
+        change_type_map: dict[str, str] | None = self.change_type_map
         changelog_message_builder_hook: MessageBuilderHook | None = (
             self.cz.changelog_message_builder_hook
         )

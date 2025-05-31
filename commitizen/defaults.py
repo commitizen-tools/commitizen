@@ -37,6 +37,7 @@ class Settings(TypedDict, total=False):
     changelog_format: str | None
     changelog_incremental: bool
     changelog_merge_prerelease: bool
+    change_type_map: dict[str, str]
     changelog_start_rev: str | None
     customize: CzSettings
     encoding: str
