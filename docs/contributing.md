@@ -1,10 +1,14 @@
-## Contributing to commitizen
+## Contributing to Commitizen
 
-First, thank you for taking the time to contribute! 🎉
+First, thank you for taking the time to contribute! 🎉 Your contributions help make Commitizen better for everyone.
 
-When contributing to [commitizen](https://github.com/commitizen-tools/commitizen), please first create an [issue](https://github.com/commitizen-tools/commitizen/issues) to discuss the change you wish to make before making a change.
+When contributing to Commitizen, we encourage you to:
 
-If you're a first-time contributor, you can check the issues with the [good first issue](https://github.com/commitizen-tools/commitizen/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) tag.
+1. First, check out the [issues](https://github.com/commitizen-tools/commitizen/issues) and [Features we won't add](faq.md#features-we-wont-add) to see if there's already a discussion about the change you wish to make.
+2. If there's no discussion, [create an issue](https://github.com/commitizen-tools/commitizen/issues/new) to discuss your proposed changes.
+3. Follow our [development workflow](#development-workflow) and guidelines below.
+
+If you're a first-time contributor, please check out issues labeled [good first issue](https://github.com/commitizen-tools/commitizen/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) - these are specifically chosen to be beginner-friendly.
 
 ## Prerequisites & Setup
 
