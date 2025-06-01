@@ -74,7 +74,7 @@ options:
   --version-scheme {pep440,semver,semver2}
                         choose version scheme
   --version-type {pep440,semver,semver2}
-                        Deprecated, use --version-scheme
+                        Deprecated, use --version-scheme instead
   --build-metadata BUILD_METADATA
                         Add additional build-metadata to the version-number
   --get-next            Determine the next version and write to stdout
