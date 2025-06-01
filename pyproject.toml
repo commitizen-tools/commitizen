@@ -107,6 +107,7 @@ packages = [{ include = "commitizen" }, { include = "commitizen/py.typed" }]
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.0"
 tox = ">4"
+poethepoet = "^0.34.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = ">=7.2,<9.0"
