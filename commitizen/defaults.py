@@ -175,7 +175,7 @@ def __getattr__(name: str) -> Any:
     if name in deprecated_vars:
         value, replacement = deprecated_vars[name]
         warnings.warn(
-            f"{name} is deprecated and will be removed in a future version. "
+            f"{name} is deprecated and will be removed in v5. "
             f"Use {replacement} instead.",
             DeprecationWarning,
             stacklevel=2,
