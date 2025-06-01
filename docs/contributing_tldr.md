@@ -9,6 +9,8 @@ Feel free to send a PR to update this file if you find anything useful. 🙇
 
 Please check the [pyproject.toml](https://github.com/commitizen-tools/commitizen/blob/master/pyproject.toml) for a comprehensive list of commands.
 
+### Code Changes
+
 ```bash
 # Ensure you have the correct dependencies
 poetry install
@@ -25,4 +27,11 @@ mypy --python-version 3.9
 # Run tests in parallel.
 pytest -n auto # This may take a while.
 pytest -n auto <test_suite>
+```
+
+### Documentation Changes
+
+```bash
+# Build the documentation locally and check for broken links
+poetry doc
 ```
