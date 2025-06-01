@@ -111,6 +111,11 @@ class Commit:
         write_message_to_file: bool = self.arguments.get("write_message_to_file")
         signoff: bool = self.arguments.get("signoff")
 
+        if signoff:
+            out.warn(
+                "Deprecated warning: `cz commit -s` is deprecated and will be removed in v5, please use `cz commit -- -s` instead."
+            )
+
         if self.arguments.get("all"):
             git.add("-u")
 
@@ -132,11 +137,6 @@ class Commit:
 
         if dry_run:
             raise DryRunExit()
-
-        if signoff:
-            out.warn(
-                "signoff mechanic is deprecated, please use `cz commit -- -s` instead."
-            )
 
         if self.config.settings["always_signoff"] or signoff:
             extra_args = f"{extra_args} -s".strip()
