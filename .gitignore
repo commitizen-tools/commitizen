@@ -113,3 +113,6 @@ venv.bak/
 
 # ruff
 .ruff_cache
+
+# poetry
+.poetry/
