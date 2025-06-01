@@ -42,7 +42,7 @@ cz c -a -- -n            # Stage all changes and skip the pre-commit and commit-
 ```
 
 !!! warning
-    The `--signoff` option (or `-s`) is now recommended being used with the new syntax: `cz commit -- -s`. The old syntax `cz commit --signoff` is deprecated.
+    The `--signoff` option (or `-s`) is now recommended being used with the new syntax: `cz commit -- -s`. The old syntax `cz commit --signoff` is deprecated and will be removed in v5.
 
 ### Retry
 
