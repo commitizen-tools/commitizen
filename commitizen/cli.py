@@ -147,7 +147,7 @@ data = {
                     {
                         "name": ["-s", "--signoff"],
                         "action": "store_true",
-                        "help": "sign off the commit",
+                        "help": "Deprecated, use 'cz commit -- -s' instead",
                     },
                     {
                         "name": ["-a", "--all"],
@@ -347,7 +347,7 @@ data = {
                     },
                     {
                         "name": ["--version-type"],
-                        "help": "Deprecated, use --version-scheme",
+                        "help": "Deprecated, use --version-scheme instead",
                         "default": None,
                         "choices": version_schemes.KNOWN_SCHEMES,
                     },
