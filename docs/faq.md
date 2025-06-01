@@ -88,6 +88,20 @@ This error was caused by a Python bug on Windows. It's been fixed by [this PR](h
 
 More discussion can be found in issue [#318](https://github.com/commitizen-tools/commitizen/issues/318).
 
+## Why don't we use Pydantic?
+
+While **Pydantic** is a powerful and popular library for data validation, we intentionally avoid using it in this project to keep our dependency tree minimal and maintainable.
+
+Including Pydantic would increase the chances of version conflicts for users - especially with major changes introduced in Pydantic v3. Because we pin dependencies tightly, adding Pydantic could unintentionally restrict what other tools or libraries users can install alongside `commitizen`. 
+
+Moreover we don't rely on the full feature set of Pydantic. Simpler alternatives like Python's built-in `TypedDict` offer sufficient type safety for our use cases, without the runtime overhead or dependency burden.
+
+In short, avoiding **Pydantic** helps us:
+
+- Keep dependencies lightweight
+- Reduce compatibility issues for users
+- Maintain clarity about what contributors should and shouldn't use
+
 ## Why does Commitizen not support CalVer?
 
 `commitizen` could support CalVer alongside SemVer, but in practice implementing CalVer
