@@ -25,7 +25,7 @@ Please fill in the following content to let us know better about this change.
 ### Documentation Changes
 
 - [ ] Run `poetry doc` locally to ensure the documentation pages renders correctly
-  - [ ] Check if there are any broken links in the documentation
+- [ ] Check and fix any broken links (internal or external) in the documentation
 
 > When running `poetry doc`, any broken internal documentation links will be reported in the console output like this:
 >
