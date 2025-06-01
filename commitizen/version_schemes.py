@@ -419,7 +419,7 @@ def get_version_scheme(settings: Settings, name: str | None = None) -> VersionSc
     if deprecated_setting:
         warnings.warn(
             DeprecationWarning(
-                "`version_type` setting is deprecated and will be removed in commitizen 4. "
+                "`version_type` setting is deprecated and will be removed in v5. "
                 "Please use `version_scheme` instead"
             )
         )

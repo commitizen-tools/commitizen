@@ -82,7 +82,7 @@ class Bump:
         if deprecated_version_type:
             warnings.warn(
                 DeprecationWarning(
-                    "`--version-type` parameter is deprecated and will be removed in commitizen 4. "
+                    "`--version-type` parameter is deprecated and will be removed in v5. "
                     "Please use `--version-scheme` instead"
                 )
             )

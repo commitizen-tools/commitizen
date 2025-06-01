@@ -19,9 +19,7 @@ def test_getattr_deprecated_vars():
     # Verify warning messages
     assert len(record) == 7
     for warning in record:
-        assert "is deprecated and will be removed in a future version" in str(
-            warning.message
-        )
+        assert "is deprecated and will be removed" in str(warning.message)
 
 
 def test_getattr_non_existent():
