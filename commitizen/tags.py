@@ -174,11 +174,7 @@ class TagRules:
             version = self.extract_version(tag)
         except InvalidVersion:
             return False
-
-        if self.merge_prereleases and version.is_prerelease:
-            return False
-
-        return True
+        return not (self.merge_prereleases and version.is_prerelease)
 
     def search_version(self, text: str, last: bool = False) -> VersionTag | None:
         """

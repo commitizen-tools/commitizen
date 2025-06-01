@@ -8,7 +8,7 @@ __all__ = ["JiraSmartCz"]
 
 class JiraSmartCz(BaseCommitizen):
     def questions(self) -> Questions:
-        questions = [
+        return [
             {
                 "type": "input",
                 "name": "message",
@@ -42,7 +42,6 @@ class JiraSmartCz(BaseCommitizen):
                 "filter": lambda x: "#comment " + x if x else "",
             },
         ]
-        return questions
 
     def message(self, answers: dict) -> str:
         return " ".join(
@@ -77,5 +76,4 @@ class JiraSmartCz(BaseCommitizen):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         filepath = os.path.join(dir_path, "jira_info.txt")
         with open(filepath, encoding=self.config.settings["encoding"]) as f:
-            content = f.read()
-        return content
+            return f.read()
