@@ -26,6 +26,6 @@ body:
   - type: textarea
     id: related-issue
     attributes:
-      label: Additional context
+      label: Related issues
       description: |
         If applicable, add link to existing issue also help us know better.
