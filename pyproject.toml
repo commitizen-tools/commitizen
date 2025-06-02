@@ -249,8 +249,8 @@ lint.sequence = [
     { cmd = "mypy" },
 ]
 
-check-commit.help = "Check the commit message"
-check-commit.cmd = "cz -nr 3 check --rev-range origin/master.."
+check-commit.help = "Check the commit messages"
+check-commit.cmd = "poetry run cz --no-raise 3 check --rev-range origin/master.."
 
 test.help = "Run the test suite"
 test.cmd = "pytest -n 3 --dist=loadfile"
@@ -262,7 +262,7 @@ cover.help = "Run the test suite with coverage"
 cover.ref = "test --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen"
 
 all.help = "Run all tasks"
-all.sequence = ["format", "lint", "cover", "check-commit"]
+all.sequence = ["check-commit", "format", "lint", "cover"]
 
 "doc:screenshots".help = "Render documentation screenshots"
 "doc:screenshots".script = "scripts.gen_cli_help_screenshots:gen_cli_help_screenshots"
@@ -274,7 +274,7 @@ doc.help = "Live documentation server"
 doc.cmd = "mkdocs serve"
 
 ci.help = "Run all tasks in CI"
-ci.sequence = [{ cmd = "pre-commit run --all-files" }, "cover"]
+ci.sequence = ["check-commit", { cmd = "pre-commit run --all-files" }, "cover"]
 ci.env = { SKIP = "no-commit-to-branch" }
 
 setup-pre-commit.help = "Install pre-commit hooks"
