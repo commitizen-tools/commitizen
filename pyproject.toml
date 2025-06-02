@@ -250,7 +250,7 @@ cover.help = "Run the test suite with coverage"
 cover.ref = "test --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen"
 
 all.help = "Run all tasks"
-all.sequence = ["check-commit", "format", "lint", "cover"]
+all.sequence = ["format", "lint", "check-commit", "cover"]
 
 "doc:screenshots".help = "Render documentation screenshots"
 "doc:screenshots".script = "scripts.gen_cli_help_screenshots:gen_cli_help_screenshots"
