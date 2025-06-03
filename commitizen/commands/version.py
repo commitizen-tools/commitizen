@@ -1,5 +1,6 @@
 import platform
 import sys
+from typing import TypedDict
 
 from commitizen import out
 from commitizen.__version__ import __version__
@@ -7,16 +8,22 @@ from commitizen.config import BaseConfig
 from commitizen.providers import get_provider
 
 
+class VersionArgs(TypedDict, total=False):
+    report: bool
+    project: bool
+    verbose: bool
+
+
 class Version:
     """Get the version of the installed commitizen or the current project."""
 
-    def __init__(self, config: BaseConfig, *args):
+    def __init__(self, config: BaseConfig, arguments: VersionArgs) -> None:
         self.config: BaseConfig = config
-        self.parameter = args[0]
+        self.parameter = arguments
         self.operating_system = platform.system()
         self.python_version = sys.version
 
-    def __call__(self):
+    def __call__(self) -> None:
         if self.parameter.get("report"):
             out.write(f"Commitizen Version: {__version__}")
             out.write(f"Python Version: {self.python_version}")

@@ -97,7 +97,6 @@ def test_version_use_version_provider(
         {
             "report": False,
             "project": project,
-            "commitizen": False,
             "verbose": not project,
         },
     )()

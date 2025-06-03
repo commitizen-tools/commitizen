@@ -169,7 +169,7 @@ class SemverCommitizen(BaseCommitizen):
         "patch": "PATCH",
     }
     changelog_pattern = r"^(patch|minor|major)"
-    commit_parser = r"^(?P<change_type>patch|minor|major)(?:\((?P<scope>[^()\r\n]*)\)|\()?:?\s(?P<message>.+)"  # noqa
+    commit_parser = r"^(?P<change_type>patch|minor|major)(?:\((?P<scope>[^()\r\n]*)\)|\()?:?\s(?P<message>.+)"
     change_type_map = {
         "major": "Breaking Changes",
         "minor": "Features",

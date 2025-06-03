@@ -46,20 +46,20 @@ class GitObject:
     name: str
     date: str
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: object) -> bool:
         return hasattr(other, "rev") and self.rev == other.rev
 
 
 class GitCommit(GitObject):
     def __init__(
         self,
-        rev,
-        title,
+        rev: str,
+        title: str,
         body: str = "",
         author: str = "",
         author_email: str = "",
         parents: list[str] | None = None,
-    ):
+    ) -> None:
         self.rev = rev.strip()
         self.title = title.strip()
         self.body = body.strip()
@@ -68,7 +68,7 @@ class GitCommit(GitObject):
         self.parents = parents or []
 
     @property
-    def message(self):
+    def message(self) -> str:
         return f"{self.title}\n\n{self.body}".strip()
 
     @classmethod
@@ -127,22 +127,26 @@ class GitCommit(GitObject):
             parents=[p for p in parents.strip().split(" ") if p],
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{self.title} ({self.rev})"
 
 
 class GitTag(GitObject):
-    def __init__(self, name, rev, date):
+    def __init__(self, name: str, rev: str, date: str) -> None:
         self.rev = rev.strip()
         self.name = name.strip()
         self._date = date.strip()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"GitTag('{self.name}', '{self.rev}', '{self.date}')"
 
     @property
-    def date(self):
+    def date(self) -> str:
         return self._date
+
+    @date.setter
+    def date(self, value: str) -> None:
+        self._date = value
 
     @classmethod
     def from_line(cls, line: str, inner_delimiter: str) -> GitTag:
@@ -211,7 +215,7 @@ def get_commits(
     ]
 
 
-def get_filenames_in_commit(git_reference: str = ""):
+def get_filenames_in_commit(git_reference: str = "") -> list[str]:
     """Get the list of files that were committed in the requested git reference.
 
     :param git_reference: a git reference as accepted by `git show`, default: the last commit
@@ -308,7 +312,7 @@ def get_core_editor() -> str | None:
     return None
 
 
-def smart_open(*args, **kwargs):
+def smart_open(*args, **kwargs):  # type: ignore[no-untyped-def,unused-ignore] # noqa: ANN201
     """Open a file with the EOL style determined from Git."""
     return open(*args, newline=EOLType.for_open(), **kwargs)
 
@@ -326,3 +330,10 @@ def _get_log_as_str_list(start: str | None, end: str, args: str) -> list[str]:
     if not c.out:
         return []
     return c.out.split(f"{delimiter}\n")
+
+
+def get_default_branch() -> str:
+    c = cmd.run("git symbolic-ref refs/remotes/origin/HEAD")
+    if c.return_code != 0:
+        raise GitCommandError(c.err)
+    return c.out.strip()

@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import os
 import os.path
-from collections.abc import Generator
+from collections.abc import Generator, Iterable
 from difflib import SequenceMatcher
 from operator import itemgetter
 from pathlib import Path
+from typing import Any, TypedDict, cast
 
 from commitizen import changelog, defaults, factory, git, out
 from commitizen.changelog_formats import get_changelog_format
@@ -25,16 +26,34 @@ from commitizen.tags import TagRules
 from commitizen.version_schemes import get_version_scheme
 
 
+class ChangelogArgs(TypedDict, total=False):
+    change_type_map: dict[str, str]
+    change_type_order: list[str]
+    current_version: str
+    dry_run: bool
+    file_name: str
+    incremental: bool
+    merge_prerelease: bool
+    rev_range: str
+    start_rev: str
+    tag_format: str
+    unreleased_version: str | None
+    version_scheme: str
+    template: str
+    extras: dict[str, Any]
+    export_template: str
+
+
 class Changelog:
     """Generate a changelog based on the commit history."""
 
-    def __init__(self, config: BaseConfig, args):
+    def __init__(self, config: BaseConfig, arguments: ChangelogArgs) -> None:
         if not git.is_git_project():
             raise NotAGitProjectError()
 
         self.config = config
 
-        changelog_file_name = args.get("file_name") or self.config.settings.get(
+        changelog_file_name = arguments.get("file_name") or self.config.settings.get(
             "changelog_file"
         )
         if not isinstance(changelog_file_name, str):
@@ -52,57 +71,61 @@ class Changelog:
         self.encoding = self.config.settings["encoding"]
         self.cz = factory.committer_factory(self.config)
 
-        self.start_rev = args.get("start_rev") or self.config.settings.get(
+        self.start_rev = arguments.get("start_rev") or self.config.settings.get(
             "changelog_start_rev"
         )
 
         self.changelog_format = get_changelog_format(self.config, self.file_name)
 
-        self.incremental = args["incremental"] or self.config.settings.get(
-            "changelog_incremental"
+        self.incremental = bool(
+            arguments.get("incremental")
+            or self.config.settings.get("changelog_incremental")
         )
-        self.dry_run = args["dry_run"]
+        self.dry_run = bool(arguments.get("dry_run"))
 
         self.scheme = get_version_scheme(
-            self.config.settings, args.get("version_scheme")
+            self.config.settings, arguments.get("version_scheme")
         )
 
         current_version = (
-            args.get("current_version", config.settings.get("version")) or ""
+            arguments.get("current_version")
+            or self.config.settings.get("version")
+            or ""
         )
         self.current_version = self.scheme(current_version) if current_version else None
 
-        self.unreleased_version = args["unreleased_version"]
+        self.unreleased_version = arguments["unreleased_version"]
         self.change_type_map = (
             self.config.settings.get("change_type_map") or self.cz.change_type_map
         )
-        self.change_type_order = (
+        self.change_type_order = cast(
+            list[str],
             self.config.settings.get("change_type_order")
             or self.cz.change_type_order
-            or defaults.CHANGE_TYPE_ORDER
+            or defaults.CHANGE_TYPE_ORDER,
         )
-        self.rev_range = args.get("rev_range")
-        self.tag_format: str = (
-            args.get("tag_format") or self.config.settings["tag_format"]
+        self.rev_range = arguments.get("rev_range")
+        self.tag_format = (
+            arguments.get("tag_format") or self.config.settings["tag_format"]
         )
         self.tag_rules = TagRules(
             scheme=self.scheme,
             tag_format=self.tag_format,
             legacy_tag_formats=self.config.settings["legacy_tag_formats"],
             ignored_tag_formats=self.config.settings["ignored_tag_formats"],
-            merge_prereleases=args.get("merge_prerelease")
+            merge_prereleases=arguments.get("merge_prerelease")
             or self.config.settings["changelog_merge_prerelease"],
         )
 
         self.template = (
-            args.get("template")
+            arguments.get("template")
             or self.config.settings.get("template")
             or self.changelog_format.template
         )
-        self.extras = args.get("extras") or {}
-        self.export_template_to = args.get("export_template")
+        self.extras = arguments.get("extras") or {}
+        self.export_template_to = arguments.get("export_template")
 
-    def _find_incremental_rev(self, latest_version: str, tags: list[GitTag]) -> str:
+    def _find_incremental_rev(self, latest_version: str, tags: Iterable[GitTag]) -> str:
         """Try to find the 'start_rev'.
 
         We use a similarity approach. We know how to parse the version from the markdown
@@ -134,9 +157,9 @@ class Changelog:
             raise NoRevisionError()
         return start_rev
 
-    def write_changelog(
+    def _write_changelog(
         self, changelog_out: str, lines: list[str], changelog_meta: changelog.Metadata
-    ):
+    ) -> None:
         with smart_open(self.file_name, "w", encoding=self.encoding) as changelog_file:
             partial_changelog: str | None = None
             if self.incremental:
@@ -151,18 +174,18 @@ class Changelog:
 
             changelog_file.write(changelog_out)
 
-    def export_template(self):
+    def _export_template(self) -> None:
         tpl = changelog.get_changelog_template(self.cz.template_loader, self.template)
-        src = Path(tpl.filename)
-        Path(self.export_template_to).write_text(src.read_text())
+        src = Path(tpl.filename)  # type: ignore
+        Path(self.export_template_to).write_text(src.read_text())  # type: ignore
 
-    def __call__(self):
+    def __call__(self) -> None:
         commit_parser = self.cz.commit_parser
         changelog_pattern = self.cz.changelog_pattern
         start_rev = self.start_rev
         unreleased_version = self.unreleased_version
         changelog_meta = changelog.Metadata()
-        change_type_map: dict | None = self.change_type_map
+        change_type_map: dict[str, str] | None = self.change_type_map
         changelog_message_builder_hook: MessageBuilderHook | None = (
             self.cz.changelog_message_builder_hook
         )
@@ -171,7 +194,7 @@ class Changelog:
         )
 
         if self.export_template_to:
-            return self.export_template()
+            return self._export_template()
 
         if not changelog_pattern or not commit_parser:
             raise NoPatternMapError(
@@ -190,7 +213,7 @@ class Changelog:
             changelog_meta = self.changelog_format.get_metadata(self.file_name)
             if changelog_meta.latest_version:
                 start_rev = self._find_incremental_rev(
-                    strip_local_version(changelog_meta.latest_version_tag), tags
+                    strip_local_version(changelog_meta.latest_version_tag or ""), tags
                 )
         if self.rev_range:
             start_rev, end_rev = changelog.get_oldest_and_newest_rev(
@@ -238,4 +261,4 @@ class Changelog:
             with open(self.file_name, encoding=self.encoding) as changelog_file:
                 lines = changelog_file.readlines()
 
-        self.write_changelog(changelog_out, lines, changelog_meta)
+        self._write_changelog(changelog_out, lines, changelog_meta)

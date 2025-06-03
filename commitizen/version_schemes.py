@@ -51,7 +51,7 @@ class VersionProtocol(Protocol):
     parser: ClassVar[re.Pattern]
     """Regex capturing this version scheme into a `version` group"""
 
-    def __init__(self, version: str):
+    def __init__(self, version: str) -> None:
         """
         Initialize a version object from its string representation.
 
