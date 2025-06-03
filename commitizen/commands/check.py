@@ -21,6 +21,8 @@ class CheckArgs(TypedDict, total=False):
     message_length_limit: int
     allowed_prefixes: list[str]
     message: str
+    default_range: bool
+    verbose: bool
 
 
 class Check:
@@ -40,6 +42,8 @@ class Check:
         self.allow_abort = bool(
             arguments.get("allow_abort", config.settings["allow_abort"])
         )
+        self.default_range = bool(arguments.get("default_range"))
+        self.verbose = bool(arguments.get("verbose"))
         self.max_msg_length = arguments.get("message_length_limit", 0)
 
         # we need to distinguish between None and [], which is a valid value
@@ -57,9 +61,13 @@ class Check:
         self.cz = factory.committer_factory(self.config)
 
     def _valid_command_argument(self) -> None:
-        num_exclusive_args_provided = sum(
+        num_exclusive_args_provided = self.default_range + sum(
             arg is not None
-            for arg in (self.commit_msg_file, self.commit_msg, self.rev_range)
+            for arg in (
+                self.commit_msg_file,
+                self.commit_msg,
+                self.rev_range,
+            )
         )
         if num_exclusive_args_provided == 0 and not sys.stdin.isatty():
             self.commit_msg = sys.stdin.read()
@@ -110,7 +118,10 @@ class Check:
             return [git.GitCommit(rev="", title="", body=self._filter_comments(msg))]
 
         # Get commit messages from git log (--rev-range)
-        return git.get_commits(end=self.rev_range or "HEAD")
+        return git.get_commits(
+            git.get_default_branch() if self.default_range else None,
+            self.rev_range or "HEAD",
+        )
 
     @staticmethod
     def _filter_comments(msg: str) -> str:
@@ -144,6 +155,9 @@ class Check:
         return "\n".join(lines)
 
     def validate_commit_message(self, commit_msg: str, pattern: str) -> bool:
+        if self.verbose:
+            out.info(commit_msg)
+
         if not commit_msg:
             return self.allow_abort
 

@@ -475,6 +475,13 @@ data = {
                         "exclusive_group": "group1",
                     },
                     {
+                        "name": ["-d", "--default-range"],
+                        "action": "store_true",
+                        "default": False,
+                        "help": "check from the default branch to HEAD. e.g, refs/remotes/origin/master..HEAD",
+                        "exclusive_group": "group1",
+                    },
+                    {
                         "name": ["-m", "--message"],
                         "help": "commit message that needs to be checked",
                         "exclusive_group": "group1",
@@ -497,6 +504,12 @@ data = {
                         "type": int,
                         "default": 0,
                         "help": "length limit of the commit message; 0 for no limit",
+                    },
+                    {
+                        "name": ["-v", "--verbose"],
+                        "action": "store_true",
+                        "default": False,
+                        "help": "show verbose output",
                     },
                 ],
             },
