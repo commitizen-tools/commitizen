@@ -1,5 +1,5 @@
 usage: cz check [-h] [--commit-msg-file COMMIT_MSG_FILE |
-                --rev-range REV_RANGE | -m MESSAGE] [--allow-abort]
+                --rev-range REV_RANGE | -d | -m MESSAGE] [--allow-abort]
                 [--allowed-prefixes [ALLOWED_PREFIXES ...]]
                 [-l MESSAGE_LENGTH_LIMIT]
 
@@ -13,6 +13,9 @@ options:
                         MSG_FILE=$1
   --rev-range REV_RANGE
                         a range of git rev to check. e.g, master..HEAD
+  -d, --use-default-range
+                        check from the default branch to HEAD. e.g,
+                        refs/remotes/origin/master..HEAD
   -m, --message MESSAGE
                         commit message that needs to be checked
   --allow-abort         allow empty commit messages, which typically abort a
