@@ -472,6 +472,13 @@ data = {
                         "exclusive_group": "group1",
                     },
                     {
+                        "name": ["-d", "--use-default-range"],
+                        "action": "store_true",
+                        "default": False,
+                        "help": "check from the default branch to HEAD. e.g, refs/remotes/origin/master..HEAD",
+                        "exclusive_group": "group1",
+                    },
+                    {
                         "name": ["-m", "--message"],
                         "help": "commit message that needs to be checked",
                         "exclusive_group": "group1",

@@ -27,19 +27,21 @@ $ cz check --rev-range REV_RANGE
 
 For example, if you'd like to check all commits on a branch, you can use `--rev-range master..HEAD`. Or, if you'd like to check all commits starting from when you first implemented commit message linting, you can use `--rev-range <first_commit_sha>..HEAD`.
 
+You can also use `--use-default-range` to check all commits from the default branch up to HEAD. This is equivalent to using `--rev-range <default_branch>..HEAD`.
+
 For more information on how git commit ranges work, you can check the [git documentation](https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection#_commit_ranges).
 
 ### Commit Message
 
 There are two ways you can provide your plain message and check it.
 
-#### Method 1: use -m or --message
+#### Method 1: use `-m` or `--message`
 
 ```bash
 $ cz check --message MESSAGE
 ```
 
-In this option, MESSAGE is the commit message to be checked.
+In this option, `MESSAGE` is the commit message to be checked.
 
 #### Method 2: use pipe to pipe it to `cz check`
 
@@ -47,7 +49,7 @@ In this option, MESSAGE is the commit message to be checked.
 $ echo MESSAGE | cz check
 ```
 
-In this option, MESSAGE is piped to cz check and will be checked.
+In this option, `MESSAGE` is piped to `cz check` and will be checked.
 
 ### Commit Message File
 
@@ -55,7 +57,7 @@ In this option, MESSAGE is piped to cz check and will be checked.
 $ cz check --commit-msg-file COMMIT_MSG_FILE
 ```
 
-In this option, COMMIT_MSG_FILE is the path of the temporary file that contains the commit message.
+In this option, `COMMIT_MSG_FILE` is the path of the temporary file that contains the commit message.
 This argument can be useful when cooperating with git hooks. Please check [Automatically check message before commit](../tutorials/auto_check.md) for more information about how to use this argument with git hooks.
 
 ### Allow Abort
@@ -65,12 +67,18 @@ cz check --message MESSAGE --allow-abort
 ```
 
 Empty commit messages typically instruct Git to abort a commit, so you can pass `--allow-abort` to
-permit them. Since `git commit` accepts an `--allow-empty-message` flag (primarily for wrapper scripts), you may wish to disallow such commits in CI. `--allow-abort` may be used in conjunction with any of the other options.
+permit them. Since `git commit` accepts the `--allow-empty-message` flag (primarily for wrapper scripts), you may wish to disallow such commits in CI. `--allow-abort` may be used in conjunction with any of the other options.
 
 ### Allowed Prefixes
 
 If the commit message starts with some specific prefixes, `cz check` returns `True` without checking the regex.
-By default, the following prefixes are allowed: `Merge`, `Revert`, `Pull request`, `fixup!` and `squash!`.
+By default, the following prefixes are allowed:
+
+- `Merge`
+- `Revert`
+- `Pull request`
+- `fixup!`
+- `squash!`
 
 ```bash
 cz check --message MESSAGE --allowed-prefixes 'Merge' 'Revert' 'Custom Prefix'
@@ -83,5 +91,5 @@ For example, `cz check --message MESSAGE -l 3` would fail the check, since `MESS
 By default, the limit is set to 0, which means no limit on the length.
 
 **Note that the limit applies only to the first line of the message.**
-Specifically, for `ConventionalCommitsCz` the length only counts from the type of change to the subject,
-while the body and the footer are not counted.
+
+Specifically, for `ConventionalCommitsCz` the length only counts from the type of change to the subject, while the body and the footer are not counted.
