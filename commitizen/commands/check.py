@@ -21,6 +21,8 @@ class CheckArgs(TypedDict, total=False):
     message_length_limit: int
     allowed_prefixes: list[str]
     message: str
+    default_range: bool
+    verbose: bool
 
 
 class Check:
@@ -40,6 +42,8 @@ class Check:
         self.allow_abort = bool(
             arguments.get("allow_abort", config.settings["allow_abort"])
         )
+        self.default_range = bool(arguments.get("default_range"))
+        self.verbose = bool(arguments.get("verbose"))
         self.max_msg_length = arguments.get("message_length_limit", 0)
 
         # we need to distinguish between None and [], which is a valid value
@@ -50,24 +54,27 @@ class Check:
             else config.settings["allowed_prefixes"]
         )
 
-        self._valid_command_argument()
-
-        self.config: BaseConfig = config
-        self.encoding = config.settings["encoding"]
-        self.cz = factory.committer_factory(self.config)
-
-    def _valid_command_argument(self) -> None:
         num_exclusive_args_provided = sum(
             arg is not None
-            for arg in (self.commit_msg_file, self.commit_msg, self.rev_range)
+            for arg in (
+                self.commit_msg_file,
+                self.commit_msg,
+                self.rev_range,
+            )
         )
-        if num_exclusive_args_provided == 0 and not sys.stdin.isatty():
-            self.commit_msg = sys.stdin.read()
-        elif num_exclusive_args_provided != 1:
+
+        if num_exclusive_args_provided > 1:
             raise InvalidCommandArgumentError(
                 "Only one of --rev-range, --message, and --commit-msg-file is permitted by check command! "
                 "See 'cz check -h' for more information"
             )
+
+        if num_exclusive_args_provided == 0 and not sys.stdin.isatty():
+            self.commit_msg = sys.stdin.read()
+
+        self.config: BaseConfig = config
+        self.encoding = config.settings["encoding"]
+        self.cz = factory.committer_factory(self.config)
 
     def __call__(self) -> None:
         """Validate if commit messages follows the conventional pattern.
@@ -109,7 +116,10 @@ class Check:
             return [git.GitCommit(rev="", title="", body=self._filter_comments(msg))]
 
         # Get commit messages from git log (--rev-range)
-        return git.get_commits(end=self.rev_range)
+        return git.get_commits(
+            git.get_default_branch() if self.default_range else None,
+            self.rev_range,
+        )
 
     @staticmethod
     def _filter_comments(msg: str) -> str:
