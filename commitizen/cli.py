@@ -679,7 +679,7 @@ def main() -> None:
         )
         sys.excepthook = no_raise_debug_excepthook
 
-    args.func(conf, arguments)()  # type: ignore
+    args.func(conf, arguments)()  # type: ignore[arg-type]
 
 
 if __name__ == "__main__":
