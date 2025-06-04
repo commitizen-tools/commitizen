@@ -176,6 +176,7 @@ class Changelog:
 
     def _export_template(self) -> None:
         tpl = changelog.get_changelog_template(self.cz.template_loader, self.template)
+        # TODO: fix the following type ignores
         src = Path(tpl.filename)  # type: ignore
         Path(self.export_template_to).write_text(src.read_text())  # type: ignore
 
