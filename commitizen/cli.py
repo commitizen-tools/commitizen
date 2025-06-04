@@ -47,17 +47,17 @@ class ParseKwargs(argparse.Action):
         self,
         parser: argparse.ArgumentParser,
         namespace: argparse.Namespace,
-        kwarg: object,
+        values: object,
         option_string: str | None = None,
     ) -> None:
-        if not isinstance(kwarg, str):
+        if not isinstance(values, str):
             return
-        if "=" not in kwarg:
+        if "=" not in values:
             raise InvalidCommandArgumentError(
                 f"Option {option_string} expect a key=value format"
             )
         kwargs = getattr(namespace, self.dest, None) or {}
-        key, value = kwarg.split("=", 1)
+        key, value = values.split("=", 1)
         if not key:
             raise InvalidCommandArgumentError(
                 f"Option {option_string} expect a key=value format"
