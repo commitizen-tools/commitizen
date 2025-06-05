@@ -206,17 +206,13 @@ class Bump:
             if get_next:
                 raise NotAllowed("--get-next cannot be combined with MANUAL_VERSION")
 
-        if self.bump_settings["major_version_zero"]:
-            if not current_version.release[0] == 0:
-                raise NotAllowed(
-                    f"--major-version-zero is meaningless for current version {current_version}"
-                )
+        if self.bump_settings["major_version_zero"] and current_version.release[0]:
+            raise NotAllowed(
+                f"--major-version-zero is meaningless for current version {current_version}"
+            )
 
-        if build_metadata:
-            if is_local_version:
-                raise NotAllowed(
-                    "--local-version cannot be combined with --build-metadata"
-                )
+        if build_metadata and is_local_version:
+            raise NotAllowed("--local-version cannot be combined with --build-metadata")
 
         if get_next:
             # if trying to use --get-next, we should not allow --changelog or --changelog-to-stdout
