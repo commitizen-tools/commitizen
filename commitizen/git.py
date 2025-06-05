@@ -203,15 +203,18 @@ def _create_commit_cmd_string(args: str, committer_date: str | None, name: str) 
 
 def get_commits(
     start: str | None = None,
-    end: str = "HEAD",
+    end: str | None = None,
     *,
     args: str = "",
 ) -> list[GitCommit]:
     """Get the commits between start and end."""
+    if end is None:
+        end = "HEAD"
     git_log_entries = _get_log_as_str_list(start, end, args)
     return [
         GitCommit.from_rev_and_commit(rev_and_commit)
-        for rev_and_commit in filter(None, git_log_entries)
+        for rev_and_commit in git_log_entries
+        if rev_and_commit
     ]
 
 
