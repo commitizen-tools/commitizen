@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import re
 from collections import OrderedDict
+from collections.abc import Iterable
 from glob import iglob
 from logging import getLogger
 from string import Template
@@ -61,7 +62,7 @@ def find_increment(
 def update_version_in_files(
     current_version: str,
     new_version: str,
-    files: list[str],
+    files: Iterable[str],
     *,
     check_consistency: bool = False,
     encoding: str = ENCODING,
@@ -99,11 +100,11 @@ def update_version_in_files(
     return updated
 
 
-def _files_and_regexes(patterns: list[str], version: str) -> list[tuple[str, str]]:
+def _files_and_regexes(patterns: Iterable[str], version: str) -> list[tuple[str, str]]:
     """
     Resolve all distinct files with their regexp from a list of glob patterns with optional regexp
     """
-    out: list[tuple[str, str]] = []
+    out: set[tuple[str, str]] = set()
     for pattern in patterns:
         drive, tail = os.path.splitdrive(pattern)
         path, _, regex = tail.partition(":")
@@ -111,9 +112,10 @@ def _files_and_regexes(patterns: list[str], version: str) -> list[tuple[str, str
         if not regex:
             regex = re.escape(version)
 
-        for path in iglob(filepath):
-            out.append((path, regex))
-    return sorted(list(set(out)))
+        for file in iglob(filepath):
+            out.add((file, regex))
+
+    return sorted(out)
 
 
 def _bump_with_regex(
