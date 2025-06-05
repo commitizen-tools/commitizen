@@ -1,5 +1,6 @@
 import io
 import sys
+from typing import Any
 
 from termcolor import colored
 
@@ -8,12 +9,12 @@ if sys.platform == "win32":
         sys.stdout.reconfigure(encoding="utf-8")
 
 
-def write(value: str, *args) -> None:
+def write(value: str, *args: object) -> None:
     """Intended to be used when value is multiline."""
     print(value, *args)
 
 
-def line(value: str, *args, **kwargs) -> None:
+def line(value: str, *args: object, **kwargs: Any) -> None:
     """Wrapper in case I want to do something different later."""
     print(value, *args, **kwargs)
 
@@ -33,7 +34,7 @@ def info(value: str) -> None:
     line(message)
 
 
-def diagnostic(value: str):
+def diagnostic(value: str) -> None:
     line(value, file=sys.stderr)
 
 
