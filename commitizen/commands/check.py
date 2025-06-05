@@ -110,7 +110,7 @@ class Check:
             return [git.GitCommit(rev="", title="", body=self._filter_comments(msg))]
 
         # Get commit messages from git log (--rev-range)
-        return git.get_commits(end=self.rev_range or "HEAD")
+        return git.get_commits(end=self.rev_range)
 
     @staticmethod
     def _filter_comments(msg: str) -> str:

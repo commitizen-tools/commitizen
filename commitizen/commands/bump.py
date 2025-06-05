@@ -253,10 +253,7 @@ class Bump:
                 ) from exc
         else:
             if increment is None:
-                if current_tag:
-                    commits = git.get_commits(current_tag.name)
-                else:
-                    commits = git.get_commits()
+                commits = git.get_commits(current_tag.name if current_tag else None)
 
                 # No commits, there is no need to create an empty tag.
                 # Unless we previously had a prerelease.
