@@ -160,16 +160,14 @@ class GitTag(GitObject):
 def tag(
     tag: str, annotated: bool = False, signed: bool = False, msg: str | None = None
 ) -> cmd.Command:
-    _opt = ""
-    if annotated:
-        _opt = f"-a {tag} -m"
-    if signed:
-        _opt = f"-s {tag} -m"
+    if not annotated and not signed:
+        return cmd.run(f"git tag {tag}")
 
     # according to https://git-scm.com/book/en/v2/Git-Basics-Tagging,
     # we're not able to create lightweight tag with message.
     # by adding message, we make it a annotated tags
-    return cmd.run(f'git tag {_opt} "{tag if _opt == "" or msg is None else msg}"')
+    option = "-s" if signed else "-a"  # The else case is for annotated tags
+    return cmd.run(f'git tag {option} {tag} -m "{msg or tag}"')
 
 
 def add(*args: str) -> cmd.Command:
