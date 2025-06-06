@@ -11,5 +11,5 @@ class CommitizenProvider(VersionProvider):
     def get_version(self) -> str:
         return self.config.settings["version"]  # type: ignore
 
-    def set_version(self, version: str):
+    def set_version(self, version: str) -> None:
         self.config.set_key("version", version)
