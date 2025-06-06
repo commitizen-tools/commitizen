@@ -231,8 +231,8 @@ class Bump:
         else:
             # If user specified changelog_to_stdout, they probably want the
             # changelog to be generated as well, this is the most intuitive solution
-            self.changelog_flag = bool(
-                self.changelog_flag or self.changelog_to_stdout or self.changelog_config
+            self.changelog_flag = any(
+                (self.changelog_flag, self.changelog_to_stdout, self.changelog_config)
             )
 
         rules = TagRules.from_settings(cast(Settings, self.bump_settings))
@@ -410,14 +410,18 @@ class Bump:
 
         c = git.tag(
             new_tag_version,
-            signed=bool(
-                self.bump_settings.get("gpg_sign")
-                or self.config.settings.get("gpg_sign")
+            signed=any(
+                (
+                    self.bump_settings.get("gpg_sign"),
+                    self.config.settings.get("gpg_sign"),
+                )
             ),
-            annotated=bool(
-                self.bump_settings.get("annotated_tag")
-                or self.config.settings.get("annotated_tag")
-                or self.bump_settings.get("annotated_tag_message")
+            annotated=any(
+                (
+                    self.bump_settings.get("annotated_tag"),
+                    self.config.settings.get("annotated_tag"),
+                    self.bump_settings.get("annotated_tag_message"),
+                )
             ),
             msg=self.bump_settings.get("annotated_tag_message", None),
             # TODO: also get from self.config.settings?
