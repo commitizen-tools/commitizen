@@ -67,7 +67,7 @@ class JiraSmartCz(BaseCommitizen):
         )
 
     def schema(self) -> str:
-        return "<ignored text> <ISSUE_KEY> <ignored text> #<COMMAND> <optional COMMAND_ARGUMENTS>"  # noqa
+        return "<ignored text> <ISSUE_KEY> <ignored text> #<COMMAND> <optional COMMAND_ARGUMENTS>"
 
     def schema_pattern(self) -> str:
         return r".*[A-Z]{2,}\-[0-9]+( #| .* #).+( #.+)*"

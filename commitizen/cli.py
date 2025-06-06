@@ -3,12 +3,11 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
-from collections.abc import Sequence
 from copy import deepcopy
 from functools import partial
 from pathlib import Path
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, cast
 
 import argcomplete
 from decli import cli
@@ -48,17 +47,17 @@ class ParseKwargs(argparse.Action):
         self,
         parser: argparse.ArgumentParser,
         namespace: argparse.Namespace,
-        kwarg: str | Sequence[Any] | None,
+        values: object,
         option_string: str | None = None,
-    ):
-        if not isinstance(kwarg, str):
+    ) -> None:
+        if not isinstance(values, str):
             return
-        if "=" not in kwarg:
+        if "=" not in values:
             raise InvalidCommandArgumentError(
                 f"Option {option_string} expect a key=value format"
             )
         kwargs = getattr(namespace, self.dest, None) or {}
-        key, value = kwarg.split("=", 1)
+        key, value = values.split("=", 1)
         if not key:
             raise InvalidCommandArgumentError(
                 f"Option {option_string} expect a key=value format"
@@ -550,8 +549,12 @@ original_excepthook = sys.excepthook
 
 
 def commitizen_excepthook(
-    type, value, traceback, debug=False, no_raise: list[int] | None = None
-):
+    type: type[BaseException],
+    value: BaseException,
+    traceback: TracebackType | None,
+    debug: bool = False,
+    no_raise: list[int] | None = None,
+) -> None:
     traceback = traceback if isinstance(traceback, TracebackType) else None
     if not isinstance(value, CommitizenException):
         original_excepthook(type, value, traceback)
@@ -581,7 +584,7 @@ def parse_no_raise(comma_separated_no_raise: str) -> list[int]:
     represents the exit code found in exceptions.
     """
     no_raise_items: list[str] = comma_separated_no_raise.split(",")
-    no_raise_codes = []
+    no_raise_codes: list[int] = []
     for item in no_raise_items:
         if item.isdecimal():
             no_raise_codes.append(int(item))
@@ -621,7 +624,7 @@ if TYPE_CHECKING:
         ]
 
 
-def main():
+def main() -> None:
     parser: argparse.ArgumentParser = cli(data)
     argcomplete.autocomplete(parser)
     # Show help if no arg provided
@@ -676,7 +679,7 @@ def main():
         )
         sys.excepthook = no_raise_debug_excepthook
 
-    args.func(conf, arguments)()
+    args.func(conf, arguments)()  # type: ignore[arg-type]
 
 
 if __name__ == "__main__":
