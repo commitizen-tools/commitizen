@@ -397,16 +397,10 @@ class Bump:
             err = c.err.strip() or c.out
             raise BumpCommitFailedError(f'2nd git.commit error: "{err}"')
 
-        if c.out:
-            if self.git_output_to_stderr:
-                out.diagnostic(c.out)
-            else:
-                out.write(c.out)
-        if c.err:
-            if self.git_output_to_stderr:
-                out.diagnostic(c.err)
-            else:
-                out.write(c.err)
+        for msg in (c.out, c.err):
+            if msg:
+                out_func = out.diagnostic if self.git_output_to_stderr else out.write
+                out_func(msg)
 
         c = git.tag(
             new_tag_version,
