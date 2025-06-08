@@ -23,18 +23,18 @@ class CargoProvider(TomlProvider):
 
     def get(self, document: tomlkit.TOMLDocument) -> str:
         try:
-            return document["package"]["version"]  # type: ignore
+            return document["package"]["version"]  # type: ignore[index,return-value]
         except tomlkit.exceptions.NonExistentKey:
             ...
-        return document["workspace"]["package"]["version"]  # type: ignore
+        return document["workspace"]["package"]["version"]  # type: ignore[index,return-value]
 
     def set(self, document: tomlkit.TOMLDocument, version: str) -> None:
         try:
-            document["workspace"]["package"]["version"] = version  # type: ignore
+            document["workspace"]["package"]["version"] = version  # type: ignore[index]
             return
         except tomlkit.exceptions.NonExistentKey:
             ...
-        document["package"]["version"] = version  # type: ignore
+        document["package"]["version"] = version  # type: ignore[index]
 
     def set_version(self, version: str) -> None:
         super().set_version(version)
@@ -44,9 +44,9 @@ class CargoProvider(TomlProvider):
     def set_lock_version(self, version: str) -> None:
         cargo_toml_content = tomlkit.parse(self.file.read_text())
         try:
-            package_name = cargo_toml_content["package"]["name"]  # type: ignore
+            package_name = cargo_toml_content["package"]["name"]  # type: ignore[index]
         except tomlkit.exceptions.NonExistentKey:
-            package_name = cargo_toml_content["workspace"]["package"]["name"]  # type: ignore
+            package_name = cargo_toml_content["workspace"]["package"]["name"]  # type: ignore[index]
 
         cargo_lock_content = tomlkit.parse(self.lock_file.read_text())
         packages: tomlkit.items.AoT = cargo_lock_content["package"]  # type: ignore[assignment]

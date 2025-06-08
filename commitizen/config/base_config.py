@@ -27,7 +27,7 @@ class BaseConfig:
 
     @property
     def path(self) -> Path:
-        return self._path  # type: ignore
+        return self._path  # type: ignore[return-value]
 
     @path.setter
     def path(self, path: str | Path) -> None:

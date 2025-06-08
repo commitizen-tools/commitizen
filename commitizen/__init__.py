@@ -1,7 +1,7 @@
 import logging
 import logging.config
 
-from colorama import init  # type: ignore
+from colorama import init
 
 from commitizen.cz.base import BaseCommitizen
 

@@ -86,7 +86,7 @@ class TomlProvider(FileProvider):
         self.file.write_text(tomlkit.dumps(document))
 
     def get(self, document: tomlkit.TOMLDocument) -> str:
-        return document["project"]["version"]  # type: ignore
+        return document["project"]["version"]  # type: ignore[index,return-value]
 
     def set(self, document: tomlkit.TOMLDocument, version: str) -> None:
-        document["project"]["version"] = version  # type: ignore
+        document["project"]["version"] = version  # type: ignore[index]
