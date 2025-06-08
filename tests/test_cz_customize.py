@@ -11,7 +11,7 @@ from commitizen.config.toml_config import TomlConfig
 from commitizen.config.yaml_config import YAMLConfig
 from commitizen.cz.customize import CustomizeCommitsCz
 from commitizen.cz.utils import (
-    multiple_line_breaker,
+    break_multiple_line,
     required_validator,
     required_validator_scope,
     required_validator_subject_strip,
@@ -61,7 +61,7 @@ TOML_STR = r"""
     type = "input"
     name = "message"
     message = "Body."
-    filter = "multiple_line_breaker"
+    filter = "break_multiple_line"
 
     [[tool.commitizen.customize.questions]]
     type = "confirm"
@@ -121,7 +121,7 @@ JSON_STR = r"""
                         "type": "input",
                         "name": "message",
                         "message": "Body.",
-                        "filter": "multiple_line_breaker"
+                        "filter": "break_multiple_line"
                     },
                     {
                         "type": "confirm",
@@ -175,7 +175,7 @@ commitizen:
     - type: input
       name: message
       message: Body.
-      filter: multiple_line_breaker
+      filter: break_multiple_line
     - type: confirm
       name: show_message
       message: Do you want to add body message in commit?
@@ -591,7 +591,7 @@ def test_questions_default(config):
             "type": "input",
             "name": "message",
             "message": "Body.",
-            "filter": "multiple_line_breaker",
+            "filter": "break_multiple_line",
         },
         {
             "type": "confirm",
@@ -629,7 +629,7 @@ def test_questions_filter_default(config, mocker: MockFixture):
     assert prompts_questions[1]["filter"] == required_validator_subject_strip
     assert prompts_questions[2]["type"] == "input"
     assert prompts_questions[2]["name"] == "message"
-    assert prompts_questions[2]["filter"] == multiple_line_breaker
+    assert prompts_questions[2]["filter"] == break_multiple_line
     assert prompts_questions[3]["type"] == "confirm"
     assert prompts_questions[3]["name"] == "show_message"
 
@@ -655,7 +655,7 @@ def test_questions_filter_values(config_filters, mocker: MockFixture):
     assert isinstance(commit_cmd.cz, CustomizeCommitsCz)
 
     for filter_desc in [
-        ("multiple_line_breaker", multiple_line_breaker),
+        ("break_multiple_line", break_multiple_line),
         ("required_validator", required_validator),
         ("required_validator_scope", required_validator_scope),
         ("required_validator_subject_strip", required_validator_subject_strip),
