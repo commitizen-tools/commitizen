@@ -11,12 +11,12 @@ def test_required_validator():
         utils.required_validator("")
 
 
-def test_multiple_line_breaker():
+def test_break_multiple_line():
     message = "this is the first line    | and this is the second line   "
-    result = utils.multiple_line_breaker(message)
+    result = utils.break_multiple_line(message)
     assert result == "this is the first line\nand this is the second line"
 
-    result = utils.multiple_line_breaker(message, "is")
+    result = utils.break_multiple_line(message, "is")
     assert result == "th\n\nthe first line    | and th\n\nthe second line"
 
 

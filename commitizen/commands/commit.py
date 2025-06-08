@@ -14,8 +14,8 @@ from commitizen import factory, git, out
 from commitizen.config import BaseConfig
 from commitizen.cz.exceptions import CzException
 from commitizen.cz.utils import (
+    break_multiple_line,
     get_backup_file_path,
-    multiple_line_breaker,
     required_validator,
     required_validator_scope,
     required_validator_subject_strip,
@@ -80,8 +80,8 @@ class Commit:
         for question in filter(
             lambda q: isinstance(q.get("filter", None), str), questions
         ):
-            if question["filter"] == "multiple_line_breaker":
-                question["filter"] = multiple_line_breaker
+            if question["filter"] == "break_multiple_line":
+                question["filter"] = break_multiple_line
             elif question["filter"] == "required_validator":
                 question["filter"] = required_validator
             elif question["filter"] == "required_validator_scope":
