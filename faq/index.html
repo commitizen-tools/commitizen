@@ -908,6 +908,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#why-dont-we-use-pydantic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why don't we use Pydantic?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#i-got-exception-winerror-995-the-io-operation-error" class="md-nav__link">
     <span class="md-ellipsis">
       I got Exception [WinError 995] The I/O operation ... error
@@ -1130,6 +1139,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#why-dont-we-use-pydantic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why don't we use Pydantic?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#i-got-exception-winerror-995-the-io-operation-error" class="md-nav__link">
     <span class="md-ellipsis">
       I got Exception [WinError 995] The I/O operation ... error
@@ -1236,6 +1254,14 @@ This one is written in python to make integration easier for python projects and
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>revert<span class="w"> </span>--no-commit<span class="w"> </span>&lt;SHA&gt;
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;revert: foo bar&quot;</span>
 </code></pre></div>
+<h2 id="why-dont-we-use-pydantic">Why don't we use Pydantic?<a class="headerlink" href="#why-dont-we-use-pydantic" title="Permanent link">&para;</a></h2>
+<p>While Pydantic is a powerful and popular library for data validation, we intentionally avoid using it in this project to keep our dependency tree minimal and maintainable.</p>
+<p>Including Pydantic would increase the chances of version conflicts for users - especially with major changes introduced in Pydantic v3. Because we pin dependencies tightly, adding Pydantic could unintentionally restrict what other tools or libraries users can install alongside <code>commitizen</code>.</p>
+<p>Moreover we don't rely on the full feature set of Pydantic. Simpler alternatives like Python's built-in <code>TypedDict</code> offer sufficient type safety for our use cases, without the runtime overhead or dependency burden.</p>
+<p>In short, avoiding Pydantic helps us:
+- Keep dependencies lightweight
+- Reduce compatibility issues for users
+- Maintain clarity about what contributors should and shouldn't use</p>
 <h2 id="i-got-exception-winerror-995-the-io-operation-error">I got <code>Exception [WinError 995] The I/O operation ...</code> error<a class="headerlink" href="#i-got-exception-winerror-995-the-io-operation-error" title="Permanent link">&para;</a></h2>
 <p>This error was caused by a Python bug on Windows. It's been fixed by <a href="https://github.com/python/cpython/pull/22017">this PR</a>, and according to Python's changelog, <a href="https://docs.python.org/3.8/whatsnew/changelog.html#python-3-8-6-release-candidate-1">3.8.6rc1</a> and <a href="https://docs.python.org/3.9/whatsnew/changelog.html#python-3-9-0-release-candidate-2">3.9.0rc2</a> should be the accurate versions first contain this fix. In conclusion, upgrade your Python version might solve this issue.</p>
 <p>More discussion can be found in issue <a href="https://github.com/commitizen-tools/commitizen/issues/318">#318</a>.</p>
