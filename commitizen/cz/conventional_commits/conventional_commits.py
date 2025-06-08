@@ -3,7 +3,7 @@ import re
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
-from commitizen.cz.utils import multiple_line_breaker, required_validator
+from commitizen.cz.utils import break_multiple_line, required_validator
 from commitizen.defaults import Questions
 
 __all__ = ["ConventionalCommitsCz"]
@@ -129,7 +129,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                 "message": (
                     "Provide additional contextual information about the code changes: (press [enter] to skip)\n"
                 ),
-                "filter": multiple_line_breaker,
+                "filter": break_multiple_line,
             },
             {
                 "type": "confirm",
