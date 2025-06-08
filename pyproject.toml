@@ -126,6 +126,7 @@ types-deprecated = "^1.2.9.2"
 types-python-dateutil = "^2.8.19.13"
 types-PyYAML = ">=5.4.3,<7.0.0"
 types-termcolor = "^0.1.1"
+types-colorama = "^0.4.15.20240311"
 
 [tool.poetry.group.documentation.dependencies]
 mkdocs = "^1.4.2"
@@ -198,6 +199,9 @@ select = [
     "UP",
     # isort
     "I",
+    # pygrep-hooks
+    "PGH003",
+    "PGH004",
     # unsorted-dunder-all
     "RUF022",
     # unused-noqa
@@ -238,16 +242,10 @@ poetry_command = ""
 
 [tool.poe.tasks]
 format.help = "Format the code"
-format.sequence = [
-    { cmd = "ruff check --fix" },
-    { cmd = "ruff format" },
-]
+format.sequence = [{ cmd = "ruff check --fix" }, { cmd = "ruff format" }]
 
 lint.help = "Lint the code"
-lint.sequence = [
-    { cmd = "ruff check" },
-    { cmd = "mypy" },
-]
+lint.sequence = [{ cmd = "ruff check" }, { cmd = "mypy" }]
 
 check-commit.help = "Check the commit message"
 check-commit.cmd = "cz -nr 3 check --rev-range origin/master.."

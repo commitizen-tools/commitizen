@@ -37,7 +37,7 @@ class TomlConfig(BaseConfig):
         with open(self.path, "wb") as output_toml_file:
             if parser.get("tool") is None:
                 parser["tool"] = table()
-            parser["tool"]["commitizen"] = table()  # type: ignore
+            parser["tool"]["commitizen"] = table()  # type: ignore[index]
             output_toml_file.write(parser.as_string().encode(self.encoding))
 
     def set_key(self, key: str, value: Any) -> Self:
@@ -49,7 +49,7 @@ class TomlConfig(BaseConfig):
         with open(self.path, "rb") as f:
             parser = parse(f.read())
 
-        parser["tool"]["commitizen"][key] = value  # type: ignore
+        parser["tool"]["commitizen"][key] = value  # type: ignore[index]
         with open(self.path, "wb") as f:
             f.write(parser.as_string().encode(self.encoding))
         return self
@@ -68,6 +68,6 @@ class TomlConfig(BaseConfig):
             raise InvalidConfigurationError(f"Failed to parse {self.path}: {e}")
 
         try:
-            self.settings.update(doc["tool"]["commitizen"])  # type: ignore
+            self.settings.update(doc["tool"]["commitizen"])  # type: ignore[index,typeddict-item] # TODO: fix this
         except exceptions.NonExistentKey:
             self.is_empty_config = True
