@@ -13,7 +13,7 @@ class PoetryProvider(TomlProvider):
     filename = "pyproject.toml"
 
     def get(self, pyproject: tomlkit.TOMLDocument) -> str:
-        return pyproject["tool"]["poetry"]["version"]  # type: ignore
+        return pyproject["tool"]["poetry"]["version"]  # type: ignore[index,return-value]
 
     def set(self, pyproject: tomlkit.TOMLDocument, version: str) -> None:
-        pyproject["tool"]["poetry"]["version"] = version  # type: ignore
+        pyproject["tool"]["poetry"]["version"] = version  # type: ignore[index]
