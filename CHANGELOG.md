@@ -1,3 +1,63 @@
+## v4.8.3 (2025-06-09)
+
+### Fix
+
+- **cli**: update description for deprecate warning
+- **commit**: emit deprecated warning of cz commit -s
+- **Check**: make parameters backward compatiable
+- **BaseConfig**: mypy error
+- **deprecated**: mark deprecate in v5
+- **defaults**: add non-capitalized default constants back and deprecated warning
+
+### Refactor
+
+- **jira**: refactor message
+- **conventional_commits**: use TypedDict for answers
+- **conventional_commits**: make schema_pattern more readable
+- do not guess if changelog format is provided
+- **check**: compile once and rename variable
+- **questions**: type questions with TypedDict
+- **bump**: simplify nested if
+- **git**: retype get_commits parameter to make it more friendly to call sites
+- **git**: simplify tag logic
+- **bump**: eliminate similar patterns in code
+- **bump**: use any to replace 'or' chain
+- remove unnecessary bool() and remove Any type from TypedDict get
+- **bump**: improve readability and still bypass mypy check
+- **commands**: remove unused args, type version command args
+- **commit**: type commit args
+- **check**: type CheckArgs arguments
+- **check**: remove unused argument
+- **changelog**: type untyped arguments
+- **bump**: TypedDict for bump argument
+- make methods protected, better type
+- **conventional_commits**: remove unnecessary checks
+- fix mypy output and better type
+- **BaseCommitizen**: remove unused process_commit
+- remove `TypeError` handling since `Python >=3.9` is required
+- add comment clarifying `no_raise` parsing to `list[int]`
+- **cli.py**: add type hints
+- **mypy**: remove `unused-ignore`
+- **changelog**: better typing, yield
+- **cli**: early return and improve test coverage
+- **git**: extract _create_commit_cmd_string
+- misc cleanup
+- **bump**: clean up
+- **bump**: add type for out, replace function with re escape
+- **BaseConfig**: use setter
+- **changelog**: minor cleanup
+- **git**: refactor get_tag_names
+- **EOLType**: add eol enum back and reorganize methods
+- **git**: code cleanup and better test coverage
+- **commit**: simplify call
+- **version_scheme**: cleanup
+- improve readability and fix typos
+
+### Perf
+
+- **bump**: avoid unnecessary list construction and rename variable to avoid confusion
+- **tags**: use set
+
 ## v4.8.2 (2025-05-22)
 
 ### Refactor
