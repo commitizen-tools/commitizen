@@ -142,8 +142,8 @@ class Init:
 
         out.info("Welcome to commitizen!\n")
         out.line(
-            "Answer the questions to configure your project.\n"
-            "For further configuration visit:\n"
+            "Answer the following questions to configure your project.\n"
+            "For further configuration, visit:\n"
             "\n"
             "https://commitizen-tools.github.io/commitizen/config/"
             "\n"
