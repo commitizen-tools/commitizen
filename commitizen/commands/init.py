@@ -72,6 +72,22 @@ class ProjectInfo:
     def is_pre_commit_installed(self) -> bool:
         return bool(shutil.which("pre-commit"))
 
+    @property
+    def default_version_provider(self) -> str:
+        if self.is_python:
+            if self.is_python_poetry:
+                return "poetry"
+            if self.is_python_uv:
+                return "uv"
+            return "pep621"
+        if self.is_rust_cargo:
+            return "cargo"
+        if self.is_npm_package:
+            return "npm"
+        if self.is_php_composer:
+            return "composer"
+        return "commitizen"
+
 
 class Init:
     _PRE_COMMIT_CONFIG_FILENAME = ".pre-commit-config.yaml"
@@ -226,25 +242,9 @@ class Init:
                 "Choose the source of the version:",
                 choices=choices,
                 style=self.cz.style,
-                default=self._version_provider_default_val,
+                default=self.project_info.default_version_provider,
             ).unsafe_ask()
         )
-
-    @property
-    def _version_provider_default_val(self) -> str:
-        if self.project_info.is_python:
-            if self.project_info.is_python_poetry:
-                return "poetry"
-            if self.project_info.is_python_uv:
-                return "uv"
-            return "pep621"
-        if self.project_info.is_rust_cargo:
-            return "cargo"
-        if self.project_info.is_npm_package:
-            return "npm"
-        if self.project_info.is_php_composer:
-            return "composer"
-        return "commitizen"
 
     def _ask_version_scheme(self) -> str:
         """Ask for setting: version_scheme"""

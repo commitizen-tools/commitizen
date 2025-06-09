@@ -421,7 +421,7 @@ class TestVersionProviderDefault:
             "commitizen.commands.init.ProjectInfo", return_value=mock_project_info
         )
         init = commands.Init(config)
-        assert init._version_provider_default_val == "poetry"
+        assert init.project_info.default_version_provider == "poetry"
 
     def test_default_for_python_uv(self, config, mocker: MockFixture):
         mock_project_info = mocker.Mock()
@@ -432,7 +432,7 @@ class TestVersionProviderDefault:
             "commitizen.commands.init.ProjectInfo", return_value=mock_project_info
         )
         init = commands.Init(config)
-        assert init._version_provider_default_val == "uv"
+        assert init.project_info.default_version_provider == "uv"
 
     def test_default_for_python_pep621(self, config, mocker: MockFixture):
         mock_project_info = mocker.Mock()
@@ -443,7 +443,7 @@ class TestVersionProviderDefault:
             "commitizen.commands.init.ProjectInfo", return_value=mock_project_info
         )
         init = commands.Init(config)
-        assert init._version_provider_default_val == "pep621"
+        assert init.project_info.default_version_provider == "pep621"
 
     def test_default_for_rust_cargo(self, config, mocker: MockFixture):
         mock_project_info = mocker.Mock()
@@ -453,7 +453,7 @@ class TestVersionProviderDefault:
             "commitizen.commands.init.ProjectInfo", return_value=mock_project_info
         )
         init = commands.Init(config)
-        assert init._version_provider_default_val == "cargo"
+        assert init.project_info.default_version_provider == "cargo"
 
     def test_default_for_npm_package(self, config, mocker: MockFixture):
         mock_project_info = mocker.Mock()
@@ -464,7 +464,7 @@ class TestVersionProviderDefault:
             "commitizen.commands.init.ProjectInfo", return_value=mock_project_info
         )
         init = commands.Init(config)
-        assert init._version_provider_default_val == "npm"
+        assert init.project_info.default_version_provider == "npm"
 
     def test_default_for_php_composer(self, config, mocker: MockFixture):
         mock_project_info = mocker.Mock()
@@ -476,7 +476,7 @@ class TestVersionProviderDefault:
             "commitizen.commands.init.ProjectInfo", return_value=mock_project_info
         )
         init = commands.Init(config)
-        assert init._version_provider_default_val == "composer"
+        assert init.project_info.default_version_provider == "composer"
 
     def test_default_fallback_to_commitizen(self, config, mocker: MockFixture):
         mock_project_info = mocker.Mock()
@@ -488,4 +488,4 @@ class TestVersionProviderDefault:
             "commitizen.commands.init.ProjectInfo", return_value=mock_project_info
         )
         init = commands.Init(config)
-        assert init._version_provider_default_val == "commitizen"
+        assert init.project_info.default_version_provider == "commitizen"
