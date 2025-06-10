@@ -4,7 +4,7 @@
 
 - **cli**: update description for deprecate warning
 - **commit**: emit deprecated warning of cz commit -s
-- **Check**: make parameters backward compatiable
+- **Check**: make parameters backward compatible
 - **BaseConfig**: mypy error
 - **deprecated**: mark deprecate in v5
 - **defaults**: add non-capitalized default constants back and deprecated warning
