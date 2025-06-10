@@ -4,58 +4,56 @@
 
 ### `name`
 
-Type: `str`
+- Type: `str`
+- Default: `"cz_conventional_commits"`
 
-Default: `"cz_conventional_commits"`
-
-Name of the committing rules to use
+Name of the committing rules to use.
 
 ### `version`
 
-Type: `str`
+- Type: `str`
+- Default: `None`
 
-Default: `None`
-
-Current version. Example: "0.1.2". Required if you use `version_provider = "commitizen"`.
+Current version. Example: `"0.1.2"`. Required if you use `version_provider = "commitizen"`.
 
 ### `version_files`
 
-Type: `list`
-
-Default: `[ ]`
+- Type: `list`
+- Default: `[]`
 
 Files (or glob patterns) where the version will be updated. A pattern to match a line, can also be specified, separated by `:` [Read more][version_files]
 
 ### `version_provider`
 
-Type: `str`
+- Type: `str`
+- Default: `commitizen`
 
-Default: `commitizen`
-
-Version provider used to read and write version [Read more](#version-providers)
+Version provider used to read and write version. [Read more](#version-providers)
 
 ### `version_scheme`
 
-Type: `str`
+- Type: `str`
+- Default: `pep440`
 
-Default: `pep440`
+Select a version scheme from the following options:
 
-Select a version scheme from the following options [`pep440`, `semver`, `semver2`].
+- `pep440`
+- `semver`
+- `semver2`
+
 Useful for non-python projects. [Read more][version-scheme]
 
 ### `tag_format`
 
-Type: `str`
-
-Default: `$version`
+- Type: `str`
+- Default: `$version`
 
 Format for the git tag, useful for old projects, that use a convention like `"v1.2.1"`. [Read more][tag_format]
 
 ### `legacy_tag_formats`
 
-Type: `list`
-
-Default: `[ ]`
+- Type: `list`
+- Default: `[]`
 
 Legacy git tag formats, useful for old projects that changed tag format.
 Tags matching those formats will be recognized as version tags and be included in the changelog.
@@ -63,9 +61,8 @@ Each entry uses the syntax as [`tag_format`](#tag_format). [Read more][tag_forma
 
 ### `ignored_tag_formats`
 
-Type: `list`
-
-Default: `[ ]`
+- Type: `list`
+- Default: `[]`
 
 Tags matching those formats will be totally ignored and won't raise a warning.
 Each entry uses the syntax as [`tag_format`](#tag_format) with the addition of `*`
@@ -73,175 +70,158 @@ that will match everything (non-greedy). [Read more][tag_format]
 
 ### `update_changelog_on_bump`
 
-Type: `bool`
+- Type: `bool`
+- Default: `False`
 
-Default: `false`
-
-Create changelog when running `cz bump`
+Create changelog when running `cz bump`.
 
 ### `gpg_sign`
 
-Type: `bool`
-
-Default: `false`
+- Type: `bool`
+- Default: `False`
 
 Use gpg signed tags instead of lightweight tags.
 
 ### `annotated_tag`
 
-Type: `bool`
-
-Default: `false`
+- Type: `bool`
+- Default: `False`
 
 Use annotated tags instead of lightweight tags. [See difference][annotated-tags-vs-lightweight]
 
 ### `bump_message`
 
-Type: `str`
+- Type: `str`
+- Default: `None`
 
-Default: `None`
-
-Create custom commit message, useful to skip CI. [Read more][bump_message]
+Create custom commit message. Useful to skip CI. [Read more][bump_message]
 
 ### `retry_after_failure`
 
-Type: `bool`
-
-Default: `false`
+- Type: `bool`
+- Default: `False`
 
 Automatically retry failed commit when running `cz commit`. [Read more][retry_after_failure]
 
 ### `allow_abort`
 
-Type: `bool`
+- Type: `bool`
+- Default: `False`
 
-Default: `false`
-
-Disallow empty commit messages, useful in CI. [Read more][allow_abort]
+Disallow empty commit messages. Useful in CI. [Read more][allow_abort]
 
 ### `allowed_prefixes`
 
-Type: `list`
-Default: `[ "Merge", "Revert", "Pull request", "fixup!", "squash!"]`
-Allow some prefixes and do not try to match the regex when checking the message [Read more][allowed_prefixes]
+- Type: `list`
+- Default: `["Merge", "Revert", "Pull request", "fixup!", "squash!"]`
+
+List of prefixes that commitizen ignores when verifying messages. [Read more][allowed_prefixes]
 
 ### `changelog_file`
 
-Type: `str`
-
-Default: `CHANGELOG.md`
+- Type: `str`
+- Default: `CHANGELOG.md`
 
 Filename of exported changelog
 
 ### `changelog_format`
 
-Type: `str`
+- Type: `str`
+- Default: `None`
 
-Default: None
-
-Format used to parse and generate the changelog, If not specified, guessed from [`changelog_file`](#changelog_file).
+Format used to parse and generate the changelog. If not specified, guessed from [`changelog_file`](#changelog_file).
 
 ### `changelog_incremental`
 
-Type: `bool`
+- Type: `bool`
+- Default: `False`
 
-Default: `false`
+Update changelog with the missing versions. This is good if you don't want to replace previous versions in the file.
 
-Update changelog with the missing versions. This is good if you don't want to replace previous versions in the file. Note: when doing `cz bump --changelog` this is automatically set to `true`
+!!! note
+    When doing `cz bump --changelog` this is automatically set to `True`
 
 ### `changelog_start_rev`
 
-Type: `str`
-
-Default: `None`
+- Type: `str`
+- Default: `None`
 
 Start from a given git rev to generate the changelog
 
 ### `changelog_merge_prerelease`
 
-Type: `bool`
-
-Default: `false`
+- Type: `bool`
+- Default: `False`
 
 Collect all changes of prerelease versions into the next non-prerelease version when creating the changelog.
 
 ### `style`
 
-Type: `list`
-
-see above
+- Type: `list`
+- Default: `[]`
 
 Style for the prompts (It will merge this value with default style.) [See More (Styling your prompts with your favorite colors)][additional-features]
 
 ### `customize`
 
-Type: `dict`
-
-Default: `None`
+- Type: `dict`
+- Default: `None`
 
 **This is only supported when config through `toml`.** Custom rules for committing and bumping. [Read more][customization]
 
 ### `use_shortcuts`
 
-Type: `bool`
-
-Default: `false`
+- Type: `bool`
+- Default: `False`
 
 If enabled, Commitizen will show keyboard shortcuts when selecting from a list. Define a `key` for each of your choices to set the key. [Read more][shortcuts]
 
 ### `major_version_zero`
 
-Type: `bool`
+- Type: `bool`
+- Default: `False`
 
-Default: `false`
-
-When true, breaking changes on a `0.x` will remain as a `0.x` version. On `false`, a breaking change will bump a `0.x` version to `1.0`. [Read more][major-version-zero]
+If enabled, breaking changes on a `0.x` will remain as a `0.x` version. Otherwise, a breaking change will bump a `0.x` version to `1.0`. [Read more][major-version-zero]
 
 ### `prerelease_offset`
 
-Type: `int`
+- Type: `int`
+- Default: `0`
 
-Default: `0`
-
-In some circumstances, a prerelease cannot start with a 0, e.g. in an embedded project individual characters are encoded as bytes. This can be done by specifying an offset from which to start counting. [Read more][prerelease-offset]
+In some circumstances, a prerelease cannot start with `0`-for example, in embedded projects where individual characters are encoded as bytes. You can specify an offset from which to start counting. [Read more][prerelease-offset]
 
 ### `pre_bump_hooks`
 
-Type: `list[str]`
-
-Default: `[]`
+- Type: `list[str]`
+- Default: `[]`
 
 Calls the hook scripts **before** bumping version. [Read more][pre_bump_hooks]
 
 ### `post_bump_hooks`
 
-Type: `list[str]`
-
-Default: `[]`
+- Type: `list[str]`
+- Default: `[]`
 
 Calls the hook scripts **after** bumping the version. [Read more][post_bump_hooks]
 
 ### `encoding`
 
-Type: `str`
-
-Default: `utf-8`
+- Type: `str`
+- Default: `"utf-8"`
 
 Sets the character encoding to be used when parsing commit messages. [Read more][encoding]
 
 ### `template`
 
-Type: `str`
-
-Default: `None` (provided by plugin)
+- Type: `str`
+- Default: `None` (provided by plugin)
 
 Provide custom changelog jinja template path relative to the current working directory. [Read more][template-customization]
 
 ### `extras`
 
-Type: `dict[str, Any]`
-
-Default: `{}`
+- Type: `dict[str, Any]`
+- Default: `{}`
 
 Provide extra variables to the changelog template. [Read more][template-customization]
 
@@ -255,7 +235,7 @@ You can also create a `.cz.toml` or `cz.toml` file at the root of your project f
 
 Example configuration:
 
-```toml
+```toml title=".cz.toml"
 [tool.commitizen]
 name = "cz_conventional_commits"
 version = "0.1.0"
@@ -282,7 +262,7 @@ style = [
 
 Commitizen has support for JSON configuration. Recommended for `NodeJS` projects.
 
-```json
+```json title=".cz.json"
 {
   "commitizen": {
     "name": "cz_conventional_commits",
@@ -308,7 +288,7 @@ Commitizen has support for JSON configuration. Recommended for `NodeJS` projects
 
 YAML configuration is supported by Commitizen. Recommended for `Go`, `ansible`, or even `helm` charts projects.
 
-```yaml
+```yaml title=".cz.yaml"
 commitizen:
   name: cz_conventional_commits
   version: 0.1.0
@@ -371,7 +351,7 @@ version_provider = "pep621"
 
 You can add your own version provider by extending `VersionProvider` and exposing it on the `commitizen.provider` entrypoint.
 
-Here is a quick example of a `my-provider` provider reading and writing version in a `VERSION` file.
+Here is a quick example of a provider `my_provider.py`, reading and writing version in a `VERSION` file.
 
 ```python title="my_provider.py"
 from pathlib import Path
