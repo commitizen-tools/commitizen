@@ -1409,7 +1409,7 @@ We have two different ways to do so.</p>
 <li>Declare <code>name = "cz_customize"</code> in your configuration file, or add <code>-n cz_customize</code> when running Commitizen.</li>
 </ol>
 <p>Example:</p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cz_customize&quot;</span>
 
 <span class="k">[tool.commitizen.customize]</span>
@@ -1446,7 +1446,7 @@ We have two different ways to do so.</p>
 <span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Do you want to add body message in commit?&quot;</span>
 </code></pre></div>
 <p>The equivalent example for a json config file:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><span class="filename">.cz.json</span><pre><span></span><code><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;commitizen&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cz_customize&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;customize&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -1499,7 +1499,7 @@ We have two different ways to do so.</p>
 <span class="p">}</span>
 </code></pre></div>
 <p>And the correspondent example for a yaml file:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">commitizen</span><span class="p">:</span>
+<div class="highlight"><span class="filename">.cz.yaml</span><pre><span></span><code><span class="nt">commitizen</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cz_customize</span>
 <span class="w">  </span><span class="nt">customize</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">message_template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{change_type}}:{%</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">show_message</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">{{message}}{%</span><span class="nv"> </span><span class="s">endif</span><span class="nv"> </span><span class="s">%}&quot;</span>
@@ -1715,7 +1715,7 @@ To specify keyboard shortcuts for your custom choices, provide the shortcut usin
 <h3 id="custom-commit-rules">Custom commit rules<a class="headerlink" href="#custom-commit-rules" title="Permanent link">&para;</a></h3>
 <p>Create a Python module, for example <code>cz_jira.py</code>.</p>
 <p>Inherit from <code>BaseCommitizen</code>, and you must define <code>questions</code> and <code>message</code>. The others are optional.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommitizen</span>
+<div class="highlight"><span class="filename">cz_jira.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommitizen</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.defaults</span><span class="w"> </span><span class="kn">import</span> <span class="n">Questions</span>
 
 
@@ -1756,7 +1756,7 @@ To specify keyboard shortcuts for your custom choices, provide the shortcut usin
         <span class="k">return</span> <span class="s2">&quot;We use this because is useful&quot;</span>
 </code></pre></div>
 <p>The next file required is <code>setup.py</code> modified from flask version.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">setuptools</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup</span>
+<div class="highlight"><span class="filename">setup.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">setuptools</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup</span>
 
 <span class="n">setup</span><span class="p">(</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;JiraCommitizen&quot;</span><span class="p">,</span>
@@ -1804,7 +1804,7 @@ doing <code>pip install .</code></p>
 </tbody>
 </table>
 <p>Let's see an example.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommitizen</span>
+<div class="highlight"><span class="filename">cz_strange.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommitizen</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">StrangeCommitizen</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
@@ -1816,7 +1816,7 @@ doing <code>pip install .</code></p>
 </code></pre></div>
 <h3 id="custom-changelog-generator">Custom changelog generator<a class="headerlink" href="#custom-changelog-generator" title="Permanent link">&para;</a></h3>
 <p>The changelog generator should just work in a very basic manner without touching anything.
-You can customize it of course, and this are the variables you need to add to your custom <code>BaseCommitizen</code>.</p>
+You can customize it of course, and the following variables are the ones you need to add to your custom <code>BaseCommitizen</code>.</p>
 <table>
 <thead>
 <tr>
@@ -1865,7 +1865,7 @@ You can customize it of course, and this are the variables you need to add to yo
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommitizen</span>
+<div class="highlight"><span class="filename">cz_strange.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommitizen</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">chat</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">compliance</span>
 
