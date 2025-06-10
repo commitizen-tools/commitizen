@@ -229,16 +229,27 @@ class Init:
     def _ask_version_provider(self) -> str:
         """Ask for setting: version_provider"""
 
-        OPTS = {
-            "commitizen": "commitizen: Fetch and set version in commitizen config (default)",
-            "cargo": "cargo: Get and set version from Cargo.toml:project.version field",
-            "composer": "composer: Get and set version from composer.json:project.version field",
-            "npm": "npm: Get and set version from package.json:project.version field",
-            "pep621": "pep621: Get and set version from pyproject.toml:project.version field",
-            "poetry": "poetry: Get and set version from pyproject.toml:tool.poetry.version field",
-            "uv": "uv: Get and Get and set version from pyproject.toml and uv.lock",
-            "scm": "scm: Fetch the version from git and does not need to set it back",
-        }
+        options = (
+            ("commitizen", "Fetch and set version in commitizen config (default)"),
+            ("cargo", "Get and set version from Cargo.toml:project.version field"),
+            (
+                "composer",
+                "Get and set version from composer.json:project.version field",
+            ),
+            ("npm", "Get and set version from package.json:project.version field"),
+            ("pep621", "Get and set version from pyproject.toml:project.version field"),
+            (
+                "poetry",
+                "Get and set version from pyproject.toml:tool.poetry.version field",
+            ),
+            ("uv", "Get and set version from pyproject.toml and uv.lock"),
+            ("scm", "Fetch the version from git and does not need to set it back"),
+        )
+
+        choices = [
+            questionary.Choice(title=f"{value}: {title}", value=value)
+            for value, title in options
+        ]
 
         default_val = "commitizen"
         if self.project_info.is_python:
@@ -255,16 +266,11 @@ class Init:
         elif self.project_info.is_php_composer:
             default_val = "composer"
 
-        choices = [
-            questionary.Choice(title=title, value=value)
-            for value, title in OPTS.items()
-        ]
-        default = next(filter(lambda x: x.value == default_val, choices))
         version_provider: str = questionary.select(
             "Choose the source of the version:",
             choices=choices,
             style=self.cz.style,
-            default=default,
+            default=default_val,
         ).unsafe_ask()
         return version_provider
 
@@ -294,7 +300,7 @@ class Init:
         return major_version_zero
 
     def _ask_update_changelog_on_bump(self) -> bool:
-        "Ask for setting: update_changelog_on_bump"
+        """Ask for setting: update_changelog_on_bump"""
         update_changelog_on_bump: bool = questionary.confirm(
             "Create changelog automatically on bump",
             default=True,
