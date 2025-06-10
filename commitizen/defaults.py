@@ -8,9 +8,6 @@ from typing import Any, TypedDict
 
 from commitizen.question import CzQuestion
 
-# Type
-Questions = Iterable[MutableMapping[str, Any]]  # TODO: deprecate this?
-
 
 class CzSettings(TypedDict, total=False):
     bump_pattern: str
@@ -161,6 +158,10 @@ def get_tag_regexes(
     }
 
 
+# Type
+Questions = Iterable[MutableMapping[str, Any]]  # TODO: remove this in v5
+
+
 def __getattr__(name: str) -> Any:
     # PEP-562: deprecate module-level variable
 
@@ -176,6 +177,7 @@ def __getattr__(name: str) -> Any:
         "change_type_order": (CHANGE_TYPE_ORDER, "CHANGE_TYPE_ORDER"),
         "encoding": (ENCODING, "ENCODING"),
         "name": (DEFAULT_SETTINGS["name"], "DEFAULT_SETTINGS['name']"),
+        "Questions": (Questions, "Iterable[CzQuestion]"),
     }
     if name in deprecated_vars:
         value, replacement = deprecated_vars[name]
