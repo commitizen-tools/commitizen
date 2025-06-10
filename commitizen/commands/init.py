@@ -64,16 +64,6 @@ class ProjectInfo:
         return os.path.isfile("composer.json")
 
     @property
-    def latest_tag(self) -> str | None:
-        return get_latest_tag_name()
-
-    def tags(self) -> list | None:
-        """Not a property, only use if necessary"""
-        if self.latest_tag is None:
-            return None
-        return get_tag_names()
-
-    @property
     def is_pre_commit_installed(self) -> bool:
         return bool(shutil.which("pre-commit"))
 
@@ -181,31 +171,32 @@ class Init:
         return name
 
     def _ask_tag(self) -> str:
-        latest_tag = self.project_info.latest_tag
+        latest_tag = get_latest_tag_name()
         if not latest_tag:
             out.error("No Existing Tag. Set tag to v0.0.1")
             return "0.0.1"
 
-        is_correct_tag = questionary.confirm(
+        if questionary.confirm(
             f"Is {latest_tag} the latest tag?", style=self.cz.style, default=False
+        ).unsafe_ask():
+            return latest_tag
+
+        existing_tags = get_tag_names()
+        if not existing_tags:
+            out.error("No Existing Tag. Set tag to v0.0.1")
+            return "0.0.1"
+
+        answer: str = questionary.select(
+            "Please choose the latest tag: ",
+            # The latest tag is most likely with the largest number.
+            # Thus, listing the existing_tags in reverse order makes more sense.
+            choices=sorted(existing_tags, reverse=True),
+            style=self.cz.style,
         ).unsafe_ask()
-        if not is_correct_tag:
-            tags = self.project_info.tags()
-            if not tags:
-                out.error("No Existing Tag. Set tag to v0.0.1")
-                return "0.0.1"
 
-            # the latest tag is most likely with the largest number. Thus list the tags in reverse order makes more sense
-            sorted_tags = sorted(tags, reverse=True)
-            latest_tag = questionary.select(
-                "Please choose the latest tag: ",
-                choices=sorted_tags,
-                style=self.cz.style,
-            ).unsafe_ask()
-
-            if not latest_tag:
-                raise NoAnswersError("Tag is required!")
-        return latest_tag
+        if not answer:
+            raise NoAnswersError("Tag is required!")
+        return answer
 
     def _ask_tag_format(self, latest_tag: str) -> str:
         is_correct_format = False
