@@ -10,7 +10,7 @@ The basic steps are:
 
 Example:
 
-```toml
+```toml title="pyproject.toml"
 [tool.commitizen]
 name = "cz_customize"
 
@@ -50,7 +50,7 @@ message = "Do you want to add body message in commit?"
 
 The equivalent example for a json config file:
 
-```json
+```json title=".cz.json"
 {
     "commitizen": {
         "name": "cz_customize",
@@ -106,7 +106,7 @@ The equivalent example for a json config file:
 
 And the correspondent example for a yaml file:
 
-```yaml
+```yaml title=".cz.yaml"
 commitizen:
   name: cz_customize
   customize:
@@ -149,16 +149,16 @@ commitizen:
 
 | Parameter           | Type   | Default | Description                                                                                                                                                                                                                      |
 | ------------------- | ------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `questions`         | `Questions` | `None`  | Questions regarding the commit message. Detailed below. The type `Questions` is an alias to `Iterable[MutableMapping[str, Any]]` which is defined in `commitizen.defaults`. It expects a list of dictionaries. |
+| `questions`         | `Questions` | `None`  | Questions regarding the commit message. Detailed below. The type `Questions` is an alias to `Iterable[MutableMapping[str, Any]]` which is defined in `commitizen.defaults`. It expects a list of dictionaries.              |
 | `message_template`  | `str`  | `None`  | The template for generating message from the given answers. `message_template` should either follow [Jinja2][jinja2] formatting specification, and all the variables in this template should be defined in `name` in `questions` |
-| `example`           | `str`  | `""`  | (OPTIONAL) Provide an example to help understand the style. Used by `cz example`.                                                                                                                                                |
-| `schema`            | `str`  | `""`  | (OPTIONAL) Show the schema used. Used by `cz schema`.                                                                                                                                                                            |
-| `schema_pattern`    | `str`  | `""`  | (OPTIONAL) The regular expression used to do commit message validation. Used by `cz check`.                                                                                                                                      |
-| `info_path`         | `str`  | `""`  | (OPTIONAL) The path to the file that contains explanation of the commit rules. Used by `cz info`. If not provided `cz info`, will load `info` instead.                                                                           |
-| `info`              | `str`  | `""`  | (OPTIONAL) Explanation of the commit rules. Used by `cz info`.                                                                                                                                                                   |
+| `example`           | `str`  | `""`    | (OPTIONAL) Provide an example to help understand the style. Used by `cz example`.                                                                                                                                                |
+| `schema`            | `str`  | `""`    | (OPTIONAL) Show the schema used. Used by `cz schema`.                                                                                                                                                                            |
+| `schema_pattern`    | `str`  | `""`    | (OPTIONAL) The regular expression used to do commit message validation. Used by `cz check`.                                                                                                                                      |
+| `info_path`         | `str`  | `""`    | (OPTIONAL) The path to the file that contains explanation of the commit rules. Used by `cz info`. If not provided `cz info`, will load `info` instead.                                                                           |
+| `info`              | `str`  | `""`    | (OPTIONAL) Explanation of the commit rules. Used by `cz info`.                                                                                                                                                                   |
 | `bump_map`          | `dict` | `None`  | (OPTIONAL) Dictionary mapping the extracted information to a `SemVer` increment type (`MAJOR`, `MINOR`, `PATCH`)                                                                                                                 |
 | `bump_pattern`      | `str`  | `None`  | (OPTIONAL) Regex to extract information from commit (subject and body)                                                                                                                                                           |
-| `change_type_order`| `str`  | `None` | (OPTIONAL) List of strings used to order the Changelog. All other types will be sorted alphabetically. Default is `["BREAKING CHANGE", "Feat", "Fix", "Refactor", "Perf"]`                                                                                             |
+| `change_type_order` | `str`  | `None`  | (OPTIONAL) List of strings used to order the Changelog. All other types will be sorted alphabetically. Default is `["BREAKING CHANGE", "Feat", "Fix", "Refactor", "Perf"]`                                                       |
 | `commit_parser`     | `str`  | `None`  | (OPTIONAL) Regex to extract information used in creating changelog. [See more][changelog-spec]                                                                                                                                   |
 | `changelog_pattern` | `str`  | `None`  | (OPTIONAL) Regex to understand which commits to include in the changelog                                                                                                                                                         |
 | `change_type_map`   | `dict` | `None`  | (OPTIONAL) Dictionary mapping the type of the commit to a changelog entry                                                                                                                                                        |
@@ -215,7 +215,7 @@ Create a Python module, for example `cz_jira.py`.
 
 Inherit from `BaseCommitizen`, and you must define `questions` and `message`. The others are optional.
 
-```python
+```python title="cz_jira.py"
 from commitizen.cz.base import BaseCommitizen
 from commitizen.defaults import Questions
 
@@ -259,7 +259,7 @@ class JiraCz(BaseCommitizen):
 
 The next file required is `setup.py` modified from flask version.
 
-```python
+```python title="setup.py"
 from setuptools import setup
 
 setup(
@@ -295,7 +295,7 @@ You need to define 2 parameters inside your custom `BaseCommitizen`.
 
 Let's see an example.
 
-```python
+```python title="cz_strange.py"
 from commitizen.cz.base import BaseCommitizen
 
 
@@ -315,7 +315,7 @@ cz -n cz_strange bump
 ### Custom changelog generator
 
 The changelog generator should just work in a very basic manner without touching anything.
-You can customize it of course, and this are the variables you need to add to your custom `BaseCommitizen`.
+You can customize it of course, and the following variables are the ones you need to add to your custom `BaseCommitizen`.
 
 | Parameter                        | Type                                                                     | Required | Description                                                                                                                                                                                                         |
 | -------------------------------- | ------------------------------------------------------------------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -326,7 +326,7 @@ You can customize it of course, and this are the variables you need to add to yo
 | `changelog_hook`                 | `method: (full_changelog: str, partial_changelog: Optional[str]) -> str` | NO       | Receives the whole and partial (if used incremental) changelog. Useful to send slack messages or notify a compliance department. Must return the full_changelog                                                     |
 | `changelog_release_hook` | `method: (release: dict, tag: git.GitTag) -> dict` | NO | Receives each generated changelog release and its associated tag. Useful to enrich releases before they are rendered. Must return the update release
 
-```python
+```python title="cz_strange.py"
 from commitizen.cz.base import BaseCommitizen
 import chat
 import compliance
@@ -375,8 +375,6 @@ class StrangeCommitizen(BaseCommitizen):
         full_changelog.replace(" fix ", " **fix** ")
         return full_changelog
 ```
-
-[changelog-des]: ./commands/changelog.md#description
 
 ### Raise Customize Exception
 
@@ -528,3 +526,4 @@ by:
 
 [template-config]: config.md#template
 [extras-config]: config.md#extras
+[changelog-des]: ./commands/changelog.md#description
