@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import shutil
-from typing import Any
+from typing import Any, NamedTuple
 
 import questionary
 import yaml
@@ -15,6 +15,54 @@ from commitizen.defaults import CONFIG_FILES, DEFAULT_SETTINGS
 from commitizen.exceptions import InitFailedError, NoAnswersError
 from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
 from commitizen.version_schemes import KNOWN_SCHEMES, Version, get_version_scheme
+
+
+class _VersionProviderOption(NamedTuple):
+    provider_name: str
+    description: str
+
+    @property
+    def title(self) -> str:
+        return f"{self.provider_name}: {self.description}"
+
+
+_VERSION_PROVIDER_CHOICES = tuple(
+    questionary.Choice(title=option.title, value=option.provider_name)
+    for option in (
+        _VersionProviderOption(
+            provider_name="commitizen",
+            description="Fetch and set version in commitizen config (default)",
+        ),
+        _VersionProviderOption(
+            provider_name="cargo",
+            description="Get and set version from Cargo.toml:project.version field",
+        ),
+        _VersionProviderOption(
+            provider_name="composer",
+            description="Get and set version from composer.json:project.version field",
+        ),
+        _VersionProviderOption(
+            provider_name="npm",
+            description="Get and set version from package.json:project.version field",
+        ),
+        _VersionProviderOption(
+            provider_name="pep621",
+            description="Get and set version from pyproject.toml:project.version field",
+        ),
+        _VersionProviderOption(
+            provider_name="poetry",
+            description="Get and set version from pyproject.toml:tool.poetry.version field",
+        ),
+        _VersionProviderOption(
+            provider_name="uv",
+            description="Get and set version from pyproject.toml and uv.lock",
+        ),
+        _VersionProviderOption(
+            provider_name="scm",
+            description="Fetch the version from git and does not need to set it back",
+        ),
+    )
+)
 
 
 class ProjectInfo:
@@ -228,44 +276,31 @@ class Init:
     def _ask_version_provider(self) -> str:
         """Ask for setting: version_provider"""
 
-        OPTS = {
-            "commitizen": "commitizen: Fetch and set version in commitizen config (default)",
-            "cargo": "cargo: Get and set version from Cargo.toml:project.version field",
-            "composer": "composer: Get and set version from composer.json:project.version field",
-            "npm": "npm: Get and set version from package.json:project.version field",
-            "pep621": "pep621: Get and set version from pyproject.toml:project.version field",
-            "poetry": "poetry: Get and set version from pyproject.toml:tool.poetry.version field",
-            "uv": "uv: Get and set version from pyproject.toml and uv.lock",
-            "scm": "scm: Fetch the version from git and does not need to set it back",
-        }
-
-        default_val = "commitizen"
-        if self.project_info.is_python:
-            if self.project_info.is_python_poetry:
-                default_val = "poetry"
-            elif self.project_info.is_python_uv:
-                default_val = "uv"
-            else:
-                default_val = "pep621"
-        elif self.project_info.is_rust_cargo:
-            default_val = "cargo"
-        elif self.project_info.is_npm_package:
-            default_val = "npm"
-        elif self.project_info.is_php_composer:
-            default_val = "composer"
-
-        choices = [
-            questionary.Choice(title=title, value=value)
-            for value, title in OPTS.items()
-        ]
-        default = next(filter(lambda x: x.value == default_val, choices))
         version_provider: str = questionary.select(
             "Choose the source of the version:",
-            choices=choices,
+            choices=_VERSION_PROVIDER_CHOICES,
             style=self.cz.style,
-            default=default,
+            default=self._default_version_provider,
         ).unsafe_ask()
         return version_provider
+
+    @property
+    def _default_version_provider(self) -> str:
+        if self.project_info.is_python:
+            if self.project_info.is_python_poetry:
+                return "poetry"
+            if self.project_info.is_python_uv:
+                return "uv"
+            return "pep621"
+
+        if self.project_info.is_rust_cargo:
+            return "cargo"
+        if self.project_info.is_npm_package:
+            return "npm"
+        if self.project_info.is_php_composer:
+            return "composer"
+
+        return "commitizen"
 
     def _ask_version_scheme(self) -> str:
         """Ask for setting: version_scheme"""
@@ -291,7 +326,7 @@ class Init:
         return major_version_zero
 
     def _ask_update_changelog_on_bump(self) -> bool:
-        "Ask for setting: update_changelog_on_bump"
+        """Ask for setting: update_changelog_on_bump"""
         update_changelog_on_bump: bool = questionary.confirm(
             "Create changelog automatically on bump",
             default=True,
