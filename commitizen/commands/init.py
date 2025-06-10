@@ -159,9 +159,9 @@ class Init:
         out.success("Configuration complete 🚀")
 
     def _ask_config_path(self) -> str:
-        default_path = ".cz.toml"
-        if self.project_info.has_pyproject:
-            default_path = "pyproject.toml"
+        default_path = (
+            "pyproject.toml" if self.project_info.has_pyproject else ".cz.toml"
+        )
 
         name: str = questionary.select(
             "Please choose a supported config file: ",
@@ -270,15 +270,13 @@ class Init:
 
     def _ask_version_scheme(self) -> str:
         """Ask for setting: version_scheme"""
-        default = "semver"
-        if self.project_info.is_python:
-            default = "pep440"
+        default_scheme = "pep440" if self.project_info.is_python else "semver"
 
         scheme: str = questionary.select(
             "Choose version scheme: ",
-            choices=list(KNOWN_SCHEMES),
+            choices=KNOWN_SCHEMES,
             style=self.cz.style,
-            default=default,
+            default=default_scheme,
         ).unsafe_ask()
         return scheme
 
@@ -318,10 +316,9 @@ class Init:
         """Generate pre-commit command according to given hook types"""
         if not hook_types:
             raise ValueError("At least 1 hook type should be provided.")
-        cmd_str = "pre-commit install " + " ".join(
+        return "pre-commit install " + " ".join(
             f"--hook-type {ty}" for ty in hook_types
         )
-        return cmd_str
 
     def _install_pre_commit_hook(self, hook_types: list[str] | None = None) -> None:
         pre_commit_config_filename = ".pre-commit-config.yaml"
