@@ -79,6 +79,8 @@ class ProjectInfo:
 
 
 class Init:
+    _PRE_COMMIT_CONFIG_PATH = ".pre-commit-config.yaml"
+
     def __init__(self, config: BaseConfig, *args: object) -> None:
         self.config: BaseConfig = config
         self.encoding = config.settings["encoding"]
@@ -320,9 +322,8 @@ class Init:
             f"--hook-type {ty}" for ty in hook_types
         )
 
-    def _install_pre_commit_hook(self, hook_types: list[str] | None = None) -> None:
-        pre_commit_config_filename = ".pre-commit-config.yaml"
-        cz_hook_config = {
+    def _get_config_data(self) -> dict[str, Any]:
+        CZ_HOOK_CONFIG = {
             "repo": "https://github.com/commitizen-tools/commitizen",
             "rev": f"v{__version__}",
             "hooks": [
@@ -331,31 +332,29 @@ class Init:
             ],
         }
 
-        config_data = {}
         if not self.project_info.has_pre_commit_config:
             # .pre-commit-config.yaml does not exist
-            config_data["repos"] = [cz_hook_config]
+            return {"repos": [CZ_HOOK_CONFIG]}
+
+        with open(self._PRE_COMMIT_CONFIG_PATH, encoding=self.encoding) as config_file:
+            config_data: dict[str, Any] = yaml.safe_load(config_file) or {}
+
+        if not isinstance(repos := config_data.get("repos"), list):
+            # .pre-commit-config.yaml exists but there's no "repos" key
+            config_data["repos"] = [CZ_HOOK_CONFIG]
+            return config_data
+
+        # Check if commitizen pre-commit hook is already in the config
+        if any("commitizen" in hook_config["repo"] for hook_config in repos):
+            out.write("commitizen already in pre-commit config")
         else:
-            with open(
-                pre_commit_config_filename, encoding=self.encoding
-            ) as config_file:
-                yaml_data = yaml.safe_load(config_file)
-                if yaml_data:
-                    config_data = yaml_data
+            repos.append(CZ_HOOK_CONFIG)
+        return config_data
 
-            if "repos" in config_data:
-                for pre_commit_hook in config_data["repos"]:
-                    if "commitizen" in pre_commit_hook["repo"]:
-                        out.write("commitizen already in pre-commit config")
-                        break
-                else:
-                    config_data["repos"].append(cz_hook_config)
-            else:
-                # .pre-commit-config.yaml exists but there's no "repos" key
-                config_data["repos"] = [cz_hook_config]
-
+    def _install_pre_commit_hook(self, hook_types: list[str] | None = None) -> None:
+        config_data = self._get_config_data()
         with smart_open(
-            pre_commit_config_filename, "w", encoding=self.encoding
+            self._PRE_COMMIT_CONFIG_PATH, "w", encoding=self.encoding
         ) as config_file:
             yaml.safe_dump(config_data, stream=config_file)
 
