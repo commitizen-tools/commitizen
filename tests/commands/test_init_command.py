@@ -420,3 +420,66 @@ def test_init_with_valid_tag_selection(config, mocker: MockFixture, tmpdir):
             content = toml_file.read()
             assert 'version = "0.9.0"' in content
             assert 'version_scheme = "semver"' in content
+
+
+def test_init_configuration_settings(tmpdir, mocker: MockFixture, config):
+    """Test that all configuration settings are properly initialized."""
+    mocker.patch(
+        "questionary.select",
+        side_effect=[
+            FakeQuestion("pyproject.toml"),
+            FakeQuestion("cz_conventional_commits"),
+            FakeQuestion("commitizen"),
+            FakeQuestion("semver"),
+        ],
+    )
+    mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+    mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+    mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
+
+    with tmpdir.as_cwd():
+        commands.Init(config)()
+
+        with open("pyproject.toml", encoding="utf-8") as toml_file:
+            config_data = toml_file.read()
+
+        # Verify all expected settings are present
+        assert 'name = "cz_conventional_commits"' in config_data
+        assert 'tag_format = "$version"' in config_data
+        assert 'version_scheme = "semver"' in config_data
+        assert 'version = "0.0.1"' in config_data
+        assert "update_changelog_on_bump = true" in config_data
+        assert "major_version_zero = true" in config_data
+
+
+def test_init_configuration_with_version_provider(tmpdir, mocker: MockFixture, config):
+    """Test configuration initialization with a different version provider."""
+    mocker.patch(
+        "questionary.select",
+        side_effect=[
+            FakeQuestion("pyproject.toml"),
+            FakeQuestion("cz_conventional_commits"),
+            FakeQuestion("pep621"),  # Different version provider
+            FakeQuestion("semver"),
+        ],
+    )
+    mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+    mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+    mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
+
+    with tmpdir.as_cwd():
+        commands.Init(config)()
+
+        with open("pyproject.toml", encoding="utf-8") as toml_file:
+            config_data = toml_file.read()
+
+        # Verify version provider is set instead of version
+        assert 'name = "cz_conventional_commits"' in config_data
+        assert 'tag_format = "$version"' in config_data
+        assert 'version_scheme = "semver"' in config_data
+        assert 'version_provider = "pep621"' in config_data
+        assert "update_changelog_on_bump = true" in config_data
+        assert "major_version_zero = true" in config_data
+        assert (
+            "version = " not in config_data
+        )  # Version should not be set when using version_provider
