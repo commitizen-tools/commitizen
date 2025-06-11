@@ -31,7 +31,7 @@ cz bump --version-scheme semver
 ```
 
 2. Configuration file:
-```toml
+```toml title="pyproject.toml"
 [tool.commitizen]
 version_scheme = "semver"
 ```
@@ -113,7 +113,7 @@ Note that as per [semantic versioning spec](https://semver.org/#spec-item-9)
 For example, the following versions (using the [PEP 440](https://peps.python.org/pep-0440/) scheme) are ordered
 by their precedence and showcase how a release might flow through a development cycle:
 
-- `1.0.0` is the current published version
+- `1.0.0` is the currently published version
 - `1.0.1a0` after committing a `fix:` for pre-release
 - `1.1.0a1` after committing an additional `feat:` for pre-release
 - `1.1.0b0` after bumping a beta release
@@ -153,7 +153,7 @@ cz bump --check-consistency
 
 For example, if we have `pyproject.toml`
 
-```toml
+```toml title="pyproject.toml"
 [tool.commitizen]
 version = "1.21.0"
 version_files = [
@@ -162,15 +162,16 @@ version_files = [
 ]
 ```
 
-`src/__version__.py`,
+`src/__version__.py`
 
-```python
+
+```python title="src/__version__.py"
 __version__ = "1.21.0"
 ```
 
-and `setup.py`.
+and `setup.py`
 
-```python
+```python title="setup.py"
 from setuptools import setup
 
 setup(..., version="1.0.5", ...)
@@ -193,7 +194,7 @@ cz bump --local-version
 
 For example, if we have `pyproject.toml`
 
-```toml
+```toml title="pyproject.toml"
 [tool.commitizen]
 version = "5.3.5+0.1.0"
 ```
@@ -454,7 +455,7 @@ In your `pyproject.toml` or `.cz.toml`
 tag_format = "v$major.$minor.$patch$prerelease"
 ```
 
-The variables must be preceded by a `$` sign and optionally can be wrapped in `{}` . Default is `$version`.
+The variables must be preceded by a `$` sign and optionally can be wrapped in `{}`. The default is `$version`.
 
 Supported variables:
 
@@ -483,7 +484,7 @@ Some examples
 
 `pyproject.toml`, `.cz.toml` or `cz.toml`
 
-```toml
+```toml title="pyproject.toml"
 [tool.commitizen]
 version_files = [
     "src/__version__.py",
@@ -496,8 +497,7 @@ This means that it will find a file `setup.py` and will only make a change
 in a line containing the `version` substring.
 
 !!! note
-    Files can be specified using relative (to the execution) paths, absolute paths
-    or glob patterns.
+    Files can be specified using relative (to the execution) paths, absolute paths, or glob patterns.
 
 ---
 
@@ -516,7 +516,7 @@ Some examples
 
 `pyproject.toml`, `.cz.toml` or `cz.toml`
 
-```toml
+```toml title="pyproject.toml"
 [tool.commitizen]
 bump_message = "release $current_version → $new_version [skip-ci]"
 ```
@@ -529,7 +529,7 @@ When set to `true` the changelog is always updated incrementally when running `c
 
 Defaults to: `false`
 
-```toml
+```toml title="pyproject.toml"
 [tool.commitizen]
 update_changelog_on_bump = true
 ```
@@ -540,7 +540,7 @@ update_changelog_on_bump = true
 
 When set to `true`, Commitizen will create annotated tags.
 
-```toml
+```toml title="pyproject.toml"
 [tool.commitizen]
 annotated_tag = true
 ```
@@ -551,7 +551,7 @@ annotated_tag = true
 
 When set to `true`, Commitizen will create gpg signed tags.
 
-```toml
+```toml title="pyproject.toml"
 [tool.commitizen]
 gpg_sign = true
 ```
@@ -565,7 +565,7 @@ Useful during the initial development stage of your project.
 
 Defaults to: `false`
 
-```toml
+```toml title="pyproject.toml"
 [tool.commitizen]
 major_version_zero = true
 ```
@@ -591,7 +591,7 @@ execution of the script, some environment variables are available:
 | `CZ_PRE_INCREMENT`           | Whether this is a `MAJOR`, `MINOR` or `PATH` release       |
 | `CZ_PRE_CHANGELOG_FILE_NAME` | Path to the changelog file, if available                   |
 
-```toml
+```toml title="pyproject.toml"
 [tool.commitizen]
 pre_bump_hooks = [
   "scripts/generate_documentation.sh"
@@ -618,7 +618,7 @@ release. During execution of the script, some environment variables are availabl
 | `CZ_POST_INCREMENT`            | Whether this was a `MAJOR`, `MINOR` or `PATH` release      |
 | `CZ_POST_CHANGELOG_FILE_NAME`  | Path to the changelog file, if available                    |
 
-```toml
+```toml title="pyproject.toml"
 [tool.commitizen]
 post_bump_hooks = [
   "scripts/slack_notification.sh"
@@ -631,7 +631,7 @@ Offset with which to start counting prereleases.
 
 Defaults to: `0`
 
-```toml
+```toml title="pyproject.toml"
 [tool.commitizen]
 prerelease_offset = 1
 ```
@@ -651,7 +651,7 @@ Options: `pep440`, `semver`, `semver2`
 
 Defaults to: `pep440`
 
-```toml
+```toml title="pyproject.toml"
 [tool.commitizen]
 version_scheme = "semver"
 ```
