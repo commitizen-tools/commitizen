@@ -251,6 +251,7 @@ def incremental_build(
     unreleased_start = metadata.unreleased_start
     unreleased_end = metadata.unreleased_end
     latest_version_position = metadata.latest_version_position
+
     skip = False
     output_lines: list[str] = []
     for index, line in enumerate(lines):
@@ -260,9 +261,7 @@ def incremental_build(
             skip = False
             if (
                 latest_version_position is None
-                or isinstance(latest_version_position, int)
-                and isinstance(unreleased_end, int)
-                and latest_version_position > unreleased_end
+                or latest_version_position > unreleased_end
             ):
                 continue
 
@@ -271,13 +270,15 @@ def incremental_build(
 
         if index == latest_version_position:
             output_lines.extend([new_content, "\n"])
-
         output_lines.append(line)
-    if not isinstance(latest_version_position, int):
-        if output_lines and output_lines[-1].strip():
-            # Ensure at least one blank line between existing and new content.
-            output_lines.append("\n")
-        output_lines.append(new_content)
+
+    if latest_version_position is not None:
+        return output_lines
+
+    if output_lines and output_lines[-1].strip():
+        # Ensure at least one blank line between existing and new content.
+        output_lines.append("\n")
+    output_lines.append(new_content)
     return output_lines
 
 
