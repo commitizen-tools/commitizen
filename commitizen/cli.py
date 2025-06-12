@@ -583,20 +583,19 @@ def parse_no_raise(comma_separated_no_raise: str) -> list[int]:
     Receives digits and strings and outputs the parsed integer which
     represents the exit code found in exceptions.
     """
-    no_raise_items: list[str] = comma_separated_no_raise.split(",")
-    no_raise_codes: list[int] = []
-    for item in no_raise_items:
-        if item.isdecimal():
-            no_raise_codes.append(int(item))
-            continue
+
+    def exit_code_from_str_or_skip(s: str) -> ExitCode | None:
         try:
-            exit_code = ExitCode[item.strip()]
-        except KeyError:
-            out.warn(f"WARN: no_raise key `{item}` does not exist. Skipping.")
-            continue
-        else:
-            no_raise_codes.append(exit_code.value)
-    return no_raise_codes
+            return ExitCode.from_str(s)
+        except (KeyError, ValueError):
+            out.warn(f"WARN: no_raise value `{s}` is not a valid exit code. Skipping.")
+            return None
+
+    return [
+        code.value
+        for s in comma_separated_no_raise.split(",")
+        if (code := exit_code_from_str_or_skip(s)) is not None
+    ]
 
 
 if TYPE_CHECKING:
