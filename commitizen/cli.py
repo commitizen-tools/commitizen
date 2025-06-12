@@ -52,16 +52,13 @@ class ParseKwargs(argparse.Action):
     ) -> None:
         if not isinstance(values, str):
             return
-        if "=" not in values:
+
+        key, sep, value = values.partition("=")
+        if not key or not sep:
             raise InvalidCommandArgumentError(
                 f"Option {option_string} expect a key=value format"
             )
         kwargs = getattr(namespace, self.dest, None) or {}
-        key, value = values.split("=", 1)
-        if not key:
-            raise InvalidCommandArgumentError(
-                f"Option {option_string} expect a key=value format"
-            )
         kwargs[key] = value.strip("'\"")
         setattr(namespace, self.dest, kwargs)
 
