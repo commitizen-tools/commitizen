@@ -328,6 +328,4 @@ def _get_log_as_str_list(start: str | None, end: str, args: str) -> list[str]:
     c = cmd.run(command)
     if c.return_code != 0:
         raise GitCommandError(c.err)
-    if not c.out:
-        return []
     return c.out.split(f"{delimiter}\n")
