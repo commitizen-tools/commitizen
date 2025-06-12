@@ -66,7 +66,7 @@ weird_cases = [
     (("1.0.0-alpha.1", None, "alpha", 0, None), "1.0.0-alpha.2"),
     (("1", None, "rc", 0, None), "1.0.0-rc.0"),
     (("1.0.0-rc.1+e20d7b57f3eb", "PATCH", None, 0, None), "1.0.0"),
-    (("1.0.0-reallyweird", "PATCH", "reallyweird", 0, None), "1.0.0"),
+    (("1.0.0-reallyweird", "PATCH", "reallyweird", 0, None), "1.0.0-reallyweird.1"),
 ]
 
 # test driven development
