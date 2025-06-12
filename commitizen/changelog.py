@@ -276,6 +276,16 @@ def incremental_build(
     return output_lines
 
 
+def get_next_tag_name_after_version(tags: Iterable[GitTag], version: str) -> str | None:
+    it = iter(tag.name for tag in tags)
+    for name in it:
+        if name == version:
+            return next(it, None)
+
+    raise NoCommitsFoundError(f"Could not find a valid revision range. {version=}")
+
+
+# TODO: unused, deprecate this?
 def get_smart_tag_range(
     tags: Sequence[GitTag], newest: str, oldest: str | None = None
 ) -> list[GitTag]:
@@ -303,7 +313,7 @@ def get_smart_tag_range(
 
 
 def get_oldest_and_newest_rev(
-    tags: Sequence[GitTag],
+    tags: Iterable[GitTag],
     version: str,
     rules: TagRules,
 ) -> tuple[str | None, str]:
@@ -326,15 +336,13 @@ def get_oldest_and_newest_rev(
     newest_tag_name = get_tag_name(newest_version)
     oldest_tag_name = get_tag_name(oldest_version) if oldest_version else None
 
-    tags_range = get_smart_tag_range(tags, newest_tag_name, oldest_tag_name)
-    if not tags_range:
-        raise NoCommitsFoundError("Could not find a valid revision range.")
-
-    oldest_rev: str | None = tags_range[-1].name
+    oldest_rev = get_next_tag_name_after_version(
+        tags, oldest_tag_name or newest_tag_name
+    )
 
     # Return None for oldest_rev if:
     # 1. The oldest tag is the last tag in the list and matches the requested oldest tag
     # 2. The oldest and the newest tag are the same
-    if oldest_rev == oldest_tag_name == tags[-1].name or oldest_rev == newest_tag_name:
-        oldest_rev = None
+    if oldest_rev == newest_tag_name:
+        return None, newest_tag_name
     return oldest_rev, newest_tag_name

@@ -1535,6 +1535,24 @@ def test_get_smart_tag_range_returns_an_extra_for_a_single_tag(tags):
     assert 2 == len(res)
 
 
+def test_get_next_tag_name_after_version(tags):
+    # Test finding next tag after a version
+    next_tag_name = changelog.get_next_tag_name_after_version(tags, "v1.2.0")
+    assert next_tag_name == "v1.1.1"
+
+    next_tag_name = changelog.get_next_tag_name_after_version(tags, "v1.1.0")
+    assert next_tag_name == "v1.0.0"
+
+    # Test finding last tag when given version is last
+    last_tag_name = changelog.get_next_tag_name_after_version(tags, "v0.9.1")
+    assert last_tag_name is None
+
+    # Test error when version not found
+    with pytest.raises(changelog.NoCommitsFoundError) as exc_info:
+        changelog.get_next_tag_name_after_version(tags, "nonexistent")
+    assert "Could not find a valid revision range" in str(exc_info.value)
+
+
 @dataclass
 class TagDef:
     name: str
