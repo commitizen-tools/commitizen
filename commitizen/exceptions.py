@@ -59,8 +59,7 @@ class ExpectedExit(CommitizenException):
     exit_code = ExitCode.EXPECTED_EXIT
 
     def __init__(self, *args: str, **kwargs: Any) -> None:
-        output_method = kwargs.get("output_method") or out.write
-        kwargs["output_method"] = output_method
+        kwargs["output_method"] = kwargs.get("output_method") or out.write
         super().__init__(*args, **kwargs)
 
 
