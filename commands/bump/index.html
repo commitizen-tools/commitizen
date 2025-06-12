@@ -1990,7 +1990,7 @@
 </li>
 <li>
 <p>Configuration file:
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;semver&quot;</span>
 </code></pre></div></p>
 </li>
@@ -2051,7 +2051,7 @@ as denoted by its associated normal version.</p>
 <p>For example, the following versions (using the <a href="https://peps.python.org/pep-0440/">PEP 440</a> scheme) are ordered
 by their precedence and showcase how a release might flow through a development cycle:</p>
 <ul>
-<li><code>1.0.0</code> is the current published version</li>
+<li><code>1.0.0</code> is the currently published version</li>
 <li><code>1.0.1a0</code> after committing a <code>fix:</code> for pre-release</li>
 <li><code>1.1.0a1</code> after committing an additional <code>feat:</code> for pre-release</li>
 <li><code>1.1.0b0</code> after bumping a beta release</li>
@@ -2128,18 +2128,18 @@ configuration are consistent before bumping version.</p>
 <div class="highlight"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--check-consistency
 </code></pre></div>
 <p>For example, if we have <code>pyproject.toml</code></p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.21.0&quot;</span>
 <span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="s2">&quot;src/__version__.py&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="s2">&quot;setup.py&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 </code></pre></div>
-<p><code>src/__version__.py</code>,</p>
-<div class="highlight"><pre><span></span><code><span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.21.0&quot;</span>
+<p><code>src/__version__.py</code></p>
+<div class="highlight"><span class="filename">src/__version__.py</span><pre><span></span><code><span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.21.0&quot;</span>
 </code></pre></div>
-<p>and <code>setup.py</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">setuptools</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup</span>
+<p>and <code>setup.py</code></p>
+<div class="highlight"><span class="filename">setup.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">setuptools</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup</span>
 
 <span class="n">setup</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;1.0.5&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
 </code></pre></div>
@@ -2153,7 +2153,7 @@ the version in <code>setup.py</code> to <code>1.21.0</code></p>
 <div class="highlight"><pre><span></span><code>cz<span class="w"> </span>bump<span class="w"> </span>--local-version
 </code></pre></div>
 <p>For example, if we have <code>pyproject.toml</code></p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;5.3.5+0.1.0&quot;</span>
 </code></pre></div>
 <p>If <code>--local-version</code> is used, it will bump only the local version <code>0.1.0</code> and keep the public version <code>5.3.5</code> intact, bumping to the version <code>5.3.5+0.2.0</code>.</p>
@@ -2345,7 +2345,7 @@ on the list, and then you can use the exit code:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;v$major.$minor.$patch$prerelease&quot;</span>
 </code></pre></div>
-<p>The variables must be preceded by a <code>$</code> sign and optionally can be wrapped in <code>{}</code> . Default is <code>$version</code>.</p>
+<p>The variables must be preceded by a <code>$</code> sign and optionally can be wrapped in <code>{}</code>. The default is <code>$version</code>.</p>
 <p>Supported variables:</p>
 <table>
 <thead>
@@ -2390,7 +2390,7 @@ regarding if the file is present or not in <code>version_files</code>.</p>
 <p>* Renamed from <code>files</code> to <code>version_files</code>.</p>
 <p>Some examples</p>
 <p><code>pyproject.toml</code>, <code>.cz.toml</code> or <code>cz.toml</code></p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="s2">&quot;src/__version__.py&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="s2">&quot;setup.py:version&quot;</span>
@@ -2401,8 +2401,7 @@ This means that it will find a file <code>setup.py</code> and will only make a c
 in a line containing the <code>version</code> substring.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Files can be specified using relative (to the execution) paths, absolute paths
-or glob patterns.</p>
+<p>Files can be specified using relative (to the execution) paths, absolute paths, or glob patterns.</p>
 </div>
 <hr />
 <h3 id="bump_message"><code>bump_message</code><a class="headerlink" href="#bump_message" title="Permanent link">&para;</a></h3>
@@ -2428,26 +2427,26 @@ or glob patterns.</p>
 </table>
 <p>Some examples</p>
 <p><code>pyproject.toml</code>, <code>.cz.toml</code> or <code>cz.toml</code></p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">bump_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;release $current_version → $new_version [skip-ci]&quot;</span>
 </code></pre></div>
 <hr />
 <h3 id="update_changelog_on_bump"><code>update_changelog_on_bump</code><a class="headerlink" href="#update_changelog_on_bump" title="Permanent link">&para;</a></h3>
 <p>When set to <code>true</code> the changelog is always updated incrementally when running <code>cz bump</code>, so the user does not have to provide the <code>--changelog</code> flag every time.</p>
 <p>Defaults to: <code>false</code></p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">update_changelog_on_bump</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
 <hr />
 <h3 id="annotated_tag"><code>annotated_tag</code><a class="headerlink" href="#annotated_tag" title="Permanent link">&para;</a></h3>
 <p>When set to <code>true</code>, Commitizen will create annotated tags.</p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">annotated_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
 <hr />
 <h3 id="gpg_sign"><code>gpg_sign</code><a class="headerlink" href="#gpg_sign" title="Permanent link">&para;</a></h3>
 <p>When set to <code>true</code>, Commitizen will create gpg signed tags.</p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">gpg_sign</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
 <hr />
@@ -2455,7 +2454,7 @@ or glob patterns.</p>
 <p>When set to <code>true</code>, Commitizen will keep the major version at zero.
 Useful during the initial development stage of your project.</p>
 <p>Defaults to: <code>false</code></p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">major_version_zero</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
 <hr />
@@ -2506,7 +2505,7 @@ execution of the script, some environment variables are available:</p>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">pre_bump_hooks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">  </span><span class="s2">&quot;scripts/generate_documentation.sh&quot;</span>
 <span class="p">]</span>
@@ -2558,7 +2557,7 @@ release. During execution of the script, some environment variables are availabl
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">post_bump_hooks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">  </span><span class="s2">&quot;scripts/slack_notification.sh&quot;</span>
 <span class="p">]</span>
@@ -2566,7 +2565,7 @@ release. During execution of the script, some environment variables are availabl
 <h3 id="prerelease_offset"><code>prerelease_offset</code><a class="headerlink" href="#prerelease_offset" title="Permanent link">&para;</a></h3>
 <p>Offset with which to start counting prereleases.</p>
 <p>Defaults to: <code>0</code></p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">prerelease_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
 </code></pre></div>
 <h3 id="version_scheme"><code>version_scheme</code><a class="headerlink" href="#version_scheme" title="Permanent link">&para;</a></h3>
@@ -2609,7 +2608,7 @@ release. During execution of the script, some environment variables are availabl
 </table>
 <p>Options: <code>pep440</code>, <code>semver</code>, <code>semver2</code></p>
 <p>Defaults to: <code>pep440</code></p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;semver&quot;</span>
 </code></pre></div>
 <h2 id="custom-bump">Custom bump<a class="headerlink" href="#custom-bump" title="Permanent link">&para;</a></h2>
