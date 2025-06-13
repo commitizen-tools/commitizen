@@ -32,6 +32,7 @@ from collections import OrderedDict, defaultdict
 from collections.abc import Generator, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date
+from itertools import chain
 from typing import TYPE_CHECKING, Any
 
 from jinja2 import (
@@ -88,33 +89,32 @@ def generate_tree_from_commits(
     pat = re.compile(changelog_pattern)
     map_pat = re.compile(commit_parser, re.MULTILINE)
     body_map_pat = re.compile(commit_parser, re.MULTILINE | re.DOTALL)
-    current_tag: GitTag | None = None
     rules = rules or TagRules()
 
     # Check if the latest commit is not tagged
-    if commits:
-        latest_commit = commits[0]
-        current_tag = get_commit_tag(latest_commit, tags)
 
-    current_tag_name: str = unreleased_version or "Unreleased"
-    current_tag_date: str = ""
-    if unreleased_version is not None:
-        current_tag_date = date.today().isoformat()
-    if current_tag is not None and current_tag.name:
-        current_tag_name = current_tag.name
-        current_tag_date = current_tag.date
+    current_tag = get_commit_tag(commits[0], tags) if commits else None
+    current_tag_name = unreleased_version or "Unreleased"
+    current_tag_date = (
+        date.today().isoformat() if unreleased_version is not None else ""
+    )
 
+    used_tags: set[GitTag] = set()
+    if current_tag:
+        used_tags.add(current_tag)
+        if current_tag.name:
+            current_tag_name = current_tag.name
+            current_tag_date = current_tag.date
+
+    commit_tag: GitTag | None = None
     changes: dict = defaultdict(list)
-    used_tags: list = [current_tag]
     for commit in commits:
-        commit_tag = get_commit_tag(commit, tags)
-
         if (
-            commit_tag
+            (commit_tag := get_commit_tag(commit, tags))
             and commit_tag not in used_tags
             and rules.include_in_changelog(commit_tag)
         ):
-            used_tags.append(commit_tag)
+            used_tags.add(commit_tag)
             release = {
                 "version": current_tag_name,
                 "date": current_tag_date,
@@ -127,24 +127,15 @@ def generate_tree_from_commits(
             current_tag_date = commit_tag.date
             changes = defaultdict(list)
 
-        matches = pat.match(commit.message)
-        if not matches:
+        if not pat.match(commit.message):
             continue
 
-        # Process subject from commit message
-        if message := map_pat.match(commit.message):
-            process_commit_message(
-                changelog_message_builder_hook,
-                message,
-                commit,
-                changes,
-                change_type_map,
-            )
-
-        # Process body from commit message
-        body_parts = commit.body.split("\n\n")
-        for body_part in body_parts:
-            if message := body_map_pat.match(body_part):
+        # Process subject and body from commit message
+        for message in chain(
+            [map_pat.match(commit.message)],
+            (body_map_pat.match(block) for block in commit.body.split("\n\n")),
+        ):
+            if message:
                 process_commit_message(
                     changelog_message_builder_hook,
                     message,
