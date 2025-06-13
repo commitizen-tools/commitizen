@@ -68,6 +68,7 @@ jobs:
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN_FOR_ORG }}
           file: "docs/README.md"
+          organization: true
       - name: Push doc to Github Page
         uses: peaceiris/actions-gh-pages@v4
         with:
