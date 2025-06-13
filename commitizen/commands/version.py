@@ -5,6 +5,7 @@ from typing import TypedDict
 from commitizen import out
 from commitizen.__version__ import __version__
 from commitizen.config import BaseConfig
+from commitizen.exceptions import NoVersionSpecifiedError
 from commitizen.providers import get_provider
 
 
@@ -28,19 +29,20 @@ class Version:
             out.write(f"Commitizen Version: {__version__}")
             out.write(f"Python Version: {self.python_version}")
             out.write(f"Operating System: {self.operating_system}")
-        elif self.parameter.get("project"):
-            version = get_provider(self.config).get_version()
-            if version:
-                out.write(f"{version}")
-            else:
+            return
+
+        if (verbose := self.parameter.get("verbose")) or self.parameter.get("project"):
+            if verbose:
+                out.write(f"Installed Commitizen Version: {__version__}")
+
+            try:
+                version = get_provider(self.config).get_version()
+            except NoVersionSpecifiedError:
                 out.error("No project information in this project.")
-        elif self.parameter.get("verbose"):
-            out.write(f"Installed Commitizen Version: {__version__}")
-            version = get_provider(self.config).get_version()
-            if version:
-                out.write(f"Project Version: {version}")
-            else:
-                out.error("No project information in this project.")
-        else:
-            # if no argument is given, show installed commitizen version
-            out.write(f"{__version__}")
+                return
+
+            out.write(f"Project Version: {version}" if verbose else version)
+            return
+
+        # if no argument is given, show installed commitizen version
+        out.write(f"{__version__}")

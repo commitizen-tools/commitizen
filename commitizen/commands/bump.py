@@ -23,7 +23,6 @@ from commitizen.exceptions import (
     NoPatternMapError,
     NotAGitProjectError,
     NotAllowed,
-    NoVersionSpecifiedError,
 )
 from commitizen.providers import get_provider
 from commitizen.tags import TagRules
@@ -163,11 +162,7 @@ class Bump:
     def __call__(self) -> None:
         """Steps executed to bump."""
         provider = get_provider(self.config)
-
-        try:
-            current_version = self.scheme(provider.get_version())
-        except TypeError:
-            raise NoVersionSpecifiedError()
+        current_version = self.scheme(provider.get_version())
 
         increment = self.arguments["increment"]
         prerelease = self.arguments["prerelease"]
