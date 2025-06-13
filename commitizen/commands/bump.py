@@ -215,11 +215,13 @@ class Bump:
             raise NotAllowed("--local-version cannot be combined with --build-metadata")
 
         if get_next:
-            # if trying to use --get-next, we should not allow --changelog or --changelog-to-stdout
-            if self.changelog_flag or self.changelog_to_stdout:
-                raise NotAllowed(
-                    "--changelog or --changelog-to-stdout is not allowed with --get-next"
-                )
+            for value, option in (
+                (self.changelog_flag, "--changelog"),
+                (self.changelog_to_stdout, "--changelog-to-stdout"),
+            ):
+                if value:
+                    raise NotAllowed(f"{option} cannot be combined with --get-next")
+
             # --get-next is a special case, taking precedence over config for 'update_changelog_on_bump'
             self.changelog_config = False
             # Setting dry_run to prevent any unwanted changes to the repo or files
