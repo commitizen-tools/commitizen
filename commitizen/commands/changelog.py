@@ -11,7 +11,6 @@ from typing import Any, TypedDict, cast
 from commitizen import changelog, defaults, factory, git, out
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.config import BaseConfig
-from commitizen.cz.base import ChangelogReleaseHook, MessageBuilderHook
 from commitizen.cz.utils import strip_local_version
 from commitizen.exceptions import (
     DryRunExit,
@@ -184,15 +183,6 @@ class Changelog:
         commit_parser = self.cz.commit_parser
         changelog_pattern = self.cz.changelog_pattern
         start_rev = self.start_rev
-        unreleased_version = self.unreleased_version
-        changelog_meta = changelog.Metadata()
-        change_type_map: dict[str, str] | None = self.change_type_map
-        changelog_message_builder_hook: MessageBuilderHook | None = (
-            self.cz.changelog_message_builder_hook
-        )
-        changelog_release_hook: ChangelogReleaseHook | None = (
-            self.cz.changelog_release_hook
-        )
 
         if self.export_template_to:
             return self._export_template()
@@ -209,33 +199,37 @@ class Changelog:
         assert self.file_name
 
         tags = self.tag_rules.get_version_tags(git.get_tags(), warn=True)
-        end_rev = ""
+        changelog_meta = changelog.Metadata()
         if self.incremental:
             changelog_meta = self.changelog_format.get_metadata(self.file_name)
             if changelog_meta.latest_version:
                 start_rev = self._find_incremental_rev(
                     strip_local_version(changelog_meta.latest_version_tag or ""), tags
                 )
+
+        end_rev = ""
         if self.rev_range:
             start_rev, end_rev = changelog.get_oldest_and_newest_rev(
                 tags,
                 self.rev_range,
                 self.tag_rules,
             )
+
         commits = git.get_commits(start=start_rev, end=end_rev, args="--topo-order")
         if not commits and (
             self.current_version is None or not self.current_version.is_prerelease
         ):
             raise NoCommitsFoundError("No commits found")
+
         tree = changelog.generate_tree_from_commits(
             commits,
             tags,
             commit_parser,
             changelog_pattern,
-            unreleased_version,
-            change_type_map=change_type_map,
-            changelog_message_builder_hook=changelog_message_builder_hook,
-            changelog_release_hook=changelog_release_hook,
+            self.unreleased_version,
+            change_type_map=self.change_type_map,
+            changelog_message_builder_hook=self.cz.changelog_message_builder_hook,
+            changelog_release_hook=self.cz.changelog_release_hook,
             rules=self.tag_rules,
         )
         if self.change_type_order:
@@ -243,11 +237,15 @@ class Changelog:
                 tree, self.change_type_order
             )
 
-        extras = self.cz.template_extras.copy()
-        extras.update(self.config.settings["extras"])
-        extras.update(self.extras)
         changelog_out = changelog.render_changelog(
-            tree, loader=self.cz.template_loader, template=self.template, **extras
+            tree,
+            self.cz.template_loader,
+            self.template,
+            **{
+                **self.cz.template_extras,
+                **self.config.settings["extras"],
+                **self.extras,
+            },
         ).lstrip("\n")
 
         # Dry_run is executed here to avoid checking and reading the files
