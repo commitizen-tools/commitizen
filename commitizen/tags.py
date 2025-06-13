@@ -5,6 +5,7 @@ import warnings
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from functools import cached_property
+from itertools import chain
 from string import Template
 from typing import TYPE_CHECKING, NamedTuple
 
@@ -88,18 +89,22 @@ class TagRules:
     ignored_tag_formats: Sequence[str] = field(default_factory=list)
     merge_prereleases: bool = False
 
+    @property
+    def tag_formats(self) -> Iterable[str]:
+        return chain([self.tag_format], self.legacy_tag_formats)
+
     @cached_property
     def version_regexes(self) -> list[re.Pattern]:
         """Regexes for all legit tag formats, current and legacy"""
-        tag_formats = [self.tag_format, *self.legacy_tag_formats]
-        regexes = (self._format_regex(p) for p in tag_formats)
-        return [re.compile(r) for r in regexes]
+        return [re.compile(self._format_regex(f)) for f in self.tag_formats]
 
     @cached_property
     def ignored_regexes(self) -> list[re.Pattern]:
         """Regexes for known but ignored tag formats"""
-        regexes = (self._format_regex(p, star=True) for p in self.ignored_tag_formats)
-        return [re.compile(r) for r in regexes]
+        return [
+            re.compile(self._format_regex(f, star=True))
+            for f in self.ignored_tag_formats
+        ]
 
     def _format_regex(self, tag_pattern: str, star: bool = False) -> str:
         """
@@ -240,10 +245,7 @@ class TagRules:
     ) -> GitTag | None:
         """Find the first matching tag for a given version."""
         version = self.scheme(version) if isinstance(version, str) else version
-        possible_tags = set(
-            self.normalize_tag(version, f)
-            for f in (self.tag_format, *self.legacy_tag_formats)
-        )
+        possible_tags = set(self.normalize_tag(version, f) for f in self.tag_formats)
         candidates = [t for t in tags if t.name in possible_tags]
         if len(candidates) > 1:
             warnings.warn(
