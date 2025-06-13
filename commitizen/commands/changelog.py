@@ -174,11 +174,15 @@ class Changelog:
 
             changelog_file.write(changelog_out)
 
-    def _export_template(self) -> None:
-        tpl = changelog.get_changelog_template(self.cz.template_loader, self.template)
-        # TODO: fix the following type ignores
-        src = Path(tpl.filename)  # type: ignore[arg-type]
-        Path(self.export_template_to).write_text(src.read_text())  # type: ignore[arg-type]
+    def _export_template(self, dist: str) -> None:
+        filename = changelog.get_changelog_template(
+            self.cz.template_loader, self.template
+        ).filename
+        if filename is None:
+            raise NotAllowed("Template filename is not set")
+
+        text = Path(filename).read_text()
+        Path(dist).write_text(text)
 
     def __call__(self) -> None:
         commit_parser = self.cz.commit_parser
@@ -195,7 +199,7 @@ class Changelog:
         )
 
         if self.export_template_to:
-            return self._export_template()
+            return self._export_template(self.export_template_to)
 
         if not changelog_pattern or not commit_parser:
             raise NoPatternMapError(
