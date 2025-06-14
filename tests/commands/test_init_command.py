@@ -266,3 +266,94 @@ def test_init_command_shows_description_when_use_help_option(
 
     out, _ = capsys.readouterr()
     file_regression.check(out, extension=".txt")
+
+
+def test_init_with_confirmed_tag_format(config, mocker: MockFixture, tmpdir):
+    mocker.patch(
+        "commitizen.commands.init.get_tag_names", return_value=["v0.0.2", "v0.0.1"]
+    )
+    mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value="v0.0.2")
+    mocker.patch(
+        "questionary.select",
+        side_effect=[
+            FakeQuestion("pyproject.toml"),
+            FakeQuestion("cz_conventional_commits"),
+            FakeQuestion("commitizen"),
+            FakeQuestion("semver"),
+        ],
+    )
+    mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+    mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+    mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
+
+    with tmpdir.as_cwd():
+        commands.Init(config)()
+        with open("pyproject.toml", encoding="utf-8") as toml_file:
+            assert 'tag_format = "v$version"' in toml_file.read()
+
+
+def test_init_with_no_existing_tags(config, mocker: MockFixture, tmpdir):
+    mocker.patch("commitizen.commands.init.get_tag_names", return_value=[])
+    mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value="v1.0.0")
+    mocker.patch(
+        "questionary.select",
+        side_effect=[
+            FakeQuestion("pyproject.toml"),
+            FakeQuestion("cz_conventional_commits"),
+            FakeQuestion("commitizen"),
+            FakeQuestion("semver"),
+        ],
+    )
+    mocker.patch("questionary.confirm", return_value=FakeQuestion(False))
+    mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+    mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
+
+    with tmpdir.as_cwd():
+        commands.Init(config)()
+        with open("pyproject.toml", encoding="utf-8") as toml_file:
+            assert 'version = "0.0.1"' in toml_file.read()
+
+
+def test_init_with_no_existing_latest_tag(config, mocker: MockFixture, tmpdir):
+    mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value=None)
+    mocker.patch(
+        "questionary.select",
+        side_effect=[
+            FakeQuestion("pyproject.toml"),
+            FakeQuestion("cz_conventional_commits"),
+            FakeQuestion("commitizen"),
+            FakeQuestion("semver"),
+        ],
+    )
+    mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+    mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+    mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
+
+    with tmpdir.as_cwd():
+        commands.Init(config)()
+        with open("pyproject.toml", encoding="utf-8") as toml_file:
+            assert 'version = "0.0.1"' in toml_file.read()
+
+
+def test_init_with_existing_tags(config, mocker: MockFixture, tmpdir):
+    expected_tags = ["v1.0.0", "v0.9.0", "v0.8.0"]
+    mocker.patch("commitizen.commands.init.get_tag_names", return_value=expected_tags)
+    mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value="v1.0.0")
+    mocker.patch(
+        "questionary.select",
+        side_effect=[
+            FakeQuestion("pyproject.toml"),
+            FakeQuestion("cz_conventional_commits"),
+            FakeQuestion("commitizen"),
+            FakeQuestion("semver"),  # Select version scheme first
+            FakeQuestion("v1.0.0"),  # Then select the latest tag
+        ],
+    )
+    mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+    mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+    mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
+
+    with tmpdir.as_cwd():
+        commands.Init(config)()
+        with open("pyproject.toml", encoding="utf-8") as toml_file:
+            assert 'version = "1.0.0"' in toml_file.read()
