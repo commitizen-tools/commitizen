@@ -208,23 +208,20 @@ class Init:
         return latest_tag
 
     def _ask_tag_format(self, latest_tag: str) -> str:
-        is_correct_format = False
         if latest_tag.startswith("v"):
-            tag_format = r"v$version"
-            is_correct_format = questionary.confirm(
-                f'Is "{tag_format}" the correct tag format?', style=self.cz.style
-            ).unsafe_ask()
+            v_tag_format = r"v$version"
+            if questionary.confirm(
+                f'Is "{v_tag_format}" the correct tag format?', style=self.cz.style
+            ).unsafe_ask():
+                return v_tag_format
 
         default_format = DEFAULT_SETTINGS["tag_format"]
-        if not is_correct_format:
-            tag_format = questionary.text(
-                f'Please enter the correct version format: (default: "{default_format}")',
-                style=self.cz.style,
-            ).unsafe_ask()
+        tag_format: str = questionary.text(
+            f'Please enter the correct version format: (default: "{default_format}")',
+            style=self.cz.style,
+        ).unsafe_ask()
 
-            if not tag_format:
-                tag_format = default_format
-        return tag_format
+        return tag_format or default_format
 
     def _ask_version_provider(self) -> str:
         """Ask for setting: version_provider"""

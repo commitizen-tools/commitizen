@@ -255,6 +255,38 @@ class TestNoPreCommitInstalled:
                 commands.Init(config)()
 
 
+class TestAskTagFormat:
+    def test_confirm_v_tag_format(self, mocker: MockFixture, config):
+        init = commands.Init(config)
+        mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+
+        result = init._ask_tag_format("v1.0.0")
+        assert result == r"v$version"
+
+    def test_reject_v_tag_format(self, mocker: MockFixture, config):
+        init = commands.Init(config)
+        mocker.patch("questionary.confirm", return_value=FakeQuestion(False))
+        mocker.patch("questionary.text", return_value=FakeQuestion("custom-$version"))
+
+        result = init._ask_tag_format("v1.0.0")
+        assert result == "custom-$version"
+
+    def test_non_v_tag_format(self, mocker: MockFixture, config):
+        init = commands.Init(config)
+        mocker.patch("questionary.text", return_value=FakeQuestion("custom-$version"))
+
+        result = init._ask_tag_format("1.0.0")
+        assert result == "custom-$version"
+
+    def test_empty_input_returns_default(self, mocker: MockFixture, config):
+        init = commands.Init(config)
+        mocker.patch("questionary.confirm", return_value=FakeQuestion(False))
+        mocker.patch("questionary.text", return_value=FakeQuestion(""))
+
+        result = init._ask_tag_format("v1.0.0")
+        assert result == "$version"  # This is the default format from DEFAULT_SETTINGS
+
+
 @skip_below_py_3_10
 def test_init_command_shows_description_when_use_help_option(
     mocker: MockFixture, capsys, file_regression
