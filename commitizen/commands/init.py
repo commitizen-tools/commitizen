@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import os
 import shutil
-from typing import Any
 
 import questionary
 import yaml
@@ -120,21 +119,6 @@ class Init:
             self.config = JsonConfig(data="{}", path=config_path)
         elif "yaml" in config_path:
             self.config = YAMLConfig(data="", path=config_path)
-        values_to_add: dict[str, Any] = {}
-        values_to_add["name"] = cz_name
-        values_to_add["tag_format"] = tag_format
-        values_to_add["version_scheme"] = version_scheme
-
-        if version_provider == "commitizen":
-            values_to_add["version"] = version.public
-        else:
-            values_to_add["version_provider"] = version_provider
-
-        if update_changelog_on_bump:
-            values_to_add["update_changelog_on_bump"] = update_changelog_on_bump
-
-        if major_version_zero:
-            values_to_add["major_version_zero"] = major_version_zero
 
         # Collect hook data
         hook_types = questionary.checkbox(
@@ -152,7 +136,18 @@ class Init:
 
         # Create and initialize config
         self.config.init_empty_config_content()
-        self._update_config_file(values_to_add)
+
+        self.config.set_key("name", cz_name)
+        self.config.set_key("tag_format", tag_format)
+        self.config.set_key("version_scheme", version_scheme)
+        if version_provider == "commitizen":
+            self.config.set_key("version", version.public)
+        else:
+            self.config.set_key("version_provider", version_provider)
+        if update_changelog_on_bump:
+            self.config.set_key("update_changelog_on_bump", update_changelog_on_bump)
+        if major_version_zero:
+            self.config.set_key("major_version_zero", major_version_zero)
 
         out.write("\nYou can bump the version running:\n")
         out.info("\tcz bump\n")
@@ -365,7 +360,3 @@ class Init:
             hook_types = ["commit-msg", "pre-push"]
         self._exec_install_pre_commit_hook(hook_types)
         out.write("commitizen pre-commit hook is now installed in your '.git'\n")
-
-    def _update_config_file(self, values: dict[str, Any]) -> None:
-        for key, value in values.items():
-            self.config.set_key(key, value)
