@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, cast
 import argcomplete
 from decli import cli
 
-from commitizen import commands, config, out, version_schemes
+from commitizen import commands, config, version_schemes
 from commitizen.exceptions import (
     CommitizenException,
     ExitCode,
@@ -580,20 +580,11 @@ def parse_no_raise(comma_separated_no_raise: str) -> list[int]:
     Receives digits and strings and outputs the parsed integer which
     represents the exit code found in exceptions.
     """
-    no_raise_items: list[str] = comma_separated_no_raise.split(",")
-    no_raise_codes: list[int] = []
-    for item in no_raise_items:
-        if item.isdecimal():
-            no_raise_codes.append(int(item))
-            continue
-        try:
-            exit_code = ExitCode[item.strip()]
-        except KeyError:
-            out.warn(f"WARN: no_raise key `{item}` does not exist. Skipping.")
-            continue
-        else:
-            no_raise_codes.append(exit_code.value)
-    return no_raise_codes
+    return [
+        code.value
+        for s in comma_separated_no_raise.split(",")
+        if (code := ExitCode.from_str(s)) is not None
+    ]
 
 
 if TYPE_CHECKING:
