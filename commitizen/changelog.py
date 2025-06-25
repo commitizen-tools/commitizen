@@ -29,7 +29,7 @@ from __future__ import annotations
 
 import re
 from collections import OrderedDict, defaultdict
-from collections.abc import Generator, Iterable, Mapping, Sequence
+from collections.abc import Generator, Iterable, Mapping, MutableMapping, Sequence
 from dataclasses import dataclass
 from datetime import date
 from typing import TYPE_CHECKING, Any
@@ -167,8 +167,8 @@ def process_commit_message(
     hook: MessageBuilderHook | None,
     parsed: re.Match[str],
     commit: GitCommit,
-    changes: dict[str | None, list],
-    change_type_map: dict[str, str] | None = None,
+    ref_changes: MutableMapping[str | None, list],
+    change_type_map: Mapping[str, str] | None = None,
 ) -> None:
     message: dict[str, Any] = {
         "sha1": commit.rev,
@@ -178,13 +178,16 @@ def process_commit_message(
         **parsed.groupdict(),
     }
 
-    if processed := hook(message, commit) if hook else message:
-        messages = [processed] if isinstance(processed, dict) else processed
-        for msg in messages:
-            change_type = msg.pop("change_type", None)
-            if change_type_map:
-                change_type = change_type_map.get(change_type, change_type)
-            changes[change_type].append(msg)
+    processed_msg = hook(message, commit) if hook else message
+    if not processed_msg:
+        return
+
+    messages = [processed_msg] if isinstance(processed_msg, dict) else processed_msg
+    for msg in messages:
+        change_type = msg.pop("change_type", None)
+        if change_type_map:
+            change_type = change_type_map.get(change_type, change_type)
+        ref_changes[change_type].append(msg)
 
 
 def generate_ordered_changelog_tree(
