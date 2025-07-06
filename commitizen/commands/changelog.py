@@ -176,8 +176,11 @@ class Changelog:
 
     def _export_template(self) -> None:
         tpl = changelog.get_changelog_template(self.cz.template_loader, self.template)
-        # TODO: fix the following type ignores
-        src = Path(tpl.filename)  # type: ignore[arg-type]
+
+        if tpl.filename is None:
+            raise ValueError("Cannot export template: tpl.filename is None")
+
+        src = Path(tpl.filename)
         Path(self.export_template_to).write_text(src.read_text())  # type: ignore[arg-type]
 
     def __call__(self) -> None:
