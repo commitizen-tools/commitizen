@@ -1914,6 +1914,32 @@ def test_export_changelog_template_from_plugin(
     assert target.read_text() == tpl
 
 
+def test_export_changelog_template_fails_when_template_has_no_filename(
+    mocker: MockFixture,
+    tmp_commitizen_project: Path,
+):
+    project_root = Path(tmp_commitizen_project)
+    target = project_root / "changelog.jinja"
+
+    # Mock a template object with no filename
+    class FakeTemplate:
+        filename = None
+
+    # Patch get_changelog_template to return a template without a filename
+    mocker.patch(
+        "commitizen.changelog.get_changelog_template", return_value=FakeTemplate()
+    )
+
+    args = ["cz", "changelog", "--export-template", str(target)]
+    mocker.patch.object(sys, "argv", args)
+
+    with pytest.raises(NotAllowed) as exc_info:
+        cli.main()
+
+    assert not target.exists()
+    assert "Template filename is not set" in str(exc_info.value)
+
+
 @skip_below_py_3_13
 def test_changelog_command_shows_description_when_use_help_option(
     mocker: MockFixture, capsys, file_regression
