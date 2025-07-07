@@ -49,6 +49,9 @@ class GitObject:
     def __eq__(self, other: object) -> bool:
         return hasattr(other, "rev") and self.rev == other.rev
 
+    def __hash__(self) -> int:
+        return hash(self.rev)
+
 
 class GitCommit(GitObject):
     def __init__(
