@@ -24,7 +24,7 @@ Type: `list`
 
 Default: `[ ]`
 
-Files were the version will be updated. A pattern to match a line, can also be specified, separated by `:` [Read more][version_files]
+Files (or glob patterns) where the version will be updated. A pattern to match a line, can also be specified, separated by `:` [Read more][version_files]
 
 ### `version_provider`
 
