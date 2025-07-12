@@ -472,7 +472,7 @@ Supported variables:
 
 ### `version_files` \*
 
-It is used to identify the files which should be updated with the new version.
+It is used to identify the files or glob patterns which should be updated with the new version.
 It is also possible to provide a pattern for each file, separated by colons (`:`).
 
 Commitizen will update its configuration file automatically (`pyproject.toml`, `.cz`) when bumping,
@@ -488,7 +488,8 @@ Some examples
 [tool.commitizen]
 version_files = [
     "src/__version__.py",
-    "setup.py:version"
+    "packages/*/pyproject.toml:version",
+    "setup.py:version",
 ]
 ```
 
