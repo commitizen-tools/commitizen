@@ -2383,7 +2383,7 @@ on the list, and then you can use the exit code:</p>
 </table>
 <hr />
 <h3 id="version_files"><code>version_files</code> *<a class="headerlink" href="#version_files" title="Permanent link">&para;</a></h3>
-<p>It is used to identify the files which should be updated with the new version.
+<p>It is used to identify the files or glob patterns which should be updated with the new version.
 It is also possible to provide a pattern for each file, separated by colons (<code>:</code>).</p>
 <p>Commitizen will update its configuration file automatically (<code>pyproject.toml</code>, <code>.cz</code>) when bumping,
 regarding if the file is present or not in <code>version_files</code>.</p>
@@ -2393,7 +2393,8 @@ regarding if the file is present or not in <code>version_files</code>.</p>
 <div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="s2">&quot;src/__version__.py&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;setup.py:version&quot;</span>
+<span class="w">    </span><span class="s2">&quot;packages/*/pyproject.toml:version&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;setup.py:version&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 </code></pre></div>
 <p>In the example above, we can see the reference <code>"setup.py:version"</code>.
