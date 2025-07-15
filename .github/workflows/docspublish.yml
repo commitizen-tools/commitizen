@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 jobs:
   update-cli-screenshots:
@@ -58,22 +59,19 @@ jobs:
           python -m pip install -U pip poetry poethepoet
           poetry --version
           poetry install --no-root --only documentation
-      - name: Build docs
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          poetry doc:build
       - name: Generate Sponsors 💖
         uses: JamesIves/github-sponsors-readme-action@v1
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN_FOR_ORG }}
           file: "docs/README.md"
           organization: true
-      - name: Push doc to Github Page
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Build docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          poetry doc:build
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          personal_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: ./site
-          user_name: "github-actions[bot]"
-          user_email: "github-actions[bot]@users.noreply.github.com"
+          folder: ./site # The folder the action should deploy.
+          branch: gh-pages
