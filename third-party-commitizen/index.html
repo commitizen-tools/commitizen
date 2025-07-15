@@ -1225,6 +1225,48 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#cz-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      cz-path
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="cz-path">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installation_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example session
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1599,6 +1641,48 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#cz-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      cz-path
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="cz-path">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installation_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example session
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1703,6 +1787,45 @@ from being used in new commit messages</p>
 <span class="w">  </span><span class="nt">update_changelog_on_bump</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">  </span><span class="nt">version_provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deno-provider</span>
 <span class="w">  </span><span class="nt">version_scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">semver</span>
+</code></pre></div>
+<h3 id="cz-path"><a href="https://pypi.org/project/cz-path/">cz-path</a><a class="headerlink" href="#cz-path" title="Permanent link">&para;</a></h3>
+<p>Provides prefix choices for commit messages based on staged files (Git only).
+For example, if the staged files are <code>component/z/a.ts</code> and <code>component/z/b.ts</code>,
+the path prefix option will be <code>component/z</code> and commit message might look like:
+<code>component/z/: description of changes</code>. If only one file is staged, the extension
+is removed in the prefix.</p>
+<h4 id="installation_8">Installation<a class="headerlink" href="#installation_8" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>cz-path
+</code></pre></div>
+<h4 id="usage_6">Usage<a class="headerlink" href="#usage_6" title="Permanent link">&para;</a></h4>
+<p>Add <code>cz-path</code> to your configuration file.</p>
+<p>Example for <code>.cz.json</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;commitizen&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cz_path&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;remove_path_prefixes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;module_name&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The default value for <code>remove_path_prefixes</code> is <code>["src"]</code>. Adding <code>/</code> to the
+prefixes is not required.</p>
+<h4 id="example-session">Example session<a class="headerlink" href="#example-session" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code> $ git add .vscode/
+ $ cz -n cz_path c
+? Prefix: (Use arrow keys)
+ » .vscode
+   .vscode/
+   project
+   (empty)
+? Prefix: .vscode
+? Commit title: adjust settings
+
+.vscode: adjust settings
+
+[main 0000000] .vscode: adjust settings
+ 2 files changed, 1 insertion(+), 11 deletions(-)
+
+Commit successful!
 </code></pre></div>
 
 
