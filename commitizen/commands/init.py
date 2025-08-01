@@ -60,6 +60,10 @@ class ProjectInfo:
         return os.path.isfile("package.json")
 
     @property
+    def is_dart_package(self) -> bool:
+        return os.path.isfile("pubspec.yaml")
+
+    @property
     def is_php_composer(self) -> bool:
         return os.path.isfile("composer.json")
 
@@ -234,6 +238,7 @@ class Init:
             "cargo": "cargo: Get and set version from Cargo.toml:project.version field",
             "composer": "composer: Get and set version from composer.json:project.version field",
             "npm": "npm: Get and set version from package.json:project.version field",
+            "dart": "dart: Get and set version from pubspec.yaml:version field",
             "pep621": "pep621: Get and set version from pyproject.toml:project.version field",
             "poetry": "poetry: Get and set version from pyproject.toml:tool.poetry.version field",
             "uv": "uv: Get and Get and set version from pyproject.toml and uv.lock",
@@ -252,6 +257,8 @@ class Init:
             default_val = "cargo"
         elif self.project_info.is_npm_package:
             default_val = "npm"
+        elif self.project_info.is_dart_package:
+            default_val = "dart"
         elif self.project_info.is_php_composer:
             default_val = "composer"
 

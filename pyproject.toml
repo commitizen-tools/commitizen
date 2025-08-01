@@ -24,6 +24,7 @@ dependencies = [
     "charset-normalizer (>=2.1.0,<4)",
     # Use the Python 3.11 and 3.12 compatible API: https://github.com/python/importlib_metadata#compatibility
     "importlib-metadata >=8.0.0,<8.7.0 ; python_version < '3.10'",
+    "ruamel-yaml (>=0.18.14,<0.19.0)",
 ]
 keywords = ["commitizen", "conventional", "commits", "git"]
 # See also: https://pypi.org/classifiers/
@@ -71,6 +72,7 @@ cargo = "commitizen.providers:CargoProvider"
 commitizen = "commitizen.providers:CommitizenProvider"
 composer = "commitizen.providers:ComposerProvider"
 npm = "commitizen.providers:NpmProvider"
+dart = "commitizen.providers:DartProvider"
 pep621 = "commitizen.providers:Pep621Provider"
 poetry = "commitizen.providers:PoetryProvider"
 scm = "commitizen.providers:ScmProvider"

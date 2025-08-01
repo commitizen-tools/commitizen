@@ -335,6 +335,7 @@ Commitizen provides some version providers for some well known formats:
 | `uv`         | Get and set version from `pyproject.toml` `project.version` field and `uv.lock` `package.version` field whose `package.name` field is the same as `pyproject.toml` `project.name` field                                 |
 | `cargo`      | Get and set version from `Cargo.toml` `package.version` field and `Cargo.lock` `package.version` field whose `package.name` field is the same as `Cargo.toml` `package.name` field                                      |
 | `npm`        | Get and set version from `package.json` `version` field, `package-lock.json` `version,packages.''.version` fields if the file exists, and `npm-shrinkwrap.json` `version,packages.''.version` fields if the file exists |
+| `dart`       | Get and set version from `pubspec.yaml` `version` field |
 | `composer`   | Get and set version from `composer.json` `project.version` field                                                                                                                                                        |
 
 !!! note

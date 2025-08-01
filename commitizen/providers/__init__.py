@@ -14,6 +14,7 @@ from commitizen.providers.base_provider import VersionProvider
 from commitizen.providers.cargo_provider import CargoProvider
 from commitizen.providers.commitizen_provider import CommitizenProvider
 from commitizen.providers.composer_provider import ComposerProvider
+from commitizen.providers.dart_provider import DartProvider
 from commitizen.providers.npm_provider import NpmProvider
 from commitizen.providers.pep621_provider import Pep621Provider
 from commitizen.providers.poetry_provider import PoetryProvider
@@ -24,6 +25,7 @@ __all__ = [
     "CargoProvider",
     "CommitizenProvider",
     "ComposerProvider",
+    "DartProvider",
     "NpmProvider",
     "Pep621Provider",
     "PoetryProvider",

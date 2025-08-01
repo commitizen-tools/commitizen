@@ -33,6 +33,7 @@ During the initialization process, you'll be prompted to configure the following
 2. **Version Provider**: Choose how to manage versioning in your project. Commitizen supports multiple version management systems:
     - `commitizen`: Uses Commitizen's built-in version management system
     - `npm`: Manages version in `package.json` for Node.js projects
+    - `dart`: Manages version in `pubspec.yaml` for Dart projects
     - `cargo`: Manages version in `Cargo.toml` for Rust projects
     - `composer`: Manages version in `composer.json` for PHP projects
     - `pep621`: Uses `pyproject.toml` with PEP 621 standard
