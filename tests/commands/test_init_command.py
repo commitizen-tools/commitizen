@@ -32,7 +32,7 @@ cz_hook_config = {
     "rev": f"v{__version__}",
     "hooks": [
         {"id": "commitizen"},
-        {"id": "commitizen-branch", "stages": ["push"]},
+        {"id": "commitizen-branch", "stages": ["pre-push"]},
     ],
 }
 
