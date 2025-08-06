@@ -63,6 +63,7 @@ Before installing Commitizen, ensure you have:
 #### Global Installation (Recommended)
 
 The recommended way to install Commitizen is using [`pipx`](https://pipx.pypa.io/) or [`uv`](https://docs.astral.sh/uv/), which ensures a clean, isolated installation:
+
 **Using pipx:**
 ```bash
 # Install Commitizen
