@@ -111,7 +111,7 @@ poetry add commitizen --dev
 
 **Using uv:**
 ```bash
-uv add commitizen
+uv add --dev commitizen
 ```
 
 **Using pdm:**
