@@ -1,20 +1,14 @@
 import os
 from collections.abc import Iterable
-from typing import TYPE_CHECKING, TypedDict
+from typing import TypedDict
+
+from jinja2 import Template
 
 from commitizen import defaults
 from commitizen.config import BaseConfig
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.utils import multiple_line_breaker, required_validator
 from commitizen.question import CzQuestion
-
-if TYPE_CHECKING:
-    from jinja2 import Template
-else:
-    try:
-        from jinja2 import Template
-    except ImportError:
-        from string import Template
 
 __all__ = ["ConventionalCommitsCz"]
 
@@ -181,10 +175,7 @@ class ConventionalCommitsCz(BaseCommitizen):
 
     def message(self, answers: ConventionalCommitsAnswers) -> str:  # type: ignore[override]
         if _message_template := self.custom_settings.get("message_template"):
-            message_template = Template(_message_template)
-            if getattr(Template, "substitute", None):
-                return message_template.substitute(**answers)  # type: ignore[attr-defined,no-any-return] # pragma: no cover # TODO: check if we can fix this
-            return message_template.render(**answers)
+            return Template(_message_template).render(**answers)
 
         prefix = answers["prefix"]
         scope = answers["scope"]
