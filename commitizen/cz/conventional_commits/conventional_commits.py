@@ -1,10 +1,20 @@
 import os
-from typing import TypedDict
+from collections.abc import Iterable
+from typing import TYPE_CHECKING, TypedDict
 
 from commitizen import defaults
+from commitizen.config import BaseConfig
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.utils import multiple_line_breaker, required_validator
 from commitizen.question import CzQuestion
+
+if TYPE_CHECKING:
+    from jinja2 import Template
+else:
+    try:
+        from jinja2 import Template
+    except ImportError:
+        from string import Template
 
 __all__ = ["ConventionalCommitsCz"]
 
@@ -39,8 +49,31 @@ class ConventionalCommitsCz(BaseCommitizen):
     }
     changelog_pattern = defaults.BUMP_PATTERN
 
-    def questions(self) -> list[CzQuestion]:
-        return [
+    def __init__(self, config: BaseConfig) -> None:
+        super().__init__(config)
+
+        self.custom_settings: defaults.CzSettings = self.config.settings.get(
+            "customize", {}
+        )
+
+        if self.custom_settings:
+            for attr_name in [
+                "bump_pattern",
+                "bump_map",
+                "bump_map_major_version_zero",
+                "change_type_order",
+                "commit_parser",
+                "change_type_map",
+            ]:
+                if value := self.custom_settings.get(attr_name):
+                    setattr(self, attr_name, value)
+
+        self.changelog_pattern = (
+            self.custom_settings.get("changelog_pattern") or self.bump_pattern
+        )
+
+    def questions(self) -> Iterable[CzQuestion]:
+        return self.custom_settings.get("questions") or [
             {
                 "type": "list",
                 "name": "prefix",
@@ -147,6 +180,12 @@ class ConventionalCommitsCz(BaseCommitizen):
         ]
 
     def message(self, answers: ConventionalCommitsAnswers) -> str:  # type: ignore[override]
+        if _message_template := self.custom_settings.get("message_template"):
+            message_template = Template(_message_template)
+            if getattr(Template, "substitute", None):
+                return message_template.substitute(**answers)  # type: ignore[attr-defined,no-any-return] # pragma: no cover # TODO: check if we can fix this
+            return message_template.render(**answers)
+
         prefix = answers["prefix"]
         scope = answers["scope"]
         subject = answers["subject"]
@@ -166,7 +205,7 @@ class ConventionalCommitsCz(BaseCommitizen):
         return f"{prefix}{scope}: {subject}{body}{footer}"
 
     def example(self) -> str:
-        return (
+        return self.custom_settings.get("example") or (
             "fix: correct minor typos in code\n"
             "\n"
             "see the issue for details on the typos fixed\n"
@@ -175,7 +214,7 @@ class ConventionalCommitsCz(BaseCommitizen):
         )
 
     def schema(self) -> str:
-        return (
+        return self.custom_settings.get("schema") or (
             "<type>(<scope>): <subject>\n"
             "<BLANK LINE>\n"
             "<body>\n"
@@ -184,6 +223,8 @@ class ConventionalCommitsCz(BaseCommitizen):
         )
 
     def schema_pattern(self) -> str:
+        if schema_pattern := self.custom_settings.get("schema_pattern"):
+            return schema_pattern
         change_types = (
             "build",
             "bump",
@@ -209,6 +250,11 @@ class ConventionalCommitsCz(BaseCommitizen):
         )
 
     def info(self) -> str:
+        if info_path := self.custom_settings.get("info_path"):
+            with open(info_path, encoding=self.config.settings["encoding"]) as f:
+                return f.read()
+        if info := self.custom_settings.get("info"):
+            return info
         dir_path = os.path.dirname(os.path.realpath(__file__))
         filepath = os.path.join(dir_path, "conventional_commits_info.txt")
         with open(filepath, encoding=self.config.settings["encoding"]) as f:
