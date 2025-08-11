@@ -33,7 +33,7 @@ class CommitArgs(TypedDict, total=False):
     dry_run: bool
     edit: bool
     extra_cli_args: str
-    message_length_limit: int
+    message_length_limit: int | None
     no_retry: bool
     signoff: bool
     write_message_to_file: Path | None
@@ -80,8 +80,11 @@ class Commit:
             raise NoAnswersError()
 
         message = self.cz.message(answers)
-        if limit := self.arguments.get("message_length_limit", 0):
+        if limit := self.arguments.get(
+            "message_length_limit", self.config.settings.get("message_length_limit", 0)
+        ):
             self._validate_subject_length(message=message, length_limit=limit)
+
         return message
 
     def _validate_subject_length(self, *, message: str, length_limit: int) -> None:
