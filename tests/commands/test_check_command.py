@@ -8,6 +8,7 @@ from pytest_mock import MockFixture
 
 from commitizen import cli, commands, git
 from commitizen.exceptions import (
+    CommitMessageLengthExceededError,
     InvalidCommandArgumentError,
     InvalidCommitMessageError,
     NoCommitsFoundError,
@@ -449,6 +450,65 @@ def test_check_command_with_message_length_limit_exceeded(config, mocker: MockFi
         arguments={"message": message, "message_length_limit": len(message) - 1},
     )
 
-    with pytest.raises(InvalidCommitMessageError):
+    with pytest.raises(CommitMessageLengthExceededError):
         check_cmd()
         error_mock.assert_called_once()
+
+
+def test_check_command_with_config_message_length_limit(config, mocker: MockFixture):
+    success_mock = mocker.patch("commitizen.out.success")
+    message = "fix(scope): some commit message"
+
+    config.settings["message_length_limit"] = len(message) + 1
+
+    check_cmd = commands.Check(
+        config=config,
+        arguments={"message": message},
+    )
+
+    check_cmd()
+    success_mock.assert_called_once()
+
+
+def test_check_command_with_config_message_length_limit_exceeded(
+    config, mocker: MockFixture
+):
+    error_mock = mocker.patch("commitizen.out.error")
+    message = "fix(scope): some commit message"
+
+    config.settings["message_length_limit"] = len(message) - 1
+
+    check_cmd = commands.Check(
+        config=config,
+        arguments={"message": message},
+    )
+
+    with pytest.raises(CommitMessageLengthExceededError):
+        check_cmd()
+        error_mock.assert_called_once()
+
+
+def test_check_command_cli_overrides_config_message_length_limit(
+    config, mocker: MockFixture
+):
+    success_mock = mocker.patch("commitizen.out.success")
+    message = "fix(scope): some commit message"
+
+    config.settings["message_length_limit"] = len(message) - 1
+
+    check_cmd = commands.Check(
+        config=config,
+        arguments={"message": message, "message_length_limit": len(message) + 1},
+    )
+
+    check_cmd()
+    success_mock.assert_called_once()
+
+    success_mock.reset_mock()
+    check_cmd = commands.Check(
+        config=config,
+        arguments={"message": message, "message_length_limit": 0},
+    )
+
+    check_cmd()
+    success_mock.assert_called_once()
