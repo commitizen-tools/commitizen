@@ -7,6 +7,7 @@ from typing import TypedDict
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
+    CommitMessageLengthExceededError,
     InvalidCommandArgumentError,
     InvalidCommitMessageError,
     NoCommitsFoundError,
@@ -42,7 +43,13 @@ class Check:
             arguments.get("allow_abort", config.settings["allow_abort"])
         )
         self.use_default_range = bool(arguments.get("use_default_range"))
-        self.max_msg_length = arguments.get("message_length_limit", 0)
+
+        # Use command line argument if provided, otherwise use config setting
+        cmd_length_limit = arguments.get("message_length_limit")
+        if cmd_length_limit is None:
+            self.max_msg_length = config.settings.get("message_length_limit", 0)
+        else:
+            self.max_msg_length = cmd_length_limit
 
         # we need to distinguish between None and [], which is a valid value
         allowed_prefixes = arguments.get("allowed_prefixes")
@@ -162,6 +169,11 @@ class Check:
         if self.max_msg_length:
             msg_len = len(commit_msg.partition("\n")[0].strip())
             if msg_len > self.max_msg_length:
-                return False
+                raise CommitMessageLengthExceededError(
+                    f"commit validation: failed!\n"
+                    f"commit message length exceeds the limit.\n"
+                    f'commit "": "{commit_msg}"\n'
+                    f"message length limit: {self.max_msg_length} (actual: {msg_len})"
+                )
 
         return bool(pattern.match(commit_msg))
