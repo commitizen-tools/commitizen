@@ -81,7 +81,12 @@ class Commit:
 
         message = cz.message(answers)
         message_len = len(message.partition("\n")[0].strip())
-        message_length_limit = self.arguments.get("message_length_limit", 0)
+
+        
+        message_length_limit = self.arguments.get("message_length_limit")
+        if message_length_limit is None:
+            message_length_limit = self.config.settings.get("message_length_limit", 0)
+
         if 0 < message_length_limit < message_len:
             raise CommitMessageLengthExceededError(
                 f"Length of commit message exceeds limit ({message_len}/{message_length_limit})"

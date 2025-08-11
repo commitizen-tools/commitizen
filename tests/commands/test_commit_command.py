@@ -554,3 +554,62 @@ def test_commit_when_nothing_added_to_commit(config, mocker: MockFixture, out):
 
     commit_mock.assert_called_once()
     error_mock.assert_called_once_with(out)
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_with_config_message_length_limit(config, mocker: MockFixture):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prefix = "feat"
+    subject = "random subject"
+    message_length = len(prefix) + len(": ") + len(subject)
+    prompt_mock.return_value = {
+        "prefix": prefix,
+        "subject": subject,
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "random body",
+        "footer": "random footer",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
+    success_mock = mocker.patch("commitizen.out.success")
+
+    config.settings["message_length_limit"] = message_length
+    commands.Commit(config, {})()
+    success_mock.assert_called_once()
+
+    config.settings["message_length_limit"] = message_length - 1
+    with pytest.raises(CommitMessageLengthExceededError):
+        commands.Commit(config, {})()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_cli_overrides_config_message_length_limit(
+    config, mocker: MockFixture
+):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prefix = "feat"
+    subject = "random subject"
+    message_length = len(prefix) + len(": ") + len(subject)
+    prompt_mock.return_value = {
+        "prefix": prefix,
+        "subject": subject,
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "random body",
+        "footer": "random footer",
+    }
+
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
+    success_mock = mocker.patch("commitizen.out.success")
+
+    config.settings["message_length_limit"] = message_length - 1
+
+    commands.Commit(config, {"message_length_limit": message_length})()
+    success_mock.assert_called_once()
+
+    success_mock.reset_mock()
+    commands.Commit(config, {"message_length_limit": 0})()
+    success_mock.assert_called_once()
