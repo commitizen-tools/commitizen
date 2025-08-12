@@ -119,6 +119,14 @@ Automatically retry failed commit when running `cz commit`. [Read more][retry_af
 
 Disallow empty commit messages. Useful in CI. [Read more][allow_abort]
 
+### `message_length_limit`
+
+Type: `int`
+
+Default: `0`
+
+Maximum length of the commit message. Setting it to `0` disables the length limit. It can be overridden by the `-l/--message-length-limit` command line argument.
+
 ### `allowed_prefixes`
 
 - Type: `list`
