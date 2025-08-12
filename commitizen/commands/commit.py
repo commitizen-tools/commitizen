@@ -82,7 +82,6 @@ class Commit:
         message = cz.message(answers)
         message_len = len(message.partition("\n")[0].strip())
 
-        
         message_length_limit = self.arguments.get("message_length_limit")
         if message_length_limit is None:
             message_length_limit = self.config.settings.get("message_length_limit", 0)
