@@ -10,7 +10,7 @@ jobs:
         platform: [ubuntu-22.04, macos-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Set up Python ${{ matrix.python-version }}
