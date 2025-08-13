@@ -19,7 +19,7 @@ class CheckArgs(TypedDict, total=False):
     commit_msg: str
     rev_range: str
     allow_abort: bool
-    message_length_limit: int
+    message_length_limit: int | None
     allowed_prefixes: list[str]
     message: str
     use_default_range: bool
@@ -44,12 +44,7 @@ class Check:
         )
         self.use_default_range = bool(arguments.get("use_default_range"))
 
-        # Use command line argument if provided, otherwise use config setting
-        cmd_length_limit = arguments.get("message_length_limit")
-        if cmd_length_limit is None:
-            self.max_msg_length = config.settings.get("message_length_limit", 0)
-        else:
-            self.max_msg_length = cmd_length_limit
+        self.max_msg_length = arguments.get("message_length_limit", config.settings.get("message_length_limit", None))
 
         # we need to distinguish between None and [], which is a valid value
         allowed_prefixes = arguments.get("allowed_prefixes")
@@ -95,7 +90,7 @@ class Check:
         invalid_msgs_content = "\n".join(
             f'commit "{commit.rev}": "{commit.message}"'
             for commit in commits
-            if not self._validate_commit_message(commit.message, pattern)
+            if not self._validate_commit_message(commit.message, pattern, commit.rev)
         )
         if invalid_msgs_content:
             # TODO: capitalize the first letter of the error message for consistency in v5
@@ -158,7 +153,7 @@ class Check:
         return "\n".join(lines)
 
     def _validate_commit_message(
-        self, commit_msg: str, pattern: re.Pattern[str]
+        self, commit_msg: str, pattern: re.Pattern[str], commit_hash: str
     ) -> bool:
         if not commit_msg:
             return self.allow_abort
@@ -166,13 +161,13 @@ class Check:
         if any(map(commit_msg.startswith, self.allowed_prefixes)):
             return True
 
-        if self.max_msg_length:
+        if self.max_msg_length is not None:
             msg_len = len(commit_msg.partition("\n")[0].strip())
             if msg_len > self.max_msg_length:
                 raise CommitMessageLengthExceededError(
                     f"commit validation: failed!\n"
                     f"commit message length exceeds the limit.\n"
-                    f'commit "": "{commit_msg}"\n'
+                    f'commit "{commit_hash}": "{commit_msg}"\n'
                     f"message length limit: {self.max_msg_length} (actual: {msg_len})"
                 )
 

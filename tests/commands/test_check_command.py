@@ -507,7 +507,7 @@ def test_check_command_cli_overrides_config_message_length_limit(
     success_mock.reset_mock()
     check_cmd = commands.Check(
         config=config,
-        arguments={"message": message, "message_length_limit": 0},
+        arguments={"message": message, "message_length_limit": None},
     )
 
     check_cmd()
