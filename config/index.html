@@ -1779,129 +1779,198 @@
 <h1 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h1>
 <h2 id="settings">Settings<a class="headerlink" href="#settings" title="Permanent link">&para;</a></h2>
 <h3 id="name"><code>name</code><a class="headerlink" href="#name" title="Permanent link">&para;</a></h3>
-<p>Type: <code>str</code></p>
-<p>Default: <code>"cz_conventional_commits"</code></p>
-<p>Name of the committing rules to use</p>
+<ul>
+<li>Type: <code>str</code></li>
+<li>Default: <code>"cz_conventional_commits"</code></li>
+</ul>
+<p>Name of the committing rules to use.</p>
 <h3 id="version"><code>version</code><a class="headerlink" href="#version" title="Permanent link">&para;</a></h3>
-<p>Type: <code>str</code></p>
-<p>Default: <code>None</code></p>
-<p>Current version. Example: "0.1.2". Required if you use <code>version_provider = "commitizen"</code>.</p>
+<ul>
+<li>Type: <code>str</code></li>
+<li>Default: <code>None</code></li>
+</ul>
+<p>Current version. Example: <code>"0.1.2"</code>. Required if you use <code>version_provider = "commitizen"</code>.</p>
 <h3 id="version_files"><code>version_files</code><a class="headerlink" href="#version_files" title="Permanent link">&para;</a></h3>
-<p>Type: <code>list</code></p>
-<p>Default: <code>[ ]</code></p>
+<ul>
+<li>Type: <code>list</code></li>
+<li>Default: <code>[]</code></li>
+</ul>
 <p>Files (or glob patterns) where the version will be updated. A pattern to match a line, can also be specified, separated by <code>:</code> <a href="../commands/bump/#version_files">Read more</a></p>
 <h3 id="version_provider"><code>version_provider</code><a class="headerlink" href="#version_provider" title="Permanent link">&para;</a></h3>
-<p>Type: <code>str</code></p>
-<p>Default: <code>commitizen</code></p>
-<p>Version provider used to read and write version <a href="#version-providers">Read more</a></p>
+<ul>
+<li>Type: <code>str</code></li>
+<li>Default: <code>commitizen</code></li>
+</ul>
+<p>Version provider used to read and write version. <a href="#version-providers">Read more</a></p>
 <h3 id="version_scheme"><code>version_scheme</code><a class="headerlink" href="#version_scheme" title="Permanent link">&para;</a></h3>
-<p>Type: <code>str</code></p>
-<p>Default: <code>pep440</code></p>
-<p>Select a version scheme from the following options [<code>pep440</code>, <code>semver</code>, <code>semver2</code>].
-Useful for non-python projects. <a href="../commands/bump/#-version-scheme">Read more</a></p>
+<ul>
+<li>Type: <code>str</code></li>
+<li>Default: <code>pep440</code></li>
+</ul>
+<p>Select a version scheme from the following options:</p>
+<ul>
+<li><code>pep440</code></li>
+<li><code>semver</code></li>
+<li><code>semver2</code></li>
+</ul>
+<p>Useful for non-python projects. <a href="../commands/bump/#-version-scheme">Read more</a></p>
 <h3 id="tag_format"><code>tag_format</code><a class="headerlink" href="#tag_format" title="Permanent link">&para;</a></h3>
-<p>Type: <code>str</code></p>
-<p>Default: <code>$version</code></p>
+<ul>
+<li>Type: <code>str</code></li>
+<li>Default: <code>$version</code></li>
+</ul>
 <p>Format for the git tag, useful for old projects, that use a convention like <code>"v1.2.1"</code>. <a href="../commands/bump/#tag_format">Read more</a></p>
 <h3 id="legacy_tag_formats"><code>legacy_tag_formats</code><a class="headerlink" href="#legacy_tag_formats" title="Permanent link">&para;</a></h3>
-<p>Type: <code>list</code></p>
-<p>Default: <code>[ ]</code></p>
+<ul>
+<li>Type: <code>list</code></li>
+<li>Default: <code>[]</code></li>
+</ul>
 <p>Legacy git tag formats, useful for old projects that changed tag format.
 Tags matching those formats will be recognized as version tags and be included in the changelog.
 Each entry uses the syntax as <a href="#tag_format"><code>tag_format</code></a>. <a href="../commands/bump/#tag_format">Read more</a></p>
 <h3 id="ignored_tag_formats"><code>ignored_tag_formats</code><a class="headerlink" href="#ignored_tag_formats" title="Permanent link">&para;</a></h3>
-<p>Type: <code>list</code></p>
-<p>Default: <code>[ ]</code></p>
+<ul>
+<li>Type: <code>list</code></li>
+<li>Default: <code>[]</code></li>
+</ul>
 <p>Tags matching those formats will be totally ignored and won't raise a warning.
 Each entry uses the syntax as <a href="#tag_format"><code>tag_format</code></a> with the addition of <code>*</code>
 that will match everything (non-greedy). <a href="../commands/bump/#tag_format">Read more</a></p>
 <h3 id="update_changelog_on_bump"><code>update_changelog_on_bump</code><a class="headerlink" href="#update_changelog_on_bump" title="Permanent link">&para;</a></h3>
-<p>Type: <code>bool</code></p>
-<p>Default: <code>false</code></p>
-<p>Create changelog when running <code>cz bump</code></p>
+<ul>
+<li>Type: <code>bool</code></li>
+<li>Default: <code>False</code></li>
+</ul>
+<p>Create changelog when running <code>cz bump</code>.</p>
 <h3 id="gpg_sign"><code>gpg_sign</code><a class="headerlink" href="#gpg_sign" title="Permanent link">&para;</a></h3>
-<p>Type: <code>bool</code></p>
-<p>Default: <code>false</code></p>
+<ul>
+<li>Type: <code>bool</code></li>
+<li>Default: <code>False</code></li>
+</ul>
 <p>Use gpg signed tags instead of lightweight tags.</p>
 <h3 id="annotated_tag"><code>annotated_tag</code><a class="headerlink" href="#annotated_tag" title="Permanent link">&para;</a></h3>
-<p>Type: <code>bool</code></p>
-<p>Default: <code>false</code></p>
+<ul>
+<li>Type: <code>bool</code></li>
+<li>Default: <code>False</code></li>
+</ul>
 <p>Use annotated tags instead of lightweight tags. <a href="https://stackoverflow.com/a/11514139/2047185">See difference</a></p>
 <h3 id="bump_message"><code>bump_message</code><a class="headerlink" href="#bump_message" title="Permanent link">&para;</a></h3>
-<p>Type: <code>str</code></p>
-<p>Default: <code>None</code></p>
-<p>Create custom commit message, useful to skip CI. <a href="../commands/bump/#bump_message">Read more</a></p>
+<ul>
+<li>Type: <code>str</code></li>
+<li>Default: <code>None</code></li>
+</ul>
+<p>Create custom commit message. Useful to skip CI. <a href="../commands/bump/#bump_message">Read more</a></p>
 <h3 id="retry_after_failure"><code>retry_after_failure</code><a class="headerlink" href="#retry_after_failure" title="Permanent link">&para;</a></h3>
-<p>Type: <code>bool</code></p>
-<p>Default: <code>false</code></p>
+<ul>
+<li>Type: <code>bool</code></li>
+<li>Default: <code>False</code></li>
+</ul>
 <p>Automatically retry failed commit when running <code>cz commit</code>. <a href="../commands/commit/#retry">Read more</a></p>
 <h3 id="allow_abort"><code>allow_abort</code><a class="headerlink" href="#allow_abort" title="Permanent link">&para;</a></h3>
-<p>Type: <code>bool</code></p>
-<p>Default: <code>false</code></p>
-<p>Disallow empty commit messages, useful in CI. <a href="../commands/check/#allow-abort">Read more</a></p>
+<ul>
+<li>Type: <code>bool</code></li>
+<li>Default: <code>False</code></li>
+</ul>
+<p>Disallow empty commit messages. Useful in CI. <a href="../commands/check/#allow-abort">Read more</a></p>
 <h3 id="allowed_prefixes"><code>allowed_prefixes</code><a class="headerlink" href="#allowed_prefixes" title="Permanent link">&para;</a></h3>
-<p>Type: <code>list</code>
-Default: <code>[ "Merge", "Revert", "Pull request", "fixup!", "squash!"]</code>
-Allow some prefixes and do not try to match the regex when checking the message <a href="../commands/check/#allowed-prefixes">Read more</a></p>
+<ul>
+<li>Type: <code>list</code></li>
+<li>Default: <code>["Merge", "Revert", "Pull request", "fixup!", "squash!"]</code></li>
+</ul>
+<p>List of prefixes that commitizen ignores when verifying messages. <a href="../commands/check/#allowed-prefixes">Read more</a></p>
 <h3 id="changelog_file"><code>changelog_file</code><a class="headerlink" href="#changelog_file" title="Permanent link">&para;</a></h3>
-<p>Type: <code>str</code></p>
-<p>Default: <code>CHANGELOG.md</code></p>
+<ul>
+<li>Type: <code>str</code></li>
+<li>Default: <code>CHANGELOG.md</code></li>
+</ul>
 <p>Filename of exported changelog</p>
 <h3 id="changelog_format"><code>changelog_format</code><a class="headerlink" href="#changelog_format" title="Permanent link">&para;</a></h3>
-<p>Type: <code>str</code></p>
-<p>Default: None</p>
-<p>Format used to parse and generate the changelog, If not specified, guessed from <a href="#changelog_file"><code>changelog_file</code></a>.</p>
+<ul>
+<li>Type: <code>str</code></li>
+<li>Default: <code>None</code></li>
+</ul>
+<p>Format used to parse and generate the changelog. If not specified, guessed from <a href="#changelog_file"><code>changelog_file</code></a>.</p>
 <h3 id="changelog_incremental"><code>changelog_incremental</code><a class="headerlink" href="#changelog_incremental" title="Permanent link">&para;</a></h3>
-<p>Type: <code>bool</code></p>
-<p>Default: <code>false</code></p>
-<p>Update changelog with the missing versions. This is good if you don't want to replace previous versions in the file. Note: when doing <code>cz bump --changelog</code> this is automatically set to <code>true</code></p>
+<ul>
+<li>Type: <code>bool</code></li>
+<li>Default: <code>False</code></li>
+</ul>
+<p>Update changelog with the missing versions. This is good if you don't want to replace previous versions in the file.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When doing <code>cz bump --changelog</code> this is automatically set to <code>True</code></p>
+</div>
 <h3 id="changelog_start_rev"><code>changelog_start_rev</code><a class="headerlink" href="#changelog_start_rev" title="Permanent link">&para;</a></h3>
-<p>Type: <code>str</code></p>
-<p>Default: <code>None</code></p>
+<ul>
+<li>Type: <code>str</code></li>
+<li>Default: <code>None</code></li>
+</ul>
 <p>Start from a given git rev to generate the changelog</p>
 <h3 id="changelog_merge_prerelease"><code>changelog_merge_prerelease</code><a class="headerlink" href="#changelog_merge_prerelease" title="Permanent link">&para;</a></h3>
-<p>Type: <code>bool</code></p>
-<p>Default: <code>false</code></p>
+<ul>
+<li>Type: <code>bool</code></li>
+<li>Default: <code>False</code></li>
+</ul>
 <p>Collect all changes of prerelease versions into the next non-prerelease version when creating the changelog.</p>
 <h3 id="style"><code>style</code><a class="headerlink" href="#style" title="Permanent link">&para;</a></h3>
-<p>Type: <code>list</code></p>
-<p>see above</p>
+<ul>
+<li>Type: <code>list</code></li>
+<li>Default: <code>[]</code></li>
+</ul>
 <p>Style for the prompts (It will merge this value with default style.) <a href="https://github.com/tmbo/questionary#additional-features">See More (Styling your prompts with your favorite colors)</a></p>
 <h3 id="customize"><code>customize</code><a class="headerlink" href="#customize" title="Permanent link">&para;</a></h3>
-<p>Type: <code>dict</code></p>
-<p>Default: <code>None</code></p>
+<ul>
+<li>Type: <code>dict</code></li>
+<li>Default: <code>None</code></li>
+</ul>
 <p><strong>This is only supported when config through <code>toml</code>.</strong> Custom rules for committing and bumping. <a href="../customization/">Read more</a></p>
 <h3 id="use_shortcuts"><code>use_shortcuts</code><a class="headerlink" href="#use_shortcuts" title="Permanent link">&para;</a></h3>
-<p>Type: <code>bool</code></p>
-<p>Default: <code>false</code></p>
+<ul>
+<li>Type: <code>bool</code></li>
+<li>Default: <code>False</code></li>
+</ul>
 <p>If enabled, Commitizen will show keyboard shortcuts when selecting from a list. Define a <code>key</code> for each of your choices to set the key. <a href="../customization/#shortcut-keys">Read more</a></p>
 <h3 id="major_version_zero"><code>major_version_zero</code><a class="headerlink" href="#major_version_zero" title="Permanent link">&para;</a></h3>
-<p>Type: <code>bool</code></p>
-<p>Default: <code>false</code></p>
-<p>When true, breaking changes on a <code>0.x</code> will remain as a <code>0.x</code> version. On <code>false</code>, a breaking change will bump a <code>0.x</code> version to <code>1.0</code>. <a href="../commands/bump/#-major-version-zero">Read more</a></p>
+<ul>
+<li>Type: <code>bool</code></li>
+<li>Default: <code>False</code></li>
+</ul>
+<p>If enabled, breaking changes on a <code>0.x</code> will remain as a <code>0.x</code> version. Otherwise, a breaking change will bump a <code>0.x</code> version to <code>1.0</code>. <a href="../commands/bump/#-major-version-zero">Read more</a></p>
 <h3 id="prerelease_offset"><code>prerelease_offset</code><a class="headerlink" href="#prerelease_offset" title="Permanent link">&para;</a></h3>
-<p>Type: <code>int</code></p>
-<p>Default: <code>0</code></p>
-<p>In some circumstances, a prerelease cannot start with a 0, e.g. in an embedded project individual characters are encoded as bytes. This can be done by specifying an offset from which to start counting. <a href="../commands/bump/#prerelease_offset">Read more</a></p>
+<ul>
+<li>Type: <code>int</code></li>
+<li>Default: <code>0</code></li>
+</ul>
+<p>In some circumstances, a prerelease cannot start with <code>0</code>-for example, in embedded projects where individual characters are encoded as bytes. You can specify an offset from which to start counting. <a href="../commands/bump/#prerelease_offset">Read more</a></p>
 <h3 id="pre_bump_hooks"><code>pre_bump_hooks</code><a class="headerlink" href="#pre_bump_hooks" title="Permanent link">&para;</a></h3>
-<p>Type: <code>list[str]</code></p>
-<p>Default: <code>[]</code></p>
+<ul>
+<li>Type: <code>list[str]</code></li>
+<li>Default: <code>[]</code></li>
+</ul>
 <p>Calls the hook scripts <strong>before</strong> bumping version. <a href="../commands/bump/#pre_bump_hooks">Read more</a></p>
 <h3 id="post_bump_hooks"><code>post_bump_hooks</code><a class="headerlink" href="#post_bump_hooks" title="Permanent link">&para;</a></h3>
-<p>Type: <code>list[str]</code></p>
-<p>Default: <code>[]</code></p>
+<ul>
+<li>Type: <code>list[str]</code></li>
+<li>Default: <code>[]</code></li>
+</ul>
 <p>Calls the hook scripts <strong>after</strong> bumping the version. <a href="../commands/bump/#post_bump_hooks">Read more</a></p>
 <h3 id="encoding"><code>encoding</code><a class="headerlink" href="#encoding" title="Permanent link">&para;</a></h3>
-<p>Type: <code>str</code></p>
-<p>Default: <code>utf-8</code></p>
+<ul>
+<li>Type: <code>str</code></li>
+<li>Default: <code>"utf-8"</code></li>
+</ul>
 <p>Sets the character encoding to be used when parsing commit messages. <a href="../tutorials/writing_commits/#writing-commits">Read more</a></p>
 <h3 id="template"><code>template</code><a class="headerlink" href="#template" title="Permanent link">&para;</a></h3>
-<p>Type: <code>str</code></p>
-<p>Default: <code>None</code> (provided by plugin)</p>
+<ul>
+<li>Type: <code>str</code></li>
+<li>Default: <code>None</code> (provided by plugin)</li>
+</ul>
 <p>Provide custom changelog jinja template path relative to the current working directory. <a href="../customization/#customizing-the-changelog-template">Read more</a></p>
 <h3 id="extras"><code>extras</code><a class="headerlink" href="#extras" title="Permanent link">&para;</a></h3>
-<p>Type: <code>dict[str, Any]</code></p>
-<p>Default: <code>{}</code></p>
+<ul>
+<li>Type: <code>dict[str, Any]</code></li>
+<li>Default: <code>{}</code></li>
+</ul>
 <p>Provide extra variables to the changelog template. <a href="../customization/#customizing-the-changelog-template">Read more</a></p>
 <h2 id="configuration-file">Configuration file<a class="headerlink" href="#configuration-file" title="Permanent link">&para;</a></h2>
 <h3 id="pyprojecttoml-cztoml-or-cztoml"><code>pyproject.toml</code>, <code>.cz.toml</code> or <code>cz.toml</code><a class="headerlink" href="#pyprojecttoml-cztoml-or-cztoml" title="Permanent link">&para;</a></h3>
@@ -1909,7 +1978,7 @@ Allow some prefixes and do not try to match the regex when checking the message 
 For a <strong>python</strong> project, we recommend adding an entry to your <code>pyproject.toml</code>.
 You can also create a <code>.cz.toml</code> or <code>cz.toml</code> file at the root of your project folder.</p>
 <p>Example configuration:</p>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<div class="highlight"><span class="filename">.cz.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cz_conventional_commits&quot;</span>
 <span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
 <span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
@@ -1932,7 +2001,7 @@ You can also create a <code>.cz.toml</code> or <code>cz.toml</code> file at the 
 </code></pre></div>
 <h3 id="czjson-or-czjson"><code>.cz.json</code> or <code>cz.json</code><a class="headerlink" href="#czjson-or-czjson" title="Permanent link">&para;</a></h3>
 <p>Commitizen has support for JSON configuration. Recommended for <code>NodeJS</code> projects.</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<div class="highlight"><span class="filename">.cz.json</span><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;commitizen&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cz_conventional_commits&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
@@ -1954,7 +2023,7 @@ You can also create a <code>.cz.toml</code> or <code>cz.toml</code> file at the 
 </code></pre></div>
 <h3 id="czyaml-or-czyaml"><code>.cz.yaml</code> or <code>cz.yaml</code><a class="headerlink" href="#czyaml-or-czyaml" title="Permanent link">&para;</a></h3>
 <p>YAML configuration is supported by Commitizen. Recommended for <code>Go</code>, <code>ansible</code>, or even <code>helm</code> charts projects.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">commitizen</span><span class="p">:</span>
+<div class="highlight"><span class="filename">.cz.yaml</span><pre><span></span><code><span class="nt">commitizen</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cz_conventional_commits</span>
 <span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1.0</span>
 <span class="w">  </span><span class="nt">version_files</span><span class="p">:</span>
@@ -2039,7 +2108,7 @@ But you can use any <code>commitizen.provider</code> entrypoint as value for <co
 </code></pre></div>
 <h3 id="custom-version-provider">Custom version provider<a class="headerlink" href="#custom-version-provider" title="Permanent link">&para;</a></h3>
 <p>You can add your own version provider by extending <code>VersionProvider</code> and exposing it on the <code>commitizen.provider</code> entrypoint.</p>
-<p>Here is a quick example of a <code>my-provider</code> provider reading and writing version in a <code>VERSION</code> file.</p>
+<p>Here is a quick example of a provider <code>my_provider.py</code>, reading and writing version in a <code>VERSION</code> file.</p>
 <div class="highlight"><span class="filename">my_provider.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.providers</span><span class="w"> </span><span class="kn">import</span> <span class="n">VersionProvider</span>
 
