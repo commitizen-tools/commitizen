@@ -44,7 +44,9 @@ class Check:
         )
         self.use_default_range = bool(arguments.get("use_default_range"))
 
-        self.max_msg_length = arguments.get("message_length_limit", config.settings.get("message_length_limit", None))
+        self.max_msg_length = arguments.get(
+            "message_length_limit", config.settings.get("message_length_limit", None)
+        )
 
         # we need to distinguish between None and [], which is a valid value
         allowed_prefixes = arguments.get("allowed_prefixes")
