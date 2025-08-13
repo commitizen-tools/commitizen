@@ -95,7 +95,7 @@ _settings: dict[str, Any] = {
     "always_signoff": False,
     "template": None,
     "extras": {},
-    "message_length_limit": 0,
+    "message_length_limit": None,
 }
 
 _new_settings: dict[str, Any] = {
@@ -127,7 +127,7 @@ _new_settings: dict[str, Any] = {
     "always_signoff": False,
     "template": None,
     "extras": {},
-    "message_length_limit": 0,
+    "message_length_limit": None,
 }
 
 

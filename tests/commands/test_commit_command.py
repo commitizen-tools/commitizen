@@ -611,5 +611,5 @@ def test_commit_command_cli_overrides_config_message_length_limit(
     success_mock.assert_called_once()
 
     success_mock.reset_mock()
-    commands.Commit(config, {"message_length_limit": 0})()
+    commands.Commit(config, {"message_length_limit": None})()
     success_mock.assert_called_once()
