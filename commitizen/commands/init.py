@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import shutil
-from typing import Any
+from typing import Any, NamedTuple
 
 import questionary
 import yaml
@@ -15,6 +15,54 @@ from commitizen.defaults import CONFIG_FILES, DEFAULT_SETTINGS
 from commitizen.exceptions import InitFailedError, NoAnswersError
 from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
 from commitizen.version_schemes import KNOWN_SCHEMES, Version, get_version_scheme
+
+
+class _VersionProviderOption(NamedTuple):
+    provider_name: str
+    description: str
+
+    @property
+    def title(self) -> str:
+        return f"{self.provider_name}: {self.description}"
+
+
+_VERSION_PROVIDER_CHOICES = tuple(
+    questionary.Choice(title=option.title, value=option.provider_name)
+    for option in (
+        _VersionProviderOption(
+            provider_name="commitizen",
+            description="Fetch and set version in commitizen config (default)",
+        ),
+        _VersionProviderOption(
+            provider_name="cargo",
+            description="Get and set version from Cargo.toml:project.version field",
+        ),
+        _VersionProviderOption(
+            provider_name="composer",
+            description="Get and set version from composer.json:project.version field",
+        ),
+        _VersionProviderOption(
+            provider_name="npm",
+            description="Get and set version from package.json:project.version field",
+        ),
+        _VersionProviderOption(
+            provider_name="pep621",
+            description="Get and set version from pyproject.toml:project.version field",
+        ),
+        _VersionProviderOption(
+            provider_name="poetry",
+            description="Get and set version from pyproject.toml:tool.poetry.version field",
+        ),
+        _VersionProviderOption(
+            provider_name="uv",
+            description="Get and set version from pyproject.toml and uv.lock",
+        ),
+        _VersionProviderOption(
+            provider_name="scm",
+            description="Fetch the version from git and does not need to set it back",
+        ),
+    )
+)
 
 
 class ProjectInfo:
@@ -64,21 +112,13 @@ class ProjectInfo:
         return os.path.isfile("composer.json")
 
     @property
-    def latest_tag(self) -> str | None:
-        return get_latest_tag_name()
-
-    def tags(self) -> list | None:
-        """Not a property, only use if necessary"""
-        if self.latest_tag is None:
-            return None
-        return get_tag_names()
-
-    @property
     def is_pre_commit_installed(self) -> bool:
         return bool(shutil.which("pre-commit"))
 
 
 class Init:
+    _PRE_COMMIT_CONFIG_PATH = ".pre-commit-config.yaml"
+
     def __init__(self, config: BaseConfig, *args: object) -> None:
         self.config: BaseConfig = config
         self.encoding = config.settings["encoding"]
@@ -92,8 +132,8 @@ class Init:
 
         out.info("Welcome to commitizen!\n")
         out.line(
-            "Answer the questions to configure your project.\n"
-            "For further configuration visit:\n"
+            "Answer the following questions to configure your project.\n"
+            "For further configuration, visit:\n"
             "\n"
             "https://commitizen-tools.github.io/commitizen/config/"
             "\n"
@@ -120,21 +160,6 @@ class Init:
             self.config = JsonConfig(data="{}", path=config_path)
         elif "yaml" in config_path:
             self.config = YAMLConfig(data="", path=config_path)
-        values_to_add: dict[str, Any] = {}
-        values_to_add["name"] = cz_name
-        values_to_add["tag_format"] = tag_format
-        values_to_add["version_scheme"] = version_scheme
-
-        if version_provider == "commitizen":
-            values_to_add["version"] = version.public
-        else:
-            values_to_add["version_provider"] = version_provider
-
-        if update_changelog_on_bump:
-            values_to_add["update_changelog_on_bump"] = update_changelog_on_bump
-
-        if major_version_zero:
-            values_to_add["major_version_zero"] = major_version_zero
 
         # Collect hook data
         hook_types = questionary.checkbox(
@@ -152,16 +177,27 @@ class Init:
 
         # Create and initialize config
         self.config.init_empty_config_content()
-        self._update_config_file(values_to_add)
+
+        self.config.set_key("name", cz_name)
+        self.config.set_key("tag_format", tag_format)
+        self.config.set_key("version_scheme", version_scheme)
+        if version_provider == "commitizen":
+            self.config.set_key("version", version.public)
+        else:
+            self.config.set_key("version_provider", version_provider)
+        if update_changelog_on_bump:
+            self.config.set_key("update_changelog_on_bump", update_changelog_on_bump)
+        if major_version_zero:
+            self.config.set_key("major_version_zero", major_version_zero)
 
         out.write("\nYou can bump the version running:\n")
         out.info("\tcz bump\n")
         out.success("Configuration complete 🚀")
 
     def _ask_config_path(self) -> str:
-        default_path = ".cz.toml"
-        if self.project_info.has_pyproject:
-            default_path = "pyproject.toml"
+        default_path = (
+            "pyproject.toml" if self.project_info.has_pyproject else ".cz.toml"
+        )
 
         name: str = questionary.select(
             "Please choose a supported config file: ",
@@ -181,104 +217,87 @@ class Init:
         return name
 
     def _ask_tag(self) -> str:
-        latest_tag = self.project_info.latest_tag
+        latest_tag = get_latest_tag_name()
         if not latest_tag:
             out.error("No Existing Tag. Set tag to v0.0.1")
             return "0.0.1"
 
-        is_correct_tag = questionary.confirm(
+        if questionary.confirm(
             f"Is {latest_tag} the latest tag?", style=self.cz.style, default=False
+        ).unsafe_ask():
+            return latest_tag
+
+        existing_tags = get_tag_names()
+        if not existing_tags:
+            out.error("No Existing Tag. Set tag to v0.0.1")
+            return "0.0.1"
+
+        answer: str = questionary.select(
+            "Please choose the latest tag: ",
+            # The latest tag is most likely with the largest number.
+            # Thus, listing the existing_tags in reverse order makes more sense.
+            choices=sorted(existing_tags, reverse=True),
+            style=self.cz.style,
         ).unsafe_ask()
-        if not is_correct_tag:
-            tags = self.project_info.tags()
-            if not tags:
-                out.error("No Existing Tag. Set tag to v0.0.1")
-                return "0.0.1"
 
-            # the latest tag is most likely with the largest number. Thus list the tags in reverse order makes more sense
-            sorted_tags = sorted(tags, reverse=True)
-            latest_tag = questionary.select(
-                "Please choose the latest tag: ",
-                choices=sorted_tags,
-                style=self.cz.style,
-            ).unsafe_ask()
-
-            if not latest_tag:
-                raise NoAnswersError("Tag is required!")
-        return latest_tag
+        if not answer:
+            raise NoAnswersError("Tag is required!")
+        return answer
 
     def _ask_tag_format(self, latest_tag: str) -> str:
-        is_correct_format = False
         if latest_tag.startswith("v"):
-            tag_format = r"v$version"
-            is_correct_format = questionary.confirm(
-                f'Is "{tag_format}" the correct tag format?', style=self.cz.style
-            ).unsafe_ask()
+            v_tag_format = r"v$version"
+            if questionary.confirm(
+                f'Is "{v_tag_format}" the correct tag format?', style=self.cz.style
+            ).unsafe_ask():
+                return v_tag_format
 
         default_format = DEFAULT_SETTINGS["tag_format"]
-        if not is_correct_format:
-            tag_format = questionary.text(
-                f'Please enter the correct version format: (default: "{default_format}")',
-                style=self.cz.style,
-            ).unsafe_ask()
+        tag_format: str = questionary.text(
+            f'Please enter the correct version format: (default: "{default_format}")',
+            style=self.cz.style,
+        ).unsafe_ask()
 
-            if not tag_format:
-                tag_format = default_format
-        return tag_format
+        return tag_format or default_format
 
     def _ask_version_provider(self) -> str:
         """Ask for setting: version_provider"""
 
-        OPTS = {
-            "commitizen": "commitizen: Fetch and set version in commitizen config (default)",
-            "cargo": "cargo: Get and set version from Cargo.toml:project.version field",
-            "composer": "composer: Get and set version from composer.json:project.version field",
-            "npm": "npm: Get and set version from package.json:project.version field",
-            "pep621": "pep621: Get and set version from pyproject.toml:project.version field",
-            "poetry": "poetry: Get and set version from pyproject.toml:tool.poetry.version field",
-            "uv": "uv: Get and Get and set version from pyproject.toml and uv.lock",
-            "scm": "scm: Fetch the version from git and does not need to set it back",
-        }
-
-        default_val = "commitizen"
-        if self.project_info.is_python:
-            if self.project_info.is_python_poetry:
-                default_val = "poetry"
-            elif self.project_info.is_python_uv:
-                default_val = "uv"
-            else:
-                default_val = "pep621"
-        elif self.project_info.is_rust_cargo:
-            default_val = "cargo"
-        elif self.project_info.is_npm_package:
-            default_val = "npm"
-        elif self.project_info.is_php_composer:
-            default_val = "composer"
-
-        choices = [
-            questionary.Choice(title=title, value=value)
-            for value, title in OPTS.items()
-        ]
-        default = next(filter(lambda x: x.value == default_val, choices))
         version_provider: str = questionary.select(
             "Choose the source of the version:",
-            choices=choices,
+            choices=_VERSION_PROVIDER_CHOICES,
             style=self.cz.style,
-            default=default,
+            default=self._default_version_provider,
         ).unsafe_ask()
         return version_provider
 
+    @property
+    def _default_version_provider(self) -> str:
+        if self.project_info.is_python:
+            if self.project_info.is_python_poetry:
+                return "poetry"
+            if self.project_info.is_python_uv:
+                return "uv"
+            return "pep621"
+
+        if self.project_info.is_rust_cargo:
+            return "cargo"
+        if self.project_info.is_npm_package:
+            return "npm"
+        if self.project_info.is_php_composer:
+            return "composer"
+
+        return "commitizen"
+
     def _ask_version_scheme(self) -> str:
         """Ask for setting: version_scheme"""
-        default = "semver"
-        if self.project_info.is_python:
-            default = "pep440"
+        default_scheme = "pep440" if self.project_info.is_python else "semver"
 
         scheme: str = questionary.select(
             "Choose version scheme: ",
-            choices=list(KNOWN_SCHEMES),
+            choices=KNOWN_SCHEMES,
             style=self.cz.style,
-            default=default,
+            default=default_scheme,
         ).unsafe_ask()
         return scheme
 
@@ -294,7 +313,7 @@ class Init:
         return major_version_zero
 
     def _ask_update_changelog_on_bump(self) -> bool:
-        "Ask for setting: update_changelog_on_bump"
+        """Ask for setting: update_changelog_on_bump"""
         update_changelog_on_bump: bool = questionary.confirm(
             "Create changelog automatically on bump",
             default=True,
@@ -318,47 +337,43 @@ class Init:
         """Generate pre-commit command according to given hook types"""
         if not hook_types:
             raise ValueError("At least 1 hook type should be provided.")
-        cmd_str = "pre-commit install " + " ".join(
+        return "pre-commit install " + " ".join(
             f"--hook-type {ty}" for ty in hook_types
         )
-        return cmd_str
 
-    def _install_pre_commit_hook(self, hook_types: list[str] | None = None) -> None:
-        pre_commit_config_filename = ".pre-commit-config.yaml"
-        cz_hook_config = {
+    def _get_config_data(self) -> dict[str, Any]:
+        CZ_HOOK_CONFIG = {
             "repo": "https://github.com/commitizen-tools/commitizen",
             "rev": f"v{__version__}",
             "hooks": [
                 {"id": "commitizen"},
-                {"id": "commitizen-branch", "stages": ["push"]},
+                {"id": "commitizen-branch", "stages": ["pre-push"]},
             ],
         }
 
-        config_data = {}
         if not self.project_info.has_pre_commit_config:
             # .pre-commit-config.yaml does not exist
-            config_data["repos"] = [cz_hook_config]
+            return {"repos": [CZ_HOOK_CONFIG]}
+
+        with open(self._PRE_COMMIT_CONFIG_PATH, encoding=self.encoding) as config_file:
+            config_data: dict[str, Any] = yaml.safe_load(config_file) or {}
+
+        if not isinstance(repos := config_data.get("repos"), list):
+            # .pre-commit-config.yaml exists but there's no "repos" key
+            config_data["repos"] = [CZ_HOOK_CONFIG]
+            return config_data
+
+        # Check if commitizen pre-commit hook is already in the config
+        if any("commitizen" in hook_config["repo"] for hook_config in repos):
+            out.write("commitizen already in pre-commit config")
         else:
-            with open(
-                pre_commit_config_filename, encoding=self.encoding
-            ) as config_file:
-                yaml_data = yaml.safe_load(config_file)
-                if yaml_data:
-                    config_data = yaml_data
+            repos.append(CZ_HOOK_CONFIG)
+        return config_data
 
-            if "repos" in config_data:
-                for pre_commit_hook in config_data["repos"]:
-                    if "commitizen" in pre_commit_hook["repo"]:
-                        out.write("commitizen already in pre-commit config")
-                        break
-                else:
-                    config_data["repos"].append(cz_hook_config)
-            else:
-                # .pre-commit-config.yaml exists but there's no "repos" key
-                config_data["repos"] = [cz_hook_config]
-
+    def _install_pre_commit_hook(self, hook_types: list[str] | None = None) -> None:
+        config_data = self._get_config_data()
         with smart_open(
-            pre_commit_config_filename, "w", encoding=self.encoding
+            self._PRE_COMMIT_CONFIG_PATH, "w", encoding=self.encoding
         ) as config_file:
             yaml.safe_dump(config_data, stream=config_file)
 
@@ -368,7 +383,3 @@ class Init:
             hook_types = ["commit-msg", "pre-push"]
         self._exec_install_pre_commit_hook(hook_types)
         out.write("commitizen pre-commit hook is now installed in your '.git'\n")
-
-    def _update_config_file(self, values: dict[str, Any]) -> None:
-        for key, value in values.items():
-            self.config.set_key(key, value)

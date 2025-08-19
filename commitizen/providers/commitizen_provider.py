@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from commitizen.exceptions import NoVersionSpecifiedError
 from commitizen.providers.base_provider import VersionProvider
 
 
@@ -9,7 +10,9 @@ class CommitizenProvider(VersionProvider):
     """
 
     def get_version(self) -> str:
-        return self.config.settings["version"]  # type: ignore[return-value] # TODO: check if we can fix this by tweaking the `Settings` type
+        if ret := self.config.settings["version"]:
+            return ret
+        raise NoVersionSpecifiedError()
 
     def set_version(self, version: str) -> None:
         self.config.set_key("version", version)

@@ -23,7 +23,6 @@ from commitizen.exceptions import (
     NoPatternMapError,
     NotAGitProjectError,
     NotAllowed,
-    NoVersionSpecifiedError,
 )
 from commitizen.providers import get_provider
 from commitizen.tags import TagRules
@@ -163,11 +162,7 @@ class Bump:
     def __call__(self) -> None:
         """Steps executed to bump."""
         provider = get_provider(self.config)
-
-        try:
-            current_version = self.scheme(provider.get_version())
-        except TypeError:
-            raise NoVersionSpecifiedError()
+        current_version = self.scheme(provider.get_version())
 
         increment = self.arguments["increment"]
         prerelease = self.arguments["prerelease"]
@@ -177,36 +172,22 @@ class Bump:
         build_metadata = self.arguments["build_metadata"]
         get_next = self.arguments["get_next"]
         allow_no_commit = self.arguments["allow_no_commit"]
+        major_version_zero = self.arguments["major_version_zero"]
 
         if manual_version:
-            if increment:
-                raise NotAllowed("--increment cannot be combined with MANUAL_VERSION")
+            for val, option in (
+                (increment, "--increment"),
+                (prerelease, "--prerelease"),
+                (devrelease is not None, "--devrelease"),
+                (is_local_version, "--local-version"),
+                (build_metadata, "--build-metadata"),
+                (major_version_zero, "--major-version-zero"),
+                (get_next, "--get-next"),
+            ):
+                if val:
+                    raise NotAllowed(f"{option} cannot be combined with MANUAL_VERSION")
 
-            if prerelease:
-                raise NotAllowed("--prerelease cannot be combined with MANUAL_VERSION")
-
-            if devrelease is not None:
-                raise NotAllowed("--devrelease cannot be combined with MANUAL_VERSION")
-
-            if is_local_version:
-                raise NotAllowed(
-                    "--local-version cannot be combined with MANUAL_VERSION"
-                )
-
-            if build_metadata:
-                raise NotAllowed(
-                    "--build-metadata cannot be combined with MANUAL_VERSION"
-                )
-
-            if self.bump_settings["major_version_zero"]:
-                raise NotAllowed(
-                    "--major-version-zero cannot be combined with MANUAL_VERSION"
-                )
-
-            if get_next:
-                raise NotAllowed("--get-next cannot be combined with MANUAL_VERSION")
-
-        if self.bump_settings["major_version_zero"] and current_version.release[0]:
+        if major_version_zero and current_version.release[0]:
             raise NotAllowed(
                 f"--major-version-zero is meaningless for current version {current_version}"
             )
@@ -215,11 +196,13 @@ class Bump:
             raise NotAllowed("--local-version cannot be combined with --build-metadata")
 
         if get_next:
-            # if trying to use --get-next, we should not allow --changelog or --changelog-to-stdout
-            if self.changelog_flag or self.changelog_to_stdout:
-                raise NotAllowed(
-                    "--changelog or --changelog-to-stdout is not allowed with --get-next"
-                )
+            for value, option in (
+                (self.changelog_flag, "--changelog"),
+                (self.changelog_to_stdout, "--changelog-to-stdout"),
+            ):
+                if value:
+                    raise NotAllowed(f"{option} cannot be combined with --get-next")
+
             # --get-next is a special case, taking precedence over config for 'update_changelog_on_bump'
             self.changelog_config = False
             # Setting dry_run to prevent any unwanted changes to the repo or files

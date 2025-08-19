@@ -18,10 +18,8 @@ class ScmProvider(VersionProvider):
         rules = TagRules.from_settings(self.config.settings)
         tags = get_tags(reachable_only=True)
         version_tags = rules.get_version_tags(tags)
-        versions = sorted(rules.extract_version(t) for t in version_tags)
-        if not versions:
-            return "0.0.0"
-        return str(versions[-1])
+        version = max((rules.extract_version(t) for t in version_tags), default=None)
+        return str(version) if version is not None else "0.0.0"
 
     def set_version(self, version: str) -> None:
         # Not necessary

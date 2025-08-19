@@ -24,7 +24,7 @@ repos:
       - id: debug-statements
       - id: no-commit-to-branch
       - id: check-merge-conflict
-      - id: check-toml
+      - id: check-toml # TOML linter (syntax checker)
       - id: check-yaml
         args: [ '--unsafe' ] # for mkdocs.yml
       - id: detect-private-key
@@ -55,17 +55,22 @@ repos:
         stages:
           - post-commit
 
+  - repo: https://github.com/ComPWA/taplo-pre-commit
+    rev: v0.9.3
+    hooks:
+      - id: taplo-format
+
   - repo: local
     hooks:
       - id: format
-        name: Format
+        name: Format Python code via Poetry
         language: system
         pass_filenames: false
         entry: poetry format
         types: [ python ]
 
       - id: linter and test
-        name: Linters
+        name: Linters via Poetry
         language: system
         pass_filenames: false
         entry: poetry lint

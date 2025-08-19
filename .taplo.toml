@@ -1,0 +1,4 @@
+include = ["pyproject.toml", ".taplo.toml"]
+
+[formatting]
+indent_string = "    "

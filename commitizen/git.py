@@ -49,6 +49,9 @@ class GitObject:
     def __eq__(self, other: object) -> bool:
         return hasattr(other, "rev") and self.rev == other.rev
 
+    def __hash__(self) -> int:
+        return hash(self.rev)
+
 
 class GitCommit(GitObject):
     def __init__(
@@ -328,6 +331,4 @@ def _get_log_as_str_list(start: str | None, end: str, args: str) -> list[str]:
     c = cmd.run(command)
     if c.return_code != 0:
         raise GitCommandError(c.err)
-    if not c.out:
-        return []
     return c.out.split(f"{delimiter}\n")
