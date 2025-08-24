@@ -100,20 +100,18 @@ class BumpRule(Protocol):
         """Determine the version increment based on a commit message.
 
         This method analyzes a commit message to determine what kind of version increment
-        is needed according to the Conventional Commits specification. It handles special
-        cases for breaking changes and respects the major_version_zero flag.
+        is needed. It handles special cases for breaking changes and respects the major_version_zero flag.
+
+        See the following subclasses for more details:
+        - ConventionalCommitBumpRule: For conventional commits
+        - CustomBumpRule: For custom bump rules
 
         Args:
-            commit_message: The commit message to analyze. Should follow conventional commit format.
-            major_version_zero: If True, breaking changes will result in a MINOR version bump
-                              instead of MAJOR. This is useful for projects in 0.x.x versions.
+            commit_message: The commit message to analyze.
+            major_version_zero: If True, breaking changes will result in a MINOR version bump instead of MAJOR
 
         Returns:
             VersionIncrement: The type of version increment needed:
-                - NONE: For commits that don't require a version bump (docs, style, etc.)
-                - MAJOR: For breaking changes when major_version_zero is False
-                - MINOR: For breaking changes when major_version_zero is True, or for new features
-                - PATCH: For bug fixes, performance improvements, or refactors
         """
 
 
