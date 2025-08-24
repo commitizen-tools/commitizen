@@ -12,12 +12,14 @@ from commitizen.exceptions import NoPatternMapError
 class VersionIncrement(IntEnum):
     """An enumeration representing semantic versioning increments.
 
-    This class defines the three types of version increments according to semantic versioning:
+    This class defines the four types of version increments according to semantic versioning:
+    - NONE: For commits that don't require a version bump (docs, style, etc.)
     - PATCH: For backwards-compatible bug fixes
     - MINOR: For backwards-compatible functionality additions
     - MAJOR: For incompatible API changes
     """
 
+    NONE = auto()
     PATCH = auto()
     MINOR = auto()
     MAJOR = auto()
@@ -26,16 +28,16 @@ class VersionIncrement(IntEnum):
         return self.name
 
     @classmethod
-    def safe_cast(cls, value: object) -> VersionIncrement | None:
+    def safe_cast(cls, value: object) -> VersionIncrement:
         if not isinstance(value, str):
-            return None
+            return VersionIncrement.NONE
         try:
             return cls[value]
         except KeyError:
-            return None
+            return VersionIncrement.NONE
 
-    @classmethod
-    def safe_cast_dict(cls, d: Mapping[str, object]) -> dict[str, VersionIncrement]:
+    @staticmethod
+    def safe_cast_dict(d: Mapping[str, object]) -> dict[str, VersionIncrement]:
         return {
             k: v
             for k, v in ((k, VersionIncrement.safe_cast(v)) for k, v in d.items())
@@ -45,8 +47,8 @@ class VersionIncrement(IntEnum):
     @staticmethod
     def get_highest_by_messages(
         commit_messages: Iterable[str],
-        extract_increment: Callable[[str], VersionIncrement | None],
-    ) -> VersionIncrement | None:
+        extract_increment: Callable[[str], VersionIncrement],
+    ) -> VersionIncrement:
         """Find the highest version increment from a list of messages.
 
         This function processes a list of messages and determines the highest version
@@ -76,9 +78,9 @@ class VersionIncrement(IntEnum):
 
     @staticmethod
     def get_highest(
-        increments: Iterable[VersionIncrement | None],
-    ) -> VersionIncrement | None:
-        return max(filter(None, increments), default=None)
+        increments: Iterable[VersionIncrement],
+    ) -> VersionIncrement:
+        return max(increments, default=VersionIncrement.NONE)
 
 
 class BumpRule(Protocol):
@@ -94,7 +96,7 @@ class BumpRule(Protocol):
 
     def extract_increment(
         self, commit_message: str, major_version_zero: bool
-    ) -> VersionIncrement | None:
+    ) -> VersionIncrement:
         """Determine the version increment based on a commit message.
 
         This method analyzes a commit message to determine what kind of version increment
@@ -107,24 +109,24 @@ class BumpRule(Protocol):
                               instead of MAJOR. This is useful for projects in 0.x.x versions.
 
         Returns:
-            VersionIncrement | None: The type of version increment needed:
+            VersionIncrement: The type of version increment needed:
+                - NONE: For commits that don't require a version bump (docs, style, etc.)
                 - MAJOR: For breaking changes when major_version_zero is False
                 - MINOR: For breaking changes when major_version_zero is True, or for new features
                 - PATCH: For bug fixes, performance improvements, or refactors
-                - None: For commits that don't require a version bump (docs, style, etc.)
         """
 
 
 class ConventionalCommitBumpRule(BumpRule):
-    _BREAKING_CHANGE_TYPES = set(["BREAKING CHANGE", "BREAKING-CHANGE"])
-    _MINOR_CHANGE_TYPES = set(["feat"])
-    _PATCH_CHANGE_TYPES = set(["fix", "perf", "refactor"])
+    _BREAKING_CHANGE_TYPES = {"BREAKING CHANGE", "BREAKING-CHANGE"}
+    _MINOR_CHANGE_TYPES = {"feat"}
+    _PATCH_CHANGE_TYPES = {"fix", "perf", "refactor"}
 
     def extract_increment(
         self, commit_message: str, major_version_zero: bool
-    ) -> VersionIncrement | None:
+    ) -> VersionIncrement:
         if not (m := self._head_pattern.match(commit_message)):
-            return None
+            return VersionIncrement.NONE
 
         change_type = m.group("change_type")
         if m.group("bang") or change_type in self._BREAKING_CHANGE_TYPES:
@@ -138,7 +140,7 @@ class ConventionalCommitBumpRule(BumpRule):
         if change_type in self._PATCH_CHANGE_TYPES:
             return VersionIncrement.PATCH
 
-        return None
+        return VersionIncrement.NONE
 
     @cached_property
     def _head_pattern(self) -> re.Pattern:
@@ -225,9 +227,9 @@ class CustomBumpRule(BumpRule):
 
     def extract_increment(
         self, commit_message: str, major_version_zero: bool
-    ) -> VersionIncrement | None:
+    ) -> VersionIncrement:
         if not (m := self.bump_pattern.search(commit_message)):
-            return None
+            return VersionIncrement.NONE
 
         effective_bump_map = (
             self.bump_map_major_version_zero if major_version_zero else self.bump_map
@@ -250,4 +252,4 @@ class CustomBumpRule(BumpRule):
         for match_pattern, increment in effective_bump_map.items():
             if re.match(match_pattern, found_keyword):
                 return increment
-        return None
+        return VersionIncrement.NONE

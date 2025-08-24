@@ -144,7 +144,7 @@ class Bump:
         )
         return bool(questionary.confirm("Is this the first tag created?").ask())
 
-    def _find_increment(self, commits: list[git.GitCommit]) -> VersionIncrement | None:
+    def _find_increment(self, commits: list[git.GitCommit]) -> VersionIncrement:
         # Update the bump map to ensure major version doesn't increment.
         is_major_version_zero = self.bump_settings["major_version_zero"]
 
@@ -170,7 +170,7 @@ class Bump:
 
         if manual_version:
             for val, option in (
-                (increment, "--increment"),
+                (increment != VersionIncrement.NONE, "--increment"),
                 (prerelease, "--prerelease"),
                 (devrelease is not None, "--devrelease"),
                 (is_local_version, "--local-version"),
@@ -225,7 +225,7 @@ class Bump:
                     f"Invalid manual version: '{manual_version}'"
                 ) from exc
         else:
-            if increment is None:
+            if increment == VersionIncrement.NONE:
                 commits = git.get_commits(current_tag.name if current_tag else None)
 
                 # No commits, there is no need to create an empty tag.
@@ -243,7 +243,11 @@ class Bump:
 
             # It may happen that there are commits, but they are not eligible
             # for an increment, this generates a problem when using prerelease (#281)
-            if prerelease and increment is None and not current_version.is_prerelease:
+            if (
+                prerelease
+                and increment == VersionIncrement.NONE
+                and not current_version.is_prerelease
+            ):
                 raise NoCommitsFoundError(
                     "[NO_COMMITS_FOUND]\n"
                     "No commits found to generate a pre-release.\n"
@@ -251,7 +255,7 @@ class Bump:
                 )
 
             # we create an empty PATCH increment for empty tag
-            if increment is None and allow_no_commit:
+            if increment == VersionIncrement.NONE and allow_no_commit:
                 increment = VersionIncrement.PATCH
 
             new_version = current_version.bump(
@@ -270,7 +274,10 @@ class Bump:
         )
 
         if get_next:
-            if increment is None and new_tag_version == current_tag_version:
+            if (
+                increment == VersionIncrement.NONE
+                and new_tag_version == current_tag_version
+            ):
                 raise NoneIncrementExit(
                     "[NO_COMMITS_TO_BUMP]\n"
                     "The commits found are not eligible to be bumped"
@@ -292,7 +299,10 @@ class Bump:
         else:
             out.write(information)
 
-        if increment is None and new_tag_version == current_tag_version:
+        if (
+            increment == VersionIncrement.NONE
+            and new_tag_version == current_tag_version
+        ):
             raise NoneIncrementExit(
                 "[NO_COMMITS_TO_BUMP]\nThe commits found are not eligible to be bumped"
             )
