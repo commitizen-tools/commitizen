@@ -137,17 +137,35 @@ class TestConventionalCommitBumpRule:
         )
 
     def test_invalid_commit_message(self, bump_rule):
-        assert bump_rule.extract_increment("invalid commit message", False) is None
-        assert bump_rule.extract_increment("", False) is None
-        assert bump_rule.extract_increment("feat", False) is None
+        assert (
+            bump_rule.extract_increment("invalid commit message", False)
+            == VersionIncrement.NONE
+        )
+        assert bump_rule.extract_increment("", False) == VersionIncrement.NONE
+        assert bump_rule.extract_increment("feat", False) == VersionIncrement.NONE
 
     def test_other_commit_types(self, bump_rule):
         # These commit types should not trigger any version bump
-        assert bump_rule.extract_increment("docs: update documentation", False) is None
-        assert bump_rule.extract_increment("style: format code", False) is None
-        assert bump_rule.extract_increment("test: add unit tests", False) is None
-        assert bump_rule.extract_increment("build: update build config", False) is None
-        assert bump_rule.extract_increment("ci: update CI pipeline", False) is None
+        assert (
+            bump_rule.extract_increment("docs: update documentation", False)
+            == VersionIncrement.NONE
+        )
+        assert (
+            bump_rule.extract_increment("style: format code", False)
+            == VersionIncrement.NONE
+        )
+        assert (
+            bump_rule.extract_increment("test: add unit tests", False)
+            == VersionIncrement.NONE
+        )
+        assert (
+            bump_rule.extract_increment("build: update build config", False)
+            == VersionIncrement.NONE
+        )
+        assert (
+            bump_rule.extract_increment("ci: update CI pipeline", False)
+            == VersionIncrement.NONE
+        )
 
     def test_breaking_change_with_refactor(self, bump_rule):
         """Test breaking changes with refactor type commit messages."""
@@ -235,14 +253,14 @@ class TestFindIncrementByCallable:
         ]
         assert (
             VersionIncrement.get_highest_by_messages(commit_messages, extract_increment)
-            is None
+            == VersionIncrement.NONE
         )
 
     def test_empty_commits(self, extract_increment):
         commit_messages = []
         assert (
             VersionIncrement.get_highest_by_messages(commit_messages, extract_increment)
-            is None
+            == VersionIncrement.NONE
         )
 
     def test_major_version_zero(self):
@@ -349,9 +367,13 @@ class TestCustomBumpRule:
 
     def test_no_match(self, custom_bump_rule):
         assert (
-            custom_bump_rule.extract_increment("feat: add new feature", False) is None
+            custom_bump_rule.extract_increment("feat: add new feature", False)
+            == VersionIncrement.NONE
         )
-        assert custom_bump_rule.extract_increment("fix: bug fix", False) is None
+        assert (
+            custom_bump_rule.extract_increment("fix: bug fix", False)
+            == VersionIncrement.NONE
+        )
 
     def test_invalid_pattern(self, bump_map, bump_map_major_version_zero):
         with pytest.raises(NoPatternMapError):
@@ -580,16 +602,23 @@ class TestCustomBumpRuleWithDefault:
     def test_no_match(self, custom_bump_rule):
         assert (
             custom_bump_rule.extract_increment("docs: update documentation", False)
-            is None
+            == VersionIncrement.NONE
         )
-        assert custom_bump_rule.extract_increment("style: format code", False) is None
-        assert custom_bump_rule.extract_increment("test: add unit tests", False) is None
+        assert (
+            custom_bump_rule.extract_increment("style: format code", False)
+            == VersionIncrement.NONE
+        )
+        assert (
+            custom_bump_rule.extract_increment("test: add unit tests", False)
+            == VersionIncrement.NONE
+        )
         assert (
             custom_bump_rule.extract_increment("build: update build config", False)
-            is None
+            == VersionIncrement.NONE
         )
         assert (
-            custom_bump_rule.extract_increment("ci: update CI pipeline", False) is None
+            custom_bump_rule.extract_increment("ci: update CI pipeline", False)
+            == VersionIncrement.NONE
         )
 
     def test_with_find_increment_by_callable(self, custom_bump_rule):
@@ -616,20 +645,32 @@ class TestGetHighest:
         assert VersionIncrement.get_highest(increments) == VersionIncrement.MAJOR
 
     def test_get_highest_with_minor(self):
-        increments = [VersionIncrement.PATCH, VersionIncrement.MINOR, None]
+        increments = [
+            VersionIncrement.PATCH,
+            VersionIncrement.MINOR,
+            VersionIncrement.NONE,
+        ]
         assert VersionIncrement.get_highest(increments) == VersionIncrement.MINOR
 
     def test_get_highest_with_patch(self):
-        increments = [VersionIncrement.PATCH, None, None]
+        increments = [
+            VersionIncrement.PATCH,
+            VersionIncrement.NONE,
+            VersionIncrement.NONE,
+        ]
         assert VersionIncrement.get_highest(increments) == VersionIncrement.PATCH
 
     def test_get_highest_with_none(self):
-        increments = [None, None, None]
-        assert VersionIncrement.get_highest(increments) is None
+        increments = [
+            VersionIncrement.NONE,
+            VersionIncrement.NONE,
+            VersionIncrement.NONE,
+        ]
+        assert VersionIncrement.get_highest(increments) == VersionIncrement.NONE
 
     def test_get_highest_empty(self):
         increments = []
-        assert VersionIncrement.get_highest(increments) is None
+        assert VersionIncrement.get_highest(increments) == VersionIncrement.NONE
 
     def test_get_highest_mixed_order(self):
         increments = [
@@ -640,7 +681,12 @@ class TestGetHighest:
         assert VersionIncrement.get_highest(increments) == VersionIncrement.MAJOR
 
     def test_get_highest_with_none_values(self):
-        increments = [None, VersionIncrement.MINOR, None, VersionIncrement.PATCH]
+        increments = [
+            VersionIncrement.NONE,
+            VersionIncrement.MINOR,
+            VersionIncrement.NONE,
+            VersionIncrement.PATCH,
+        ]
         assert VersionIncrement.get_highest(increments) == VersionIncrement.MINOR
 
 
@@ -651,16 +697,18 @@ class TestSafeCast:
         assert VersionIncrement.safe_cast("PATCH") == VersionIncrement.PATCH
 
     def test_safe_cast_invalid_strings(self):
-        assert VersionIncrement.safe_cast("invalid") is None
-        assert VersionIncrement.safe_cast("major") is None  # case sensitive
-        assert VersionIncrement.safe_cast("") is None
+        assert VersionIncrement.safe_cast("invalid") == VersionIncrement.NONE
+        assert (
+            VersionIncrement.safe_cast("major") == VersionIncrement.NONE
+        )  # case sensitive
+        assert VersionIncrement.safe_cast("") == VersionIncrement.NONE
 
     def test_safe_cast_non_string_values(self):
-        assert VersionIncrement.safe_cast(None) is None
-        assert VersionIncrement.safe_cast(1) is None
-        assert VersionIncrement.safe_cast(True) is None
-        assert VersionIncrement.safe_cast([]) is None
-        assert VersionIncrement.safe_cast({}) is None
+        assert VersionIncrement.safe_cast(None) == VersionIncrement.NONE
+        assert VersionIncrement.safe_cast(1) == VersionIncrement.NONE
+        assert VersionIncrement.safe_cast(True) == VersionIncrement.NONE
+        assert VersionIncrement.safe_cast([]) == VersionIncrement.NONE
+        assert VersionIncrement.safe_cast({}) == VersionIncrement.NONE
         assert (
-            VersionIncrement.safe_cast(VersionIncrement.MAJOR) is None
+            VersionIncrement.safe_cast(VersionIncrement.MAJOR) == VersionIncrement.NONE
         )  # enum value itself

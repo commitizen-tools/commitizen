@@ -143,7 +143,7 @@ class VersionProtocol(Protocol):
 
     def bump(
         self,
-        increment: VersionIncrement | None,
+        increment: VersionIncrement,
         prerelease: Prerelease | None = None,
         prerelease_offset: int = 0,
         devrelease: int | None = None,
@@ -238,7 +238,7 @@ class BaseVersion(_BaseVersion):
 
         return f"+{build_metadata}"
 
-    def increment_base(self, increment: VersionIncrement | None = None) -> str:
+    def increment_base(self, increment: VersionIncrement) -> str:
         base = dict(
             zip_longest(
                 (
@@ -265,7 +265,7 @@ class BaseVersion(_BaseVersion):
 
     def bump(
         self,
-        increment: VersionIncrement | None,
+        increment: VersionIncrement,
         prerelease: Prerelease | None = None,
         prerelease_offset: int = 0,
         devrelease: int | None = None,
@@ -307,7 +307,7 @@ class BaseVersion(_BaseVersion):
         )  # type: ignore[return-value]
 
     def _get_increment_base(
-        self, increment: VersionIncrement | None, exact_increment: bool
+        self, increment: VersionIncrement, exact_increment: bool
     ) -> str:
         if (
             not self.is_prerelease
