@@ -103,6 +103,15 @@ Default: `None`
 
 Create custom commit message, useful to skip CI. [Read more][bump_message]
 
+### `breaking_change_exclamation_in_title`
+
+Type: `bool`
+
+Default: `false`
+
+When true, breaking changes will be indicated by an exclamation mark in the commit title (e.g., `feat!: breaking change`).
+When false, breaking changes will be indicated by `BREAKING CHANGE:` in the footer. [Read more][breaking-change-exclamation]
+
 ### `retry_after_failure`
 
 Type: `bool`
