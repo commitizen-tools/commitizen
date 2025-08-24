@@ -160,7 +160,6 @@ data = {
                     {
                         "name": ["-l", "--message-length-limit"],
                         "type": int,
-                        "default": 0,
                         "help": "length limit of the commit message; 0 for no limit",
                     },
                     {
@@ -499,7 +498,6 @@ data = {
                     {
                         "name": ["-l", "--message-length-limit"],
                         "type": int,
-                        "default": 0,
                         "help": "length limit of the commit message; 0 for no limit",
                     },
                 ],

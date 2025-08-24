@@ -33,7 +33,7 @@ class CommitArgs(TypedDict, total=False):
     dry_run: bool
     edit: bool
     extra_cli_args: str
-    message_length_limit: int
+    message_length_limit: int | None
     no_retry: bool
     signoff: bool
     write_message_to_file: Path | None
@@ -81,8 +81,13 @@ class Commit:
 
         message = cz.message(answers)
         message_len = len(message.partition("\n")[0].strip())
-        message_length_limit = self.arguments.get("message_length_limit", 0)
-        if 0 < message_length_limit < message_len:
+
+        message_length_limit = self.arguments.get(
+            "message_length_limit",
+            self.config.settings.get("message_length_limit", None),
+        )
+
+        if message_length_limit is not None and message_len > message_length_limit:
             raise CommitMessageLengthExceededError(
                 f"Length of commit message exceeds limit ({message_len}/{message_length_limit})"
             )
