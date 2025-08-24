@@ -150,7 +150,7 @@ class Bump:
 
         return VersionIncrement.get_highest_by_messages(
             (commit.message for commit in commits),
-            lambda x: self.cz.bump_rule.get_increment(x, is_major_version_zero),
+            lambda x: self.cz.bump_rule.extract_increment(x, is_major_version_zero),
         )
 
     def __call__(self) -> None:

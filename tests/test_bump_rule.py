@@ -21,217 +21,227 @@ def bump_rule():
 class TestConventionalCommitBumpRule:
     def test_feat_commit(self, bump_rule):
         assert (
-            bump_rule.get_increment("feat: add new feature", False)
+            bump_rule.extract_increment("feat: add new feature", False)
             == VersionIncrement.MINOR
         )
         assert (
-            bump_rule.get_increment("feat: add new feature", True)
+            bump_rule.extract_increment("feat: add new feature", True)
             == VersionIncrement.MINOR
         )
 
     def test_fix_commit(self, bump_rule):
-        assert bump_rule.get_increment("fix: fix bug", False) == VersionIncrement.PATCH
-        assert bump_rule.get_increment("fix: fix bug", True) == VersionIncrement.PATCH
+        assert (
+            bump_rule.extract_increment("fix: fix bug", False) == VersionIncrement.PATCH
+        )
+        assert (
+            bump_rule.extract_increment("fix: fix bug", True) == VersionIncrement.PATCH
+        )
 
     def test_perf_commit(self, bump_rule):
         assert (
-            bump_rule.get_increment("perf: improve performance", False)
+            bump_rule.extract_increment("perf: improve performance", False)
             == VersionIncrement.PATCH
         )
         assert (
-            bump_rule.get_increment("perf: improve performance", True)
+            bump_rule.extract_increment("perf: improve performance", True)
             == VersionIncrement.PATCH
         )
 
     def test_refactor_commit(self, bump_rule):
         assert (
-            bump_rule.get_increment("refactor: restructure code", False)
+            bump_rule.extract_increment("refactor: restructure code", False)
             == VersionIncrement.PATCH
         )
         assert (
-            bump_rule.get_increment("refactor: restructure code", True)
+            bump_rule.extract_increment("refactor: restructure code", True)
             == VersionIncrement.PATCH
         )
 
     def test_breaking_change_with_bang(self, bump_rule):
         assert (
-            bump_rule.get_increment("feat!: breaking change", False)
+            bump_rule.extract_increment("feat!: breaking change", False)
             == VersionIncrement.MAJOR
         )
         assert (
-            bump_rule.get_increment("feat!: breaking change", True)
+            bump_rule.extract_increment("feat!: breaking change", True)
             == VersionIncrement.MINOR
         )
 
     def test_breaking_change_type(self, bump_rule):
         assert (
-            bump_rule.get_increment("BREAKING CHANGE: major change", False)
+            bump_rule.extract_increment("BREAKING CHANGE: major change", False)
             == VersionIncrement.MAJOR
         )
         assert (
-            bump_rule.get_increment("BREAKING CHANGE: major change", True)
+            bump_rule.extract_increment("BREAKING CHANGE: major change", True)
             == VersionIncrement.MINOR
         )
 
     def test_commit_with_scope(self, bump_rule):
         assert (
-            bump_rule.get_increment("feat(api): add new endpoint", False)
+            bump_rule.extract_increment("feat(api): add new endpoint", False)
             == VersionIncrement.MINOR
         )
         assert (
-            bump_rule.get_increment("fix(ui): fix button alignment", False)
+            bump_rule.extract_increment("fix(ui): fix button alignment", False)
             == VersionIncrement.PATCH
         )
 
     def test_commit_with_complex_scopes(self, bump_rule):
         # Test with multiple word scopes
         assert (
-            bump_rule.get_increment("feat(user_management): add user roles", False)
+            bump_rule.extract_increment("feat(user_management): add user roles", False)
             == VersionIncrement.MINOR
         )
         assert (
-            bump_rule.get_increment("fix(database_connection): handle timeout", False)
+            bump_rule.extract_increment(
+                "fix(database_connection): handle timeout", False
+            )
             == VersionIncrement.PATCH
         )
 
         # Test with nested scopes
         assert (
-            bump_rule.get_increment("feat(api/auth): implement OAuth", False)
+            bump_rule.extract_increment("feat(api/auth): implement OAuth", False)
             == VersionIncrement.MINOR
         )
         assert (
-            bump_rule.get_increment("fix(ui/components): fix dropdown", False)
+            bump_rule.extract_increment("fix(ui/components): fix dropdown", False)
             == VersionIncrement.PATCH
         )
 
         # Test with breaking changes and scopes
         assert (
-            bump_rule.get_increment("feat(api)!: remove deprecated endpoints", False)
+            bump_rule.extract_increment(
+                "feat(api)!: remove deprecated endpoints", False
+            )
             == VersionIncrement.MAJOR
         )
         assert (
-            bump_rule.get_increment("feat(api)!: remove deprecated endpoints", True)
+            bump_rule.extract_increment("feat(api)!: remove deprecated endpoints", True)
             == VersionIncrement.MINOR
         )
 
         # Test with BREAKING CHANGE and scopes
         assert (
-            bump_rule.get_increment(
+            bump_rule.extract_increment(
                 "BREAKING CHANGE(api): remove deprecated endpoints", False
             )
             == VersionIncrement.MAJOR
         )
         assert (
-            bump_rule.get_increment(
+            bump_rule.extract_increment(
                 "BREAKING CHANGE(api): remove deprecated endpoints", True
             )
             == VersionIncrement.MINOR
         )
 
     def test_invalid_commit_message(self, bump_rule):
-        assert bump_rule.get_increment("invalid commit message", False) is None
-        assert bump_rule.get_increment("", False) is None
-        assert bump_rule.get_increment("feat", False) is None
+        assert bump_rule.extract_increment("invalid commit message", False) is None
+        assert bump_rule.extract_increment("", False) is None
+        assert bump_rule.extract_increment("feat", False) is None
 
     def test_other_commit_types(self, bump_rule):
         # These commit types should not trigger any version bump
-        assert bump_rule.get_increment("docs: update documentation", False) is None
-        assert bump_rule.get_increment("style: format code", False) is None
-        assert bump_rule.get_increment("test: add unit tests", False) is None
-        assert bump_rule.get_increment("build: update build config", False) is None
-        assert bump_rule.get_increment("ci: update CI pipeline", False) is None
+        assert bump_rule.extract_increment("docs: update documentation", False) is None
+        assert bump_rule.extract_increment("style: format code", False) is None
+        assert bump_rule.extract_increment("test: add unit tests", False) is None
+        assert bump_rule.extract_increment("build: update build config", False) is None
+        assert bump_rule.extract_increment("ci: update CI pipeline", False) is None
 
     def test_breaking_change_with_refactor(self, bump_rule):
         """Test breaking changes with refactor type commit messages."""
         # Breaking change with refactor type
         assert (
-            bump_rule.get_increment("refactor!: drop support for Python 2.7", False)
+            bump_rule.extract_increment("refactor!: drop support for Python 2.7", False)
             == VersionIncrement.MAJOR
         )
         assert (
-            bump_rule.get_increment("refactor!: drop support for Python 2.7", True)
+            bump_rule.extract_increment("refactor!: drop support for Python 2.7", True)
             == VersionIncrement.MINOR
         )
 
         # Breaking change with refactor type and scope
         assert (
-            bump_rule.get_increment(
+            bump_rule.extract_increment(
                 "refactor(api)!: remove deprecated endpoints", False
             )
             == VersionIncrement.MAJOR
         )
         assert (
-            bump_rule.get_increment("refactor(api)!: remove deprecated endpoints", True)
+            bump_rule.extract_increment(
+                "refactor(api)!: remove deprecated endpoints", True
+            )
             == VersionIncrement.MINOR
         )
 
         # Regular refactor (should be VersionIncrement.PATCH)
         assert (
-            bump_rule.get_increment("refactor: improve code structure", False)
+            bump_rule.extract_increment("refactor: improve code structure", False)
             == VersionIncrement.PATCH
         )
         assert (
-            bump_rule.get_increment("refactor: improve code structure", True)
+            bump_rule.extract_increment("refactor: improve code structure", True)
             == VersionIncrement.PATCH
         )
 
 
 class TestFindIncrementByCallable:
     @pytest.fixture
-    def get_increment(self, bump_rule):
-        return lambda x: bump_rule.get_increment(x, False)
+    def extract_increment(self, bump_rule):
+        return lambda x: bump_rule.extract_increment(x, False)
 
-    def test_single_commit(self, get_increment):
+    def test_single_commit(self, extract_increment):
         commit_messages = ["feat: add new feature"]
         assert (
-            VersionIncrement.get_highest_by_messages(commit_messages, get_increment)
+            VersionIncrement.get_highest_by_messages(commit_messages, extract_increment)
             == VersionIncrement.MINOR
         )
 
-    def test_multiple_commits(self, get_increment):
+    def test_multiple_commits(self, extract_increment):
         commit_messages = [
             "feat: new feature",
             "fix: bug fix",
             "docs: update readme",
         ]
         assert (
-            VersionIncrement.get_highest_by_messages(commit_messages, get_increment)
+            VersionIncrement.get_highest_by_messages(commit_messages, extract_increment)
             == VersionIncrement.MINOR
         )
 
-    def test_breaking_change(self, get_increment):
+    def test_breaking_change(self, extract_increment):
         commit_messages = [
             "feat: new feature",
             "feat!: breaking change",
         ]
         assert (
-            VersionIncrement.get_highest_by_messages(commit_messages, get_increment)
+            VersionIncrement.get_highest_by_messages(commit_messages, extract_increment)
             == VersionIncrement.MAJOR
         )
 
-    def test_multi_line_commit(self, get_increment):
+    def test_multi_line_commit(self, extract_increment):
         commit_messages = [
             "feat: new feature\n\nBREAKING CHANGE: major change",
         ]
         assert (
-            VersionIncrement.get_highest_by_messages(commit_messages, get_increment)
+            VersionIncrement.get_highest_by_messages(commit_messages, extract_increment)
             == VersionIncrement.MAJOR
         )
 
-    def test_no_increment_needed(self, get_increment):
+    def test_no_increment_needed(self, extract_increment):
         commit_messages = [
             "docs: update documentation",
             "style: format code",
         ]
         assert (
-            VersionIncrement.get_highest_by_messages(commit_messages, get_increment)
+            VersionIncrement.get_highest_by_messages(commit_messages, extract_increment)
             is None
         )
 
-    def test_empty_commits(self, get_increment):
+    def test_empty_commits(self, extract_increment):
         commit_messages = []
         assert (
-            VersionIncrement.get_highest_by_messages(commit_messages, get_increment)
+            VersionIncrement.get_highest_by_messages(commit_messages, extract_increment)
             is None
         )
 
@@ -244,12 +254,12 @@ class TestFindIncrementByCallable:
         ]
         assert (
             VersionIncrement.get_highest_by_messages(
-                commit_messages, lambda x: bump_rule.get_increment(x, True)
+                commit_messages, lambda x: bump_rule.extract_increment(x, True)
             )
             == VersionIncrement.MINOR
         )
 
-    def test_mixed_commit_types(self, get_increment):
+    def test_mixed_commit_types(self, extract_increment):
         commit_messages = [
             "feat: new feature",
             "fix: bug fix",
@@ -257,17 +267,17 @@ class TestFindIncrementByCallable:
             "refactor: restructure code",
         ]
         assert (
-            VersionIncrement.get_highest_by_messages(commit_messages, get_increment)
+            VersionIncrement.get_highest_by_messages(commit_messages, extract_increment)
             == VersionIncrement.MINOR
         )
 
-    def test_commit_with_scope(self, get_increment):
+    def test_commit_with_scope(self, extract_increment):
         commit_messages = [
             "feat(api): add new endpoint",
             "fix(ui): fix button alignment",
         ]
         assert (
-            VersionIncrement.get_highest_by_messages(commit_messages, get_increment)
+            VersionIncrement.get_highest_by_messages(commit_messages, extract_increment)
             == VersionIncrement.MINOR
         )
 
@@ -299,47 +309,49 @@ class TestCustomBumpRule:
 
     def test_major_version(self, custom_bump_rule):
         assert (
-            custom_bump_rule.get_increment("feat: add new feature [MAJOR]", False)
+            custom_bump_rule.extract_increment("feat: add new feature [MAJOR]", False)
             == VersionIncrement.MAJOR
         )
         assert (
-            custom_bump_rule.get_increment("fix: bug fix [MAJOR]", False)
+            custom_bump_rule.extract_increment("fix: bug fix [MAJOR]", False)
             == VersionIncrement.MAJOR
         )
 
     def test_minor_version(self, custom_bump_rule):
         assert (
-            custom_bump_rule.get_increment("feat: add new feature [MINOR]", False)
+            custom_bump_rule.extract_increment("feat: add new feature [MINOR]", False)
             == VersionIncrement.MINOR
         )
         assert (
-            custom_bump_rule.get_increment("fix: bug fix [MINOR]", False)
+            custom_bump_rule.extract_increment("fix: bug fix [MINOR]", False)
             == VersionIncrement.MINOR
         )
 
     def test_patch_version(self, custom_bump_rule):
         assert (
-            custom_bump_rule.get_increment("feat: add new feature [PATCH]", False)
+            custom_bump_rule.extract_increment("feat: add new feature [PATCH]", False)
             == VersionIncrement.PATCH
         )
         assert (
-            custom_bump_rule.get_increment("fix: bug fix [PATCH]", False)
+            custom_bump_rule.extract_increment("fix: bug fix [PATCH]", False)
             == VersionIncrement.PATCH
         )
 
     def test_major_version_zero(self, custom_bump_rule):
         assert (
-            custom_bump_rule.get_increment("feat: add new feature [MAJOR]", True)
+            custom_bump_rule.extract_increment("feat: add new feature [MAJOR]", True)
             == VersionIncrement.MINOR
         )
         assert (
-            custom_bump_rule.get_increment("fix: bug fix [MAJOR]", True)
+            custom_bump_rule.extract_increment("fix: bug fix [MAJOR]", True)
             == VersionIncrement.MINOR
         )
 
     def test_no_match(self, custom_bump_rule):
-        assert custom_bump_rule.get_increment("feat: add new feature", False) is None
-        assert custom_bump_rule.get_increment("fix: bug fix", False) is None
+        assert (
+            custom_bump_rule.extract_increment("feat: add new feature", False) is None
+        )
+        assert custom_bump_rule.extract_increment("fix: bug fix", False) is None
 
     def test_invalid_pattern(self, bump_map, bump_map_major_version_zero):
         with pytest.raises(NoPatternMapError):
@@ -379,14 +391,14 @@ class TestCustomBumpRule:
         rule = CustomBumpRule(pattern, bump_map, bump_map)
 
         assert (
-            rule.get_increment(
+            rule.extract_increment(
                 "feat: add new feature [MAJOR] [MINOR]",
                 False,
             )
             == VersionIncrement.MAJOR
         )
         assert (
-            rule.get_increment("fix: bug fix [MINOR] [PATCH]", False)
+            rule.extract_increment("fix: bug fix [MINOR] [PATCH]", False)
             == VersionIncrement.MINOR
         )
 
@@ -398,7 +410,7 @@ class TestCustomBumpRule:
         ]
         assert (
             VersionIncrement.get_highest_by_messages(
-                commit_messages, lambda x: custom_bump_rule.get_increment(x, False)
+                commit_messages, lambda x: custom_bump_rule.extract_increment(x, False)
             )
             == VersionIncrement.MAJOR
         )
@@ -423,46 +435,47 @@ class TestCustomBumpRule:
 
         # Test with multiple version tags
         assert (
-            rule.get_increment("major!: drop support for Python 2.7", False)
+            rule.extract_increment("major!: drop support for Python 2.7", False)
             == VersionIncrement.MAJOR
         )
         assert (
-            rule.get_increment("major!: drop support for Python 2.7", True)
+            rule.extract_increment("major!: drop support for Python 2.7", True)
             == VersionIncrement.MINOR
         )
         assert (
-            rule.get_increment("major: drop support for Python 2.7", False)
+            rule.extract_increment("major: drop support for Python 2.7", False)
             == VersionIncrement.MAJOR
         )
         assert (
-            rule.get_increment("major: drop support for Python 2.7", True)
+            rule.extract_increment("major: drop support for Python 2.7", True)
             == VersionIncrement.MINOR
         )
         assert (
-            rule.get_increment("patch!: drop support for Python 2.7", False)
+            rule.extract_increment("patch!: drop support for Python 2.7", False)
             == VersionIncrement.MAJOR
         )
         assert (
-            rule.get_increment("patch!: drop support for Python 2.7", True)
+            rule.extract_increment("patch!: drop support for Python 2.7", True)
             == VersionIncrement.MINOR
         )
         assert (
-            rule.get_increment("patch: drop support for Python 2.7", False)
+            rule.extract_increment("patch: drop support for Python 2.7", False)
             == VersionIncrement.PATCH
         )
         assert (
-            rule.get_increment("patch: drop support for Python 2.7", True)
+            rule.extract_increment("patch: drop support for Python 2.7", True)
             == VersionIncrement.PATCH
         )
         assert (
-            rule.get_increment("minor: add new feature", False)
+            rule.extract_increment("minor: add new feature", False)
             == VersionIncrement.MINOR
         )
         assert (
-            rule.get_increment("minor: add new feature", True) == VersionIncrement.MINOR
+            rule.extract_increment("minor: add new feature", True)
+            == VersionIncrement.MINOR
         )
-        assert rule.get_increment("patch: fix bug", False) == VersionIncrement.PATCH
-        assert rule.get_increment("patch: fix bug", True) == VersionIncrement.PATCH
+        assert rule.extract_increment("patch: fix bug", False) == VersionIncrement.PATCH
+        assert rule.extract_increment("patch: fix bug", True) == VersionIncrement.PATCH
 
 
 class TestCustomBumpRuleWithDefault:
@@ -476,104 +489,108 @@ class TestCustomBumpRuleWithDefault:
 
     def test_breaking_change_with_bang(self, custom_bump_rule):
         assert (
-            custom_bump_rule.get_increment("feat!: breaking change", False)
+            custom_bump_rule.extract_increment("feat!: breaking change", False)
             == VersionIncrement.MAJOR
         )
         assert (
-            custom_bump_rule.get_increment("fix!: breaking change", False)
+            custom_bump_rule.extract_increment("fix!: breaking change", False)
             == VersionIncrement.MAJOR
         )
         assert (
-            custom_bump_rule.get_increment("feat!: breaking change", True)
+            custom_bump_rule.extract_increment("feat!: breaking change", True)
             == VersionIncrement.MINOR
         )
         assert (
-            custom_bump_rule.get_increment("fix!: breaking change", True)
+            custom_bump_rule.extract_increment("fix!: breaking change", True)
             == VersionIncrement.MINOR
         )
 
     def test_breaking_change_type(self, custom_bump_rule):
         assert (
-            custom_bump_rule.get_increment("BREAKING CHANGE: major change", False)
+            custom_bump_rule.extract_increment("BREAKING CHANGE: major change", False)
             == VersionIncrement.MAJOR
         )
         assert (
-            custom_bump_rule.get_increment("BREAKING-CHANGE: major change", False)
+            custom_bump_rule.extract_increment("BREAKING-CHANGE: major change", False)
             == VersionIncrement.MAJOR
         )
         assert (
-            custom_bump_rule.get_increment("BREAKING CHANGE: major change", True)
+            custom_bump_rule.extract_increment("BREAKING CHANGE: major change", True)
             == VersionIncrement.MINOR
         )
         assert (
-            custom_bump_rule.get_increment("BREAKING-CHANGE: major change", True)
+            custom_bump_rule.extract_increment("BREAKING-CHANGE: major change", True)
             == VersionIncrement.MINOR
         )
 
     def test_feat_commit(self, custom_bump_rule):
         assert (
-            custom_bump_rule.get_increment("feat: add new feature", False)
+            custom_bump_rule.extract_increment("feat: add new feature", False)
             == VersionIncrement.MINOR
         )
         assert (
-            custom_bump_rule.get_increment("feat: add new feature", True)
+            custom_bump_rule.extract_increment("feat: add new feature", True)
             == VersionIncrement.MINOR
         )
 
     def test_fix_commit(self, custom_bump_rule):
         assert (
-            custom_bump_rule.get_increment("fix: fix bug", False)
+            custom_bump_rule.extract_increment("fix: fix bug", False)
             == VersionIncrement.PATCH
         )
         assert (
-            custom_bump_rule.get_increment("fix: fix bug", True)
+            custom_bump_rule.extract_increment("fix: fix bug", True)
             == VersionIncrement.PATCH
         )
 
     def test_refactor_commit(self, custom_bump_rule):
         assert (
-            custom_bump_rule.get_increment("refactor: restructure code", False)
+            custom_bump_rule.extract_increment("refactor: restructure code", False)
             == VersionIncrement.PATCH
         )
         assert (
-            custom_bump_rule.get_increment("refactor: restructure code", True)
+            custom_bump_rule.extract_increment("refactor: restructure code", True)
             == VersionIncrement.PATCH
         )
 
     def test_perf_commit(self, custom_bump_rule):
         assert (
-            custom_bump_rule.get_increment("perf: improve performance", False)
+            custom_bump_rule.extract_increment("perf: improve performance", False)
             == VersionIncrement.PATCH
         )
         assert (
-            custom_bump_rule.get_increment("perf: improve performance", True)
+            custom_bump_rule.extract_increment("perf: improve performance", True)
             == VersionIncrement.PATCH
         )
 
     def test_commit_with_scope(self, custom_bump_rule):
         assert (
-            custom_bump_rule.get_increment("feat(api): add new endpoint", False)
+            custom_bump_rule.extract_increment("feat(api): add new endpoint", False)
             == VersionIncrement.MINOR
         )
         assert (
-            custom_bump_rule.get_increment("fix(ui): fix button alignment", False)
+            custom_bump_rule.extract_increment("fix(ui): fix button alignment", False)
             == VersionIncrement.PATCH
         )
         assert (
-            custom_bump_rule.get_increment("refactor(core): restructure", False)
+            custom_bump_rule.extract_increment("refactor(core): restructure", False)
             == VersionIncrement.PATCH
         )
 
     def test_no_match(self, custom_bump_rule):
         assert (
-            custom_bump_rule.get_increment("docs: update documentation", False) is None
+            custom_bump_rule.extract_increment("docs: update documentation", False)
+            is None
         )
-        assert custom_bump_rule.get_increment("style: format code", False) is None
-        assert custom_bump_rule.get_increment("test: add unit tests", False) is None
+        assert custom_bump_rule.extract_increment("style: format code", False) is None
+        assert custom_bump_rule.extract_increment("test: add unit tests", False) is None
         assert (
-            custom_bump_rule.get_increment("build: update build config", False) is None
+            custom_bump_rule.extract_increment("build: update build config", False)
+            is None
         )
-        assert custom_bump_rule.get_increment("ci: update CI pipeline", False) is None
+        assert (
+            custom_bump_rule.extract_increment("ci: update CI pipeline", False) is None
+        )
 
     def test_with_find_increment_by_callable(self, custom_bump_rule):
         commit_messages = [
@@ -583,7 +600,7 @@ class TestCustomBumpRuleWithDefault:
         ]
         assert (
             VersionIncrement.get_highest_by_messages(
-                commit_messages, lambda x: custom_bump_rule.get_increment(x, False)
+                commit_messages, lambda x: custom_bump_rule.extract_increment(x, False)
             )
             == VersionIncrement.MAJOR
         )
