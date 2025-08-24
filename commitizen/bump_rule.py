@@ -45,17 +45,17 @@ class VersionIncrement(IntEnum):
     @staticmethod
     def get_highest_by_messages(
         commit_messages: Iterable[str],
-        get_increment: Callable[[str], VersionIncrement | None],
+        extract_increment: Callable[[str], VersionIncrement | None],
     ) -> VersionIncrement | None:
         """Find the highest version increment from a list of messages.
 
         This function processes a list of messages and determines the highest version
         increment needed based on the commit messages. It splits multi-line commit messages
-        and evaluates each line using the provided get_increment callable.
+        and evaluates each line using the provided extract_increment callable.
 
         Args:
             commit_messages: A list of messages to analyze.
-            get_increment: A callable that takes a commit message string and returns an
+            extract_increment: A callable that takes a commit message string and returns an
                 VersionIncrement value (MAJOR, MINOR, PATCH) or None if no increment is needed.
 
         Returns:
@@ -65,11 +65,11 @@ class VersionIncrement(IntEnum):
         Example:
             >>> commit_messages = ["feat: new feature", "fix: bug fix"]
             >>> rule = ConventionalCommitBumpRule()
-            >>> VersionIncrement.get_highest_by_messages(commit_messages, lambda x: rule.get_increment(x, False))
+            >>> VersionIncrement.get_highest_by_messages(commit_messages, lambda x: rule.extract_increment(x, False))
             'MINOR'
         """
         return VersionIncrement.get_highest(
-            get_increment(line)
+            extract_increment(line)
             for message in commit_messages
             for line in message.split("\n")
         )
@@ -92,7 +92,7 @@ class BumpRule(Protocol):
     such as conventional commits or custom rules.
     """
 
-    def get_increment(
+    def extract_increment(
         self, commit_message: str, major_version_zero: bool
     ) -> VersionIncrement | None:
         """Determine the version increment based on a commit message.
@@ -120,7 +120,7 @@ class ConventionalCommitBumpRule(BumpRule):
     _MINOR_CHANGE_TYPES = set(["feat"])
     _PATCH_CHANGE_TYPES = set(["fix", "perf", "refactor"])
 
-    def get_increment(
+    def extract_increment(
         self, commit_message: str, major_version_zero: bool
     ) -> VersionIncrement | None:
         if not (m := self._head_pattern.match(commit_message)):
@@ -223,7 +223,7 @@ class CustomBumpRule(BumpRule):
         self.bump_map = bump_map
         self.bump_map_major_version_zero = bump_map_major_version_zero
 
-    def get_increment(
+    def extract_increment(
         self, commit_message: str, major_version_zero: bool
     ) -> VersionIncrement | None:
         if not (m := self.bump_pattern.search(commit_message)):
