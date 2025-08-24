@@ -70,17 +70,14 @@ class VersionIncrement(IntEnum):
             >>> VersionIncrement.get_highest_by_messages(commit_messages, lambda x: rule.extract_increment(x, False))
             'MINOR'
         """
-        return VersionIncrement.get_highest(
-            extract_increment(line)
-            for message in commit_messages
-            for line in message.split("\n")
+        return max(
+            (
+                extract_increment(line)
+                for message in commit_messages
+                for line in message.split("\n")
+            ),
+            default=VersionIncrement.NONE,
         )
-
-    @staticmethod
-    def get_highest(
-        increments: Iterable[VersionIncrement],
-    ) -> VersionIncrement:
-        return max(increments, default=VersionIncrement.NONE)
 
 
 class BumpRule(Protocol):
@@ -234,13 +231,16 @@ class CustomBumpRule(BumpRule):
         )
 
         try:
-            if ret := VersionIncrement.get_highest(
-                (
-                    increment
-                    for name, increment in effective_bump_map.items()
-                    if m.group(name)
-                ),
-            ):
+            if (
+                ret := max(
+                    (
+                        increment
+                        for name, increment in effective_bump_map.items()
+                        if m.group(name)
+                    ),
+                    default=VersionIncrement.NONE,
+                )
+            ) is not VersionIncrement.NONE:
                 return ret
         except IndexError:
             pass
