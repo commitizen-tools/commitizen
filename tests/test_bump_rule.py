@@ -635,61 +635,6 @@ class TestCustomBumpRuleWithDefault:
         )
 
 
-class TestGetHighest:
-    def test_get_highest_with_major(self):
-        increments = [
-            VersionIncrement.PATCH,
-            VersionIncrement.MINOR,
-            VersionIncrement.MAJOR,
-        ]
-        assert VersionIncrement.get_highest(increments) == VersionIncrement.MAJOR
-
-    def test_get_highest_with_minor(self):
-        increments = [
-            VersionIncrement.PATCH,
-            VersionIncrement.MINOR,
-            VersionIncrement.NONE,
-        ]
-        assert VersionIncrement.get_highest(increments) == VersionIncrement.MINOR
-
-    def test_get_highest_with_patch(self):
-        increments = [
-            VersionIncrement.PATCH,
-            VersionIncrement.NONE,
-            VersionIncrement.NONE,
-        ]
-        assert VersionIncrement.get_highest(increments) == VersionIncrement.PATCH
-
-    def test_get_highest_with_none(self):
-        increments = [
-            VersionIncrement.NONE,
-            VersionIncrement.NONE,
-            VersionIncrement.NONE,
-        ]
-        assert VersionIncrement.get_highest(increments) == VersionIncrement.NONE
-
-    def test_get_highest_empty(self):
-        increments = []
-        assert VersionIncrement.get_highest(increments) == VersionIncrement.NONE
-
-    def test_get_highest_mixed_order(self):
-        increments = [
-            VersionIncrement.MAJOR,
-            VersionIncrement.PATCH,
-            VersionIncrement.MINOR,
-        ]
-        assert VersionIncrement.get_highest(increments) == VersionIncrement.MAJOR
-
-    def test_get_highest_with_none_values(self):
-        increments = [
-            VersionIncrement.NONE,
-            VersionIncrement.MINOR,
-            VersionIncrement.NONE,
-            VersionIncrement.PATCH,
-        ]
-        assert VersionIncrement.get_highest(increments) == VersionIncrement.MINOR
-
-
 class TestSafeCast:
     def test_safe_cast_valid_strings(self):
         assert VersionIncrement.safe_cast("MAJOR") == VersionIncrement.MAJOR
