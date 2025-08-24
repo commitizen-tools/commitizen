@@ -255,8 +255,8 @@ class Bump:
                 )
 
             # we create an empty PATCH increment for empty tag
-            if increment == VersionIncrement.NONE and allow_no_commit:
-                increment = VersionIncrement.PATCH
+            if allow_no_commit:
+                increment = max(increment, VersionIncrement.PATCH)
 
             new_version = current_version.bump(
                 increment,
