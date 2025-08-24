@@ -49,6 +49,9 @@ class GitObject:
     def __eq__(self, other: object) -> bool:
         return hasattr(other, "rev") and self.rev == other.rev
 
+    def __hash__(self) -> int:
+        return hash(self.rev)
+
 
 class GitCommit(GitObject):
     def __init__(
@@ -329,3 +332,10 @@ def _get_log_as_str_list(start: str | None, end: str, args: str) -> list[str]:
     if c.return_code != 0:
         raise GitCommandError(c.err)
     return c.out.split(f"{delimiter}\n")
+
+
+def get_default_branch() -> str:
+    c = cmd.run("git symbolic-ref refs/remotes/origin/HEAD")
+    if c.return_code != 0:
+        raise GitCommandError(c.err)
+    return c.out.strip()

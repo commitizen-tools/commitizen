@@ -22,6 +22,7 @@ class CheckArgs(TypedDict, total=False):
     message_length_limit: int | None
     allowed_prefixes: list[str]
     message: str
+    use_default_range: bool
 
 
 class Check:
@@ -41,7 +42,7 @@ class Check:
         self.allow_abort = bool(
             arguments.get("allow_abort", config.settings["allow_abort"])
         )
-
+        self.use_default_range = bool(arguments.get("use_default_range"))
         self.max_msg_length = arguments.get(
             "message_length_limit", config.settings.get("message_length_limit", None)
         )
@@ -54,24 +55,27 @@ class Check:
             else config.settings["allowed_prefixes"]
         )
 
-        self._valid_command_argument()
-
-        self.config: BaseConfig = config
-        self.encoding = config.settings["encoding"]
-        self.cz = factory.committer_factory(self.config)
-
-    def _valid_command_argument(self) -> None:
         num_exclusive_args_provided = sum(
             arg is not None
-            for arg in (self.commit_msg_file, self.commit_msg, self.rev_range)
+            for arg in (
+                self.commit_msg_file,
+                self.commit_msg,
+                self.rev_range,
+            )
         )
-        if num_exclusive_args_provided == 0 and not sys.stdin.isatty():
-            self.commit_msg = sys.stdin.read()
-        elif num_exclusive_args_provided != 1:
+
+        if num_exclusive_args_provided > 1:
             raise InvalidCommandArgumentError(
                 "Only one of --rev-range, --message, and --commit-msg-file is permitted by check command! "
                 "See 'cz check -h' for more information"
             )
+
+        if num_exclusive_args_provided == 0 and not sys.stdin.isatty():
+            self.commit_msg = sys.stdin.read()
+
+        self.config: BaseConfig = config
+        self.encoding = config.settings["encoding"]
+        self.cz = factory.committer_factory(self.config)
 
     def __call__(self) -> None:
         """Validate if commit messages follows the conventional pattern.
@@ -113,7 +117,10 @@ class Check:
             return [git.GitCommit(rev="", title="", body=self._filter_comments(msg))]
 
         # Get commit messages from git log (--rev-range)
-        return git.get_commits(end=self.rev_range)
+        return git.get_commits(
+            git.get_default_branch() if self.use_default_range else None,
+            self.rev_range,
+        )
 
     @staticmethod
     def _filter_comments(msg: str) -> str:
@@ -138,7 +145,7 @@ class Check:
             The filtered commit message without comments.
         """
 
-        lines = []
+        lines: list[str] = []
         for line in msg.split("\n"):
             if "# ------------------------ >8 ------------------------" in line:
                 break

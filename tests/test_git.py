@@ -480,3 +480,22 @@ def test_create_commit_cmd_string(mocker, os_name, committer_date, expected_cmd)
     mocker.patch("os.name", os_name)
     result = git._create_commit_cmd_string("", committer_date, "temp.txt")
     assert result == expected_cmd
+
+
+def test_get_default_branch_success(mocker: MockFixture):
+    mocker.patch(
+        "commitizen.cmd.run", return_value=FakeCommand(out="refs/remotes/origin/main\n")
+    )
+    assert git.get_default_branch() == "refs/remotes/origin/main"
+
+
+def test_get_default_branch_error(mocker: MockFixture):
+    mocker.patch(
+        "commitizen.cmd.run",
+        return_value=FakeCommand(
+            err="fatal: ref refs/remotes/origin/HEAD is not a symbolic ref",
+            return_code=1,
+        ),
+    )
+    with pytest.raises(exceptions.GitCommandError):
+        git.get_default_branch()

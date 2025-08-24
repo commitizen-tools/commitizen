@@ -112,16 +112,6 @@ class ProjectInfo:
         return os.path.isfile("composer.json")
 
     @property
-    def latest_tag(self) -> str | None:
-        return get_latest_tag_name()
-
-    def tags(self) -> list | None:
-        """Not a property, only use if necessary"""
-        if self.latest_tag is None:
-            return None
-        return get_tag_names()
-
-    @property
     def is_pre_commit_installed(self) -> bool:
         return bool(shutil.which("pre-commit"))
 
@@ -142,8 +132,8 @@ class Init:
 
         out.info("Welcome to commitizen!\n")
         out.line(
-            "Answer the questions to configure your project.\n"
-            "For further configuration visit:\n"
+            "Answer the following questions to configure your project.\n"
+            "For further configuration, visit:\n"
             "\n"
             "https://commitizen-tools.github.io/commitizen/config/"
             "\n"
@@ -170,21 +160,6 @@ class Init:
             self.config = JsonConfig(data="{}", path=config_path)
         elif "yaml" in config_path:
             self.config = YAMLConfig(data="", path=config_path)
-        values_to_add: dict[str, Any] = {}
-        values_to_add["name"] = cz_name
-        values_to_add["tag_format"] = tag_format
-        values_to_add["version_scheme"] = version_scheme
-
-        if version_provider == "commitizen":
-            values_to_add["version"] = version.public
-        else:
-            values_to_add["version_provider"] = version_provider
-
-        if update_changelog_on_bump:
-            values_to_add["update_changelog_on_bump"] = update_changelog_on_bump
-
-        if major_version_zero:
-            values_to_add["major_version_zero"] = major_version_zero
 
         # Collect hook data
         hook_types = questionary.checkbox(
@@ -202,7 +177,18 @@ class Init:
 
         # Create and initialize config
         self.config.init_empty_config_content()
-        self._update_config_file(values_to_add)
+
+        self.config.set_key("name", cz_name)
+        self.config.set_key("tag_format", tag_format)
+        self.config.set_key("version_scheme", version_scheme)
+        if version_provider == "commitizen":
+            self.config.set_key("version", version.public)
+        else:
+            self.config.set_key("version_provider", version_provider)
+        if update_changelog_on_bump:
+            self.config.set_key("update_changelog_on_bump", update_changelog_on_bump)
+        if major_version_zero:
+            self.config.set_key("major_version_zero", major_version_zero)
 
         out.write("\nYou can bump the version running:\n")
         out.info("\tcz bump\n")
@@ -231,31 +217,32 @@ class Init:
         return name
 
     def _ask_tag(self) -> str:
-        latest_tag = self.project_info.latest_tag
+        latest_tag = get_latest_tag_name()
         if not latest_tag:
             out.error("No Existing Tag. Set tag to v0.0.1")
             return "0.0.1"
 
-        is_correct_tag = questionary.confirm(
+        if questionary.confirm(
             f"Is {latest_tag} the latest tag?", style=self.cz.style, default=False
+        ).unsafe_ask():
+            return latest_tag
+
+        existing_tags = get_tag_names()
+        if not existing_tags:
+            out.error("No Existing Tag. Set tag to v0.0.1")
+            return "0.0.1"
+
+        answer: str = questionary.select(
+            "Please choose the latest tag: ",
+            # The latest tag is most likely with the largest number.
+            # Thus, listing the existing_tags in reverse order makes more sense.
+            choices=sorted(existing_tags, reverse=True),
+            style=self.cz.style,
         ).unsafe_ask()
-        if not is_correct_tag:
-            tags = self.project_info.tags()
-            if not tags:
-                out.error("No Existing Tag. Set tag to v0.0.1")
-                return "0.0.1"
 
-            # the latest tag is most likely with the largest number. Thus list the tags in reverse order makes more sense
-            sorted_tags = sorted(tags, reverse=True)
-            latest_tag = questionary.select(
-                "Please choose the latest tag: ",
-                choices=sorted_tags,
-                style=self.cz.style,
-            ).unsafe_ask()
-
-            if not latest_tag:
-                raise NoAnswersError("Tag is required!")
-        return latest_tag
+        if not answer:
+            raise NoAnswersError("Tag is required!")
+        return answer
 
     def _ask_tag_format(self, latest_tag: str) -> str:
         if latest_tag.startswith("v"):
@@ -360,7 +347,7 @@ class Init:
             "rev": f"v{__version__}",
             "hooks": [
                 {"id": "commitizen"},
-                {"id": "commitizen-branch", "stages": ["push"]},
+                {"id": "commitizen-branch", "stages": ["pre-push"]},
             ],
         }
 
@@ -396,7 +383,3 @@ class Init:
             hook_types = ["commit-msg", "pre-push"]
         self._exec_install_pre_commit_hook(hook_types)
         out.write("commitizen pre-commit hook is now installed in your '.git'\n")
-
-    def _update_config_file(self, values: dict[str, Any]) -> None:
-        for key, value in values.items():
-            self.config.set_key(key, value)
