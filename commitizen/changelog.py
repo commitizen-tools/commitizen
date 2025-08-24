@@ -35,6 +35,7 @@ from datetime import date
 from itertools import chain
 from typing import TYPE_CHECKING, Any
 
+from deprecated import deprecated
 from jinja2 import (
     BaseLoader,
     ChoiceLoader,
@@ -285,7 +286,11 @@ def get_next_tag_name_after_version(tags: Iterable[GitTag], version: str) -> str
     raise NoCommitsFoundError(f"Could not find a valid revision range. {version=}")
 
 
-# TODO: unused, deprecate this?
+@deprecated(
+    reason="This function is unused and will be removed in v5",
+    version="5.0.0",
+    category=DeprecationWarning,
+)
 def get_smart_tag_range(
     tags: Sequence[GitTag], newest: str, oldest: str | None = None
 ) -> list[GitTag]:
