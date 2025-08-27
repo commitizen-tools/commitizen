@@ -12,6 +12,7 @@ readme = "docs/README.md"
 requires-python = ">=3.9,<4.0"
 dependencies = [
     "questionary (>=2.0,<3.0)",
+    "prompt_toolkit!=3.0.52",  # Exclude transitive dependency due to known issue in questionary: https://github.com/tmbo/questionary/issues/454
     "decli (>=0.6.0,<1.0)",
     "colorama (>=0.4.1,<1.0)",
     "termcolor (>=1.1.0,<4.0.0)",
