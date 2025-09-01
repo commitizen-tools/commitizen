@@ -13,6 +13,10 @@ add to your commit body the following `BREAKING CHANGE`.
 Using these three keywords will allow the proper identification of the semantic version.
 Of course, there are other keywords, but I'll leave it to the reader to explore them.
 
+Note: You can also indicate breaking changes by adding an exclamation mark in the commit title
+(e.g., `feat!: breaking change`) by setting the `breaking_change_exclamation_in_title`
+configuration option to `true`. [Read more][breaking-change-config]
+
 ## Writing commits
 
 Now to the important part: when writing commits, it's important to think about:
@@ -44,3 +48,4 @@ Emojis may be added as well (e.g., see [cz-emoji][cz_emoji]), which requires the
 [conventional_commits]: https://www.conventionalcommits.org
 [cz_emoji]: https://commitizen-tools.github.io/commitizen/third-party-commitizen/#cz-emoji
 [configuration]: ../config.md#encoding
+[breaking-change-config]: ../config.md#breaking_change_exclamation_in_title

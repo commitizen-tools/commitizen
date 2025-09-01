@@ -105,6 +105,55 @@ def test_breaking_change_in_footer(config):
     )
 
 
+@pytest.mark.parametrize(
+    "scope,breaking_change_exclamation_in_title,expected_message",
+    [
+        # Test with scope and breaking_change_exclamation_in_title enabled
+        (
+            "users",
+            True,
+            "feat(users)!: email pattern corrected\n\ncomplete content\n\nBREAKING CHANGE: migrate by renaming user to users",
+        ),
+        # Test without scope and breaking_change_exclamation_in_title enabled
+        (
+            "",
+            True,
+            "feat!: email pattern corrected\n\ncomplete content\n\nBREAKING CHANGE: migrate by renaming user to users",
+        ),
+        # Test with scope and breaking_change_exclamation_in_title disabled
+        (
+            "users",
+            False,
+            "feat(users): email pattern corrected\n\ncomplete content\n\nBREAKING CHANGE: migrate by renaming user to users",
+        ),
+        # Test without scope and breaking_change_exclamation_in_title disabled
+        (
+            "",
+            False,
+            "feat: email pattern corrected\n\ncomplete content\n\nBREAKING CHANGE: migrate by renaming user to users",
+        ),
+    ],
+)
+def test_breaking_change_message_formats(
+    config, scope, breaking_change_exclamation_in_title, expected_message
+):
+    # Set the breaking_change_exclamation_in_title setting
+    config.settings["breaking_change_exclamation_in_title"] = (
+        breaking_change_exclamation_in_title
+    )
+    conventional_commits = ConventionalCommitsCz(config)
+    answers = {
+        "prefix": "feat",
+        "scope": scope,
+        "subject": "email pattern corrected",
+        "is_breaking_change": True,
+        "body": "complete content",
+        "footer": "migrate by renaming user to users",
+    }
+    message = conventional_commits.message(answers)
+    assert message == expected_message
+
+
 def test_example(config):
     """just testing a string is returned. not the content"""
     conventional_commits = ConventionalCommitsCz(config)
