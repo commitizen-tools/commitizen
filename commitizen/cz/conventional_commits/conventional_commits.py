@@ -154,11 +154,21 @@ class ConventionalCommitsCz(BaseCommitizen):
         footer = answers["footer"]
         is_breaking_change = answers["is_breaking_change"]
 
+        # Check if breaking change exclamation in title is enabled
+        breaking_change_exclamation_in_title = self.config.settings.get(
+            "breaking_change_exclamation_in_title", False
+        )
+
         if scope:
             scope = f"({scope})"
         if body:
             body = f"\n\n{body}"
         if is_breaking_change:
+            if breaking_change_exclamation_in_title:
+                if scope:
+                    scope = f"{scope}!"
+                else:
+                    prefix = f"{prefix}!"
             footer = f"BREAKING CHANGE: {footer}"
         if footer:
             footer = f"\n\n{footer}"
