@@ -96,6 +96,15 @@ Use annotated tags instead of lightweight tags. [See difference][annotated-tags-
 
 Create custom commit message. Useful to skip CI. [Read more][bump_message]
 
+### `breaking_change_exclamation_in_title`
+
+Type: `bool`
+
+Default: `False`
+
+When true, breaking changes will be also indicated by an exclamation mark in the commit title (e.g., `feat!: breaking change`).
+When false, breaking changes will be only indicated by `BREAKING CHANGE:` in the footer. [Read more][writing_commits]
+
 ### `retry_after_failure`
 
 - Type: `bool`
@@ -401,3 +410,4 @@ setup(
 [template-customization]: customization.md#customizing-the-changelog-template
 [annotated-tags-vs-lightweight]: https://stackoverflow.com/a/11514139/2047185
 [encoding]: tutorials/writing_commits.md#writing-commits
+[writing_commits]: tutorials/writing_commits.md#conventional-commits
