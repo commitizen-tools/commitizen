@@ -61,6 +61,7 @@ class Settings(TypedDict, total=False):
     version_scheme: str | None
     version_type: str | None
     version: str | None
+    breaking_change_exclamation_in_title: bool
 
 
 CONFIG_FILES: list[str] = [
@@ -109,6 +110,7 @@ DEFAULT_SETTINGS: Settings = {
     "always_signoff": False,
     "template": None,  # default provided by plugin
     "extras": {},
+    "breaking_change_exclamation_in_title": False,
 }
 
 MAJOR = "MAJOR"
