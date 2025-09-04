@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from textwrap import dedent
 
@@ -23,13 +24,19 @@ version = "42.1"
 
 CARGO_WORKSPACE_TOML = """\
 [workspace.package]
-name = "whatever"
+members = ["whatever"]
 version = "0.1.0"
+"""
+
+CARGO_WORKSPACE_MEMBER_TOML = """\
+[package]
+name = "whatever"
+version.workspace = true
 """
 
 CARGO_WORKSPACE_TOML_EXPECTED = """\
 [workspace.package]
-name = "whatever"
+members = ["whatever"]
 version = "42.1"
 """
 
@@ -114,6 +121,11 @@ def test_cargo_provider_with_lock(
     filename = CargoProvider.filename
     file = chdir / filename
     file.write_text(dedent(toml_content))
+
+    member_folder = chdir / "whatever"
+    os.mkdir(member_folder)
+    member_file = member_folder / "Cargo.toml"
+    member_file.write_text(dedent(CARGO_WORKSPACE_MEMBER_TOML))
 
     lock_filename = CargoProvider.lock_filename
     lock_file = chdir / lock_filename
