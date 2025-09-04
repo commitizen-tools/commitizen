@@ -23,20 +23,64 @@ version = "42.1"
 """
 
 CARGO_WORKSPACE_TOML = """\
+[workspace]
+members = ["member1", "folder/member2", "crates/*"]
+exclude = ["crates/member4", "folder/member5"]
+
 [workspace.package]
-members = ["whatever"]
 version = "0.1.0"
 """
 
-CARGO_WORKSPACE_MEMBER_TOML = """\
+CARGO_WORKSPACE_MEMBERS = [
+    {
+        "path": "member1",
+        "content": """\
 [package]
-name = "whatever"
+name = "member1"
 version.workspace = true
-"""
+""",
+    },
+    {
+        "path": "folder/member2",
+        "content": """\
+[package]
+name = "member2"
+version.workspace = "1.1.1"
+""",
+    },
+    {
+        "path": "crates/member3",
+        "content": """\
+[package]
+name = "member3"
+version.workspace = true
+""",
+    },
+    {
+        "path": "crates/member4",
+        "content": """\
+[package]
+name = "member4"
+version.workspace = "2.2.2"
+""",
+    },
+    {
+        "path": "folder/member5",
+        "content": """\
+[package]
+name = "member5"
+version.workspace = "3.3.3"
+""",
+    },
+]
+
 
 CARGO_WORKSPACE_TOML_EXPECTED = """\
+[workspace]
+members = ["member1", "folder/member2", "crates/*"]
+exclude = ["crates/member4", "folder/member5"]
+
 [workspace.package]
-members = ["whatever"]
 version = "42.1"
 """
 
@@ -57,6 +101,120 @@ CARGO_LOCK_EXPECTED = """\
 [[package]]
 name = "whatever"
 version = "42.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+dependencies = [
+ "packageA",
+ "packageB",
+ "packageC",
+]
+"""
+
+CARGO_WORKSPACE_LOCK = """\
+[[package]]
+name = "member1"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+dependencies = [
+ "packageA",
+ "packageB",
+ "packageC",
+]
+
+[[package]]
+name = "member2"
+version = "1.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+dependencies = [
+ "packageA",
+ "packageB",
+ "packageC",
+]
+
+[[package]]
+name = "member3"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+dependencies = [
+ "packageA",
+ "packageB",
+ "packageC",
+]
+
+[[package]]
+name = "member4"
+version = "2.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+dependencies = [
+ "packageA",
+ "packageB",
+ "packageC",
+]
+
+[[package]]
+name = "member5"
+version = "3.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+dependencies = [
+ "packageA",
+ "packageB",
+ "packageC",
+]
+"""
+
+CARGO_WORKSPACE_LOCK_EXPECTED = """\
+[[package]]
+name = "member1"
+version = "42.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+dependencies = [
+ "packageA",
+ "packageB",
+ "packageC",
+]
+
+[[package]]
+name = "member2"
+version = "1.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+dependencies = [
+ "packageA",
+ "packageB",
+ "packageC",
+]
+
+[[package]]
+name = "member3"
+version = "42.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+dependencies = [
+ "packageA",
+ "packageB",
+ "packageC",
+]
+
+[[package]]
+name = "member4"
+version = "2.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+dependencies = [
+ "packageA",
+ "packageB",
+ "packageC",
+]
+
+[[package]]
+name = "member5"
+version = "3.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "123abc"
 dependencies = [
@@ -104,9 +262,9 @@ def test_cargo_provider(
         ),
         (
             CARGO_WORKSPACE_TOML,
-            CARGO_LOCK,
+            CARGO_WORKSPACE_LOCK,
             CARGO_WORKSPACE_TOML_EXPECTED,
-            CARGO_LOCK_EXPECTED,
+            CARGO_WORKSPACE_LOCK_EXPECTED,
         ),
     ),
 )
@@ -122,10 +280,14 @@ def test_cargo_provider_with_lock(
     file = chdir / filename
     file.write_text(dedent(toml_content))
 
-    member_folder = chdir / "whatever"
-    os.mkdir(member_folder)
-    member_file = member_folder / "Cargo.toml"
-    member_file.write_text(dedent(CARGO_WORKSPACE_MEMBER_TOML))
+    # Create workspace members
+    os.mkdir(chdir / "crates")
+    os.mkdir(chdir / "folder")
+    for i in range(0, 5):
+        member_folder = Path(CARGO_WORKSPACE_MEMBERS[i]["path"])
+        os.mkdir(member_folder)
+        member_file = member_folder / "Cargo.toml"
+        member_file.write_text(dedent(CARGO_WORKSPACE_MEMBERS[i]["content"]))
 
     lock_filename = CargoProvider.lock_filename
     lock_file = chdir / lock_filename
