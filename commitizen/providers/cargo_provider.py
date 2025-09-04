@@ -1,11 +1,19 @@
 from __future__ import annotations
 
+import fnmatch
 import glob
 from pathlib import Path
 
 import tomlkit
 
 from commitizen.providers.base_provider import TomlProvider
+
+
+def matches_exclude(path: str, exclude_patterns: list[str]) -> bool:
+    for pattern in exclude_patterns:
+        if fnmatch.fnmatch(path, pattern):
+            return True
+    return False
 
 
 class CargoProvider(TomlProvider):
@@ -55,27 +63,30 @@ class CargoProvider(TomlProvider):
                     cargo_lock_content["package"][i]["version"] = version  # type: ignore[index]
                     break
         except tomlkit.exceptions.NonExistentKey:
-            workspace_members = (
-                cargo_toml_content.get("workspace", {})
-                .get("package", {})
-                .get("members", [])
+            workspace_members = cargo_toml_content.get("workspace", {}).get(
+                "members", []
+            )
+            excluded_workspace_members = cargo_toml_content.get("workspace", {}).get(
+                "exclude", []
             )
             members_inheriting = []
 
             for member in workspace_members:
-                matched_paths = glob.glob(member, recursive=True)
-                for path in matched_paths:
-                    cargo_file = Path(path) / "Cargo.toml"
-                    cargo_toml_content = tomlkit.parse(cargo_file.read_text())
-                    try:
-                        version_workspace = cargo_toml_content["package"]["version"][  # type: ignore[index]
-                            "workspace"
-                        ]
-                        if version_workspace is True:
-                            package_name = cargo_toml_content["package"]["name"]  # type: ignore[index]
-                            members_inheriting.append(package_name)
-                    except tomlkit.exceptions.NonExistentKey:
-                        continue
+                for path in glob.glob(member, recursive=True):
+                    if not matches_exclude(path, excluded_workspace_members):
+                        cargo_file = Path(path) / "Cargo.toml"
+                        cargo_toml_content = tomlkit.parse(cargo_file.read_text())
+                        try:
+                            version_workspace = cargo_toml_content["package"][
+                                "version"
+                            ][  # type: ignore[index]
+                                "workspace"
+                            ]
+                            if version_workspace is True:
+                                package_name = cargo_toml_content["package"]["name"]  # type: ignore[index]
+                                members_inheriting.append(package_name)
+                        except tomlkit.exceptions.NonExistentKey:
+                            continue
 
             for i, package in enumerate(packages):
                 if package["name"] in members_inheriting:
