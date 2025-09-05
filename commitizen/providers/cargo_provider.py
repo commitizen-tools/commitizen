@@ -73,20 +73,19 @@ class CargoProvider(TomlProvider):
 
             for member in workspace_members:
                 for path in glob.glob(member, recursive=True):
-                    if not matches_exclude(path, excluded_workspace_members):
-                        cargo_file = Path(path) / "Cargo.toml"
-                        cargo_toml_content = tomlkit.parse(cargo_file.read_text())
-                        try:
-                            version_workspace = cargo_toml_content["package"][
-                                "version"
-                            ][  # type: ignore[index]
-                                "workspace"
-                            ]
-                            if version_workspace is True:
-                                package_name = cargo_toml_content["package"]["name"]  # type: ignore[index]
-                                members_inheriting.append(package_name)
-                        except tomlkit.exceptions.NonExistentKey:
-                            continue
+                    if matches_exclude(path, excluded_workspace_members):
+                        continue
+                    cargo_file = Path(path) / "Cargo.toml"
+                    cargo_toml_content = tomlkit.parse(cargo_file.read_text())
+                    try:
+                        version_workspace = cargo_toml_content["package"]["version"][  # type: ignore[index]
+                            "workspace"
+                        ]
+                        if version_workspace is True:
+                            package_name = cargo_toml_content["package"]["name"]  # type: ignore[index]
+                            members_inheriting.append(package_name)
+                    except tomlkit.exceptions.NonExistentKey:
+                        continue
 
             for i, package in enumerate(packages):
                 if package["name"] in members_inheriting:
