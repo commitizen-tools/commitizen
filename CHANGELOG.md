@@ -1,3 +1,14 @@
+## v4.8.4 (2025-09-05)
+
+### Fix
+
+- members in workspace, use exclude
+- cargo workspaces
+
+### Refactor
+
+- reduce code indentation
+
 ## v4.8.3 (2025-06-09)
 
 ### Fix
