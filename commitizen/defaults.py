@@ -92,6 +92,7 @@ DEFAULT_SETTINGS: Settings = {
         "Pull request",
         "fixup!",
         "squash!",
+        "amend!",
     ],
     "changelog_file": "CHANGELOG.md",
     "changelog_format": None,  # default guessed from changelog_file
