@@ -1,3 +1,42 @@
+## v4.9.0 (2025-09-09)
+
+### Feat
+
+- **check**: add check against default branch
+
+### Fix
+
+- **changelog**: mark get_smart_tag_range as deprecated
+- **init**: use pre-push as pre-commit stage
+- **init**: use pre-push as pre-commit stage
+- **init**: make welcome message easier to read
+- **Init**: fix a typo in _ask_version_provider options and remove unnecessary filter, use named tuple for options
+- **ExitCode**: add from_str in ExitCode and replace parse_no_raise with it
+- raise NoVersionSpecifiedError if version is None, and adjust call sites of get_version
+- **Changelog**: fix _export_template variable type
+- **Bump**: rewrite --get-next NotAllowed error message for consistency
+
+### Refactor
+
+- **changelog**: add get_next_tag_name_after_version and test, mark unused for get_smart_tag_range
+- **changelog**: simplify logic for get_oldest_and_newest_rev
+- **changelog**: shorten generate_tree_from_commits
+- **Init**: remove the variable values_to_add and the update_config function for readability
+- **Init**: remove unnecessary methods from ProjectInfo and refactor _ask_tag
+- **Init**: fix unbounded variable in _ask_tag_format
+- **init**: remote extra words
+- **process_commit_message**: better type and early return
+- **Init**: extract _get_config_data for readability
+- **changelog**: shorten condition expression and early return
+- **Changelog**: remove unnecessary intermediate variables for better readability
+- **bump**: use a loop to shorten a series of similar NotAllowed exceptions
+- **Init**: use ternary operator
+- **TagRules**: extract tag_formats property and simplify list comprehension
+- **git**: remove redundant if branch
+- **ScmProvider**: replace sorted with max
+- **ExpectedExit**: make the constructor more compact
+- **ParseArgs**: simplify __call__ function body
+
 ## v4.8.4 (2025-09-05)
 
 ### Fix
