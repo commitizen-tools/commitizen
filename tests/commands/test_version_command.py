@@ -1,3 +1,4 @@
+import os
 import platform
 import sys
 
@@ -112,13 +113,25 @@ def test_version_use_version_provider(
 def test_version_command_shows_description_when_use_help_option(
     mocker: MockerFixture, capsys, file_regression
 ):
-    testargs = ["cz", "version", "--help"]
-    mocker.patch.object(sys, "argv", testargs)
-    with pytest.raises(SystemExit):
-        cli.main()
+    # Force consistent terminal width for tests to avoid wrapping differences
+    # between single and multi-worker pytest modes
+    original_columns = os.environ.get("COLUMNS")
+    os.environ["COLUMNS"] = "80"
 
-    out, _ = capsys.readouterr()
-    file_regression.check(out, extension=".txt")
+    try:
+        testargs = ["cz", "version", "--help"]
+        mocker.patch.object(sys, "argv", testargs)
+        with pytest.raises(SystemExit):
+            cli.main()
+
+        out, _ = capsys.readouterr()
+        file_regression.check(out, extension=".txt")
+    finally:
+        # Restore original COLUMNS
+        if original_columns is not None:
+            os.environ["COLUMNS"] = original_columns
+        else:
+            os.environ.pop("COLUMNS", None)
 
 
 @pytest.mark.parametrize(
