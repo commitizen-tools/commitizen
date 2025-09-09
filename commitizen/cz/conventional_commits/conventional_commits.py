@@ -154,15 +154,17 @@ class ConventionalCommitsCz(BaseCommitizen):
         footer = answers["footer"]
         is_breaking_change = answers["is_breaking_change"]
 
-        scope = f"({scope})" if scope else ""
-        body = f"\n\n{body}" if body else ""
-        title = f"{prefix}{scope}"
+        formatted_scope = f"({scope})" if scope else ""
+        title = f"{prefix}{formatted_scope}"
         if is_breaking_change:
             if self.config.settings.get("breaking_change_exclamation_in_title", False):
                 title = f"{title}!"
             footer = f"BREAKING CHANGE: {footer}"
 
-        return f"{title}: {subject}{body}{footer}"
+        formatted_body = f"\n\n{body}" if body else ""
+        formatted_footter = f"\n\n{footer}" if footer else ""
+
+        return f"{title}: {subject}{formatted_body}{formatted_footter}"
 
     def example(self) -> str:
         return (
