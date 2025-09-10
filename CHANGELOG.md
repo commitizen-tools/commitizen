@@ -1,3 +1,9 @@
+## v4.9.1 (2025-09-10)
+
+### Fix
+
+- **dependency**: move deprecated to project.dependencies
+
 ## v4.9.0 (2025-09-09)
 
 ### Feat
