@@ -3,13 +3,13 @@ from __future__ import annotations
 import os
 import re
 from collections import OrderedDict
-from collections.abc import Iterable
+from collections.abc import Generator, Iterable
 from glob import iglob
 from logging import getLogger
 from string import Template
 from typing import cast
 
-from commitizen.defaults import BUMP_MESSAGE, ENCODING, MAJOR, MINOR, PATCH
+from commitizen.defaults import BUMP_MESSAGE, MAJOR, MINOR, PATCH
 from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import GitCommit, smart_open
 from commitizen.version_schemes import Increment, Version
@@ -64,8 +64,8 @@ def update_version_in_files(
     new_version: str,
     files: Iterable[str],
     *,
-    check_consistency: bool = False,
-    encoding: str = ENCODING,
+    check_consistency: bool,
+    encoding: str,
 ) -> list[str]:
     """Change old version to the new one in every file given.
 
@@ -75,16 +75,22 @@ def update_version_in_files(
 
     Returns the list of updated files.
     """
-    # TODO: separate check step and write step
-    updated = []
-    for path, regex in _files_and_regexes(files, current_version):
-        current_version_found, version_file = _bump_with_regex(
-            path,
-            current_version,
-            new_version,
-            regex,
-            encoding=encoding,
-        )
+    updated_files = []
+
+    for path, pattern in _resolve_files_and_regexes(files, current_version):
+        current_version_found = False
+        bumped_lines = []
+
+        with open(path, encoding=encoding) as version_file:
+            for line in version_file:
+                bumped_line = (
+                    line.replace(current_version, new_version)
+                    if pattern.search(line)
+                    else line
+                )
+
+                current_version_found = current_version_found or bumped_line != line
+                bumped_lines.append(bumped_line)
 
         if check_consistency and not current_version_found:
             raise CurrentVersionNotFoundError(
@@ -93,53 +99,32 @@ def update_version_in_files(
                 "version_files are possibly inconsistent."
             )
 
+        bumped_version_file_content = "".join(bumped_lines)
+
         # Write the file out again
         with smart_open(path, "w", encoding=encoding) as file:
-            file.write(version_file)
-        updated.append(path)
-    return updated
+            file.write(bumped_version_file_content)
+        updated_files.append(path)
+
+    return updated_files
 
 
-def _files_and_regexes(patterns: Iterable[str], version: str) -> list[tuple[str, str]]:
+def _resolve_files_and_regexes(
+    patterns: Iterable[str], version: str
+) -> Generator[tuple[str, re.Pattern], None, None]:
     """
     Resolve all distinct files with their regexp from a list of glob patterns with optional regexp
     """
-    out: set[tuple[str, str]] = set()
+    filepath_set: set[tuple[str, str]] = set()
     for pattern in patterns:
         drive, tail = os.path.splitdrive(pattern)
         path, _, regex = tail.partition(":")
         filepath = drive + path
-        if not regex:
-            regex = re.escape(version)
+        regex = regex or re.escape(version)
 
-        for file in iglob(filepath):
-            out.add((file, regex))
+        filepath_set.update((path, regex) for path in iglob(filepath))
 
-    return sorted(out)
-
-
-def _bump_with_regex(
-    version_filepath: str,
-    current_version: str,
-    new_version: str,
-    regex: str,
-    encoding: str = ENCODING,
-) -> tuple[bool, str]:
-    current_version_found = False
-    lines = []
-    pattern = re.compile(regex)
-    with open(version_filepath, encoding=encoding) as f:
-        for line in f:
-            if not pattern.search(line):
-                lines.append(line)
-                continue
-
-            bumped_line = line.replace(current_version, new_version)
-            if bumped_line != line:
-                current_version_found = True
-            lines.append(bumped_line)
-
-    return current_version_found, "".join(lines)
+    return ((path, re.compile(regex)) for path, regex in sorted(filepath_set))
 
 
 def create_commit_message(
