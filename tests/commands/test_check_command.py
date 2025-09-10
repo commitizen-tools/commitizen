@@ -452,3 +452,11 @@ def test_check_command_with_message_length_limit_exceeded(config, mocker: MockFi
     with pytest.raises(InvalidCommitMessageError):
         check_cmd()
         error_mock.assert_called_once()
+
+
+def test_check_command_with_amend_prefix_default(config, mocker: MockFixture):
+    success_mock = mocker.patch("commitizen.out.success")
+    check_cmd = commands.Check(config=config, arguments={"message": "amend! test"})
+
+    check_cmd()
+    success_mock.assert_called_once()
