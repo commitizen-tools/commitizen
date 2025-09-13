@@ -114,6 +114,8 @@ DEFAULT_SETTINGS: Settings = {
 CHANGELOG_FORMAT = "markdown"
 
 BUMP_PATTERN = r"^((BREAKING[\-\ ]CHANGE|\w+)(\(.+\))?!?):"
+
+# TODO: remove this in v5
 BUMP_MAP = dict(
     (
         (r"^.+!$", str(VersionIncrement.MAJOR)),
@@ -124,6 +126,8 @@ BUMP_MAP = dict(
         (r"^perf", str(VersionIncrement.PATCH)),
     )
 )
+
+# TODO: remove this in v5
 BUMP_MAP_MAJOR_VERSION_ZERO = dict(
     (
         (r"^.+!$", str(VersionIncrement.MINOR)),
