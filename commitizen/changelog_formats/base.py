@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 from abc import ABCMeta
-from typing import IO, Any, ClassVar
+from typing import IO, ClassVar
 
 from commitizen.changelog import Metadata
 from commitizen.config.base_config import BaseConfig
@@ -40,34 +40,40 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
         with open(filepath, encoding=self.encoding) as changelog_file:
             return self.get_metadata_from_file(changelog_file)
 
-    def get_metadata_from_file(self, file: IO[Any]) -> Metadata:
-        meta = Metadata()
+    def get_metadata_from_file(self, file: IO[str]) -> Metadata:
+        out_metadata = Metadata()
         unreleased_level: int | None = None
-        for index, line in enumerate(file):
-            line = line.strip().lower()
 
-            unreleased: int | None = None
-            if "unreleased" in line:
-                unreleased = self.parse_title_level(line)
+        lines = [line.strip().lower() for line in file.readlines()]
+        for index, line in enumerate(lines):
+            parsed_unreleased_level = self.parse_title_level(line)
+            current_unreleased_level = (
+                parsed_unreleased_level if "unreleased" in line else None
+            )
+
             # Try to find beginning and end lines of the unreleased block
-            if unreleased:
-                meta.unreleased_start = index
-                unreleased_level = unreleased
+            if current_unreleased_level:
+                out_metadata.unreleased_start = index
+                unreleased_level = current_unreleased_level
                 continue
-            elif unreleased_level and self.parse_title_level(line) == unreleased_level:
-                meta.unreleased_end = index
+
+            if unreleased_level and parsed_unreleased_level == unreleased_level:
+                out_metadata.unreleased_end = index
 
             # Try to find the latest release done
-            parsed = self.parse_version_from_title(line)
-            if parsed:
-                meta.latest_version = parsed.version
-                meta.latest_version_tag = parsed.tag
-                meta.latest_version_position = index
+            if parsed_version_tag := self.parse_version_from_title(line):
+                out_metadata.latest_version = parsed_version_tag.version
+                out_metadata.latest_version_tag = parsed_version_tag.tag
+                out_metadata.latest_version_position = index
                 break  # there's no need for more info
-        if meta.unreleased_start is not None and meta.unreleased_end is None:
-            meta.unreleased_end = index
 
-        return meta
+        if (
+            out_metadata.unreleased_start is not None
+            and out_metadata.unreleased_end is None
+        ):
+            out_metadata.unreleased_end = len(lines) - 1
+
+        return out_metadata
 
     def parse_version_from_title(self, line: str) -> VersionTag | None:
         """
