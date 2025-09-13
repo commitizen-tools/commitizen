@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
-from tomlkit import exceptions, parse, table
+from tomlkit import TOMLDocument, exceptions, parse, table
 
 from commitizen.exceptions import InvalidConfigurationError
 
@@ -27,32 +27,33 @@ class TomlConfig(BaseConfig):
         self._parse_setting(data)
 
     def init_empty_config_content(self) -> None:
+        config_doc = TOMLDocument()
         if os.path.isfile(self.path):
             with open(self.path, "rb") as input_toml_file:
-                parser = parse(input_toml_file.read())
-        else:
-            parser = parse("")
+                config_doc = parse(input_toml_file.read())
+
+        if config_doc.get("tool") is None:
+            config_doc["tool"] = table()
+        config_doc["tool"]["commitizen"] = table()  # type: ignore[index]
 
         with open(self.path, "wb") as output_toml_file:
-            if parser.get("tool") is None:
-                parser["tool"] = table()
-            parser["tool"]["commitizen"] = table()  # type: ignore[index]
             output_toml_file.write(
-                parser.as_string().encode(self._settings["encoding"])
+                config_doc.as_string().encode(self._settings["encoding"])
             )
 
-    def set_key(self, key: str, value: Any) -> Self:
+    def set_key(self, key: str, value: object) -> Self:
         """Set or update a key in the conf.
 
         For now only strings are supported.
         We use to update the version number.
         """
         with open(self.path, "rb") as f:
-            parser = parse(f.read())
+            config_doc = parse(f.read())
 
-        parser["tool"]["commitizen"][key] = value  # type: ignore[index]
+        config_doc["tool"]["commitizen"][key] = value  # type: ignore[index]
         with open(self.path, "wb") as f:
-            f.write(parser.as_string().encode(self._settings["encoding"]))
+            f.write(config_doc.as_string().encode(self._settings["encoding"]))
+
         return self
 
     def _parse_setting(self, data: bytes | str) -> None:
