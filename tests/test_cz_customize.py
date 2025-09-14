@@ -1,6 +1,11 @@
+from pathlib import Path
+
 import pytest
 
-from commitizen.config import BaseConfig, JsonConfig, TomlConfig, YAMLConfig
+from commitizen.config import BaseConfig
+from commitizen.config.json_config import JsonConfig
+from commitizen.config.toml_config import TomlConfig
+from commitizen.config.yaml_config import YAMLConfig
 from commitizen.cz.customize import CustomizeCommitsCz
 from commitizen.exceptions import MissingCzCustomizeConfigError
 
@@ -319,8 +324,8 @@ commitizen:
 
 @pytest.fixture(
     params=[
-        TomlConfig(data=TOML_STR, path="not_exist.toml"),
-        JsonConfig(data=JSON_STR, path="not_exist.json"),
+        TomlConfig(data=TOML_STR, path=Path("not_exist.toml")),
+        JsonConfig(data=JSON_STR, path=Path("not_exist.json")),
     ]
 )
 def config(request):
@@ -334,9 +339,9 @@ def config(request):
 
 @pytest.fixture(
     params=[
-        TomlConfig(data=TOML_STR_INFO_PATH, path="not_exist.toml"),
-        JsonConfig(data=JSON_STR_INFO_PATH, path="not_exist.json"),
-        YAMLConfig(data=YAML_STR_INFO_PATH, path="not_exist.yaml"),
+        TomlConfig(data=TOML_STR_INFO_PATH, path=Path("not_exist.toml")),
+        JsonConfig(data=JSON_STR_INFO_PATH, path=Path("not_exist.json")),
+        YAMLConfig(data=YAML_STR_INFO_PATH, path=Path("not_exist.yaml")),
     ]
 )
 def config_info(request):
@@ -345,9 +350,9 @@ def config_info(request):
 
 @pytest.fixture(
     params=[
-        TomlConfig(data=TOML_STR_WITHOUT_INFO, path="not_exist.toml"),
-        JsonConfig(data=JSON_STR_WITHOUT_PATH, path="not_exist.json"),
-        YAMLConfig(data=YAML_STR_WITHOUT_PATH, path="not_exist.yaml"),
+        TomlConfig(data=TOML_STR_WITHOUT_INFO, path=Path("not_exist.toml")),
+        JsonConfig(data=JSON_STR_WITHOUT_PATH, path=Path("not_exist.json")),
+        YAMLConfig(data=YAML_STR_WITHOUT_PATH, path=Path("not_exist.yaml")),
     ]
 )
 def config_without_info(request):
@@ -356,8 +361,8 @@ def config_without_info(request):
 
 @pytest.fixture(
     params=[
-        TomlConfig(data=TOML_WITH_UNICODE, path="not_exist.toml"),
-        JsonConfig(data=JSON_WITH_UNICODE, path="not_exist.json"),
+        TomlConfig(data=TOML_WITH_UNICODE, path=Path("not_exist.toml")),
+        JsonConfig(data=JSON_WITH_UNICODE, path=Path("not_exist.json")),
     ]
 )
 def config_with_unicode(request):
