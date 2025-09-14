@@ -42,11 +42,6 @@ class TomlConfig(BaseConfig):
             )
 
     def set_key(self, key: str, value: object) -> Self:
-        """Set or update a key in the conf.
-
-        For now only strings are supported.
-        We use to update the version number.
-        """
         with open(self.path, "rb") as f:
             config_doc = parse(f.read())
 
