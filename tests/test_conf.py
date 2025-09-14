@@ -9,6 +9,9 @@ import pytest
 import yaml
 
 from commitizen import config, defaults, git
+from commitizen.config.json_config import JsonConfig
+from commitizen.config.toml_config import TomlConfig
+from commitizen.config.yaml_config import YAMLConfig
 from commitizen.exceptions import ConfigFileIsEmpty, InvalidConfigurationError
 
 PYPROJECT = """
@@ -211,7 +214,7 @@ class TestReadCfg:
             _not_root_path.write(JSON_STR)
 
             cfg = config.read_cfg(filepath="./not_in_root/.cz.json")
-            json_cfg_by_class = config.JsonConfig(data=JSON_STR, path=_not_root_path)
+            json_cfg_by_class = JsonConfig(data=JSON_STR, path=_not_root_path)
             assert cfg.settings == json_cfg_by_class.settings
 
     def test_load_cz_yaml_not_from_config_argument(_, tmpdir):
@@ -220,7 +223,7 @@ class TestReadCfg:
             _not_root_path.write(YAML_STR)
 
             cfg = config.read_cfg(filepath="./not_in_root/.cz.yaml")
-            yaml_cfg_by_class = config.YAMLConfig(data=YAML_STR, path=_not_root_path)
+            yaml_cfg_by_class = YAMLConfig(data=YAML_STR, path=_not_root_path)
             assert cfg.settings == yaml_cfg_by_class._settings
 
     def test_load_empty_pyproject_toml_from_config_argument(_, tmpdir):
@@ -244,7 +247,7 @@ class TestReadCfg:
 class TestTomlConfig:
     def test_init_empty_config_content(self, tmpdir, config_file, exception_string):
         path = tmpdir.mkdir("commitizen").join(config_file)
-        toml_config = config.TomlConfig(data="", path=path)
+        toml_config = TomlConfig(data="", path=path)
         toml_config.init_empty_config_content()
 
         with open(path, encoding="utf-8") as toml_file:
@@ -257,7 +260,7 @@ class TestTomlConfig:
 
         path = tmpdir.mkdir("commitizen").join(config_file)
         path.write(existing_content)
-        toml_config = config.TomlConfig(data="", path=path)
+        toml_config = TomlConfig(data="", path=path)
         toml_config.init_empty_config_content()
 
         with open(path, encoding="utf-8") as toml_file:
@@ -270,7 +273,7 @@ class TestTomlConfig:
         path = tmpdir.mkdir("commitizen").join(config_file)
 
         with pytest.raises(InvalidConfigurationError, match=exception_string):
-            config.TomlConfig(data=existing_content, path=path)
+            TomlConfig(data=existing_content, path=path)
 
 
 @pytest.mark.parametrize(
@@ -284,7 +287,7 @@ class TestTomlConfig:
 class TestJsonConfig:
     def test_init_empty_config_content(self, tmpdir, config_file, exception_string):
         path = tmpdir.mkdir("commitizen").join(config_file)
-        json_config = config.JsonConfig(data="{}", path=path)
+        json_config = JsonConfig(data="{}", path=path)
         json_config.init_empty_config_content()
 
         with open(path, encoding="utf-8") as json_file:
@@ -297,7 +300,7 @@ class TestJsonConfig:
         path = tmpdir.mkdir("commitizen").join(config_file)
 
         with pytest.raises(InvalidConfigurationError, match=exception_string):
-            config.JsonConfig(data=existing_content, path=path)
+            JsonConfig(data=existing_content, path=path)
 
 
 @pytest.mark.parametrize(
@@ -311,7 +314,7 @@ class TestJsonConfig:
 class TestYamlConfig:
     def test_init_empty_config_content(self, tmpdir, config_file, exception_string):
         path = tmpdir.mkdir("commitizen").join(config_file)
-        yaml_config = config.YAMLConfig(data="{}", path=path)
+        yaml_config = YAMLConfig(data="{}", path=path)
         yaml_config.init_empty_config_content()
 
         with open(path) as yaml_file:
@@ -322,4 +325,4 @@ class TestYamlConfig:
         path = tmpdir.mkdir("commitizen").join(config_file)
 
         with pytest.raises(InvalidConfigurationError, match=exception_string):
-            config.YAMLConfig(data=existing_content, path=path)
+            YAMLConfig(data=existing_content, path=path)

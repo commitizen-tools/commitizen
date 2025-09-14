@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import sys
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -87,7 +88,7 @@ def test_init_without_setup_pre_commit_hook(
 
 def test_init_when_config_already_exists(config: BaseConfig, capsys):
     # Set config path
-    path = os.sep.join(["tests", "pyproject.toml"])
+    path = Path(os.sep.join(["tests", "pyproject.toml"]))
     config.path = path
 
     commands.Init(config)()
