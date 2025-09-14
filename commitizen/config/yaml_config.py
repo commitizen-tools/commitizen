@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 import yaml
 
@@ -52,19 +52,14 @@ class YAMLConfig(BaseConfig):
         except (KeyError, TypeError):
             self.is_empty_config = True
 
-    def set_key(self, key: str, value: Any) -> Self:
-        """Set or update a key in the conf.
-
-        For now only strings are supported.
-        We use to update the version number.
-        """
+    def set_key(self, key: str, value: object) -> Self:
         with open(self.path, "rb") as yaml_file:
-            parser = yaml.load(yaml_file, Loader=yaml.FullLoader)
+            config_doc = yaml.load(yaml_file, Loader=yaml.FullLoader)
 
-        parser["commitizen"][key] = value
+        config_doc["commitizen"][key] = value
         with smart_open(
             self.path, "w", encoding=self._settings["encoding"]
         ) as yaml_file:
-            yaml.dump(parser, yaml_file, explicit_start=True)
+            yaml.dump(config_doc, yaml_file, explicit_start=True)
 
         return self
