@@ -17,8 +17,8 @@ if TYPE_CHECKING:
 
 class BaseConfig:
     def __init__(self) -> None:
+        self.is_empty_config = False
         self._settings: Settings = DEFAULT_SETTINGS.copy()
-        self.encoding = self.settings["encoding"]
         self._path: Path | None = None
 
     @property
@@ -30,7 +30,7 @@ class BaseConfig:
         return self._path  # type: ignore[return-value]
 
     @path.setter
-    def path(self, path: str | Path) -> None:
+    def path(self, path: Path) -> None:
         self._path = Path(path)
 
     def set_key(self, key: str, value: Any) -> Self:
@@ -48,4 +48,8 @@ class BaseConfig:
         raise NotImplementedError()
 
     def init_empty_config_content(self) -> None:
+        """Create a config file with the empty config content.
+
+        The implementation is different for each config file type.
+        """
         raise NotImplementedError()

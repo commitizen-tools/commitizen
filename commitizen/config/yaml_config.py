@@ -21,14 +21,15 @@ if TYPE_CHECKING:
 
 
 class YAMLConfig(BaseConfig):
-    def __init__(self, *, data: bytes | str, path: Path | str) -> None:
+    def __init__(self, *, data: bytes | str, path: Path) -> None:
         super().__init__()
-        self.is_empty_config = False
         self.path = path
         self._parse_setting(data)
 
     def init_empty_config_content(self) -> None:
-        with smart_open(self.path, "a", encoding=self.encoding) as json_file:
+        with smart_open(
+            self.path, "a", encoding=self._settings["encoding"]
+        ) as json_file:
             yaml.dump({"commitizen": {}}, json_file, explicit_start=True)
 
     def _parse_setting(self, data: bytes | str) -> None:
@@ -61,7 +62,9 @@ class YAMLConfig(BaseConfig):
             parser = yaml.load(yaml_file, Loader=yaml.FullLoader)
 
         parser["commitizen"][key] = value
-        with smart_open(self.path, "w", encoding=self.encoding) as yaml_file:
+        with smart_open(
+            self.path, "w", encoding=self._settings["encoding"]
+        ) as yaml_file:
             yaml.dump(parser, yaml_file, explicit_start=True)
 
         return self
