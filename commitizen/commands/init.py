@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import shutil
+from pathlib import Path
 from typing import Any, NamedTuple
 
 import questionary
@@ -9,7 +10,10 @@ import yaml
 
 from commitizen import cmd, factory, out
 from commitizen.__version__ import __version__
-from commitizen.config import BaseConfig, JsonConfig, TomlConfig, YAMLConfig
+from commitizen.config import (
+    BaseConfig,
+)
+from commitizen.config.factory import create_config
 from commitizen.cz import registry
 from commitizen.defaults import CONFIG_FILES, DEFAULT_SETTINGS
 from commitizen.exceptions import InitFailedError, NoAnswersError
@@ -188,45 +192,33 @@ class Init:
                 )
             out.write("commitizen pre-commit hook is now installed in your '.git'\n")
 
-        # Initialize configuration
-        if "toml" in config_path:
-            self.config = TomlConfig(data="", path=config_path)
-        elif "json" in config_path:
-            self.config = JsonConfig(data="{}", path=config_path)
-        elif "yaml" in config_path:
-            self.config = YAMLConfig(data="", path=config_path)
-
-        # Create and initialize config
-        self.config.init_empty_config_content()
-
-        self.config.set_key("name", cz_name)
-        self.config.set_key("tag_format", tag_format)
-        self.config.set_key("version_scheme", version_scheme)
-        if version_provider == "commitizen":
-            self.config.set_key("version", version.public)
-        else:
-            self.config.set_key("version_provider", version_provider)
-        if update_changelog_on_bump:
-            self.config.set_key("update_changelog_on_bump", update_changelog_on_bump)
-        if major_version_zero:
-            self.config.set_key("major_version_zero", major_version_zero)
+        _write_config_to_file(
+            path=config_path,
+            cz_name=cz_name,
+            version_provider=version_provider,
+            version_scheme=version_scheme,
+            version=version,
+            tag_format=tag_format,
+            update_changelog_on_bump=update_changelog_on_bump,
+            major_version_zero=major_version_zero,
+        )
 
         out.write("\nYou can bump the version running:\n")
         out.info("\tcz bump\n")
         out.success("Configuration complete 🚀")
 
-    def _ask_config_path(self) -> str:
+    def _ask_config_path(self) -> Path:
         default_path = (
             "pyproject.toml" if self.project_info.has_pyproject else ".cz.toml"
         )
 
-        name: str = questionary.select(
+        filename: str = questionary.select(
             "Please choose a supported config file: ",
             choices=CONFIG_FILES,
             default=default_path,
             style=self.cz.style,
         ).unsafe_ask()
-        return name
+        return Path(filename)
 
     def _ask_name(self) -> str:
         name: str = questionary.select(
@@ -372,3 +364,30 @@ class Init:
         else:
             repos.append(CZ_HOOK_CONFIG)
         return config_data
+
+
+def _write_config_to_file(
+    *,
+    path: Path,
+    cz_name: str,
+    version_provider: str,
+    version_scheme: str,
+    version: Version,
+    tag_format: str,
+    update_changelog_on_bump: bool,
+    major_version_zero: bool,
+) -> None:
+    out_config = create_config(path=path)
+    out_config.init_empty_config_content()
+
+    out_config.set_key("name", cz_name)
+    out_config.set_key("tag_format", tag_format)
+    out_config.set_key("version_scheme", version_scheme)
+    if version_provider == "commitizen":
+        out_config.set_key("version", version.public)
+    else:
+        out_config.set_key("version_provider", version_provider)
+    if update_changelog_on_bump:
+        out_config.set_key("update_changelog_on_bump", update_changelog_on_bump)
+    if major_version_zero:
+        out_config.set_key("major_version_zero", major_version_zero)

@@ -21,9 +21,8 @@ if TYPE_CHECKING:
 
 
 class TomlConfig(BaseConfig):
-    def __init__(self, *, data: bytes | str, path: Path | str) -> None:
+    def __init__(self, *, data: bytes | str, path: Path) -> None:
         super().__init__()
-        self.is_empty_config = False
         self.path = path
         self._parse_setting(data)
 
@@ -38,7 +37,9 @@ class TomlConfig(BaseConfig):
             if parser.get("tool") is None:
                 parser["tool"] = table()
             parser["tool"]["commitizen"] = table()  # type: ignore[index]
-            output_toml_file.write(parser.as_string().encode(self.encoding))
+            output_toml_file.write(
+                parser.as_string().encode(self._settings["encoding"])
+            )
 
     def set_key(self, key: str, value: Any) -> Self:
         """Set or update a key in the conf.
@@ -51,7 +52,7 @@ class TomlConfig(BaseConfig):
 
         parser["tool"]["commitizen"][key] = value  # type: ignore[index]
         with open(self.path, "wb") as f:
-            f.write(parser.as_string().encode(self.encoding))
+            f.write(parser.as_string().encode(self._settings["encoding"]))
         return self
 
     def _parse_setting(self, data: bytes | str) -> None:
