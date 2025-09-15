@@ -215,6 +215,18 @@ class SemverCommitizen(BaseCommitizen):
         subject = answers.get("subject", "default message").trim()
         return f"{prefix}: {subject}"
 
+    def example(self) -> str:
+        return ""
+
+    def schema(self) -> str:
+        return ""
+
+    def schema_pattern(self) -> str:
+        return ""
+
+    def info(self) -> str:
+        return ""
+
 
 @pytest.fixture()
 def use_cz_semver(mocker):
@@ -227,6 +239,18 @@ class MockPlugin(BaseCommitizen):
         return []
 
     def message(self, answers: Mapping) -> str:
+        return ""
+
+    def example(self) -> str:
+        return ""
+
+    def schema(self) -> str:
+        return ""
+
+    def schema_pattern(self) -> str:
+        return ""
+
+    def info(self) -> str:
         return ""
 
 
