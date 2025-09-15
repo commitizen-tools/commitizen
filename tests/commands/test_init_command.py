@@ -122,7 +122,7 @@ def test_init_without_choosing_tag(config: BaseConfig, mocker: MockFixture, tmpd
 def pre_commit_installed(mocker: MockFixture):
     # Assume the `pre-commit` is installed
     mocker.patch(
-        "commitizen.commands.init.ProjectInfo.is_pre_commit_installed",
+        "commitizen.project_info.is_pre_commit_installed",
         return_value=True,
     )
     # And installation success (i.e. no exception raised)
@@ -232,7 +232,7 @@ class TestNoPreCommitInstalled:
     ):
         # Assume `pre-commit` is not installed
         mocker.patch(
-            "commitizen.commands.init.ProjectInfo.is_pre_commit_installed",
+            "commitizen.project_info.is_pre_commit_installed",
             return_value=False,
         )
         with tmpdir.as_cwd():
