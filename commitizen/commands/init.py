@@ -1,14 +1,12 @@
 from __future__ import annotations
 
-import os
-import shutil
 from pathlib import Path
 from typing import Any, NamedTuple
 
 import questionary
 import yaml
 
-from commitizen import cmd, factory, out
+from commitizen import cmd, factory, out, project_info
 from commitizen.__version__ import __version__
 from commitizen.config import (
     BaseConfig,
@@ -69,64 +67,12 @@ _VERSION_PROVIDER_CHOICES = tuple(
 )
 
 
-class ProjectInfo:
-    """Discover information about the current folder."""
-
-    @property
-    def has_pyproject(self) -> bool:
-        return os.path.isfile("pyproject.toml")
-
-    @property
-    def has_uv_lock(self) -> bool:
-        return os.path.isfile("uv.lock")
-
-    @property
-    def has_setup(self) -> bool:
-        return os.path.isfile("setup.py")
-
-    @property
-    def has_pre_commit_config(self) -> bool:
-        return os.path.isfile(".pre-commit-config.yaml")
-
-    @property
-    def is_python_uv(self) -> bool:
-        return self.has_pyproject and self.has_uv_lock
-
-    @property
-    def is_python_poetry(self) -> bool:
-        if not self.has_pyproject:
-            return False
-        with open("pyproject.toml") as f:
-            return "[tool.poetry]" in f.read()
-
-    @property
-    def is_python(self) -> bool:
-        return self.has_pyproject or self.has_setup
-
-    @property
-    def is_rust_cargo(self) -> bool:
-        return os.path.isfile("Cargo.toml")
-
-    @property
-    def is_npm_package(self) -> bool:
-        return os.path.isfile("package.json")
-
-    @property
-    def is_php_composer(self) -> bool:
-        return os.path.isfile("composer.json")
-
-    @property
-    def is_pre_commit_installed(self) -> bool:
-        return bool(shutil.which("pre-commit"))
-
-
 class Init:
     _PRE_COMMIT_CONFIG_PATH = ".pre-commit-config.yaml"
 
     def __init__(self, config: BaseConfig, *args: object) -> None:
         self.config: BaseConfig = config
         self.cz = factory.committer_factory(self.config)
-        self.project_info = ProjectInfo()
 
     def __call__(self) -> None:
         if self.config.path:
@@ -172,7 +118,7 @@ class Init:
             ) as config_file:
                 yaml.safe_dump(config_data, stream=config_file)
 
-            if not self.project_info.is_pre_commit_installed:
+            if not project_info.is_pre_commit_installed():
                 raise InitFailedError(
                     "Failed to install pre-commit hook.\n"
                     "pre-commit is not installed in current environment."
@@ -208,14 +154,10 @@ class Init:
         out.success("Configuration complete 🚀")
 
     def _ask_config_path(self) -> Path:
-        default_path = (
-            "pyproject.toml" if self.project_info.has_pyproject else ".cz.toml"
-        )
-
         filename: str = questionary.select(
             "Please choose a supported config file: ",
             choices=CONFIG_FILES,
-            default=default_path,
+            default=project_info.get_default_config_filename(),
             style=self.cz.style,
         ).unsafe_ask()
         return Path(filename)
@@ -280,37 +222,17 @@ class Init:
             "Choose the source of the version:",
             choices=_VERSION_PROVIDER_CHOICES,
             style=self.cz.style,
-            default=self._default_version_provider,
+            default=project_info.get_default_version_provider(),
         ).unsafe_ask()
         return version_provider
 
-    @property
-    def _default_version_provider(self) -> str:
-        if self.project_info.is_python:
-            if self.project_info.is_python_poetry:
-                return "poetry"
-            if self.project_info.is_python_uv:
-                return "uv"
-            return "pep621"
-
-        if self.project_info.is_rust_cargo:
-            return "cargo"
-        if self.project_info.is_npm_package:
-            return "npm"
-        if self.project_info.is_php_composer:
-            return "composer"
-
-        return "commitizen"
-
     def _ask_version_scheme(self) -> str:
         """Ask for setting: version_scheme"""
-        default_scheme = "pep440" if self.project_info.is_python else "semver"
-
         scheme: str = questionary.select(
             "Choose version scheme: ",
             choices=KNOWN_SCHEMES,
             style=self.cz.style,
-            default=default_scheme,
+            default=project_info.get_default_version_scheme(),
         ).unsafe_ask()
         return scheme
 
@@ -344,8 +266,7 @@ class Init:
             ],
         }
 
-        if not self.project_info.has_pre_commit_config:
-            # .pre-commit-config.yaml does not exist
+        if not Path(".pre-commit-config.yaml").is_file():
             return {"repos": [CZ_HOOK_CONFIG]}
 
         with open(
