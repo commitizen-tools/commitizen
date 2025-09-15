@@ -150,8 +150,42 @@ class Init:
             tag_format = self._ask_tag_format(tag)  # confirm & text
             update_changelog_on_bump = self._ask_update_changelog_on_bump()  # confirm
             major_version_zero = self._ask_major_version_zero(version)  # confirm
+            hook_types: list[str] | None = questionary.checkbox(
+                "What types of pre-commit hook you want to install? (Leave blank if you don't want to install)",
+                choices=[
+                    questionary.Choice("commit-msg", checked=False),
+                    questionary.Choice("pre-push", checked=False),
+                ],
+            ).unsafe_ask()
         except KeyboardInterrupt:
             raise InitFailedError("Stopped by user")
+
+        if hook_types:
+            config_data = self._get_config_data()
+            with smart_open(
+                self._PRE_COMMIT_CONFIG_PATH, "w", encoding=self.encoding
+            ) as config_file:
+                yaml.safe_dump(config_data, stream=config_file)
+
+            if not self.project_info.is_pre_commit_installed:
+                raise InitFailedError(
+                    "Failed to install pre-commit hook.\n"
+                    "pre-commit is not installed in current environment."
+                )
+
+            cmd_str = "pre-commit install " + " ".join(
+                f"--hook-type {ty}" for ty in hook_types
+            )
+            c = cmd.run(cmd_str)
+            if c.return_code != 0:
+                raise InitFailedError(
+                    "Failed to install pre-commit hook.\n"
+                    f"Error running {cmd_str}."
+                    "Outputs are attached below:\n"
+                    f"stdout: {c.out}\n"
+                    f"stderr: {c.err}"
+                )
+            out.write("commitizen pre-commit hook is now installed in your '.git'\n")
 
         # Initialize configuration
         if "toml" in config_path:
@@ -160,20 +194,6 @@ class Init:
             self.config = JsonConfig(data="{}", path=config_path)
         elif "yaml" in config_path:
             self.config = YAMLConfig(data="", path=config_path)
-
-        # Collect hook data
-        hook_types = questionary.checkbox(
-            "What types of pre-commit hook you want to install? (Leave blank if you don't want to install)",
-            choices=[
-                questionary.Choice("commit-msg", checked=False),
-                questionary.Choice("pre-push", checked=False),
-            ],
-        ).unsafe_ask()
-        if hook_types:
-            try:
-                self._install_pre_commit_hook(hook_types)
-            except InitFailedError as e:
-                raise InitFailedError(f"Failed to install pre-commit hook.\n{e}")
 
         # Create and initialize config
         self.config.init_empty_config_content()
@@ -321,26 +341,6 @@ class Init:
         ).unsafe_ask()
         return update_changelog_on_bump
 
-    def _exec_install_pre_commit_hook(self, hook_types: list[str]) -> None:
-        cmd_str = self._gen_pre_commit_cmd(hook_types)
-        c = cmd.run(cmd_str)
-        if c.return_code != 0:
-            err_msg = (
-                f"Error running {cmd_str}."
-                "Outputs are attached below:\n"
-                f"stdout: {c.out}\n"
-                f"stderr: {c.err}"
-            )
-            raise InitFailedError(err_msg)
-
-    def _gen_pre_commit_cmd(self, hook_types: list[str]) -> str:
-        """Generate pre-commit command according to given hook types"""
-        if not hook_types:
-            raise ValueError("At least 1 hook type should be provided.")
-        return "pre-commit install " + " ".join(
-            f"--hook-type {ty}" for ty in hook_types
-        )
-
     def _get_config_data(self) -> dict[str, Any]:
         CZ_HOOK_CONFIG = {
             "repo": "https://github.com/commitizen-tools/commitizen",
@@ -369,17 +369,3 @@ class Init:
         else:
             repos.append(CZ_HOOK_CONFIG)
         return config_data
-
-    def _install_pre_commit_hook(self, hook_types: list[str] | None = None) -> None:
-        config_data = self._get_config_data()
-        with smart_open(
-            self._PRE_COMMIT_CONFIG_PATH, "w", encoding=self.encoding
-        ) as config_file:
-            yaml.safe_dump(config_data, stream=config_file)
-
-        if not self.project_info.is_pre_commit_installed:
-            raise InitFailedError("pre-commit is not installed in current environment.")
-        if hook_types is None:
-            hook_types = ["commit-msg", "pre-push"]
-        self._exec_install_pre_commit_hook(hook_types)
-        out.write("commitizen pre-commit hook is now installed in your '.git'\n")
