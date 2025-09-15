@@ -11,6 +11,7 @@ from pytest_mock import MockFixture
 
 from commitizen import cli, commands
 from commitizen.__version__ import __version__
+from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import InitFailedError, NoAnswersError
 from tests.utils import skip_below_py_3_10
 
@@ -58,7 +59,9 @@ EXPECTED_DICT_CONFIG = {
 }
 
 
-def test_init_without_setup_pre_commit_hook(tmpdir, mocker: MockFixture, config):
+def test_init_without_setup_pre_commit_hook(
+    tmpdir, mocker: MockFixture, config: BaseConfig
+):
     mocker.patch(
         "questionary.select",
         side_effect=[
@@ -72,7 +75,6 @@ def test_init_without_setup_pre_commit_hook(tmpdir, mocker: MockFixture, config)
     mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
     # Return None to skip hook installation
     mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
-
     with tmpdir.as_cwd():
         commands.Init(config)()
 
@@ -83,7 +85,7 @@ def test_init_without_setup_pre_commit_hook(tmpdir, mocker: MockFixture, config)
         assert not os.path.isfile(pre_commit_config_filename)
 
 
-def test_init_when_config_already_exists(config, capsys):
+def test_init_when_config_already_exists(config: BaseConfig, capsys):
     # Set config path
     path = os.sep.join(["tests", "pyproject.toml"])
     config.path = path
@@ -93,7 +95,7 @@ def test_init_when_config_already_exists(config, capsys):
     assert captured.out == f"Config file {path} already exists\n"
 
 
-def test_init_without_choosing_tag(config, mocker: MockFixture, tmpdir):
+def test_init_without_choosing_tag(config: BaseConfig, mocker: MockFixture, tmpdir):
     mocker.patch(
         "commitizen.commands.init.get_tag_names", return_value=["0.0.2", "0.0.1"]
     )
@@ -115,7 +117,7 @@ def test_init_without_choosing_tag(config, mocker: MockFixture, tmpdir):
             commands.Init(config)()
 
 
-def test_executed_pre_commit_command(config):
+def test_executed_pre_commit_command(config: BaseConfig):
     init = commands.Init(config)
     expected_cmd = "pre-commit install --hook-type commit-msg --hook-type pre-push"
     assert init._gen_pre_commit_cmd(["commit-msg", "pre-push"]) == expected_cmd
@@ -155,17 +157,14 @@ def default_choice(request, mocker: MockFixture):
     yield request.param
 
 
-def check_cz_config(config: str):
+def check_cz_config(config_filepath: str):
     """
     Check the content of commitizen config is as expected
-
-    Args:
-        config: The config path
     """
-    with open(config) as file:
-        if "json" in config:
+    with open(config_filepath) as file:
+        if "json" in config_filepath:
             assert json.load(file) == EXPECTED_DICT_CONFIG
-        elif "yaml" in config:
+        elif "yaml" in config_filepath:
             assert yaml.load(file, Loader=yaml.FullLoader) == EXPECTED_DICT_CONFIG
         else:
             config_data = file.read()
@@ -183,13 +182,17 @@ def check_pre_commit_config(expected: list[dict[str, Any]]):
 
 @pytest.mark.usefixtures("pre_commit_installed")
 class TestPreCommitCases:
-    def test_no_existing_pre_commit_config(_, default_choice, tmpdir, config):
+    def test_no_existing_pre_commit_config(
+        _, default_choice: str, tmpdir, config: BaseConfig
+    ):
         with tmpdir.as_cwd():
             commands.Init(config)()
             check_cz_config(default_choice)
             check_pre_commit_config([cz_hook_config])
 
-    def test_empty_pre_commit_config(_, default_choice, tmpdir, config):
+    def test_empty_pre_commit_config(
+        _, default_choice: str, tmpdir, config: BaseConfig
+    ):
         with tmpdir.as_cwd():
             p = tmpdir.join(pre_commit_config_filename)
             p.write("")
@@ -198,7 +201,9 @@ class TestPreCommitCases:
             check_cz_config(default_choice)
             check_pre_commit_config([cz_hook_config])
 
-    def test_pre_commit_config_without_cz_hook(_, default_choice, tmpdir, config):
+    def test_pre_commit_config_without_cz_hook(
+        _, default_choice: str, tmpdir, config: BaseConfig
+    ):
         existing_hook_config = {
             "repo": "https://github.com/pre-commit/pre-commit-hooks",
             "rev": "v1.2.3",
@@ -213,7 +218,9 @@ class TestPreCommitCases:
             check_cz_config(default_choice)
             check_pre_commit_config([existing_hook_config, cz_hook_config])
 
-    def test_cz_hook_exists_in_pre_commit_config(_, default_choice, tmpdir, config):
+    def test_cz_hook_exists_in_pre_commit_config(
+        _, default_choice: str, tmpdir, config: BaseConfig
+    ):
         with tmpdir.as_cwd():
             p = tmpdir.join(pre_commit_config_filename)
             p.write(yaml.safe_dump({"repos": [cz_hook_config]}))
@@ -226,7 +233,7 @@ class TestPreCommitCases:
 
 class TestNoPreCommitInstalled:
     def test_pre_commit_not_installed(
-        _, mocker: MockFixture, config, default_choice, tmpdir
+        _, mocker: MockFixture, config: BaseConfig, default_choice: str, tmpdir
     ):
         # Assume `pre-commit` is not installed
         mocker.patch(
@@ -238,7 +245,7 @@ class TestNoPreCommitInstalled:
                 commands.Init(config)()
 
     def test_pre_commit_exec_failed(
-        _, mocker: MockFixture, config, default_choice, tmpdir
+        _, mocker: MockFixture, config: BaseConfig, default_choice: str, tmpdir
     ):
         # Assume `pre-commit` is installed
         mocker.patch(
@@ -256,14 +263,14 @@ class TestNoPreCommitInstalled:
 
 
 class TestAskTagFormat:
-    def test_confirm_v_tag_format(self, mocker: MockFixture, config):
+    def test_confirm_v_tag_format(self, mocker: MockFixture, config: BaseConfig):
         init = commands.Init(config)
         mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
 
         result = init._ask_tag_format("v1.0.0")
         assert result == r"v$version"
 
-    def test_reject_v_tag_format(self, mocker: MockFixture, config):
+    def test_reject_v_tag_format(self, mocker: MockFixture, config: BaseConfig):
         init = commands.Init(config)
         mocker.patch("questionary.confirm", return_value=FakeQuestion(False))
         mocker.patch("questionary.text", return_value=FakeQuestion("custom-$version"))
@@ -271,14 +278,14 @@ class TestAskTagFormat:
         result = init._ask_tag_format("v1.0.0")
         assert result == "custom-$version"
 
-    def test_non_v_tag_format(self, mocker: MockFixture, config):
+    def test_non_v_tag_format(self, mocker: MockFixture, config: BaseConfig):
         init = commands.Init(config)
         mocker.patch("questionary.text", return_value=FakeQuestion("custom-$version"))
 
         result = init._ask_tag_format("1.0.0")
         assert result == "custom-$version"
 
-    def test_empty_input_returns_default(self, mocker: MockFixture, config):
+    def test_empty_input_returns_default(self, mocker: MockFixture, config: BaseConfig):
         init = commands.Init(config)
         mocker.patch("questionary.confirm", return_value=FakeQuestion(False))
         mocker.patch("questionary.text", return_value=FakeQuestion(""))
@@ -300,7 +307,9 @@ def test_init_command_shows_description_when_use_help_option(
     file_regression.check(out, extension=".txt")
 
 
-def test_init_with_confirmed_tag_format(config, mocker: MockFixture, tmpdir):
+def test_init_with_confirmed_tag_format(
+    config: BaseConfig, mocker: MockFixture, tmpdir
+):
     mocker.patch(
         "commitizen.commands.init.get_tag_names", return_value=["v0.0.2", "v0.0.1"]
     )
@@ -324,7 +333,7 @@ def test_init_with_confirmed_tag_format(config, mocker: MockFixture, tmpdir):
             assert 'tag_format = "v$version"' in toml_file.read()
 
 
-def test_init_with_no_existing_tags(config, mocker: MockFixture, tmpdir):
+def test_init_with_no_existing_tags(config: BaseConfig, mocker: MockFixture, tmpdir):
     mocker.patch("commitizen.commands.init.get_tag_names", return_value=[])
     mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value="v1.0.0")
     mocker.patch(
@@ -346,7 +355,9 @@ def test_init_with_no_existing_tags(config, mocker: MockFixture, tmpdir):
             assert 'version = "0.0.1"' in toml_file.read()
 
 
-def test_init_with_no_existing_latest_tag(config, mocker: MockFixture, tmpdir):
+def test_init_with_no_existing_latest_tag(
+    config: BaseConfig, mocker: MockFixture, tmpdir
+):
     mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value=None)
     mocker.patch(
         "questionary.select",
@@ -367,7 +378,7 @@ def test_init_with_no_existing_latest_tag(config, mocker: MockFixture, tmpdir):
             assert 'version = "0.0.1"' in toml_file.read()
 
 
-def test_init_with_existing_tags(config, mocker: MockFixture, tmpdir):
+def test_init_with_existing_tags(config: BaseConfig, mocker: MockFixture, tmpdir):
     expected_tags = ["v1.0.0", "v0.9.0", "v0.8.0"]
     mocker.patch("commitizen.commands.init.get_tag_names", return_value=expected_tags)
     mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value="v1.0.0")
@@ -391,7 +402,7 @@ def test_init_with_existing_tags(config, mocker: MockFixture, tmpdir):
             assert 'version = "1.0.0"' in toml_file.read()
 
 
-def test_init_with_valid_tag_selection(config, mocker: MockFixture, tmpdir):
+def test_init_with_valid_tag_selection(config: BaseConfig, mocker: MockFixture, tmpdir):
     expected_tags = ["v1.0.0", "v0.9.0", "v0.8.0"]
     mocker.patch("commitizen.commands.init.get_tag_names", return_value=expected_tags)
     mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value="v1.0.0")
@@ -422,7 +433,7 @@ def test_init_with_valid_tag_selection(config, mocker: MockFixture, tmpdir):
             assert 'version_scheme = "semver"' in content
 
 
-def test_init_configuration_settings(tmpdir, mocker: MockFixture, config):
+def test_init_configuration_settings(tmpdir, mocker: MockFixture, config: BaseConfig):
     """Test that all configuration settings are properly initialized."""
     mocker.patch(
         "questionary.select",
@@ -452,7 +463,9 @@ def test_init_configuration_settings(tmpdir, mocker: MockFixture, config):
         assert "major_version_zero = true" in config_data
 
 
-def test_init_configuration_with_version_provider(tmpdir, mocker: MockFixture, config):
+def test_init_configuration_with_version_provider(
+    tmpdir, mocker: MockFixture, config: BaseConfig
+):
     """Test configuration initialization with a different version provider."""
     mocker.patch(
         "questionary.select",
