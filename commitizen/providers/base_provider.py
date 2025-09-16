@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import json
 from abc import ABC, abstractmethod
-from collections.abc import Mapping
 from pathlib import Path
-from typing import Any, ClassVar
+from typing import ClassVar
 
 import tomlkit
 
@@ -56,19 +55,14 @@ class JsonProvider(FileProvider):
     indent: ClassVar[int] = 2
 
     def get_version(self) -> str:
-        document = json.loads(self.file.read_text())
-        return self.get(document)
+        version = json.loads(self.file.read_text())["version"]
+        assert isinstance(version, str)
+        return version
 
     def set_version(self, version: str) -> None:
         document = json.loads(self.file.read_text())
-        self.set(document, version)
-        self.file.write_text(json.dumps(document, indent=self.indent) + "\n")
-
-    def get(self, document: Mapping[str, str]) -> str:
-        return document["version"]
-
-    def set(self, document: dict[str, Any], version: str) -> None:
         document["version"] = version
+        self.file.write_text(json.dumps(document, indent=self.indent) + "\n")
 
 
 class TomlProvider(FileProvider):
@@ -77,16 +71,11 @@ class TomlProvider(FileProvider):
     """
 
     def get_version(self) -> str:
-        document = tomlkit.parse(self.file.read_text())
-        return self.get(document)
+        version = tomlkit.parse(self.file.read_text())["project"]["version"]  # type: ignore[index]
+        assert isinstance(version, str)
+        return version
 
     def set_version(self, version: str) -> None:
         document = tomlkit.parse(self.file.read_text())
-        self.set(document, version)
-        self.file.write_text(tomlkit.dumps(document))
-
-    def get(self, document: tomlkit.TOMLDocument) -> str:
-        return document["project"]["version"]  # type: ignore[index,return-value]
-
-    def set(self, document: tomlkit.TOMLDocument, version: str) -> None:
         document["project"]["version"] = version  # type: ignore[index]
+        self.file.write_text(tomlkit.dumps(document))
