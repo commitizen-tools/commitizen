@@ -12,7 +12,7 @@ from pytest_regressions.file_regression import FileRegressionFixture
 
 from commitizen import __file__ as commitizen_init
 from commitizen import cli, git
-from commitizen.changelog_formats import ChangelogFormat
+from commitizen.changelog_formats import BaseFormat
 from commitizen.commands.changelog import Changelog
 from commitizen.config.base_config import BaseConfig
 from commitizen.cz.base import BaseCommitizen
@@ -77,7 +77,7 @@ def test_changelog_with_different_cz(mocker: MockFixture, capsys, file_regressio
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_from_start(
-    mocker: MockFixture, capsys, changelog_format: ChangelogFormat, file_regression
+    mocker: MockFixture, capsys, changelog_format: BaseFormat, file_regression
 ):
     create_file_and_commit("feat: new file")
     create_file_and_commit("refactor: is in changelog")
@@ -103,7 +103,7 @@ def test_changelog_from_start(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_replacing_unreleased_using_incremental(
-    mocker: MockFixture, capsys, changelog_format: ChangelogFormat, file_regression
+    mocker: MockFixture, capsys, changelog_format: BaseFormat, file_regression
 ):
     create_file_and_commit("feat: add new output")
     create_file_and_commit("fix: output glitch")
@@ -1484,7 +1484,7 @@ def test_changelog_from_current_version_tag_with_nonversion_tag(
 def test_changelog_template_option_precedence(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
-    any_changelog_format: ChangelogFormat,
+    any_changelog_format: BaseFormat,
     arg: str,
     cfg: str,
     expected: str,
@@ -1527,7 +1527,7 @@ def test_changelog_template_extras_precedence(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
     mock_plugin: BaseCommitizen,
-    any_changelog_format: ChangelogFormat,
+    any_changelog_format: BaseFormat,
 ):
     project_root = Path(tmp_commitizen_project)
     changelog_tpl = project_root / any_changelog_format.template
@@ -1800,7 +1800,7 @@ def test_changelog_ignored_tags(
 def test_changelog_template_extra_quotes(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
-    any_changelog_format: ChangelogFormat,
+    any_changelog_format: BaseFormat,
 ):
     project_root = Path(tmp_commitizen_project)
     changelog_tpl = project_root / any_changelog_format.template
@@ -1836,7 +1836,7 @@ def test_changelog_template_extra_quotes(
 def test_changelog_template_extra_weird_but_valid(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
-    any_changelog_format: ChangelogFormat,
+    any_changelog_format: BaseFormat,
     extra: str,
     expected,
 ):
@@ -1858,7 +1858,7 @@ def test_changelog_template_extra_weird_but_valid(
 def test_changelog_template_extra_bad_format(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
-    any_changelog_format: ChangelogFormat,
+    any_changelog_format: BaseFormat,
     extra: str,
 ):
     project_root = Path(tmp_commitizen_project)
@@ -1876,7 +1876,7 @@ def test_changelog_template_extra_bad_format(
 def test_export_changelog_template_from_default(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
-    any_changelog_format: ChangelogFormat,
+    any_changelog_format: BaseFormat,
 ):
     project_root = Path(tmp_commitizen_project)
     target = project_root / "changelog.jinja"
@@ -1895,7 +1895,7 @@ def test_export_changelog_template_from_plugin(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
     mock_plugin: BaseCommitizen,
-    changelog_format: ChangelogFormat,
+    changelog_format: BaseFormat,
     tmp_path: Path,
 ):
     project_root = Path(tmp_commitizen_project)

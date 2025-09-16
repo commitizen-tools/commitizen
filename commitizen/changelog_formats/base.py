@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 from typing import IO, Any, ClassVar
 
 from commitizen.changelog import Metadata
@@ -9,16 +9,19 @@ from commitizen.config.base_config import BaseConfig
 from commitizen.tags import TagRules, VersionTag
 from commitizen.version_schemes import get_version_scheme
 
-from . import ChangelogFormat
+TEMPLATE_EXTENSION = "j2"
 
 
-class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
+class BaseFormat(metaclass=ABCMeta):
     """
     Base class to extend to implement a changelog file format.
     """
 
     extension: ClassVar[str] = ""
+    """Standard known extension associated with this format"""
+
     alternative_extensions: ClassVar[set[str]] = set()
+    """Known alternatives extensions for this format"""
 
     def __init__(self, config: BaseConfig) -> None:
         # Constructor needs to be redefined because `Protocol` prevent instantiation by default
@@ -32,6 +35,20 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
             legacy_tag_formats=self.config.settings["legacy_tag_formats"],
             ignored_tag_formats=self.config.settings["ignored_tag_formats"],
         )
+
+    @property
+    def ext(self) -> str:
+        """Dotted version of extensions, as in `pathlib` and `os` modules"""
+        return f".{self.extension}"
+
+    @property
+    def template(self) -> str:
+        """Expected template name for this format"""
+        return f"CHANGELOG.{self.extension}.{TEMPLATE_EXTENSION}"
+
+    @property
+    def default_changelog_file(self) -> str:
+        return f"CHANGELOG.{self.extension}"
 
     def get_metadata(self, filepath: str) -> Metadata:
         if not os.path.isfile(filepath):
@@ -69,18 +86,14 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
 
         return meta
 
+    @abstractmethod
     def parse_version_from_title(self, line: str) -> VersionTag | None:
         """
         Extract the version from a title line if any
         """
-        raise NotImplementedError(
-            "Default `get_metadata_from_file` requires `parse_version_from_changelog` to be implemented"
-        )
 
+    @abstractmethod
     def parse_title_level(self, line: str) -> int | None:
         """
         Get the title level/type of a line if any
         """
-        raise NotImplementedError(
-            "Default `get_metadata_from_file` requires `parse_title_type_of_line` to be implemented"
-        )

@@ -5,6 +5,7 @@ from itertools import zip_longest
 from typing import IO, TYPE_CHECKING, Any, Union
 
 from commitizen.changelog import Metadata
+from commitizen.tags import VersionTag
 
 from .base import BaseFormat
 
@@ -90,3 +91,9 @@ class RestructuredText(BaseFormat):
             and not second.isalnum()
             and all(char == second[0] for char in second[1:])
         )
+
+    def parse_version_from_title(self, line: str) -> VersionTag | None:
+        raise NotImplementedError("parse_version_from_title is not implemented")
+
+    def parse_title_level(self, line: str) -> int | None:
+        raise NotImplementedError("parse_title_level is not implemented")

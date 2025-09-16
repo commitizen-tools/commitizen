@@ -11,7 +11,7 @@ import pytest
 from jinja2 import FileSystemLoader
 
 from commitizen import changelog, git
-from commitizen.changelog_formats import ChangelogFormat
+from commitizen.changelog_formats import BaseFormat
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
 from commitizen.cz.conventional_commits.conventional_commits import (
@@ -1240,7 +1240,7 @@ def test_generate_ordered_changelog_tree_raises():
 
 
 def test_render_changelog(
-    gitcommits, tags, changelog_content, any_changelog_format: ChangelogFormat
+    gitcommits, tags, changelog_content, any_changelog_format: BaseFormat
 ):
     parser = ConventionalCommitsCz.commit_parser
     changelog_pattern = ConventionalCommitsCz.changelog_pattern
@@ -1254,7 +1254,7 @@ def test_render_changelog(
 
 
 def test_render_changelog_from_default_plugin_values(
-    gitcommits, tags, changelog_content, any_changelog_format: ChangelogFormat
+    gitcommits, tags, changelog_content, any_changelog_format: BaseFormat
 ):
     parser = ConventionalCommitsCz.commit_parser
     changelog_pattern = ConventionalCommitsCz.changelog_pattern
@@ -1282,7 +1282,7 @@ def test_render_changelog_override_loader(gitcommits, tags, tmp_path: Path):
 
 
 def test_render_changelog_override_template_from_cwd(
-    gitcommits, tags, chdir: Path, any_changelog_format: ChangelogFormat
+    gitcommits, tags, chdir: Path, any_changelog_format: BaseFormat
 ):
     tpl = "overridden from cwd"
     template = any_changelog_format.template
@@ -1342,7 +1342,7 @@ def test_render_changelog_support_arbitrary_kwargs(gitcommits, tags, tmp_path: P
     assert result == "value"
 
 
-def test_render_changelog_unreleased(gitcommits, any_changelog_format: ChangelogFormat):
+def test_render_changelog_unreleased(gitcommits, any_changelog_format: BaseFormat):
     some_commits = gitcommits[:7]
     parser = ConventionalCommitsCz.commit_parser
     changelog_pattern = ConventionalCommitsCz.changelog_pattern
@@ -1356,7 +1356,7 @@ def test_render_changelog_unreleased(gitcommits, any_changelog_format: Changelog
 
 
 def test_render_changelog_tag_and_unreleased(
-    gitcommits, tags, any_changelog_format: ChangelogFormat
+    gitcommits, tags, any_changelog_format: BaseFormat
 ):
     some_commits = gitcommits[:7]
     single_tag = [
@@ -1377,7 +1377,7 @@ def test_render_changelog_tag_and_unreleased(
 
 
 def test_render_changelog_with_change_type(
-    gitcommits, tags, any_changelog_format: ChangelogFormat
+    gitcommits, tags, any_changelog_format: BaseFormat
 ):
     new_title = ":some-emoji: feature"
     change_type_map = {"feat": new_title}
@@ -1393,7 +1393,7 @@ def test_render_changelog_with_change_type(
 
 
 def test_render_changelog_with_changelog_message_builder_hook(
-    gitcommits, tags, any_changelog_format: ChangelogFormat
+    gitcommits, tags, any_changelog_format: BaseFormat
 ):
     def changelog_message_builder_hook(message: dict, commit: git.GitCommit) -> dict:
         message["message"] = (
@@ -1418,7 +1418,7 @@ def test_render_changelog_with_changelog_message_builder_hook(
 
 
 def test_changelog_message_builder_hook_can_remove_commits(
-    gitcommits, tags, any_changelog_format: ChangelogFormat
+    gitcommits, tags, any_changelog_format: BaseFormat
 ):
     def changelog_message_builder_hook(message: dict, commit: git.GitCommit):
         return None
@@ -1444,7 +1444,7 @@ def test_changelog_message_builder_hook_can_remove_commits(
 
 
 def test_render_changelog_with_changelog_message_builder_hook_multiple_entries(
-    gitcommits, tags, any_changelog_format: ChangelogFormat
+    gitcommits, tags, any_changelog_format: BaseFormat
 ):
     def changelog_message_builder_hook(message: dict, commit: git.GitCommit):
         messages = [message.copy(), message.copy(), message.copy()]
@@ -1470,7 +1470,7 @@ def test_render_changelog_with_changelog_message_builder_hook_multiple_entries(
 
 
 def test_changelog_message_builder_hook_can_access_and_modify_change_type(
-    gitcommits, tags, any_changelog_format: ChangelogFormat
+    gitcommits, tags, any_changelog_format: BaseFormat
 ):
     def changelog_message_builder_hook(message: dict, commit: git.GitCommit):
         assert "change_type" in message
@@ -1501,7 +1501,7 @@ def test_changelog_message_builder_hook_can_access_and_modify_change_type(
 
 
 def test_render_changelog_with_changelog_release_hook(
-    gitcommits, tags, any_changelog_format: ChangelogFormat
+    gitcommits, tags, any_changelog_format: BaseFormat
 ):
     def changelog_release_hook(release: dict, tag: git.GitTag | None) -> dict:
         release["extra"] = "whatever"

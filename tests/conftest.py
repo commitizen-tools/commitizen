@@ -11,7 +11,7 @@ from pytest_mock import MockerFixture
 
 from commitizen import cmd, defaults
 from commitizen.changelog_formats import (
-    ChangelogFormat,
+    BaseFormat,
     get_changelog_format,
 )
 from commitizen.config import BaseConfig
@@ -265,9 +265,7 @@ SUPPORTED_FORMATS = ("markdown", "textile", "asciidoc", "restructuredtext")
 
 
 @pytest.fixture(params=SUPPORTED_FORMATS)
-def changelog_format(
-    config: BaseConfig, request: pytest.FixtureRequest
-) -> ChangelogFormat:
+def changelog_format(config: BaseConfig, request: pytest.FixtureRequest) -> BaseFormat:
     """For tests relying on formats specifics"""
     format: str = request.param
     config.settings["changelog_format"] = format
@@ -279,7 +277,7 @@ def changelog_format(
 
 
 @pytest.fixture
-def any_changelog_format(config: BaseConfig) -> ChangelogFormat:
+def any_changelog_format(config: BaseConfig) -> BaseFormat:
     """For test not relying on formats specifics, use the default"""
     config.settings["changelog_format"] = defaults.CHANGELOG_FORMAT
     return get_changelog_format(config)
