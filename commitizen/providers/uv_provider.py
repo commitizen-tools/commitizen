@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class UvProvider(TomlProvider):
     """
-    uv.lock and pyproject.tom version management
+    uv.lock and pyproject.toml version management
     """
 
     filename = "pyproject.toml"
