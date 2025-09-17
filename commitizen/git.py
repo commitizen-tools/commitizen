@@ -304,6 +304,18 @@ def is_staging_clean() -> bool:
     return not bool(c.out)
 
 
+def has_uncommitted_changes() -> bool:
+    """Check if there are any uncommitted changes (working + staged).
+    
+    Returns True if there are uncommitted changes (modified, added, deleted files)
+    but excludes untracked files as they don't affect version bumping.
+    """
+    c = cmd.run("git status --porcelain")
+    # Filter out untracked files (lines starting with ??)
+    lines = [line for line in c.out.splitlines() if not line.startswith('??')]
+    return bool(lines)
+
+
 def is_git_project() -> bool:
     c = cmd.run("git rev-parse --is-inside-work-tree")
     return c.out.strip() == "true"

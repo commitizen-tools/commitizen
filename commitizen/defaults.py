@@ -61,6 +61,7 @@ class Settings(TypedDict, total=False):
     version_scheme: str | None
     version_type: str | None
     version: str | None
+    check_uncommitted: bool
 
 
 CONFIG_FILES: list[str] = [
@@ -108,6 +109,7 @@ DEFAULT_SETTINGS: Settings = {
     "always_signoff": False,
     "template": None,  # default provided by plugin
     "extras": {},
+    "check_uncommitted": False,
 }
 
 MAJOR = "MAJOR"

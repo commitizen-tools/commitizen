@@ -40,6 +40,7 @@ class ExitCode(IntEnum):
     CONFIG_FILE_NOT_FOUND = 30
     CONFIG_FILE_IS_EMPTY = 31
     COMMIT_MESSAGE_LENGTH_LIMIT_EXCEEDED = 32
+    UNCOMMITTED_CHANGES = 33
 
     @classmethod
     def from_str(cls, value: str) -> ExitCode:
@@ -219,3 +220,13 @@ class ConfigFileIsEmpty(CommitizenException):
 class CommitMessageLengthExceededError(CommitizenException):
     exit_code = ExitCode.COMMIT_MESSAGE_LENGTH_LIMIT_EXCEEDED
     message = "Length of commit message exceeds the given limit."
+
+
+class UncommittedChangesError(CommitizenException):
+    exit_code = ExitCode.UNCOMMITTED_CHANGES
+    message = (
+        "[UNCOMMITTED_CHANGES]\n"
+        "Working tree contains uncommitted changes. Version bumping aborted.\n"
+        "Please commit or stash your changes before bumping the version.\n"
+        "Use 'git status' to see uncommitted changes."
+    )
