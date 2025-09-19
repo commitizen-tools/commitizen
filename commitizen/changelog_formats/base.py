@@ -25,10 +25,9 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
         # See: https://bugs.python.org/issue44807
         self.config = config
         self.encoding = self.config.settings["encoding"]
-        self.tag_format = self.config.settings["tag_format"]
         self.tag_rules = TagRules(
             scheme=get_version_scheme(self.config.settings),
-            tag_format=self.tag_format,
+            tag_format=self.config.settings["tag_format"],
             legacy_tag_formats=self.config.settings["legacy_tag_formats"],
             ignored_tag_formats=self.config.settings["ignored_tag_formats"],
         )
