@@ -71,7 +71,6 @@ class Check:
             self.commit_msg = sys.stdin.read()
 
         self.config: BaseConfig = config
-        self.encoding = config.settings["encoding"]
         self.cz = factory.committer_factory(self.config)
 
     def __call__(self) -> None:
@@ -105,7 +104,9 @@ class Check:
             # Get commit message from command line (--message)
             return self.commit_msg
 
-        with open(self.commit_msg_file, encoding=self.encoding) as commit_file:
+        with open(
+            self.commit_msg_file, encoding=self.config.settings["encoding"]
+        ) as commit_file:
             # Get commit message from file (--commit-msg-file)
             return commit_file.read()
 

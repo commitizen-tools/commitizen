@@ -48,7 +48,6 @@ class Commit:
             raise NotAGitProjectError()
 
         self.config: BaseConfig = config
-        self.encoding = config.settings["encoding"]
         self.cz = factory.committer_factory(self.config)
         self.arguments = arguments
         self.backup_file_path = get_backup_file_path()
@@ -59,7 +58,9 @@ class Commit:
             return None
 
         # Read commit message from backup
-        with open(self.backup_file_path, encoding=self.encoding) as f:
+        with open(
+            self.backup_file_path, encoding=self.config.settings["encoding"]
+        ) as f:
             return f.read().strip()
 
     def _prompt_commit_questions(self) -> str:
@@ -146,7 +147,9 @@ class Commit:
         out.info(f"\n{commit_message}\n")
 
         if write_message_to_file:
-            with smart_open(write_message_to_file, "w", encoding=self.encoding) as file:
+            with smart_open(
+                write_message_to_file, "w", encoding=self.config.settings["encoding"]
+            ) as file:
                 file.write(commit_message)
 
         if dry_run:
@@ -160,7 +163,9 @@ class Commit:
             out.error(c.err)
 
             # Create commit backup
-            with smart_open(self.backup_file_path, "w", encoding=self.encoding) as f:
+            with smart_open(
+                self.backup_file_path, "w", encoding=self.config.settings["encoding"]
+            ) as f:
                 f.write(commit_message)
 
             raise CommitError()

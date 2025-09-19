@@ -67,7 +67,6 @@ class Changelog:
             else changelog_file_name
         )
 
-        self.encoding = self.config.settings["encoding"]
         self.cz = factory.committer_factory(self.config)
 
         self.start_rev = arguments.get("start_rev") or self.config.settings.get(
@@ -157,7 +156,9 @@ class Changelog:
     def _write_changelog(
         self, changelog_out: str, lines: list[str], changelog_meta: changelog.Metadata
     ) -> None:
-        with smart_open(self.file_name, "w", encoding=self.encoding) as changelog_file:
+        with smart_open(
+            self.file_name, "w", encoding=self.config.settings["encoding"]
+        ) as changelog_file:
             partial_changelog: str | None = None
             if self.incremental:
                 new_lines = changelog.incremental_build(
@@ -259,7 +260,9 @@ class Changelog:
 
         lines = []
         if self.incremental and os.path.isfile(self.file_name):
-            with open(self.file_name, encoding=self.encoding) as changelog_file:
+            with open(
+                self.file_name, encoding=self.config.settings["encoding"]
+            ) as changelog_file:
                 lines = changelog_file.readlines()
 
         self._write_changelog(changelog_out, lines, changelog_meta)

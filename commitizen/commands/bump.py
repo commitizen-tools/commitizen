@@ -67,7 +67,6 @@ class Bump:
             raise NotAGitProjectError()
 
         self.config: BaseConfig = config
-        self.encoding = config.settings["encoding"]
         self.arguments = arguments
         self.bump_settings = cast(
             BumpArgs,
@@ -335,7 +334,7 @@ class Bump:
                 str(new_version),
                 self.bump_settings["version_files"],
                 check_consistency=self.check_consistency,
-                encoding=self.encoding,
+                encoding=self.config.settings["encoding"],
             )
         )
 
