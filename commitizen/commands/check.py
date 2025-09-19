@@ -79,6 +79,7 @@ class Check:
 
         Raises:
             InvalidCommitMessageError: if the commit provided not follows the conventional pattern
+            NoCommitsFoundError: if no commit is found with the given range
         """
         commits = self._get_commits()
         if not commits:
