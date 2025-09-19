@@ -104,12 +104,10 @@ class Changelog:
             or defaults.CHANGE_TYPE_ORDER,
         )
         self.rev_range = arguments.get("rev_range")
-        self.tag_format = (
-            arguments.get("tag_format") or self.config.settings["tag_format"]
-        )
         self.tag_rules = TagRules(
             scheme=self.scheme,
-            tag_format=self.tag_format,
+            tag_format=arguments.get("tag_format")
+            or self.config.settings["tag_format"],
             legacy_tag_formats=self.config.settings["legacy_tag_formats"],
             ignored_tag_formats=self.config.settings["ignored_tag_formats"],
             merge_prereleases=arguments.get("merge_prerelease")
