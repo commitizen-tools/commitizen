@@ -216,8 +216,8 @@ class Bump:
 
         rules = TagRules.from_settings(cast(Settings, self.bump_settings))
         current_tag = rules.find_tag_for(git.get_tags(), current_version)
-        current_tag_version = getattr(
-            current_tag, "name", rules.normalize_tag(current_version)
+        current_tag_version = (
+            current_tag.name if current_tag else rules.normalize_tag(current_version)
         )
 
         is_initial = self._is_initial_tag(current_tag, self.arguments["yes"])
