@@ -884,7 +884,6 @@ def test_changelog_with_filename_as_empty_string(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_first_version_from_arg(
     mocker: MockFixture, config_path, changelog_path, file_regression
 ):
@@ -918,7 +917,6 @@ def test_changelog_from_rev_first_version_from_arg(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_latest_version_from_arg(
     mocker: MockFixture, config_path, changelog_path, file_regression
 ):
@@ -954,7 +952,6 @@ def test_changelog_from_rev_latest_version_from_arg(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-@pytest.mark.freeze_time("2022-02-13")
 @pytest.mark.parametrize(
     "rev_range,tag",
     (
@@ -986,7 +983,6 @@ def test_changelog_from_rev_range_not_found(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_multiple_matching_tags(
     mocker: MockFixture, config_path, changelog_path
 ):
@@ -1016,7 +1012,6 @@ def test_changelog_multiple_matching_tags(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_range_default_tag_format(
     mocker, config_path, changelog_path
 ):
@@ -1047,7 +1042,6 @@ def test_changelog_from_rev_range_default_tag_format(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_version_range_including_first_tag(
     mocker: MockFixture, config_path, changelog_path, file_regression
 ):
@@ -1079,7 +1073,6 @@ def test_changelog_from_rev_version_range_including_first_tag(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_version_range_from_arg(
     mocker: MockFixture, config_path, changelog_path, file_regression
 ):
@@ -1119,7 +1112,6 @@ def test_changelog_from_rev_version_range_from_arg(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_version_range_with_legacy_tags(
     mocker: MockFixture, config_path, changelog_path, file_regression
 ):
@@ -1154,7 +1146,6 @@ def test_changelog_from_rev_version_range_with_legacy_tags(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_version_with_big_range_from_arg(
     mocker: MockFixture, config_path, changelog_path, file_regression
 ):
@@ -1214,7 +1205,6 @@ def test_changelog_from_rev_version_with_big_range_from_arg(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_latest_version_dry_run(
     mocker: MockFixture, capsys, config_path, changelog_path, file_regression
 ):
@@ -1267,7 +1257,6 @@ def test_invalid_subject_is_skipped(mocker: MockFixture, capsys):
     assert out == ("## Unreleased\n\n### Feat\n\n- a new world\n\n")
 
 
-@pytest.mark.freeze_time("2022-02-13")
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_with_customized_change_type_order(
     mocker, config_path, changelog_path, file_regression
@@ -1325,7 +1314,6 @@ def test_empty_commit_list(mocker):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_prerelease_rev_with_use_scheme_semver(
     mocker: MockFixture, capsys, config_path, changelog_path, file_regression
 ):
