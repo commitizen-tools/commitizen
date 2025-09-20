@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import sys
 import time
-import uuid
-from pathlib import Path
 
 import pytest
 from deprecated import deprecated
@@ -28,17 +26,12 @@ class FakeCommand:
         self.return_code = return_code
 
 
-def create_file_and_commit(
-    message: str, filename: str | None = None, committer_date: str | None = None
-):
-    if not filename:
-        filename = str(uuid.uuid4())
-
-    Path(filename).touch()
-    c = cmd.run("git add .")
+# TODO: rename this function when the tests are stable (nobody is changing it)
+def create_file_and_commit(message: str, committer_date: str | None = None):
+    c = cmd.run("git add .")  # prevent untracked files errors
     if c.return_code != 0:
         raise exceptions.CommitError(c.err)
-    c = git.commit(message, committer_date=committer_date)
+    c = git.commit(message, "--allow-empty", committer_date)
     if c.return_code != 0:
         raise exceptions.CommitError(c.err)
 
