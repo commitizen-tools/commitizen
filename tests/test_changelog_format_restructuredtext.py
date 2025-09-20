@@ -299,15 +299,15 @@ Changelog
 
 
 @pytest.fixture
-def format(config: BaseConfig) -> RestructuredText:
-    return RestructuredText(config)
+def format(mock_config: BaseConfig) -> RestructuredText:
+    return RestructuredText(mock_config)
 
 
 @pytest.fixture
-def format_with_tags(config: BaseConfig, request) -> RestructuredText:
-    config.settings["tag_format"] = request.param
-    config.settings["legacy_tag_formats"] = ["legacy-${version}"]
-    return RestructuredText(config)
+def format_with_tags(mock_config: BaseConfig, request) -> RestructuredText:
+    mock_config.settings["tag_format"] = request.param
+    mock_config.settings["legacy_tag_formats"] = ["legacy-${version}"]
+    return RestructuredText(mock_config)
 
 
 @pytest.mark.parametrize("content, expected", CASES)

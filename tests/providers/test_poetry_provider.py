@@ -25,7 +25,7 @@ version = "42.1"
     ((POETRY_TOML, POETRY_EXPECTED),),
 )
 def test_cargo_provider(
-    config: BaseConfig,
+    mock_config: BaseConfig,
     chdir: Path,
     content: str,
     expected: str,
@@ -33,9 +33,9 @@ def test_cargo_provider(
     filename = PoetryProvider.filename
     file = chdir / filename
     file.write_text(dedent(content))
-    config.settings["version_provider"] = "poetry"
+    mock_config.settings["version_provider"] = "poetry"
 
-    provider = get_provider(config)
+    provider = get_provider(mock_config)
     assert isinstance(provider, PoetryProvider)
     assert provider.get_version() == "0.1.0"
 

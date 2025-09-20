@@ -41,13 +41,13 @@ message = "Write a short and imperative summary of the code changes: (lower case
 
 
 @pytest.fixture
-def config():
+def mock_config():
     return TomlConfig(data=TOML_WITH_SEARCH_FILTER, path="not_exist.toml")
 
 
-def test_questions_with_search_filter(config):
+def test_questions_with_search_filter(mock_config):
     """Test that questions are properly configured with search filter"""
-    cz = CustomizeCommitsCz(config)
+    cz = CustomizeCommitsCz(mock_config)
     questions = cz.questions()
 
     # Test that the first question (change_type) has search filter enabled
@@ -63,9 +63,9 @@ def test_questions_with_search_filter(config):
     assert choices[1]["value"] == "feat"
 
 
-def test_message_template(config):
+def test_message_template(mock_config):
     """Test that the message template is properly configured"""
-    cz = CustomizeCommitsCz(config)
+    cz = CustomizeCommitsCz(mock_config)
     template = cz.message(
         {
             "change_type": "feat",

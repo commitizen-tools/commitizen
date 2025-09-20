@@ -608,7 +608,7 @@ def test_bump_dry_run(mocker: MockFixture, capsys):
     assert tag_exists is False
 
 
-def test_bump_in_non_git_project(tmpdir, config, mocker: MockFixture):
+def test_bump_in_non_git_project(tmpdir, mock_config, mocker: MockFixture):
     testargs = ["cz", "bump", "--yes"]
     mocker.patch.object(sys, "argv", testargs)
 
