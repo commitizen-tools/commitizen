@@ -155,15 +155,16 @@ class ConventionalCommitsCz(BaseCommitizen):
         is_breaking_change = answers["is_breaking_change"]
 
         if scope:
-            scope = f"({scope})"
-        if body:
-            body = f"\n\n{body}"
+            # example: "fix(users): email pattern corrected"
+            first_line = f"{prefix}({scope}): {subject}"
+        else:
+            # example: "fix: email pattern corrected"
+            first_line = f"{prefix}: {subject}"
+
         if is_breaking_change:
             footer = f"BREAKING CHANGE: {footer}"
-        if footer:
-            footer = f"\n\n{footer}"
 
-        return f"{prefix}{scope}: {subject}{body}{footer}"
+        return "\n\n".join(s for s in (first_line, body, footer) if s)
 
     def example(self) -> str:
         return (
