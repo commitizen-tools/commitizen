@@ -13,7 +13,7 @@ import questionary
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
 from commitizen.cz.exceptions import CzException
-from commitizen.cz.utils import get_backup_file_path
+from commitizen.cz.utils import get_backup_file_path, get_input_with_continuation
 from commitizen.exceptions import (
     CommitError,
     CommitMessageLengthExceededError,
@@ -66,18 +66,41 @@ class Commit:
         # Prompt user for the commit message
         cz = self.cz
         questions = cz.questions()
-        for question in (q for q in questions if q["type"] == "list"):
-            question["use_shortcuts"] = self.config.settings["use_shortcuts"]
-        try:
-            answers = questionary.prompt(questions, style=cz.style)
-        except ValueError as err:
-            root_err = err.__context__
-            if isinstance(root_err, CzException):
-                raise CustomError(root_err.__str__())
-            raise err
+        answers = {}
 
-        if not answers:
-            raise NoAnswersError()
+        # Handle questions one by one to support custom continuation
+        for question in questions:
+            if question["type"] == "list":
+                question["use_shortcuts"] = self.config.settings["use_shortcuts"]
+                try:
+                    answer = questionary.prompt([question], style=cz.style)
+                    if not answer:
+                        raise NoAnswersError()
+                    answers.update(answer)
+                except ValueError as err:
+                    root_err = err.__context__
+                    if isinstance(root_err, CzException):
+                        raise CustomError(root_err.__str__())
+                    raise err
+            elif question["type"] == "input" and question.get("continuation", False):
+                print(f"\033[90m💡 Type backslash and press Enter for line continuation\033[0m")
+                raw_answer = get_input_with_continuation(question["message"])
+                if "filter" in question:
+                    processed_answer = question["filter"](raw_answer)
+                else:
+                    processed_answer = raw_answer
+                answers[question["name"]] = processed_answer
+            else:
+                try:
+                    answer = questionary.prompt([question], style=cz.style)
+                    if not answer:
+                        raise NoAnswersError()
+                    answers.update(answer)
+                except ValueError as err:
+                    root_err = err.__context__
+                    if isinstance(root_err, CzException):
+                        raise CustomError(root_err.__str__())
+                    raise err
 
         message = cz.message(answers)
         message_len = len(message.partition("\n")[0].strip())

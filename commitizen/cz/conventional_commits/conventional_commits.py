@@ -109,26 +109,23 @@ class ConventionalCommitsCz(BaseCommitizen):
             {
                 "type": "input",
                 "name": "scope",
-                "message": (
-                    "What is the scope of this change? (class or file name): (press [enter] to skip)\n"
-                ),
+                "message": "What is the scope of this change? (class or file name): (press [enter] to skip)",
                 "filter": _parse_scope,
+                "multiline": True,
             },
             {
                 "type": "input",
                 "name": "subject",
                 "filter": _parse_subject,
-                "message": (
-                    "Write a short and imperative summary of the code changes: (lower case and no period)\n"
-                ),
+                "message": "Write a short and imperative summary of the code changes: (lower case and no period)",
+                "multiline": True,
             },
             {
                 "type": "input",
                 "name": "body",
-                "message": (
-                    "Provide additional contextual information about the code changes: (press [enter] to skip)\n"
-                ),
-                "filter": multiple_line_breaker,
+                "message": "Provide additional contextual information about the code changes:\n(Type backslash and press Enter for line continuation, or use multiline input, or [Enter] to skip)",
+                "multiline": True,
+                "default": "",
             },
             {
                 "type": "confirm",
@@ -139,10 +136,8 @@ class ConventionalCommitsCz(BaseCommitizen):
             {
                 "type": "input",
                 "name": "footer",
-                "message": (
-                    "Footer. Information about Breaking Changes and "
-                    "reference issues that this commit closes: (press [enter] to skip)\n"
-                ),
+                "message": "Footer. Information about Breaking Changes and reference issues that this commit closes: (press [enter] to skip)",
+                "multiline": True,
             },
         ]
 

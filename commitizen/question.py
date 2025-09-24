@@ -20,6 +20,9 @@ class InputQuestion(TypedDict, total=False):
     name: str
     message: str
     filter: Callable[[str], str]
+    multiline: bool
+    default: str
+    continuation: bool
 
 
 class ConfirmQuestion(TypedDict):
