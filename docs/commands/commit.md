@@ -28,6 +28,44 @@ cz commit --write-message-to-file COMMIT_MSG_FILE
 
 This can be combined with `--dry-run` to only write the message without creating a commit. This is particularly useful for [automatically preparing commit messages](../tutorials/auto_prepare_commit_message.md).
 
+## Multiline Input Support
+
+Commitizen now supports enhanced multiline input for commit messages, making it easier to create detailed, well-structured commits.
+
+### How It Works
+
+When prompted for input during `cz commit`, you can now use multiline input with smart behavior:
+
+#### For Optional Fields (scope, body, footer)
+- **Enter on empty line** → Skips the field
+- **Enter after typing content** → Adds a new line for multiline input
+- **Alt+Enter** → Finishes and submits the input
+
+#### For Required Fields (subject)
+- **Enter on empty line** → Shows error message with options:
+  ```
+  ⚠ This field is required. Please enter some content or press Ctrl+C to abort.
+  >
+  ```
+- **Enter after typing content** → Adds a new line for multiline input
+- **Alt+Enter** → Finishes and submits the input
+- **Ctrl+C** → Aborts the commit session
+
+### Example Usage
+
+```sh
+cz commit
+```
+
+During the interactive process:
+
+1. **Commit Type**: Select from the list (e.g., `feat`, `fix`, `docs`)
+2. **Scope** (optional): Press Enter to skip, or type scope and use Enter for multiline
+3. **Subject** (required): Must enter content, can use Enter for multiline, Alt+Enter to finish
+4. **Body** (optional): Press Enter to skip, or add detailed description with multiline support
+5. **Breaking Change**: Yes/No confirmation
+6. **Footer** (optional): Press Enter to skip, or add references/notes with multiline support
+
 ## Advanced Features
 
 ### Git Command Options

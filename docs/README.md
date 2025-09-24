@@ -42,6 +42,7 @@ This standardization makes your commit history more readable and meaningful, whi
 ### Features
 
 - Interactive CLI for standardized commits with default [Conventional Commits][conventional_commits] support
+- **Enhanced multiline input** with smart behavior for required and optional fields
 - Intelligent [version bumping](https://commitizen-tools.github.io/commitizen/commands/bump/) using [Semantic Versioning][semver]
 - Automatic [keep a changelog][keepchangelog] generation
 - Built-in commit validation with pre-commit hooks

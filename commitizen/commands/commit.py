@@ -9,6 +9,10 @@ from pathlib import Path
 from typing import TypedDict
 
 import questionary
+import questionary.prompts.text
+from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit.key_binding.key_processor import KeyPressEvent
+from prompt_toolkit.keys import Keys
 
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
@@ -83,21 +87,114 @@ class Commit:
                         raise CustomError(root_err.__str__())
                     raise err
             elif question["type"] == "input" and question.get("multiline", False):
-                print(
-                    "\033[90m💡 Multiline input:\n Press Enter for new lines and Esc+Enter to finish\033[0m \n \033[90mor (Finish with 'Alt+Enter' or 'Esc then Enter')\033[0m"
+                is_optional = (
+                    question.get("default") == ""
+                    or "skip" in question.get("message", "").lower()
                 )
+
+                if is_optional:
+                    print(
+                        "\033[90m💡 Multiline input:\n Press Enter on empty line to skip, Enter after text for new lines, Alt+Enter to finish\033[0m"
+                    )
+                else:
+                    print(
+                        "\033[90m💡 Multiline input:\n Press Enter for new lines and Alt+Enter to finish\033[0m"
+                    )
+
+                # Create custom multiline input with Enter-on-empty behavior for optional fields
+
                 multiline_question = question.copy()
                 multiline_question["multiline"] = True
-                try:
-                    answer = questionary.prompt([multiline_question], style=cz.style)
-                    if not answer:
-                        raise NoAnswersError()
-                    answers.update(answer)
-                except ValueError as err:
-                    root_err = err.__context__
-                    if isinstance(root_err, CzException):
-                        raise CustomError(root_err.__str__())
-                    raise err
+
+                if is_optional:
+                    # Create custom key bindings for optional fields
+                    bindings = KeyBindings()
+
+                    @bindings.add(Keys.Enter)
+                    def _(event: KeyPressEvent) -> None:
+                        buffer = event.current_buffer
+                        # If buffer is completely empty, submit
+                        if not buffer.text.strip():
+                            event.app.exit(result=buffer.text)
+                        else:
+                            # If there's text, add new line
+                            buffer.newline()
+
+                    # Use the text prompt directly with custom bindings
+                    try:
+                        result = questionary.prompts.text.text(
+                            message=question["message"],
+                            multiline=True,
+                            style=cz.style,
+                            key_bindings=bindings,
+                        ).ask()
+
+                        field_name = question["name"]
+                        if result is None:
+                            result = question.get("default", "")
+
+                        # Apply filter if present
+                        if "filter" in question:
+                            result = question["filter"](result)
+
+                        answer = {field_name: result}
+                        answers.update(answer)
+
+                    except Exception:
+                        # Fallback to standard behavior if custom approach fails
+                        answer = questionary.prompt(
+                            [multiline_question], style=cz.style
+                        )
+                        if not answer:
+                            raise NoAnswersError()
+                        answers.update(answer)
+                else:
+                    # Required fields - don't allow newline on empty first line and show error
+                    bindings = KeyBindings()
+
+                    @bindings.add(Keys.Enter)
+                    def _(event: KeyPressEvent) -> None:
+                        buffer = event.current_buffer
+                        # If buffer is completely empty (no content at all), show error and don't allow newline
+                        if not buffer.text.strip():
+                            # Show error message with prompt
+                            print(
+                                "\n\033[91m⚠ This field is required. Please enter some content or press Ctrl+C to abort.\033[0m"
+                            )
+                            print("> ", end="", flush=True)
+                            # Don't do anything - require content first
+                            pass
+                        else:
+                            # If there's text, add new line
+                            buffer.newline()
+
+                    try:
+                        result = questionary.prompts.text.text(
+                            message=question["message"],
+                            multiline=True,
+                            style=cz.style,
+                            key_bindings=bindings,
+                        ).ask()
+
+                        field_name = question["name"]
+                        if result is None:
+                            result = ""
+
+                        # Apply filter if present
+                        if "filter" in question:
+                            result = question["filter"](result)
+
+                        answer = {field_name: result}
+                        answers.update(answer)
+
+                    except Exception:
+                        # Fallback to standard behavior if custom approach fails
+                        answer = questionary.prompt(
+                            [multiline_question], style=cz.style
+                        )
+                        if not answer:
+                            raise NoAnswersError()
+                        answers.update(answer)
             else:
                 try:
                     answer = questionary.prompt([question], style=cz.style)
