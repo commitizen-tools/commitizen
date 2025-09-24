@@ -2,8 +2,6 @@ import os
 import re
 import tempfile
 
-import questionary
-
 from commitizen import git
 from commitizen.cz import exceptions
 
@@ -18,8 +16,6 @@ def required_validator(answer: str, msg: object = None) -> str:
 
 def multiple_line_breaker(answer: str, sep: str = "|") -> str:
     return "\n".join(line.strip() for line in answer.split(sep) if line)
-
-
 
 
 def strip_local_version(version: str) -> str:

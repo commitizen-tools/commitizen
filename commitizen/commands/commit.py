@@ -83,7 +83,9 @@ class Commit:
                         raise CustomError(root_err.__str__())
                     raise err
             elif question["type"] == "input" and question.get("multiline", False):
-                print(f"\033[90m💡 Multiline input:\n Press Enter for new lines and Esc+Enter to finish\033[0m \n \033[90mor (Finish with 'Alt+Enter' or 'Esc then Enter')\033[0m")
+                print(
+                    "\033[90m💡 Multiline input:\n Press Enter for new lines and Esc+Enter to finish\033[0m \n \033[90mor (Finish with 'Alt+Enter' or 'Esc then Enter')\033[0m"
+                )
                 multiline_question = question.copy()
                 multiline_question["multiline"] = True
                 try:
