@@ -13,7 +13,7 @@ import questionary
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
 from commitizen.cz.exceptions import CzException
-from commitizen.cz.utils import get_backup_file_path, get_input_with_continuation
+from commitizen.cz.utils import get_backup_file_path
 from commitizen.exceptions import (
     CommitError,
     CommitMessageLengthExceededError,
@@ -82,14 +82,20 @@ class Commit:
                     if isinstance(root_err, CzException):
                         raise CustomError(root_err.__str__())
                     raise err
-            elif question["type"] == "input" and question.get("continuation", False):
-                print(f"\033[90m💡 Type backslash and press Enter for line continuation\033[0m")
-                raw_answer = get_input_with_continuation(question["message"])
-                if "filter" in question:
-                    processed_answer = question["filter"](raw_answer)
-                else:
-                    processed_answer = raw_answer
-                answers[question["name"]] = processed_answer
+            elif question["type"] == "input" and question.get("multiline", False):
+                print(f"\033[90m💡 Multiline input:\n Press Enter for new lines and Esc+Enter to finish\033[0m \n \033[90mor (Finish with 'Alt+Enter' or 'Esc then Enter')\033[0m")
+                multiline_question = question.copy()
+                multiline_question["multiline"] = True
+                try:
+                    answer = questionary.prompt([multiline_question], style=cz.style)
+                    if not answer:
+                        raise NoAnswersError()
+                    answers.update(answer)
+                except ValueError as err:
+                    root_err = err.__context__
+                    if isinstance(root_err, CzException):
+                        raise CustomError(root_err.__str__())
+                    raise err
             else:
                 try:
                     answer = questionary.prompt([question], style=cz.style)

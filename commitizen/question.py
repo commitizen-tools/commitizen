@@ -22,7 +22,6 @@ class InputQuestion(TypedDict, total=False):
     filter: Callable[[str], str]
     multiline: bool
     default: str
-    continuation: bool
 
 
 class ConfirmQuestion(TypedDict):
