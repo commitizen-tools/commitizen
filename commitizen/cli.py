@@ -372,6 +372,18 @@ data = {
                         "help": "bump version without eligible commits",
                         "action": "store_true",
                     },
+                    {
+                        "name": ["--check-uncommitted"],
+                        "default": None,
+                        "help": "abort version bump if uncommitted changes are found",
+                        "action": "store_true",
+                    },
+                    {
+                        "name": ["--no-check-uncommitted"],
+                        "dest": "check_uncommitted",
+                        "help": "allow version bump with uncommitted changes",
+                        "action": "store_false",
+                    },
                 ],
             },
             {

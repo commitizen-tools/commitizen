@@ -23,6 +23,7 @@ from commitizen.exceptions import (
     NoPatternMapError,
     NotAGitProjectError,
     NotAllowed,
+    UncommittedChangesError,
 )
 from commitizen.providers import get_provider
 from commitizen.tags import TagRules
@@ -43,6 +44,7 @@ class BumpArgs(Settings, total=False):
     changelog_to_stdout: bool
     changelog: bool
     check_consistency: bool
+    check_uncommitted: bool | None
     devrelease: int | None
     dry_run: bool
     file_name: str
@@ -359,6 +361,14 @@ class Bump:
 
         if self.arguments["files_only"]:
             raise ExpectedExit()
+
+        # Check for uncommitted changes if the flag is enabled
+        check_uncommitted = self.arguments.get("check_uncommitted")
+        if check_uncommitted is None:
+            check_uncommitted = self.config.settings.get("check_uncommitted", False)
+        
+        if check_uncommitted and git.has_uncommitted_changes():
+            raise UncommittedChangesError()
 
         # FIXME: check if any changes have been staged
         git.add(*files)
