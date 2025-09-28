@@ -10,27 +10,27 @@ from commitizen.config.base_config import BaseConfig
 from tests.utils import skip_below_py_3_10
 
 
-def test_version_for_showing_project_version(config, capsys):
+def test_version_for_showing_project_version(mock_config, capsys):
     # No version exist
     commands.Version(
-        config,
+        mock_config,
         {"report": False, "project": True, "commitizen": False, "verbose": False},
     )()
     captured = capsys.readouterr()
     assert "No project information in this project." in captured.err
 
-    config.settings["version"] = "v0.0.1"
+    mock_config.settings["version"] = "v0.0.1"
     commands.Version(
-        config,
+        mock_config,
         {"report": False, "project": True, "commitizen": False, "verbose": False},
     )()
     captured = capsys.readouterr()
     assert "v0.0.1" in captured.out
 
 
-def test_version_for_showing_commitizen_version(config, capsys):
+def test_version_for_showing_commitizen_version(mock_config, capsys):
     commands.Version(
-        config,
+        mock_config,
         {"report": False, "project": False, "commitizen": True, "verbose": False},
     )()
     captured = capsys.readouterr()
@@ -38,25 +38,25 @@ def test_version_for_showing_commitizen_version(config, capsys):
 
     # default showing commitizen version
     commands.Version(
-        config,
+        mock_config,
         {"report": False, "project": False, "commitizen": False, "verbose": False},
     )()
     captured = capsys.readouterr()
     assert f"{__version__}" in captured.out
 
 
-def test_version_for_showing_both_versions(config, capsys):
+def test_version_for_showing_both_versions(mock_config, capsys):
     commands.Version(
-        config,
+        mock_config,
         {"report": False, "project": False, "commitizen": False, "verbose": True},
     )()
     captured = capsys.readouterr()
     assert f"Installed Commitizen Version: {__version__}" in captured.out
     assert "No project information in this project." in captured.err
 
-    config.settings["version"] = "v0.0.1"
+    mock_config.settings["version"] = "v0.0.1"
     commands.Version(
-        config,
+        mock_config,
         {"report": False, "project": False, "commitizen": False, "verbose": True},
     )()
     captured = capsys.readouterr()
@@ -66,9 +66,9 @@ def test_version_for_showing_both_versions(config, capsys):
     assert expected_out in captured.out
 
 
-def test_version_for_showing_commitizen_system_info(config, capsys):
+def test_version_for_showing_commitizen_system_info(mock_config, capsys):
     commands.Version(
-        config,
+        mock_config,
         {"report": True, "project": False, "commitizen": False, "verbose": False},
     )()
     captured = capsys.readouterr()
@@ -81,7 +81,7 @@ def test_version_for_showing_commitizen_system_info(config, capsys):
 @pytest.mark.usefixtures("tmp_git_project")
 def test_version_use_version_provider(
     mocker: MockerFixture,
-    config: BaseConfig,
+    mock_config: BaseConfig,
     capsys: pytest.CaptureFixture,
     project: bool,
 ):
@@ -93,7 +93,7 @@ def test_version_use_version_provider(
     )
 
     commands.Version(
-        config,
+        mock_config,
         {
             "report": False,
             "project": project,

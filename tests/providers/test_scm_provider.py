@@ -42,17 +42,17 @@ from tests.utils import (
 )
 @pytest.mark.usefixtures("tmp_git_project")
 def test_scm_provider(
-    config: BaseConfig, tag_format: str, tag: str, expected_version: str
+    mock_config: BaseConfig, tag_format: str, tag: str, expected_version: str
 ):
     create_file_and_commit("test: fake commit")
     create_tag(tag)
     create_file_and_commit("test: fake commit")
     create_tag("should-not-match")
 
-    config.settings["version_provider"] = "scm"
-    config.settings["tag_format"] = tag_format
+    mock_config.settings["version_provider"] = "scm"
+    mock_config.settings["tag_format"] = tag_format
 
-    provider = get_provider(config)
+    provider = get_provider(mock_config)
     assert isinstance(provider, ScmProvider)
     actual_version = provider.get_version()
     assert actual_version == expected_version
@@ -62,19 +62,19 @@ def test_scm_provider(
 
 
 @pytest.mark.usefixtures("tmp_git_project")
-def test_scm_provider_default_without_commits_and_tags(config: BaseConfig):
-    config.settings["version_provider"] = "scm"
+def test_scm_provider_default_without_commits_and_tags(mock_config: BaseConfig):
+    mock_config.settings["version_provider"] = "scm"
 
-    provider = get_provider(config)
+    provider = get_provider(mock_config)
     assert isinstance(provider, ScmProvider)
     assert provider.get_version() == "0.0.0"
 
 
 @pytest.mark.usefixtures("tmp_git_project")
-def test_scm_provider_default_with_commits_and_tags(config: BaseConfig):
-    config.settings["version_provider"] = "scm"
+def test_scm_provider_default_with_commits_and_tags(mock_config: BaseConfig):
+    mock_config.settings["version_provider"] = "scm"
 
-    provider = get_provider(config)
+    provider = get_provider(mock_config)
     assert isinstance(provider, ScmProvider)
     assert provider.get_version() == "0.0.0"
 
@@ -116,14 +116,14 @@ def test_scm_provider_default_with_commits_and_tags(config: BaseConfig):
 
 
 @pytest.mark.usefixtures("tmp_git_project")
-def test_scm_provider_detect_legacy_tags(config: BaseConfig):
-    config.settings["version_provider"] = "scm"
-    config.settings["tag_format"] = "v${version}"
-    config.settings["legacy_tag_formats"] = [
+def test_scm_provider_detect_legacy_tags(mock_config: BaseConfig):
+    mock_config.settings["version_provider"] = "scm"
+    mock_config.settings["tag_format"] = "v${version}"
+    mock_config.settings["legacy_tag_formats"] = [
         "legacy-${version}",
         "old-${version}",
     ]
-    provider = get_provider(config)
+    provider = get_provider(mock_config)
 
     create_file_and_commit("test: fake commit")
     create_tag("old-0.4.1")

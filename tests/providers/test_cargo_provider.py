@@ -233,7 +233,7 @@ dependencies = [
     ),
 )
 def test_cargo_provider(
-    config: BaseConfig,
+    mock_config: BaseConfig,
     chdir: Path,
     content: str,
     expected: str,
@@ -241,9 +241,9 @@ def test_cargo_provider(
     filename = CargoProvider.filename
     file = chdir / filename
     file.write_text(dedent(content))
-    config.settings["version_provider"] = "cargo"
+    mock_config.settings["version_provider"] = "cargo"
 
-    provider = get_provider(config)
+    provider = get_provider(mock_config)
     assert isinstance(provider, CargoProvider)
     assert provider.get_version() == "0.1.0"
 
@@ -269,7 +269,7 @@ def test_cargo_provider(
     ),
 )
 def test_cargo_provider_with_lock(
-    config: BaseConfig,
+    mock_config: BaseConfig,
     chdir: Path,
     toml_content: str,
     lock_content: str,
@@ -292,9 +292,9 @@ def test_cargo_provider_with_lock(
     lock_filename = CargoProvider.lock_filename
     lock_file = chdir / lock_filename
     lock_file.write_text(dedent(lock_content))
-    config.settings["version_provider"] = "cargo"
+    mock_config.settings["version_provider"] = "cargo"
 
-    provider = get_provider(config)
+    provider = get_provider(mock_config)
     assert isinstance(provider, CargoProvider)
     assert provider.get_version() == "0.1.0"
 

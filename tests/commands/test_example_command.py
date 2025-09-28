@@ -7,9 +7,9 @@ from commitizen import cli, commands
 from tests.utils import skip_below_py_3_10
 
 
-def test_example(config, mocker: MockerFixture):
+def test_example(mock_config, mocker: MockerFixture):
     write_mock = mocker.patch("commitizen.out.write")
-    commands.Example(config)()
+    commands.Example(mock_config)()
     write_mock.assert_called_once()
 
 

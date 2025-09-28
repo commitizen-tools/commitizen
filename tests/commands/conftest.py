@@ -7,7 +7,7 @@ from commitizen.config import BaseConfig, JsonConfig
 
 
 @pytest.fixture()
-def config():
+def mock_config():
     _config = BaseConfig()
     _config.settings.update({"name": defaults.DEFAULT_SETTINGS["name"]})
     return _config

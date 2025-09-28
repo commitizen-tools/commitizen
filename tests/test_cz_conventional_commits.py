@@ -40,15 +40,15 @@ def test_subject_transformations(subject_transformation):
     assert transformed_subject == _parse_subject(invalid_subject)
 
 
-def test_questions(config):
-    conventional_commits = ConventionalCommitsCz(config)
+def test_questions(mock_config):
+    conventional_commits = ConventionalCommitsCz(mock_config)
     questions = conventional_commits.questions()
     assert isinstance(questions, list)
     assert isinstance(questions[0], dict)
 
 
-def test_choices_all_have_keyboard_shortcuts(config):
-    conventional_commits = ConventionalCommitsCz(config)
+def test_choices_all_have_keyboard_shortcuts(mock_config):
+    conventional_commits = ConventionalCommitsCz(mock_config)
     questions = conventional_commits.questions()
 
     list_questions = (q for q in questions if q["type"] == "list")
@@ -56,8 +56,8 @@ def test_choices_all_have_keyboard_shortcuts(config):
         assert all("key" in choice for choice in select["choices"])
 
 
-def test_small_answer(config):
-    conventional_commits = ConventionalCommitsCz(config)
+def test_small_answer(mock_config):
+    conventional_commits = ConventionalCommitsCz(mock_config)
     answers = {
         "prefix": "fix",
         "scope": "users",
@@ -70,8 +70,8 @@ def test_small_answer(config):
     assert message == "fix(users): email pattern corrected"
 
 
-def test_long_answer(config):
-    conventional_commits = ConventionalCommitsCz(config)
+def test_long_answer(mock_config):
+    conventional_commits = ConventionalCommitsCz(mock_config)
     answers = {
         "prefix": "fix",
         "scope": "users",
@@ -87,8 +87,8 @@ def test_long_answer(config):
     )
 
 
-def test_breaking_change_in_footer(config):
-    conventional_commits = ConventionalCommitsCz(config)
+def test_breaking_change_in_footer(mock_config):
+    conventional_commits = ConventionalCommitsCz(mock_config)
     answers = {
         "prefix": "fix",
         "scope": "users",
@@ -105,22 +105,22 @@ def test_breaking_change_in_footer(config):
     )
 
 
-def test_example(config):
+def test_example(mock_config):
     """just testing a string is returned. not the content"""
-    conventional_commits = ConventionalCommitsCz(config)
+    conventional_commits = ConventionalCommitsCz(mock_config)
     example = conventional_commits.example()
     assert isinstance(example, str)
 
 
-def test_schema(config):
+def test_schema(mock_config):
     """just testing a string is returned. not the content"""
-    conventional_commits = ConventionalCommitsCz(config)
+    conventional_commits = ConventionalCommitsCz(mock_config)
     schema = conventional_commits.schema()
     assert isinstance(schema, str)
 
 
-def test_info(config):
+def test_info(mock_config):
     """just testing a string is returned. not the content"""
-    conventional_commits = ConventionalCommitsCz(config)
+    conventional_commits = ConventionalCommitsCz(mock_config)
     info = conventional_commits.info()
     assert isinstance(info, str)

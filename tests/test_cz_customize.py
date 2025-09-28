@@ -323,7 +323,7 @@ commitizen:
         JsonConfig(data=JSON_STR, path="not_exist.json"),
     ]
 )
-def config(request):
+def mock_config(request):
     """Parametrize the config fixture
 
     This fixture allow to test multiple config formats,
@@ -372,8 +372,8 @@ def test_initialize_cz_customize_failed():
     assert MissingCzCustomizeConfigError.message in str(excinfo.value)
 
 
-def test_bump_pattern(config):
-    cz = CustomizeCommitsCz(config)
+def test_bump_pattern(mock_config):
+    cz = CustomizeCommitsCz(mock_config)
     assert cz.bump_pattern == "^(break|new|fix|hotfix)"
 
 
@@ -382,8 +382,8 @@ def test_bump_pattern_unicode(config_with_unicode):
     assert cz.bump_pattern == "^(✨ feat|🐛 bug fix)"
 
 
-def test_bump_map(config):
-    cz = CustomizeCommitsCz(config)
+def test_bump_map(mock_config):
+    cz = CustomizeCommitsCz(mock_config)
     assert cz.bump_map == {
         "break": "MAJOR",
         "new": "MINOR",
@@ -401,8 +401,8 @@ def test_bump_map_unicode(config_with_unicode):
     }
 
 
-def test_change_type_order(config):
-    cz = CustomizeCommitsCz(config)
+def test_change_type_order(mock_config):
+    cz = CustomizeCommitsCz(mock_config)
     assert cz.change_type_order == [
         "perf",
         "BREAKING CHANGE",
@@ -423,8 +423,8 @@ def test_change_type_order_unicode(config_with_unicode):
     ]
 
 
-def test_questions(config):
-    cz = CustomizeCommitsCz(config)
+def test_questions(mock_config):
+    cz = CustomizeCommitsCz(mock_config)
     questions = cz.questions()
     expected_questions = [
         {
@@ -469,8 +469,8 @@ def test_questions_unicode(config_with_unicode):
     assert list(questions) == expected_questions
 
 
-def test_answer(config):
-    cz = CustomizeCommitsCz(config)
+def test_answer(mock_config):
+    cz = CustomizeCommitsCz(mock_config)
     answers = {
         "change_type": "feature",
         "message": "this feature enable customize through config file",
@@ -479,7 +479,7 @@ def test_answer(config):
     message = cz.message(answers)
     assert message == "feature: this feature enable customize through config file"
 
-    cz = CustomizeCommitsCz(config)
+    cz = CustomizeCommitsCz(mock_config)
     answers = {
         "change_type": "feature",
         "message": "this feature enable customize through config file",
@@ -512,8 +512,8 @@ def test_answer_unicode(config_with_unicode):
     assert message == "✨ feature:"
 
 
-def test_example(config):
-    cz = CustomizeCommitsCz(config)
+def test_example(mock_config):
+    cz = CustomizeCommitsCz(mock_config)
     assert (
         "feature: this feature enables customization through a config file"
         in cz.example()
@@ -528,13 +528,13 @@ def test_example_unicode(config_with_unicode):
     )
 
 
-def test_schema(config):
-    cz = CustomizeCommitsCz(config)
+def test_schema(mock_config):
+    cz = CustomizeCommitsCz(mock_config)
     assert "<type>: <body>" in cz.schema()
 
 
-def test_schema_pattern(config):
-    cz = CustomizeCommitsCz(config)
+def test_schema_pattern(mock_config):
+    cz = CustomizeCommitsCz(mock_config)
     assert r"(feature|bug fix):(\s.*)" in cz.schema_pattern()
 
 
@@ -543,8 +543,8 @@ def test_schema_pattern_unicode(config_with_unicode):
     assert r"(✨ feature|🐛 bug fix):(\s.*)" in cz.schema_pattern()
 
 
-def test_info(config):
-    cz = CustomizeCommitsCz(config)
+def test_info(mock_config):
+    cz = CustomizeCommitsCz(mock_config)
     assert "This is a customized cz." in cz.info()
 
 
@@ -567,8 +567,8 @@ def test_info_without_info(config_without_info):
     assert cz.info() == ""
 
 
-def test_commit_parser(config):
-    cz = CustomizeCommitsCz(config)
+def test_commit_parser(mock_config):
+    cz = CustomizeCommitsCz(mock_config)
     assert cz.commit_parser == "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?"
 
 
@@ -580,8 +580,8 @@ def test_commit_parser_unicode(config_with_unicode):
     )
 
 
-def test_changelog_pattern(config):
-    cz = CustomizeCommitsCz(config)
+def test_changelog_pattern(mock_config):
+    cz = CustomizeCommitsCz(mock_config)
     assert cz.changelog_pattern == "^(feature|bug fix)?(!)?"
 
 
@@ -590,8 +590,8 @@ def test_changelog_pattern_unicode(config_with_unicode):
     assert cz.changelog_pattern == "^(✨ feature|🐛 bug fix)?(!)?"
 
 
-def test_change_type_map(config):
-    cz = CustomizeCommitsCz(config)
+def test_change_type_map(mock_config):
+    cz = CustomizeCommitsCz(mock_config)
     assert cz.change_type_map == {"feature": "Feat", "bug fix": "Fix"}
 
 
