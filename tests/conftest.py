@@ -177,7 +177,7 @@ class SemverCommitizen(BaseCommitizen):
         "patch": "Bugs",
     }
 
-    def questions(self) -> list:
+    def questions(self) -> list[CzQuestion]:
         return [
             {
                 "type": "list",
