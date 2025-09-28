@@ -76,7 +76,8 @@ def test_commit_backup_on_failure(config, mocker: MockFixture):
         temp_file = commit_cmd.temp_file
         commit_cmd()
 
-    prompt_mock.assert_called_once()
+    # The multiline feature calls prompt multiple times, so don't assert call count
+    assert prompt_mock.called
     error_mock.assert_called_once()
     assert os.path.isfile(temp_file)
 
@@ -130,7 +131,8 @@ def test_commit_retry_after_failure_no_backup(config, mocker: MockFixture):
     commands.Commit(config, {})()
 
     commit_mock.assert_called_with("feat: user created\n\ncloses #21", args="")
-    prompt_mock.assert_called_once()
+    # The multiline feature calls prompt multiple times, so don't assert call count
+    assert prompt_mock.called
     success_mock.assert_called_once()
 
 
@@ -175,7 +177,8 @@ def test_commit_retry_after_failure_with_no_retry_works(config, mocker: MockFixt
     commit_cmd()
 
     commit_mock.assert_called_with("feat: user created\n\ncloses #21", args="")
-    prompt_mock.assert_called_once()
+    # The multiline feature calls prompt multiple times, so don't assert call count
+    assert prompt_mock.called
     success_mock.assert_called_once()
     assert not os.path.isfile(temp_file)
 
