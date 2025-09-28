@@ -63,32 +63,36 @@ class Commit:
         ) as f:
             return f.read().strip()
 
-    def _prompt_commit_questions(self) -> str:
+    def _get_message_by_prompt_commit_questions(self) -> str:
         # Prompt user for the commit message
-        cz = self.cz
-        questions = cz.questions()
+        questions = self.cz.questions()
         for question in (q for q in questions if q["type"] == "list"):
             question["use_shortcuts"] = self.config.settings["use_shortcuts"]
         try:
-            answers = questionary.prompt(questions, style=cz.style)
+            answers = questionary.prompt(questions, style=self.cz.style)
         except ValueError as err:
             root_err = err.__context__
             if isinstance(root_err, CzException):
-                raise CustomError(root_err.__str__())
+                raise CustomError(str(root_err))
             raise err
 
         if not answers:
             raise NoAnswersError()
 
-        message = cz.message(answers)
-        message_len = len(message.partition("\n")[0].strip())
-        message_length_limit = self.arguments.get("message_length_limit", 0)
-        if 0 < message_length_limit < message_len:
-            raise CommitMessageLengthExceededError(
-                f"Length of commit message exceeds limit ({message_len}/{message_length_limit})"
-            )
-
+        message = self.cz.message(answers)
+        self._validate_subject_length(message)
         return message
+
+    def _validate_subject_length(self, message: str) -> None:
+        # By the contract, message_length_limit is set to 0 for no limit
+        subject = message.partition("\n")[0].strip()
+        limit = self.arguments.get("message_length_limit", 0)
+        if limit == 0:
+            return
+        if len(subject) > limit:
+            raise CommitMessageLengthExceededError(
+                f"Length of commit message exceeds limit ({len(subject)}/{limit}), subject: '{subject}'"
+            )
 
     def manual_edit(self, message: str) -> str:
         editor = git.get_core_editor()
@@ -114,11 +118,13 @@ class Commit:
                 raise NoCommitBackupError()
             return commit_message
 
-        if self.config.settings.get("retry_after_failure") and not self.arguments.get(
-            "no_retry"
+        if (
+            self.config.settings.get("retry_after_failure")
+            and not self.arguments.get("no_retry")
+            and (backup_message := self._read_backup_message())
         ):
-            return self._read_backup_message() or self._prompt_commit_questions()
-        return self._prompt_commit_questions()
+            return backup_message
+        return self._get_message_by_prompt_commit_questions()
 
     def __call__(self) -> None:
         extra_args = self.arguments.get("extra_cli_args", "")

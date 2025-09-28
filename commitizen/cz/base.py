@@ -68,7 +68,7 @@ class BaseCommitizen(metaclass=ABCMeta):
             self.config.settings.update({"style": BaseCommitizen.default_style_config})
 
     @abstractmethod
-    def questions(self) -> Iterable[CzQuestion]:
+    def questions(self) -> list[CzQuestion]:
         """Questions regarding the commit message."""
 
     @abstractmethod
