@@ -123,7 +123,7 @@ class ConventionalCommitsCz(BaseCommitizen):
             {
                 "type": "input",
                 "name": "body",
-                "message": "Provide additional contextual information about the code changes:\n(Type backslash and press Enter for line continuation, or use multiline input, or [Enter] to skip)",
+                "message": "Provide additional contextual information about the code changes:\n(Use multiline input or [Enter] to skip)",
                 "multiline": True,
                 "default": "",
             },

@@ -295,3 +295,32 @@ class TestCommitMultilineFeature:
         assert isinstance(answer, dict)
         assert field_name in answer
         assert answer[field_name] == result
+
+    def test_handle_multiline_fallback_success(self):
+        """Test the _handle_multiline_fallback helper function with successful response."""
+        from commitizen.commands.commit import _handle_multiline_fallback
+
+        with patch("questionary.prompt") as mock_prompt:
+            mock_prompt.return_value = {"test_field": "test_value"}
+
+            question = {"name": "test_field", "message": "Test"}
+            style = None
+
+            result = _handle_multiline_fallback(question, style)
+
+            assert result == {"test_field": "test_value"}
+            mock_prompt.assert_called_once_with([question], style=style)
+
+    def test_handle_multiline_fallback_no_answers_error(self):
+        """Test the _handle_multiline_fallback helper function raises NoAnswersError."""
+        from commitizen.commands.commit import _handle_multiline_fallback
+        from commitizen.exceptions import NoAnswersError
+
+        with patch("questionary.prompt") as mock_prompt:
+            mock_prompt.return_value = None
+
+            question = {"name": "test_field", "message": "Test"}
+            style = None
+
+            with pytest.raises(NoAnswersError):
+                _handle_multiline_fallback(question, style)

@@ -6,7 +6,7 @@ import shutil
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import TypedDict
+from typing import Any, TypedDict
 
 import questionary
 import questionary.prompts.text
@@ -30,6 +30,7 @@ from commitizen.exceptions import (
     NothingToCommitError,
 )
 from commitizen.git import smart_open
+from commitizen.question import CzQuestion, InputQuestion
 
 
 class CommitArgs(TypedDict, total=False):
@@ -42,6 +43,25 @@ class CommitArgs(TypedDict, total=False):
     signoff: bool
     write_message_to_file: Path | None
     retry: bool
+
+
+def _handle_questionary_prompt(question: CzQuestion, cz_style: Any) -> dict[str, Any]:
+    """Handle questionary prompt with error handling."""
+    try:
+        answer = questionary.prompt([question], style=cz_style)
+        if not answer:
+            raise NoAnswersError()
+        return answer
+    except ValueError as err:
+        root_err = err.__context__
+        if isinstance(root_err, CzException):
+            raise CustomError(root_err.__str__())
+        raise err
+
+
+def _handle_multiline_fallback(multiline_question: InputQuestion, cz_style: Any) -> dict[str, Any]:
+    """Handle fallback to standard behavior if custom multiline approach fails."""
+    return _handle_questionary_prompt(multiline_question, cz_style)
 
 
 class Commit:
@@ -76,16 +96,8 @@ class Commit:
         for question in questions:
             if question["type"] == "list":
                 question["use_shortcuts"] = self.config.settings["use_shortcuts"]
-                try:
-                    answer = questionary.prompt([question], style=cz.style)
-                    if not answer:
-                        raise NoAnswersError()
-                    answers.update(answer)
-                except ValueError as err:
-                    root_err = err.__context__
-                    if isinstance(root_err, CzException):
-                        raise CustomError(root_err.__str__())
-                    raise err
+                answer = _handle_questionary_prompt(question, cz.style)
+                answers.update(answer)
             elif question["type"] == "input" and question.get("multiline", False):
                 is_optional = (
                     question.get("default") == ""
@@ -93,12 +105,12 @@ class Commit:
                 )
 
                 if is_optional:
-                    print(
-                        "\033[90m💡 Multiline input:\n Press Enter on empty line to skip, Enter after text for new lines, Alt+Enter to finish\033[0m"
+                    out.info(
+                        "💡 Multiline input:\n Press Enter on empty line to skip, Enter after text for new lines, Alt+Enter to finish"
                     )
                 else:
-                    print(
-                        "\033[90m💡 Multiline input:\n Press Enter for new lines and Alt+Enter to finish\033[0m"
+                    out.info(
+                        "💡 Multiline input:\n Press Enter for new lines and Alt+Enter to finish"
                     )
 
                 # Create custom multiline input with Enter-on-empty behavior for optional fields
@@ -142,11 +154,7 @@ class Commit:
 
                     except Exception:
                         # Fallback to standard behavior if custom approach fails
-                        answer = questionary.prompt(
-                            [multiline_question], style=cz.style
-                        )
-                        if not answer:
-                            raise NoAnswersError()
+                        answer = _handle_multiline_fallback(multiline_question, cz.style)
                         answers.update(answer)
                 else:
                     # Required fields - don't allow newline on empty first line and show error
@@ -158,8 +166,8 @@ class Commit:
                         # If buffer is completely empty (no content at all), show error and don't allow newline
                         if not buffer.text.strip():
                             # Show error message with prompt
-                            print(
-                                "\n\033[91m⚠ This field is required. Please enter some content or press Ctrl+C to abort.\033[0m"
+                            out.error(
+                                "\n⚠ This field is required. Please enter some content or press Ctrl+C to abort."
                             )
                             print("> ", end="", flush=True)
                             # Don't do anything - require content first
@@ -189,23 +197,11 @@ class Commit:
 
                     except Exception:
                         # Fallback to standard behavior if custom approach fails
-                        answer = questionary.prompt(
-                            [multiline_question], style=cz.style
-                        )
-                        if not answer:
-                            raise NoAnswersError()
+                        answer = _handle_multiline_fallback(multiline_question, cz.style)
                         answers.update(answer)
             else:
-                try:
-                    answer = questionary.prompt([question], style=cz.style)
-                    if not answer:
-                        raise NoAnswersError()
-                    answers.update(answer)
-                except ValueError as err:
-                    root_err = err.__context__
-                    if isinstance(root_err, CzException):
-                        raise CustomError(root_err.__str__())
-                    raise err
+                answer = _handle_questionary_prompt(question, cz.style)
+                answers.update(answer)
 
         message = cz.message(answers)
         message_len = len(message.partition("\n")[0].strip())
