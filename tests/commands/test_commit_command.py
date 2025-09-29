@@ -73,7 +73,7 @@ def test_commit_backup_on_failure(config, mocker: MockFixture):
 
     with pytest.raises(CommitError):
         commit_cmd = commands.Commit(config, {})
-        temp_file = commit_cmd.temp_file
+        temp_file = commit_cmd.backup_file_path
         commit_cmd()
 
     prompt_mock.assert_called_once()
@@ -101,7 +101,7 @@ def test_commit_retry_works(config, mocker: MockFixture):
     success_mock = mocker.patch("commitizen.out.success")
 
     commit_cmd = commands.Commit(config, {"retry": True})
-    temp_file = commit_cmd.temp_file
+    temp_file = commit_cmd.backup_file_path
     commit_cmd()
 
     commit_mock.assert_called_with("backup commit", args="")
@@ -144,7 +144,7 @@ def test_commit_retry_after_failure_works(config, mocker: MockFixture):
 
     config.settings["retry_after_failure"] = True
     commit_cmd = commands.Commit(config, {})
-    temp_file = commit_cmd.temp_file
+    temp_file = commit_cmd.backup_file_path
     commit_cmd()
 
     commit_mock.assert_called_with("backup commit", args="")
@@ -171,7 +171,7 @@ def test_commit_retry_after_failure_with_no_retry_works(config, mocker: MockFixt
 
     config.settings["retry_after_failure"] = True
     commit_cmd = commands.Commit(config, {"no_retry": True})
-    temp_file = commit_cmd.temp_file
+    temp_file = commit_cmd.backup_file_path
     commit_cmd()
 
     commit_mock.assert_called_with("feat: user created\n\ncloses #21", args="")
