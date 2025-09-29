@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from pathlib import Path
 
 try:
     from commitizen.cz.utils import get_backup_file_path
@@ -9,11 +8,11 @@ except ImportError as error:
 
 
 def post_commit() -> None:
-    backup_file = Path(get_backup_file_path())
+    backup_file_path = get_backup_file_path()
 
     # remove backup file if it exists
-    if backup_file.is_file():
-        backup_file.unlink()
+    if backup_file_path.is_file():
+        backup_file_path.unlink()
 
 
 if __name__ == "__main__":

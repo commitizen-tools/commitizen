@@ -2,7 +2,6 @@
 import shutil
 import subprocess
 import sys
-from pathlib import Path
 from subprocess import CalledProcessError
 
 try:
@@ -25,12 +24,12 @@ def prepare_commit_msg(commit_msg_file: str) -> int:
         capture_output=True,
     ).returncode
     if exit_code != 0:
-        backup_file = Path(get_backup_file_path())
-        if backup_file.is_file():
+        backup_file_path = get_backup_file_path()
+        if backup_file_path.is_file():
             # confirm if commit message from backup file should be reused
             answer = input("retry with previous message? [y/N]: ")
             if answer.lower() == "y":
-                shutil.copyfile(backup_file, commit_msg_file)
+                shutil.copyfile(backup_file_path, commit_msg_file)
                 return 0
 
         # use commitizen to generate the commit message
@@ -50,7 +49,7 @@ def prepare_commit_msg(commit_msg_file: str) -> int:
             return error.returncode
 
         # write message to backup file
-        shutil.copyfile(commit_msg_file, backup_file)
+        shutil.copyfile(commit_msg_file, backup_file_path)
     return 0
 
 
