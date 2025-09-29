@@ -51,15 +51,15 @@ class Commit:
         self.encoding = config.settings["encoding"]
         self.cz = factory.committer_factory(self.config)
         self.arguments = arguments
-        self.temp_file: str = get_backup_file_path()
+        self.backup_file_path = get_backup_file_path()
 
     def _read_backup_message(self) -> str | None:
         # Check the commit backup file exists
-        if not os.path.isfile(self.temp_file):
+        if not self.backup_file_path.is_file():
             return None
 
         # Read commit message from backup
-        with open(self.temp_file, encoding=self.encoding) as f:
+        with open(self.backup_file_path, encoding=self.encoding) as f:
             return f.read().strip()
 
     def _prompt_commit_questions(self) -> str:
@@ -108,10 +108,10 @@ class Commit:
 
     def _get_message(self) -> str:
         if self.arguments.get("retry"):
-            m = self._read_backup_message()
-            if m is None:
+            commit_message = self._read_backup_message()
+            if commit_message is None:
                 raise NoCommitBackupError()
-            return m
+            return commit_message
 
         if self.config.settings.get("retry_after_failure") and not self.arguments.get(
             "no_retry"
@@ -139,15 +139,15 @@ class Commit:
         if write_message_to_file is not None and write_message_to_file.is_dir():
             raise NotAllowed(f"{write_message_to_file} is a directory")
 
-        m = self._get_message()
+        commit_message = self._get_message()
         if self.arguments.get("edit"):
-            m = self.manual_edit(m)
+            commit_message = self.manual_edit(commit_message)
 
-        out.info(f"\n{m}\n")
+        out.info(f"\n{commit_message}\n")
 
         if write_message_to_file:
             with smart_open(write_message_to_file, "w", encoding=self.encoding) as file:
-                file.write(m)
+                file.write(commit_message)
 
         if dry_run:
             raise DryRunExit()
@@ -155,13 +155,13 @@ class Commit:
         if self.config.settings["always_signoff"] or signoff:
             extra_args = f"{extra_args} -s".strip()
 
-        c = git.commit(m, args=extra_args)
+        c = git.commit(commit_message, args=extra_args)
         if c.return_code != 0:
             out.error(c.err)
 
             # Create commit backup
-            with smart_open(self.temp_file, "w", encoding=self.encoding) as f:
-                f.write(m)
+            with smart_open(self.backup_file_path, "w", encoding=self.encoding) as f:
+                f.write(commit_message)
 
             raise CommitError()
 
@@ -170,7 +170,7 @@ class Commit:
             return
 
         with contextlib.suppress(FileNotFoundError):
-            os.remove(self.temp_file)
+            self.backup_file_path.unlink()
         out.write(c.err)
         out.write(c.out)
         out.success("Commit successful!")
