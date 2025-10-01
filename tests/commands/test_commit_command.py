@@ -328,6 +328,24 @@ def test_commit_when_customized_expected_raised(config, mocker: MockFixture, cap
 
 
 @pytest.mark.usefixtures("staging_is_clean")
+def test_commit_when_customized_error_in_handle_questionary_prompt(
+    config, mocker: MockFixture
+):
+    """Test ValueError with CzException context in _handle_questionary_prompt."""
+    _err = ValueError("questionary error")
+    _err.__context__ = CzException("Custom validation failed")
+
+    handle_prompt_mock = mocker.patch(
+        "commitizen.commands.commit._handle_questionary_prompt"
+    )
+    handle_prompt_mock.side_effect = _err
+
+    with pytest.raises(ValueError):
+        commit_cmd = commands.Commit(config, {})
+        commit_cmd()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
 def test_commit_when_non_customized_expected_raised(
     config, mocker: MockFixture, capsys
 ):
@@ -447,6 +465,18 @@ def test_manual_edit(editor, config, mocker: MockFixture, tmp_path):
         subprocess_mock.assert_called_once_with(["vim", str(temp_file)])
 
         assert edited_message == test_message.strip()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_manual_edit_editor_not_found(config, mocker: MockFixture):
+    """Test manual_edit raises error when editor executable is not found."""
+    mocker.patch("commitizen.git.get_core_editor", return_value="nonexistent_editor")
+    mocker.patch("shutil.which", return_value=None)
+
+    commit_cmd = commands.Commit(config, {"edit": True})
+
+    with pytest.raises(RuntimeError, match="Editor 'nonexistent_editor' not found."):
+        commit_cmd.manual_edit("test message")
 
 
 @skip_below_py_3_13

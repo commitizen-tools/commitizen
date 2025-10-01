@@ -150,6 +150,45 @@ class TestMultilineInputBehavior:
         assert mock_text.call_count == 2  # Prompt shown twice
         mock_error.assert_called_once()  # Error message displayed once
 
+    @patch("commitizen.out.info")
+    @patch("questionary.text")
+    def test_result_none_uses_default(self, mock_text, _mock_info, mock_cz_style):
+        """Test that when result is None, default value is used."""
+        mock_instance = Mock()
+        mock_instance.unsafe_ask.return_value = None
+        mock_text.return_value = mock_instance
+
+        question = {
+            "type": "input",
+            "name": "scope",
+            "message": "Scope",
+            "multiline": True,
+            "default": "default_value",
+        }
+
+        result = _handle_multiline_question(question, mock_cz_style)
+
+        assert result == {"scope": "default_value"}
+
+    @patch("commitizen.out.info")
+    @patch("questionary.text")
+    def test_result_none_no_default(self, mock_text, _mock_info, mock_cz_style):
+        """Test that when result is None and no default, empty string is used."""
+        mock_instance = Mock()
+        mock_instance.unsafe_ask.return_value = None
+        mock_text.return_value = mock_instance
+
+        question = {
+            "type": "input",
+            "name": "scope",
+            "message": "Scope",
+            "multiline": True,
+        }
+
+        result = _handle_multiline_question(question, mock_cz_style)
+
+        assert result == {"scope": ""}
+
 
 class TestKeyBindings:
     """Test key binding setup."""
