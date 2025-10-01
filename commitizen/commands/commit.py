@@ -9,10 +9,10 @@ from pathlib import Path
 from typing import Any, TypedDict
 
 import questionary
-import questionary.prompts.text
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 from prompt_toolkit.keys import Keys
+from prompt_toolkit.styles import Style
 
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
@@ -45,8 +45,11 @@ class CommitArgs(TypedDict, total=False):
     retry: bool
 
 
-def _handle_questionary_prompt(question: CzQuestion, cz_style: Any) -> dict[str, Any]:
-    """Handle questionary prompt with error handling."""
+def _handle_questionary_prompt(question: CzQuestion, cz_style: Style) -> dict[str, Any]:
+    """Handle questionary prompt with multiline and error handling."""
+    if question["type"] == "input" and question.get("multiline", False):
+        return _handle_multiline_question(question, cz_style)
+
     try:
         answer = questionary.prompt([question], style=cz_style)
         if not answer:
@@ -55,13 +58,76 @@ def _handle_questionary_prompt(question: CzQuestion, cz_style: Any) -> dict[str,
     except ValueError as err:
         root_err = err.__context__
         if isinstance(root_err, CzException):
-            raise CustomError(root_err.__str__())
+            raise CustomError(str(root_err))
         raise err
 
 
-def _handle_multiline_fallback(multiline_question: InputQuestion, cz_style: Any) -> dict[str, Any]:
-    """Handle fallback to standard behavior if custom multiline approach fails."""
-    return _handle_questionary_prompt(multiline_question, cz_style)
+def _handle_multiline_question(
+    question: InputQuestion, cz_style: Style
+) -> dict[str, Any]:
+    """Handle multiline input questions."""
+    is_optional = (
+        question.get("default") == ""
+        or "skip" in question.get("message", "").lower()
+        or "[enter] to skip" in question.get("message", "").lower()
+    )
+
+    guidance = (
+        "💡 Press Enter on empty line to skip, Alt+Enter to finish"
+        if is_optional
+        else "💡 Press Alt+Enter to finish"
+    )
+    out.info(guidance)
+
+    def _handle_key_press(event: KeyPressEvent, is_finish_key: bool) -> None:
+        buffer = event.current_buffer
+        is_empty = not buffer.text.strip()
+
+        if is_empty:
+            if is_optional and not is_finish_key:
+                event.app.exit(result="")
+            elif not is_optional:
+                out.error(
+                    "⚠ This field is required. Please enter some content or press Ctrl+C to abort."
+                )
+                out.line("> ", end="", flush=True)
+            else:
+                event.app.exit(result=buffer.text)
+        else:
+            if is_finish_key:
+                event.app.exit(result=buffer.text)
+            else:
+                buffer.newline()
+
+    bindings = KeyBindings()
+
+    @bindings.add(Keys.Enter)
+    def _(event: KeyPressEvent) -> None:
+        _handle_key_press(event, is_finish_key=False)
+
+    @bindings.add(Keys.Escape, Keys.Enter)
+    def _(event: KeyPressEvent) -> None:
+        _handle_key_press(event, is_finish_key=True)
+
+    result = questionary.text(
+        message=question["message"],
+        multiline=True,
+        style=cz_style,
+        key_bindings=bindings,
+    ).unsafe_ask()
+
+    if result is None:
+        result = question.get("default", "")
+
+    if "filter" in question:
+        try:
+            result = question["filter"](result)
+        except Exception as e:
+            out.error(f"⚠ {str(e)}")
+            out.line("> ", end="", flush=True)
+            return _handle_multiline_question(question, cz_style)
+
+    return {question["name"]: result}
 
 
 class Commit:
@@ -92,116 +158,12 @@ class Commit:
         questions = cz.questions()
         answers = {}
 
-        # Handle questions one by one to support custom continuation
         for question in questions:
             if question["type"] == "list":
                 question["use_shortcuts"] = self.config.settings["use_shortcuts"]
-                answer = _handle_questionary_prompt(question, cz.style)
-                answers.update(answer)
-            elif question["type"] == "input" and question.get("multiline", False):
-                is_optional = (
-                    question.get("default") == ""
-                    or "skip" in question.get("message", "").lower()
-                )
 
-                if is_optional:
-                    out.info(
-                        "💡 Multiline input:\n Press Enter on empty line to skip, Enter after text for new lines, Alt+Enter to finish"
-                    )
-                else:
-                    out.info(
-                        "💡 Multiline input:\n Press Enter for new lines and Alt+Enter to finish"
-                    )
-
-                # Create custom multiline input with Enter-on-empty behavior for optional fields
-
-                multiline_question = question.copy()
-                multiline_question["multiline"] = True
-
-                if is_optional:
-                    # Create custom key bindings for optional fields
-                    bindings = KeyBindings()
-
-                    @bindings.add(Keys.Enter)
-                    def _(event: KeyPressEvent) -> None:
-                        buffer = event.current_buffer
-                        # If buffer is completely empty, submit
-                        if not buffer.text.strip():
-                            event.app.exit(result=buffer.text)
-                        else:
-                            # If there's text, add new line
-                            buffer.newline()
-
-                    # Use the text prompt directly with custom bindings
-                    try:
-                        result = questionary.prompts.text.text(
-                            message=question["message"],
-                            multiline=True,
-                            style=cz.style,
-                            key_bindings=bindings,
-                        ).ask()
-
-                        field_name = question["name"]
-                        if result is None:
-                            result = question.get("default", "")
-
-                        # Apply filter if present
-                        if "filter" in question:
-                            result = question["filter"](result)
-
-                        answer = {field_name: result}
-                        answers.update(answer)
-
-                    except Exception:
-                        # Fallback to standard behavior if custom approach fails
-                        answer = _handle_multiline_fallback(multiline_question, cz.style)
-                        answers.update(answer)
-                else:
-                    # Required fields - don't allow newline on empty first line and show error
-                    bindings = KeyBindings()
-
-                    @bindings.add(Keys.Enter)
-                    def _(event: KeyPressEvent) -> None:
-                        buffer = event.current_buffer
-                        # If buffer is completely empty (no content at all), show error and don't allow newline
-                        if not buffer.text.strip():
-                            # Show error message with prompt
-                            out.error(
-                                "\n⚠ This field is required. Please enter some content or press Ctrl+C to abort."
-                            )
-                            print("> ", end="", flush=True)
-                            # Don't do anything - require content first
-                            pass
-                        else:
-                            # If there's text, add new line
-                            buffer.newline()
-
-                    try:
-                        result = questionary.prompts.text.text(
-                            message=question["message"],
-                            multiline=True,
-                            style=cz.style,
-                            key_bindings=bindings,
-                        ).ask()
-
-                        field_name = question["name"]
-                        if result is None:
-                            result = ""
-
-                        # Apply filter if present
-                        if "filter" in question:
-                            result = question["filter"](result)
-
-                        answer = {field_name: result}
-                        answers.update(answer)
-
-                    except Exception:
-                        # Fallback to standard behavior if custom approach fails
-                        answer = _handle_multiline_fallback(multiline_question, cz.style)
-                        answers.update(answer)
-            else:
-                answer = _handle_questionary_prompt(question, cz.style)
-                answers.update(answer)
+            answer = _handle_questionary_prompt(question, cz.style)
+            answers.update(answer)
 
         message = cz.message(answers)
         message_len = len(message.partition("\n")[0].strip())
