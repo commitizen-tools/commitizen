@@ -3,324 +3,219 @@
 from unittest.mock import Mock, patch
 
 import pytest
-from prompt_toolkit.key_binding.key_processor import KeyPressEvent
+from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.keys import Keys
 
-from commitizen.commands.commit import Commit
+from commitizen.commands.commit import _handle_multiline_question
 from commitizen.config import BaseConfig
 
 
-class TestCommitMultilineFeature:
-    """Test suite for multiline input functionality."""
+@pytest.fixture
+def config():
+    """Create a test configuration."""
+    _config = BaseConfig()
+    _config.settings.update({"name": "cz_conventional_commits"})
+    return _config
 
-    @pytest.fixture
-    def config(self):
-        """Create a test configuration."""
-        _config = BaseConfig()
-        _config.settings.update({"name": "cz_conventional_commits"})
-        return _config
 
-    @pytest.fixture
-    def commit_cmd(self, config):
-        """Create a Commit command instance."""
-        return Commit(config, {})
+@pytest.fixture
+def mock_cz_style():
+    """Mock commitizen style."""
+    return None
 
-    def test_optional_field_detection(self, commit_cmd):
+
+class TestMultilineFieldDetection:
+    """Test optional vs required field detection logic."""
+
+    @pytest.mark.parametrize(
+        "question,expected",
+        [
+            ({"default": "", "message": "Optional field"}, True),
+            ({"message": "Press enter to skip this field"}, True),
+            ({"message": "Optional field (press [enter] to skip)"}, True),
+            ({"message": "Required field"}, False),
+            ({"default": "some value", "message": "Field with default"}, False),
+        ],
+    )
+    def test_optional_field_detection(self, question, expected):
         """Test that optional fields are correctly identified."""
-        # Test field with default=""
-        optional_question = {"default": "", "message": "Optional field"}
-        result = (
-            optional_question.get("default") == ""
-            or "skip" in optional_question.get("message", "").lower()
+        is_optional = (
+            question.get("default") == ""
+            or "skip" in question.get("message", "").lower()
+            or "[enter] to skip" in question.get("message", "").lower()
         )
-        assert result is True
+        assert is_optional == expected
 
-        # Test field with "skip" in message
-        skip_question = {"message": "Press enter to skip this field"}
-        result = (
-            skip_question.get("default") == ""
-            or "skip" in skip_question.get("message", "").lower()
-        )
-        assert result is True
 
-        # Test required field
-        required_question = {"message": "Required field"}
-        result = (
-            required_question.get("default") == ""
-            or "skip" in required_question.get("message", "").lower()
-        )
-        assert result is False
+class TestMultilineInputBehavior:
+    """Test multiline input behavior with mocked prompts."""
 
-    @patch("questionary.prompts.text.text")
-    def test_optional_field_empty_input_skips(self, mock_text, commit_cmd):
-        """Test that pressing Enter on empty optional field skips it."""
-        # Mock the text prompt to return empty string
-        mock_text_instance = Mock()
-        mock_text_instance.ask.return_value = ""
-        mock_text.return_value = mock_text_instance
+    @patch("questionary.text")
+    def test_optional_field_empty_input_returns_empty(self, mock_text, mock_cz_style):
+        """Test that empty input on optional field returns empty string."""
+        mock_instance = Mock()
+        mock_instance.unsafe_ask.return_value = ""
+        mock_text.return_value = mock_instance
 
-        # Create an optional question
         question = {
             "type": "input",
             "name": "scope",
             "message": "What is the scope? (press [enter] to skip)",
             "multiline": True,
             "default": "",
-            "filter": lambda x: x.strip(),
         }
 
-        # Test the multiline handling logic
-        is_optional = (
-            question.get("default") == ""
-            or "skip" in question.get("message", "").lower()
-        )
-        assert is_optional is True
+        result = _handle_multiline_question(question, mock_cz_style)
 
-        # Verify that empty input results in default value
-        if is_optional:
-            result = ""
-            if not result.strip():
-                result = question.get("default", "")
-            assert result == ""
+        assert result == {"scope": ""}
 
-    @patch("questionary.prompts.text.text")
-    def test_optional_field_multiline_content(self, mock_text, commit_cmd):
-        """Test that optional fields can handle multiline content."""
-        # Mock the text prompt to return multiline content
+    @patch("questionary.text")
+    def test_multiline_content_preserved(self, mock_text, mock_cz_style):
+        """Test that multiline content is properly preserved."""
         multiline_content = "Line 1\nLine 2\nLine 3"
-        mock_text_instance = Mock()
-        mock_text_instance.ask.return_value = multiline_content
-        mock_text.return_value = mock_text_instance
+        mock_instance = Mock()
+        mock_instance.unsafe_ask.return_value = multiline_content
+        mock_text.return_value = mock_instance
 
-        # Verify multiline content is preserved
-        result = multiline_content
-        assert "\n" in result
-        assert result.count("\n") == 2  # Two newlines for three lines
-
-    def test_required_field_detection(self, commit_cmd):
-        """Test that required fields are correctly identified."""
-        required_question = {
+        question = {
             "type": "input",
-            "name": "subject",
-            "message": "Write a short summary",
+            "name": "body",
+            "message": "Provide additional context",
             "multiline": True,
         }
 
-        is_optional = (
-            required_question.get("default") == ""
-            or "skip" in required_question.get("message", "").lower()
-        )
-        assert is_optional is False
+        result = _handle_multiline_question(question, mock_cz_style)
 
-    @patch("builtins.print")
-    def test_required_field_empty_input_shows_error(self, mock_print, commit_cmd):
-        """Test that empty required field shows error message."""
-        # Simulate the error handling for required fields
-        buffer_text = ""  # Empty input
+        assert result == {"body": multiline_content}
+        assert result["body"].count("\n") == 2
 
-        if not buffer_text.strip():
-            # This is what our key binding does for required fields
-            error_msg = "\n\033[91m⚠ This field is required. Please enter some content or press Ctrl+C to abort.\033[0m"
-            prompt_msg = "> "
+    @patch("commitizen.out.info")
+    @patch("questionary.text")
+    def test_filter_applied_to_result(self, mock_text, _mock_info, mock_cz_style):
+        """Test that filters are correctly applied to multiline input."""
+        mock_instance = Mock()
+        mock_instance.unsafe_ask.return_value = "Add new feature.  "
+        mock_text.return_value = mock_instance
 
-            # Verify the error message would be shown
-            assert "required" in error_msg
-            assert "Ctrl+C" in error_msg
-            assert prompt_msg == "> "
-
-    @patch("questionary.prompts.text.text")
-    def test_required_field_with_content_succeeds(self, mock_text, commit_cmd):
-        """Test that required fields with content work properly."""
-        # Mock the text prompt to return valid content
-        valid_content = "Add user authentication feature"
-        mock_text_instance = Mock()
-        mock_text_instance.ask.return_value = valid_content
-        mock_text.return_value = mock_text_instance
-
-        # Create a required question
         question = {
             "type": "input",
             "name": "subject",
             "message": "Write a short summary",
             "multiline": True,
-            "filter": lambda x: x.strip(".").strip(),
+            "filter": lambda x: x.strip().rstrip("."),
         }
 
-        # Test that content is processed correctly
-        result = valid_content
-        if "filter" in question:
-            result = question["filter"](result)
+        result = _handle_multiline_question(question, mock_cz_style)
 
-        assert result == "Add user authentication feature"
-        assert len(result) > 0
+        assert result == {"subject": "Add new feature"}
 
-    def test_key_binding_setup_for_optional_fields(self):
-        """Test that key bindings are set up correctly for optional fields."""
-        from prompt_toolkit.key_binding import KeyBindings
+    @patch("commitizen.out.info")
+    @patch("commitizen.out.error")
+    @patch("commitizen.out.line")
+    @patch("questionary.text")
+    def test_filter_error_triggers_retry(
+        self, mock_text, _mock_line, mock_error, _mock_info, mock_cz_style
+    ):
+        """Test that filter errors are handled and trigger retry."""
+        filter_call_count = [0]
 
-        bindings = KeyBindings()
+        def get_mock_instance():
+            mock_instance = Mock()
+            mock_instance.unsafe_ask.return_value = "user input"
+            return mock_instance
 
-        # Mock the key binding function for optional fields
-        def mock_optional_handler(event: KeyPressEvent) -> None:
-            buffer = event.current_buffer
-            if not buffer.text.strip():
-                # Should exit with empty result for optional fields
-                event.app.exit(result=buffer.text)
-            else:
-                # Should add newline for content
-                buffer.newline()
+        # Return instances for both the first and second call
+        mock_text.side_effect = [get_mock_instance(), get_mock_instance()]
 
-        # Add the binding
-        bindings.add(Keys.Enter)(mock_optional_handler)
+        def failing_then_succeeding_filter(text):
+            filter_call_count[0] += 1
+            if filter_call_count[0] == 1:
+                raise ValueError("Invalid format")
+            return text.strip()
 
-        # Verify binding was added
-        assert len(bindings.bindings) > 0
-
-    def test_key_binding_setup_for_required_fields(self):
-        """Test that key bindings are set up correctly for required fields."""
-        from prompt_toolkit.key_binding import KeyBindings
-
-        bindings = KeyBindings()
-
-        # Mock the key binding function for required fields
-        def mock_required_handler(event: KeyPressEvent) -> None:
-            buffer = event.current_buffer
-            if not buffer.text.strip():
-                # Should show error and do nothing for required fields
-                print("Error: Field is required")
-                pass
-            else:
-                # Should add newline for content
-                buffer.newline()
-
-        # Add the binding
-        bindings.add(Keys.Enter)(mock_required_handler)
-
-        # Verify binding was added
-        assert len(bindings.bindings) > 0
-
-    @patch("questionary.prompts.text.text")
-    @patch("questionary.prompt")
-    def test_fallback_to_standard_prompt(self, mock_prompt, mock_text, commit_cmd):
-        """Test that fallback works when custom prompt fails."""
-        # Mock the text prompt to raise an exception
-        mock_text.side_effect = Exception("Custom prompt failed")
-
-        # Mock the standard prompt
-        mock_prompt.return_value = {"test_field": "fallback value"}
-
-        # This would be handled in the except block of our implementation
-        try:
-            raise Exception("Custom prompt failed")
-        except Exception:
-            # Fallback to standard questionary prompt
-            result = {"test_field": "fallback value"}
-            assert result["test_field"] == "fallback value"
-
-    def test_multiline_question_configuration(self):
-        """Test that multiline questions are configured properly."""
-        # Test configuration for optional field
-        optional_question = {
+        question = {
             "type": "input",
-            "name": "scope",
-            "message": "Scope (press [enter] to skip)",
+            "name": "test",
+            "message": "Test",
             "multiline": True,
-            "default": "",
+            "filter": failing_then_succeeding_filter,
         }
 
-        assert optional_question["multiline"] is True
-        assert optional_question.get("default") == ""
-        assert "type" in optional_question
-        assert "name" in optional_question
-        assert "message" in optional_question
+        result = _handle_multiline_question(question, mock_cz_style)
 
-        # Test configuration for required field
-        required_question = {
-            "type": "input",
-            "name": "subject",
-            "message": "Summary",
-            "multiline": True,
-        }
-
-        assert required_question["multiline"] is True
+        assert result == {"test": "user input"}
         assert (
-            "default" not in required_question or required_question.get("default") != ""
-        )
+            filter_call_count[0] == 2
+        )  # Filter called twice: first fails, second succeeds
+        assert mock_text.call_count == 2  # Prompt shown twice
+        mock_error.assert_called_once()  # Error message displayed once
 
-    @patch("builtins.print")
-    def test_user_guidance_messages(self, mock_print):
-        """Test that proper guidance messages are shown."""
-        # Test optional field guidance
-        is_optional = True
-        if is_optional:
-            expected_msg = "\033[90m💡 Multiline input:\n Press Enter on empty line to skip, Enter after text for new lines, Alt+Enter to finish\033[0m"
-            # Verify the message format
-            assert "Enter on empty line to skip" in expected_msg
-            assert "Alt+Enter to finish" in expected_msg
 
-        # Test required field guidance
-        is_optional = False
-        if not is_optional:
-            expected_msg = "\033[90m💡 Multiline input:\n Press Enter for new lines and Alt+Enter to finish\033[0m"
-            # Verify the message format
-            assert "Enter for new lines" in expected_msg
-            assert "Alt+Enter to finish" in expected_msg
+class TestKeyBindings:
+    """Test key binding setup."""
 
-    def test_filter_application(self):
-        """Test that filters are applied correctly to multiline input."""
+    def test_key_bindings_created(self):
+        """Test that key bindings are properly created."""
+        bindings = KeyBindings()
 
-        # Test scope filter (removes spaces, joins with dashes)
-        def _parse_scope(text: str) -> str:
-            return "-".join(text.strip().split())
+        @bindings.add(Keys.Enter)
+        def _enter_handler(_event):
+            pass
 
-        scope_input = "user auth module"
-        filtered_scope = _parse_scope(scope_input)
-        assert filtered_scope == "user-auth-module"
+        @bindings.add(Keys.Escape, Keys.Enter)
+        def _alt_enter_handler(_event):
+            pass
 
-        # Test simple subject processing (strip whitespace then dots)
-        def simple_subject_filter(text: str) -> str:
-            return text.strip().rstrip(".")
+        assert len(bindings.bindings) == 2
 
-        subject_input = "Add new feature.  "
-        filtered_subject = simple_subject_filter(subject_input)
-        assert filtered_subject == "Add new feature"
 
-    def test_answer_dictionary_structure(self):
-        """Test that answers are structured correctly."""
-        field_name = "test_field"
-        result = "test content"
+class TestGuidanceMessages:
+    """Test user guidance messages."""
 
-        answer = {field_name: result}
+    def test_optional_field_guidance(self):
+        """Test guidance message for optional fields."""
+        expected_msg = "💡 Press Enter on empty line to skip, Alt+Enter to finish"
+        assert "Enter on empty line to skip" in expected_msg
+        assert "Alt+Enter to finish" in expected_msg
 
-        assert isinstance(answer, dict)
-        assert field_name in answer
-        assert answer[field_name] == result
+    def test_required_field_guidance(self):
+        """Test guidance message for required fields."""
+        expected_msg = "💡 Press Alt+Enter to finish"
+        assert "Alt+Enter to finish" in expected_msg
+        assert "skip" not in expected_msg.lower()
 
-    def test_handle_multiline_fallback_success(self):
-        """Test the _handle_multiline_fallback helper function with successful response."""
-        from commitizen.commands.commit import _handle_multiline_fallback
 
-        with patch("questionary.prompt") as mock_prompt:
-            mock_prompt.return_value = {"test_field": "test_value"}
+class TestQuestionConfiguration:
+    """Test question configuration structure."""
 
-            question = {"name": "test_field", "message": "Test"}
-            style = None
+    @pytest.mark.parametrize(
+        "question_type,expected_keys",
+        [
+            ("optional", ["type", "name", "message", "multiline", "default"]),
+            ("required", ["type", "name", "message", "multiline"]),
+        ],
+    )
+    def test_question_structure(self, question_type, expected_keys):
+        """Test that questions have proper structure."""
+        if question_type == "optional":
+            question = {
+                "type": "input",
+                "name": "scope",
+                "message": "Scope (press [enter] to skip)",
+                "multiline": True,
+                "default": "",
+            }
+        else:
+            question = {
+                "type": "input",
+                "name": "subject",
+                "message": "Summary",
+                "multiline": True,
+            }
 
-            result = _handle_multiline_fallback(question, style)
+        for key in expected_keys:
+            assert key in question
 
-            assert result == {"test_field": "test_value"}
-            mock_prompt.assert_called_once_with([question], style=style)
-
-    def test_handle_multiline_fallback_no_answers_error(self):
-        """Test the _handle_multiline_fallback helper function raises NoAnswersError."""
-        from commitizen.commands.commit import _handle_multiline_fallback
-        from commitizen.exceptions import NoAnswersError
-
-        with patch("questionary.prompt") as mock_prompt:
-            mock_prompt.return_value = None
-
-            question = {"name": "test_field", "message": "Test"}
-            style = None
-
-            with pytest.raises(NoAnswersError):
-                _handle_multiline_fallback(question, style)
+        if question_type == "optional":
+            assert question["default"] == ""
+        assert question["multiline"] is True
