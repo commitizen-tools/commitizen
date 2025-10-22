@@ -1,4 +1,4 @@
-from commitizen import BaseCommitizenCustomizing commitizen is not hard at all.
+Customizing commitizen is not hard at all.
 We have two different ways to do so.
 
 ## 1. Customize in configuration file

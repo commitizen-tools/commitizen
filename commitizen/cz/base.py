@@ -123,8 +123,16 @@ class BaseCommitizen(metaclass=ABCMeta):
         if max_msg_length:
             msg_len = len(commit_msg.partition("\n")[0].strip())
             if msg_len > max_msg_length:
-                return ValidationResult(False, [])
-        return ValidationResult(bool(re.match(pattern, commit_msg)), [])
+                return ValidationResult(
+                    False,
+                    [
+                        f"The commit message subject is too long ({msg_len} > {max_msg_length} characters)."
+                    ],
+                )
+        return ValidationResult(
+            bool(re.match(pattern, commit_msg)),
+            [f"The commit message does not match the pattern: {pattern}"],
+        )
 
     def format_exception_message(
         self, ill_formated_commits: list[tuple[git.GitCommit, list]]
