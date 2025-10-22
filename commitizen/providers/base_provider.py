@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from abc import ABC, abstractmethod
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, ClassVar
 
@@ -19,7 +20,7 @@ class VersionProvider(ABC):
 
     config: BaseConfig
 
-    def __init__(self, config: BaseConfig):
+    def __init__(self, config: BaseConfig) -> None:
         self.config = config
 
     @abstractmethod
@@ -29,7 +30,7 @@ class VersionProvider(ABC):
         """
 
     @abstractmethod
-    def set_version(self, version: str):
+    def set_version(self, version: str) -> None:
         """
         Set the new current version
         """
@@ -58,15 +59,15 @@ class JsonProvider(FileProvider):
         document = json.loads(self.file.read_text())
         return self.get(document)
 
-    def set_version(self, version: str):
+    def set_version(self, version: str) -> None:
         document = json.loads(self.file.read_text())
         self.set(document, version)
         self.file.write_text(json.dumps(document, indent=self.indent) + "\n")
 
-    def get(self, document: dict[str, Any]) -> str:
-        return document["version"]  # type: ignore
+    def get(self, document: Mapping[str, str]) -> str:
+        return document["version"]
 
-    def set(self, document: dict[str, Any], version: str):
+    def set(self, document: dict[str, Any], version: str) -> None:
         document["version"] = version
 
 
@@ -79,13 +80,13 @@ class TomlProvider(FileProvider):
         document = tomlkit.parse(self.file.read_text())
         return self.get(document)
 
-    def set_version(self, version: str):
+    def set_version(self, version: str) -> None:
         document = tomlkit.parse(self.file.read_text())
         self.set(document, version)
         self.file.write_text(tomlkit.dumps(document))
 
     def get(self, document: tomlkit.TOMLDocument) -> str:
-        return document["project"]["version"]  # type: ignore
+        return document["project"]["version"]  # type: ignore[index,return-value]
 
-    def set(self, document: tomlkit.TOMLDocument, version: str):
-        document["project"]["version"] = version  # type: ignore
+    def set(self, document: tomlkit.TOMLDocument, version: str) -> None:
+        document["project"]["version"] = version  # type: ignore[index]

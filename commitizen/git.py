@@ -2,33 +2,43 @@ from __future__ import annotations
 
 import os
 from enum import Enum
-from os import linesep
+from functools import lru_cache
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 from commitizen import cmd, out
 from commitizen.exceptions import GitCommandError
 
-UNIX_EOL = "\n"
-WINDOWS_EOL = "\r\n"
 
-
-class EOLTypes(Enum):
+class EOLType(Enum):
     """The EOL type from `git config core.eol`."""
 
     LF = "lf"
     CRLF = "crlf"
     NATIVE = "native"
 
-    def get_eol_for_open(self) -> str:
-        """Get the EOL character for `open()`."""
-        map = {
-            EOLTypes.CRLF: WINDOWS_EOL,
-            EOLTypes.LF: UNIX_EOL,
-            EOLTypes.NATIVE: linesep,
-        }
+    @classmethod
+    def for_open(cls) -> str:
+        c = cmd.run("git config core.eol")
+        eol = c.out.strip().upper()
+        return cls._char_for_open()[cls._safe_cast(eol)]
 
-        return map[self]
+    @classmethod
+    def _safe_cast(cls, eol: str) -> EOLType:
+        try:
+            return cls[eol]
+        except KeyError:
+            return cls.NATIVE
+
+    @classmethod
+    @lru_cache
+    def _char_for_open(cls) -> dict[EOLType, str]:
+        """Get the EOL character for `open()`."""
+        return {
+            cls.LF: "\n",
+            cls.CRLF: "\r\n",
+            cls.NATIVE: os.linesep,
+        }
 
 
 class GitObject:
@@ -36,42 +46,110 @@ class GitObject:
     name: str
     date: str
 
-    def __eq__(self, other) -> bool:
-        if not hasattr(other, "rev"):
-            return False
-        return self.rev == other.rev  # type: ignore
+    def __eq__(self, other: object) -> bool:
+        return hasattr(other, "rev") and self.rev == other.rev
+
+    def __hash__(self) -> int:
+        return hash(self.rev)
 
 
 class GitCommit(GitObject):
     def __init__(
-        self, rev, title, body: str = "", author: str = "", author_email: str = ""
-    ):
+        self,
+        rev: str,
+        title: str,
+        body: str = "",
+        author: str = "",
+        author_email: str = "",
+        parents: list[str] | None = None,
+    ) -> None:
         self.rev = rev.strip()
         self.title = title.strip()
         self.body = body.strip()
         self.author = author.strip()
         self.author_email = author_email.strip()
+        self.parents = parents or []
 
     @property
-    def message(self):
+    def message(self) -> str:
         return f"{self.title}\n\n{self.body}".strip()
 
-    def __repr__(self):
+    @classmethod
+    def from_rev_and_commit(cls, rev_and_commit: str) -> GitCommit:
+        """Create a GitCommit instance from a formatted commit string.
+
+        This method parses a multi-line string containing commit information in the following format:
+        ```
+        <rev>
+        <parents>
+        <title>
+        <author>
+        <author_email>
+        <body_line_1>
+        <body_line_2>
+        ...
+        ```
+
+        Args:
+            rev_and_commit (str): A string containing commit information with fields separated by newlines.
+                - rev: The commit hash/revision
+                - parents: Space-separated list of parent commit hashes
+                - title: The commit title/message
+                - author: The commit author's name
+                - author_email: The commit author's email
+                - body: Optional multi-line commit body
+
+        Returns:
+            GitCommit: A new GitCommit instance with the parsed information.
+
+        Example:
+            >>> commit_str = '''abc123
+            ... def456 ghi789
+            ... feat: add new feature
+            ... John Doe
+            ... john@example.com
+            ... This is a detailed description
+            ... of the new feature'''
+            >>> commit = GitCommit.from_rev_and_commit(commit_str)
+            >>> commit.rev
+            'abc123'
+            >>> commit.title
+            'feat: add new feature'
+            >>> commit.parents
+            ['def456', 'ghi789']
+        """
+        rev, parents, title, author, author_email, *body_list = rev_and_commit.split(
+            "\n"
+        )
+        return cls(
+            rev=rev.strip(),
+            title=title.strip(),
+            body="\n".join(body_list).strip(),
+            author=author,
+            author_email=author_email,
+            parents=[p for p in parents.strip().split(" ") if p],
+        )
+
+    def __repr__(self) -> str:
         return f"{self.title} ({self.rev})"
 
 
 class GitTag(GitObject):
-    def __init__(self, name, rev, date):
+    def __init__(self, name: str, rev: str, date: str) -> None:
         self.rev = rev.strip()
         self.name = name.strip()
         self._date = date.strip()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"GitTag('{self.name}', '{self.rev}', '{self.date}')"
 
     @property
-    def date(self):
+    def date(self) -> str:
         return self._date
+
+    @date.setter
+    def date(self, value: str) -> None:
+        self._date = value
 
     @classmethod
     def from_line(cls, line: str, inner_delimiter: str) -> GitTag:
@@ -85,22 +163,18 @@ class GitTag(GitObject):
 def tag(
     tag: str, annotated: bool = False, signed: bool = False, msg: str | None = None
 ) -> cmd.Command:
-    _opt = ""
-    if annotated:
-        _opt = f"-a {tag} -m"
-    if signed:
-        _opt = f"-s {tag} -m"
+    if not annotated and not signed:
+        return cmd.run(f"git tag {tag}")
 
     # according to https://git-scm.com/book/en/v2/Git-Basics-Tagging,
     # we're not able to create lightweight tag with message.
     # by adding message, we make it a annotated tags
-    c = cmd.run(f'git tag {_opt} "{tag if _opt == "" or msg is None else msg}"')
-    return c
+    option = "-s" if signed else "-a"  # The else case is for annotated tags
+    return cmd.run(f'git tag {option} {tag} -m "{msg or tag}"')
 
 
 def add(*args: str) -> cmd.Command:
-    c = cmd.run(f"git add {' '.join(args)}")
-    return c
+    return cmd.run(f"git add {' '.join(args)}")
 
 
 def commit(
@@ -112,45 +186,40 @@ def commit(
     f.write(message.encode("utf-8"))
     f.close()
 
-    command = f'git commit {args} -F "{f.name}"'
-
-    if committer_date and os.name == "nt":  # pragma: no cover
-        # Using `cmd /v /c "{command}"` sets environment variables only for that command
-        command = f'cmd /v /c "set GIT_COMMITTER_DATE={committer_date}&& {command}"'
-    elif committer_date:
-        command = f"GIT_COMMITTER_DATE={committer_date} {command}"
-
+    command = _create_commit_cmd_string(args, committer_date, f.name)
     c = cmd.run(command)
     os.unlink(f.name)
     return c
 
 
+def _create_commit_cmd_string(args: str, committer_date: str | None, name: str) -> str:
+    command = f'git commit {args} -F "{name}"'
+    if not committer_date:
+        return command
+    if os.name != "nt":
+        return f"GIT_COMMITTER_DATE={committer_date} {command}"
+    # Using `cmd /v /c "{command}"` sets environment variables only for that command
+    return f'cmd /v /c "set GIT_COMMITTER_DATE={committer_date}&& {command}"'
+
+
 def get_commits(
     start: str | None = None,
-    end: str = "HEAD",
+    end: str | None = None,
     *,
     args: str = "",
 ) -> list[GitCommit]:
     """Get the commits between start and end."""
+    if end is None:
+        end = "HEAD"
     git_log_entries = _get_log_as_str_list(start, end, args)
-    git_commits = []
-    for rev_and_commit in git_log_entries:
-        if not rev_and_commit:
-            continue
-        rev, title, author, author_email, *body_list = rev_and_commit.split("\n")
-        if rev_and_commit:
-            git_commit = GitCommit(
-                rev=rev.strip(),
-                title=title.strip(),
-                body="\n".join(body_list).strip(),
-                author=author,
-                author_email=author_email,
-            )
-            git_commits.append(git_commit)
-    return git_commits
+    return [
+        GitCommit.from_rev_and_commit(rev_and_commit)
+        for rev_and_commit in git_log_entries
+        if rev_and_commit
+    ]
 
 
-def get_filenames_in_commit(git_reference: str = ""):
+def get_filenames_in_commit(git_reference: str = "") -> list[str]:
     """Get the list of files that were committed in the requested git reference.
 
     :param git_reference: a git reference as accepted by `git show`, default: the last commit
@@ -160,8 +229,7 @@ def get_filenames_in_commit(git_reference: str = ""):
     c = cmd.run(f"git show --name-only --pretty=format: {git_reference}")
     if c.return_code == 0:
         return c.out.strip().split("\n")
-    else:
-        raise GitCommandError(c.err)
+    raise GitCommandError(c.err)
 
 
 def get_tags(
@@ -187,15 +255,10 @@ def get_tags(
     if c.err:
         out.warn(f"Attempting to proceed after: {c.err}")
 
-    if not c.out:
-        return []
-
-    git_tags = [
+    return [
         GitTag.from_line(line=line, inner_delimiter=inner_delimiter)
         for line in c.out.split("\n")[:-1]
     ]
-
-    return git_tags
 
 
 def tag_exist(tag: str) -> bool:
@@ -221,18 +284,18 @@ def get_tag_message(tag: str) -> str | None:
     return c.out.strip()
 
 
-def get_tag_names() -> list[str | None]:
+def get_tag_names() -> list[str]:
     c = cmd.run("git tag --list")
     if c.err:
         return []
-    return [tag.strip() for tag in c.out.split("\n") if tag.strip()]
+    return [tag for raw in c.out.split("\n") if (tag := raw.strip())]
 
 
 def find_git_project_root() -> Path | None:
     c = cmd.run("git rev-parse --show-toplevel")
-    if not c.err:
-        return Path(c.out.strip())
-    return None
+    if c.err:
+        return None
+    return Path(c.out.strip())
 
 
 def is_staging_clean() -> bool:
@@ -243,32 +306,7 @@ def is_staging_clean() -> bool:
 
 def is_git_project() -> bool:
     c = cmd.run("git rev-parse --is-inside-work-tree")
-    if c.out.strip() == "true":
-        return True
-    return False
-
-
-def get_eol_style() -> EOLTypes:
-    c = cmd.run("git config core.eol")
-    eol = c.out.strip().lower()
-
-    # We enumerate the EOL types of the response of
-    # `git config core.eol`, and map it to our enumration EOLTypes.
-    #
-    # It is just like the variant of the "match" syntax.
-    map = {
-        "lf": EOLTypes.LF,
-        "crlf": EOLTypes.CRLF,
-        "native": EOLTypes.NATIVE,
-    }
-
-    # If the response of `git config core.eol` is in the map:
-    if eol in map:
-        return map[eol]
-    else:
-        # The default value is "native".
-        # https://git-scm.com/docs/git-config#Documentation/git-config.txt-coreeol
-        return map["native"]
+    return c.out.strip() == "true"
 
 
 def get_core_editor() -> str | None:
@@ -278,25 +316,26 @@ def get_core_editor() -> str | None:
     return None
 
 
-def smart_open(*args, **kargs):
+def smart_open(*args, **kwargs):  # type: ignore[no-untyped-def,unused-ignore] # noqa: ANN201
     """Open a file with the EOL style determined from Git."""
-    return open(*args, newline=get_eol_style().get_eol_for_open(), **kargs)
+    return open(*args, newline=EOLType.for_open(), **kwargs)
 
 
 def _get_log_as_str_list(start: str | None, end: str, args: str) -> list[str]:
     """Get string representation of each log entry"""
     delimiter = "----------commit-delimiter----------"
-    log_format: str = "%H%n%s%n%an%n%ae%n%b"
-    git_log_cmd = (
-        f"git -c log.showSignature=False log --pretty={log_format}{delimiter} {args}"
-    )
-    if start:
-        command = f"{git_log_cmd} {start}..{end}"
-    else:
-        command = f"{git_log_cmd} {end}"
+    log_format: str = "%H%n%P%n%s%n%an%n%ae%n%b"
+    command_range = f"{start}..{end}" if start else end
+    command = f"git -c log.showSignature=False log --pretty={log_format}{delimiter} {args} {command_range}"
+
     c = cmd.run(command)
     if c.return_code != 0:
         raise GitCommandError(c.err)
-    if not c.out:
-        return []
     return c.out.split(f"{delimiter}\n")
+
+
+def get_default_branch() -> str:
+    c = cmd.run("git symbolic-ref refs/remotes/origin/HEAD")
+    if c.return_code != 0:
+        raise GitCommandError(c.err)
+    return c.out.strip()

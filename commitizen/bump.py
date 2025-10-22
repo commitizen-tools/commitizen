@@ -3,16 +3,20 @@ from __future__ import annotations
 import os
 import re
 from collections import OrderedDict
+from collections.abc import Iterable
 from glob import iglob
+from logging import getLogger
 from string import Template
 from typing import cast
 
-from commitizen.defaults import MAJOR, MINOR, PATCH, bump_message, encoding
+from commitizen.defaults import BUMP_MESSAGE, ENCODING, MAJOR, MINOR, PATCH
 from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import GitCommit, smart_open
-from commitizen.version_schemes import DEFAULT_SCHEME, Increment, Version, VersionScheme
+from commitizen.version_schemes import Increment, Version
 
 VERSION_TYPES = [None, PATCH, MINOR, MAJOR]
+
+logger = getLogger("commitizen")
 
 
 def find_increment(
@@ -38,7 +42,15 @@ def find_increment(
                         new_increment = increments_map[match_pattern]
                         break
 
+                if new_increment is None:
+                    logger.debug(
+                        f"no increment needed for '{found_keyword}' in '{message}'"
+                    )
+
                 if VERSION_TYPES.index(increment) < VERSION_TYPES.index(new_increment):
+                    logger.debug(
+                        f"increment detected is '{new_increment}' due to '{found_keyword}' in '{message}'"
+                    )
                     increment = new_increment
 
                 if increment == MAJOR:
@@ -50,10 +62,10 @@ def find_increment(
 def update_version_in_files(
     current_version: str,
     new_version: str,
-    files: list[str],
+    files: Iterable[str],
     *,
     check_consistency: bool = False,
-    encoding: str = encoding,
+    encoding: str = ENCODING,
 ) -> list[str]:
     """Change old version to the new one in every file given.
 
@@ -65,7 +77,7 @@ def update_version_in_files(
     """
     # TODO: separate check step and write step
     updated = []
-    for path, regex in files_and_regexs(files, current_version):
+    for path, regex in _files_and_regexes(files, current_version):
         current_version_found, version_file = _bump_with_regex(
             path,
             current_version,
@@ -88,21 +100,22 @@ def update_version_in_files(
     return updated
 
 
-def files_and_regexs(patterns: list[str], version: str) -> list[tuple[str, str]]:
+def _files_and_regexes(patterns: Iterable[str], version: str) -> list[tuple[str, str]]:
     """
     Resolve all distinct files with their regexp from a list of glob patterns with optional regexp
     """
-    out = []
+    out: set[tuple[str, str]] = set()
     for pattern in patterns:
         drive, tail = os.path.splitdrive(pattern)
         path, _, regex = tail.partition(":")
         filepath = drive + path
         if not regex:
-            regex = _version_to_regex(version)
+            regex = re.escape(version)
 
-        for path in iglob(filepath):
-            out.append((path, regex))
-    return sorted(list(set(out)))
+        for file in iglob(filepath):
+            out.add((file, regex))
+
+    return sorted(out)
 
 
 def _bump_with_regex(
@@ -110,53 +123,23 @@ def _bump_with_regex(
     current_version: str,
     new_version: str,
     regex: str,
-    encoding: str = encoding,
+    encoding: str = ENCODING,
 ) -> tuple[bool, str]:
     current_version_found = False
     lines = []
     pattern = re.compile(regex)
     with open(version_filepath, encoding=encoding) as f:
         for line in f:
-            if pattern.search(line):
-                bumped_line = line.replace(current_version, new_version)
-                if bumped_line != line:
-                    current_version_found = True
-                lines.append(bumped_line)
-            else:
+            if not pattern.search(line):
                 lines.append(line)
+                continue
+
+            bumped_line = line.replace(current_version, new_version)
+            if bumped_line != line:
+                current_version_found = True
+            lines.append(bumped_line)
+
     return current_version_found, "".join(lines)
-
-
-def _version_to_regex(version: str) -> str:
-    return version.replace(".", r"\.").replace("+", r"\+")
-
-
-def normalize_tag(
-    version: Version | str,
-    tag_format: str,
-    scheme: VersionScheme | None = None,
-) -> str:
-    """The tag and the software version might be different.
-
-    That's why this function exists.
-
-    Example:
-    | tag | version (PEP 0440) |
-    | --- | ------- |
-    | v0.9.0 | 0.9.0 |
-    | ver1.0.0 | 1.0.0 |
-    | ver1.0.0.a0 | 1.0.0a0 |
-    """
-    scheme = scheme or DEFAULT_SCHEME
-    version = scheme(version) if isinstance(version, str) else version
-
-    major, minor, patch = version.release
-    prerelease = version.prerelease or ""
-
-    t = Template(tag_format)
-    return t.safe_substitute(
-        version=version, major=major, minor=minor, patch=patch, prerelease=prerelease
-    )
 
 
 def create_commit_message(
@@ -165,6 +148,6 @@ def create_commit_message(
     message_template: str | None = None,
 ) -> str:
     if message_template is None:
-        message_template = bump_message
+        message_template = BUMP_MESSAGE
     t = Template(message_template)
     return t.safe_substitute(current_version=current_version, new_version=new_version)

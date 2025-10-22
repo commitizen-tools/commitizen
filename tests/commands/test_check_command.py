@@ -238,7 +238,7 @@ def test_check_a_range_of_failed_git_commits(config, mocker: MockFixture):
     ill_formated_commits_msgs = [
         "First commit does not follow rule",
         "Second commit does not follow rule",
-        ("Third commit does not follow rule\n" "Ill-formatted commit with body"),
+        ("Third commit does not follow rule\nIll-formatted commit with body"),
     ]
     mocker.patch(
         "commitizen.git.get_commits",
@@ -365,7 +365,7 @@ def test_check_command_with_pipe_message_and_failed(mocker: MockFixture):
     assert "commit validation: failed!" in str(excinfo.value)
 
 
-def test_check_command_with_comment_in_messege_file(mocker: MockFixture, capsys):
+def test_check_command_with_comment_in_message_file(mocker: MockFixture, capsys):
     testargs = ["cz", "check", "--commit-msg-file", "some_file"]
     mocker.patch.object(sys, "argv", testargs)
     mocker.patch(
@@ -492,4 +492,4 @@ def test_check_command_with_custom_validator_failed(mocker: MockFixture):
     with pytest.raises(InvalidCommitMessageError) as excinfo:
         cli.main()
     assert "commit validation: failed!" in str(excinfo.value)
-    assert "commit message does not match pattern" in str(excinfo.value)
+    assert "pattern: " in str(excinfo.value)

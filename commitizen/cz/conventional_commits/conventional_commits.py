@@ -1,47 +1,46 @@
 import os
-import re
+from typing import TypedDict
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.utils import multiple_line_breaker, required_validator
-from commitizen.defaults import Questions
+from commitizen.question import CzQuestion
 
 __all__ = ["ConventionalCommitsCz"]
 
 
-def parse_scope(text):
-    if not text:
-        return ""
-
-    scope = text.strip().split()
-    if len(scope) == 1:
-        return scope[0]
-
-    return "-".join(scope)
+def _parse_scope(text: str) -> str:
+    return "-".join(text.strip().split())
 
 
-def parse_subject(text):
-    if isinstance(text, str):
-        text = text.strip(".").strip()
+def _parse_subject(text: str) -> str:
+    return required_validator(text.strip(".").strip(), msg="Subject is required.")
 
-    return required_validator(text, msg="Subject is required.")
+
+class ConventionalCommitsAnswers(TypedDict):
+    prefix: str
+    scope: str
+    subject: str
+    body: str
+    footer: str
+    is_breaking_change: bool
 
 
 class ConventionalCommitsCz(BaseCommitizen):
-    bump_pattern = defaults.bump_pattern
-    bump_map = defaults.bump_map
-    bump_map_major_version_zero = defaults.bump_map_major_version_zero
-    commit_parser = r"^((?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?|\w+!):\s(?P<message>.*)?"  # noqa
+    bump_pattern = defaults.BUMP_PATTERN
+    bump_map = defaults.BUMP_MAP
+    bump_map_major_version_zero = defaults.BUMP_MAP_MAJOR_VERSION_ZERO
+    commit_parser = r"^((?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?|\w+!):\s(?P<message>.*)?"
     change_type_map = {
         "feat": "Feat",
         "fix": "Fix",
         "refactor": "Refactor",
         "perf": "Perf",
     }
-    changelog_pattern = defaults.bump_pattern
+    changelog_pattern = defaults.BUMP_PATTERN
 
-    def questions(self) -> Questions:
-        questions: Questions = [
+    def questions(self) -> list[CzQuestion]:
+        return [
             {
                 "type": "list",
                 "name": "prefix",
@@ -86,9 +85,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                     },
                     {
                         "value": "test",
-                        "name": (
-                            "test: Adding missing or correcting " "existing tests"
-                        ),
+                        "name": ("test: Adding missing or correcting existing tests"),
                         "key": "t",
                     },
                     {
@@ -115,12 +112,12 @@ class ConventionalCommitsCz(BaseCommitizen):
                 "message": (
                     "What is the scope of this change? (class or file name): (press [enter] to skip)\n"
                 ),
-                "filter": parse_scope,
+                "filter": _parse_scope,
             },
             {
                 "type": "input",
                 "name": "subject",
-                "filter": parse_subject,
+                "filter": _parse_subject,
                 "message": (
                     "Write a short and imperative summary of the code changes: (lower case and no period)\n"
                 ),
@@ -135,8 +132,8 @@ class ConventionalCommitsCz(BaseCommitizen):
             },
             {
                 "type": "confirm",
-                "message": "Is this a BREAKING CHANGE? Correlates with MAJOR in SemVer",
                 "name": "is_breaking_change",
+                "message": "Is this a BREAKING CHANGE? Correlates with MAJOR in SemVer",
                 "default": False,
             },
             {
@@ -148,9 +145,8 @@ class ConventionalCommitsCz(BaseCommitizen):
                 ),
             },
         ]
-        return questions
 
-    def message(self, answers: dict) -> str:
+    def message(self, answers: ConventionalCommitsAnswers) -> str:  # type: ignore[override]
         prefix = answers["prefix"]
         scope = answers["scope"]
         subject = answers["subject"]
@@ -167,9 +163,7 @@ class ConventionalCommitsCz(BaseCommitizen):
         if footer:
             footer = f"\n\n{footer}"
 
-        message = f"{prefix}{scope}: {subject}{body}{footer}"
-
-        return message
+        return f"{prefix}{scope}: {subject}{body}{footer}"
 
     def example(self) -> str:
         return (
@@ -190,25 +184,32 @@ class ConventionalCommitsCz(BaseCommitizen):
         )
 
     def schema_pattern(self) -> str:
-        PATTERN = (
+        change_types = (
+            "build",
+            "bump",
+            "chore",
+            "ci",
+            "docs",
+            "feat",
+            "fix",
+            "perf",
+            "refactor",
+            "revert",
+            "style",
+            "test",
+        )
+        return (
             r"(?s)"  # To explicitly make . match new line
-            r"(build|ci|docs|feat|fix|perf|refactor|style|test|chore|revert|bump)"  # type
-            r"(\(\S+\))?!?:"  # scope
-            r"( [^\n\r]+)"  # subject
+            r"(" + "|".join(change_types) + r")"  # type
+            r"(\(\S+\))?"  # scope
+            r"!?"
+            r": "
+            r"([^\n\r]+)"  # subject
             r"((\n\n.*)|(\s*))?$"
         )
-        return PATTERN
 
     def info(self) -> str:
         dir_path = os.path.dirname(os.path.realpath(__file__))
         filepath = os.path.join(dir_path, "conventional_commits_info.txt")
         with open(filepath, encoding=self.config.settings["encoding"]) as f:
-            content = f.read()
-        return content
-
-    def process_commit(self, commit: str) -> str:
-        pat = re.compile(self.schema_pattern())
-        m = re.match(pat, commit)
-        if m is None:
-            return ""
-        return m.group(3).strip()
+            return f.read()

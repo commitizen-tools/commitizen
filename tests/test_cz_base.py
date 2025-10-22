@@ -1,3 +1,5 @@
+from collections.abc import Mapping
+
 import pytest
 
 from commitizen.cz.base import BaseCommitizen, ValidationResult
@@ -7,7 +9,7 @@ class DummyCz(BaseCommitizen):
     def questions(self):
         return [{"type": "input", "name": "commit", "message": "Initial commit:\n"}]
 
-    def message(self, answers: dict):
+    def message(self, answers: Mapping):
         return answers["commit"]
 
     def schema_pattern(self) -> str:
@@ -56,9 +58,3 @@ def test_info(config):
     cz = DummyCz(config)
     with pytest.raises(NotImplementedError):
         cz.info()
-
-
-def test_process_commit(config):
-    cz = DummyCz(config)
-    message = cz.process_commit("test(test_scope): this is test msg")
-    assert message == "test(test_scope): this is test msg"

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 from abc import ABCMeta, abstractmethod
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from typing import Any, Callable, NamedTuple, Protocol
 
 from jinja2 import BaseLoader, PackageLoader
@@ -10,7 +10,7 @@ from prompt_toolkit.styles import Style, merge_styles
 
 from commitizen import git
 from commitizen.config.base_config import BaseConfig
-from commitizen.defaults import Questions
+from commitizen.question import CzQuestion
 
 
 class MessageBuilderHook(Protocol):
@@ -74,21 +74,21 @@ class BaseCommitizen(metaclass=ABCMeta):
             self.config.settings.update({"style": BaseCommitizen.default_style_config})
 
     @abstractmethod
-    def questions(self) -> Questions:
+    def questions(self) -> Iterable[CzQuestion]:
         """Questions regarding the commit message."""
 
     @abstractmethod
-    def message(self, answers: dict) -> str:
+    def message(self, answers: Mapping[str, Any]) -> str:
         """Format your git message."""
 
     @property
-    def style(self):
+    def style(self) -> Style:
         return merge_styles(
             [
                 Style(BaseCommitizen.default_style_config),
                 Style(self.config.settings["style"]),
             ]
-        )
+        )  # type: ignore[return-value]
 
     def example(self) -> str:
         """Example of the commit message."""
@@ -106,7 +106,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         self,
         *,
         commit_msg: str,
-        pattern: str | None,
+        pattern: re.Pattern[str] | None,
         allow_abort: bool,
         allowed_prefixes: list[str],
         max_msg_length: int,
@@ -120,44 +120,36 @@ class BaseCommitizen(metaclass=ABCMeta):
 
         if any(map(commit_msg.startswith, allowed_prefixes)):
             return ValidationResult(True, [])
+
         if max_msg_length:
             msg_len = len(commit_msg.partition("\n")[0].strip())
             if msg_len > max_msg_length:
                 return ValidationResult(
                     False,
-                    [
-                        f"The commit message subject is too long ({msg_len} > {max_msg_length} characters)."
-                    ],
+                    [f"message is too long: {msg_len} > {max_msg_length}"],
                 )
+
         return ValidationResult(
-            bool(re.match(pattern, commit_msg)),
-            [f"The commit message does not match the pattern: {pattern}"],
+            bool(pattern.match(commit_msg)),
+            [f"pattern: {pattern.pattern}"],
         )
 
     def format_exception_message(
-        self, ill_formated_commits: list[tuple[git.GitCommit, list]]
+        self, invalid_commits: list[tuple[git.GitCommit, list]]
     ) -> str:
         """Format commit errors."""
         displayed_msgs_content = "\n".join(
             [
-                f'commit "{commit.rev}": "{commit.message}"'
-                for commit, _ in ill_formated_commits
+                f'commit "{commit.rev}": "{commit.message}\n"' + "\n".join(errors)
+                for commit, errors in invalid_commits
             ]
         )
         return (
             "commit validation: failed!\n"
             "please enter a commit message in the commitizen format.\n"
-            f"{displayed_msgs_content}\n"
-            f"pattern: {self.schema_pattern()}"
+            f"{displayed_msgs_content}"
         )
 
     def info(self) -> str:
         """Information about the standardized commit message."""
         raise NotImplementedError("Not Implemented yet")
-
-    def process_commit(self, commit: str) -> str:
-        """Process commit for changelog.
-
-        If not overwritten, it returns the first line of commit.
-        """
-        return commit.split("\n")[0]

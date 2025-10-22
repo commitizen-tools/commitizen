@@ -3,8 +3,9 @@ from __future__ import annotations
 import os
 import re
 import tempfile
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator, Mapping
 from pathlib import Path
+from typing import Any
 
 import pytest
 from pytest_mock import MockerFixture
@@ -17,6 +18,7 @@ from commitizen.changelog_formats import (
 from commitizen.config import BaseConfig
 from commitizen.cz import registry
 from commitizen.cz.base import BaseCommitizen, ValidationResult
+from commitizen.question import CzQuestion
 from tests.utils import create_file_and_commit
 
 SIGNER = "GitHub Action"
@@ -69,7 +71,7 @@ def tmp_git_project(tmpdir):
 @pytest.fixture(scope="function")
 def tmp_commitizen_project(tmp_git_project):
     tmp_commitizen_cfg_file = tmp_git_project.join("pyproject.toml")
-    tmp_commitizen_cfg_file.write("[tool.commitizen]\n" 'version="0.1.0"\n')
+    tmp_commitizen_cfg_file.write('[tool.commitizen]\nversion="0.1.0"\n')
 
     yield tmp_git_project
 
@@ -83,9 +85,7 @@ def tmp_commitizen_project_initial(tmp_git_project):
     ):
         with tmp_git_project.as_cwd():
             tmp_commitizen_cfg_file = tmp_git_project.join("pyproject.toml")
-            tmp_commitizen_cfg_file.write(
-                f"[tool.commitizen]\n" f'version="{version}"\n'
-            )
+            tmp_commitizen_cfg_file.write(f'[tool.commitizen]\nversion="{version}"\n')
             tmp_version_file = tmp_git_project.join("__version__.py")
             tmp_version_file.write(version)
             tmp_commitizen_cfg_file = tmp_git_project.join("pyproject.toml")
@@ -171,7 +171,7 @@ class SemverCommitizen(BaseCommitizen):
         "patch": "PATCH",
     }
     changelog_pattern = r"^(patch|minor|major)"
-    commit_parser = r"^(?P<change_type>patch|minor|major)(?:\((?P<scope>[^()\r\n]*)\)|\()?:?\s(?P<message>.+)"  # noqa
+    commit_parser = r"^(?P<change_type>patch|minor|major)(?:\((?P<scope>[^()\r\n]*)\)|\()?:?\s(?P<message>.+)"
     change_type_map = {
         "major": "Breaking Changes",
         "minor": "Features",
@@ -211,7 +211,7 @@ class SemverCommitizen(BaseCommitizen):
             },
         ]
 
-    def message(self, answers: dict) -> str:
+    def message(self, answers: Mapping) -> str:
         prefix = answers["prefix"]
         subject = answers.get("subject", "default message").trim()
         return f"{prefix}: {subject}"
@@ -224,41 +224,41 @@ def use_cz_semver(mocker):
 
 
 class MockPlugin(BaseCommitizen):
-    def questions(self) -> defaults.Questions:
+    def questions(self) -> Iterable[CzQuestion]:
         return []
 
-    def message(self, answers: dict) -> str:
+    def message(self, answers: Mapping) -> str:
         return ""
 
 
 @pytest.fixture
 def mock_plugin(mocker: MockerFixture, config: BaseConfig) -> BaseCommitizen:
     mock = MockPlugin(config)
-    mocker.patch("commitizen.factory.commiter_factory", return_value=mock)
+    mocker.patch("commitizen.factory.committer_factory", return_value=mock)
     return mock
 
 
 class ValidationCz(BaseCommitizen):
-    def questions(self):
+    def questions(self) -> Iterable[CzQuestion]:
         return [
             {"type": "input", "name": "commit", "message": "Initial commit:\n"},
             {"type": "input", "name": "issue_nb", "message": "ABC-123"},
         ]
 
-    def message(self, answers: dict):
+    def message(self, answers: Mapping[str, Any]) -> str:
         return f"{answers['issue_nb']}: {answers['commit']}"
 
-    def schema(self):
+    def schema(self) -> str:
         return "<issue_nb>: <commit>"
 
-    def schema_pattern(self):
+    def schema_pattern(self) -> str:
         return r"^(?P<issue_nb>[A-Z]{3}-\d+): (?P<commit>.*)$"
 
     def validate_commit_message(
         self,
         *,
         commit_msg: str,
-        pattern: str | None,
+        pattern: re.Pattern[str] | None,
         allow_abort: bool,
         allowed_prefixes: list[str],
         max_msg_length: int,
@@ -274,39 +274,37 @@ class ValidationCz(BaseCommitizen):
 
         if any(map(commit_msg.startswith, allowed_prefixes)):
             return ValidationResult(True, [])
+
         if max_msg_length:
             msg_len = len(commit_msg.partition("\n")[0].strip())
             if msg_len > max_msg_length:
                 return ValidationResult(
                     False,
-                    [f"commit message is too long. Max length is {max_msg_length}"],
+                    [f"message is too long: {msg_len} > {max_msg_length}"],
                 )
-        pattern_match = bool(re.match(pattern, commit_msg))
-        if not pattern_match:
-            return ValidationResult(
-                False, [f"commit message does not match pattern {pattern}"]
-            )
-        return ValidationResult(True, [])
+
+        return ValidationResult(
+            bool(pattern.match(commit_msg)), [f"pattern: {pattern.pattern}"]
+        )
 
     def format_exception_message(
-        self, ill_formated_commits: list[tuple[git.GitCommit, list]]
+        self, invalid_commits: list[tuple[git.GitCommit, list]]
     ) -> str:
         """Format commit errors."""
         displayed_msgs_content = "\n".join(
             [
                 (
-                    f'commit "{commit.rev}": "{commit.message}"\n'
-                    f"errors:\n"
-                    "\n".join(f"- {error}" for error in errors)
+                    f'commit "{commit.rev}": "{commit.message}"\nerrors:\n\n'.join(
+                        f"- {error}" for error in errors
+                    )
                 )
-                for (commit, errors) in ill_formated_commits
+                for (commit, errors) in invalid_commits
             ]
         )
         return (
             "commit validation: failed!\n"
             "please enter a commit message in the commitizen format.\n"
-            f"{displayed_msgs_content}\n"
-            f"pattern: {self.schema_pattern}"
+            f"{displayed_msgs_content}"
         )
 
 
@@ -329,7 +327,7 @@ def changelog_format(
     if "tmp_commitizen_project" in request.fixturenames:
         tmp_commitizen_project = request.getfixturevalue("tmp_commitizen_project")
         pyproject = tmp_commitizen_project / "pyproject.toml"
-        pyproject.write(f"{pyproject.read()}\n" f'changelog_format = "{format}"\n')
+        pyproject.write(f'{pyproject.read()}\nchangelog_format = "{format}"\n')
     return get_changelog_format(config)
 
 

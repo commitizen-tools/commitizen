@@ -61,7 +61,7 @@ def test_version_for_showing_both_versions(config, capsys):
     )()
     captured = capsys.readouterr()
     expected_out = (
-        f"Installed Commitizen Version: {__version__}\n" f"Project Version: v0.0.1"
+        f"Installed Commitizen Version: {__version__}\nProject Version: v0.0.1"
     )
     assert expected_out in captured.out
 
@@ -97,7 +97,6 @@ def test_version_use_version_provider(
         {
             "report": False,
             "project": project,
-            "commitizen": False,
             "verbose": not project,
         },
     )()

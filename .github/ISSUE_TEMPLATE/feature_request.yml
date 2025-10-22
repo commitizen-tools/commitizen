@@ -1,7 +1,7 @@
 name: 🚀 Feature request
 description: Suggest an idea for this project
 title: "<One feature request per issue>"
-labels: [feature]
+labels: ['type: feature']
 body:
   - type: textarea
     id: description
@@ -26,6 +26,6 @@ body:
   - type: textarea
     id: related-issue
     attributes:
-      label: Additional context
+      label: Related issues
       description: |
         If applicable, add link to existing issue also help us know better.

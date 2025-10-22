@@ -19,11 +19,10 @@ if sys.version_info >= (3, 10):
 else:
     import importlib_metadata as metadata
 
-from packaging.version import InvalidVersion  # noqa: F401: Rexpose the common exception
+from packaging.version import InvalidVersion  # noqa: F401 (expose the common exception)
 from packaging.version import Version as _BaseVersion
 
-from commitizen.config.base_config import BaseConfig
-from commitizen.defaults import MAJOR, MINOR, PATCH
+from commitizen.defaults import MAJOR, MINOR, PATCH, Settings
 from commitizen.exceptions import VersionSchemeUnknown
 
 if TYPE_CHECKING:
@@ -42,7 +41,9 @@ if TYPE_CHECKING:
 
 Increment: TypeAlias = Literal["MAJOR", "MINOR", "PATCH"]
 Prerelease: TypeAlias = Literal["alpha", "beta", "rc"]
-DEFAULT_VERSION_PARSER = r"v?(?P<version>([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?(\w+)?)"
+_DEFAULT_VERSION_PARSER = re.compile(
+    r"v?(?P<version>([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z.]+)?(\w+)?)"
+)
 
 
 @runtime_checkable
@@ -50,7 +51,7 @@ class VersionProtocol(Protocol):
     parser: ClassVar[re.Pattern]
     """Regex capturing this version scheme into a `version` group"""
 
-    def __init__(self, version: str):
+    def __init__(self, version: str) -> None:
         """
         Initialize a version object from its string representation.
 
@@ -79,7 +80,7 @@ class VersionProtocol(Protocol):
 
     @property
     def prerelease(self) -> str | None:
-        """The prelease potion of the version is this is a prerelease."""
+        """The prerelease potion of the version is this is a prerelease."""
         raise NotImplementedError("must be implemented")
 
     @property
@@ -143,7 +144,7 @@ class VersionProtocol(Protocol):
             prerelease: The type of prerelease, if Any
             is_local_version: Whether to increment the local version instead
             exact_increment: Treat the increment and prerelease arguments explicitly.  Disables logic
-                that attempts to deduce the correct increment when a prelease suffix is present.
+                that attempts to deduce the correct increment when a prerelease suffix is present.
         """
 
 
@@ -157,7 +158,7 @@ class BaseVersion(_BaseVersion):
     A base class implementing the `VersionProtocol` for PEP440-like versions.
     """
 
-    parser: ClassVar[re.Pattern] = re.compile(DEFAULT_VERSION_PARSER)
+    parser: ClassVar[re.Pattern] = _DEFAULT_VERSION_PARSER
     """Regex capturing this version scheme into a `version` group"""
 
     @property
@@ -265,40 +266,36 @@ class BaseVersion(_BaseVersion):
 
         if self.local and is_local_version:
             local_version = self.scheme(self.local).bump(increment)
-            return self.scheme(f"{self.public}+{local_version}")  # type: ignore
-        else:
-            if not self.is_prerelease:
-                base = self.increment_base(increment)
-            elif exact_increment:
-                base = self.increment_base(increment)
-            else:
-                base = f"{self.major}.{self.minor}.{self.micro}"
-                if increment == PATCH:
-                    pass
-                elif increment == MINOR:
-                    if self.micro != 0:
-                        base = self.increment_base(increment)
-                elif increment == MAJOR:
-                    if self.minor != 0 or self.micro != 0:
-                        base = self.increment_base(increment)
-            dev_version = self.generate_devrelease(devrelease)
+            return self.scheme(f"{self.public}+{local_version}")  # type: ignore[return-value]
 
-            release = list(self.release)
-            if len(release) < 3:
-                release += [0] * (3 - len(release))
-            current_base = ".".join(str(part) for part in release)
-            if base == current_base:
-                pre_version = self.generate_prerelease(
-                    prerelease, offset=prerelease_offset
-                )
-            else:
-                base_version = cast(BaseVersion, self.scheme(base))
-                pre_version = base_version.generate_prerelease(
-                    prerelease, offset=prerelease_offset
-                )
-            build_metadata = self.generate_build_metadata(build_metadata)
-            # TODO: post version
-            return self.scheme(f"{base}{pre_version}{dev_version}{build_metadata}")  # type: ignore
+        base = self._get_increment_base(increment, exact_increment)
+        dev_version = self.generate_devrelease(devrelease)
+
+        release = list(self.release)
+        if len(release) < 3:
+            release += [0] * (3 - len(release))
+        current_base = ".".join(str(part) for part in release)
+
+        pre_version = (
+            self if base == current_base else cast(BaseVersion, self.scheme(base))
+        ).generate_prerelease(prerelease, offset=prerelease_offset)
+
+        # TODO: post version
+        return self.scheme(
+            f"{base}{pre_version}{dev_version}{self.generate_build_metadata(build_metadata)}"
+        )  # type: ignore[return-value]
+
+    def _get_increment_base(
+        self, increment: Increment | None, exact_increment: bool
+    ) -> str:
+        if (
+            not self.is_prerelease
+            or exact_increment
+            or (increment == MINOR and self.micro != 0)
+            or (increment == MAJOR and (self.minor != 0 or self.micro != 0))
+        ):
+            return self.increment_base(increment)
+        return f"{self.major}.{self.minor}.{self.micro}"
 
 
 class Pep440(BaseVersion):
@@ -317,7 +314,7 @@ class SemVer(BaseVersion):
     """
 
     def __str__(self) -> str:
-        parts = []
+        parts: list[str] = []
 
         # Epoch
         if self.epoch != 0:
@@ -352,7 +349,7 @@ class SemVer2(SemVer):
     See: https://semver.org/spec/v2.0.0.html
     """
 
-    _STD_PRELEASES = {
+    _STD_PRERELEASES = {
         "a": "alpha",
         "b": "beta",
     }
@@ -360,12 +357,12 @@ class SemVer2(SemVer):
     @property
     def prerelease(self) -> str | None:
         if self.is_prerelease and self.pre:
-            prerelease_type = self._STD_PRELEASES.get(self.pre[0], self.pre[0])
+            prerelease_type = self._STD_PRERELEASES.get(self.pre[0], self.pre[0])
             return f"{prerelease_type}.{self.pre[1]}"
         return None
 
     def __str__(self) -> str:
-        parts = []
+        parts: list[str] = []
 
         # Epoch
         if self.epoch != 0:
@@ -374,9 +371,19 @@ class SemVer2(SemVer):
         # Release segment
         parts.append(".".join(str(x) for x in self.release))
 
+        if prerelease := self._get_prerelease():
+            parts.append(f"-{prerelease}")
+
+        # Local version segment
+        if self.local:
+            parts.append(f"+{self.local}")
+
+        return "".join(parts)
+
+    def _get_prerelease(self) -> str:
         # Pre-release identifiers
         # See: https://semver.org/spec/v2.0.0.html#spec-item-9
-        prerelease_parts = []
+        prerelease_parts: list[str] = []
         if self.prerelease:
             prerelease_parts.append(f"{self.prerelease}")
 
@@ -388,15 +395,7 @@ class SemVer2(SemVer):
         if self.dev is not None:
             prerelease_parts.append(f"dev.{self.dev}")
 
-        if prerelease_parts:
-            parts.append("-")
-            parts.append(".".join(prerelease_parts))
-
-        # Local version segment
-        if self.local:
-            parts.append(f"+{self.local}")
-
-        return "".join(parts)
+        return ".".join(prerelease_parts)
 
 
 DEFAULT_SCHEME: VersionScheme = Pep440
@@ -408,22 +407,23 @@ KNOWN_SCHEMES = [ep.name for ep in metadata.entry_points(group=SCHEMES_ENTRYPOIN
 """All known registered version schemes"""
 
 
-def get_version_scheme(config: BaseConfig, name: str | None = None) -> VersionScheme:
+def get_version_scheme(settings: Settings, name: str | None = None) -> VersionScheme:
     """
     Get the version scheme as defined in the configuration
     or from an overridden `name`
 
     :raises VersionSchemeUnknown: if the version scheme is not found.
     """
-    deprecated_setting: str | None = config.settings.get("version_type")
+    # TODO: Remove the deprecated `version_type` handling
+    deprecated_setting: str | None = settings.get("version_type")
     if deprecated_setting:
         warnings.warn(
             DeprecationWarning(
-                "`version_type` setting is deprecated and will be removed in commitizen 4. "
+                "`version_type` setting is deprecated and will be removed in v5. "
                 "Please use `version_scheme` instead"
             )
         )
-    name = name or config.settings.get("version_scheme") or deprecated_setting
+    name = name or settings.get("version_scheme") or deprecated_setting
     if not name:
         return DEFAULT_SCHEME
 

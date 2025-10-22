@@ -5,7 +5,6 @@ default_install_hook_types:
 
 default_stages:
   - pre-commit
-  - pre-push
 
 repos:
   - repo: meta
@@ -14,30 +13,30 @@ repos:
       - id: check-useless-excludes
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v5.0.0
     hooks:
       - id: check-vcs-permalinks
       - id: end-of-file-fixer
-        exclude: "tests/((commands|data)/|test_).+"
+        exclude: "tests/((commands|data|providers/test_uv_provider)/|test_).+"
       - id: trailing-whitespace
         args: [ --markdown-linebreak-ext=md ]
         exclude: '\.svg$'
       - id: debug-statements
       - id: no-commit-to-branch
       - id: check-merge-conflict
-      - id: check-toml
+      - id: check-toml # TOML linter (syntax checker)
       - id: check-yaml
         args: [ '--unsafe' ] # for mkdocs.yml
       - id: detect-private-key
 
   - repo: https://github.com/asottile/blacken-docs
-    rev: 1.13.0
+    rev: 1.19.1
     hooks:
       - id: blacken-docs
         additional_dependencies: [ black~=23.11 ]
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.4
+    rev: v2.4.1
     hooks:
       - id: codespell
         name: Run codespell to check for common misspellings in files
@@ -49,27 +48,30 @@ repos:
           - tomli
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.0.0 # automatically updated by Commitizen
+    rev: v4.9.1 # automatically updated by Commitizen
     hooks:
       - id: commitizen
       - id: commitizen-branch
         stages:
           - post-commit
-          - pre-push
+
+  - repo: https://github.com/ComPWA/taplo-pre-commit
+    rev: v0.9.3
+    hooks:
+      - id: taplo-format
 
   - repo: local
     hooks:
       - id: format
-        name: format
+        name: Format Python code via Poetry
         language: system
         pass_filenames: false
-        entry: ./scripts/format
+        entry: poetry format
         types: [ python ]
 
       - id: linter and test
-        name: linter and test
+        name: Linters via Poetry
         language: system
         pass_filenames: false
-        stages: [ pre-push ]
-        entry: ./scripts/test
+        entry: poetry lint
         types: [ python ]

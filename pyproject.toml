@@ -1,21 +1,34 @@
-[tool.commitizen]
-version = "4.0.0"
-tag_format = "v$version"
-version_files = [
-    "pyproject.toml:version",
-    "commitizen/__version__.py",
-    ".pre-commit-config.yaml:rev:.+Commitizen",
-]
-
-[tool.poetry]
+[project]
 name = "commitizen"
-version = "4.0.0"
+version = "4.9.1"
 description = "Python commitizen client tool"
-authors = ["Santiago Fraire <santiwilly@gmail.com>"]
-license = "MIT"
-keywords = ["commitizen", "conventional", "commits", "git"]
+authors = [{ name = "Santiago Fraire", email = "santiwilly@gmail.com" }]
+maintainers = [
+    { name = "Wei Lee", email = "weilee.rx@gmail.com" },
+    { name = "Axel H.", email = "noirbizarre@gmail.com" },
+]
+license = { file = "LICENSE" }
 readme = "docs/README.md"
-homepage = "https://github.com/commitizen-tools/commitizen"
+requires-python = ">=3.9,<4.0"
+dependencies = [
+    "questionary (>=2.0,<3.0)",
+    # Exclude transitive dependency due to known issue in questionary: https://github.com/tmbo/questionary/issues/454
+    "prompt_toolkit!=3.0.52",
+    "decli (>=0.6.0,<1.0)",
+    "colorama (>=0.4.1,<1.0)",
+    "termcolor (>=1.1.0,<4.0.0)",
+    "packaging>=19",
+    "tomlkit (>=0.5.3,<1.0.0)",
+    "jinja2>=2.10.3",
+    "pyyaml>=3.08",
+    "argcomplete >=1.12.1,<3.7",
+    "typing-extensions (>=4.0.1,<5.0.0) ; python_version < '3.11'",
+    "charset-normalizer (>=2.1.0,<4)",
+    "deprecated (>=1.2.13, <2)",
+    # Use the Python 3.11 and 3.12 compatible API: https://github.com/python/importlib_metadata#compatibility
+    "importlib-metadata >=8.0.0,<8.7.0 ; python_version < '3.10'",
+]
+keywords = ["commitizen", "conventional", "commits", "git"]
 # See also: https://pypi.org/classifiers/
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -31,66 +44,32 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
+    "License :: OSI Approved :: MIT License",
 ]
-packages = [{ include = "commitizen" }, { include = "commitizen/py.typed" }]
 
-[tool.poetry.dependencies]
-python = ">=3.9"
-questionary = "^2.0"
-decli = "^0.6.0"
-colorama = "^0.4.1"
-termcolor = ">= 1.1, < 3"
-packaging = ">=19"
-tomlkit = ">=0.5.3,<1.0.0"
-jinja2 = ">=2.10.3"
-pyyaml = ">=3.08"
-argcomplete = ">=1.12.1,<3.6"
-typing-extensions = { version = "^4.0.1", python = "<3.11" }
-charset-normalizer = ">=2.1.0,<4"
-# Use the Python 3.11 and 3.12 compatible API: https://github.com/python/importlib_metadata#compatibility
-importlib_metadata = { version = ">=8.0.0,<9", python = "<3.10" }
+[project.urls]
+Homepage = "https://github.com/commitizen-tools/commitizen"
+Documentation = "https://commitizen-tools.github.io/commitizen/"
+Repository = "https://github.com/commitizen-tools/commitizen"
+Issues = "https://github.com/commitizen-tools/commitizen/issues"
+Changelog = "https://github.com/commitizen-tools/commitizen/blob/master/CHANGELOG.md"
 
-[tool.poetry.group.dev.dependencies]
-# dev tool
-ipython = "^8.0"
-# test
-pytest = ">=7.2,<9.0"
-pytest-cov = ">=4,<7"
-pytest-mock = "^3.10"
-pytest-regressions = "^2.4.0"
-pytest-freezer = "^0.4.6"
-pytest-xdist = "^3.1.0"
-# linter
-ruff = ">=0.5.0,<0.9.0"
-pre-commit = ">=2.18,<5.0"
-mypy = "^1.4"
-types-PyYAML = ">=5.4.3,<7.0.0"
-types-termcolor = "^0.1.1"
-# documentation
-mkdocs = "^1.4.2"
-mkdocs-material = "^9.1.6"
-deprecated = "^1.2.13"
-types-deprecated = "^1.2.9.2"
-types-python-dateutil = "^2.8.19.13"
-rich = "^13.7.1"
-
-
-[tool.poetry.scripts]
+[project.scripts]
 cz = "commitizen.cli:main"
 git-cz = "commitizen.cli:main"
 
-[tool.poetry.plugins."commitizen.plugin"]
+[project.entry-points."commitizen.plugin"]
 cz_conventional_commits = "commitizen.cz.conventional_commits:ConventionalCommitsCz"
 cz_jira = "commitizen.cz.jira:JiraSmartCz"
 cz_customize = "commitizen.cz.customize:CustomizeCommitsCz"
 
-[tool.poetry.plugins."commitizen.changelog_format"]
+[project.entry-points."commitizen.changelog_format"]
 markdown = "commitizen.changelog_formats.markdown:Markdown"
 asciidoc = "commitizen.changelog_formats.asciidoc:AsciiDoc"
 textile = "commitizen.changelog_formats.textile:Textile"
 restructuredtext = "commitizen.changelog_formats.restructuredtext:RestructuredText"
 
-[tool.poetry.plugins."commitizen.provider"]
+[project.entry-points."commitizen.provider"]
 cargo = "commitizen.providers:CargoProvider"
 commitizen = "commitizen.providers:CommitizenProvider"
 composer = "commitizen.providers:ComposerProvider"
@@ -98,11 +77,66 @@ npm = "commitizen.providers:NpmProvider"
 pep621 = "commitizen.providers:Pep621Provider"
 poetry = "commitizen.providers:PoetryProvider"
 scm = "commitizen.providers:ScmProvider"
+uv = "commitizen.providers:UvProvider"
 
-[tool.poetry.plugins."commitizen.scheme"]
+[project.entry-points."commitizen.scheme"]
 pep440 = "commitizen.version_schemes:Pep440"
 semver = "commitizen.version_schemes:SemVer"
 semver2 = "commitizen.version_schemes:SemVer2"
+
+[build-system]
+requires = ["poetry-core>=2.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.commitizen]
+version = "4.9.1"
+tag_format = "v$version"
+version_files = [
+    "pyproject.toml:version",
+    "commitizen/__version__.py",
+    ".pre-commit-config.yaml:rev:.+Commitizen",
+]
+version_scheme = "pep440"
+
+
+[tool.poetry]
+packages = [{ include = "commitizen" }, { include = "commitizen/py.typed" }]
+
+[tool.poetry.requires-plugins]
+"poethepoet" = ">=0.32.2"
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.0"
+tox = ">4"
+poethepoet = "^0.34.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = ">=7.2,<9.0"
+pytest-cov = ">=4,<7"
+pytest-mock = "^3.10"
+pytest-regressions = "^2.4.0"
+pytest-freezer = "^0.4.6"
+pytest-xdist = "^3.1.0"
+
+[tool.poetry.group.linters.dependencies]
+ruff = "^0.11.5"
+pre-commit = ">=3.2.0,<5.0"
+mypy = "^1.16.0"
+types-deprecated = "^1.2.9.2"
+types-python-dateutil = "^2.8.19.13"
+types-PyYAML = ">=5.4.3,<7.0.0"
+types-termcolor = "^0.1.1"
+types-colorama = "^0.4.15.20240311"
+
+[tool.poetry.group.documentation.dependencies]
+mkdocs = "^1.4.2"
+mkdocs-material = "^9.1.6"
+
+[tool.poetry.group.script.dependencies]
+# for scripts/gen_cli_help_screenshots.py
+rich = "^13.7.1"
+
 
 [tool.coverage]
 [tool.coverage.report]
@@ -133,18 +167,31 @@ omit = [
     '*/tests/*',
 ]
 
-[build-system]
-requires = ["poetry_core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 addopts = "--strict-markers"
+testpaths = ["tests/"]
+
+[tool.tox]
+requires = ["tox>=4.22"]
+env_list = ["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+[tool.tox.env_run_base]
+description = "Run tests suite against Python {base_python}"
+skip_install = true
+deps = ["poetry>=2.0"]
+commands_pre = [["poetry", "install", "--only", "main,test"]]
+commands = [["pytest", { replace = "posargs", extend = true }]]
 
 [tool.ruff]
+required-version = ">=0.11.5"
 line-length = 88
 
 [tool.ruff.lint]
 select = [
+    # flake8-annotations
+    "ANN001",
+    "ANN2",
     # pycodestyle
     "E",
     # Pyflakes
@@ -153,8 +200,18 @@ select = [
     "UP",
     # isort
     "I",
+    # pygrep-hooks
+    "PGH003",
+    "PGH004",
+    # unsorted-dunder-all
+    "RUF022",
+    # unused-noqa
+    "RUF100",
 ]
 ignore = ["E501", "D1", "D415"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ANN"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["commitizen", "tests"]
@@ -163,7 +220,7 @@ known-first-party = ["commitizen", "tests"]
 convention = "google"
 
 [tool.mypy]
-files = "commitizen"
+files = ["commitizen", "tests"]
 disallow_untyped_decorators = true
 disallow_subclassing_any = true
 warn_return_any = true
@@ -180,3 +237,44 @@ ignore_missing_imports = true
 skip = '.git*,*.svg,*.lock'
 check-hidden = true
 ignore-words-list = 'asend'
+
+[tool.poe]
+poetry_command = ""
+
+[tool.poe.tasks]
+format.help = "Format the code"
+format.sequence = [{ cmd = "ruff check --fix" }, { cmd = "ruff format" }]
+
+lint.help = "Lint the code"
+lint.sequence = [{ cmd = "ruff check" }, { cmd = "mypy" }]
+
+check-commit.help = "Check the commit messages"
+check-commit.cmd = "poetry run cz --no-raise 3 check --rev-range origin/master.."
+
+test.help = "Run the test suite"
+test.cmd = "pytest -n 3 --dist=loadfile"
+
+"test:all".help = "Run the test suite on all supported Python versions"
+"test:all".cmd = "tox --parallel"
+
+cover.help = "Run the test suite with coverage"
+cover.ref = "test --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen"
+
+all.help = "Run all tasks"
+all.sequence = ["format", "lint", "check-commit", "cover"]
+
+"doc:screenshots".help = "Render documentation screenshots"
+"doc:screenshots".script = "scripts.gen_cli_help_screenshots:gen_cli_help_screenshots"
+
+"doc:build".help = "Build the documentation"
+"doc:build".cmd = "mkdocs build"
+
+doc.help = "Live documentation server"
+doc.cmd = "mkdocs serve"
+
+ci.help = "Run all tasks in CI"
+ci.sequence = ["check-commit", { cmd = "pre-commit run --all-files" }, "cover"]
+ci.env = { SKIP = "no-commit-to-branch" }
+
+setup-pre-commit.help = "Install pre-commit hooks"
+setup-pre-commit.cmd = "pre-commit install"

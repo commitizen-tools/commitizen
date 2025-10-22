@@ -1,4 +1,4 @@
-Customizing commitizen is not hard at all.
+Customizing Commitizen is not hard at all.
 We have two different ways to do so.
 
 ## 1. Customize in configuration file
@@ -6,11 +6,11 @@ We have two different ways to do so.
 The basic steps are:
 
 1. Define your custom committing or bumping rules in the configuration file.
-2. Declare `name = "cz_customize"` in your configuration file, or add `-n cz_customize` when running commitizen.
+2. Declare `name = "cz_customize"` in your configuration file, or add `-n cz_customize` when running Commitizen.
 
 Example:
 
-```toml
+```toml title="pyproject.toml"
 [tool.commitizen]
 name = "cz_customize"
 
@@ -50,7 +50,7 @@ message = "Do you want to add body message in commit?"
 
 The equivalent example for a json config file:
 
-```json
+```json title=".cz.json"
 {
     "commitizen": {
         "name": "cz_customize",
@@ -104,9 +104,9 @@ The equivalent example for a json config file:
 }
 ```
 
-And the correspondent example for a yaml json file:
+And the correspondent example for a yaml file:
 
-```yaml
+```yaml title=".cz.yaml"
 commitizen:
   name: cz_customize
   customize:
@@ -115,8 +115,8 @@ commitizen:
     schema: "<type>: <body>"
     schema_pattern: "(feature|bug fix):(\\s.*)"
     bump_pattern: "^(break|new|fix|hotfix)"
-    commit_parser: "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?",
-    changelog_pattern: "^(feature|bug fix)?(!)?",
+    commit_parser: "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?"
+    changelog_pattern: "^(feature|bug fix)?(!)?"
     change_type_map:
       feature: Feat
       bug fix: Fix
@@ -139,60 +139,63 @@ commitizen:
       message: Select the type of change you are committing
     - type: input
       name: message
-      message: Body.
+      message: 'Body.'
     - type: confirm
       name: show_message
-      message: Do you want to add body message in commit?
+      message: 'Do you want to add body message in commit?'
 ```
 
 ### Customize configuration
 
 | Parameter           | Type   | Default | Description                                                                                                                                                                                                                      |
 | ------------------- | ------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `questions`         | `Questions` | `None`  | Questions regarding the commit message. Detailed below. The type `Questions` is an alias to `Iterable[MutableMapping[str, Any]]` which is defined in `commitizen.defaults`. It expects a list of dictionaries. |
+| `questions`         | `Questions` | `None`  | Questions regarding the commit message. Detailed below. The type `Questions` is an alias to `Iterable[MutableMapping[str, Any]]` which is defined in `commitizen.defaults`. It expects a list of dictionaries.              |
 | `message_template`  | `str`  | `None`  | The template for generating message from the given answers. `message_template` should either follow [Jinja2][jinja2] formatting specification, and all the variables in this template should be defined in `name` in `questions` |
-| `example`           | `str`  | `""`  | (OPTIONAL) Provide an example to help understand the style. Used by `cz example`.                                                                                                                                                |
-| `schema`            | `str`  | `""`  | (OPTIONAL) Show the schema used. Used by `cz schema`.                                                                                                                                                                            |
-| `schema_pattern`    | `str`  | `""`  | (OPTIONAL) The regular expression used to do commit message validation. Used by `cz check`.                                                                                                                                      |
-| `info_path`         | `str`  | `""`  | (OPTIONAL) The path to the file that contains explanation of the commit rules. Used by `cz info`. If not provided `cz info`, will load `info` instead.                                                                           |
-| `info`              | `str`  | `""`  | (OPTIONAL) Explanation of the commit rules. Used by `cz info`.                                                                                                                                                                   |
+| `example`           | `str`  | `""`    | (OPTIONAL) Provide an example to help understand the style. Used by `cz example`.                                                                                                                                                |
+| `schema`            | `str`  | `""`    | (OPTIONAL) Show the schema used. Used by `cz schema`.                                                                                                                                                                            |
+| `schema_pattern`    | `str`  | `""`    | (OPTIONAL) The regular expression used to do commit message validation. Used by `cz check`.                                                                                                                                      |
+| `info_path`         | `str`  | `""`    | (OPTIONAL) The path to the file that contains explanation of the commit rules. Used by `cz info`. If not provided `cz info`, will load `info` instead.                                                                           |
+| `info`              | `str`  | `""`    | (OPTIONAL) Explanation of the commit rules. Used by `cz info`.                                                                                                                                                                   |
 | `bump_map`          | `dict` | `None`  | (OPTIONAL) Dictionary mapping the extracted information to a `SemVer` increment type (`MAJOR`, `MINOR`, `PATCH`)                                                                                                                 |
 | `bump_pattern`      | `str`  | `None`  | (OPTIONAL) Regex to extract information from commit (subject and body)                                                                                                                                                           |
-| `change_type_order`| `str`  | `None` | (OPTIONAL) List of strings used to order the Changelog. All other types will be sorted alphabetically. Default is `["BREAKING CHANGE", "Feat", "Fix", "Refactor", "Perf"]`                                                                                             |
+| `change_type_order` | `str`  | `None`  | (OPTIONAL) List of strings used to order the Changelog. All other types will be sorted alphabetically. Default is `["BREAKING CHANGE", "Feat", "Fix", "Refactor", "Perf"]`                                                       |
 | `commit_parser`     | `str`  | `None`  | (OPTIONAL) Regex to extract information used in creating changelog. [See more][changelog-spec]                                                                                                                                   |
 | `changelog_pattern` | `str`  | `None`  | (OPTIONAL) Regex to understand which commits to include in the changelog                                                                                                                                                         |
 | `change_type_map`   | `dict` | `None`  | (OPTIONAL) Dictionary mapping the type of the commit to a changelog entry                                                                                                                                                        |
 
 [jinja2]: https://jinja.palletsprojects.com/en/2.10.x/
-[changelog-spec]: https://commitizen-tools.github.io/commitizen/changelog/
+[changelog-spec]: https://commitizen-tools.github.io/commitizen/commands/changelog/
 
 #### Detailed `questions` content
 
 | Parameter   | Type   | Default | Description                                                                                                                                                                                     |
 | ----------- | ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `type`      | `str`  | `None`  | The type of questions. Valid type: `list`, `input` and etc. [See More][different-question-types]                                                                                                |
+| `type`      | `str`  | `None`  | The type of questions. Valid types: `list`, `select`, `input`, etc. The `select` type provides an interactive searchable list interface. [See More][different-question-types]                  |
 | `name`      | `str`  | `None`  | The key for the value answered by user. It's used in `message_template`                                                                                                                         |
 | `message`   | `str`  | `None`  | Detail description for the question.                                                                                                                                                            |
-| `choices`   | `list` | `None`  | (OPTIONAL) The choices when `type = list`. Either use a list of values or a list of dictionaries with `name` and `value` keys. Keyboard shortcuts can be defined via `key`. See examples above. |
+| `choices`   | `list` | `None`  | (OPTIONAL) The choices when `type = list` or `type = select`. Either use a list of values or a list of dictionaries with `name` and `value` keys. Keyboard shortcuts can be defined via `key`. See examples above. |
 | `default`   | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                                                                 |
 | `filter`    | `str`  | `None`  | (OPTIONAL) Validator for user's answer. **(Work in Progress)**                                                                                                                                  |
-| `multiline` | `bool` | `False` | (OPTIONAL) Enable multiline support when `type = input`.                                                                                                                                            |
+| `multiline` | `bool` | `False` | (OPTIONAL) Enable multiline support when `type = input`.                                                                                                                                        |
+| `use_search_filter` | `bool` | `False` | (OPTIONAL) Enable search/filter functionality for list/select type questions. This allows users to type and filter through the choices.                                                  |
+| `use_jk_keys` | `bool` | `True` | (OPTIONAL) Enable/disable j/k keys for navigation in list/select type questions. Set to false if you prefer arrow keys only.                                                                    |
+
 [different-question-types]: https://github.com/tmbo/questionary#different-question-types
 
 #### Shortcut keys
 
-When the [`use_shortcuts`](config.md#settings) config option is enabled, commitizen can show and use keyboard shortcuts to select items from lists directly.
-For example, when using the `cz_conventional_commits` commitizen template, shortcut keys are shown when selecting the commit type. Unless otherwise defined, keyboard shortcuts will be numbered automatically.
+When the [`use_shortcuts`](config.md#settings) config option is enabled, Commitizen can show and use keyboard shortcuts to select items from lists directly.
+For example, when using the `cz_conventional_commits` Commitizen template, shortcut keys are shown when selecting the commit type. Unless otherwise defined, keyboard shortcuts will be numbered automatically.
 To specify keyboard shortcuts for your custom choices, provide the shortcut using the `key` parameter in dictionary form for each choice you would like to customize.
 
 ## 2. Customize through customizing a class
 
 The basic steps are:
 
-1. Inheriting from `BaseCommitizen`
+1. Inheriting from `BaseCommitizen`.
 2. Give a name to your rules.
-3. Create a python package using `setup.py`, `poetry`, etc
-4. Expose the class as a `commitizen.plugin` entrypoint
+3. Create a python package using `setup.py`, `poetry`, etc.
+4. Expose the class as a `commitizen.plugin` entrypoint.
 
 Check an [example][convcomms] on how to configure `BaseCommitizen`.
 
@@ -212,7 +215,7 @@ Create a Python module, for example `cz_jira.py`.
 
 Inherit from `BaseCommitizen`, and you must define `questions` and `message`. The others are optional.
 
-```python
+```python title="cz_jira.py"
 from commitizen.cz.base import BaseCommitizen
 from commitizen.defaults import Questions
 
@@ -256,7 +259,7 @@ class JiraCz(BaseCommitizen):
 
 The next file required is `setup.py` modified from flask version.
 
-```python
+```python title="setup.py"
 from setuptools import setup
 
 setup(
@@ -292,7 +295,7 @@ You need to define 2 parameters inside your custom `BaseCommitizen`.
 
 Let's see an example.
 
-```python
+```python title="cz_strange.py"
 from commitizen.cz.base import BaseCommitizen
 
 
@@ -301,7 +304,7 @@ class StrangeCommitizen(BaseCommitizen):
     bump_map = {"break": "MAJOR", "new": "MINOR", "fix": "PATCH", "hotfix": "PATCH"}
 ```
 
-That's it, your commitizen now supports custom rules, and you can run.
+That's it, your Commitizen now supports custom rules, and you can run.
 
 ```bash
 cz -n cz_strange bump
@@ -379,18 +382,18 @@ class CustomValidationCz(BaseCommitizen):
 ### Custom changelog generator
 
 The changelog generator should just work in a very basic manner without touching anything.
-You can customize it of course, and this are the variables you need to add to your custom `BaseCommitizen`.
+You can customize it of course, and the following variables are the ones you need to add to your custom `BaseCommitizen`.
 
 | Parameter                        | Type                                                                     | Required | Description                                                                                                                                                                                                         |
 | -------------------------------- | ------------------------------------------------------------------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `commit_parser`                  | `str`                                                                    | NO       | Regex which should provide the variables explained in the [changelog description][changelog-des]                                                                                                                    |
 | `changelog_pattern`              | `str`                                                                    | NO       | Regex to validate the commits, this is useful to skip commits that don't meet your ruling standards like a Merge. Usually the same as bump_pattern                                                                  |
 | `change_type_map`                | `dict`                                                                   | NO       | Convert the title of the change type that will appear in the changelog, if a value is not found, the original will be provided                                                                                      |
-| `changelog_message_builder_hook` | `method: (dict, git.GitCommit) -> dict | list | None`                                  | NO       | Customize with extra information your message output, like adding links, this function is executed per parsed commit. Each GitCommit contains the following attrs: `rev`, `title`, `body`, `author`, `author_email`. Returning a falsy value ignore the commit. |
+| `changelog_message_builder_hook` | `method: (dict, git.GitCommit) -> dict | list | None`                  | NO       | Customize with extra information your message output, like adding links, this function is executed per parsed commit. Each GitCommit contains the following attrs: `rev`, `title`, `body`, `author`, `author_email`. Returning a falsy value ignore the commit. |
 | `changelog_hook`                 | `method: (full_changelog: str, partial_changelog: Optional[str]) -> str` | NO       | Receives the whole and partial (if used incremental) changelog. Useful to send slack messages or notify a compliance department. Must return the full_changelog                                                     |
-| `changelog_release_hook` | `method: (release: dict, tag: git.GitTag) -> dict` | NO | Receives each generated changelog release and its associated tag. Useful to enrich a releases before they are rendered. Must return the update release
+| `changelog_release_hook` | `method: (release: dict, tag: git.GitTag) -> dict` | NO | Receives each generated changelog release and its associated tag. Useful to enrich releases before they are rendered. Must return the update release
 
-```python
+```python title="cz_strange.py"
 from commitizen.cz.base import BaseCommitizen
 import chat
 import compliance
@@ -440,8 +443,6 @@ class StrangeCommitizen(BaseCommitizen):
         return full_changelog
 ```
 
-[changelog-des]: ./commands/changelog.md#description
-
 ### Raise Customize Exception
 
 If you want `commitizen` to catch your exception and print the message, you'll have to inherit `CzException`.
@@ -459,7 +460,7 @@ class NoSubjectProvidedException(CzException):
 Commitizen migrated to a new plugin format relying on `importlib.metadata.EntryPoint`.
 Migration should be straight-forward for legacy plugins:
 
-- Remove the `discover_this` line from you plugin module
+- Remove the `discover_this` line from your plugin module
 - Expose the plugin class under as a `commitizen.plugin` entrypoint.
 
 The name of the plugin is now determined by the name of the entrypoint.
@@ -511,20 +512,20 @@ Commitizen gives you the possibility to provide your own changelog template, by:
 
 - providing one with your customization class
 - providing one from the current working directory and setting it:
-    - as [configuration][template-config]
-    - as `--template` parameter to both `bump` and `changelog` commands
+  - as [configuration][template-config]
+  - as `--template` parameter to both `bump` and `changelog` commands
 - either by providing a template with the same name as the default template
 
-By default, the template used is the `CHANGELOG.md.j2` file from the commitizen repository.
+By default, the template used is the `CHANGELOG.md.j2` file from the Commitizen repository.
 
 ### Providing a template with your customization class
 
-There is 3 parameters available to change the template rendering from your custom `BaseCommitizen`.
+There are 3 parameters available to change the template rendering from your custom `BaseCommitizen`.
 
 | Parameter         | Type   | Default | Description                                                                                           |
 | ----------------- | ------ | ------- | ----------------------------------------------------------------------------------------------------- |
-| `template`        | `str`  | `None`  | Provide your own template name (default to `CHANGELOG.md.j2`)                            |
-| `template_loader` | `str`  | `None`  | Override the default template loader (so you can provide template from you customization class)       |
+| `template`        | `str`  | `None`  | Provide your own template name (default to `CHANGELOG.md.j2`)                                         |
+| `template_loader` | `str`  | `None`  | Override the default template loader (so you can provide template from your customization class)      |
 | `template_extras` | `dict` | `None`  | Provide some extra template parameters                                                                |
 
 Let's see an example.
@@ -548,14 +549,14 @@ This snippet will:
 
 ### Providing a template from the current working directory
 
-Users can provides their own template from their current working directory (your project root) by:
+Users can provide their own template from their current working directory (your project root) by:
 
 - providing a template with the same name (`CHANGELOG.md.j2` unless overridden by your custom class)
 - setting your template path as `template` configuration
 - giving your template path as `--template` parameter to `bump` and `changelog` commands
 
-!!! Note
-    The path is relative to the current working directory, aka. your project root most of the time.
+!!! note
+    The path is relative to the current working directory, aka your project root most of the time.
 
 ### Template variables
 
@@ -574,17 +575,22 @@ Each `Change` has the following fields:
 | scope | `str | None` | An optional scope |
 | message | `str` | The commit message body |
 | sha1 | `str` | The commit `sha1` |
+| parents | `list[str]` | The parent commit(s) `sha1`(s) |
 | author | `str` | The commit author name |
 | author_email | `str` | The commit author email |
 
-!!! Note
+!!! note
     The field values depend on the customization class and/or the settings you provide
+
+The `parents` field can be used to identify merge commits and generate a changelog based on those. Another use case
+is listing commits that belong to the same pull request.
 
 When using another template (either provided by a plugin or by yourself), you can also pass extra template variables
 by:
 
 - defining them in your configuration with the [`extras` settings][extras-config]
-- providing them on the commandline with the `--extra/-e` parameter to `bump` and `changelog` commands
+- providing them on the command line with the `--extra/-e` parameter to `bump` and `changelog` commands
 
 [template-config]: config.md#template
 [extras-config]: config.md#extras
+[changelog-des]: ./commands/changelog.md#description

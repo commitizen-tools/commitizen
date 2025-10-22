@@ -473,16 +473,16 @@ def test_answer(config):
     cz = CustomizeCommitsCz(config)
     answers = {
         "change_type": "feature",
-        "message": "this feature enaable customize through config file",
+        "message": "this feature enable customize through config file",
         "show_message": True,
     }
     message = cz.message(answers)
-    assert message == "feature: this feature enaable customize through config file"
+    assert message == "feature: this feature enable customize through config file"
 
     cz = CustomizeCommitsCz(config)
     answers = {
         "change_type": "feature",
-        "message": "this feature enaable customize through config file",
+        "message": "this feature enable customize through config file",
         "show_message": False,
     }
     message = cz.message(answers)

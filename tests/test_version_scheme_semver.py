@@ -83,7 +83,7 @@ tdd_cases = [
     (("1.0.0-alpha1", None, "alpha", 0, None), "1.0.0-a2"),
 ]
 
-excact_cases = [
+exact_cases = [
     (("1.0.0", "PATCH", None, 0, None), "1.0.1"),
     (("1.0.0", "MINOR", None, 0, None), "1.1.0"),
     # with exact_increment=False: "1.0.0-b0"
@@ -144,7 +144,7 @@ def test_bump_semver_version(test_input, expected):
     )
 
 
-@pytest.mark.parametrize("test_input, expected", excact_cases)
+@pytest.mark.parametrize("test_input, expected", exact_cases)
 def test_bump_semver_version_force(test_input, expected):
     current_version = test_input[0]
     increment = test_input[1]

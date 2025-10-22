@@ -197,7 +197,7 @@ def test_file_version_inconsistent_error(
     assert expected_msg in str(excinfo.value)
 
 
-def test_multiplt_versions_to_bump(
+def test_multiple_versions_to_bump(
     multiple_versions_to_update_poetry_lock, file_regression
 ):
     old_version = "1.2.9"
@@ -216,7 +216,7 @@ def test_update_version_in_globbed_files(commitizen_config_file, file_regression
     print(commitizen_config_file, other)
     copyfile(commitizen_config_file, other)
 
-    # Prepend full ppath as test assume absolute paths or cwd-relative
+    # Prepend full path as test assume absolute paths or cwd-relative
     version_files = [commitizen_config_file.dirpath("*.toml")]
 
     bump.update_version_in_files(

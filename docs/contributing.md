@@ -1,32 +1,82 @@
-## Contributing to commitizen
+## Contributing to Commitizen
 
-First of all, thank you for taking the time to contribute! 🎉
+First, thank you for taking the time to contribute! 🎉 Your contributions help make Commitizen better for everyone.
 
-When contributing to [commitizen](https://github.com/commitizen-tools/commitizen), please first create an [issue](https://github.com/commitizen-tools/commitizen/issues) to discuss the change you wish to make before making a change.
+When contributing to Commitizen, we encourage you to:
 
-If you're a first-time contributor, you can check the issues with [good first issue](https://github.com/commitizen-tools/commitizen/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) tag.
+1. First, check out the [issues](https://github.com/commitizen-tools/commitizen/issues) and [Features we won't add](faq.md#features-we-wont-add) to see if there's already a discussion about the change you wish to make.
+2. If there's no discussion, [create an issue](https://github.com/commitizen-tools/commitizen/issues/new) to discuss your proposed changes.
+3. Follow our [development workflow](#development-workflow) and guidelines below.
 
-## Install before contributing
+If you're a first-time contributor, please check out issues labeled [good first issue](https://github.com/commitizen-tools/commitizen/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) - these are specifically chosen to be beginner-friendly.
 
-1. Install [poetry](https://python-poetry.org/) `1.2.0+`, installation [pages](https://python-poetry.org/docs/#installing-with-the-official-installer)
-2. Install [gpg](https://gnupg.org), installation [pages](https://gnupg.org/documentation/manuals/gnupg/Installation.html#Installation). For Mac users, you could try [homebrew](https://brew.sh/).
+## Prerequisites & Setup
 
-## Before making a pull request
+### Required Tools
 
-1. Fork [the repository](https://github.com/commitizen-tools/commitizen).
-2. Clone the repository from your GitHub.
-3. Setup development environment through [poetry](https://python-poetry.org/) (`poetry install`).
-4. Setup [pre-commit](https://pre-commit.com/) hook (`poetry run pre-commit install`)
-5. Check out a new branch and add your modification.
-6. Add test cases for all your changes.
-   (We use [CodeCov](https://codecov.io/) to ensure our test coverage does not drop.)
-7. Use [commitizen](https://github.com/commitizen-tools/commitizen) to do git commit. We follow [conventional commits](https://www.conventionalcommits.org/).
-8. Run `./scripts/format` and `./scripts/test` to ensure you follow the coding style and the tests pass.
-9. Optionally, update the `./docs/README.md` or `docs/images/cli_help` (through running `scripts/gen_cli_help_screenshots.py`).
-9. **Do not** update the `CHANGELOG.md`, it will be automatically created after merging to `master`.
-10. **Do not** update the versions in the project, they will be automatically updated.
-10. If your changes are about documentation. Run `poetry run mkdocs serve` to serve documentation locally and check whether there is any warning or error.
-11. Send a [pull request](https://github.com/commitizen-tools/commitizen/pulls) 🙏
+1. **Python Environment**
+    - Python `>=3.9`
+    - [Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer) `>=2.0.0`
+2. **Version Control & Security**
+    - Git
+    - Commitizen
+    - [GPG](https://gnupg.org) for commit signing
+        - [Installation page](https://gnupg.org/documentation/manuals/gnupg/Installation.html#Installation)
+        - For Mac users: `brew install gnupg`
+        - For Windows users: Download from [Gpg4win](https://www.gpg4win.org/)
+        - For Linux users: Use your distribution's package manager (e.g., `apt install gnupg` for Ubuntu)
+
+### Getting Started
+
+1. Fork [Commitizen](https://github.com/commitizen-tools/commitizen)
+2. Clone your fork:
+    ```bash
+    git clone https://github.com/YOUR_USERNAME/commitizen.git
+    cd commitizen
+    ```
+3. Add the upstream repository:
+    ```bash
+    git remote add upstream https://github.com/commitizen-tools/commitizen.git
+    ```
+4. Set up the development environment:
+    ```bash
+    poetry install
+    ```
+5. Set up pre-commit hooks:
+    ```bash
+    poetry setup-pre-commit
+    ```
+
+## Development Workflow
+
+1. **Create a New Branch**
+    ```bash
+    git switch -c feature/your-feature-name
+    # or
+    git switch -c fix/your-bug-fix
+    ```
+2. **Make Your Changes**
+    - Write your code
+    - Add tests for new functionalities or fixes
+    - Update documentation if needed
+    - Follow the existing code style
+3. **Testing**
+    - Run the full test suite: `poetry all`
+    - Ensure test coverage doesn't drop (we use [CodeCov](https://app.codecov.io/gh/commitizen-tools/commitizen))
+    - For documentation changes, run `poetry doc` to check for warnings/errors
+4. **Committing Changes**
+    - Use Commitizen to make commits (we follow [conventional commits](https://www.conventionalcommits.org/))
+    - Example: `cz commit`
+5. **Documentation**
+    - Update `docs/README.md` if needed
+    - For CLI help screenshots: `poetry doc:screenshots`
+    - **DO NOT** update `CHANGELOG.md` (automatically generated)
+    - **DO NOT** update version numbers (automatically handled)
+6. **Pull Request**
+    - Push your changes: `git push origin your-branch-name`
+    - Create a pull request on GitHub
+    - Ensure CI checks pass
+    - Wait for review and address any feedback
 
 ## Use of GitHub Labels
 
@@ -45,8 +95,8 @@ If you're a first-time contributor, you can check the issues with [good first is
 * pr-status: wait-for-modification
 * pr-status: wait-for-response
 * pr-status: ready-to-merge
-* needs: test-case *(pr only)*
-* needs: documentation *(pr only)*
+* needs: test-case *(PR only)*
+* needs: documentation *(PR only)*
 * type: feature
 * type: bug
 * type: documentation
@@ -57,7 +107,7 @@ If you're a first-time contributor, you can check the issues with [good first is
 * os: macOS
 
 
-### Issue life cycle
+## Issue life cycle
 
 ```mermaid
 graph TD
@@ -75,7 +125,7 @@ graph TD
     close --> output[/close/]
 ```
 
-### Pull request life cycle
+## Pull request life cycle
 
 ```mermaid
 flowchart TD
@@ -103,6 +153,3 @@ flowchart TD
     --modification-received-->
     review
 ```
-
-
-[conventional-commits]: https://www.conventionalcommits.org/

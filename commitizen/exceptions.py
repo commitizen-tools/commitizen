@@ -1,9 +1,12 @@
-import enum
+from __future__ import annotations
+
+from enum import IntEnum
+from typing import Any
 
 from commitizen import out
 
 
-class ExitCode(enum.IntEnum):
+class ExitCode(IntEnum):
     EXPECTED_EXIT = 0
     NO_COMMITIZEN_FOUND = 1
     NOT_A_GIT_PROJECT = 2
@@ -38,9 +41,15 @@ class ExitCode(enum.IntEnum):
     CONFIG_FILE_IS_EMPTY = 31
     COMMIT_MESSAGE_LENGTH_LIMIT_EXCEEDED = 32
 
+    @classmethod
+    def from_str(cls, value: str) -> ExitCode:
+        if value.isdecimal():
+            return cls(int(value))
+        return cls[value.strip()]
+
 
 class CommitizenException(Exception):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: str, **kwargs: Any) -> None:
         self.output_method = kwargs.get("output_method") or out.error
         self.exit_code: ExitCode = self.__class__.exit_code
         if args:
@@ -50,16 +59,15 @@ class CommitizenException(Exception):
         else:
             self.message = ""
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.message
 
 
 class ExpectedExit(CommitizenException):
     exit_code = ExitCode.EXPECTED_EXIT
 
-    def __init__(self, *args, **kwargs):
-        output_method = kwargs.get("output_method") or out.write
-        kwargs["output_method"] = output_method
+    def __init__(self, *args: str, **kwargs: Any) -> None:
+        kwargs["output_method"] = kwargs.get("output_method") or out.write
         super().__init__(*args, **kwargs)
 
 

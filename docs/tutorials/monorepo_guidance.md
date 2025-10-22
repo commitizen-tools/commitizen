@@ -1,4 +1,4 @@
-# Configuring commitizen in a monorepo
+# Configuring Commitizen in a monorepo
 
 This tutorial assumes the monorepo layout is designed with multiple components that can be released independently of each
 other, it also assumes that conventional commits with scopes are in use. Some suggested layouts:
@@ -27,6 +27,7 @@ Sample `.cz.toml` for each component:
 name = "cz_customize"
 version = "0.0.0"
 tag_format = "${version}-library-b" # the component name can be a prefix or suffix with or without a separator
+ignored_tag_formats = ["${version}-library-*"] # Avoid noise from other tags
 update_changelog_on_bump = true
 ```
 
@@ -36,6 +37,7 @@ update_changelog_on_bump = true
 name = "cz_customize"
 version = "0.0.0"
 tag_format = "${version}-library-z"
+ignored_tag_formats = ["${version}-library-*"] # Avoid noise from other tags
 update_changelog_on_bump = true
 ```
 
@@ -54,9 +56,9 @@ In order to filter the correct commits for each component, you'll have to come u
 For example:
 
 - Trigger the pipeline based on the changed path, which can have some downsides, as you'll rely on the developer not including files from other files
-    - [github actions](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore) uses `path`
+    - [GitHub actions](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore) uses `path`
     - [Jenkins](https://www.jenkins.io/doc/book/pipeline/syntax/#built-in-conditions) uses `changeset`
-    - [Gitlab](https://docs.gitlab.com/ee/ci/yaml/#ruleschanges) uses `rules:changes`
+    - [GitLab](https://docs.gitlab.com/ee/ci/yaml/#ruleschanges) uses `rules:changes`
 - Filter certain pattern of the commit message (recommended)
 
 
@@ -75,5 +77,5 @@ changelog_pattern = "^(feat|fix)\\(library-b\\)(!)?:" #the pattern on types can 
 A commit message looking like this, would be included:
 
 ```
-fix:(library-b) Some awesome message
+fix(library-b): Some awesome message
 ```

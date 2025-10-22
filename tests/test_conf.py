@@ -72,6 +72,8 @@ _settings: dict[str, Any] = {
     "version_provider": "commitizen",
     "version_scheme": None,
     "tag_format": "$version",
+    "legacy_tag_formats": [],
+    "ignored_tag_formats": [],
     "bump_message": None,
     "retry_after_failure": False,
     "allow_abort": False,
@@ -101,6 +103,8 @@ _new_settings: dict[str, Any] = {
     "version_provider": "commitizen",
     "version_scheme": None,
     "tag_format": "$version",
+    "legacy_tag_formats": [],
+    "ignored_tag_formats": [],
     "bump_message": None,
     "retry_after_failure": False,
     "allow_abort": False,
@@ -147,7 +151,7 @@ def test_find_git_project_root(tmpdir):
 
 
 @pytest.mark.parametrize(
-    "config_files_manager", defaults.config_files.copy(), indirect=True
+    "config_files_manager", defaults.CONFIG_FILES.copy(), indirect=True
 )
 def test_set_key(config_files_manager):
     _conf = config.read_cfg()
@@ -158,7 +162,7 @@ def test_set_key(config_files_manager):
 
 class TestReadCfg:
     @pytest.mark.parametrize(
-        "config_files_manager", defaults.config_files.copy(), indirect=True
+        "config_files_manager", defaults.CONFIG_FILES.copy(), indirect=True
     )
     def test_load_conf(_, config_files_manager):
         cfg = config.read_cfg()
@@ -235,7 +239,7 @@ class TestTomlConfig:
     def test_init_empty_config_content_with_existing_content(
         self, tmpdir, config_file, exception_string
     ):
-        existing_content = "[tool.black]\n" "line-length = 88\n"
+        existing_content = "[tool.black]\nline-length = 88\n"
 
         path = tmpdir.mkdir("commitizen").join(config_file)
         path.write(existing_content)

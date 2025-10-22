@@ -1,7 +1,7 @@
 name: 📖 Documentation
 description: Suggest an improvement for the documentation of this project
 title: Content to be added or fixed
-labels: [documentation]
+labels: ['type: documentation']
 body:
   - type: checkboxes
     id: type

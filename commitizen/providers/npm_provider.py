@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, ClassVar
 
@@ -58,8 +59,8 @@ class NpmProvider(VersionProvider):
                 json.dumps(shrinkwrap_document, indent=self.indent) + "\n"
             )
 
-    def get_package_version(self, document: dict[str, Any]) -> str:
-        return document["version"]  # type: ignore
+    def get_package_version(self, document: Mapping[str, str]) -> str:
+        return document["version"]
 
     def set_package_version(
         self, document: dict[str, Any], version: str

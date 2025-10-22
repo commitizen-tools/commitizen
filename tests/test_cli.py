@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+import types
 from functools import partial
 
 import pytest
@@ -182,3 +183,59 @@ def test_unknown_args_before_double_dash_raises(mocker: MockFixture):
     assert "Invalid commitizen arguments were found before -- separator" in str(
         excinfo.value
     )
+
+
+def test_commitizen_excepthook_non_commitizen_exception(mocker: MockFixture):
+    """Test that commitizen_excepthook delegates to original_excepthook for non-CommitizenException."""
+    # Mock the original excepthook
+    mock_original_excepthook = mocker.Mock()
+    mocker.patch("commitizen.cli.original_excepthook", mock_original_excepthook)
+
+    # Create a regular exception
+    test_exception = ValueError("test error")
+
+    # Call commitizen_excepthook with the regular exception
+    cli.commitizen_excepthook(ValueError, test_exception, None)
+
+    # Verify original_excepthook was called with correct arguments
+    mock_original_excepthook.assert_called_once_with(ValueError, test_exception, None)
+
+
+def test_commitizen_excepthook_non_commitizen_exception_with_traceback(
+    mocker: MockFixture,
+):
+    """Test that commitizen_excepthook handles traceback correctly for non-CommitizenException."""
+    # Mock the original excepthook
+    mock_original_excepthook = mocker.Mock()
+    mocker.patch("commitizen.cli.original_excepthook", mock_original_excepthook)
+
+    # Create a regular exception with a traceback
+    test_exception = ValueError("test error")
+    test_traceback = mocker.Mock(spec=types.TracebackType)
+
+    # Call commitizen_excepthook with the regular exception and traceback
+    cli.commitizen_excepthook(ValueError, test_exception, test_traceback)
+
+    # Verify original_excepthook was called with correct arguments including traceback
+    mock_original_excepthook.assert_called_once_with(
+        ValueError, test_exception, test_traceback
+    )
+
+
+def test_commitizen_excepthook_non_commitizen_exception_with_invalid_traceback(
+    mocker: MockFixture,
+):
+    """Test that commitizen_excepthook handles invalid traceback correctly for non-CommitizenException."""
+    # Mock the original excepthook
+    mock_original_excepthook = mocker.Mock()
+    mocker.patch("commitizen.cli.original_excepthook", mock_original_excepthook)
+
+    # Create a regular exception with an invalid traceback
+    test_exception = ValueError("test error")
+    test_traceback = mocker.Mock()  # Not a TracebackType
+
+    # Call commitizen_excepthook with the regular exception and invalid traceback
+    cli.commitizen_excepthook(ValueError, test_exception, test_traceback)
+
+    # Verify original_excepthook was called with None as traceback
+    mock_original_excepthook.assert_called_once_with(ValueError, test_exception, None)

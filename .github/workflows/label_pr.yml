@@ -9,11 +9,39 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         sparse-checkout: |
           .github/labeler.yml
         sparse-checkout-cone-mode: false
-    - uses: actions/labeler@v5
+    - uses: actions/labeler@v6
       with:
         configuration-path: .github/labeler.yml
+    - name: Label based on PR title
+      uses: actions/github-script@v8
+      with:
+        script: |
+          const title = context.payload.pull_request.title.toLowerCase();
+          const labels = [];
+
+          if (title.includes("fix") || title.includes("bug")) {
+            labels.push("type: bug");
+          }
+          if (title.includes("feat")) {
+            labels.push("type: feature");
+          }
+          if (title.includes("doc")) {
+            labels.push("type: documentation");
+          }
+          if (title.includes("refactor")) {
+            labels.push("type: refactor");
+          }
+
+          if (labels.length > 0) {
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              labels
+            });
+          }

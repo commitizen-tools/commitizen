@@ -1,3 +1,259 @@
+## v4.9.1 (2025-09-10)
+
+### Fix
+
+- **dependency**: move deprecated to project.dependencies
+
+## v4.9.0 (2025-09-09)
+
+### Feat
+
+- **check**: add check against default branch
+
+### Fix
+
+- **changelog**: mark get_smart_tag_range as deprecated
+- **init**: use pre-push as pre-commit stage
+- **init**: use pre-push as pre-commit stage
+- **init**: make welcome message easier to read
+- **Init**: fix a typo in _ask_version_provider options and remove unnecessary filter, use named tuple for options
+- **ExitCode**: add from_str in ExitCode and replace parse_no_raise with it
+- raise NoVersionSpecifiedError if version is None, and adjust call sites of get_version
+- **Changelog**: fix _export_template variable type
+- **Bump**: rewrite --get-next NotAllowed error message for consistency
+
+### Refactor
+
+- **changelog**: add get_next_tag_name_after_version and test, mark unused for get_smart_tag_range
+- **changelog**: simplify logic for get_oldest_and_newest_rev
+- **changelog**: shorten generate_tree_from_commits
+- **Init**: remove the variable values_to_add and the update_config function for readability
+- **Init**: remove unnecessary methods from ProjectInfo and refactor _ask_tag
+- **Init**: fix unbounded variable in _ask_tag_format
+- **init**: remote extra words
+- **process_commit_message**: better type and early return
+- **Init**: extract _get_config_data for readability
+- **changelog**: shorten condition expression and early return
+- **Changelog**: remove unnecessary intermediate variables for better readability
+- **bump**: use a loop to shorten a series of similar NotAllowed exceptions
+- **Init**: use ternary operator
+- **TagRules**: extract tag_formats property and simplify list comprehension
+- **git**: remove redundant if branch
+- **ScmProvider**: replace sorted with max
+- **ExpectedExit**: make the constructor more compact
+- **ParseArgs**: simplify __call__ function body
+
+## v4.8.4 (2025-09-05)
+
+### Fix
+
+- members in workspace, use exclude
+- cargo workspaces
+
+### Refactor
+
+- reduce code indentation
+
+## v4.8.3 (2025-06-09)
+
+### Fix
+
+- **cli**: update description for deprecate warning
+- **commit**: emit deprecated warning of cz commit -s
+- **Check**: make parameters backward compatible
+- **BaseConfig**: mypy error
+- **deprecated**: mark deprecate in v5
+- **defaults**: add non-capitalized default constants back and deprecated warning
+
+### Refactor
+
+- **jira**: refactor message
+- **conventional_commits**: use TypedDict for answers
+- **conventional_commits**: make schema_pattern more readable
+- do not guess if changelog format is provided
+- **check**: compile once and rename variable
+- **questions**: type questions with TypedDict
+- **bump**: simplify nested if
+- **git**: retype get_commits parameter to make it more friendly to call sites
+- **git**: simplify tag logic
+- **bump**: eliminate similar patterns in code
+- **bump**: use any to replace 'or' chain
+- remove unnecessary bool() and remove Any type from TypedDict get
+- **bump**: improve readability and still bypass mypy check
+- **commands**: remove unused args, type version command args
+- **commit**: type commit args
+- **check**: type CheckArgs arguments
+- **check**: remove unused argument
+- **changelog**: type untyped arguments
+- **bump**: TypedDict for bump argument
+- make methods protected, better type
+- **conventional_commits**: remove unnecessary checks
+- fix mypy output and better type
+- **BaseCommitizen**: remove unused process_commit
+- remove `TypeError` handling since `Python >=3.9` is required
+- add comment clarifying `no_raise` parsing to `list[int]`
+- **cli.py**: add type hints
+- **mypy**: remove `unused-ignore`
+- **changelog**: better typing, yield
+- **cli**: early return and improve test coverage
+- **git**: extract _create_commit_cmd_string
+- misc cleanup
+- **bump**: clean up
+- **bump**: add type for out, replace function with re escape
+- **BaseConfig**: use setter
+- **changelog**: minor cleanup
+- **git**: refactor get_tag_names
+- **EOLType**: add eol enum back and reorganize methods
+- **git**: code cleanup and better test coverage
+- **commit**: simplify call
+- **version_scheme**: cleanup
+- improve readability and fix typos
+
+### Perf
+
+- **bump**: avoid unnecessary list construction and rename variable to avoid confusion
+- **tags**: use set
+
+## v4.8.2 (2025-05-22)
+
+### Refactor
+
+- **check**: simplify code
+- **check**: remove unnecessary variable
+
+## v4.8.1 (2025-05-22)
+
+### Refactor
+
+- **customize**: improve code readability
+
+## v4.8.0 (2025-05-20)
+
+### Feat
+
+- **cli**: add --tag-format argument to changelog command
+
+## v4.7.2 (2025-05-18)
+
+### Refactor
+
+- **default**: capitalize all constants and remove unnecessary variable
+
+## v4.7.1 (2025-05-16)
+
+### Fix
+
+- **bump**: don't fail if an invalid version tag is present (fix #1410) (#1418)
+
+## v4.7.0 (2025-05-10)
+
+### Feat
+
+- **providers**: add support for `Cargo.lock`
+
+### Refactor
+
+- **tests**: increase verbosity of variables
+
+## v4.6.3 (2025-05-07)
+
+### Fix
+
+- **changelog.py**: cross-platform path handling using os.path.join and modify the path linter and test parameter
+- **changelog.py**: modify the CHANGELOG.md generated by cz bump --changelog to the right place
+
+## v4.6.2 (2025-05-05)
+
+### Fix
+
+- **docs**: fix url link and table formatting in the customization docs (#1399)
+
+## v4.6.1 (2025-05-05)
+
+### Fix
+
+- **commit**: use os.unlink to remove temp file
+
+## v4.6.0 (2025-04-13)
+
+### Feat
+
+- **changelog**: expose commit parents' digests when processing commits
+- **git**: add parents' digests in commit information
+
+## v4.5.1 (2025-04-09)
+
+### Fix
+
+- print which tag is invalid
+
+## v4.5.0 (2025-04-04)
+
+### Feat
+
+- **init**: set uv to default value if both pyproject.toml and uv.lock present
+
+### Fix
+
+- **commands/init**: add missing uv provider to "cz init"
+
+## v4.4.1 (2025-03-02)
+
+### Fix
+
+- **tags**: fixes ImportError on Python >=3.11 (#1363) (#1364)
+
+## v4.4.0 (2025-03-02)
+
+### Feat
+
+- **tags**: adds `legacy_tag_formats` and `ignored_tag_formats` settings
+
+### Refactor
+
+- **get_tag_regexes**: dedup tag regexes definition
+
+## v4.3.0 (2025-02-28)
+
+### Feat
+
+- **providers**: add uv_provider
+
+## v4.2.2 (2025-02-18)
+
+### Fix
+
+- **bump**: manual version bump if prerelease offset is configured
+
+## v4.2.1 (2025-02-08)
+
+### Fix
+
+- **bump**: add debugging to bump
+
+## v4.2.0 (2025-02-07)
+
+### Feat
+
+- draft of the --empty parameter
+
+### Refactor
+
+- **bump**: rename --empty as --allow-no-commit
+
+## v4.1.1 (2025-01-26)
+
+### Fix
+
+- **get-next-bump**: add a test case
+- **get-next-bump**: fix to permit usage of --get-next options even when update_changelog_on_bump is set to true
+
+## v4.1.0 (2024-12-06)
+
+### Feat
+
+- **commit**: allow '-- --allow-empty' to create empty commits
+
 ## v4.0.0 (2024-11-26)
 
 ## v3.31.0 (2024-11-16)

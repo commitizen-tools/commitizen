@@ -1,14 +1,15 @@
 import os
+from collections.abc import Mapping
 
 from commitizen.cz.base import BaseCommitizen
-from commitizen.defaults import Questions
+from commitizen.question import CzQuestion
 
 __all__ = ["JiraSmartCz"]
 
 
 class JiraSmartCz(BaseCommitizen):
-    def questions(self) -> Questions:
-        questions = [
+    def questions(self) -> list[CzQuestion]:
+        return [
             {
                 "type": "input",
                 "name": "message",
@@ -42,20 +43,12 @@ class JiraSmartCz(BaseCommitizen):
                 "filter": lambda x: "#comment " + x if x else "",
             },
         ]
-        return questions
 
-    def message(self, answers: dict) -> str:
+    def message(self, answers: Mapping[str, str]) -> str:
         return " ".join(
-            filter(
-                bool,
-                [
-                    answers["message"],
-                    answers["issues"],
-                    answers["workflow"],
-                    answers["time"],
-                    answers["comment"],
-                ],
-            )
+            x
+            for k in ("message", "issues", "workflow", "time", "comment")
+            if (x := answers.get(k))
         )
 
     def example(self) -> str:
@@ -68,7 +61,7 @@ class JiraSmartCz(BaseCommitizen):
         )
 
     def schema(self) -> str:
-        return "<ignored text> <ISSUE_KEY> <ignored text> #<COMMAND> <optional COMMAND_ARGUMENTS>"  # noqa
+        return "<ignored text> <ISSUE_KEY> <ignored text> #<COMMAND> <optional COMMAND_ARGUMENTS>"
 
     def schema_pattern(self) -> str:
         return r".*[A-Z]{2,}\-[0-9]+( #| .* #).+( #.+)*"
@@ -77,5 +70,4 @@ class JiraSmartCz(BaseCommitizen):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         filepath = os.path.join(dir_path, "jira_info.txt")
         with open(filepath, encoding=self.config.settings["encoding"]) as f:
-            content = f.read()
-        return content
+            return f.read()

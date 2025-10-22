@@ -1,7 +1,7 @@
 name: 🛠 Bug report
 description: Create a report to help us improve
 title: Good bug title tells us about precise symptom, not about the root cause.
-labels: [bug]
+labels: ['type: bug']
 body:
   - type: textarea
     id: description
@@ -48,14 +48,22 @@ body:
     attributes:
       label: Environment
       description: |
-        For older commitizen versions, please include the output of the following commands manually
-      placeholder: |
-        - commitizen version: `cz version`
-        - python version: `python --version`
-        - operating system: `python3 -c "import platform; print(platform.system())"`
+        Please use the following command to retrieve environment information
 
         ```bash
         cz version --report
         ```
+
+        If `cz version --report` is not available, please run the following commands to retrieve your environment information:
+
+        ```bash
+        echo "Commitizen Version: $(cz version)"
+        echo "Python Version: $(python3 -c 'import sys; print(sys.version)')"
+        echo "Operating System: $(python3 -c 'import platform; print(platform.system())')"
+        ```
+      placeholder: |
+        Commitizen Version: 4.0.0
+        Python Version: 3.13.3 (main, Apr  8 2025, 13:54:08) [Clang 16.0.0 (clang-1600.0.26.6)]
+        Operating System: Darwin
     validations:
       required: true
