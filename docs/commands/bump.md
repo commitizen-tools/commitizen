@@ -589,7 +589,7 @@ execution of the script, some environment variables are available:
 | `CZ_PRE_NEW_VERSION`         | New version, after the bump                                |
 | `CZ_PRE_NEW_TAG_VERSION`     | New version tag, after the bump                            |
 | `CZ_PRE_MESSAGE`             | Commit message of the bump                                 |
-| `CZ_PRE_INCREMENT`           | Whether this is a `MAJOR`, `MINOR` or `PATH` release       |
+| `CZ_PRE_INCREMENT`           | Whether this is a `MAJOR`, `MINOR` or `PATCH` release       |
 | `CZ_PRE_CHANGELOG_FILE_NAME` | Path to the changelog file, if available                   |
 
 ```toml title="pyproject.toml"
@@ -616,7 +616,7 @@ release. During execution of the script, some environment variables are availabl
 | `CZ_POST_CURRENT_VERSION`      | Current version, after the bump                             |
 | `CZ_POST_CURRENT_TAG_VERSION`  | Current version tag, after the bump                         |
 | `CZ_POST_MESSAGE`              | Commit message of the bump                                  |
-| `CZ_POST_INCREMENT`            | Whether this was a `MAJOR`, `MINOR` or `PATH` release      |
+| `CZ_POST_INCREMENT`            | Whether this was a `MAJOR`, `MINOR` or `PATCH` release      |
 | `CZ_POST_CHANGELOG_FILE_NAME`  | Path to the changelog file, if available                    |
 
 ```toml title="pyproject.toml"
