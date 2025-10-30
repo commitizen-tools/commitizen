@@ -38,7 +38,7 @@ If you're a first-time contributor, please check out issues labeled [good first 
     ```bash
     git remote add upstream https://github.com/commitizen-tools/commitizen.git
     ```
-4. Set up the development environment:
+4. Set up the development environment (nix users go to [nix section](#nix)):
     ```bash
     poetry install
     ```
@@ -70,6 +70,7 @@ If you're a first-time contributor, please check out issues labeled [good first 
 5. **Documentation**
     - Update `docs/README.md` if needed
     - For CLI help screenshots: `poetry doc:screenshots`
+    - Prefer [Google style documentation](https://github.com/google/styleguide/blob/gh-pages/pyguide.md#38-comments-and-docstrings), which works well with editors like VSCode and PyCharm
     - **DO NOT** update `CHANGELOG.md` (automatically generated)
     - **DO NOT** update version numbers (automatically handled)
 6. **Pull Request**
@@ -152,4 +153,17 @@ flowchart TD
     wait-for-modification
     --modification-received-->
     review
+```
+
+## Nix
+
+If you have installed poetry globally, the project won't work because it requries `poethepoet` for command management.
+
+You'll have to install poetry locally.
+
+```sh
+python -m venv .venv
+. .venv/bin/activate
+pip install -U pip && pip install poetry
+poetry install
 ```
