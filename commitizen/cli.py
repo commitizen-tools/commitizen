@@ -543,6 +543,18 @@ data = {
                         "action": "store_true",
                         "exclusive_group": "group1",
                     },
+                    {
+                        "name": ["--major"],
+                        "help": "get just the major version",
+                        "action": "store_true",
+                        "exclusive_group": "group2",
+                    },
+                    {
+                        "name": ["--minor"],
+                        "help": "get just the minor version",
+                        "action": "store_true",
+                        "exclusive_group": "group2",
+                    },
                 ],
             },
         ],
