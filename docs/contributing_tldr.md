@@ -12,7 +12,7 @@ Please check the [pyproject.toml](https://github.com/commitizen-tools/commitizen
 ### Code Changes
 
 ```bash
-# Ensure you have the correct dependencies
+# Ensure you have the correct dependencies, for nix user's see below
 poetry install
 
 # Make ruff happy
@@ -34,4 +34,15 @@ pytest -n auto <test_suite>
 ```bash
 # Build the documentation locally and check for broken links
 poetry doc
+```
+
+### Nix Users
+
+If you are using Nix, you can install poetry locally by running:
+
+```sh
+python -m venv .venv
+. .venv/bin/activate
+pip install -U pip && pip install poetry
+poetry install
 ```
