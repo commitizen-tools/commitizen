@@ -5,14 +5,17 @@ from typing import TypedDict
 from commitizen import out
 from commitizen.__version__ import __version__
 from commitizen.config import BaseConfig
-from commitizen.exceptions import NoVersionSpecifiedError
+from commitizen.exceptions import NoVersionSpecifiedError, VersionSchemeUnknown
 from commitizen.providers import get_provider
+from commitizen.version_schemes import get_version_scheme
 
 
 class VersionArgs(TypedDict, total=False):
     report: bool
     project: bool
     verbose: bool
+    major: bool
+    minor: bool
 
 
 class Version:
@@ -40,6 +43,17 @@ class Version:
             except NoVersionSpecifiedError:
                 out.error("No project information in this project.")
                 return
+
+            try:
+                version_scheme = get_version_scheme(self.config.settings)
+            except VersionSchemeUnknown:
+                out.error("Unknown version scheme.")
+            _version = version_scheme(version)
+
+            if self.parameter.get("major"):
+                version = f"{_version.major}"
+            elif self.parameter.get("minor"):
+                version = f"{_version.minor}"
 
             out.write(f"Project Version: {version}" if verbose else version)
             return

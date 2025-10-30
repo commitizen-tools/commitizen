@@ -157,7 +157,7 @@ flowchart TD
 
 ## Nix
 
-If you have installed poetry globally, the project won't work because it requries `poethepoet` for command management.
+If you have installed poetry globally, the project won't work because it requires `poethepoet` for command management.
 
 You'll have to install poetry locally.
 
