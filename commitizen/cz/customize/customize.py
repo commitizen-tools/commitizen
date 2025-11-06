@@ -1,9 +1,14 @@
 from __future__ import annotations
 
-try:
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
     from jinja2 import Template
-except ImportError:
-    from string import Template  # type: ignore
+else:
+    try:
+        from jinja2 import Template
+    except ImportError:
+        from string import Template
 
 
 from commitizen import defaults
@@ -68,16 +73,16 @@ class CustomizeCommitsCz(BaseCommitizen):
         else:
             return message_template.render(**answers)
 
-    def example(self) -> str | None:
-        return self.custom_settings.get("example")
+    def example(self) -> str:
+        return self.custom_settings.get("example") or ""
 
-    def schema_pattern(self) -> str | None:
-        return self.custom_settings.get("schema_pattern")
+    def schema_pattern(self) -> str:
+        return self.custom_settings.get("schema_pattern") or ""
 
-    def schema(self) -> str | None:
-        return self.custom_settings.get("schema")
+    def schema(self) -> str:
+        return self.custom_settings.get("schema") or ""
 
-    def info(self) -> str | None:
+    def info(self) -> str:
         info_path = self.custom_settings.get("info_path")
         info = self.custom_settings.get("info")
         if info_path:
@@ -86,4 +91,4 @@ class CustomizeCommitsCz(BaseCommitizen):
             return content
         elif info:
             return info
-        return None
+        return ""

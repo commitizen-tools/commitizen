@@ -42,7 +42,7 @@ class ExitCode(enum.IntEnum):
 class CommitizenException(Exception):
     def __init__(self, *args, **kwargs):
         self.output_method = kwargs.get("output_method") or out.error
-        self.exit_code = self.__class__.exit_code
+        self.exit_code: ExitCode = self.__class__.exit_code
         if args:
             self.message = args[0]
         elif hasattr(self.__class__, "message"):

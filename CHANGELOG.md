@@ -1,3 +1,24 @@
+## v4.0.0 (2024-11-26)
+
+## v3.31.0 (2024-11-16)
+
+### Feat
+
+- **commitizen**: document '--' double dash in '--help'
+
+### Fix
+
+- **commit**: avoid warnings with 'always_signoff' configuration
+- **commit**: resolve 'always_signoff' configuration and '-s' CLI issues
+
+## v3.30.1 (2024-11-10)
+
+### Refactor
+
+- **cli**: replace magic number 0 with ExitCode.EXPECTED_EXIT
+- **defaults**: disallow style as None
+- **cz_customize**: return empty string for info, example, schema and schema_pattern if not provided
+
 ## v3.30.0 (2024-10-23)
 
 ### Feat

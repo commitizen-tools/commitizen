@@ -3,11 +3,12 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
+from collections.abc import Sequence
 from copy import deepcopy
 from functools import partial
 from pathlib import Path
 from types import TracebackType
-from typing import Any, Sequence
+from typing import Any
 
 import argcomplete
 from decli import cli
@@ -167,6 +168,12 @@ data = {
                         "type": int,
                         "default": 0,
                         "help": "length limit of the commit message; 0 for no limit",
+                    },
+                    {
+                        "name": ["--"],
+                        "action": "store_true",
+                        "dest": "double_dash",
+                        "help": "Positional arguments separator (recommended)",
                     },
                 ],
             },
@@ -547,7 +554,7 @@ def commitizen_excepthook(
             original_excepthook(type, value, traceback)
         exit_code = value.exit_code
         if exit_code in no_raise:
-            exit_code = 0
+            exit_code = ExitCode.EXPECTED_EXIT
         sys.exit(exit_code)
     else:
         original_excepthook(type, value, traceback)
