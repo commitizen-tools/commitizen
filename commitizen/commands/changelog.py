@@ -199,7 +199,8 @@ class Changelog:
             raise NotAllowed("--incremental cannot be combined with a rev_range")
 
         # Don't continue if no `file_name` specified.
-        assert self.file_name
+        if not self.file_name:
+            raise NotAllowed("filename is required.")
 
         tags = self.tag_rules.get_version_tags(git.get_tags(), warn=True)
         changelog_meta = changelog.Metadata()
