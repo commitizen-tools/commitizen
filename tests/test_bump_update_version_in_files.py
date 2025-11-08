@@ -2,6 +2,7 @@ from pathlib import Path
 from shutil import copyfile
 
 import pytest
+from _pytest.fixtures import FixtureRequest
 
 from commitizen import bump
 from commitizen.exceptions import CurrentVersionNotFoundError
@@ -21,40 +22,40 @@ def _copy_sample_file_to_tmpdir(
 
 
 @pytest.fixture(scope="function")
-def commitizen_config_file(tmpdir):
+def commitizen_config_file(tmp_path: Path) -> Path:
     return _copy_sample_file_to_tmpdir(
-        tmpdir, "sample_pyproject.toml", "pyproject.toml"
+        tmp_path, "sample_pyproject.toml", "pyproject.toml"
     )
 
 
 @pytest.fixture(scope="function")
-def python_version_file(tmpdir, request):
-    return _copy_sample_file_to_tmpdir(tmpdir, "sample_version.py", "__version__.py")
+def python_version_file(tmp_path: Path, request: FixtureRequest) -> Path:
+    return _copy_sample_file_to_tmpdir(tmp_path, "sample_version.py", "__version__.py")
 
 
 @pytest.fixture(scope="function")
-def inconsistent_python_version_file(tmpdir):
+def inconsistent_python_version_file(tmp_path: Path) -> Path:
     return _copy_sample_file_to_tmpdir(
-        tmpdir, "inconsistent_version.py", "__version__.py"
+        tmp_path, "inconsistent_version.py", "__version__.py"
     )
 
 
 @pytest.fixture(scope="function")
-def random_location_version_file(tmpdir):
-    return _copy_sample_file_to_tmpdir(tmpdir, "sample_cargo.lock", "Cargo.lock")
+def random_location_version_file(tmp_path: Path) -> Path:
+    return _copy_sample_file_to_tmpdir(tmp_path, "sample_cargo.lock", "Cargo.lock")
 
 
 @pytest.fixture(scope="function")
-def version_repeated_file(tmpdir):
+def version_repeated_file(tmp_path: Path) -> Path:
     return _copy_sample_file_to_tmpdir(
-        tmpdir, "repeated_version_number.json", "package.json"
+        tmp_path, "repeated_version_number.json", "package.json"
     )
 
 
 @pytest.fixture(scope="function")
-def docker_compose_file(tmpdir):
+def docker_compose_file(tmp_path: Path) -> Path:
     return _copy_sample_file_to_tmpdir(
-        tmpdir, "sample_docker_compose.yaml", "docker-compose.yaml"
+        tmp_path, "sample_docker_compose.yaml", "docker-compose.yaml"
     )
 
 
@@ -66,36 +67,38 @@ def docker_compose_file(tmpdir):
     ),
     ids=("with_eol", "without_eol"),
 )
-def multiple_versions_to_update_poetry_lock(tmpdir, request):
-    return _copy_sample_file_to_tmpdir(tmpdir, request.param, "pyproject.toml")
+def multiple_versions_to_update_poetry_lock(
+    tmp_path: Path, request: FixtureRequest
+) -> Path:
+    return _copy_sample_file_to_tmpdir(tmp_path, request.param, "pyproject.toml")
 
 
 @pytest.fixture(scope="function")
-def multiple_versions_increase_string(tmpdir):
-    tmp_file = tmpdir.join("anyfile")
-    tmp_file.write(MULTIPLE_VERSIONS_INCREASE_STRING)
+def multiple_versions_increase_string(tmp_path: Path) -> str:
+    tmp_file = tmp_path / "anyfile"
+    tmp_file.write_text(MULTIPLE_VERSIONS_INCREASE_STRING)
     return str(tmp_file)
 
 
 @pytest.fixture(scope="function")
-def multiple_versions_reduce_string(tmpdir):
-    tmp_file = tmpdir.join("anyfile")
-    tmp_file.write(MULTIPLE_VERSIONS_REDUCE_STRING)
+def multiple_versions_reduce_string(tmp_path: Path) -> str:
+    tmp_file = tmp_path / "anyfile"
+    tmp_file.write_text(MULTIPLE_VERSIONS_REDUCE_STRING)
     return str(tmp_file)
 
 
 @pytest.fixture(scope="function")
 def version_files(
-    commitizen_config_file,
-    python_version_file,
-    version_repeated_file,
-    docker_compose_file,
-):
+    commitizen_config_file: Path,
+    python_version_file: Path,
+    version_repeated_file: Path,
+    docker_compose_file: Path,
+) -> tuple[str, ...]:
     return (
-        commitizen_config_file,
-        python_version_file,
-        version_repeated_file,
-        docker_compose_file,
+        str(commitizen_config_file),
+        str(python_version_file),
+        str(version_repeated_file),
+        str(docker_compose_file),
     )
 
 
@@ -228,12 +231,14 @@ def test_multiple_versions_to_bump(
 def test_update_version_in_globbed_files(commitizen_config_file, file_regression):
     old_version = "1.2.3"
     new_version = "2.0.0"
-    other = commitizen_config_file.dirpath("other.toml")
-    print(commitizen_config_file, other)
+    other = commitizen_config_file.parent / "other.toml"
+
     copyfile(commitizen_config_file, other)
 
     # Prepend full path as test assume absolute paths or cwd-relative
-    version_files = [commitizen_config_file.dirpath("*.toml")]
+    version_files = [
+        str(file_path) for file_path in commitizen_config_file.parent.glob("*.toml")
+    ]
 
     bump.update_version_in_files(
         old_version,
@@ -247,13 +252,15 @@ def test_update_version_in_globbed_files(commitizen_config_file, file_regression
         file_regression.check(file.read_text("utf-8"), extension=".toml")
 
 
-def test_update_version_in_files_with_check_consistency_true(version_files):
+def test_update_version_in_files_with_check_consistency_true(
+    version_files: tuple[str, ...],
+):
     """Test update_version_in_files with check_consistency=True (success case)."""
     old_version = "1.2.3"
     new_version = "2.0.0"
 
     # This should succeed because all files contain the current version
-    updated_files = bump.update_version_in_files(
+    updated_files: list[str] = bump.update_version_in_files(
         old_version,
         new_version,
         version_files,
@@ -262,9 +269,7 @@ def test_update_version_in_files_with_check_consistency_true(version_files):
     )
 
     # Verify that all files were updated
-    assert len(updated_files) == len(version_files)
-    for file_path in updated_files:
-        assert file_path in version_files
+    assert set(updated_files) == set(version_files)
 
 
 def test_update_version_in_files_with_check_consistency_true_failure(
