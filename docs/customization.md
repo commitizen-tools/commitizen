@@ -110,13 +110,13 @@ And the correspondent example for a yaml file:
 commitizen:
   name: cz_customize
   customize:
-    message_template: "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
+    message_template: '{{change_type}}:{% if show_message %} {{message}}{% endif %}'
     example: 'feature: this feature enable customize through config file'
-    schema: "<type>: <body>"
-    schema_pattern: "(feature|bug fix):(\\s.*)"
-    bump_pattern: "^(break|new|fix|hotfix)"
-    commit_parser: "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?"
-    changelog_pattern: "^(feature|bug fix)?(!)?"
+    schema: '<type>: <body>'
+    schema_pattern: '(feature|bug fix):(\\s.*)'
+    bump_pattern: '^(break|new|fix|hotfix)'
+    commit_parser: '^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?'
+    changelog_pattern: '^(feature|bug fix)?(!)?'
     change_type_map:
       feature: Feat
       bug fix: Fix
@@ -125,7 +125,7 @@ commitizen:
       new: MINOR
       fix: PATCH
       hotfix: PATCH
-    change_type_order: ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]
+    change_type_order: ['BREAKING CHANGE', 'feat', 'fix', 'refactor', 'perf']
     info_path: cz_customize_info.txt
     info: This is customized info
     questions:
@@ -168,17 +168,18 @@ commitizen:
 
 #### Detailed `questions` content
 
-| Parameter   | Type   | Default | Description                                                                                                                                                                                     |
-| ----------- | ------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `type`      | `str`  | `None`  | The type of questions. Valid types: `list`, `select`, `input`, etc. The `select` type provides an interactive searchable list interface. [See More][different-question-types]                  |
-| `name`      | `str`  | `None`  | The key for the value answered by user. It's used in `message_template`                                                                                                                         |
-| `message`   | `str`  | `None`  | Detail description for the question.                                                                                                                                                            |
-| `choices`   | `list` | `None`  | (OPTIONAL) The choices when `type = list` or `type = select`. Either use a list of values or a list of dictionaries with `name` and `value` keys. Keyboard shortcuts can be defined via `key`. See examples above. |
-| `default`   | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                                                                 |
-| `filter`    | `str`  | `None`  | (OPTIONAL) Validator for user's answer. **(Work in Progress)**                                                                                                                                  |
-| `multiline` | `bool` | `False` | (OPTIONAL) Enable multiline support when `type = input`.                                                                                                                                        |
-| `use_search_filter` | `bool` | `False` | (OPTIONAL) Enable search/filter functionality for list/select type questions. This allows users to type and filter through the choices.                                                  |
-| `use_jk_keys` | `bool` | `True` | (OPTIONAL) Enable/disable j/k keys for navigation in list/select type questions. Set to false if you prefer arrow keys only.                                                                    |
+| Parameter           | Type   | Default | Description                                                                                                                                                                                                        |
+| ------------------- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `type`              | `str`  | `None`  | The type of questions. Valid types: `list`, `select`, `input`, etc. The `select` type provides an interactive searchable list interface. [See More][different-question-types]                                      |
+| `name`              | `str`  | `None`  | The key for the value answered by user. It's used in `message_template`                                                                                                                                            |
+| `message`           | `str`  | `None`  | Detail description for the question.                                                                                                                                                                               |
+| `choices`           | `list` | `None`  | (OPTIONAL) The choices when `type = list` or `type = select`. Either use a list of values or a list of dictionaries with `name` and `value` keys. Keyboard shortcuts can be defined via `key`. See examples above. |
+| `default`           | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                                                                                    |
+| `filter`            | `str`  | `None`  | (OPTIONAL) Validator for user's answer. The string is the name of a `commitizen.cz.utils.NAME(answer...)` function like `break_multiple_line`                                                                      |
+| `multiline`         | `bool` | `False` | (OPTIONAL) Enable multiline support when `type = input`.                                                                                                                                                           |
+| `multiline`         | `bool` | `False` | (OPTIONAL) Enable multiline support when `type = input`.                                                                                                                                                           |
+| `use_search_filter` | `bool` | `False` | (OPTIONAL) Enable search/filter functionality for list/select type questions. This allows users to type and filter through the choices.                                                                            |
+| `use_jk_keys`       | `bool` | `True`  | (OPTIONAL) Enable/disable j/k keys for navigation in list/select type questions. Set to false if you prefer arrow keys only.                                                                                       |
 
 [different-question-types]: https://github.com/tmbo/questionary#different-question-types
 

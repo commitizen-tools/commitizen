@@ -14,7 +14,28 @@ def required_validator(answer: str, msg: object = None) -> str:
     return answer
 
 
-def multiple_line_breaker(answer: str, sep: str = "|") -> str:
+def required_validator_scope(
+    answer: str,
+    msg: str = "! Error: Scope is required",
+) -> str:
+    return required_validator(answer, msg)
+
+
+def required_validator_subject_strip(
+    answer: str,
+    msg: str = "! Error: Subject is required",
+) -> str:
+    return required_validator(answer.strip(".").strip(), msg)
+
+
+def required_validator_title_strip(
+    answer: str,
+    msg: str = "! Error: Title is required",
+) -> str:
+    return required_validator(answer.strip(".").strip(), msg)
+
+
+def break_multiple_line(answer: str, sep: str = "|") -> str:
     return "\n".join(line.strip() for line in answer.split(sep) if line)
 
 
