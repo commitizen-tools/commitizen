@@ -346,13 +346,10 @@ def test_update_version_in_files_return_value(version_files):
     assert isinstance(updated_files, list)
 
     # Verify all files in the input are in the returned list
-    assert len(updated_files) == len(version_files)
-    for file_path in version_files:
-        assert file_path in updated_files
+    assert set(version_files) == set(updated_files)
 
     # Verify the returned paths are strings
-    for file_path in updated_files:
-        assert isinstance(file_path, str)
+    assert all(isinstance(file_path, str) for file_path in updated_files)
 
 
 def test_update_version_in_files_return_value_partial_update(tmp_path):
