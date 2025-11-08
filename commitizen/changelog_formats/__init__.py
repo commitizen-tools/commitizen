@@ -1,63 +1,28 @@
 from __future__ import annotations
 
 import sys
-from typing import Callable, ClassVar, Protocol
+from typing import Callable
+
+from commitizen.changelog_formats.base import BaseFormat
 
 if sys.version_info >= (3, 10):
     from importlib import metadata
 else:
     import importlib_metadata as metadata
 
-from commitizen.changelog import Metadata
 from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import ChangelogFormatUnknown
 
 CHANGELOG_FORMAT_ENTRYPOINT = "commitizen.changelog_format"
-TEMPLATE_EXTENSION = "j2"
 
 
-class ChangelogFormat(Protocol):
-    extension: ClassVar[str]
-    """Standard known extension associated with this format"""
-
-    alternative_extensions: ClassVar[set[str]]
-    """Known alternatives extensions for this format"""
-
-    config: BaseConfig
-
-    def __init__(self, config: BaseConfig) -> None:
-        self.config = config
-
-    @property
-    def ext(self) -> str:
-        """Dotted version of extensions, as in `pathlib` and `os` modules"""
-        return f".{self.extension}"
-
-    @property
-    def template(self) -> str:
-        """Expected template name for this format"""
-        return f"CHANGELOG.{self.extension}.{TEMPLATE_EXTENSION}"
-
-    @property
-    def default_changelog_file(self) -> str:
-        return f"CHANGELOG.{self.extension}"
-
-    def get_metadata(self, filepath: str) -> Metadata:
-        """
-        Extract the changelog metadata.
-        """
-        raise NotImplementedError
-
-
-KNOWN_CHANGELOG_FORMATS: dict[str, type[ChangelogFormat]] = {
+KNOWN_CHANGELOG_FORMATS: dict[str, type[BaseFormat]] = {
     ep.name: ep.load()
     for ep in metadata.entry_points(group=CHANGELOG_FORMAT_ENTRYPOINT)
 }
 
 
-def get_changelog_format(
-    config: BaseConfig, filename: str | None = None
-) -> ChangelogFormat:
+def get_changelog_format(config: BaseConfig, filename: str | None = None) -> BaseFormat:
     """
     Get a format from its name
 
@@ -74,7 +39,7 @@ def get_changelog_format(
     return format(config)
 
 
-def _guess_changelog_format(filename: str | None) -> type[ChangelogFormat] | None:
+def _guess_changelog_format(filename: str | None) -> type[BaseFormat] | None:
     """
     Try guessing the file format from the filename.
 
@@ -92,7 +57,7 @@ def _guess_changelog_format(filename: str | None) -> type[ChangelogFormat] | Non
     return None
 
 
-def __getattr__(name: str) -> Callable[[str], type[ChangelogFormat] | None]:
+def __getattr__(name: str) -> Callable[[str], type[BaseFormat] | None]:
     if name == "guess_changelog_format":
         return _guess_changelog_format
     raise AttributeError(f"module {__name__} has no attribute {name}")

@@ -5,7 +5,7 @@ from collections.abc import Iterable, Mapping
 from typing import Any, Callable, Protocol
 
 from jinja2 import BaseLoader, PackageLoader
-from prompt_toolkit.styles import Style, merge_styles
+from prompt_toolkit.styles import Style
 
 from commitizen import git
 from commitizen.config.base_config import BaseConfig
@@ -77,25 +77,25 @@ class BaseCommitizen(metaclass=ABCMeta):
 
     @property
     def style(self) -> Style:
-        return merge_styles(
+        return Style(
             [
-                Style(BaseCommitizen.default_style_config),
-                Style(self.config.settings["style"]),
+                *BaseCommitizen.default_style_config,
+                *self.config.settings["style"],
             ]
-        )  # type: ignore[return-value]
+        )
 
+    @abstractmethod
     def example(self) -> str:
         """Example of the commit message."""
-        raise NotImplementedError("Not Implemented yet")
 
+    @abstractmethod
     def schema(self) -> str:
         """Schema definition of the commit message."""
-        raise NotImplementedError("Not Implemented yet")
 
+    @abstractmethod
     def schema_pattern(self) -> str:
         """Regex matching the schema used for message validation."""
-        raise NotImplementedError("Not Implemented yet")
 
+    @abstractmethod
     def info(self) -> str:
         """Information about the standardized commit message."""
-        raise NotImplementedError("Not Implemented yet")

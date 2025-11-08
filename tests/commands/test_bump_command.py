@@ -13,7 +13,7 @@ from pytest_mock import MockFixture
 
 import commitizen.commands.bump as bump
 from commitizen import cli, cmd, defaults, git, hooks
-from commitizen.changelog_formats import ChangelogFormat
+from commitizen.changelog_formats import BaseFormat
 from commitizen.config.base_config import BaseConfig
 from commitizen.cz.base import BaseCommitizen
 from commitizen.exceptions import (
@@ -1289,7 +1289,7 @@ def test_bump_command_version_scheme_priority_over_version_type(mocker: MockFixt
 def test_bump_template_option_precedence(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
-    any_changelog_format: ChangelogFormat,
+    any_changelog_format: BaseFormat,
     arg: str,
     cfg: str,
     expected: str,
@@ -1331,7 +1331,7 @@ def test_bump_template_option_precedence(
 def test_bump_template_extras_precedence(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
-    any_changelog_format: ChangelogFormat,
+    any_changelog_format: BaseFormat,
     mock_plugin: BaseCommitizen,
 ):
     project_root = Path(tmp_commitizen_project)
@@ -1376,7 +1376,7 @@ def test_bump_template_extras_precedence(
 def test_bump_template_extra_quotes(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
-    any_changelog_format: ChangelogFormat,
+    any_changelog_format: BaseFormat,
 ):
     project_root = Path(tmp_commitizen_project)
     changelog_tpl = project_root / any_changelog_format.template
