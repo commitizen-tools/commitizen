@@ -176,7 +176,6 @@ commitizen:
 | `choices`   | `list` | `None`  | (OPTIONAL) The choices when `type = list` or `type = select`. Either use a list of values or a list of dictionaries with `name` and `value` keys. Keyboard shortcuts can be defined via `key`. See examples above. |
 | `default`   | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                                                                 |
 | `filter`    | `str`  | `None`  | (OPTIONAL) Validator for user's answer. **(Work in Progress)**                                                                                                                                  |
-| `multiline` | `bool` | `False` | (OPTIONAL) Enable multiline support when `type = input`.                                                                                                                                        |
 | `use_search_filter` | `bool` | `False` | (OPTIONAL) Enable search/filter functionality for list/select type questions. This allows users to type and filter through the choices.                                                  |
 | `use_jk_keys` | `bool` | `True` | (OPTIONAL) Enable/disable j/k keys for navigation in list/select type questions. Set to false if you prefer arrow keys only.                                                                    |
 

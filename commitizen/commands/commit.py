@@ -6,9 +6,13 @@ import shutil
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import TypedDict
+from typing import Any, TypedDict
 
 import questionary
+from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit.key_binding.key_processor import KeyPressEvent
+from prompt_toolkit.keys import Keys
+from prompt_toolkit.styles import Style
 
 from commitizen import factory, git, out
 from commitizen.config import BaseConfig
@@ -26,6 +30,7 @@ from commitizen.exceptions import (
     NothingToCommitError,
 )
 from commitizen.git import smart_open
+from commitizen.question import CzQuestion, InputQuestion
 
 
 class CommitArgs(TypedDict, total=False):
@@ -38,6 +43,91 @@ class CommitArgs(TypedDict, total=False):
     signoff: bool
     write_message_to_file: Path | None
     retry: bool
+
+
+def _handle_questionary_prompt(question: CzQuestion, cz_style: Style) -> dict[str, Any]:
+    """Handle questionary prompt with multiline and error handling."""
+    if question["type"] == "input" and question.get("multiline", False):
+        return _handle_multiline_question(question, cz_style)
+
+    try:
+        answer = questionary.prompt([question], style=cz_style)
+        if not answer:
+            raise NoAnswersError()
+        return answer
+    except ValueError as err:
+        root_err = err.__context__
+        if isinstance(root_err, CzException):
+            raise CustomError(str(root_err))
+        raise err
+
+
+def _handle_multiline_question(
+    question: InputQuestion, cz_style: Style
+) -> dict[str, Any]:
+    """Handle multiline input questions."""
+    is_optional = (
+        question.get("default") == ""
+        or "skip" in question.get("message", "").lower()
+        or "[enter] to skip" in question.get("message", "").lower()
+    )
+
+    guidance = (
+        "💡 Press Enter on empty line to skip, Alt+Enter to finish"
+        if is_optional
+        else "💡 Press Alt+Enter to finish"
+    )
+    out.info(guidance)
+
+    def _handle_key_press(event: KeyPressEvent, is_finish_key: bool) -> None:
+        buffer = event.current_buffer
+        is_empty = not buffer.text.strip()
+
+        if is_empty:
+            if is_optional and not is_finish_key:
+                event.app.exit(result="")
+            elif not is_optional:
+                out.error(
+                    "⚠ This field is required. Please enter some content or press Ctrl+C to abort."
+                )
+                out.line("> ", end="", flush=True)
+            else:
+                event.app.exit(result=buffer.text)
+        else:
+            if is_finish_key:
+                event.app.exit(result=buffer.text)
+            else:
+                buffer.newline()
+
+    bindings = KeyBindings()
+
+    @bindings.add(Keys.Enter)
+    def _(event: KeyPressEvent) -> None:
+        _handle_key_press(event, is_finish_key=False)
+
+    @bindings.add(Keys.Escape, Keys.Enter)
+    def _(event: KeyPressEvent) -> None:
+        _handle_key_press(event, is_finish_key=True)
+
+    result = questionary.text(
+        message=question["message"],
+        multiline=True,
+        style=cz_style,
+        key_bindings=bindings,
+    ).unsafe_ask()
+
+    if result is None:
+        result = question.get("default", "")
+
+    if "filter" in question:
+        try:
+            result = question["filter"](result)
+        except Exception as e:
+            out.error(f"⚠ {str(e)}")
+            out.line("> ", end="", flush=True)
+            return _handle_multiline_question(question, cz_style)
+
+    return {question["name"]: result}
 
 
 class Commit:
@@ -66,18 +156,14 @@ class Commit:
         # Prompt user for the commit message
         cz = self.cz
         questions = cz.questions()
-        for question in (q for q in questions if q["type"] == "list"):
-            question["use_shortcuts"] = self.config.settings["use_shortcuts"]
-        try:
-            answers = questionary.prompt(questions, style=cz.style)
-        except ValueError as err:
-            root_err = err.__context__
-            if isinstance(root_err, CzException):
-                raise CustomError(root_err.__str__())
-            raise err
+        answers = {}
 
-        if not answers:
-            raise NoAnswersError()
+        for question in questions:
+            if question["type"] == "list":
+                question["use_shortcuts"] = self.config.settings["use_shortcuts"]
+
+            answer = _handle_questionary_prompt(question, cz.style)
+            answers.update(answer)
 
         message = cz.message(answers)
         message_len = len(message.partition("\n")[0].strip())
