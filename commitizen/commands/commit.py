@@ -80,18 +80,16 @@ class Commit:
             raise NoAnswersError()
 
         message = self.cz.message(answers)
-        self._validate_subject_length(message)
+        if limit := self.arguments.get("message_length_limit", 0):
+            self._validate_subject_length(message=message, length_limit=limit)
         return message
 
-    def _validate_subject_length(self, message: str) -> None:
+    def _validate_subject_length(self, *, message: str, length_limit: int) -> None:
         # By the contract, message_length_limit is set to 0 for no limit
         subject = message.partition("\n")[0].strip()
-        limit = self.arguments.get("message_length_limit", 0)
-        if limit == 0:
-            return
-        if len(subject) > limit:
+        if len(subject) > length_limit:
             raise CommitMessageLengthExceededError(
-                f"Length of commit message exceeds limit ({len(subject)}/{limit}), subject: '{subject}'"
+                f"Length of commit message exceeds limit ({len(subject)}/{length_limit}), subject: '{subject}'"
             )
 
     def manual_edit(self, message: str) -> str:
