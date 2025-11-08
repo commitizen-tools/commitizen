@@ -78,25 +78,30 @@ class Check:
         """Validate if commit messages follows the conventional pattern.
 
         Raises:
-            InvalidCommitMessageError: if the commit provided not follows the conventional pattern
+            InvalidCommitMessageError: if the commit provided does not follow the conventional pattern
         """
         commits = self._get_commits()
         if not commits:
             raise NoCommitsFoundError(f"No commit found with range: '{self.rev_range}'")
 
         pattern = re.compile(self.cz.schema_pattern())
-        invalid_msgs_content = "\n".join(
-            f'commit "{commit.rev}": "{commit.message}"'
+        invalid_commits = [
+            (commit, check.errors)
             for commit in commits
-            if not self._validate_commit_message(commit.message, pattern)
-        )
-        if invalid_msgs_content:
-            # TODO: capitalize the first letter of the error message for consistency in v5
+            if not (
+                check := self.cz.validate_commit_message(
+                    commit_msg=commit.message,
+                    pattern=pattern,
+                    allow_abort=self.allow_abort,
+                    allowed_prefixes=self.allowed_prefixes,
+                    max_msg_length=self.max_msg_length,
+                )
+            ).is_valid
+        ]
+
+        if invalid_commits:
             raise InvalidCommitMessageError(
-                "commit validation: failed!\n"
-                "please enter a commit message in the commitizen format.\n"
-                f"{invalid_msgs_content}\n"
-                f"pattern: {pattern.pattern}"
+                self.cz.format_exception_message(invalid_commits)
             )
         out.success("Commit validation: successful!")
 

@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import re
 from abc import ABCMeta, abstractmethod
 from collections.abc import Iterable, Mapping
-from typing import Any, Callable, Protocol
+from typing import Any, Callable, NamedTuple, Protocol
 
 from jinja2 import BaseLoader, PackageLoader
 from prompt_toolkit.styles import Style, merge_styles
@@ -24,6 +25,11 @@ class ChangelogReleaseHook(Protocol):
     ) -> dict[str, Any]: ...
 
 
+class ValidationResult(NamedTuple):
+    is_valid: bool
+    errors: list
+
+
 class BaseCommitizen(metaclass=ABCMeta):
     bump_pattern: str | None = None
     bump_map: dict[str, str] | None = None
@@ -41,7 +47,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         ("disabled", "fg:#858585 italic"),
     ]
 
-    # The whole subject will be parsed as message by default
+    # The whole subject will be parsed as a message by default
     # This allows supporting changelog for any rule system.
     # It can be modified per rule
     commit_parser: str | None = r"(?P<message>.*)"
@@ -95,6 +101,54 @@ class BaseCommitizen(metaclass=ABCMeta):
     def schema_pattern(self) -> str:
         """Regex matching the schema used for message validation."""
         raise NotImplementedError("Not Implemented yet")
+
+    def validate_commit_message(
+        self,
+        *,
+        commit_msg: str,
+        pattern: re.Pattern[str] | None,
+        allow_abort: bool,
+        allowed_prefixes: list[str],
+        max_msg_length: int,
+    ) -> ValidationResult:
+        """Validate commit message against the pattern."""
+        if not commit_msg:
+            return ValidationResult(allow_abort, [])
+
+        if pattern is None:
+            return ValidationResult(True, [])
+
+        if any(map(commit_msg.startswith, allowed_prefixes)):
+            return ValidationResult(True, [])
+
+        if max_msg_length:
+            msg_len = len(commit_msg.partition("\n")[0].strip())
+            if msg_len > max_msg_length:
+                return ValidationResult(
+                    False,
+                    [f"message is too long: {msg_len} > {max_msg_length}"],
+                )
+
+        return ValidationResult(
+            bool(pattern.match(commit_msg)),
+            [f"pattern: {pattern.pattern}"],
+        )
+
+    def format_exception_message(
+        self, invalid_commits: list[tuple[git.GitCommit, list]]
+    ) -> str:
+        """Format commit errors."""
+        displayed_msgs_content = "\n".join(
+            [
+                f'commit "{commit.rev}": "{commit.message}\n"' + "\n".join(errors)
+                for commit, errors in invalid_commits
+            ]
+        )
+        return (
+            "commit validation: failed!\n"
+            "please enter a commit message in the commitizen format.\n"
+            f"{displayed_msgs_content}"
+        )
 
     def info(self) -> str:
         """Information about the standardized commit message."""

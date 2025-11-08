@@ -3,20 +3,21 @@ from __future__ import annotations
 import os
 import re
 import tempfile
-from collections.abc import Iterator, Mapping
+from collections.abc import Iterable, Iterator, Mapping
 from pathlib import Path
+from typing import Any
 
 import pytest
 from pytest_mock import MockerFixture
 
-from commitizen import cmd, defaults
+from commitizen import cmd, defaults, git
 from commitizen.changelog_formats import (
     ChangelogFormat,
     get_changelog_format,
 )
 from commitizen.config import BaseConfig
 from commitizen.cz import registry
-from commitizen.cz.base import BaseCommitizen
+from commitizen.cz.base import BaseCommitizen, ValidationResult
 from commitizen.question import CzQuestion
 from tests.utils import create_file_and_commit
 
@@ -223,7 +224,7 @@ def use_cz_semver(mocker):
 
 
 class MockPlugin(BaseCommitizen):
-    def questions(self) -> list[CzQuestion]:
+    def questions(self) -> Iterable[CzQuestion]:
         return []
 
     def message(self, answers: Mapping) -> str:
@@ -235,6 +236,82 @@ def mock_plugin(mocker: MockerFixture, config: BaseConfig) -> BaseCommitizen:
     mock = MockPlugin(config)
     mocker.patch("commitizen.factory.committer_factory", return_value=mock)
     return mock
+
+
+class ValidationCz(BaseCommitizen):
+    def questions(self) -> Iterable[CzQuestion]:
+        return [
+            {"type": "input", "name": "commit", "message": "Initial commit:\n"},
+            {"type": "input", "name": "issue_nb", "message": "ABC-123"},
+        ]
+
+    def message(self, answers: Mapping[str, Any]) -> str:
+        return f"{answers['issue_nb']}: {answers['commit']}"
+
+    def schema(self) -> str:
+        return "<issue_nb>: <commit>"
+
+    def schema_pattern(self) -> str:
+        return r"^(?P<issue_nb>[A-Z]{3}-\d+): (?P<commit>.*)$"
+
+    def validate_commit_message(
+        self,
+        *,
+        commit_msg: str,
+        pattern: re.Pattern[str] | None,
+        allow_abort: bool,
+        allowed_prefixes: list[str],
+        max_msg_length: int,
+    ) -> ValidationResult:
+        """Validate commit message against the pattern."""
+        if not commit_msg:
+            return ValidationResult(
+                allow_abort, [] if allow_abort else ["commit message is empty"]
+            )
+
+        if pattern is None:
+            return ValidationResult(True, [])
+
+        if any(map(commit_msg.startswith, allowed_prefixes)):
+            return ValidationResult(True, [])
+
+        if max_msg_length:
+            msg_len = len(commit_msg.partition("\n")[0].strip())
+            if msg_len > max_msg_length:
+                return ValidationResult(
+                    False,
+                    [f"message is too long: {msg_len} > {max_msg_length}"],
+                )
+
+        return ValidationResult(
+            bool(pattern.match(commit_msg)), [f"pattern: {pattern.pattern}"]
+        )
+
+    def format_exception_message(
+        self, invalid_commits: list[tuple[git.GitCommit, list]]
+    ) -> str:
+        """Format commit errors."""
+        displayed_msgs_content = "\n".join(
+            [
+                (
+                    f'commit "{commit.rev}": "{commit.message}"\nerrors:\n\n'.join(
+                        f"- {error}" for error in errors
+                    )
+                )
+                for (commit, errors) in invalid_commits
+            ]
+        )
+        return (
+            "commit validation: failed!\n"
+            "please enter a commit message in the commitizen format.\n"
+            f"{displayed_msgs_content}"
+        )
+
+
+@pytest.fixture
+def use_cz_custom_validator(mocker):
+    new_cz = {**registry, "cz_custom_validator": ValidationCz}
+    mocker.patch.dict("commitizen.cz.registry", new_cz)
 
 
 SUPPORTED_FORMATS = ("markdown", "textile", "asciidoc", "restructuredtext")
