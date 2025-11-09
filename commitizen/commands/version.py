@@ -48,6 +48,8 @@ class Version:
                 version_scheme = get_version_scheme(self.config.settings)
             except VersionSchemeUnknown:
                 out.error("Unknown version scheme.")
+                return
+
             _version = version_scheme(version)
 
             if self.parameter.get("major"):
