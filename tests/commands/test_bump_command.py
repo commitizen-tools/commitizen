@@ -23,7 +23,6 @@ from commitizen.exceptions import (
     DryRunExit,
     ExitCode,
     ExpectedExit,
-    GetNextExit,
     InvalidManualVersion,
     NoCommitsFoundError,
     NoneIncrementExit,
@@ -1456,7 +1455,7 @@ def test_bump_get_next(mocker: MockFixture, capsys):
 
     testargs = ["cz", "bump", "--yes", "--get-next"]
     mocker.patch.object(sys, "argv", testargs)
-    with pytest.raises(GetNextExit):
+    with pytest.raises(DryRunExit):
         cli.main()
 
     out, _ = capsys.readouterr()
@@ -1476,7 +1475,7 @@ def test_bump_get_next_update_changelog_on_bump(
 
     testargs = ["cz", "bump", "--yes", "--get-next"]
     mocker.patch.object(sys, "argv", testargs)
-    with pytest.raises(GetNextExit):
+    with pytest.raises(DryRunExit):
         cli.main()
 
     out, _ = capsys.readouterr()
@@ -1484,39 +1483,6 @@ def test_bump_get_next_update_changelog_on_bump(
 
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is False
-
-
-@pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_get_next__changelog_is_not_allowed(mocker: MockFixture):
-    create_file_and_commit("feat: new file")
-
-    testargs = ["cz", "bump", "--yes", "--get-next", "--changelog"]
-    mocker.patch.object(sys, "argv", testargs)
-
-    with pytest.raises(NotAllowed):
-        cli.main()
-
-
-@pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_get_next__changelog_to_stdout_is_not_allowed(mocker: MockFixture):
-    create_file_and_commit("feat: new file")
-
-    testargs = ["cz", "bump", "--yes", "--get-next", "--changelog-to-stdout"]
-    mocker.patch.object(sys, "argv", testargs)
-
-    with pytest.raises(NotAllowed):
-        cli.main()
-
-
-@pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_get_next__manual_version_is_not_allowed(mocker: MockFixture):
-    create_file_and_commit("feat: new file")
-
-    testargs = ["cz", "bump", "--yes", "--get-next", "0.2.1"]
-    mocker.patch.object(sys, "argv", testargs)
-
-    with pytest.raises(NotAllowed):
-        cli.main()
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
