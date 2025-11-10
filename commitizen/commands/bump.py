@@ -16,7 +16,6 @@ from commitizen.exceptions import (
     BumpTagFailedError,
     DryRunExit,
     ExpectedExit,
-    GetNextExit,
     InvalidManualVersion,
     NoCommitsFoundError,
     NoneIncrementExit,
@@ -47,7 +46,7 @@ class BumpArgs(Settings, total=False):
     dry_run: bool
     file_name: str
     files_only: bool | None
-    get_next: bool
+    get_next: bool  # TODO: maybe rename to `next_version_to_stdout`
     git_output_to_stderr: bool
     increment_mode: str
     increment: Increment | None
@@ -94,7 +93,6 @@ class Bump:
         )
         self.cz = factory.committer_factory(self.config)
         self.changelog_flag = arguments["changelog"]
-        self.changelog_config = self.config.settings.get("update_changelog_on_bump")
         self.changelog_to_stdout = arguments["changelog_to_stdout"]
         self.git_output_to_stderr = arguments["git_output_to_stderr"]
         self.no_verify = arguments["no_verify"]
@@ -169,7 +167,9 @@ class Bump:
         is_local_version = self.arguments["local_version"]
         manual_version = self.arguments["manual_version"]
         build_metadata = self.arguments["build_metadata"]
-        get_next = self.arguments["get_next"]
+        next_version_to_stdout = self.arguments[
+            "get_next"
+        ]  # TODO: maybe rename to `next_version_to_stdout`
         allow_no_commit = self.arguments["allow_no_commit"]
         major_version_zero = self.arguments["major_version_zero"]
 
@@ -181,7 +181,6 @@ class Bump:
                 (is_local_version, "--local-version"),
                 (build_metadata, "--build-metadata"),
                 (major_version_zero, "--major-version-zero"),
-                (get_next, "--get-next"),
             ):
                 if val:
                     raise NotAllowed(f"{option} cannot be combined with MANUAL_VERSION")
@@ -194,24 +193,23 @@ class Bump:
         if build_metadata and is_local_version:
             raise NotAllowed("--local-version cannot be combined with --build-metadata")
 
-        if get_next:
+        if next_version_to_stdout:
             for value, option in (
                 (self.changelog_flag, "--changelog"),
                 (self.changelog_to_stdout, "--changelog-to-stdout"),
             ):
                 if value:
-                    raise NotAllowed(f"{option} cannot be combined with --get-next")
+                    warnings.warn(f"{option} has no effect when used with --get-next")
 
-            # --get-next is a special case, taking precedence over config for 'update_changelog_on_bump'
-            self.changelog_config = False
-            # Setting dry_run to prevent any unwanted changes to the repo or files
-            self.dry_run = True
-        else:
-            # If user specified changelog_to_stdout, they probably want the
-            # changelog to be generated as well, this is the most intuitive solution
-            self.changelog_flag = any(
-                (self.changelog_flag, self.changelog_to_stdout, self.changelog_config)
+        # If user specified changelog_to_stdout, they probably want the
+        # changelog to be generated as well, this is the most intuitive solution
+        self.changelog_flag = any(
+            (
+                self.changelog_flag,
+                self.changelog_to_stdout,
+                self.config.settings.get("update_changelog_on_bump"),
             )
+        )
 
         rules = TagRules.from_settings(cast(Settings, self.bump_settings))
         current_tag = rules.find_tag_for(git.get_tags(), current_version)
@@ -270,20 +268,18 @@ class Bump:
             )
 
         new_tag_version = rules.normalize_tag(new_version)
-        message = bump.create_commit_message(
-            current_version, new_version, self.bump_settings["bump_message"]
-        )
-
-        if get_next:
+        if next_version_to_stdout:
             if increment is None and new_tag_version == current_tag_version:
                 raise NoneIncrementExit(
                     "[NO_COMMITS_TO_BUMP]\n"
                     "The commits found are not eligible to be bumped"
                 )
-
             out.write(str(new_version))
-            raise GetNextExit()
+            raise DryRunExit()
 
+        message = bump.create_commit_message(
+            current_version, new_version, self.bump_settings["bump_message"]
+        )
         # Report found information
         information = f"{message}\ntag to create: {new_tag_version}\n"
         if increment:
