@@ -1035,6 +1035,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#nix-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nix Users
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1131,6 +1140,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#nix-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nix Users
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1163,7 +1181,7 @@
 <h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
 <p>Please check the <a href="https://github.com/commitizen-tools/commitizen/blob/master/pyproject.toml">pyproject.toml</a> for a comprehensive list of commands.</p>
 <h3 id="code-changes">Code Changes<a class="headerlink" href="#code-changes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Ensure you have the correct dependencies</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ensure you have the correct dependencies, for nix user&#39;s see below</span>
 poetry<span class="w"> </span>install
 
 <span class="c1"># Make ruff happy</span>
@@ -1182,6 +1200,13 @@ pytest<span class="w"> </span>-n<span class="w"> </span>auto<span class="w"> </s
 <h3 id="documentation-changes">Documentation Changes<a class="headerlink" href="#documentation-changes" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Build the documentation locally and check for broken links</span>
 poetry<span class="w"> </span>doc
+</code></pre></div>
+<h3 id="nix-users">Nix Users<a class="headerlink" href="#nix-users" title="Permanent link">&para;</a></h3>
+<p>If you are using Nix, you can install poetry locally by running:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+.<span class="w"> </span>.venv/bin/activate
+pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pip<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>poetry
+poetry<span class="w"> </span>install
 </code></pre></div>
 
 

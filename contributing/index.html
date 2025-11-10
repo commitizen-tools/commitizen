@@ -1054,6 +1054,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#nix" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nix
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1208,6 +1217,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#nix" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nix
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1266,7 +1284,7 @@
 <li>Add the upstream repository:
     <div class="highlight"><pre><span></span><code>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>upstream<span class="w"> </span>https://github.com/commitizen-tools/commitizen.git
 </code></pre></div></li>
-<li>Set up the development environment:
+<li>Set up the development environment (nix users go to <a href="#nix">nix section</a>):
     <div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>install
 </code></pre></div></li>
 <li>Set up pre-commit hooks:
@@ -1301,6 +1319,7 @@ git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </sp
 <li><strong>Documentation</strong><ul>
 <li>Update <code>docs/README.md</code> if needed</li>
 <li>For CLI help screenshots: <code>poetry doc:screenshots</code></li>
+<li>Prefer <a href="https://github.com/google/styleguide/blob/gh-pages/pyguide.md#38-comments-and-docstrings">Google style documentation</a>, which works well with editors like VSCode and PyCharm</li>
 <li><strong>DO NOT</strong> update <code>CHANGELOG.md</code> (automatically generated)</li>
 <li><strong>DO NOT</strong> update version numbers (automatically handled)</li>
 </ul>
@@ -1380,6 +1399,14 @@ git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </sp
     wait-for-modification
     --modification-received--&gt;
     review</code></pre>
+<h2 id="nix">Nix<a class="headerlink" href="#nix" title="Permanent link">&para;</a></h2>
+<p>If you have installed poetry globally, the project won't work because it requires <code>poethepoet</code> for command management.</p>
+<p>You'll have to install poetry locally.</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+.<span class="w"> </span>.venv/bin/activate
+pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pip<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>poetry
+poetry<span class="w"> </span>install
+</code></pre></div>
 
 
 

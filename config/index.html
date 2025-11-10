@@ -737,6 +737,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#breaking_change_exclamation_in_title" class="md-nav__link">
+    <span class="md-ellipsis">
+      breaking_change_exclamation_in_title
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#retry_after_failure" class="md-nav__link">
     <span class="md-ellipsis">
       retry_after_failure
@@ -749,6 +758,15 @@
   <a href="#allow_abort" class="md-nav__link">
     <span class="md-ellipsis">
       allow_abort
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message_length_limit" class="md-nav__link">
+    <span class="md-ellipsis">
+      message_length_limit
     </span>
   </a>
   
@@ -1528,6 +1546,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#breaking_change_exclamation_in_title" class="md-nav__link">
+    <span class="md-ellipsis">
+      breaking_change_exclamation_in_title
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#retry_after_failure" class="md-nav__link">
     <span class="md-ellipsis">
       retry_after_failure
@@ -1540,6 +1567,15 @@
   <a href="#allow_abort" class="md-nav__link">
     <span class="md-ellipsis">
       allow_abort
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message_length_limit" class="md-nav__link">
+    <span class="md-ellipsis">
+      message_length_limit
     </span>
   </a>
   
@@ -1860,6 +1896,11 @@ that will match everything (non-greedy). <a href="../commands/bump/#tag_format">
 <li>Default: <code>None</code></li>
 </ul>
 <p>Create custom commit message. Useful to skip CI. <a href="../commands/bump/#bump_message">Read more</a></p>
+<h3 id="breaking_change_exclamation_in_title"><code>breaking_change_exclamation_in_title</code><a class="headerlink" href="#breaking_change_exclamation_in_title" title="Permanent link">&para;</a></h3>
+<p>Type: <code>bool</code></p>
+<p>Default: <code>False</code></p>
+<p>When true, breaking changes will be also indicated by an exclamation mark in the commit title (e.g., <code>feat!: breaking change</code>).
+When false, breaking changes will be only indicated by <code>BREAKING CHANGE:</code> in the footer. <a href="../tutorials/writing_commits/#conventional-commits">Read more</a></p>
 <h3 id="retry_after_failure"><code>retry_after_failure</code><a class="headerlink" href="#retry_after_failure" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Type: <code>bool</code></li>
@@ -1872,6 +1913,10 @@ that will match everything (non-greedy). <a href="../commands/bump/#tag_format">
 <li>Default: <code>False</code></li>
 </ul>
 <p>Disallow empty commit messages. Useful in CI. <a href="../commands/check/#allow-abort">Read more</a></p>
+<h3 id="message_length_limit"><code>message_length_limit</code><a class="headerlink" href="#message_length_limit" title="Permanent link">&para;</a></h3>
+<p>Type: <code>int</code></p>
+<p>Default: <code>0</code></p>
+<p>Maximum length of the commit message. Setting it to <code>0</code> disables the length limit. It can be overridden by the <code>-l/--message-length-limit</code> command line argument.</p>
 <h3 id="allowed_prefixes"><code>allowed_prefixes</code><a class="headerlink" href="#allowed_prefixes" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Type: <code>list</code></li>
