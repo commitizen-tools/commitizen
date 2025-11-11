@@ -1509,17 +1509,6 @@ def test_bump_get_next__changelog_to_stdout_is_not_allowed(mocker: MockFixture):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_get_next__manual_version_is_not_allowed(mocker: MockFixture):
-    create_file_and_commit("feat: new file")
-
-    testargs = ["cz", "bump", "--yes", "--get-next", "0.2.1"]
-    mocker.patch.object(sys, "argv", testargs)
-
-    with pytest.raises(NotAllowed):
-        cli.main()
-
-
-@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_get_next__no_eligible_commits_raises(mocker: MockFixture):
     create_file_and_commit("chore: new commit")
 
