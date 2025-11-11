@@ -29,6 +29,7 @@ from commitizen.version_schemes import (
     Increment,
     InvalidVersion,
     Prerelease,
+    VersionProtocol,
     get_version_scheme,
 )
 
@@ -156,43 +157,91 @@ class Bump:
             )
         return bump.find_increment(commits, regex=bump_pattern, increments_map=bump_map)
 
+    def _validate_arguments(self, current_version: VersionProtocol) -> None:
+        errors: list[str] = []
+        if self.arguments["manual_version"]:
+            for val, option in (
+                (self.arguments["increment"], "--increment"),
+                (self.arguments["prerelease"], "--prerelease"),
+                (self.arguments["devrelease"] is not None, "--devrelease"),
+                (self.arguments["local_version"], "--local-version"),
+                (self.arguments["build_metadata"], "--build-metadata"),
+                (self.arguments["major_version_zero"], "--major-version-zero"),
+            ):
+                if val:
+                    errors.append(f"{option} cannot be combined with MANUAL_VERSION")
+
+        if self.arguments["major_version_zero"] and current_version.release[0]:
+            errors.append(
+                f"--major-version-zero is meaningless for current version {current_version}"
+            )
+        if self.arguments["build_metadata"] and self.arguments["local_version"]:
+            errors.append("--local-version cannot be combined with --build-metadata")
+
+        if errors:
+            raise NotAllowed("\n".join(errors))
+
+    def _resolve_increment_and_new_version(
+        self, current_version: VersionProtocol, current_tag: git.GitTag | None
+    ) -> tuple[Increment | None, VersionProtocol]:
+        increment = self.arguments["increment"]
+        if manual_version := self.arguments["manual_version"]:
+            try:
+                return increment, self.scheme(manual_version)
+            except InvalidVersion as exc:
+                raise InvalidManualVersion(
+                    "[INVALID_MANUAL_VERSION]\n"
+                    f"Invalid manual version: '{manual_version}'"
+                ) from exc
+
+        if increment is None:
+            commits = git.get_commits(current_tag.name if current_tag else None)
+
+            # No commits, there is no need to create an empty tag.
+            # Unless we previously had a prerelease.
+            if (
+                not commits
+                and not current_version.is_prerelease
+                and not self.arguments["allow_no_commit"]
+            ):
+                raise NoCommitsFoundError("[NO_COMMITS_FOUND]\nNo new commits found.")
+
+            increment = self._find_increment(commits)
+
+        # It may happen that there are commits, but they are not eligible
+        # for an increment, this generates a problem when using prerelease (#281)
+        if (
+            self.arguments["prerelease"]
+            and increment is None
+            and not current_version.is_prerelease
+        ):
+            raise NoCommitsFoundError(
+                "[NO_COMMITS_FOUND]\n"
+                "No commits found to generate a pre-release.\n"
+                "To avoid this error, manually specify the type of increment with `--increment`"
+            )
+
+        # we create an empty PATCH increment for empty tag
+        if increment is None and self.arguments["allow_no_commit"]:
+            increment = "PATCH"
+
+        return increment, current_version.bump(
+            increment,
+            prerelease=self.arguments["prerelease"],
+            prerelease_offset=self.bump_settings["prerelease_offset"],
+            devrelease=self.arguments["devrelease"],
+            is_local_version=self.arguments["local_version"],
+            build_metadata=self.arguments["build_metadata"],
+            exact_increment=self.arguments["increment_mode"] == "exact",
+        )
+
     def __call__(self) -> None:
         """Steps executed to bump."""
         provider = get_provider(self.config)
         current_version = self.scheme(provider.get_version())
+        self._validate_arguments(current_version)
 
-        increment = self.arguments["increment"]
-        prerelease = self.arguments["prerelease"]
-        devrelease = self.arguments["devrelease"]
-        is_local_version = self.arguments["local_version"]
-        manual_version = self.arguments["manual_version"]
-        build_metadata = self.arguments["build_metadata"]
-        next_version_to_stdout = self.arguments[
-            "get_next"
-        ]  # TODO: maybe rename to `next_version_to_stdout`
-        allow_no_commit = self.arguments["allow_no_commit"]
-        major_version_zero = self.arguments["major_version_zero"]
-
-        if manual_version:
-            for val, option in (
-                (increment, "--increment"),
-                (prerelease, "--prerelease"),
-                (devrelease is not None, "--devrelease"),
-                (is_local_version, "--local-version"),
-                (build_metadata, "--build-metadata"),
-                (major_version_zero, "--major-version-zero"),
-            ):
-                if val:
-                    raise NotAllowed(f"{option} cannot be combined with MANUAL_VERSION")
-
-        if major_version_zero and current_version.release[0]:
-            raise NotAllowed(
-                f"--major-version-zero is meaningless for current version {current_version}"
-            )
-
-        if build_metadata and is_local_version:
-            raise NotAllowed("--local-version cannot be combined with --build-metadata")
-
+        next_version_to_stdout = self.arguments["get_next"]
         if next_version_to_stdout:
             for value, option in (
                 (self.changelog_flag, "--changelog"),
@@ -219,53 +268,9 @@ class Bump:
 
         is_initial = self._is_initial_tag(current_tag, self.arguments["yes"])
 
-        if manual_version:
-            try:
-                new_version = self.scheme(manual_version)
-            except InvalidVersion as exc:
-                raise InvalidManualVersion(
-                    "[INVALID_MANUAL_VERSION]\n"
-                    f"Invalid manual version: '{manual_version}'"
-                ) from exc
-        else:
-            if increment is None:
-                commits = git.get_commits(current_tag.name if current_tag else None)
-
-                # No commits, there is no need to create an empty tag.
-                # Unless we previously had a prerelease.
-                if (
-                    not commits
-                    and not current_version.is_prerelease
-                    and not allow_no_commit
-                ):
-                    raise NoCommitsFoundError(
-                        "[NO_COMMITS_FOUND]\nNo new commits found."
-                    )
-
-                increment = self._find_increment(commits)
-
-            # It may happen that there are commits, but they are not eligible
-            # for an increment, this generates a problem when using prerelease (#281)
-            if prerelease and increment is None and not current_version.is_prerelease:
-                raise NoCommitsFoundError(
-                    "[NO_COMMITS_FOUND]\n"
-                    "No commits found to generate a pre-release.\n"
-                    "To avoid this error, manually specify the type of increment with `--increment`"
-                )
-
-            # we create an empty PATCH increment for empty tag
-            if increment is None and allow_no_commit:
-                increment = "PATCH"
-
-            new_version = current_version.bump(
-                increment,
-                prerelease=prerelease,
-                prerelease_offset=self.bump_settings["prerelease_offset"],
-                devrelease=devrelease,
-                is_local_version=is_local_version,
-                build_metadata=build_metadata,
-                exact_increment=self.arguments["increment_mode"] == "exact",
-            )
+        increment, new_version = self._resolve_increment_and_new_version(
+            current_version, current_tag
+        )
 
         new_tag_version = rules.normalize_tag(new_version)
         if next_version_to_stdout:
