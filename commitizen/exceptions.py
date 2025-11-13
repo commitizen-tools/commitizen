@@ -75,10 +75,6 @@ class DryRunExit(ExpectedExit):
     pass
 
 
-class GetNextExit(ExpectedExit):
-    pass
-
-
 class NoneIncrementExit(CommitizenException):
     exit_code = ExitCode.NO_INCREMENT
 
