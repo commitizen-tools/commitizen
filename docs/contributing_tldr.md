@@ -3,7 +3,7 @@ Feel free to send a PR to update this file if you find anything useful. 🙇
 ## Environment
 
 - Python `>=3.9`
-- [Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer) `>=2.0.0`
+- [Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer) `>=2.2.0`
 
 ## Useful commands
 

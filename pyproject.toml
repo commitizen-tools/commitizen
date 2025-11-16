@@ -85,8 +85,38 @@ pep440 = "commitizen.version_schemes:Pep440"
 semver = "commitizen.version_schemes:SemVer"
 semver2 = "commitizen.version_schemes:SemVer2"
 
+[dependency-groups]
+dev = ["ipython>=8.0,<9.0", "tox>4", "poethepoet>=0.34.0,<1.0.0"]
+
+test = [
+    "pytest>=7.2,<9.0",
+    "pytest-cov>=4,<7",
+    "pytest-mock>=3.10,<4.0",
+    "pytest-regressions>=2.4.0,<3.0.0",
+    "pytest-freezer>=0.4.6,<1.0.0",
+    "pytest-xdist>=3.1.0,<4.0.0",
+]
+
+linters = [
+    "ruff>=0.11.5,<1.0.0",
+    "pre-commit>=3.2.0,<5.0",
+    "mypy>=1.16.0,<2.0",
+    "types-deprecated>=1.2.9.2,<2.0",
+    "types-python-dateutil>=2.8.19.13,<3.0",
+    "types-PyYAML>=5.4.3,<7.0.0",
+    "types-termcolor>=0.1.1,<1.0",
+    "types-colorama>=0.4.15.20240311,<1.0",
+]
+
+documentation = ["mkdocs>=1.4.2,<2.0", "mkdocs-material>=9.1.6,<10.0"]
+
+script = [
+    # for scripts/gen_cli_help_screenshots.py
+    "rich>=13.7.1,<14.0",
+]
+
 [build-system]
-requires = ["poetry-core>=2.0"]
+requires = ["poetry-core>=2.2"]
 build-backend = "poetry.core.masonry.api"
 
 
@@ -106,38 +136,6 @@ packages = [{ include = "commitizen" }, { include = "commitizen/py.typed" }]
 
 [tool.poetry.requires-plugins]
 "poethepoet" = ">=0.32.2"
-
-[tool.poetry.group.dev.dependencies]
-ipython = "^8.0"
-tox = ">4"
-poethepoet = "^0.34.0"
-
-[tool.poetry.group.test.dependencies]
-pytest = ">=7.2,<9.0"
-pytest-cov = ">=4,<7"
-pytest-mock = "^3.10"
-pytest-regressions = "^2.4.0"
-pytest-freezer = "^0.4.6"
-pytest-xdist = "^3.1.0"
-
-[tool.poetry.group.linters.dependencies]
-ruff = "^0.11.5"
-pre-commit = ">=3.2.0,<5.0"
-mypy = "^1.16.0"
-types-deprecated = "^1.2.9.2"
-types-python-dateutil = "^2.8.19.13"
-types-PyYAML = ">=5.4.3,<7.0.0"
-types-termcolor = "^0.1.1"
-types-colorama = "^0.4.15.20240311"
-
-[tool.poetry.group.documentation.dependencies]
-mkdocs = "^1.4.2"
-mkdocs-material = "^9.1.6"
-
-[tool.poetry.group.script.dependencies]
-# for scripts/gen_cli_help_screenshots.py
-rich = "^13.7.1"
-
 
 [tool.coverage]
 [tool.coverage.report]
