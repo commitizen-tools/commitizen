@@ -1,4 +1,5 @@
-from typing import Callable, Literal, TypedDict, Union
+from collections.abc import Callable
+from typing import Literal, TypedDict
 
 
 class Choice(TypedDict, total=False):
@@ -29,4 +30,4 @@ class ConfirmQuestion(TypedDict):
     default: bool
 
 
-CzQuestion = Union[ListQuestion, InputQuestion, ConfirmQuestion]
+CzQuestion = ListQuestion | InputQuestion | ConfirmQuestion
