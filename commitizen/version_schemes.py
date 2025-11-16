@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 import sys
 import warnings
+from importlib import metadata
 from itertools import zip_longest
 from typing import (
     TYPE_CHECKING,
@@ -14,11 +15,6 @@ from typing import (
     runtime_checkable,
 )
 
-if sys.version_info >= (3, 10):
-    from importlib import metadata
-else:
-    import importlib_metadata as metadata
-
 from packaging.version import InvalidVersion  # noqa: F401 (expose the common exception)
 from packaging.version import Version as _BaseVersion
 
@@ -26,11 +22,7 @@ from commitizen.defaults import MAJOR, MINOR, PATCH, Settings
 from commitizen.exceptions import VersionSchemeUnknown
 
 if TYPE_CHECKING:
-    # TypeAlias is Python 3.10+ but backported in typing-extensions
-    if sys.version_info >= (3, 10):
-        from typing import TypeAlias
-    else:
-        from typing_extensions import TypeAlias
+    from typing import TypeAlias
 
     # Self is Python 3.11+ but backported in typing-extensions
     if sys.version_info < (3, 11):
