@@ -55,7 +55,7 @@ This standardization makes your commit history more readable and meaningful, whi
 
 Before installing Commitizen, ensure you have:
 
-- [Python](https://www.python.org/downloads/) `3.9+`
+- [Python](https://www.python.org/downloads/) `3.10+`
 - [Git][gitscm] `1.8.5.2+`
 
 ### Installation
