@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import re
 from abc import ABCMeta, abstractmethod
-from collections.abc import Iterable, Mapping
-from typing import Any, Callable, NamedTuple, Protocol
+from collections.abc import Callable, Iterable, Mapping
+from typing import Any, NamedTuple, Protocol
 
 from jinja2 import BaseLoader, PackageLoader
 from prompt_toolkit.styles import Style
