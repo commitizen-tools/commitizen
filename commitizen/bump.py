@@ -62,7 +62,7 @@ def find_increment(
 def update_version_in_files(
     current_version: str,
     new_version: str,
-    files: Iterable[str],
+    version_files: Iterable[str],
     *,
     check_consistency: bool,
     encoding: str,
@@ -77,7 +77,7 @@ def update_version_in_files(
     """
     updated_files = []
 
-    for path, pattern in _resolve_files_and_regexes(files, current_version):
+    for path, pattern in _resolve_files_and_regexes(version_files, current_version):
         current_version_found = False
         bumped_lines = []
 
