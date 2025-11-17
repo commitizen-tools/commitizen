@@ -302,10 +302,10 @@ class Bump:
                 "[NO_COMMITS_TO_BUMP]\nThe commits found are not eligible to be bumped"
             )
 
-        files: list[str] = []
+        updated_files: list[str] = []
         dry_run = self.arguments["dry_run"]
         if self.changelog_flag:
-            args = {
+            changelog_args = {
                 "unreleased_version": new_tag_version,
                 "template": self.template,
                 "extras": self.extras,
@@ -313,22 +313,27 @@ class Bump:
                 "dry_run": dry_run,
             }
             if self.changelog_to_stdout:
-                changelog_cmd = Changelog(self.config, {**args, "dry_run": True})  # type: ignore[typeddict-item]
+                changelog_cmd = Changelog(
+                    self.config,
+                    {**changelog_args, "dry_run": True},  # type: ignore[typeddict-item]
+                )
                 try:
                     changelog_cmd()
                 except DryRunExit:
                     pass
 
-            args["file_name"] = self.file_name
-            changelog_cmd = Changelog(self.config, args)  # type: ignore[arg-type]
+            changelog_cmd = Changelog(
+                self.config,
+                {**changelog_args, "file_name": self.file_name},  # type: ignore[typeddict-item]
+            )
             changelog_cmd()
-            files.append(changelog_cmd.file_name)
+            updated_files.append(changelog_cmd.file_name)
 
         # Do not perform operations over files or git.
         if dry_run:
             raise DryRunExit()
 
-        files.extend(
+        updated_files.extend(
             bump.update_version_in_files(
                 str(current_version),
                 str(new_version),
@@ -360,13 +365,13 @@ class Bump:
             raise ExpectedExit()
 
         # FIXME: check if any changes have been staged
-        git.add(*files)
+        git.add(*updated_files)
         c = git.commit(message, args=self._get_commit_args())
         if self.retry and c.return_code != 0 and self.changelog_flag:
             # Maybe pre-commit reformatted some files? Retry once
             logger.debug("1st git.commit error: %s", c.err)
             logger.info("1st commit attempt failed; retrying once")
-            git.add(*files)
+            git.add(*updated_files)
             c = git.commit(message, args=self._get_commit_args())
         if c.return_code != 0:
             err = c.err.strip() or c.out
