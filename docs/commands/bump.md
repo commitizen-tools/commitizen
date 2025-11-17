@@ -9,7 +9,7 @@
 - **Automatic Version Detection**: Analyzes commit history to determine the appropriate version bump
 - **Manual Version Control**: Supports manual version specification when needed
 - **Pre-release Support**: Handles alpha, beta, and release candidate versions
-- **Multiple Version Schemes**: Supports both [PEP 0440][pep440] and [semantic versioning][semver] formats
+- **Multiple Version Schemes**: Supports both [PEP 440][pep440] and [semantic versioning][semver] formats
 
 ### Version Increment Rules
 
@@ -23,7 +23,7 @@ The version follows the `MAJOR.MINOR.PATCH` format, with increments determined b
 
 ### Version Schemes
 
-By default, Commitizen uses [PEP 0440][pep440] for version formatting. You can switch to semantic versioning using either:
+By default, Commitizen uses [PEP 440][pep440] for version formatting. You can switch to semantic versioning using either:
 
 1. Command line:
 ```sh
