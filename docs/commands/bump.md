@@ -470,35 +470,64 @@ Supported variables:
 
 ---
 
-### `version_files` \*
+### `version_files`
 
 It is used to identify the files or glob patterns which should be updated with the new version.
-It is also possible to provide a pattern for each file, separated by colons (`:`).
 
 Commitizen will update its configuration file automatically (`pyproject.toml`, `.cz`) when bumping,
 regarding if the file is present or not in `version_files`.
 
-\* Renamed from `files` to `version_files`.
+You may specify the `version_files` in your `pyproject.toml`, `.cz.toml` or `cz.toml` configuration file.
 
-Some examples
+It is also possible to provide a pattern for each file, separated by a colon (e.g. `file:pattern`). See the below example for more details.
 
-`pyproject.toml`, `.cz.toml` or `cz.toml`
+#### Example Configuration
 
 ```toml title="pyproject.toml"
 [tool.commitizen]
 version_files = [
     "src/__version__.py",
     "packages/*/pyproject.toml:version",
-    "setup.py:version",
+    "setup.json:version",
 ]
 ```
 
-In the example above, we can see the reference `"setup.py:version"`.
-This means that it will find a file `setup.py` and will only make a change
-in a line containing the `version` substring.
+In the example configuration above, we can see the reference `"setup.json:version"`.
+
+This means that it will find a file `setup.json` and will only change the lines that contain the substring `"version"`.
+
+For example, if we have a file `setup.json` with the following content:
+
+<!-- DEPENDENCY: repeated_version_number.json -->
+
+```json title="setup.json"
+{
+  "name": "magictool",
+  "version": "1.2.3",
+  "dependencies": {
+      "lodash": "1.2.3"
+  }
+}
+```
+
+After running `cz bump 2.0.0`, the file will be updated to:
+
+```diff title="setup.json"
+{
+  "name": "magictool",
+- "version": "1.2.3",
++ "version": "2.0.0",
+  "dependencies": {
+      "lodash": "1.2.3"
+  }
+}
+```
 
 !!! note
     Files can be specified using relative (to the execution) paths, absolute paths, or glob patterns.
+
+!!! note
+    (Historical note) This option was renamed from `files` to `version_files`.
 
 ---
 
