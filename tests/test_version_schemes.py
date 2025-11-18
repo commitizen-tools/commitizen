@@ -1,11 +1,6 @@
 from __future__ import annotations
 
-import sys
-
-if sys.version_info >= (3, 10):
-    from importlib import metadata
-else:
-    import importlib_metadata as metadata
+from importlib import metadata
 
 import pytest
 from pytest_mock import MockerFixture

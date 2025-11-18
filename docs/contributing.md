@@ -15,7 +15,7 @@ If you're a first-time contributor, please check out issues labeled [good first 
 ### Required Tools
 
 1. **Python Environment**
-    - Python `>=3.9`
+    - Python `>=3.10`
     - [Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer) `>=2.0.0`
 2. **Version Control & Security**
     - Git

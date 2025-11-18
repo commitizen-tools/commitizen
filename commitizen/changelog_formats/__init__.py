@@ -1,12 +1,8 @@
 from __future__ import annotations
 
-import sys
-from typing import Callable, ClassVar, Protocol
-
-if sys.version_info >= (3, 10):
-    from importlib import metadata
-else:
-    import importlib_metadata as metadata
+from collections.abc import Callable
+from importlib import metadata
+from typing import ClassVar, Protocol
 
 from commitizen.changelog import Metadata
 from commitizen.config.base_config import BaseConfig
