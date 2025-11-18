@@ -759,9 +759,24 @@
           <li class="md-nav__item">
   <a href="#version_files" class="md-nav__link">
     <span class="md-ellipsis">
-      version_files *
+      version_files
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="version_files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1823,9 +1838,24 @@
           <li class="md-nav__item">
   <a href="#version_files" class="md-nav__link">
     <span class="md-ellipsis">
-      version_files *
+      version_files
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="version_files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -2382,27 +2412,50 @@ on the list, and then you can use the exit code:</p>
 </tbody>
 </table>
 <hr />
-<h3 id="version_files"><code>version_files</code> *<a class="headerlink" href="#version_files" title="Permanent link">&para;</a></h3>
-<p>It is used to identify the files or glob patterns which should be updated with the new version.
-It is also possible to provide a pattern for each file, separated by colons (<code>:</code>).</p>
+<h3 id="version_files"><code>version_files</code><a class="headerlink" href="#version_files" title="Permanent link">&para;</a></h3>
+<p>It is used to identify the files or glob patterns which should be updated with the new version.</p>
 <p>Commitizen will update its configuration file automatically (<code>pyproject.toml</code>, <code>.cz</code>) when bumping,
 regarding if the file is present or not in <code>version_files</code>.</p>
-<p>* Renamed from <code>files</code> to <code>version_files</code>.</p>
-<p>Some examples</p>
-<p><code>pyproject.toml</code>, <code>.cz.toml</code> or <code>cz.toml</code></p>
+<p>You may specify the <code>version_files</code> in your <code>pyproject.toml</code>, <code>.cz.toml</code> or <code>cz.toml</code> configuration file.</p>
+<p>It is also possible to provide a pattern for each file, separated by a colon (e.g. <code>file:pattern</code>). See the below example for more details.</p>
+<h4 id="example-configuration">Example Configuration<a class="headerlink" href="#example-configuration" title="Permanent link">&para;</a></h4>
 <div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="s2">&quot;src/__version__.py&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="s2">&quot;packages/*/pyproject.toml:version&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;setup.py:version&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;setup.json:version&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 </code></pre></div>
-<p>In the example above, we can see the reference <code>"setup.py:version"</code>.
-This means that it will find a file <code>setup.py</code> and will only make a change
-in a line containing the <code>version</code> substring.</p>
+<p>In the example configuration above, we can see the reference <code>"setup.json:version"</code>.</p>
+<p>This means that it will find a file <code>setup.json</code> and will only change the lines that contain the substring <code>"version"</code>.</p>
+<p>For example, if we have a file <code>setup.json</code> with the following content:</p>
+<!-- DEPENDENCY: repeated_version_number.json -->
+
+<div class="highlight"><span class="filename">setup.json</span><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;magictool&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.2.3&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;lodash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.2.3&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>After running <code>cz bump 2.0.0</code>, the file will be updated to:</p>
+<div class="highlight"><span class="filename">setup.json</span><pre><span></span><code>{
+<span class="w"> </span> &quot;name&quot;: &quot;magictool&quot;,
+<span class="gd">- &quot;version&quot;: &quot;1.2.3&quot;,</span>
+<span class="gi">+ &quot;version&quot;: &quot;2.0.0&quot;,</span>
+<span class="w"> </span> &quot;dependencies&quot;: {
+<span class="w"> </span>     &quot;lodash&quot;: &quot;1.2.3&quot;
+<span class="w"> </span> }
+}
+</code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Files can be specified using relative (to the execution) paths, absolute paths, or glob patterns.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>(Historical note) This option was renamed from <code>files</code> to <code>version_files</code>.</p>
 </div>
 <hr />
 <h3 id="bump_message"><code>bump_message</code><a class="headerlink" href="#bump_message" title="Permanent link">&para;</a></h3>
