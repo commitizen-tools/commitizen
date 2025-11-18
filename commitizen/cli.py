@@ -160,7 +160,6 @@ data = {
                     {
                         "name": ["-l", "--message-length-limit"],
                         "type": int,
-                        "default": 0,
                         "help": "length limit of the commit message; 0 for no limit",
                     },
                     {
@@ -499,7 +498,6 @@ data = {
                     {
                         "name": ["-l", "--message-length-limit"],
                         "type": int,
-                        "default": 0,
                         "help": "length limit of the commit message; 0 for no limit",
                     },
                 ],
@@ -542,6 +540,18 @@ data = {
                         ),
                         "action": "store_true",
                         "exclusive_group": "group1",
+                    },
+                    {
+                        "name": ["--major"],
+                        "help": "get just the major version",
+                        "action": "store_true",
+                        "exclusive_group": "group2",
+                    },
+                    {
+                        "name": ["--minor"],
+                        "help": "get just the minor version",
+                        "action": "store_true",
+                        "exclusive_group": "group2",
                     },
                 ],
             },

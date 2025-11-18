@@ -3,13 +3,14 @@ from __future__ import annotations
 import json
 import os
 import sys
+from pathlib import Path
 from typing import Any
 
 import pytest
 import yaml
 from pytest_mock import MockFixture
 
-from commitizen import cli, commands
+from commitizen import cli, cmd, commands
 from commitizen.__version__ import __version__
 from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import InitFailedError, NoAnswersError
@@ -87,7 +88,7 @@ def test_init_without_setup_pre_commit_hook(
 
 def test_init_when_config_already_exists(config: BaseConfig, capsys):
     # Set config path
-    path = os.sep.join(["tests", "pyproject.toml"])
+    path = Path(os.sep.join(["tests", "pyproject.toml"]))
     config.path = path
 
     commands.Init(config)()
@@ -117,23 +118,17 @@ def test_init_without_choosing_tag(config: BaseConfig, mocker: MockFixture, tmpd
             commands.Init(config)()
 
 
-def test_executed_pre_commit_command(config: BaseConfig):
-    init = commands.Init(config)
-    expected_cmd = "pre-commit install --hook-type commit-msg --hook-type pre-push"
-    assert init._gen_pre_commit_cmd(["commit-msg", "pre-push"]) == expected_cmd
-
-
 @pytest.fixture(scope="function")
 def pre_commit_installed(mocker: MockFixture):
     # Assume the `pre-commit` is installed
     mocker.patch(
-        "commitizen.commands.init.ProjectInfo.is_pre_commit_installed",
+        "commitizen.project_info.is_pre_commit_installed",
         return_value=True,
     )
     # And installation success (i.e. no exception raised)
     mocker.patch(
-        "commitizen.commands.init.Init._exec_install_pre_commit_hook",
-        return_value=None,
+        "commitizen.cmd.run",
+        return_value=cmd.Command("0.0.1", "", b"", b"", 0),
     )
 
 
@@ -237,25 +232,8 @@ class TestNoPreCommitInstalled:
     ):
         # Assume `pre-commit` is not installed
         mocker.patch(
-            "commitizen.commands.init.ProjectInfo.is_pre_commit_installed",
+            "commitizen.project_info.is_pre_commit_installed",
             return_value=False,
-        )
-        with tmpdir.as_cwd():
-            with pytest.raises(InitFailedError):
-                commands.Init(config)()
-
-    def test_pre_commit_exec_failed(
-        _, mocker: MockFixture, config: BaseConfig, default_choice: str, tmpdir
-    ):
-        # Assume `pre-commit` is installed
-        mocker.patch(
-            "commitizen.commands.init.ProjectInfo.is_pre_commit_installed",
-            return_value=True,
-        )
-        # But pre-commit installation will fail
-        mocker.patch(
-            "commitizen.commands.init.Init._exec_install_pre_commit_hook",
-            side_effect=InitFailedError("Mock init failed error."),
         )
         with tmpdir.as_cwd():
             with pytest.raises(InitFailedError):

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from commitizen.defaults import DEFAULT_SETTINGS, Settings
 
@@ -17,8 +17,8 @@ if TYPE_CHECKING:
 
 class BaseConfig:
     def __init__(self) -> None:
+        self.is_empty_config = False
         self._settings: Settings = DEFAULT_SETTINGS.copy()
-        self.encoding = self.settings["encoding"]
         self._path: Path | None = None
 
     @property
@@ -30,14 +30,13 @@ class BaseConfig:
         return self._path  # type: ignore[return-value]
 
     @path.setter
-    def path(self, path: str | Path) -> None:
+    def path(self, path: Path) -> None:
         self._path = Path(path)
 
-    def set_key(self, key: str, value: Any) -> Self:
-        """Set or update a key in the conf.
+    def set_key(self, key: str, value: object) -> Self:
+        """Set or update a key in the config file.
 
-        For now only strings are supported.
-        We use to update the version number.
+        Currently, only strings are supported for the parameter key.
         """
         raise NotImplementedError()
 
@@ -48,4 +47,8 @@ class BaseConfig:
         raise NotImplementedError()
 
     def init_empty_config_content(self) -> None:
+        """Create a config file with the empty config content.
+
+        The implementation is different for each config file type.
+        """
         raise NotImplementedError()

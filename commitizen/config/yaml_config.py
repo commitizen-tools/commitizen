@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 import yaml
 
@@ -21,14 +21,15 @@ if TYPE_CHECKING:
 
 
 class YAMLConfig(BaseConfig):
-    def __init__(self, *, data: bytes | str, path: Path | str) -> None:
+    def __init__(self, *, data: bytes | str, path: Path) -> None:
         super().__init__()
-        self.is_empty_config = False
         self.path = path
         self._parse_setting(data)
 
     def init_empty_config_content(self) -> None:
-        with smart_open(self.path, "a", encoding=self.encoding) as json_file:
+        with smart_open(
+            self.path, "a", encoding=self._settings["encoding"]
+        ) as json_file:
             yaml.dump({"commitizen": {}}, json_file, explicit_start=True)
 
     def _parse_setting(self, data: bytes | str) -> None:
@@ -51,17 +52,14 @@ class YAMLConfig(BaseConfig):
         except (KeyError, TypeError):
             self.is_empty_config = True
 
-    def set_key(self, key: str, value: Any) -> Self:
-        """Set or update a key in the conf.
-
-        For now only strings are supported.
-        We use to update the version number.
-        """
+    def set_key(self, key: str, value: object) -> Self:
         with open(self.path, "rb") as yaml_file:
-            parser = yaml.load(yaml_file, Loader=yaml.FullLoader)
+            config_doc = yaml.load(yaml_file, Loader=yaml.FullLoader)
 
-        parser["commitizen"][key] = value
-        with smart_open(self.path, "w", encoding=self.encoding) as yaml_file:
-            yaml.dump(parser, yaml_file, explicit_start=True)
+        config_doc["commitizen"][key] = value
+        with smart_open(
+            self.path, "w", encoding=self._settings["encoding"]
+        ) as yaml_file:
+            yaml.dump(config_doc, yaml_file, explicit_start=True)
 
         return self

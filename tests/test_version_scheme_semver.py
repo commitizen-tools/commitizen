@@ -1,189 +1,882 @@
-import itertools
-import random
+from __future__ import annotations
 
 import pytest
 
 from commitizen.version_schemes import SemVer, VersionProtocol
-
-simple_flow = [
-    (("0.1.0", "PATCH", None, 0, None), "0.1.1"),
-    (("0.1.0", "PATCH", None, 0, 1), "0.1.1-dev1"),
-    (("0.1.1", "MINOR", None, 0, None), "0.2.0"),
-    (("0.2.0", "MINOR", None, 0, None), "0.3.0"),
-    (("0.2.0", "MINOR", None, 0, 1), "0.3.0-dev1"),
-    (("0.3.0", "PATCH", None, 0, None), "0.3.1"),
-    (("0.3.0", "PATCH", "alpha", 0, None), "0.3.1-a0"),
-    (("0.3.1a0", None, "alpha", 0, None), "0.3.1-a1"),
-    (("0.3.0", "PATCH", "alpha", 1, None), "0.3.1-a1"),
-    (("0.3.1a0", None, "alpha", 1, None), "0.3.1-a1"),
-    (("0.3.1a0", None, None, 0, None), "0.3.1"),
-    (("0.3.1", "PATCH", None, 0, None), "0.3.2"),
-    (("0.4.2", "MAJOR", "alpha", 0, None), "1.0.0-a0"),
-    (("1.0.0a0", None, "alpha", 0, None), "1.0.0-a1"),
-    (("1.0.0a1", None, "alpha", 0, None), "1.0.0-a2"),
-    (("1.0.0a1", None, "alpha", 0, 1), "1.0.0-a2-dev1"),
-    (("1.0.0a2.dev0", None, "alpha", 0, 1), "1.0.0-a3-dev1"),
-    (("1.0.0a2.dev0", None, "alpha", 0, 0), "1.0.0-a3-dev0"),
-    (("1.0.0a1", None, "beta", 0, None), "1.0.0-b0"),
-    (("1.0.0b0", None, "beta", 0, None), "1.0.0-b1"),
-    (("1.0.0b1", None, "rc", 0, None), "1.0.0-rc0"),
-    (("1.0.0rc0", None, "rc", 0, None), "1.0.0-rc1"),
-    (("1.0.0rc0", None, "rc", 0, 1), "1.0.0-rc1-dev1"),
-    (("1.0.0rc0", "PATCH", None, 0, None), "1.0.0"),
-    (("1.0.0a3.dev0", None, "beta", 0, None), "1.0.0-b0"),
-    (("1.0.0", "PATCH", None, 0, None), "1.0.1"),
-    (("1.0.1", "PATCH", None, 0, None), "1.0.2"),
-    (("1.0.2", "MINOR", None, 0, None), "1.1.0"),
-    (("1.1.0", "MINOR", None, 0, None), "1.2.0"),
-    (("1.2.0", "PATCH", None, 0, None), "1.2.1"),
-    (("1.2.1", "MAJOR", None, 0, None), "2.0.0"),
-]
-
-local_versions = [
-    (("4.5.0+0.1.0", "PATCH", None, 0, None), "4.5.0+0.1.1"),
-    (("4.5.0+0.1.1", "MINOR", None, 0, None), "4.5.0+0.2.0"),
-    (("4.5.0+0.2.0", "MAJOR", None, 0, None), "4.5.0+1.0.0"),
-]
-
-# never bump backwards on pre-releases
-linear_prerelease_cases = [
-    (("0.1.1b1", None, "alpha", 0, None), "0.1.1-b2"),
-    (("0.1.1rc0", None, "alpha", 0, None), "0.1.1-rc1"),
-    (("0.1.1rc0", None, "beta", 0, None), "0.1.1-rc1"),
-]
-
-weird_cases = [
-    (("1.1", "PATCH", None, 0, None), "1.1.1"),
-    (("1", "MINOR", None, 0, None), "1.1.0"),
-    (("1", "MAJOR", None, 0, None), "2.0.0"),
-    (("1a0", None, "alpha", 0, None), "1.0.0-a1"),
-    (("1a0", None, "alpha", 1, None), "1.0.0-a1"),
-    (("1", None, "beta", 0, None), "1.0.0-b0"),
-    (("1", None, "beta", 1, None), "1.0.0-b1"),
-    (("1beta", None, "beta", 0, None), "1.0.0-b1"),
-    (("1.0.0alpha1", None, "alpha", 0, None), "1.0.0-a2"),
-    (("1", None, "rc", 0, None), "1.0.0-rc0"),
-    (("1.0.0rc1+e20d7b57f3eb", "PATCH", None, 0, None), "1.0.0"),
-]
-
-# test driven development
-tdd_cases = [
-    (("0.1.1", "PATCH", None, 0, None), "0.1.2"),
-    (("0.1.1", "MINOR", None, 0, None), "0.2.0"),
-    (("2.1.1", "MAJOR", None, 0, None), "3.0.0"),
-    (("0.9.0", "PATCH", "alpha", 0, None), "0.9.1-a0"),
-    (("0.9.0", "MINOR", "alpha", 0, None), "0.10.0-a0"),
-    (("0.9.0", "MAJOR", "alpha", 0, None), "1.0.0-a0"),
-    (("0.9.0", "MAJOR", "alpha", 1, None), "1.0.0-a1"),
-    (("1.0.0a2", None, "beta", 0, None), "1.0.0-b0"),
-    (("1.0.0a2", None, "beta", 1, None), "1.0.0-b1"),
-    (("1.0.0beta1", None, "rc", 0, None), "1.0.0-rc0"),
-    (("1.0.0rc1", None, "rc", 0, None), "1.0.0-rc2"),
-    (("1.0.0-a0", None, "rc", 0, None), "1.0.0-rc0"),
-    (("1.0.0-alpha1", None, "alpha", 0, None), "1.0.0-a2"),
-]
-
-exact_cases = [
-    (("1.0.0", "PATCH", None, 0, None), "1.0.1"),
-    (("1.0.0", "MINOR", None, 0, None), "1.1.0"),
-    # with exact_increment=False: "1.0.0-b0"
-    (("1.0.0a1", "PATCH", "beta", 0, None), "1.0.1-b0"),
-    # with exact_increment=False: "1.0.0-b1"
-    (("1.0.0b0", "PATCH", "beta", 0, None), "1.0.1-b0"),
-    # with exact_increment=False: "1.0.0-rc0"
-    (("1.0.0b1", "PATCH", "rc", 0, None), "1.0.1-rc0"),
-    # with exact_increment=False: "1.0.0-rc1"
-    (("1.0.0rc0", "PATCH", "rc", 0, None), "1.0.1-rc0"),
-    # with exact_increment=False: "1.0.0-rc1-dev1"
-    (("1.0.0rc0", "PATCH", "rc", 0, 1), "1.0.1-rc0-dev1"),
-    # with exact_increment=False: "1.0.0-b0"
-    (("1.0.0a1", "MINOR", "beta", 0, None), "1.1.0-b0"),
-    # with exact_increment=False: "1.0.0-b1"
-    (("1.0.0b0", "MINOR", "beta", 0, None), "1.1.0-b0"),
-    # with exact_increment=False: "1.0.0-rc0"
-    (("1.0.0b1", "MINOR", "rc", 0, None), "1.1.0-rc0"),
-    # with exact_increment=False: "1.0.0-rc1"
-    (("1.0.0rc0", "MINOR", "rc", 0, None), "1.1.0-rc0"),
-    # with exact_increment=False: "1.0.0-rc1-dev1"
-    (("1.0.0rc0", "MINOR", "rc", 0, 1), "1.1.0-rc0-dev1"),
-    # with exact_increment=False: "2.0.0"
-    (("2.0.0b0", "MAJOR", None, 0, None), "3.0.0"),
-    # with exact_increment=False: "2.0.0"
-    (("2.0.0b0", "MINOR", None, 0, None), "2.1.0"),
-    # with exact_increment=False: "2.0.0"
-    (("2.0.0b0", "PATCH", None, 0, None), "2.0.1"),
-    # same with exact_increment=False
-    (("2.0.0b0", "MAJOR", "alpha", 0, None), "3.0.0-a0"),
-    # with exact_increment=False: "2.0.0b1"
-    (("2.0.0b0", "MINOR", "alpha", 0, None), "2.1.0-a0"),
-    # with exact_increment=False: "2.0.0b1"
-    (("2.0.0b0", "PATCH", "alpha", 0, None), "2.0.1-a0"),
-]
+from tests.utils import VersionSchemeTestArgs
 
 
 @pytest.mark.parametrize(
-    "test_input, expected",
-    itertools.chain(tdd_cases, weird_cases, simple_flow, linear_prerelease_cases),
+    "version_args, expected_version",
+    [
+        (
+            VersionSchemeTestArgs(
+                current_version="0.1.1",
+                increment="PATCH",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.1.2",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.1.1",
+                increment="MINOR",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.2.0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="2.1.1",
+                increment="MAJOR",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "3.0.0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.9.0",
+                increment="PATCH",
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.9.1-a0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.9.0",
+                increment="MINOR",
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.10.0-a0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.9.0",
+                increment="MAJOR",
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-a0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.9.0",
+                increment="MAJOR",
+                prerelease="alpha",
+                prerelease_offset=1,
+                devrelease=None,
+            ),
+            "1.0.0-a1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0a2",
+                increment=None,
+                prerelease="beta",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-b0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0a2",
+                increment=None,
+                prerelease="beta",
+                prerelease_offset=1,
+                devrelease=None,
+            ),
+            "1.0.0-b1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0beta1",
+                increment=None,
+                prerelease="rc",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-rc0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0rc1",
+                increment=None,
+                prerelease="rc",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-rc2",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0-a0",
+                increment=None,
+                prerelease="rc",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-rc0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0-alpha1",
+                increment=None,
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-a2",
+        ),
+        # weird cases
+        (
+            VersionSchemeTestArgs(
+                current_version="1.1",
+                increment="PATCH",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.1.1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1",
+                increment="MINOR",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.1.0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1",
+                increment="MAJOR",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "2.0.0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1a0",
+                increment=None,
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-a1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1a0",
+                increment=None,
+                prerelease="alpha",
+                prerelease_offset=1,
+                devrelease=None,
+            ),
+            "1.0.0-a1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1",
+                increment=None,
+                prerelease="beta",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-b0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1",
+                increment=None,
+                prerelease="beta",
+                prerelease_offset=1,
+                devrelease=None,
+            ),
+            "1.0.0-b1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1beta",
+                increment=None,
+                prerelease="beta",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-b1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0alpha1",
+                increment=None,
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-a2",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1",
+                increment=None,
+                prerelease="rc",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-rc0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0rc1+e20d7b57f3eb",
+                increment="PATCH",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0",
+        ),
+        # simple flow
+        (
+            VersionSchemeTestArgs(
+                current_version="0.1.0",
+                increment="PATCH",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.1.1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.1.0",
+                increment="PATCH",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=1,
+            ),
+            "0.1.1-dev1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.1.1",
+                increment="MINOR",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.2.0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.2.0",
+                increment="MINOR",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.3.0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.2.0",
+                increment="MINOR",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=1,
+            ),
+            "0.3.0-dev1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.3.0",
+                increment="PATCH",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.3.1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.3.0",
+                increment="PATCH",
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.3.1-a0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.3.1a0",
+                increment=None,
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.3.1-a1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.3.0",
+                increment="PATCH",
+                prerelease="alpha",
+                prerelease_offset=1,
+                devrelease=None,
+            ),
+            "0.3.1-a1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.3.1a0",
+                increment=None,
+                prerelease="alpha",
+                prerelease_offset=1,
+                devrelease=None,
+            ),
+            "0.3.1-a1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.3.1a0",
+                increment=None,
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.3.1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.3.1",
+                increment="PATCH",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.3.2",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.4.2",
+                increment="MAJOR",
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-a0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0a0",
+                increment=None,
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-a1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0a1",
+                increment=None,
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-a2",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0a1",
+                increment=None,
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=1,
+            ),
+            "1.0.0-a2-dev1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0a2.dev0",
+                increment=None,
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=1,
+            ),
+            "1.0.0-a3-dev1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0a2.dev0",
+                increment=None,
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=0,
+            ),
+            "1.0.0-a3-dev0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0a1",
+                increment=None,
+                prerelease="beta",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-b0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0b0",
+                increment=None,
+                prerelease="beta",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-b1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0b1",
+                increment=None,
+                prerelease="rc",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-rc0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0rc0",
+                increment=None,
+                prerelease="rc",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-rc1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0rc0",
+                increment=None,
+                prerelease="rc",
+                prerelease_offset=0,
+                devrelease=1,
+            ),
+            "1.0.0-rc1-dev1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0rc0",
+                increment="PATCH",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0a3.dev0",
+                increment=None,
+                prerelease="beta",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-b0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0",
+                increment="PATCH",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.1",
+                increment="PATCH",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.2",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.2",
+                increment="MINOR",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.1.0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.1.0",
+                increment="MINOR",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.2.0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.2.0",
+                increment="PATCH",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.2.1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.2.1",
+                increment="MAJOR",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "2.0.0",
+        ),
+        # linear prerelease cases (never bump backwards on pre-releases)
+        (
+            VersionSchemeTestArgs(
+                current_version="0.1.1b1",
+                increment=None,
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.1.1-b2",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.1.1rc0",
+                increment=None,
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.1.1-rc1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="0.1.1rc0",
+                increment=None,
+                prerelease="beta",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.1.1-rc1",
+        ),
+    ],
 )
-def test_bump_semver_version(test_input, expected):
-    current_version = test_input[0]
-    increment = test_input[1]
-    prerelease = test_input[2]
-    prerelease_offset = test_input[3]
-    devrelease = test_input[4]
+def test_bump_semver_version(
+    version_args: VersionSchemeTestArgs, expected_version: str
+):
     assert (
         str(
-            SemVer(current_version).bump(
-                increment=increment,
-                prerelease=prerelease,
-                prerelease_offset=prerelease_offset,
-                devrelease=devrelease,
+            SemVer(version_args.current_version).bump(
+                increment=version_args.increment,
+                prerelease=version_args.prerelease,
+                prerelease_offset=version_args.prerelease_offset,
+                devrelease=version_args.devrelease,
             )
         )
-        == expected
+        == expected_version
     )
 
 
-@pytest.mark.parametrize("test_input, expected", exact_cases)
-def test_bump_semver_version_force(test_input, expected):
-    current_version = test_input[0]
-    increment = test_input[1]
-    prerelease = test_input[2]
-    prerelease_offset = test_input[3]
-    devrelease = test_input[4]
+@pytest.mark.parametrize(
+    "version_args, expected_version",
+    [
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0",
+                increment="PATCH",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0",
+                increment="MINOR",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.1.0",
+        ),
+        # with exact_increment=False: "1.0.0-b0"
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0a1",
+                increment="PATCH",
+                prerelease="beta",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.1-b0",
+        ),
+        # with exact_increment=False: "1.0.0-b1"
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0b0",
+                increment="PATCH",
+                prerelease="beta",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.1-b0",
+        ),
+        # with exact_increment=False: "1.0.0-rc0"
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0b1",
+                increment="PATCH",
+                prerelease="rc",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.1-rc0",
+        ),
+        # with exact_increment=False: "1.0.0-rc1"
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0rc0",
+                increment="PATCH",
+                prerelease="rc",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.1-rc0",
+        ),
+        # with exact_increment=False: "1.0.0-rc1-dev1"
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0rc0",
+                increment="PATCH",
+                prerelease="rc",
+                prerelease_offset=0,
+                devrelease=1,
+            ),
+            "1.0.1-rc0-dev1",
+        ),
+        # with exact_increment=False: "1.0.0-b0"
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0a1",
+                increment="MINOR",
+                prerelease="beta",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.1.0-b0",
+        ),
+        # with exact_increment=False: "1.0.0-b1"
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0b0",
+                increment="MINOR",
+                prerelease="beta",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.1.0-b0",
+        ),
+        # with exact_increment=False: "1.0.0-rc0"
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0b1",
+                increment="MINOR",
+                prerelease="rc",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.1.0-rc0",
+        ),
+        # with exact_increment=False: "1.0.0-rc1"
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0rc0",
+                increment="MINOR",
+                prerelease="rc",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.1.0-rc0",
+        ),
+        # with exact_increment=False: "1.0.0-rc1-dev1"
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0rc0",
+                increment="MINOR",
+                prerelease="rc",
+                prerelease_offset=0,
+                devrelease=1,
+            ),
+            "1.1.0-rc0-dev1",
+        ),
+        # with exact_increment=False: "2.0.0"
+        (
+            VersionSchemeTestArgs(
+                current_version="2.0.0b0",
+                increment="MAJOR",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "3.0.0",
+        ),
+        # with exact_increment=False: "2.0.0"
+        (
+            VersionSchemeTestArgs(
+                current_version="2.0.0b0",
+                increment="MINOR",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "2.1.0",
+        ),
+        # with exact_increment=False: "2.0.0"
+        (
+            VersionSchemeTestArgs(
+                current_version="2.0.0b0",
+                increment="PATCH",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "2.0.1",
+        ),
+        # same with exact_increment=False
+        (
+            VersionSchemeTestArgs(
+                current_version="2.0.0b0",
+                increment="MAJOR",
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "3.0.0-a0",
+        ),
+        # with exact_increment=False: "2.0.0b1"
+        (
+            VersionSchemeTestArgs(
+                current_version="2.0.0b0",
+                increment="MINOR",
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "2.1.0-a0",
+        ),
+        # with exact_increment=False: "2.0.0b1"
+        (
+            VersionSchemeTestArgs(
+                current_version="2.0.0b0",
+                increment="PATCH",
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "2.0.1-a0",
+        ),
+    ],
+)
+def test_bump_semver_version_force(
+    version_args: VersionSchemeTestArgs, expected_version: str
+):
     assert (
         str(
-            SemVer(current_version).bump(
-                increment=increment,
-                prerelease=prerelease,
-                prerelease_offset=prerelease_offset,
-                devrelease=devrelease,
+            SemVer(version_args.current_version).bump(
+                increment=version_args.increment,
+                prerelease=version_args.prerelease,
+                prerelease_offset=version_args.prerelease_offset,
+                devrelease=version_args.devrelease,
                 exact_increment=True,
             )
         )
-        == expected
+        == expected_version
     )
 
 
-@pytest.mark.parametrize("test_input,expected", local_versions)
-def test_bump_semver_version_local(test_input, expected):
-    current_version = test_input[0]
-    increment = test_input[1]
-    prerelease = test_input[2]
-    prerelease_offset = test_input[3]
-    devrelease = test_input[4]
-    is_local_version = True
+@pytest.mark.parametrize(
+    "version_args, expected_version",
+    [
+        (
+            VersionSchemeTestArgs(
+                current_version="4.5.0+0.1.0",
+                increment="PATCH",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "4.5.0+0.1.1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="4.5.0+0.1.1",
+                increment="MINOR",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "4.5.0+0.2.0",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="4.5.0+0.2.0",
+                increment="MAJOR",
+                prerelease=None,
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "4.5.0+1.0.0",
+        ),
+    ],
+)
+def test_bump_semver_version_local(
+    version_args: VersionSchemeTestArgs, expected_version: str
+):
     assert (
         str(
-            SemVer(current_version).bump(
-                increment=increment,
-                prerelease=prerelease,
-                prerelease_offset=prerelease_offset,
-                devrelease=devrelease,
-                is_local_version=is_local_version,
+            SemVer(version_args.current_version).bump(
+                increment=version_args.increment,
+                prerelease=version_args.prerelease,
+                prerelease_offset=version_args.prerelease_offset,
+                devrelease=version_args.devrelease,
+                is_local_version=True,
             )
         )
-        == expected
+        == expected_version
     )
 
 
@@ -194,76 +887,3 @@ def test_semver_scheme_property():
 
 def test_semver_implement_version_protocol():
     assert isinstance(SemVer("0.0.1"), VersionProtocol)
-
-
-def test_semver_sortable():
-    test_input = [x[0][0] for x in simple_flow]
-    test_input.extend([x[1] for x in simple_flow])
-    # randomize
-    random_input = [SemVer(x) for x in random.sample(test_input, len(test_input))]
-    assert len(random_input) == len(test_input)
-    sorted_result = [str(x) for x in sorted(random_input)]
-    assert sorted_result == [
-        "0.1.0",
-        "0.1.0",
-        "0.1.1-dev1",
-        "0.1.1",
-        "0.1.1",
-        "0.2.0",
-        "0.2.0",
-        "0.2.0",
-        "0.3.0-dev1",
-        "0.3.0",
-        "0.3.0",
-        "0.3.0",
-        "0.3.0",
-        "0.3.1-a0",
-        "0.3.1-a0",
-        "0.3.1-a0",
-        "0.3.1-a0",
-        "0.3.1-a1",
-        "0.3.1-a1",
-        "0.3.1-a1",
-        "0.3.1",
-        "0.3.1",
-        "0.3.1",
-        "0.3.2",
-        "0.4.2",
-        "1.0.0-a0",
-        "1.0.0-a0",
-        "1.0.0-a1",
-        "1.0.0-a1",
-        "1.0.0-a1",
-        "1.0.0-a1",
-        "1.0.0-a2-dev0",
-        "1.0.0-a2-dev0",
-        "1.0.0-a2-dev1",
-        "1.0.0-a2",
-        "1.0.0-a3-dev0",
-        "1.0.0-a3-dev0",
-        "1.0.0-a3-dev1",
-        "1.0.0-b0",
-        "1.0.0-b0",
-        "1.0.0-b0",
-        "1.0.0-b1",
-        "1.0.0-b1",
-        "1.0.0-rc0",
-        "1.0.0-rc0",
-        "1.0.0-rc0",
-        "1.0.0-rc0",
-        "1.0.0-rc1-dev1",
-        "1.0.0-rc1",
-        "1.0.0",
-        "1.0.0",
-        "1.0.1",
-        "1.0.1",
-        "1.0.2",
-        "1.0.2",
-        "1.1.0",
-        "1.1.0",
-        "1.2.0",
-        "1.2.0",
-        "1.2.1",
-        "1.2.1",
-        "2.0.0",
-    ]

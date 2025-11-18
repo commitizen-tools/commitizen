@@ -1,6 +1,6 @@
 [project]
 name = "commitizen"
-version = "4.9.1"
+version = "4.10.0"
 description = "Python commitizen client tool"
 authors = [{ name = "Santiago Fraire", email = "santiwilly@gmail.com" }]
 maintainers = [
@@ -18,7 +18,7 @@ dependencies = [
     "colorama (>=0.4.1,<1.0)",
     "termcolor (>=1.1.0,<4.0.0)",
     "packaging>=19",
-    "tomlkit (>=0.5.3,<1.0.0)",
+    "tomlkit (>=0.8.0,<1.0.0)",
     "jinja2>=2.10.3",
     "pyyaml>=3.08",
     "argcomplete >=1.12.1,<3.7",
@@ -90,7 +90,7 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.commitizen]
-version = "4.9.1"
+version = "4.10.0"
 tag_format = "v$version"
 version_files = [
     "pyproject.toml:version",

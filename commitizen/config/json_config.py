@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from commitizen.exceptions import InvalidConfigurationError
 from commitizen.git import smart_open
@@ -20,28 +20,24 @@ if TYPE_CHECKING:
 
 
 class JsonConfig(BaseConfig):
-    def __init__(self, *, data: bytes | str, path: Path | str) -> None:
+    def __init__(self, *, data: bytes | str, path: Path) -> None:
         super().__init__()
-        self.is_empty_config = False
         self.path = path
         self._parse_setting(data)
 
     def init_empty_config_content(self) -> None:
-        with smart_open(self.path, "a", encoding=self.encoding) as json_file:
+        with smart_open(
+            self.path, "a", encoding=self._settings["encoding"]
+        ) as json_file:
             json.dump({"commitizen": {}}, json_file)
 
-    def set_key(self, key: str, value: Any) -> Self:
-        """Set or update a key in the conf.
-
-        For now only strings are supported.
-        We use to update the version number.
-        """
+    def set_key(self, key: str, value: object) -> Self:
         with open(self.path, "rb") as f:
-            parser = json.load(f)
+            config_doc = json.load(f)
 
-        parser["commitizen"][key] = value
-        with smart_open(self.path, "w", encoding=self.encoding) as f:
-            json.dump(parser, f, indent=2)
+        config_doc["commitizen"][key] = value
+        with smart_open(self.path, "w", encoding=self._settings["encoding"]) as f:
+            json.dump(config_doc, f, indent=2)
         return self
 
     def _parse_setting(self, data: bytes | str) -> None:

@@ -1,3 +1,36 @@
+## v4.10.0 (2025-11-10)
+
+### Feat
+
+- add config option for line length warning
+- **conventional_commits**: allow exclamation in title on BC
+- **version**: add the ability to just print major or minor version
+- allow `amend!` prefix as created by `git --fixup=reword:<commit>`
+
+### Fix
+
+- **commands/version**: add missing return
+- **test**: set terminal width for cli tests
+- **Init**: raise InitFailedError on keyboard interrupt on pre-commit hook question, simplify logic, remove unreachable code path
+
+### Refactor
+
+- **bump**: cleanup related to update_version_file
+- **RestructuredTest**: rename variable, fix typo and remove unnecessary string copy
+- **TomlConfig**: minor cleanups for DX
+- **Commit**: refactor _prompt_commit_questions and fix some type hint
+- **hooks**: refactor to improve readability
+- **Init**: make project_info a module and remove self.project_info
+- **BaseConfig**: update docstring, extract factory method and remove unnecessary variable assignment
+- remove self.encoding for better maintainability
+- **utils**: make get_backup_file_path to return a path for semantic correctness
+- remove unnecessary class member tag_format
+- **Bump**: remove use of getattr
+- **ConventionalCommitsCz**: rewrite message method to make the pattern more clear
+- **cmd**: unnest try except
+- **BaseCommitizen**: remove NotImplementedError and make them abstract method
+- **BaseCommitizen**: construct Style object directly to get rid of potential type error
+
 ## v4.9.1 (2025-09-10)
 
 ### Fix

@@ -3,7 +3,8 @@ import os
 import pytest
 
 from commitizen import defaults
-from commitizen.config import BaseConfig, JsonConfig
+from commitizen.config import BaseConfig
+from commitizen.config.json_config import JsonConfig
 
 
 @pytest.fixture()

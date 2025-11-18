@@ -410,7 +410,9 @@ KNOWN_SCHEMES = [ep.name for ep in metadata.entry_points(group=SCHEMES_ENTRYPOIN
 def get_version_scheme(settings: Settings, name: str | None = None) -> VersionScheme:
     """
     Get the version scheme as defined in the configuration
-    or from an overridden `name`
+    or from an overridden `name`.
+
+
 
     :raises VersionSchemeUnknown: if the version scheme is not found.
     """

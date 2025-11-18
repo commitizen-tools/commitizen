@@ -1,3 +1,4 @@
+import os
 import platform
 import sys
 
@@ -112,10 +113,59 @@ def test_version_use_version_provider(
 def test_version_command_shows_description_when_use_help_option(
     mocker: MockerFixture, capsys, file_regression
 ):
-    testargs = ["cz", "version", "--help"]
-    mocker.patch.object(sys, "argv", testargs)
-    with pytest.raises(SystemExit):
-        cli.main()
+    # Force consistent terminal width for tests to avoid wrapping differences
+    # between single and multi-worker pytest modes
+    original_columns = os.environ.get("COLUMNS")
+    os.environ["COLUMNS"] = "80"
 
-    out, _ = capsys.readouterr()
-    file_regression.check(out, extension=".txt")
+    try:
+        testargs = ["cz", "version", "--help"]
+        mocker.patch.object(sys, "argv", testargs)
+        with pytest.raises(SystemExit):
+            cli.main()
+
+        out, _ = capsys.readouterr()
+        file_regression.check(out, extension=".txt")
+    finally:
+        # Restore original COLUMNS
+        if original_columns is not None:
+            os.environ["COLUMNS"] = original_columns
+        else:
+            os.environ.pop("COLUMNS", None)
+
+
+@pytest.mark.parametrize(
+    "version, expected_version", (("1.0.0", "1\n"), ("2.1.3", "2\n"), ("0.0.1", "0\n"))
+)
+def test_version_just_major(config, capsys, version: str, expected_version: str):
+    config.settings["version"] = version
+    commands.Version(
+        config,
+        {
+            "report": False,
+            "project": True,
+            "verbose": False,
+            "major": True,
+        },
+    )()
+    captured = capsys.readouterr()
+    assert expected_version == captured.out
+
+
+@pytest.mark.parametrize(
+    "version, expected_version",
+    (("1.0.0", "0\n"), ("2.1.3", "1\n"), ("0.0.1", "0\n"), ("0.1.0", "1\n")),
+)
+def test_version_just_minor(config, capsys, version: str, expected_version: str):
+    config.settings["version"] = version
+    commands.Version(
+        config,
+        {
+            "report": False,
+            "project": True,
+            "verbose": False,
+            "minor": True,
+        },
+    )()
+    captured = capsys.readouterr()
+    assert expected_version == captured.out

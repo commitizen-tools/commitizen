@@ -7,7 +7,11 @@ from typing import TYPE_CHECKING
 import pytest
 
 from commitizen.changelog import Metadata
-from commitizen.changelog_formats.restructuredtext import RestructuredText
+from commitizen.changelog_formats.restructuredtext import (
+    RestructuredText,
+    _is_overlined_title,
+    _is_underlined_title,
+)
 from commitizen.config.base_config import BaseConfig
 
 if TYPE_CHECKING:
@@ -325,9 +329,9 @@ def test_get_metadata(
     [(text, True) for text in UNDERLINED_TITLES]
     + [(text, False) for text in NOT_UNDERLINED_TITLES],
 )
-def test_is_underlined_title(format: RestructuredText, text: str, expected: bool):
+def test_is_underlined_title(text: str, expected: bool):
     _, first, second = dedent(text).splitlines()
-    assert format.is_underlined_title(first, second) is expected
+    assert _is_underlined_title(first, second) is expected
 
 
 @pytest.mark.parametrize(
@@ -335,10 +339,10 @@ def test_is_underlined_title(format: RestructuredText, text: str, expected: bool
     [(text, True) for text in OVERLINED_TITLES]
     + [(text, False) for text in NOT_OVERLINED_TITLES],
 )
-def test_is_overlined_title(format: RestructuredText, text: str, expected: bool):
+def test_is_overlined_title(text: str, expected: bool):
     _, first, second, third = dedent(text).splitlines()
 
-    assert format.is_overlined_title(first, second, third) is expected
+    assert _is_overlined_title(first, second, third) is expected
 
 
 @pytest.mark.parametrize(

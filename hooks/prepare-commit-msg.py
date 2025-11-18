@@ -3,7 +3,6 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from subprocess import CalledProcessError
 
 try:
     from commitizen.cz.utils import get_backup_file_path
@@ -24,33 +23,34 @@ def prepare_commit_msg(commit_msg_file: str) -> int:
         ],
         capture_output=True,
     ).returncode
-    if exit_code != 0:
-        backup_file = Path(get_backup_file_path())
-        if backup_file.is_file():
-            # confirm if commit message from backup file should be reused
-            answer = input("retry with previous message? [y/N]: ")
-            if answer.lower() == "y":
-                shutil.copyfile(backup_file, commit_msg_file)
-                return 0
+    if exit_code == 0:
+        return 0
 
-        # use commitizen to generate the commit message
-        try:
-            subprocess.run(
-                [
-                    "cz",
-                    "commit",
-                    "--dry-run",
-                    "--write-message-to-file",
-                    commit_msg_file,
-                ],
-                stdin=sys.stdin,
-                stdout=sys.stdout,
-            ).check_returncode()
-        except CalledProcessError as error:
-            return error.returncode
+    backup_file = Path(get_backup_file_path())
+    if backup_file.is_file():
+        # confirm if commit message from backup file should be reused
+        answer = input("retry with previous message? [y/N]: ")
+        if answer.lower() == "y":
+            shutil.copyfile(backup_file, commit_msg_file)
+            return 0
 
-        # write message to backup file
-        shutil.copyfile(commit_msg_file, backup_file)
+    # use commitizen to generate the commit message
+    exit_code = subprocess.run(
+        [
+            "cz",
+            "commit",
+            "--dry-run",
+            "--write-message-to-file",
+            commit_msg_file,
+        ],
+        stdin=sys.stdin,
+        stdout=sys.stdout,
+    ).returncode
+    if exit_code:
+        return exit_code
+
+    # write message to backup file
+    shutil.copyfile(commit_msg_file, backup_file)
     return 0
 
 
@@ -58,4 +58,5 @@ if __name__ == "__main__":
     # make hook interactive by attaching /dev/tty to stdin
     with open("/dev/tty") as tty:
         sys.stdin = tty
-        exit(prepare_commit_msg(sys.argv[1]))
+        exit_code = prepare_commit_msg(sys.argv[1])
+        exit(exit_code)

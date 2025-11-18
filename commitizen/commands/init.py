@@ -1,15 +1,17 @@
 from __future__ import annotations
 
-import os
-import shutil
+from pathlib import Path
 from typing import Any, NamedTuple
 
 import questionary
 import yaml
 
-from commitizen import cmd, factory, out
+from commitizen import cmd, factory, out, project_info
 from commitizen.__version__ import __version__
-from commitizen.config import BaseConfig, JsonConfig, TomlConfig, YAMLConfig
+from commitizen.config import (
+    BaseConfig,
+)
+from commitizen.config.factory import create_config
 from commitizen.cz import registry
 from commitizen.defaults import CONFIG_FILES, DEFAULT_SETTINGS
 from commitizen.exceptions import InitFailedError, NoAnswersError
@@ -65,65 +67,12 @@ _VERSION_PROVIDER_CHOICES = tuple(
 )
 
 
-class ProjectInfo:
-    """Discover information about the current folder."""
-
-    @property
-    def has_pyproject(self) -> bool:
-        return os.path.isfile("pyproject.toml")
-
-    @property
-    def has_uv_lock(self) -> bool:
-        return os.path.isfile("uv.lock")
-
-    @property
-    def has_setup(self) -> bool:
-        return os.path.isfile("setup.py")
-
-    @property
-    def has_pre_commit_config(self) -> bool:
-        return os.path.isfile(".pre-commit-config.yaml")
-
-    @property
-    def is_python_uv(self) -> bool:
-        return self.has_pyproject and self.has_uv_lock
-
-    @property
-    def is_python_poetry(self) -> bool:
-        if not self.has_pyproject:
-            return False
-        with open("pyproject.toml") as f:
-            return "[tool.poetry]" in f.read()
-
-    @property
-    def is_python(self) -> bool:
-        return self.has_pyproject or self.has_setup
-
-    @property
-    def is_rust_cargo(self) -> bool:
-        return os.path.isfile("Cargo.toml")
-
-    @property
-    def is_npm_package(self) -> bool:
-        return os.path.isfile("package.json")
-
-    @property
-    def is_php_composer(self) -> bool:
-        return os.path.isfile("composer.json")
-
-    @property
-    def is_pre_commit_installed(self) -> bool:
-        return bool(shutil.which("pre-commit"))
-
-
 class Init:
     _PRE_COMMIT_CONFIG_PATH = ".pre-commit-config.yaml"
 
     def __init__(self, config: BaseConfig, *args: object) -> None:
         self.config: BaseConfig = config
-        self.encoding = config.settings["encoding"]
         self.cz = factory.committer_factory(self.config)
-        self.project_info = ProjectInfo()
 
     def __call__(self) -> None:
         if self.config.path:
@@ -150,62 +99,68 @@ class Init:
             tag_format = self._ask_tag_format(tag)  # confirm & text
             update_changelog_on_bump = self._ask_update_changelog_on_bump()  # confirm
             major_version_zero = self._ask_major_version_zero(version)  # confirm
+            hook_types: list[str] | None = questionary.checkbox(
+                "What types of pre-commit hook you want to install? (Leave blank if you don't want to install)",
+                choices=[
+                    questionary.Choice("commit-msg", checked=False),
+                    questionary.Choice("pre-push", checked=False),
+                ],
+            ).unsafe_ask()
         except KeyboardInterrupt:
             raise InitFailedError("Stopped by user")
 
-        # Initialize configuration
-        if "toml" in config_path:
-            self.config = TomlConfig(data="", path=config_path)
-        elif "json" in config_path:
-            self.config = JsonConfig(data="{}", path=config_path)
-        elif "yaml" in config_path:
-            self.config = YAMLConfig(data="", path=config_path)
-
-        # Collect hook data
-        hook_types = questionary.checkbox(
-            "What types of pre-commit hook you want to install? (Leave blank if you don't want to install)",
-            choices=[
-                questionary.Choice("commit-msg", checked=False),
-                questionary.Choice("pre-push", checked=False),
-            ],
-        ).unsafe_ask()
         if hook_types:
-            try:
-                self._install_pre_commit_hook(hook_types)
-            except InitFailedError as e:
-                raise InitFailedError(f"Failed to install pre-commit hook.\n{e}")
+            config_data = self._get_config_data()
+            with smart_open(
+                self._PRE_COMMIT_CONFIG_PATH,
+                "w",
+                encoding=self.config.settings["encoding"],
+            ) as config_file:
+                yaml.safe_dump(config_data, stream=config_file)
 
-        # Create and initialize config
-        self.config.init_empty_config_content()
+            if not project_info.is_pre_commit_installed():
+                raise InitFailedError(
+                    "Failed to install pre-commit hook.\n"
+                    "pre-commit is not installed in current environment."
+                )
 
-        self.config.set_key("name", cz_name)
-        self.config.set_key("tag_format", tag_format)
-        self.config.set_key("version_scheme", version_scheme)
-        if version_provider == "commitizen":
-            self.config.set_key("version", version.public)
-        else:
-            self.config.set_key("version_provider", version_provider)
-        if update_changelog_on_bump:
-            self.config.set_key("update_changelog_on_bump", update_changelog_on_bump)
-        if major_version_zero:
-            self.config.set_key("major_version_zero", major_version_zero)
+            cmd_str = "pre-commit install " + " ".join(
+                f"--hook-type {ty}" for ty in hook_types
+            )
+            c = cmd.run(cmd_str)
+            if c.return_code != 0:
+                raise InitFailedError(
+                    "Failed to install pre-commit hook.\n"
+                    f"Error running {cmd_str}."
+                    "Outputs are attached below:\n"
+                    f"stdout: {c.out}\n"
+                    f"stderr: {c.err}"
+                )
+            out.write("commitizen pre-commit hook is now installed in your '.git'\n")
+
+        _write_config_to_file(
+            path=config_path,
+            cz_name=cz_name,
+            version_provider=version_provider,
+            version_scheme=version_scheme,
+            version=version,
+            tag_format=tag_format,
+            update_changelog_on_bump=update_changelog_on_bump,
+            major_version_zero=major_version_zero,
+        )
 
         out.write("\nYou can bump the version running:\n")
         out.info("\tcz bump\n")
         out.success("Configuration complete 🚀")
 
-    def _ask_config_path(self) -> str:
-        default_path = (
-            "pyproject.toml" if self.project_info.has_pyproject else ".cz.toml"
-        )
-
-        name: str = questionary.select(
+    def _ask_config_path(self) -> Path:
+        filename: str = questionary.select(
             "Please choose a supported config file: ",
             choices=CONFIG_FILES,
-            default=default_path,
+            default=project_info.get_default_config_filename(),
             style=self.cz.style,
         ).unsafe_ask()
-        return name
+        return Path(filename)
 
     def _ask_name(self) -> str:
         name: str = questionary.select(
@@ -267,37 +222,17 @@ class Init:
             "Choose the source of the version:",
             choices=_VERSION_PROVIDER_CHOICES,
             style=self.cz.style,
-            default=self._default_version_provider,
+            default=project_info.get_default_version_provider(),
         ).unsafe_ask()
         return version_provider
 
-    @property
-    def _default_version_provider(self) -> str:
-        if self.project_info.is_python:
-            if self.project_info.is_python_poetry:
-                return "poetry"
-            if self.project_info.is_python_uv:
-                return "uv"
-            return "pep621"
-
-        if self.project_info.is_rust_cargo:
-            return "cargo"
-        if self.project_info.is_npm_package:
-            return "npm"
-        if self.project_info.is_php_composer:
-            return "composer"
-
-        return "commitizen"
-
     def _ask_version_scheme(self) -> str:
         """Ask for setting: version_scheme"""
-        default_scheme = "pep440" if self.project_info.is_python else "semver"
-
         scheme: str = questionary.select(
             "Choose version scheme: ",
             choices=KNOWN_SCHEMES,
             style=self.cz.style,
-            default=default_scheme,
+            default=project_info.get_default_version_scheme(),
         ).unsafe_ask()
         return scheme
 
@@ -321,26 +256,6 @@ class Init:
         ).unsafe_ask()
         return update_changelog_on_bump
 
-    def _exec_install_pre_commit_hook(self, hook_types: list[str]) -> None:
-        cmd_str = self._gen_pre_commit_cmd(hook_types)
-        c = cmd.run(cmd_str)
-        if c.return_code != 0:
-            err_msg = (
-                f"Error running {cmd_str}."
-                "Outputs are attached below:\n"
-                f"stdout: {c.out}\n"
-                f"stderr: {c.err}"
-            )
-            raise InitFailedError(err_msg)
-
-    def _gen_pre_commit_cmd(self, hook_types: list[str]) -> str:
-        """Generate pre-commit command according to given hook types"""
-        if not hook_types:
-            raise ValueError("At least 1 hook type should be provided.")
-        return "pre-commit install " + " ".join(
-            f"--hook-type {ty}" for ty in hook_types
-        )
-
     def _get_config_data(self) -> dict[str, Any]:
         CZ_HOOK_CONFIG = {
             "repo": "https://github.com/commitizen-tools/commitizen",
@@ -351,11 +266,12 @@ class Init:
             ],
         }
 
-        if not self.project_info.has_pre_commit_config:
-            # .pre-commit-config.yaml does not exist
+        if not Path(".pre-commit-config.yaml").is_file():
             return {"repos": [CZ_HOOK_CONFIG]}
 
-        with open(self._PRE_COMMIT_CONFIG_PATH, encoding=self.encoding) as config_file:
+        with open(
+            self._PRE_COMMIT_CONFIG_PATH, encoding=self.config.settings["encoding"]
+        ) as config_file:
             config_data: dict[str, Any] = yaml.safe_load(config_file) or {}
 
         if not isinstance(repos := config_data.get("repos"), list):
@@ -370,16 +286,29 @@ class Init:
             repos.append(CZ_HOOK_CONFIG)
         return config_data
 
-    def _install_pre_commit_hook(self, hook_types: list[str] | None = None) -> None:
-        config_data = self._get_config_data()
-        with smart_open(
-            self._PRE_COMMIT_CONFIG_PATH, "w", encoding=self.encoding
-        ) as config_file:
-            yaml.safe_dump(config_data, stream=config_file)
 
-        if not self.project_info.is_pre_commit_installed:
-            raise InitFailedError("pre-commit is not installed in current environment.")
-        if hook_types is None:
-            hook_types = ["commit-msg", "pre-push"]
-        self._exec_install_pre_commit_hook(hook_types)
-        out.write("commitizen pre-commit hook is now installed in your '.git'\n")
+def _write_config_to_file(
+    *,
+    path: Path,
+    cz_name: str,
+    version_provider: str,
+    version_scheme: str,
+    version: Version,
+    tag_format: str,
+    update_changelog_on_bump: bool,
+    major_version_zero: bool,
+) -> None:
+    out_config = create_config(path=path)
+    out_config.init_empty_config_content()
+
+    out_config.set_key("name", cz_name)
+    out_config.set_key("tag_format", tag_format)
+    out_config.set_key("version_scheme", version_scheme)
+    if version_provider == "commitizen":
+        out_config.set_key("version", version.public)
+    else:
+        out_config.set_key("version_provider", version_provider)
+    if update_changelog_on_bump:
+        out_config.set_key("update_changelog_on_bump", update_changelog_on_bump)
+    if major_version_zero:
+        out_config.set_key("major_version_zero", major_version_zero)

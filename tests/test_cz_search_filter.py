@@ -1,6 +1,6 @@
 import pytest
 
-from commitizen.config import TomlConfig
+from commitizen.config.toml_config import TomlConfig
 from commitizen.cz.customize import CustomizeCommitsCz
 
 TOML_WITH_SEARCH_FILTER = r"""

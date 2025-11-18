@@ -1,6 +1,7 @@
 import os
 import re
 import tempfile
+from pathlib import Path
 
 from commitizen import git
 from commitizen.cz import exceptions
@@ -22,10 +23,9 @@ def strip_local_version(version: str) -> str:
     return _RE_LOCAL_VERSION.sub("", version)
 
 
-def get_backup_file_path() -> str:
+def get_backup_file_path() -> Path:
     project_root = git.find_git_project_root()
     project = project_root.as_posix().replace("/", "%") if project_root else ""
 
     user = os.environ.get("USER", "")
-
-    return os.path.join(tempfile.gettempdir(), f"cz.commit%{user}%{project}.backup")
+    return Path(tempfile.gettempdir(), f"cz.commit%{user}%{project}.backup")

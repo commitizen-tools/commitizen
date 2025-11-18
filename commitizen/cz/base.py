@@ -6,10 +6,11 @@ from collections.abc import Iterable, Mapping
 from typing import Any, Callable, NamedTuple, Protocol
 
 from jinja2 import BaseLoader, PackageLoader
-from prompt_toolkit.styles import Style, merge_styles
+from prompt_toolkit.styles import Style
 
 from commitizen import git
 from commitizen.config.base_config import BaseConfig
+from commitizen.exceptions import CommitMessageLengthExceededError
 from commitizen.question import CzQuestion
 
 
@@ -74,7 +75,7 @@ class BaseCommitizen(metaclass=ABCMeta):
             self.config.settings.update({"style": BaseCommitizen.default_style_config})
 
     @abstractmethod
-    def questions(self) -> Iterable[CzQuestion]:
+    def questions(self) -> list[CzQuestion]:
         """Questions regarding the commit message."""
 
     @abstractmethod
@@ -83,50 +84,57 @@ class BaseCommitizen(metaclass=ABCMeta):
 
     @property
     def style(self) -> Style:
-        return merge_styles(
+        return Style(
             [
-                Style(BaseCommitizen.default_style_config),
-                Style(self.config.settings["style"]),
+                *BaseCommitizen.default_style_config,
+                *self.config.settings["style"],
             ]
-        )  # type: ignore[return-value]
+        )
 
+    @abstractmethod
     def example(self) -> str:
         """Example of the commit message."""
-        raise NotImplementedError("Not Implemented yet")
 
+    @abstractmethod
     def schema(self) -> str:
         """Schema definition of the commit message."""
-        raise NotImplementedError("Not Implemented yet")
 
+    @abstractmethod
     def schema_pattern(self) -> str:
         """Regex matching the schema used for message validation."""
-        raise NotImplementedError("Not Implemented yet")
+
+    @abstractmethod
+    def info(self) -> str:
+        """Information about the standardized commit message."""
 
     def validate_commit_message(
         self,
         *,
         commit_msg: str,
-        pattern: re.Pattern[str] | None,
+        pattern: re.Pattern[str],
         allow_abort: bool,
         allowed_prefixes: list[str],
-        max_msg_length: int,
+        max_msg_length: int | None,
+        commit_hash: str,
     ) -> ValidationResult:
         """Validate commit message against the pattern."""
         if not commit_msg:
-            return ValidationResult(allow_abort, [])
-
-        if pattern is None:
-            return ValidationResult(True, [])
+            return ValidationResult(
+                allow_abort, [] if allow_abort else ["commit message is empty"]
+            )
 
         if any(map(commit_msg.startswith, allowed_prefixes)):
             return ValidationResult(True, [])
 
-        if max_msg_length:
+        if max_msg_length is not None:
             msg_len = len(commit_msg.partition("\n")[0].strip())
             if msg_len > max_msg_length:
-                return ValidationResult(
-                    False,
-                    [f"message is too long: {msg_len} > {max_msg_length}"],
+                # TODO: capitalize the first letter of the error message for consistency in v5
+                raise CommitMessageLengthExceededError(
+                    f"commit validation: failed!\n"
+                    f"commit message length exceeds the limit.\n"
+                    f'commit "{commit_hash}": "{commit_msg}"\n'
+                    f"message length limit: {max_msg_length} (actual: {msg_len})"
                 )
 
         return ValidationResult(
@@ -144,12 +152,9 @@ class BaseCommitizen(metaclass=ABCMeta):
                 for commit, errors in invalid_commits
             ]
         )
+        # TODO: capitalize the first letter of the error message for consistency in v5
         return (
             "commit validation: failed!\n"
             "please enter a commit message in the commitizen format.\n"
             f"{displayed_msgs_content}"
         )
-
-    def info(self) -> str:
-        """Information about the standardized commit message."""
-        raise NotImplementedError("Not Implemented yet")

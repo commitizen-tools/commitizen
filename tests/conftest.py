@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 import re
 import tempfile
-from collections.abc import Iterable, Iterator, Mapping
+from collections.abc import Iterator, Mapping
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +18,7 @@ from commitizen.changelog_formats import (
 from commitizen.config import BaseConfig
 from commitizen.cz import registry
 from commitizen.cz.base import BaseCommitizen, ValidationResult
+from commitizen.exceptions import CommitMessageLengthExceededError
 from commitizen.question import CzQuestion
 from tests.utils import create_file_and_commit
 
@@ -178,7 +179,7 @@ class SemverCommitizen(BaseCommitizen):
         "patch": "Bugs",
     }
 
-    def questions(self) -> list:
+    def questions(self) -> list[CzQuestion]:
         return [
             {
                 "type": "list",
@@ -216,6 +217,18 @@ class SemverCommitizen(BaseCommitizen):
         subject = answers.get("subject", "default message").trim()
         return f"{prefix}: {subject}"
 
+    def example(self) -> str:
+        return ""
+
+    def schema(self) -> str:
+        return ""
+
+    def schema_pattern(self) -> str:
+        return ""
+
+    def info(self) -> str:
+        return ""
+
 
 @pytest.fixture()
 def use_cz_semver(mocker):
@@ -224,10 +237,22 @@ def use_cz_semver(mocker):
 
 
 class MockPlugin(BaseCommitizen):
-    def questions(self) -> Iterable[CzQuestion]:
+    def questions(self) -> list[CzQuestion]:
         return []
 
     def message(self, answers: Mapping) -> str:
+        return ""
+
+    def example(self) -> str:
+        return ""
+
+    def schema(self) -> str:
+        return ""
+
+    def schema_pattern(self) -> str:
+        return ""
+
+    def info(self) -> str:
         return ""
 
 
@@ -239,7 +264,7 @@ def mock_plugin(mocker: MockerFixture, config: BaseConfig) -> BaseCommitizen:
 
 
 class ValidationCz(BaseCommitizen):
-    def questions(self) -> Iterable[CzQuestion]:
+    def questions(self) -> list[CzQuestion]:
         return [
             {"type": "input", "name": "commit", "message": "Initial commit:\n"},
             {"type": "input", "name": "issue_nb", "message": "ABC-123"},
@@ -254,14 +279,21 @@ class ValidationCz(BaseCommitizen):
     def schema_pattern(self) -> str:
         return r"^(?P<issue_nb>[A-Z]{3}-\d+): (?P<commit>.*)$"
 
+    def example(self) -> str:
+        return "ABC-123: fixed a bug"
+
+    def info(self) -> str:
+        return "Commit message must start with an issue number like ABC-123"
+
     def validate_commit_message(
         self,
         *,
         commit_msg: str,
-        pattern: re.Pattern[str] | None,
+        pattern: re.Pattern[str],
         allow_abort: bool,
         allowed_prefixes: list[str],
-        max_msg_length: int,
+        max_msg_length: int | None,
+        commit_hash: str,
     ) -> ValidationResult:
         """Validate commit message against the pattern."""
         if not commit_msg:
@@ -269,18 +301,18 @@ class ValidationCz(BaseCommitizen):
                 allow_abort, [] if allow_abort else ["commit message is empty"]
             )
 
-        if pattern is None:
-            return ValidationResult(True, [])
-
         if any(map(commit_msg.startswith, allowed_prefixes)):
             return ValidationResult(True, [])
 
         if max_msg_length:
             msg_len = len(commit_msg.partition("\n")[0].strip())
             if msg_len > max_msg_length:
-                return ValidationResult(
-                    False,
-                    [f"message is too long: {msg_len} > {max_msg_length}"],
+                # TODO: capitalize the first letter of the error message for consistency in v5
+                raise CommitMessageLengthExceededError(
+                    f"commit validation: failed!\n"
+                    f"commit message length exceeds the limit.\n"
+                    f'commit "{commit_hash}": "{commit_msg}"\n'
+                    f"message length limit: {max_msg_length} (actual: {msg_len})"
                 )
 
         return ValidationResult(

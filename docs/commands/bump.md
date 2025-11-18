@@ -9,7 +9,7 @@
 - **Automatic Version Detection**: Analyzes commit history to determine the appropriate version bump
 - **Manual Version Control**: Supports manual version specification when needed
 - **Pre-release Support**: Handles alpha, beta, and release candidate versions
-- **Multiple Version Schemes**: Supports both [PEP 0440][pep440] and [semantic versioning][semver] formats
+- **Multiple Version Schemes**: Supports both [PEP 440][pep440] and [semantic versioning][semver] formats
 
 ### Version Increment Rules
 
@@ -23,7 +23,7 @@ The version follows the `MAJOR.MINOR.PATCH` format, with increments determined b
 
 ### Version Schemes
 
-By default, Commitizen uses [PEP 0440][pep440] for version formatting. You can switch to semantic versioning using either:
+By default, Commitizen uses [PEP 440][pep440] for version formatting. You can switch to semantic versioning using either:
 
 1. Command line:
 ```sh
@@ -470,35 +470,64 @@ Supported variables:
 
 ---
 
-### `version_files` \*
+### `version_files`
 
 It is used to identify the files or glob patterns which should be updated with the new version.
-It is also possible to provide a pattern for each file, separated by colons (`:`).
 
 Commitizen will update its configuration file automatically (`pyproject.toml`, `.cz`) when bumping,
 regarding if the file is present or not in `version_files`.
 
-\* Renamed from `files` to `version_files`.
+You may specify the `version_files` in your `pyproject.toml`, `.cz.toml` or `cz.toml` configuration file.
 
-Some examples
+It is also possible to provide a pattern for each file, separated by a colon (e.g. `file:pattern`). See the below example for more details.
 
-`pyproject.toml`, `.cz.toml` or `cz.toml`
+#### Example Configuration
 
 ```toml title="pyproject.toml"
 [tool.commitizen]
 version_files = [
     "src/__version__.py",
     "packages/*/pyproject.toml:version",
-    "setup.py:version",
+    "setup.json:version",
 ]
 ```
 
-In the example above, we can see the reference `"setup.py:version"`.
-This means that it will find a file `setup.py` and will only make a change
-in a line containing the `version` substring.
+In the example configuration above, we can see the reference `"setup.json:version"`.
+
+This means that it will find a file `setup.json` and will only change the lines that contain the substring `"version"`.
+
+For example, if we have a file `setup.json` with the following content:
+
+<!-- DEPENDENCY: repeated_version_number.json -->
+
+```json title="setup.json"
+{
+  "name": "magictool",
+  "version": "1.2.3",
+  "dependencies": {
+      "lodash": "1.2.3"
+  }
+}
+```
+
+After running `cz bump 2.0.0`, the file will be updated to:
+
+```diff title="setup.json"
+{
+  "name": "magictool",
+- "version": "1.2.3",
++ "version": "2.0.0",
+  "dependencies": {
+      "lodash": "1.2.3"
+  }
+}
+```
 
 !!! note
     Files can be specified using relative (to the execution) paths, absolute paths, or glob patterns.
+
+!!! note
+    (Historical note) This option was renamed from `files` to `version_files`.
 
 ---
 
@@ -589,7 +618,7 @@ execution of the script, some environment variables are available:
 | `CZ_PRE_NEW_VERSION`         | New version, after the bump                                |
 | `CZ_PRE_NEW_TAG_VERSION`     | New version tag, after the bump                            |
 | `CZ_PRE_MESSAGE`             | Commit message of the bump                                 |
-| `CZ_PRE_INCREMENT`           | Whether this is a `MAJOR`, `MINOR` or `PATH` release       |
+| `CZ_PRE_INCREMENT`           | Whether this is a `MAJOR`, `MINOR` or `PATCH` release       |
 | `CZ_PRE_CHANGELOG_FILE_NAME` | Path to the changelog file, if available                   |
 
 ```toml title="pyproject.toml"
@@ -616,7 +645,7 @@ release. During execution of the script, some environment variables are availabl
 | `CZ_POST_CURRENT_VERSION`      | Current version, after the bump                             |
 | `CZ_POST_CURRENT_TAG_VERSION`  | Current version tag, after the bump                         |
 | `CZ_POST_MESSAGE`              | Commit message of the bump                                  |
-| `CZ_POST_INCREMENT`            | Whether this was a `MAJOR`, `MINOR` or `PATH` release      |
+| `CZ_POST_INCREMENT`            | Whether this was a `MAJOR`, `MINOR` or `PATCH` release      |
 | `CZ_POST_CHANGELOG_FILE_NAME`  | Path to the changelog file, if available                    |
 
 ```toml title="pyproject.toml"
