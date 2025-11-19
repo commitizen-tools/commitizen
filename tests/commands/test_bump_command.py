@@ -646,13 +646,11 @@ def test_none_increment_should_not_call_git_tag_and_error_code_is_not_zero(
     dummy_value = git.tag("0.0.2")
     git.tag = MagicMock(return_value=dummy_value)
 
-    with pytest.raises(NoneIncrementExit):
-        try:
-            cli.main()
-        except NoneIncrementExit as e:
-            git.tag.assert_not_called()
-            assert e.exit_code == ExitCode.NO_INCREMENT
-            raise e
+    with pytest.raises(NoneIncrementExit) as e:
+        cli.main()
+
+    git.tag.assert_not_called()
+    assert e.value.exit_code == ExitCode.NO_INCREMENT
 
     # restore pop stashed
     git.tag = stashed_git_tag
