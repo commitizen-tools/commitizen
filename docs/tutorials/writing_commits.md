@@ -44,8 +44,8 @@ Emojis may be added as well (e.g., see [cz-emoji][cz_emoji]), which requires the
 | `fix(commands): bump error when no user provided` | `fix: stuff` |
 | `feat: add new commit command` | `feat: commit command introduced` |
 
-[customization]: ../customization.md
+[customization]: ../customization/config_file.md
 [conventional_commits]: https://www.conventionalcommits.org
 [cz_emoji]: https://commitizen-tools.github.io/commitizen/third-party-commitizen/#cz-emoji
-[configuration]: ../config.md#encoding
-[breaking-change-config]: ../config.md#breaking_change_exclamation_in_title
+[configuration]: ../config/commit.md#encoding
+[breaking-change-config]: ../config/commit.md#breaking_change_exclamation_in_title
