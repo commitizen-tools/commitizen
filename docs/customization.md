@@ -3,17 +3,11 @@ We have two different ways to do so.
 
 ## 1. Customize in configuration file
 
-The basic steps are:
-
-1. Define your custom committing or bumping rules in the configuration file.
-2. Declare `name = "cz_customize"` in your configuration file, or add `-n cz_customize` when running Commitizen.
+Define your custom committing or bumping rules in the configuration file, changing behaviour of the default cz_conventional_commits commitizen.
 
 Example:
 
 ```toml title="pyproject.toml"
-[tool.commitizen]
-name = "cz_customize"
-
 [tool.commitizen.customize]
 message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
 example = "feature: this feature enable customize through config file"
@@ -53,7 +47,6 @@ The equivalent example for a json config file:
 ```json title=".cz.json"
 {
     "commitizen": {
-        "name": "cz_customize",
         "customize": {
             "message_template": "{{change_type}}:{% if show_message %} {{message}}{% endif %}",
             "example": "feature: this feature enable customize through config file",
@@ -108,7 +101,6 @@ And the correspondent example for a yaml file:
 
 ```yaml title=".cz.yaml"
 commitizen:
-  name: cz_customize
   customize:
     message_template: '{{change_type}}:{% if show_message %} {{message}}{% endif %}'
     example: 'feature: this feature enable customize through config file'
