@@ -1,4 +1,4 @@
-usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
+usage: cz bump [-h] [--dry-run] [--files-only] [--version-files-only] [--local-version] [--changelog]
                [--no-verify] [--yes] [--tag-format TAG_FORMAT]
                [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}]
                [--devrelease DEVRELEASE] [--increment {MAJOR,MINOR,PATCH}]
@@ -22,7 +22,8 @@ positional arguments:
 options:
   -h, --help            show this help message and exit
   --dry-run             show output to stdout, no commit, no modified files
-  --files-only          bump version in the files from the config
+  --files-only          bump version in the files from the config (Deprecated in v5)
+  --version-files-only  bump version in the files from the config 
   --local-version       bump only the local version portion
   --changelog, -ch      generate the changelog for the newest version
   --no-verify           this option bypasses the pre-commit and commit-msg

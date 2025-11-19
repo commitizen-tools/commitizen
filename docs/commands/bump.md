@@ -109,12 +109,22 @@ Commitizen supports the [PEP 440][pep440] version format, which includes several
 
 ![cz bump --help](../images/cli_help/cz_bump___help.svg)
 
-### `--files-only`
+### `--files-only` (deprecated)
+**Deprecated**: This flag will be removed in Commitizen v5.  
+Please use [`--version-files-only`](#--version-files-only) instead.
 
 Bumps the version in the files defined in [`version_files`](#version_files) without creating a commit and tag on the git repository,
 
 ```bash
 cz bump --files-only
+```
+
+### `--version-files-only`
+
+Bumps the version in the files defined in [`version_files`](#version_files) without creating a commit and tag on the git repository,
+
+```bash
+cz bump --version-files-only
 ```
 
 ### `--changelog`

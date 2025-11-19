@@ -47,6 +47,7 @@ class BumpArgs(Settings, total=False):
     dry_run: bool
     file_name: str
     files_only: bool | None
+    version_files_only: bool | None
     get_next: bool
     git_output_to_stderr: bool
     increment_mode: str
@@ -356,8 +357,16 @@ class Bump:
                 else None,
             )
 
-        if self.arguments["files_only"]:
+        if self.arguments.get("files_only"):
+            warnings.warn(
+                "--files-only is deprecated and will be removed in v5. Use --version-files-only instead.",
+                DeprecationWarning,
+            )
             raise ExpectedExit()
+
+        if self.arguments.get("version_files_only"):
+            raise ExpectedExit()
+
 
         # FIXME: check if any changes have been staged
         git.add(*files)

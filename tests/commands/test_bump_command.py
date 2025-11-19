@@ -555,7 +555,7 @@ def test_bump_files_only(mocker: MockFixture, tmp_commitizen_project):
     assert tag_exists is True
 
     create_file_and_commit("feat: another new feature")
-    testargs = ["cz", "bump", "--yes", "--files-only"]
+    testargs = ["cz", "bump", "--yes", "--files-only","--version-files-only"]
     mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(ExpectedExit):
         cli.main()
@@ -1427,7 +1427,7 @@ def test_bump_changelog_contains_increment_only(mocker, tmp_commitizen_project, 
     # Add a commit and create the incremental changelog to v3.0.0
     # it should only include v3 changes
     create_file_and_commit("feat(next)!: next version")
-    testargs = ["cz", "bump", "--yes", "--files-only", "--changelog-to-stdout"]
+    testargs = ["cz", "bump", "--yes", "--files-only", "--version-files-only", "--changelog-to-stdout"]
     mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(ExpectedExit):
         cli.main()
