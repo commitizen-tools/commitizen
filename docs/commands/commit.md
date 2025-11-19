@@ -11,7 +11,7 @@ The `commit` command provides an interactive way to create structured commits. U
 - `cz commit`
 - `cz c` (shortcut)
 
-By default, Commitizen uses conventional commits, but you can customize the commit rules to match your project's needs. See the [customization guide](../customization.md) for details.
+By default, Commitizen uses conventional commits, but you can customize the commit rules to match your project's needs. See the [customization guide](../customization/config_file.md) for details.
 
 ## Basic Usage
 
