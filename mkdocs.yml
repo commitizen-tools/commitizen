@@ -42,8 +42,18 @@ nav:
       - ls: "commands/ls.md"
       - schema: "commands/schema.md"
       - version: "commands/version.md"
-  - Configuration: "config.md"
-  - Customization: "customization.md"
+  - Configuration:
+      - Configuration File: "config/configuration_file.md"
+      - Version Provider: "config/version_provider.md"
+      - bump: "config/bump.md"
+      - commit: "config/commit.md"
+      - check: "config/check.md"
+      - changelog: "config/changelog.md"
+      - Misc Options: "config/option.md"
+  - Advanced Customization:
+      - Configuration File: "customization/config_file.md"
+      - Customized Python Class: "customization/python_class.md"
+      - Changelog Template: "customization/changelog_template.md"
   - Tutorials:
       - Writing commits: "tutorials/writing_commits.md"
       - Managing tags formats: "tutorials/tag_format.md"

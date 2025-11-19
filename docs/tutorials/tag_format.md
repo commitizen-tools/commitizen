@@ -42,8 +42,7 @@ As a result, the tag generated on bump will have this format: `v1.0.0` and the v
 !!! note
     Both `$version` and `${version}` syntaxes are strictly equivalent. You can use the one you prefer.
 
-See [the `version_scheme` section in `bump` command documentation](../commands/bump.md#version_scheme) for more details on version schemes and how to define your own.
-See [`tag_format`](../config.md#tag_format) and [`version_scheme`](../config.md#version_scheme) settings in [Configuration reference](../config.md) for more details on these settings.
+See [`tag_format`](../commands/bump.md#-tag-format) and [`version_scheme`](../commands/bump.md#-version-scheme) settings for more details.
 
 ## Changing convention
 
@@ -71,7 +70,7 @@ Your new tag will be in the form `component-${version}`.
 Now let's say you have some known tags you want to ignore, either because they are not versions, or because they are not versions of the component you are dealing with.
 As a consequence, you don't want them to trigger a warning because Commitizen detected an unknown tag format.
 
-Then you can tell Commitizen about it using the [`ignored_tag_formats`](../config.md#ignored_tag_formats) setting:
+Then you can tell Commitizen about it using the [`ignored_tag_formats`](../config/bump.md#ignored_tag_formats) setting:
 
 ```yaml
 [tool.commitizen]

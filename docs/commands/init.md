@@ -20,10 +20,7 @@ When you run `cz init`, Commitizen will guide you through an interactive setup p
 
 The initialization process will create a configuration file in your project root.
 
-Choose the configuration file format based on your project type:
-
-- Use `pyproject.toml` for Python projects
-- Use `.cz.toml`, `.cz.yaml`, `.cz.json`, etc. for other projects.
+See [Configuration File][configuration_file] for more details.
 
 ## Configuration Options
 
@@ -48,6 +45,8 @@ During the initialization process, you'll be prompted to configure the following
 7. **Alpha Versioning**: Option to keep major version at 0 for alpha/beta software
 8. **Pre-commit Hooks**: Set up Git pre-commit hooks for automated commit message validation
 
+See [Configuration Options][configuration_options] for more details.
+
 ## Example
 
 ```sh
@@ -61,6 +60,9 @@ cz init
 
 After initialization, you can:
 
-1. Start using `cz commit` to create conventional commits
-2. Use `cz bump` to manage versioning
-3. Configure additional settings in your project's configuration file
+1. Start using [`cz commit`](./commit.md) to create conventional commits
+2. Use [`cz bump`](./bump.md) to manage versioning
+3. Configure additional settings in your project's [configuration_file][configuration_file]
+
+[configuration_file]: ../config/configuration_file.md
+[configuration_options]: ../config/option.md
