@@ -8,7 +8,8 @@ import shutil
 import pytest
 from pytest_mock import MockFixture
 
-from commitizen import cmd, exceptions, git
+from commitizen import cmd, git
+from commitizen.exceptions import GitCommandError
 from tests.utils import (
     FakeCommand,
     create_branch,
@@ -110,10 +111,13 @@ def test_git_message_with_empty_body():
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_get_log_as_str_list_empty():
-    """ensure an exception or empty list in an empty project"""
+    """
+    Ensure an exception is raised or empty list in an empty project.
+    The behavior is different depending on the version of git.
+    """
     try:
         gitlog = git._get_log_as_str_list(start=None, end="HEAD", args="")
-    except exceptions.GitCommandError:
+    except GitCommandError:
         return
     assert len(gitlog) == 0, "list should be empty if no assert"
 
@@ -409,7 +413,7 @@ def test_get_filenames_in_commit_error(mocker: MockFixture):
         "commitizen.cmd.run",
         return_value=FakeCommand(out="", err="fatal: bad object HEAD", return_code=1),
     )
-    with pytest.raises(exceptions.GitCommandError) as excinfo:
+    with pytest.raises(GitCommandError) as excinfo:
         git.get_filenames_in_commit()
     assert str(excinfo.value) == "fatal: bad object HEAD"
 
@@ -497,5 +501,5 @@ def test_get_default_branch_error(mocker: MockFixture):
             return_code=1,
         ),
     )
-    with pytest.raises(exceptions.GitCommandError):
+    with pytest.raises(GitCommandError):
         git.get_default_branch()
