@@ -222,10 +222,11 @@ In this example, it will detect that `setup.py` contains `1.0.5` instead of `1.2
       ```
 
     2. Manually update the version in `setup.py` to match the version in `pyproject.toml`:
-      ```python title="setup.py"
+      ```diff title="setup.py"
       from setuptools import setup
 
-      setup(..., version="1.21.0", ...)
+      - setup(..., version="1.0.5", ...)
+      + setup(..., version="1.21.0", ...)
       ```
 
     3. Run the bump command again:
