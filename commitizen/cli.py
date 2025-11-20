@@ -208,6 +208,11 @@ data = {
                     {
                         "name": "--files-only",
                         "action": "store_true",
+                        "help": "Bump version in config files (deprecated; use --version-files-only).",
+                    },
+                    {
+                        "name": "--version-files-only",
+                        "action": "store_true",
                         "help": "bump version in the files from the config",
                     },
                     {
