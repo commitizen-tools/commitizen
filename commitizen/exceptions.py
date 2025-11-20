@@ -29,7 +29,7 @@ class ExitCode(IntEnum):
     INVALID_CONFIGURATION = 19
     NOT_ALLOWED = 20
     NO_INCREMENT = 21
-    UNRECOGNIZED_CHARACTERSET_ENCODING = 22
+    CHARACTER_SET_DECODE_ERROR = 22
     GIT_COMMAND_ERROR = 23
     INVALID_MANUAL_VERSION = 24
     INIT_FAILED = 25
@@ -170,7 +170,7 @@ class NotAllowed(CommitizenException):
 
 
 class CharacterSetDecodeError(CommitizenException):
-    exit_code = ExitCode.UNRECOGNIZED_CHARACTERSET_ENCODING
+    exit_code = ExitCode.CHARACTER_SET_DECODE_ERROR
 
 
 class GitCommandError(CommitizenException):
@@ -215,3 +215,6 @@ class ConfigFileIsEmpty(CommitizenException):
 class CommitMessageLengthExceededError(CommitizenException):
     exit_code = ExitCode.COMMIT_MESSAGE_LENGTH_LIMIT_EXCEEDED
     message = "Length of commit message exceeds the given limit."
+
+
+# When adding a new exit code, please update the documentation of the exit codes in docs/exit_codes.md
