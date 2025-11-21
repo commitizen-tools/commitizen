@@ -207,7 +207,7 @@ cookiecutter gh:commitizen-tools/commitizen_cz_template
 
 See [commitizen_cz_template](https://github.com/commitizen-tools/commitizen_cz_template) for details.
 
-Once you publish your rules, you can send us a PR to the [Third-party section](./third-party-commitizen.md).
+Once you publish your rules, you can send us a PR to the [Third-party section](./third-party-plugins/about.md).
 
 ### Custom commit rules
 
