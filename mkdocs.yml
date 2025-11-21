@@ -55,6 +55,7 @@ nav:
       - Developmental releases: "tutorials/dev_releases.md"
       - Monorepo support: "tutorials/monorepo_guidance.md"
   - FAQ: "faq.md"
+  - Features we won't add: "features_wont_add.md"
   - Exit Codes: "exit_codes.md"
   - Third-Party Commitizen Plugins:
       - About: "third-party-plugins/about.md"

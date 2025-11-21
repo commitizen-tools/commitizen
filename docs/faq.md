@@ -1,14 +1,8 @@
-## Features we won't add
+This page contains frequently asked questions about Commitizen.
 
-For a comprehensive list of features that have been considered but won't be implemented, please refer to our [issue tracker](https://github.com/commitizen-tools/commitizen/issues?q=is:issue%20state:closed%20label:%22issue-status:%20wont-fix%22%20OR%20label:%22issue-status:%20wont-implement%22).
+## Support for [`PEP621`](https://peps.python.org/pep-0621/)
 
-- Enable multiple locations of config file `.cz.*` [#955](https://github.com/commitizen-tools/commitizen/issues/955)
-- Create a flag to build the changelog from commits in multiple git repositories [#790](https://github.com/commitizen-tools/commitizen/issues/790)
-- Global Configuration [#597](https://github.com/commitizen-tools/commitizen/issues/597)
-
-## Support for PEP621
-
-PEP621 establishes a `[project]` definition inside `pyproject.toml`
+`PEP621` establishes a `[project]` definition inside `pyproject.toml`
 
 ```toml
 [project]
@@ -16,7 +10,7 @@ name = "spam"
 version = "2.5.1"
 ```
 
-Commitizen provides a [`pep621` version provider](config.md#version-providers) to get and set version from this field.
+Commitizen provides a `PEP621` [version provider](config.md#version-providers) to get and set version from this field.
 You just need to set the proper `version_provider` setting:
 
 ```toml
@@ -28,12 +22,14 @@ version = "2.5.1"
 version_provider = "pep621"
 ```
 
-## Why are `revert` and `chore` valid types in the check pattern of cz conventional_commits but not types we can select?
+## Why are `revert` and `chore` valid types in the check pattern of `cz_conventional_commits` but not types we can select?
 
-`revert` and `chore` are added to the "pattern" in `cz check` in order to prevent backward errors, but officially they are not part of conventional commits, we are using the latest [types from Angular](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type) (they used to but were removed).
-However, you can create a customized `cz` with those extra types. (See [Customization](customization.md)).
+`revert` and `chore` are added to `pattern` in `cz check` in order to prevent backward errors, but officially they are not part of conventional commits, we are using the latest [types from Angular](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type) (they used to but were removed).
+However, you can create a customized `cz` with those extra types. See [Customization](customization.md) for more details.
 
-See more discussion in issue [#142](https://github.com/commitizen-tools/commitizen/issues/142) and [#36](https://github.com/commitizen-tools/commitizen/issues/36)
+See more discussion in
+- [issue #142](https://github.com/commitizen-tools/commitizen/issues/142)
+- [issue #36](https://github.com/commitizen-tools/commitizen/issues/36)
 
 ## How to revert a bump?
 
@@ -47,23 +43,25 @@ git reset --hard HEAD
 
 This will remove the last tag created, plus the commit containing the update to `.cz.toml` and the changelog generated for the version.
 
-In case the commit was pushed to the server you can remove it by running
+In case the commit was pushed to the server, you can remove it by running:
 
 ```sh
 git push --delete origin <created_tag>
 ```
 
-## Is this project affiliated with the Commitizen JS project?
+## Is this project affiliated with the [Commitizen JS][cz-js] project?
 
-It is not affiliated.
+**It is not affiliated.**
 
 Both are used for similar purposes, parsing commits, generating changelog and version we presume.
 This one is written in python to make integration easier for python projects and the other serves the JS packages.
 
-They differ a bit in design, not sure if cz-js does any of this, but these are some things you can do with this repo (python's commitizen):
+<!-- TODO: Add more details about the differences between Commitizen and Commitizen JS -->
 
-- create custom rules, version bumps and changelog generation, by default we use the popular conventional commits (I think cz-js allows this).
-- single package, install one thing and it will work (cz-js is a monorepo, but you have to install different dependencies AFAIK)
+They differ a bit in design, not sure if cz-js does any of this, but these are some things you can do with our Commitizen:
+
+- create custom rules, version bumps and changelog generation. By default, we use the popular conventional commits (I think cz-js allows this).
+- single package, install one thing and it will work. cz-js is a monorepo, but you have to install different dependencies as far as I know.
 - pre-commit integration
 - works on any language project, as long as you create the `.cz.toml` or `cz.toml` file.
 
@@ -73,8 +71,6 @@ If you are using conventional commits in your git history, then you could swap o
 
 Regarding the name, [cz-js][cz-js] came first, they used the word Commitizen first. When this project was created originally, the creator read "be a good commitizen", and thought it was just a cool word that made sense, and this would be a package that helps you be a good "commit citizen".
 
-[cz-js]: https://github.com/commitizen/cz-cli
-
 ## How to handle revert commits?
 
 ```sh
@@ -82,7 +78,7 @@ git revert --no-commit <SHA>
 git commit -m "revert: foo bar"
 ```
 
-## Why don't we use Pydantic?
+## Why don't we use [Pydantic](https://docs.pydantic.dev/)?
 
 While Pydantic is a powerful and popular library for data validation, we intentionally avoid using it in this project to keep our dependency tree minimal and maintainable.
 
@@ -98,7 +94,7 @@ In short, avoiding Pydantic helps us:
 
 ## I got `Exception [WinError 995] The I/O operation ...` error
 
-This error was caused by a Python bug on Windows. It's been fixed by [this PR](https://github.com/python/cpython/pull/22017), and according to Python's changelog, [3.8.6rc1](https://docs.python.org/3.8/whatsnew/changelog.html#python-3-8-6-release-candidate-1) and [3.9.0rc2](https://docs.python.org/3.9/whatsnew/changelog.html#python-3-9-0-release-candidate-2) should be the accurate versions first contain this fix. In conclusion, upgrade your Python version might solve this issue.
+This error was caused by a Python bug on Windows. It's been fixed by [cpython #22017](https://github.com/python/cpython/pull/22017), and according to Python's changelog, [3.8.6rc1](https://docs.python.org/3.8/whatsnew/changelog.html#python-3-8-6-release-candidate-1) and [3.9.0rc2](https://docs.python.org/3.9/whatsnew/changelog.html#python-3-9-0-release-candidate-2) should be the accurate versions first contain this fix. In conclusion, upgrade your Python version might solve this issue.
 
 More discussion can be found in issue [#318](https://github.com/commitizen-tools/commitizen/issues/318).
 
@@ -162,3 +158,5 @@ ignored_tag_formats = [
     "v${major}.${minor}",
 ]
 ```
+
+[cz-js]: https://github.com/commitizen/cz-cli
