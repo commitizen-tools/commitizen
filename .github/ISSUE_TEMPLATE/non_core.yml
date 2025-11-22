@@ -1,0 +1,26 @@
+name: non-core improvement proposal
+description: Suggest an idea for this project
+title: Idea
+labels: ['type: refactor']
+body:
+  - type: checkboxes
+    id: type
+    attributes:
+      label: Type
+      options:
+        - label: Refactor
+        - label: Test
+  - type: textarea
+    id: why
+    attributes:
+      label: Why?
+      description: |
+        A clear and concise description of why you want to propose this improvement.
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: |
+        If applicable, add context that helps us understand the idea better.
