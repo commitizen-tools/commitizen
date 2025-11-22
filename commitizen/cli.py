@@ -543,13 +543,13 @@ data = {
                     },
                     {
                         "name": ["--major"],
-                        "help": "get just the major version",
+                        "help": "get just the major version. Need to be used with --project or --verbose.",
                         "action": "store_true",
                         "exclusive_group": "group2",
                     },
                     {
                         "name": ["--minor"],
-                        "help": "get just the minor version",
+                        "help": "get just the minor version. Need to be used with --project or --verbose.",
                         "action": "store_true",
                         "exclusive_group": "group2",
                     },
