@@ -1,0 +1,21 @@
+name: 🤔 Question
+description: |
+  Letting us know your question will help us improve the project or document.
+  If you think it is a bug, please use the bug report template instead.
+title: Your question
+labels: ['type: question']
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: |
+        A clear description of your question.
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: |
+        If applicable, add context that helps us understand your question better.
