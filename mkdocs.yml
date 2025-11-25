@@ -5,20 +5,15 @@ theme:
   name: "material"
   palette:
     - primary: 'deep purple'
-    # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
       toggle:
         icon: material/brightness-auto
         name: Switch to light mode
-
-    # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
-
-    # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       toggle:
@@ -42,8 +37,9 @@ nav:
       - ls: "commands/ls.md"
       - schema: "commands/schema.md"
       - version: "commands/version.md"
-  - Configuration: "config.md"
-  - Customization: "customization.md"
+  - Configuration:
+      - Overview: "config.md"
+      - Customization: "customization.md"
   - Tutorials:
       - Writing commits: "tutorials/writing_commits.md"
       - Managing tags formats: "tutorials/tag_format.md"
