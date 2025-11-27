@@ -29,20 +29,20 @@ class Version:
 
     def __init__(self, config: BaseConfig, arguments: VersionArgs) -> None:
         self.config: BaseConfig = config
-        self.parameter = arguments
+        self.arguments = arguments
 
     def __call__(self) -> None:
-        if self.parameter.get("report"):
+        if self.arguments.get("report"):
             out.write(f"Commitizen Version: {__version__}")
             out.write(f"Python Version: {sys.version}")
             out.write(f"Operating System: {platform.system()}")
             return
 
-        if self.parameter.get("verbose"):
+        if self.arguments.get("verbose"):
             out.write(f"Installed Commitizen Version: {__version__}")
 
-        if not self.parameter.get("commitizen") and (
-            self.parameter.get("project") or self.parameter.get("verbose")
+        if not self.arguments.get("commitizen") and (
+            self.arguments.get("project") or self.arguments.get("verbose")
         ):
             try:
                 version = get_provider(self.config).get_version()
@@ -55,19 +55,19 @@ class Version:
                 out.error("Unknown version scheme.")
                 return
 
-            if self.parameter.get("major"):
+            if self.arguments.get("major"):
                 version = f"{version_scheme.major}"
-            elif self.parameter.get("minor"):
+            elif self.arguments.get("minor"):
                 version = f"{version_scheme.minor}"
 
             out.write(
                 f"Project Version: {version}"
-                if self.parameter.get("verbose")
+                if self.arguments.get("verbose")
                 else version
             )
             return
 
-        if self.parameter.get("major") or self.parameter.get("minor"):
+        if self.arguments.get("major") or self.arguments.get("minor"):
             out.error(
                 "Major or minor version can only be used with --project or --verbose."
             )
