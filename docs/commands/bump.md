@@ -11,7 +11,7 @@ It analyzes your commits to determine the appropriate version increment accordin
 
     We will use `pyproject.toml` as the configuration file throughout the documentation.
 
-    See [Configuration file](../config.md#configuration-file) for more details.
+    See [Configuration file](../config/configuration_file.md) for more details.
 
 ## Key Features
 
@@ -30,7 +30,7 @@ The version follows the `MAJOR.MINOR.PATCH` format, with increments determined b
 | `MINOR`   | New features                | `feat`                  |
 | `PATCH`   | Fixes and improvements      | `fix`, `perf`, `refactor`|
 
-### Version Schemes (`--version-scheme`)
+### `--version-scheme`
 
 By default, Commitizen uses [PEP 440][pep440] for version formatting. You can switch to semantic versioning using either:
 
@@ -50,7 +50,7 @@ Available options are:
 - `pep440`: [PEP 440][pep440] (**default** and recommended for Python projects)
 - `semver`: [Semantic Versioning][semver] (recommended for non-Python projects)
 
-You can also set this in the [configuration](#version_scheme) with `version_scheme = "semver"`.
+You can also set this in the configuration file with `version_scheme = "semver"`.
 
 !!! note
     [pep440][pep440] and [semver][semver] are quite similar, although their difference lies in
@@ -111,7 +111,7 @@ Commitizen supports the [PEP 440][pep440] version format, which includes several
 
 ### `--files-only`
 
-Bumps the version in the files defined in [`version_files`](#version_files) without creating a commit and tag on the git repository.
+Bumps the version in the files defined in [`version_files`][version_files] without creating a commit and tag on the git repository.
 
 ```bash
 cz bump --files-only
@@ -178,7 +178,7 @@ The following table illustrates the difference in behavior between the two modes
 
 ### `--check-consistency`
 
-Check whether the versions defined in [`version_files`](#version_files) and the version in Commitizen configuration are consistent before bumping version.
+Check whether the versions defined in [version_files][version_files] and the version in Commitizen configuration are consistent before bumping version.
 
 ```bash
 cz bump --check-consistency
@@ -207,7 +207,7 @@ from setuptools import setup
 setup(..., version="1.0.5", ...)
 ```
 
-When you run `cz bump --check-consistency`, Commitizen will verify that the current version in `pyproject.toml` (`1.21.0`) exists in all files listed in [`version_files`](#version_files).
+When you run `cz bump --check-consistency`, Commitizen will verify that the current version in `pyproject.toml` (`1.21.0`) exists in all files listed in [version_files][version_files].
 In this example, it will detect that `setup.py` contains `1.0.5` instead of `1.21.0`, causing the bump to fail.
 
 !!! warning "Partial updates on failure"
@@ -259,6 +259,9 @@ For example, in `pyproject.toml`:
 [tool.commitizen]
 annotated_tag = true
 ```
+
+!!! note
+    By default, Commitizen uses lightweight tags.
 
 ### `--annotated-tag-message`
 
@@ -351,10 +354,13 @@ Creates gpg signed tags.
 cz bump --gpg-sign
 ```
 
+!!! note
+    By default, Commitizen uses lightweight tags.
+
 ### `--template`
 
 Provides your own changelog jinja template.
-See [the template customization section](../customization.md#customizing-the-changelog-template)
+See [the template customization section](../customization/changelog_template.md)
 
 ### `--extra`
 
@@ -364,7 +370,7 @@ Provides your own changelog extra variables by using the `extras` settings or th
 cz bump --changelog --extra key=value -e short="quoted value"
 ```
 
-See [the template customization section](../customization.md#customizing-the-changelog-template).
+See [the template customization section](../customization/changelog_template.md).
 
 ### `--build-metadata`
 
@@ -451,15 +457,13 @@ Allow the project version to be bumped even when there's no eligible version.
     cz bump --allow-no-commit
     ```
 
-### `--version-scheme`
+    # bump version to 2.0.0 even when there's no breaking changes or even no commits
+    cz bump --allow-no-commit 2.0.0
+    ```
 
-See [Version Schemes](#version-schemes-version-scheme).
+### `--tag-format`
 
-## Configuration file options
-
-### `tag_format`
-
-`tag_format` and [`version_scheme`](#version-schemes-version-scheme) are combined to make Git tag names from versions.
+`tag_format` and [version_scheme][version_scheme] are combined to make Git tag names from versions.
 
 These are used in:
 
@@ -500,200 +504,6 @@ Supported variables:
 | `$patch`, `${patch}`           | PATCH increment                             |
 | `$prerelease`, `${prerelease}` | Prerelease (alpha, beta, release candidate) |
 | `$devrelease`, `${devrelease}` | Development release                         |
-
-### `version_files`
-
-Identify the files or glob patterns which should be updated with the new version.
-
-Commitizen will update its configuration file automatically when bumping,
-regardless of whether the file is present or not in `version_files`.
-
-You may specify the `version_files` in your configuration file.
-
-```toml title="pyproject.toml"
-[tool.commitizen]
-version_files = [
-    "src/__version__.py",
-]
-```
-
-It is also possible to provide a pattern for each file, separated by a colon (e.g. `file:pattern`). See the below example for more details.
-
-```toml title="pyproject.toml"
-[tool.commitizen]
-version_files = [
-    "packages/*/pyproject.toml:version",
-    "setup.json:version",
-]
-```
-
-#### Example scenario
-
-We have a project with the following configuration file `pyproject.toml`:
-
-```toml title="pyproject.toml"
-[tool.commitizen]
-version_files = [
-    "src/__version__.py",
-    "packages/*/pyproject.toml:version",
-    "setup.json:version",
-]
-```
-
-For the reference `"setup.json:version"`, it means that it will look for a file `setup.json` and will only change the lines that contain the substring `"version"`.
-
-For example, if the content of `setup.json` is:
-
-<!-- DEPENDENCY: repeated_version_number.json -->
-
-```json title="setup.json"
-{
-  "name": "magictool",
-  "version": "1.2.3",
-  "dependencies": {
-      "lodash": "1.2.3"
-  }
-}
-```
-
-After running `cz bump 2.0.0`, its content will be updated to:
-
-```diff title="setup.json"
-{
-  "name": "magictool",
-- "version": "1.2.3",
-+ "version": "2.0.0",
-  "dependencies": {
-      "lodash": "1.2.3"
-  }
-}
-```
-
-!!! note
-    Files can be specified using relative (to the execution) paths, absolute paths, or glob patterns.
-
-!!! note "Historical note"
-    This option was renamed from `files` to `version_files`.
-
-### `bump_message`
-
-Template used to specify the commit message generated when bumping.
-
-Defaults to: `bump: version $current_version → $new_version`
-
-| Variable           | Description                         |
-| ------------------ | ----------------------------------- |
-| `$current_version` | the version existing before bumping |
-| `$new_version`     | version generated after bumping     |
-
-#### Example configuration
-
-```toml title="pyproject.toml"
-[tool.commitizen]
-bump_message = "release $current_version → $new_version [skip-ci]"
-```
-
-### `update_changelog_on_bump`
-
-When set to `true`, `cz bump` is equivalent to `cz bump --changelog`.
-
-```toml title="pyproject.toml"
-[tool.commitizen]
-update_changelog_on_bump = true
-```
-
-### `annotated_tag`
-
-When set to `true`, `cz bump` is equivalent to `cz bump --annotated-tag`.
-
-```toml title="pyproject.toml"
-[tool.commitizen]
-annotated_tag = true
-```
-
-### `gpg_sign`
-
-When set to `true`, `cz bump` is equivalent to `cz bump --gpg-sign`. See [--gpg-sign](#-gpg-sign).
-
-```toml title="pyproject.toml"
-[tool.commitizen]
-gpg_sign = true
-```
-
-### `major_version_zero`
-
-When set to `true`, `cz bump` is equivalent to `cz bump --major-version-zero`. See [--major-version-zero](#-major-version-zero).
-
-```toml title="pyproject.toml"
-[tool.commitizen]
-major_version_zero = true
-```
-
-### `pre_bump_hooks`
-
-A list of optional commands that will run right _after_ updating [`version_files`](#version_files)
-and _before_ actual committing and tagging the release.
-
-Useful when you need to generate documentation based on the new version. During
-execution of the script, some environment variables are available:
-
-| Variable                     | Description                                                |
-| ---------------------------- | ---------------------------------------------------------- |
-| `CZ_PRE_IS_INITIAL`          | `True` when this is the initial release, `False` otherwise |
-| `CZ_PRE_CURRENT_VERSION`     | Current version, before the bump                           |
-| `CZ_PRE_CURRENT_TAG_VERSION` | Current version tag, before the bump                       |
-| `CZ_PRE_NEW_VERSION`         | New version, after the bump                                |
-| `CZ_PRE_NEW_TAG_VERSION`     | New version tag, after the bump                            |
-| `CZ_PRE_MESSAGE`             | Commit message of the bump                                 |
-| `CZ_PRE_INCREMENT`           | Whether this is a `MAJOR`, `MINOR` or `PATCH` release       |
-| `CZ_PRE_CHANGELOG_FILE_NAME` | Path to the changelog file, if available                   |
-
-```toml title="pyproject.toml"
-[tool.commitizen]
-pre_bump_hooks = [
-  "scripts/generate_documentation.sh"
-]
-```
-
-### `post_bump_hooks`
-
-A list of optional commands that will run right _after_ committing and tagging the release.
-
-Useful when you need to send notifications about a release, or further automate deploying the
-release. During execution of the script, some environment variables are available:
-
-| Variable                       | Description                                                 |
-| ------------------------------ | ----------------------------------------------------------- |
-| `CZ_POST_WAS_INITIAL`          | `True` when this was the initial release, `False` otherwise |
-| `CZ_POST_PREVIOUS_VERSION`     | Previous version, before the bump                           |
-| `CZ_POST_PREVIOUS_TAG_VERSION` | Previous version tag, before the bump                       |
-| `CZ_POST_CURRENT_VERSION`      | Current version, after the bump                             |
-| `CZ_POST_CURRENT_TAG_VERSION`  | Current version tag, after the bump                         |
-| `CZ_POST_MESSAGE`              | Commit message of the bump                                  |
-| `CZ_POST_INCREMENT`            | Whether this was a `MAJOR`, `MINOR` or `PATCH` release      |
-| `CZ_POST_CHANGELOG_FILE_NAME`  | Path to the changelog file, if available                    |
-
-```toml title="pyproject.toml"
-[tool.commitizen]
-post_bump_hooks = [
-  "scripts/slack_notification.sh"
-]
-```
-
-### `prerelease_offset`
-
-Offset with which to start counting prereleases.
-
-Defaults to: `0`
-
-```toml title="pyproject.toml"
-[tool.commitizen]
-prerelease_offset = 1
-```
-
-### `version_scheme`
-
-See [Version Schemes](#version-schemes-version-scheme).
 
 ## Avoid raising errors
 
@@ -758,9 +568,6 @@ on the list, and then you can use the exit code:
 cz -nr 21 bump
 ```
 
-## Custom bump
-
-Read the [customizing section](../customization.md).
-
 [pep440]: https://www.python.org/dev/peps/pep-0440/
 [semver]: https://semver.org/
+[version_files]: ../config/bump.md#version_files
