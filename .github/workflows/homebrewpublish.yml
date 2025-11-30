@@ -12,7 +12,7 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -24,7 +24,7 @@ jobs:
         run: |
           echo "project_version=$(cz version --project)" >> $GITHUB_ENV
       - name: Update Homebrew formula
-        uses: dawidd6/action-homebrew-bump-formula@v5
+        uses: dawidd6/action-homebrew-bump-formula@v6
         with:
           token: ${{secrets.PERSONAL_ACCESS_TOKEN}}
           formula: commitizen
