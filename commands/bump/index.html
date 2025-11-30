@@ -2381,9 +2381,10 @@ In this case, you'll need to restore the files to their previous state.</p>
 </li>
 <li>
 <p>Manually update the version in <code>setup.py</code> to match the version in <code>pyproject.toml</code>:
-  <div class="highlight"><span class="filename">setup.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">setuptools</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup</span>
+  <div class="highlight"><span class="filename">setup.py</span><pre><span></span><code>from setuptools import setup
 
-<span class="n">setup</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;1.21.0&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+<span class="gd">- setup(..., version=&quot;1.0.5&quot;, ...)</span>
+<span class="gi">+ setup(..., version=&quot;1.21.0&quot;, ...)</span>
 </code></pre></div></p>
 </li>
 <li>
