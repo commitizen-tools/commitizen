@@ -128,7 +128,7 @@ cz bump --changelog
 ### `--prerelease`
 
 The bump is a pre-release bump, meaning that in addition to a possible version bump the new version receives a
-pre-release segment compatible with the bump’s version scheme, where the segment consist of a _phase_ and a
+pre-release segment compatible with the bump's version scheme, where the segment consist of a _phase_ and a
 non-negative number. Supported options for `--prerelease` are the following phase names `alpha`, `beta`, or
 `rc` (release candidate). For more details, refer to the
 [Python Packaging User Guide](https://packaging.python.org/en/latest/specifications/version-specifiers/#pre-releases).
@@ -746,7 +746,95 @@ cz -nr 21 bump
 
 ## Custom bump
 
-Read the [customizing section](../customization.md).
+You can create custom bump rules to define how version numbers should be incremented based on your commit messages. This is done by configuring three main components:
+
+### Bump Pattern
+
+The `bump_pattern` is a regex pattern string used to match commit messages. It defines the structure of your commit messages and captures named groups for different types of changes. The captured groups will be used as keys in the bump map.
+
+Example:
+```python
+# Simple pattern matching major/minor/patch types
+r"^((?P<major>major)|(?P<minor>minor)|(?P<patch>patch))(?P<scope>\(.+\))?(?P<bang>!)?:"
+
+# Conventional commits style pattern
+r"^((?P<minor>feat)|(?P<patch>fix|perf|refactor)|(?P<breaking>BREAKING[\-\ ]CHANGE))(?P<scope>\(.+\))?(?P<bang>!)?:"
+```
+
+### Bump Map
+
+The `bump_map` defines how different commit types map to version increments. The keys in this dictionary must match the named capture groups from your pattern. The values are the version increment types:
+
+- `"MAJOR"`
+- `"MINOR"`
+- `"PATCH"`
+
+Example for conventional commits:
+```python
+{
+    # Breaking changes (either by type or bang)
+    "breaking": "MAJOR",  # When type is "BREAKING CHANGE"
+    "bang": "MAJOR",  # When commit ends with ! (e.g., feat!: new feature)
+    # New features
+    "minor": "MINOR",
+    # Bug fixes and improvements
+    "patch": "PATCH",
+}
+```
+
+Or using regex patterns:
+```python
+{
+    (r"^.+!$", "MAJOR"),
+    (r"^BREAKING[\-\ ]CHANGE", "MAJOR"),
+    (r"^feat", "MINOR"),
+    (r"^fix", "PATCH"),
+    (r"^refactor", "PATCH"),
+    (r"^perf", "PATCH"),
+}
+```
+
+### Major Version Zero Map
+
+The `bump_map_major_version_zero` allows you to define different versioning behavior when your project is in initial development (major version is 0). This is useful for following semantic versioning principles where breaking changes in 0.x.x versions don't require a major version bump.
+
+Example for conventional commits during initial development:
+```python
+{
+    # Breaking changes (either by type or bang)
+    "breaking": "MINOR",  # When type is "BREAKING CHANGE"
+    "bang": "MINOR",  # When commit ends with ! (e.g., feat!: new feature)
+    # New features
+    "minor": "MINOR",
+    # Bug fixes and improvements
+    "patch": "PATCH",
+}
+```
+
+Or with regex patterns:
+```python
+{
+    (r"^.+!$", "MINOR"),
+    (r"^BREAKING[\-\ ]CHANGE", "MINOR"),
+    (r"^feat", "MINOR"),
+    (r"^fix", "PATCH"),
+    (r"^refactor", "PATCH"),
+    (r"^perf", "PATCH"),
+}
+```
+
+This configuration will handle commit messages like:
+
+- `BREAKING CHANGE: remove deprecated API` → MAJOR (or MINOR in major version zero)
+- `feat!: add new API` → MAJOR (or MINOR in major version zero)
+- `feat: add new feature` → MINOR
+- `fix: fix bug` → PATCH
+- `perf: improve performance` → PATCH
+- `refactor: restructure code` → PATCH
+
+For more details on implementing custom bump rules, see the [customization guide](../customization.md).
+
+<!-- TODO: maybe sync the content with the customization guide? -->
 
 [pep440]: https://www.python.org/dev/peps/pep-0440/
 [semver]: https://semver.org/

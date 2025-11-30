@@ -12,7 +12,35 @@ from pytest_mock import MockerFixture
 
 from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import VersionSchemeUnknown
-from commitizen.version_schemes import Pep440, SemVer, get_version_scheme
+from commitizen.version_schemes import Pep440, Prerelease, SemVer, get_version_scheme
+
+
+class TestPrereleaseSafeCast:
+    def test_safe_cast_valid_strings(self):
+        assert Prerelease.safe_cast("ALPHA") == Prerelease.ALPHA
+        assert Prerelease.safe_cast("BETA") == Prerelease.BETA
+        assert Prerelease.safe_cast("RC") == Prerelease.RC
+
+    def test_safe_cast_case_insensitive(self):
+        assert Prerelease.safe_cast("alpha") == Prerelease.ALPHA
+        assert Prerelease.safe_cast("beta") == Prerelease.BETA
+        assert Prerelease.safe_cast("rc") == Prerelease.RC
+        assert Prerelease.safe_cast("Alpha") == Prerelease.ALPHA
+        assert Prerelease.safe_cast("Beta") == Prerelease.BETA
+        assert Prerelease.safe_cast("Rc") == Prerelease.RC
+
+    def test_safe_cast_invalid_strings(self):
+        assert Prerelease.safe_cast("invalid") is None
+        assert Prerelease.safe_cast("") is None
+        assert Prerelease.safe_cast("release") is None
+
+    def test_safe_cast_non_string_values(self):
+        assert Prerelease.safe_cast(None) is None
+        assert Prerelease.safe_cast(1) is None
+        assert Prerelease.safe_cast(True) is None
+        assert Prerelease.safe_cast([]) is None
+        assert Prerelease.safe_cast({}) is None
+        assert Prerelease.safe_cast(Prerelease.ALPHA) is None  # enum value itself
 
 
 def test_default_version_scheme_is_pep440(config: BaseConfig):
