@@ -1,18 +1,24 @@
 from __future__ import annotations
 
+import re
 import sys
+from collections.abc import Mapping
 from io import StringIO
+from typing import Any
 
 import pytest
 from pytest_mock import MockFixture
 
 from commitizen import cli, commands, git
+from commitizen.cz import registry
+from commitizen.cz.base import BaseCommitizen, ValidationResult
 from commitizen.exceptions import (
     CommitMessageLengthExceededError,
     InvalidCommandArgumentError,
     InvalidCommitMessageError,
     NoCommitsFoundError,
 )
+from commitizen.question import CzQuestion
 from tests.utils import create_file_and_commit, skip_below_py_3_13
 
 COMMIT_LOG = [
@@ -517,3 +523,131 @@ def test_check_command_cli_overrides_config_message_length_limit(
         config=config,
         arguments={"message": message, "message_length_limit": None},
     )
+
+
+class ValidationCz(BaseCommitizen):
+    def questions(self) -> list[CzQuestion]:
+        return [
+            {"type": "input", "name": "commit", "message": "Initial commit:\n"},
+            {"type": "input", "name": "issue_nb", "message": "ABC-123"},
+        ]
+
+    def message(self, answers: Mapping[str, Any]) -> str:
+        return f"{answers['issue_nb']}: {answers['commit']}"
+
+    def schema(self) -> str:
+        return "<issue_nb>: <commit>"
+
+    def schema_pattern(self) -> str:
+        return r"^(?P<issue_nb>[A-Z]{3}-\d+): (?P<commit>.*)$"
+
+    def example(self) -> str:
+        return "ABC-123: fixed a bug"
+
+    def info(self) -> str:
+        return "Commit message must start with an issue number like ABC-123"
+
+    def validate_commit_message(
+        self,
+        *,
+        commit_msg: str,
+        pattern: re.Pattern[str],
+        allow_abort: bool,
+        allowed_prefixes: list[str],
+        max_msg_length: int | None,
+        commit_hash: str,
+    ) -> ValidationResult:
+        """Validate commit message against the pattern."""
+        if not commit_msg:
+            return ValidationResult(
+                allow_abort, [] if allow_abort else ["commit message is empty"]
+            )
+
+        if any(map(commit_msg.startswith, allowed_prefixes)):
+            return ValidationResult(True, [])
+
+        if max_msg_length:
+            msg_len = len(commit_msg.partition("\n")[0].strip())
+            if msg_len > max_msg_length:
+                # TODO: capitalize the first letter of the error message for consistency in v5
+                raise CommitMessageLengthExceededError(
+                    f"commit validation: failed!\n"
+                    f"commit message length exceeds the limit.\n"
+                    f'commit "{commit_hash}": "{commit_msg}"\n'
+                    f"message length limit: {max_msg_length} (actual: {msg_len})"
+                )
+
+        return ValidationResult(
+            bool(pattern.match(commit_msg)), [f"pattern: {pattern.pattern}"]
+        )
+
+    def format_exception_message(
+        self, invalid_commits: list[tuple[git.GitCommit, list]]
+    ) -> str:
+        """Format commit errors."""
+        displayed_msgs_content = "\n".join(
+            [
+                (
+                    f'commit "{commit.rev}": "{commit.message}"\nerrors:\n\n'.join(
+                        f"- {error}" for error in errors
+                    )
+                )
+                for (commit, errors) in invalid_commits
+            ]
+        )
+        return (
+            "commit validation: failed!\n"
+            "please enter a commit message in the commitizen format.\n"
+            f"{displayed_msgs_content}"
+        )
+
+
+@pytest.fixture
+def use_cz_custom_validator(mocker):
+    new_cz = {**registry, "cz_custom_validator": ValidationCz}
+    mocker.patch.dict("commitizen.cz.registry", new_cz)
+
+
+@pytest.mark.usefixtures("use_cz_custom_validator")
+def test_check_command_with_custom_validator_succeed(mocker: MockFixture, capsys):
+    testargs = [
+        "cz",
+        "--name",
+        "cz_custom_validator",
+        "check",
+        "--commit-msg-file",
+        "some_file",
+    ]
+    mocker.patch.object(sys, "argv", testargs)
+    mocker.patch(
+        "commitizen.commands.check.open",
+        mocker.mock_open(read_data="ABC-123: add commitizen pre-commit hook"),
+    )
+    cli.main()
+    out, _ = capsys.readouterr()
+    assert "Commit validation: successful!" in out
+
+
+@pytest.mark.usefixtures("use_cz_custom_validator")
+def test_check_command_with_custom_validator_failed(mocker: MockFixture):
+    testargs = [
+        "cz",
+        "--name",
+        "cz_custom_validator",
+        "check",
+        "--commit-msg-file",
+        "some_file",
+    ]
+    mocker.patch.object(sys, "argv", testargs)
+    mocker.patch(
+        "commitizen.commands.check.open",
+        mocker.mock_open(
+            read_data="123-ABC issue id has wrong format and misses colon"
+        ),
+    )
+    with pytest.raises(InvalidCommitMessageError) as excinfo:
+        cli.main()
+    assert "commit validation: failed!" in str(excinfo.value), (
+        "Pattern validation unexpectedly passed"
+    )
+    assert "pattern: " in str(excinfo.value), "Pattern not found in error message"
