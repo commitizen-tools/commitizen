@@ -207,7 +207,7 @@ cookiecutter gh:commitizen-tools/commitizen_cz_template
 
 See [commitizen_cz_template](https://github.com/commitizen-tools/commitizen_cz_template) for details.
 
-Once you publish your rules, you can send us a PR to the [Third-party section](./third-party-plugins/about.md).
+Once you publish your rules, you can send us a PR to the [Third-party section](./third-party-commitizen.md).
 
 ### Custom commit rules
 
@@ -311,6 +311,73 @@ cz -n cz_strange bump
 ```
 
 [convcomms]: https://github.com/commitizen-tools/commitizen/blob/master/commitizen/cz/conventional_commits/conventional_commits.py
+
+### Custom commit validation and error message
+
+The commit message validation can be customized by overriding the `validate_commit_message` and `format_error_message`
+methods from `BaseCommitizen`. This allows for a more detailed feedback to the user where the error originates from.
+
+```python
+import re
+
+from commitizen.cz.base import BaseCommitizen, ValidationResult
+from commitizen import git
+
+
+class CustomValidationCz(BaseCommitizen):
+    def validate_commit_message(
+        self,
+        *,
+        commit_msg: str,
+        pattern: str | None,
+        allow_abort: bool,
+        allowed_prefixes: list[str],
+        max_msg_length: int,
+    ) -> ValidationResult:
+        """Validate commit message against the pattern."""
+        if not commit_msg:
+            return allow_abort, [] if allow_abort else [f"commit message is empty"]
+
+        if pattern is None:
+            return True, []
+
+        if any(map(commit_msg.startswith, allowed_prefixes)):
+            return True, []
+        if max_msg_length:
+            msg_len = len(commit_msg.partition("\n")[0].strip())
+            if msg_len > max_msg_length:
+                return False, [
+                    f"commit message is too long. Max length is {max_msg_length}"
+                ]
+        pattern_match = re.match(pattern, commit_msg)
+        if pattern_match:
+            return True, []
+        else:
+            # Perform additional validation of the commit message format
+            # and add custom error messages as needed
+            return False, ["commit message does not match the pattern"]
+
+    def format_exception_message(
+        self, ill_formated_commits: list[tuple[git.GitCommit, list]]
+    ) -> str:
+        """Format commit errors."""
+        displayed_msgs_content = "\n".join(
+            [
+                (
+                    f'commit "{commit.rev}": "{commit.message}"'
+                    f"errors:\n"
+                    "\n".join((f"- {error}" for error in errors))
+                )
+                for commit, errors in ill_formated_commits
+            ]
+        )
+        return (
+            "commit validation: failed!\n"
+            "please enter a commit message in the commitizen format.\n"
+            f"{displayed_msgs_content}\n"
+            f"pattern: {self.schema_pattern()}"
+        )
+```
 
 ### Custom changelog generator
 
