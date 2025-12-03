@@ -5,6 +5,7 @@ import re
 import tempfile
 from collections.abc import Iterator, Mapping
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 from pytest_mock import MockerFixture
@@ -17,7 +18,9 @@ from commitizen.changelog_formats import (
 from commitizen.config import BaseConfig
 from commitizen.cz import registry
 from commitizen.cz.base import BaseCommitizen
-from commitizen.question import CzQuestion
+
+if TYPE_CHECKING:
+    from commitizen.question import CzQuestion
 from tests.utils import create_file_and_commit
 
 SIGNER = "GitHub Action"

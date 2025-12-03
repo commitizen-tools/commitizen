@@ -3,10 +3,10 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any
 
-from commitizen.question import CzQuestion
-
 if TYPE_CHECKING:
     from jinja2 import Template
+
+    from commitizen.question import CzQuestion
 else:
     try:
         from jinja2 import Template
