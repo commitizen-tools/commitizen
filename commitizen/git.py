@@ -237,7 +237,7 @@ def get_tags(
 ) -> list[GitTag]:
     inner_delimiter = "---inner_delimiter---"
     formatter = (
-        f'"%(refname:lstrip=2){inner_delimiter}'
+        f'"%(refname:strip=2){inner_delimiter}'
         f"%(objectname){inner_delimiter}"
         f"%(creatordate:format:{dateformat}){inner_delimiter}"
         f'%(object)"'
