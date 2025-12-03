@@ -21,8 +21,6 @@ from commitizen.exceptions import (
     NoCommandFoundError,
 )
 
-logger = logging.getLogger(__name__)
-
 
 class ParseKwargs(argparse.Action):
     """
@@ -612,6 +610,43 @@ def parse_no_raise(comma_separated_no_raise: str) -> list[int]:
     ]
 
 
+def _validate_unknown_args_and_parse_as_extra_cli_args(unknown_args: list[str]) -> str:
+    """Validate unknown arguments received from the command line and parse them as extra cli args.
+
+    The format of the extra cli args should be like this:
+    ```
+    cz commit -- -s -n
+    ```
+
+    Raises:
+        InvalidCommandArgumentError: if unknown arguments are found without -- separation
+        InvalidCommandArgumentError: if unknown arguments are found before -- separator
+    """
+
+    # Raise error for extra-args without -- separation
+    if "--" not in unknown_args:
+        raise InvalidCommandArgumentError(
+            f"Invalid commitizen arguments were found: `{' '.join(unknown_args)}`. "
+            "Please use -- separator for extra git args"
+        )
+
+    # Raise error for extra-args before --
+    if unknown_args[0] != "--":
+        pos = unknown_args.index("--")
+        raise InvalidCommandArgumentError(
+            f"Invalid commitizen arguments were found before -- separator: `{' '.join(unknown_args[:pos])}`. "
+        )
+
+    # Log warning for -- without any extra args
+    if len(unknown_args) == 1:
+        logger = logging.getLogger(__name__)
+        logger.warning(
+            "\nWARN: Incomplete commit command: received -- separator without any following git arguments\n"
+        )
+
+    return " ".join(unknown_args[1:])
+
+
 if TYPE_CHECKING:
 
     class Args(argparse.Namespace):
@@ -655,25 +690,9 @@ def main() -> None:
 
     arguments = vars(args)
     if unknown_args:
-        # Raise error for extra-args without -- separation
-        if "--" not in unknown_args:
-            raise InvalidCommandArgumentError(
-                f"Invalid commitizen arguments were found: `{' '.join(unknown_args)}`. "
-                "Please use -- separator for extra git args"
-            )
-        # Raise error for extra-args before --
-        elif unknown_args[0] != "--":
-            pos = unknown_args.index("--")
-            raise InvalidCommandArgumentError(
-                f"Invalid commitizen arguments were found before -- separator: `{' '.join(unknown_args[:pos])}`. "
-            )
-        # Log warning for -- without any extra args
-        elif len(unknown_args) == 1:
-            logger.warning(
-                "\nWARN: Incomplete commit command: received -- separator without any following git arguments\n"
-            )
-        extra_args = " ".join(unknown_args[1:])
-        arguments["extra_cli_args"] = extra_args
+        arguments["extra_cli_args"] = (
+            _validate_unknown_args_and_parse_as_extra_cli_args(unknown_args)
+        )
 
     conf = config.read_cfg(args.config)
     args = cast("Args", args)
