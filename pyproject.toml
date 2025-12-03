@@ -6,6 +6,7 @@ authors = [{ name = "Santiago Fraire", email = "santiwilly@gmail.com" }]
 maintainers = [
     { name = "Wei Lee", email = "weilee.rx@gmail.com" },
     { name = "Axel H.", email = "noirbizarre@gmail.com" },
+    { name = "Tim Hsiung", email = "bear890707@gmail.com" },
 ]
 license = { file = "LICENSE" }
 readme = "docs/README.md"
