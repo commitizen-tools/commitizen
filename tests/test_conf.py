@@ -175,9 +175,9 @@ def test_find_git_project_root(tmpdir):
     "config_files_manager", defaults.CONFIG_FILES.copy(), indirect=True
 )
 def test_set_key(config_files_manager):
-    _conf = config.read_cfg()
+    _conf = config.search_and_read_config_file()
     _conf.set_key("version", "2.0.0")
-    cfg = config.read_cfg()
+    cfg = config.search_and_read_config_file()
     assert cfg.settings == _new_settings
 
 
@@ -186,12 +186,12 @@ class TestReadCfg:
         "config_files_manager", defaults.CONFIG_FILES.copy(), indirect=True
     )
     def test_load_conf(_, config_files_manager):
-        cfg = config.read_cfg()
+        cfg = config.search_and_read_config_file()
         assert cfg.settings == _settings
 
     def test_conf_returns_default_when_no_files(_, tmpdir):
         with tmpdir.as_cwd():
-            cfg = config.read_cfg()
+            cfg = config.search_and_read_config_file()
             assert cfg.settings == defaults.DEFAULT_SETTINGS
 
     def test_load_empty_pyproject_toml_and_cz_toml_with_config(_, tmpdir):
@@ -201,7 +201,7 @@ class TestReadCfg:
             p = tmpdir.join(".cz.toml")
             p.write(PYPROJECT)
 
-            cfg = config.read_cfg()
+            cfg = config.search_and_read_config_file()
             assert cfg.settings == _settings
 
     def test_load_pyproject_toml_from_config_argument(_, tmpdir):
@@ -209,7 +209,7 @@ class TestReadCfg:
             _not_root_path = tmpdir.mkdir("not_in_root").join("pyproject.toml")
             _not_root_path.write(PYPROJECT)
 
-            cfg = config.read_cfg(filepath="./not_in_root/pyproject.toml")
+            cfg = config.search_and_read_config_file("./not_in_root/pyproject.toml")
             assert cfg.settings == _settings
 
     def test_load_cz_json_not_from_config_argument(_, tmpdir):
@@ -217,7 +217,7 @@ class TestReadCfg:
             _not_root_path = tmpdir.mkdir("not_in_root").join(".cz.json")
             _not_root_path.write(JSON_STR)
 
-            cfg = config.read_cfg(filepath="./not_in_root/.cz.json")
+            cfg = config.search_and_read_config_file("./not_in_root/.cz.json")
             json_cfg_by_class = JsonConfig(data=JSON_STR, path=_not_root_path)
             assert cfg.settings == json_cfg_by_class.settings
 
@@ -226,7 +226,7 @@ class TestReadCfg:
             _not_root_path = tmpdir.mkdir("not_in_root").join(".cz.yaml")
             _not_root_path.write(YAML_STR)
 
-            cfg = config.read_cfg(filepath="./not_in_root/.cz.yaml")
+            cfg = config.search_and_read_config_file("./not_in_root/.cz.yaml")
             yaml_cfg_by_class = YAMLConfig(data=YAML_STR, path=_not_root_path)
             assert cfg.settings == yaml_cfg_by_class._settings
 
@@ -236,7 +236,7 @@ class TestReadCfg:
             _not_root_path.write("")
 
             with pytest.raises(ConfigFileIsEmpty):
-                config.read_cfg(filepath="./not_in_root/pyproject.toml")
+                config.search_and_read_config_file("./not_in_root/pyproject.toml")
 
 
 @pytest.mark.parametrize(

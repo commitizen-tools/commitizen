@@ -675,12 +675,12 @@ def main() -> None:
         extra_args = " ".join(unknown_args[1:])
         arguments["extra_cli_args"] = extra_args
 
-    conf = config.read_cfg(args.config)
     args = cast("Args", args)
+    config_object = config.search_and_read_config_file(args.config)
     if args.name:
-        conf.update({"name": args.name})
-    elif not conf.path:
-        conf.update({"name": "cz_conventional_commits"})
+        config_object.update({"name": args.name})
+    elif not config_object.path:
+        config_object.update({"name": "cz_conventional_commits"})
 
     if args.debug:
         logging.getLogger("commitizen").setLevel(logging.DEBUG)
@@ -692,7 +692,7 @@ def main() -> None:
         )
         sys.excepthook = no_raise_debug_excepthook
 
-    args.func(conf, arguments)()  # type: ignore[arg-type]
+    args.func(config_object, arguments)()  # type: ignore[arg-type]
 
 
 if __name__ == "__main__":
