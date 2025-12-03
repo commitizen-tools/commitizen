@@ -559,8 +559,6 @@ data = {
     },
 }
 
-original_excepthook = sys.excepthook
-
 
 def commitizen_excepthook(
     type: type[BaseException],
@@ -571,24 +569,17 @@ def commitizen_excepthook(
 ) -> None:
     traceback = traceback if isinstance(traceback, TracebackType) else None
     if not isinstance(value, CommitizenException):
-        original_excepthook(type, value, traceback)
+        sys.__excepthook__(type, value, traceback)
         return
 
-    if not no_raise:
-        no_raise = []
     if value.message:
         value.output_method(value.message)
     if debug:
-        original_excepthook(type, value, traceback)
+        sys.__excepthook__(type, value, traceback)
     exit_code = value.exit_code
-    if exit_code in no_raise:
-        exit_code = ExitCode.EXPECTED_EXIT
+    if no_raise is not None and exit_code in no_raise:
+        sys.exit(ExitCode.EXPECTED_EXIT)
     sys.exit(exit_code)
-
-
-commitizen_debug_excepthook = partial(commitizen_excepthook, debug=True)
-
-sys.excepthook = commitizen_excepthook
 
 
 def parse_no_raise(comma_separated_no_raise: str) -> list[int]:
@@ -682,15 +673,12 @@ def main() -> None:
     elif not conf.path:
         conf.update({"name": "cz_conventional_commits"})
 
+    sys.excepthook = commitizen_excepthook
     if args.debug:
         logging.getLogger("commitizen").setLevel(logging.DEBUG)
-        sys.excepthook = commitizen_debug_excepthook
-    elif args.no_raise:
-        no_raise_exit_codes = parse_no_raise(args.no_raise)
-        no_raise_debug_excepthook = partial(
-            commitizen_excepthook, no_raise=no_raise_exit_codes
-        )
-        sys.excepthook = no_raise_debug_excepthook
+        sys.excepthook = partial(sys.excepthook, debug=True)
+    if args.no_raise:
+        sys.excepthook = partial(sys.excepthook, no_raise=parse_no_raise(args.no_raise))
 
     args.func(conf, arguments)()  # type: ignore[arg-type]
 
