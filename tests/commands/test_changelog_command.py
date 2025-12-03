@@ -292,10 +292,11 @@ def test_changelog_hook(mocker: MockFixture, config: BaseConfig, dry_run: bool):
         config, {"unreleased_version": None, "incremental": True, "dry_run": dry_run}
     )
     mocker.patch.object(changelog.cz, "changelog_hook", changelog_hook_mock)
-    try:
+    if dry_run:
+        with pytest.raises(DryRunExit):
+            changelog()
+    else:
         changelog()
-    except DryRunExit:
-        pass
 
     full_changelog = (
         "## Unreleased\n\n### Refactor\n\n- is in changelog\n\n### Feat\n\n- new file\n"
