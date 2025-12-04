@@ -29,7 +29,6 @@ from __future__ import annotations
 
 import re
 from collections import OrderedDict, defaultdict
-from collections.abc import Generator, Iterable, Mapping, MutableMapping, Sequence
 from dataclasses import dataclass
 from datetime import date
 from itertools import chain
@@ -44,13 +43,14 @@ from jinja2 import (
     Template,
 )
 
-from commitizen.cz.base import ChangelogReleaseHook
 from commitizen.exceptions import InvalidConfigurationError, NoCommitsFoundError
-from commitizen.git import GitCommit, GitTag
 from commitizen.tags import TagRules
 
 if TYPE_CHECKING:
-    from commitizen.cz.base import MessageBuilderHook
+    from collections.abc import Generator, Iterable, Mapping, MutableMapping, Sequence
+
+    from commitizen.cz.base import ChangelogReleaseHook, MessageBuilderHook
+    from commitizen.git import GitCommit, GitTag
 
 
 @dataclass

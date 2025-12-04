@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import pytest
 
-from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import VersionProviderUnknown
 from commitizen.providers import get_provider
 from commitizen.providers.commitizen_provider import CommitizenProvider
+
+if TYPE_CHECKING:
+    from commitizen.config.base_config import BaseConfig
 
 
 def test_default_version_provider_is_commitizen_config(config: BaseConfig):

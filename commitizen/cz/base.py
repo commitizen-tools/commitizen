@@ -1,16 +1,16 @@
 from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
-from collections.abc import Iterable, Mapping
 from typing import TYPE_CHECKING, Any, Callable, Protocol
 
 from jinja2 import BaseLoader, PackageLoader
 from prompt_toolkit.styles import Style
 
-from commitizen import git
-from commitizen.config.base_config import BaseConfig
-
 if TYPE_CHECKING:
+    from collections.abc import Iterable, Mapping
+
+    from commitizen import git
+    from commitizen.config.base_config import BaseConfig
     from commitizen.question import CzQuestion
 
 

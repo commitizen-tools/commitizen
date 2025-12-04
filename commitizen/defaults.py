@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-import pathlib
 import warnings
 from collections import OrderedDict
 from collections.abc import Iterable, MutableMapping, Sequence
 from typing import TYPE_CHECKING, Any, TypedDict
 
 if TYPE_CHECKING:
+    import pathlib
+
     from commitizen.question import CzQuestion
 
 

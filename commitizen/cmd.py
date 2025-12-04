@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import os
 import subprocess
-from collections.abc import Mapping
-from typing import NamedTuple
+from typing import TYPE_CHECKING, NamedTuple
 
 from charset_normalizer import from_bytes
 
 from commitizen.exceptions import CharacterSetDecodeError
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 
 class Command(NamedTuple):
