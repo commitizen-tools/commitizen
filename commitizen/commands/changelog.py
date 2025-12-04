@@ -2,15 +2,13 @@ from __future__ import annotations
 
 import os
 import os.path
-from collections.abc import Generator, Iterable
 from difflib import SequenceMatcher
 from operator import itemgetter
 from pathlib import Path
-from typing import Any, TypedDict, cast
+from typing import TYPE_CHECKING, Any, TypedDict, cast
 
 from commitizen import changelog, defaults, factory, git, out
 from commitizen.changelog_formats import get_changelog_format
-from commitizen.config import BaseConfig
 from commitizen.cz.utils import strip_local_version
 from commitizen.exceptions import (
     DryRunExit,
@@ -23,6 +21,11 @@ from commitizen.exceptions import (
 from commitizen.git import GitTag, smart_open
 from commitizen.tags import TagRules
 from commitizen.version_schemes import get_version_scheme
+
+if TYPE_CHECKING:
+    from collections.abc import Generator, Iterable
+
+    from commitizen.config import BaseConfig
 
 
 class ChangelogArgs(TypedDict, total=False):
@@ -97,7 +100,7 @@ class Changelog:
             self.config.settings.get("change_type_map") or self.cz.change_type_map
         )
         self.change_type_order = cast(
-            list[str],
+            "list[str]",
             self.config.settings.get("change_type_order")
             or self.cz.change_type_order
             or defaults.CHANGE_TYPE_ORDER,

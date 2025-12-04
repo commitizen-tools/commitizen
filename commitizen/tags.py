@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import re
 import warnings
-from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from functools import cached_property
 from itertools import chain
@@ -22,6 +21,7 @@ from commitizen.version_schemes import (
 
 if TYPE_CHECKING:
     import sys
+    from collections.abc import Iterable, Sequence
 
     from commitizen.version_schemes import VersionScheme
 

@@ -4,9 +4,9 @@ import inspect
 import os
 import platform
 import shutil
+from typing import TYPE_CHECKING
 
 import pytest
-from pytest_mock import MockFixture
 
 from commitizen import cmd, git
 from commitizen.exceptions import GitCommandError
@@ -17,6 +17,9 @@ from tests.utils import (
     create_tag,
     switch_branch,
 )
+
+if TYPE_CHECKING:
+    from pytest_mock import MockFixture
 
 
 @pytest.mark.parametrize("date", ["2020-01-21", "1970-01-01"])

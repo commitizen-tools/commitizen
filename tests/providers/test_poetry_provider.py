@@ -1,13 +1,17 @@
 from __future__ import annotations
 
-from pathlib import Path
 from textwrap import dedent
+from typing import TYPE_CHECKING
 
 import pytest
 
-from commitizen.config.base_config import BaseConfig
 from commitizen.providers import get_provider
 from commitizen.providers.poetry_provider import PoetryProvider
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from commitizen.config.base_config import BaseConfig
 
 POETRY_TOML = """\
 [tool.poetry]
