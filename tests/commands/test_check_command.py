@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import sys
 from io import StringIO
+from typing import TYPE_CHECKING
 
 import pytest
-from pytest_mock import MockFixture
 
 from commitizen import cli, commands, git
 from commitizen.exceptions import (
@@ -14,6 +14,9 @@ from commitizen.exceptions import (
     NoCommitsFoundError,
 )
 from tests.utils import create_file_and_commit, skip_below_py_3_13
+
+if TYPE_CHECKING:
+    from pytest_mock import MockFixture
 
 COMMIT_LOG = [
     "refactor: A code change that neither fixes a bug nor adds a feature",

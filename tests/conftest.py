@@ -3,12 +3,9 @@ from __future__ import annotations
 import os
 import re
 import tempfile
-from collections.abc import Iterator, Mapping
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
-from pytest_mock import MockerFixture
 
 from commitizen import cmd, defaults
 from commitizen.changelog_formats import (
@@ -20,6 +17,11 @@ from commitizen.cz import registry
 from commitizen.cz.base import BaseCommitizen
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator, Mapping
+    from pathlib import Path
+
+    from pytest_mock import MockerFixture
+
     from commitizen.question import CzQuestion
 from tests.utils import create_file_and_commit
 

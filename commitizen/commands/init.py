@@ -1,22 +1,24 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, NamedTuple
+from typing import TYPE_CHECKING, Any, NamedTuple
 
 import questionary
 import yaml
 
 from commitizen import cmd, factory, out, project_info
 from commitizen.__version__ import __version__
-from commitizen.config import (
-    BaseConfig,
-)
 from commitizen.config.factory import create_config
 from commitizen.cz import registry
 from commitizen.defaults import CONFIG_FILES, DEFAULT_SETTINGS
 from commitizen.exceptions import InitFailedError, NoAnswersError
 from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
 from commitizen.version_schemes import KNOWN_SCHEMES, Version, get_version_scheme
+
+if TYPE_CHECKING:
+    from commitizen.config import (
+        BaseConfig,
+    )
 
 
 class _VersionProviderOption(NamedTuple):

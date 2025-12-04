@@ -4,14 +4,18 @@ import importlib
 import pkgutil
 import sys
 import warnings
-from collections.abc import Iterable
 
 if sys.version_info >= (3, 10):
     from importlib import metadata
 else:
     import importlib_metadata as metadata
 
-from commitizen.cz.base import BaseCommitizen
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+    from commitizen.cz.base import BaseCommitizen
 
 
 def discover_plugins(

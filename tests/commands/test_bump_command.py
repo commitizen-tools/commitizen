@@ -5,17 +5,14 @@ import re
 import sys
 from pathlib import Path
 from textwrap import dedent
+from typing import TYPE_CHECKING
 from unittest.mock import MagicMock, call
 
-import py
 import pytest
-from pytest_mock import MockFixture
 
 import commitizen.commands.bump as bump
 from commitizen import cli, cmd, defaults, git, hooks
-from commitizen.changelog_formats import ChangelogFormat
 from commitizen.config.base_config import BaseConfig
-from commitizen.cz.base import BaseCommitizen
 from commitizen.exceptions import (
     BumpTagFailedError,
     CommitizenException,
@@ -32,6 +29,13 @@ from commitizen.exceptions import (
     NoVersionSpecifiedError,
 )
 from tests.utils import create_file_and_commit, create_tag, skip_below_py_3_13
+
+if TYPE_CHECKING:
+    import py
+    from pytest_mock import MockFixture
+
+    from commitizen.changelog_formats import ChangelogFormat
+    from commitizen.cz.base import BaseCommitizen
 
 
 @pytest.mark.parametrize(
