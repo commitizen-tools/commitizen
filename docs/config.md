@@ -407,11 +407,11 @@ setup(
 [major-version-zero]: commands/bump.md#-major-version-zero
 [prerelease-offset]: commands/bump.md#prerelease_offset
 [retry_after_failure]: commands/commit.md#retry
-[allow_abort]: commands/check.md#allow-abort
+[allow_abort]: commands/check.md#-allow-abort
 [version-scheme]: commands/bump.md#version-schemes-version-scheme
 [pre_bump_hooks]: commands/bump.md#pre_bump_hooks
 [post_bump_hooks]: commands/bump.md#post_bump_hooks
-[allowed_prefixes]: commands/check.md#allowed-prefixes
+[allowed_prefixes]: commands/check.md#-allowed-prefixes
 [additional-features]: https://github.com/tmbo/questionary#additional-features
 [customization]: customization.md
 [shortcuts]: customization.md#shortcut-keys
