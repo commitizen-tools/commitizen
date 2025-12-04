@@ -7,9 +7,11 @@ from typing import TYPE_CHECKING
 
 from tomlkit import TOMLDocument, dumps, parse
 from tomlkit.exceptions import NonExistentKey
-from tomlkit.items import AoT
 
 from commitizen.providers.base_provider import TomlProvider
+
+if TYPE_CHECKING:
+    from tomlkit.items import AoT
 
 
 class CargoProvider(TomlProvider):

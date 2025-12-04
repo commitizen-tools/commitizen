@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import pytest
 
 from commitizen import defaults
@@ -9,8 +11,10 @@ from commitizen.changelog_formats import (
     _guess_changelog_format,
     get_changelog_format,
 )
-from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import ChangelogFormatUnknown
+
+if TYPE_CHECKING:
+    from commitizen.config.base_config import BaseConfig
 
 
 @pytest.mark.parametrize("format", KNOWN_CHANGELOG_FORMATS.values())

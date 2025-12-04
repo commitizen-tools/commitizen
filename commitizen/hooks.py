@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import os
-from collections.abc import Mapping
+from typing import TYPE_CHECKING
 
 from commitizen import cmd, out
 from commitizen.exceptions import RunHookError
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 
 def run(hooks: str | list[str], _env_prefix: str = "CZ_", **env: object) -> None:

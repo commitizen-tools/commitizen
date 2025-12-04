@@ -208,6 +208,13 @@ select = [
     "RUF100",
     # Checks for uses of the assert keyword.
     "S101",
+    # flake8-type-checking (TC)
+    "TC001",
+    "TC002",
+    "TC003",
+    "TC004",
+    "TC005",
+    "TC006",
 ]
 ignore = ["E501", "D1", "D415"]
 

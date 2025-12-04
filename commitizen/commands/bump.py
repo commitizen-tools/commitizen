@@ -2,14 +2,13 @@ from __future__ import annotations
 
 import warnings
 from logging import getLogger
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 import questionary
 
 from commitizen import bump, factory, git, hooks, out
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.commands.changelog import Changelog
-from commitizen.config import BaseConfig
 from commitizen.defaults import Settings
 from commitizen.exceptions import (
     BumpCommitFailedError,
@@ -32,6 +31,9 @@ from commitizen.version_schemes import (
     VersionProtocol,
     get_version_scheme,
 )
+
+if TYPE_CHECKING:
+    from commitizen.config import BaseConfig
 
 logger = getLogger("commitizen")
 
@@ -69,7 +71,7 @@ class Bump:
         self.config: BaseConfig = config
         self.arguments = arguments
         self.bump_settings = cast(
-            BumpArgs,
+            "BumpArgs",
             {
                 **config.settings,
                 **{
@@ -260,7 +262,7 @@ class Bump:
             )
         )
 
-        rules = TagRules.from_settings(cast(Settings, self.bump_settings))
+        rules = TagRules.from_settings(cast("Settings", self.bump_settings))
         current_tag = rules.find_tag_for(git.get_tags(), current_version)
         current_tag_version = (
             current_tag.name if current_tag else rules.normalize_tag(current_version)
