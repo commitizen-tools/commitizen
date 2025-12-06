@@ -244,6 +244,7 @@ class Changelog:
             tree,
             self.cz.template_loader,
             self.template,
+            incremental=self.incremental,
             **{
                 **self.cz.template_extras,
                 **self.config.settings["extras"],
