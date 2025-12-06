@@ -1,0 +1,41 @@
+name: Links
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+  pull_request:
+  schedule:
+    - cron: "00 18 * * *"
+
+jobs:
+  check-links:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write # required for peter-evans/create-issue-from-file
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Link Checker
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: . --exclude-path "tests"
+          fail: false
+
+      - name: Broken Links Report
+        if: steps.lychee.outputs.exit_code != 0 && github.event_name == 'schedule'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+
+            // Read the markdown file
+            // Ensure the path is correct relative to the workspace root
+            const reportBody = fs.readFileSync('./lychee/out.md', 'utf8');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Broken Links Report',
+              body: reportBody
+            });'
