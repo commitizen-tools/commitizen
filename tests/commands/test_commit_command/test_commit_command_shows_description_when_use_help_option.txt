@@ -1,22 +1,17 @@
-usage: cz commit [-h] [--retry] [--no-retry] [--dry-run]
-                 [--write-message-to-file FILE_PATH] [-s] [-a] [-e]
-                 [-l MESSAGE_LENGTH_LIMIT] [--]
+usage: cz commit [-h] [--retry] [--no-retry] [--dry-run] [--write-message-to-file FILE_PATH] [-s] [-a] [-e] [-l MESSAGE_LENGTH_LIMIT] [--]
 
-create new commit
+Create a new commit
 
 options:
   -h, --help            show this help message and exit
-  --retry               retry last commit
-  --no-retry            skip retry if retry_after_failure is set to true
-  --dry-run             show output to stdout, no commit, no modified files
+  --retry               Retry the last commit
+  --no-retry            Skip retry if retry_after_failure is set to true
+  --dry-run             Show output to stdout, no commit, no modified files
   --write-message-to-file FILE_PATH
-                        write message to file before committing (can be
-                        combined with --dry-run)
-  -s, --signoff         Deprecated, use 'cz commit -- -s' instead
-  -a, --all             Tell the command to automatically stage files that
-                        have been modified and deleted, but new files you have
-                        not told Git about are not affected.
-  -e, --edit            edit the commit message before committing
+                        Write message to file before committing (can be combined with --dry-run)
+  -s, --signoff         Deprecated, use `cz commit -- -s` instead
+  -a, --all             Automatically stage all tracked files that have been modified and deleted
+  -e, --edit            Edit the commit message before committing
   -l, --message-length-limit MESSAGE_LENGTH_LIMIT
-                        length limit of the commit message; 0 for no limit
-  --                    Positional arguments separator (recommended)
+                        Maximum length of the commit message; 0 for no limit
+  --                    Separator for positional arguments, e.g. `cz commit -- --allow-empty`

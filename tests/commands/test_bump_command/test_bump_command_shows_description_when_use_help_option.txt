@@ -1,81 +1,60 @@
-usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
-               [--no-verify] [--yes] [--tag-format TAG_FORMAT]
-               [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}]
-               [--devrelease DEVRELEASE] [--increment {MAJOR,MINOR,PATCH}]
-               [--increment-mode {linear,exact}] [--check-consistency]
-               [--annotated-tag]
-               [--annotated-tag-message ANNOTATED_TAG_MESSAGE] [--gpg-sign]
-               [--changelog-to-stdout] [--git-output-to-stderr] [--retry]
-               [--major-version-zero] [--template TEMPLATE] [--extra EXTRA]
-               [--file-name FILE_NAME] [--prerelease-offset PRERELEASE_OFFSET]
-               [--version-scheme {pep440,semver,semver2}]
-               [--version-type {pep440,semver,semver2}]
-               [--build-metadata BUILD_METADATA] [--get-next]
-               [--allow-no-commit]
+usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog] [--no-verify] [--yes] [--tag-format TAG_FORMAT] [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}] [--devrelease DEVRELEASE]
+               [--increment {MAJOR,MINOR,PATCH}] [--increment-mode {linear,exact}] [--check-consistency] [--annotated-tag] [--annotated-tag-message ANNOTATED_TAG_MESSAGE] [--gpg-sign] [--changelog-to-stdout]
+               [--git-output-to-stderr] [--retry] [--major-version-zero] [--template TEMPLATE] [--extra EXTRA] [--file-name FILE_NAME] [--prerelease-offset PRERELEASE_OFFSET]
+               [--version-scheme {pep440,semver,semver2}] [--version-type {pep440,semver,semver2}] [--build-metadata BUILD_METADATA] [--get-next] [--allow-no-commit]
                [MANUAL_VERSION]
 
-bump semantic version based on the git log
+Bump semantic version based on the git log
 
 positional arguments:
-  MANUAL_VERSION        bump to the given version (e.g: 1.5.3)
+  MANUAL_VERSION        Bump to the specified version (e.g: 1.5.3)
 
 options:
   -h, --help            show this help message and exit
-  --dry-run             show output to stdout, no commit, no modified files
-  --files-only          bump version in the files from the config
-  --local-version       bump only the local version portion
-  --changelog, -ch      generate the changelog for the newest version
-  --no-verify           this option bypasses the pre-commit and commit-msg
-                        hooks
-  --yes                 accept automatically questions done
+  --dry-run             Show output to stdout, no commit, no modified files
+  --files-only          Bump version in the files from the config
+  --local-version       Bump only the local version portion
+  --changelog, -ch      Generate the changelog for the newest version
+  --no-verify           Bypass the pre-commit and commit-msg hooks
+  --yes                 Accept automatically questions done
   --tag-format TAG_FORMAT
-                        the format used to tag the commit and read it, use it
-                        in existing projects, wrap around simple quotes
+                        The format used to tag the commit and read it, use it in existing projects, wrap around simple quotes
   --bump-message BUMP_MESSAGE
-                        template used to create the release commit, useful
-                        when working with CI
+                        Template for creating the release commit message, useful in CI/CD pipelines
   --prerelease, -pr {alpha,beta,rc}
-                        choose type of prerelease
+                        Choose the type of prerelease
   --devrelease, -d DEVRELEASE
-                        specify non-negative integer for dev. release
+                        Specify a non-negative integer for dev. release
   --increment {MAJOR,MINOR,PATCH}
-                        manually specify the desired increment
+                        Specify a desired increment
   --increment-mode {linear,exact}
-                        set the method by which the new version is chosen.
-                        'linear' (default) guesses the next version based on
-                        typical linear version progression, such that bumping
-                        of a pre-release with lower precedence than the
-                        current pre-release phase maintains the current phase
-                        of higher precedence. 'exact' applies the changes that
-                        have been specified (or determined from the commit
-                        log) without interpretation, such that the increment
-                        and pre-release are always honored
+                        Set the method by which the new version is chosen. 'linear' (default) resolves the next version by following typical linear version progression, ensuring that bumping a pre-release with lower
+                        precedence than the current pre-release phase keeps the current phase of higher precedence. 'exact' applies the changes that have been specified (or determined from the commit log) without
+                        interpretation, ensuring that the increment and pre-release are always honored
   --check-consistency, -cc
-                        check consistency among versions defined in commitizen
-                        configuration and version_files
-  --annotated-tag, -at  create annotated tag instead of lightweight one
+                        Check consistency among versions defined in `version_files`
+  --annotated-tag, -at  Create an annotated tag instead of a lightweight one
   --annotated-tag-message, -atm ANNOTATED_TAG_MESSAGE
-                        create annotated tag message
-  --gpg-sign, -s        sign tag instead of lightweight one
+                        Create an annotated tag message
+  --gpg-sign, -s        Sign the tag instead of a lightweight one
   --changelog-to-stdout
-                        Output changelog to the stdout
+                        Output the changelog to the stdout
   --git-output-to-stderr
-                        Redirect git output to stderr
-  --retry               retry commit if it fails the 1st time
-  --major-version-zero  keep major version at zero, even for breaking changes
+                        Redirect Git output to stderr
+  --retry               Retry the commit after first failure
+  --major-version-zero  Keep the major version at zero, even for breaking changes
   --template, -t TEMPLATE
-                        changelog template file name (relative to the current
-                        working directory)
+                        changelog template file name (relative to the current working directory)
   --extra, -e EXTRA     a changelog extra variable (in the form 'key=value')
   --file-name FILE_NAME
-                        file name of changelog (default: 'CHANGELOG.md')
+                        File name of the changelog (default: 'CHANGELOG.md')
   --prerelease-offset PRERELEASE_OFFSET
-                        start pre-releases with this offset
+                        Start pre-releases with this offset
   --version-scheme {pep440,semver,semver2}
-                        choose version scheme
+                        Choose the version scheme
   --version-type {pep440,semver,semver2}
-                        Deprecated, use --version-scheme instead
+                        Deprecated, use `--version-scheme` instead
   --build-metadata BUILD_METADATA
-                        Add additional build-metadata to the version-number
-  --get-next            Determine the next version and write to stdout
-  --allow-no-commit     bump version without eligible commits
+                        Add additional build-metadata to the version number
+  --get-next            Output the next version to stdout
+  --allow-no-commit     Bump the version even when there are no eligible commits
