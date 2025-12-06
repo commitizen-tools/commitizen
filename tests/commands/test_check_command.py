@@ -23,7 +23,7 @@ from tests.utils import create_file_and_commit, skip_below_py_3_13
 
 COMMIT_LOG = [
     "refactor: A code change that neither fixes a bug nor adds a feature",
-    r"refactor(cz/connventional_commit): use \S to check scope",
+    r"refactor(cz/conventional_commit): use \S to check scope",
     "refactor(git): remove unnecessary dot between git range",
     "bump: version 1.16.3 → 1.16.4",
     (
@@ -242,14 +242,14 @@ def test_check_command_with_empty_range(config, mocker: MockFixture):
 
 
 def test_check_a_range_of_failed_git_commits(config, mocker: MockFixture):
-    ill_formated_commits_msgs = [
+    ill_formatted_commits_msgs = [
         "First commit does not follow rule",
         "Second commit does not follow rule",
         ("Third commit does not follow rule\nIll-formatted commit with body"),
     ]
     mocker.patch(
         "commitizen.git.get_commits",
-        return_value=_build_fake_git_commits(ill_formated_commits_msgs),
+        return_value=_build_fake_git_commits(ill_formatted_commits_msgs),
     )
     check_cmd = commands.Check(
         config=config, arguments={"rev_range": "HEAD~10..master"}
@@ -257,7 +257,7 @@ def test_check_a_range_of_failed_git_commits(config, mocker: MockFixture):
 
     with pytest.raises(InvalidCommitMessageError) as excinfo:
         check_cmd()
-    assert all([msg in str(excinfo.value) for msg in ill_formated_commits_msgs])
+    assert all([msg in str(excinfo.value) for msg in ill_formatted_commits_msgs])
 
 
 def test_check_command_with_valid_message(config, mocker: MockFixture):
