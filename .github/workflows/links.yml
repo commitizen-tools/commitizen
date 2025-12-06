@@ -1,0 +1,82 @@
+name: Links
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+  pull_request:
+  schedule:
+    - cron: "00 18 * * *"
+
+jobs:
+  linkChecker:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write # required for peter-evans/create-issue-from-file
+      pull-requests: write # required for github-script to comment on PRs
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Link Checker
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: . --exclude-path "tests"
+          fail: false
+
+    #   - name: Create or Update PR Comment
+    #     if: steps.lychee.outputs.exit_code != 0 && github.event_name == 'pull_request'
+    #     uses: actions/github-script@v8
+    #     with:
+    #       script: |
+    #         const fs = require('fs');
+    #         const commentMarker = '<!-- link-checker-report -->';
+
+    #         // Read the report file if it exists, otherwise use a fallback message
+    #         let body;
+    #         if (fs.existsSync('./lychee/out.md')) {
+    #           body = fs.readFileSync('./lychee/out.md', 'utf8');
+    #         } else {
+    #           body = '## 🔗 Link Checker Report\n\nThe link checker found broken links in this pull request. Please check the workflow logs for details.';
+    #         }
+
+    #         // Add the marker to identify this comment
+    #         body = commentMarker + '\n\n' + body;
+
+    #         // Get existing comments on the PR
+    #         const { data: comments } = await github.rest.issues.listComments({
+    #           owner: context.repo.owner,
+    #           repo: context.repo.repo,
+    #           issue_number: context.issue.number,
+    #         });
+
+    #         // Find existing comment with our marker
+    #         const existingComment = comments.find(comment =>
+    #           comment.user.type === 'Bot' &&
+    #           comment.body.includes(commentMarker)
+    #         );
+
+    #         if (existingComment) {
+    #           // Update existing comment
+    #           await github.rest.issues.updateComment({
+    #             owner: context.repo.owner,
+    #             repo: context.repo.repo,
+    #             comment_id: existingComment.id,
+    #             body: body,
+    #           });
+    #         } else {
+    #           // Create new comment
+    #           await github.rest.issues.createComment({
+    #             owner: context.repo.owner,
+    #             repo: context.repo.repo,
+    #             issue_number: context.issue.number,
+    #             body: body,
+    #           });
+    #         }
+
+    #   - name: Create Issue From File
+    #     if: steps.lychee.outputs.exit_code != 0 && github.event_name == 'schedule'
+    #     uses: peter-evans/create-issue-from-file@v5
+    #     with:
+    #       title: Link Checker Report
+    #       content-filepath: ./lychee/out.md
+    #       labels: 'type: documentation'
