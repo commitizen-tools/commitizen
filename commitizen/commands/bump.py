@@ -311,6 +311,8 @@ class Bump:
                 "extras": self.extras,
                 "incremental": True,
                 "dry_run": dry_run,
+                "during_version_bump": prerelease
+                is None,  # We let the changelog implementation know that we want to replace prereleases while staying incremental AND the new tag does not exist already
             }
             if self.changelog_to_stdout:
                 changelog_cmd = Changelog(self.config, {**args, "dry_run": True})  # type: ignore[typeddict-item]

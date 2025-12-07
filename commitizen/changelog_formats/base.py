@@ -4,8 +4,9 @@ import os
 from abc import ABCMeta
 from typing import IO, Any, ClassVar
 
-from commitizen.changelog import Metadata
+from commitizen.changelog import IncrementalMergeInfo, Metadata
 from commitizen.config.base_config import BaseConfig
+from commitizen.git import GitTag
 from commitizen.tags import TagRules, VersionTag
 from commitizen.version_schemes import get_version_scheme
 
@@ -68,6 +69,27 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
             meta.unreleased_end = index
 
         return meta
+
+    def get_latest_full_release(self, filepath: str) -> IncrementalMergeInfo:
+        if not os.path.isfile(filepath):
+            return IncrementalMergeInfo()
+
+        with open(
+            filepath, encoding=self.config.settings["encoding"]
+        ) as changelog_file:
+            return self.get_latest_full_release_from_file(changelog_file)
+
+    def get_latest_full_release_from_file(self, file: IO[Any]) -> IncrementalMergeInfo:
+        for index, line in enumerate(file):
+            line = line.strip().lower()
+
+            parsed = self.parse_version_from_title(line)
+            if parsed:
+                if not self.tag_rules.extract_version(
+                    GitTag(parsed.tag, "", "")
+                ).is_prerelease:
+                    return IncrementalMergeInfo(name=parsed.tag, index=index)
+        return IncrementalMergeInfo()
 
     def parse_version_from_title(self, line: str) -> VersionTag | None:
         """
