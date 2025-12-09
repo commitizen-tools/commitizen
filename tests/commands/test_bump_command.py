@@ -1767,16 +1767,15 @@ def test_changelog_config_flag_merge_prerelease(
     with open(changelog_path) as f:
         out = f.read()
         out = re.sub(
-            r"\([^)]*\)", "", out
+            r" \([^)]*\)", "", out
         )  # remove date from release, since I have no idea how to mock that
-        print(out)
 
     file_regression.check(out, extension=".md")
 
 
 @pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_config_flag_merge_prerelease_more_commits(
+def test_changelog_config_flag_merge_prerelease_only_prerelease_present(
     mocker: MockFixture, changelog_path, config_path, file_regression, test_input
 ):
     # supposed to verify that logic regarding indexes is generic
@@ -1786,8 +1785,9 @@ def test_changelog_config_flag_merge_prerelease_more_commits(
         f.write("annotated_tag = true\n")
 
     create_file_and_commit("feat: more relevant commit")
-    mocker.patch("commitizen.git.GitTag.date", "1970-01-01")
-    git.tag("0.1.0")
+    testargs = ["cz", "bump", "--prerelease", test_input, "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
 
     create_file_and_commit("feat: add new output")
     create_file_and_commit("fix: output glitch")
@@ -1803,8 +1803,7 @@ def test_changelog_config_flag_merge_prerelease_more_commits(
     with open(changelog_path) as f:
         out = f.read()
         out = re.sub(
-            r"\([^)]*\)", "", out
+            r" \([^)]*\)", "", out
         )  # remove date from release, since I have no idea how to mock that
-        print(out)
 
     file_regression.check(out, extension=".md")

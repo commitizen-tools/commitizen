@@ -3,13 +3,8 @@
 ### Feat
 
 - add new output
+- more relevant commit
 
 ### Fix
 
 - output glitch
-
-## 0.1.0
-
-### Feat
-
-- more relevant commit
