@@ -80,7 +80,9 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
             return self.get_latest_full_release_from_file(changelog_file)
 
     def get_latest_full_release_from_file(self, file: IO[Any]) -> IncrementalMergeInfo:
+        latest_version_index: int | None = None
         for index, line in enumerate(file):
+            latest_version_index = index
             line = line.strip().lower()
 
             parsed = self.parse_version_from_title(line)
@@ -89,7 +91,7 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
                     GitTag(parsed.tag, "", "")
                 ).is_prerelease:
                     return IncrementalMergeInfo(name=parsed.tag, index=index)
-        return IncrementalMergeInfo()
+        return IncrementalMergeInfo(index=latest_version_index)
 
     def parse_version_from_title(self, line: str) -> VersionTag | None:
         """

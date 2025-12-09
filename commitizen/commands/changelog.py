@@ -225,11 +225,16 @@ class Changelog:
             latest_full_release_info = self.changelog_format.get_latest_full_release(
                 self.file_name
             )
-            start_rev = latest_full_release_info.name or ""
             if latest_full_release_info.index:
                 changelog_meta.unreleased_start = 0
                 changelog_meta.latest_version_position = latest_full_release_info.index
                 changelog_meta.unreleased_end = latest_full_release_info.index - 1
+
+            start_rev = latest_full_release_info.name or ""
+            if not start_rev and latest_full_release_info.index:
+                # Only pre-releases in changelog
+                changelog_meta.latest_version_position = None
+                changelog_meta.unreleased_end = latest_full_release_info.index + 1
 
         commits = git.get_commits(start=start_rev, end=end_rev, args="--topo-order")
         if not commits and (
