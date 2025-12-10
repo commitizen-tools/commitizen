@@ -5,6 +5,7 @@ import glob
 from pathlib import Path
 
 import tomlkit
+from tomlkit.items import Table
 
 from commitizen.providers.base_provider import TomlProvider
 
@@ -41,11 +42,11 @@ class CargoProvider(TomlProvider):
 
     def set(self, document: tomlkit.TOMLDocument, version: str) -> None:
         try:
-            document["workspace"]["package"]["version"] = version  # type: ignore[index]
+            document["package"]["version"] = version  # type: ignore[index]
             return
         except tomlkit.exceptions.NonExistentKey:
             ...
-        document["package"]["version"] = version  # type: ignore[index]
+        document["workspace"]["package"]["version"] = version  # type: ignore[index]
 
     def set_version(self, version: str) -> None:
         super().set_version(version)
@@ -69,7 +70,7 @@ class CargoProvider(TomlProvider):
             excluded_workspace_members = cargo_toml_content.get("workspace", {}).get(
                 "exclude", []
             )
-            members_inheriting = []
+            members_inheriting: list[str] = []
 
             for member in workspace_members:
                 for path in glob.glob(member, recursive=True):
@@ -77,14 +78,15 @@ class CargoProvider(TomlProvider):
                         continue
                     cargo_file = Path(path) / "Cargo.toml"
                     cargo_toml_content = tomlkit.parse(cargo_file.read_text())
-                    try:
-                        version_workspace = cargo_toml_content["package"]["version"][  # type: ignore[index]
-                            "workspace"
-                        ]
-                        if version_workspace is True:
-                            package_name = cargo_toml_content["package"]["name"]  # type: ignore[index]
-                            members_inheriting.append(package_name)
-                    except tomlkit.exceptions.NonExistentKey:
+
+                    package_version = cargo_toml_content["package"]["version"]  # type: ignore[index]
+                    if (
+                        isinstance(package_version, Table)
+                        and package_version["workspace"] is True
+                    ):
+                        package_name = cargo_toml_content["package"]["name"]
+                        members_inheriting.append(package_name)
+                    else:
                         continue
 
             for i, package in enumerate(packages):
