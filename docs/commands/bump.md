@@ -431,7 +431,7 @@ Useful for determining the next version based on CI for non-production environme
 !!! warning
     The `--get-next` flag will raise a `NoneIncrementExit` if the found commits are not eligible for a version bump.
 
-    For information on how to suppress this exit, see [avoid raising errors](#avoid-raising-errors).
+    For information on how to suppress this exit, see [Ignoring Exit Codes](../exit_codes.md#ignoring-exit-codes).
 
 ### `--allow-no-commit`
 
@@ -504,69 +504,6 @@ Supported variables:
 | `$patch`, `${patch}`           | PATCH increment                             |
 | `$prerelease`, `${prerelease}` | Prerelease (alpha, beta, release candidate) |
 | `$devrelease`, `${devrelease}` | Development release                         |
-
-## Avoid raising errors
-
-Some situations from Commitizen raise an exit code different from 0.
-If the error code is different from 0, any CI or script running Commitizen might be interrupted.
-
-If you have a special use case, where you don't want to raise one of these error codes, you can
-tell Commitizen to not raise them.
-
-### Recommended use case
-
-At the moment, we've identified that the most common error code to skip is
-
-| Error name        | Exit code |
-| ----------------- | --------- |
-| NoneIncrementExit | 21        |
-
-There are some situations where you don't want to get an error code when some
-commits do not match your rules, you just want those commits to be skipped.
-
-```sh
-cz -nr 21 bump
-```
-
-### Easy way
-
-Check which error code was raised by Commitizen by running in the terminal
-
-```sh
-echo $?
-```
-
-The output should be an integer like this
-
-```sh
-3
-```
-
-And then you can tell Commitizen to ignore it:
-
-```sh
-cz --no-raise 3
-```
-
-You can tell Commitizen to skip more than one if needed:
-
-```sh
-cz --no-raise 3,4,5
-```
-
-### Longer way
-
-Check the list of [exit_codes](../exit_codes.md) and understand which one you have
-to skip and why.
-
-Remember to document somewhere this, because you'll forget.
-
-For example if the system raises a `NoneIncrementExit` error, you look it up
-on the list, and then you can use the exit code:
-
-```sh
-cz -nr 21 bump
-```
 
 [pep440]: https://www.python.org/dev/peps/pep-0440/
 [semver]: https://semver.org/
