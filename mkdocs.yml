@@ -57,7 +57,7 @@ nav:
     - Customized Python Class: "customization/python_class.md"
     - Changelog Template: "customization/changelog_template.md"
   - Tutorials:
-    - Writing commits: "tutorials/writing_commits.md"
+    - Commit Message Best Practices: "tutorials/writing_commits.md"
     - Managing tags formats: "tutorials/tag_format.md"
     - Auto check commits: "tutorials/auto_check.md"
     - Auto prepare commit message: "tutorials/auto_prepare_commit_message.md"
