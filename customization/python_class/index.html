@@ -1,0 +1,2465 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="commit rules, semantic version, conventional commits">
+      
+      
+      
+      
+        <link rel="prev" href="../config_file/">
+      
+      
+        <link rel="next" href="../changelog_template/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Customized Python Class - Commitizen</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#customizing-through-a-python-class" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Commitizen" class="md-header__button md-logo" aria-label="Commitizen" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Commitizen
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Customized Python Class
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_3" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_3">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/commitizen-tools/commitizen" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    commitizen-tools/commitizen
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Commitizen" class="md-nav__button md-logo" aria-label="Commitizen" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Commitizen
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/commitizen-tools/commitizen" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    commitizen-tools/commitizen
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Commands
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Commands
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/init/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    init
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/commit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    commit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/bump/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    bump
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/check/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    check
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    example
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/info/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    info
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/ls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    version
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Configuration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../config/configuration_file/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration File
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../config/version_provider/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Version Provider
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../config/bump/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    bump
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../config/commit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    commit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../config/check/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    check
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../config/changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../config/option/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Misc Options
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Customization
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced Customization
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config_file/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration File
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customized Python Class
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customized Python Class
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#custom-commit-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom commit rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-bump-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom bump rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom bump rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-commit-validation-and-error-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom commit validation and error message
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-changelog-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom changelog generator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#raise-customize-exception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Raise Customize Exception
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migrating-from-legacy-plugin-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migrating from legacy plugin format
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Migrating from legacy plugin format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/writing_commits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing commits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/tag_format/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Managing tags formats
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/auto_check/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auto check commits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/auto_prepare_commit_message/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auto prepare commit message
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/gitlab_ci/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitLab CI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/github_actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Actions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/jenkins_pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/dev_releases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developmental releases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/monorepo_guidance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monorepo support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features_wont_add/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features we won't add
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../exit_codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exit Codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Third-Party Commitizen Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Third-Party Commitizen Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/commitizen-deno-provider/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    commitizen-deno-provider
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/commitizen-emoji/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Commitizen emoji (Unmaintained)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/conventional-jira/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventional JIRA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/cz-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    cz-ai
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/cz-conventional-gitmoji/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    cz-conventional-gitmoji
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/cz-emoji/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    cz-emoji
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/cz-legacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventional Legacy (cz_legacy)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/cz-path/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    cz-path
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/github-jira-conventional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub JIRA Conventional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing_tldr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing TL;DR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../external_links/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#custom-commit-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom commit rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-bump-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom bump rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom bump rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-commit-validation-and-error-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom commit validation and error message
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-changelog-generator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom changelog generator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#raise-customize-exception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Raise Customize Exception
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migrating-from-legacy-plugin-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migrating from legacy plugin format
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Migrating from legacy plugin format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="customizing-through-a-python-class">Customizing through a python class<a class="headerlink" href="#customizing-through-a-python-class" title="Permanent link">&para;</a></h1>
+<p>The basic steps are:</p>
+<ol>
+<li>Inheriting from <code>BaseCommitizen</code>.</li>
+<li>Give a name to your rules.</li>
+<li>Create a Python package using proper <a href="https://packaging.python.org/en/latest/glossary/#term-Build-Backend">build backend</a></li>
+<li>Expose the class as a <code>commitizen.plugin</code> entrypoint.</li>
+</ol>
+<p>Check an <a href="https://github.com/commitizen-tools/commitizen/blob/master/commitizen/cz/conventional_commits/conventional_commits.py">example</a> on how to configure <code>BaseCommitizen</code>.</p>
+<p>You can also automate the steps above through <a href="https://cookiecutter.readthedocs.io/en/1.7.0/">cookiecutter</a>.</p>
+<div class="highlight"><pre><span></span><code>cookiecutter<span class="w"> </span>gh:commitizen-tools/commitizen_cz_template
+</code></pre></div>
+<p>See <a href="https://github.com/commitizen-tools/commitizen_cz_template">commitizen_cz_template</a> for details.</p>
+<p>See <a href="../../third-party-plugins/about/">Third-party plugins</a> for more details on how to create a third-party Commitizen plugin.</p>
+<h2 id="custom-commit-rules">Custom commit rules<a class="headerlink" href="#custom-commit-rules" title="Permanent link">&para;</a></h2>
+<p>Create a Python module, for example <code>cz_jira.py</code>.</p>
+<p>Inherit from <code>BaseCommitizen</code>, and you must define <code>questions</code> and <code>message</code>. The others are optional.</p>
+<div class="highlight"><span class="filename">cz_jira.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommitizen</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.defaults</span><span class="w"> </span><span class="kn">import</span> <span class="n">Questions</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">JiraCz</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
+    <span class="c1"># Questions = Iterable[MutableMapping[str, Any]]</span>
+    <span class="c1"># It expects a list with dictionaries.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">questions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Questions</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Questions regarding the commit message.&quot;&quot;&quot;</span>
+        <span class="n">questions</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Commit title&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;issue&quot;</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Jira Issue number:&quot;</span><span class="p">},</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">questions</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">answers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the message with the given answers.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;answers[&#39;title&#39;] (#answers[&#39;issue&#39;])&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">example</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Provide an example to help understand the style (OPTIONAL)</span>
+
+<span class="sd">        Used by `cz example`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;Problem with user (#321)&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">schema</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Show the schema used (OPTIONAL)</span>
+
+<span class="sd">        Used by `cz schema`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;title&gt; (&lt;issue&gt;)&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Explanation of the commit rules. (OPTIONAL)</span>
+
+<span class="sd">        Used by `cz info`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;We use this because is useful&quot;</span>
+</code></pre></div>
+<p>The next file required is <code>setup.py</code> modified from flask version.</p>
+<div class="highlight"><span class="filename">setup.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">setuptools</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;JiraCommitizen&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
+    <span class="n">py_modules</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cz_jira&quot;</span><span class="p">],</span>
+    <span class="n">license</span><span class="o">=</span><span class="s2">&quot;MIT&quot;</span><span class="p">,</span>
+    <span class="n">long_description</span><span class="o">=</span><span class="s2">&quot;this is a long description&quot;</span><span class="p">,</span>
+    <span class="n">install_requires</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;commitizen&quot;</span><span class="p">],</span>
+    <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;commitizen.plugin&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;cz_jira = cz_jira:JiraCz&quot;</span><span class="p">]},</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>So in the end, we would have</p>
+<div class="codehilite"><pre><span></span><code>.
+├── cz_jira.py
+└── setup.py
+</code></pre></div>
+
+<p>And that's it. You can install it without uploading to PyPI by simply
+doing <code>pip install .</code></p>
+<h2 id="custom-bump-rules">Custom bump rules<a class="headerlink" href="#custom-bump-rules" title="Permanent link">&para;</a></h2>
+<p>You need to define 2 parameters inside your custom <code>BaseCommitizen</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bump_pattern</code></td>
+<td><code>str</code></td>
+<td><code>None</code></td>
+<td>Regex to extract information from commit (subject and body)</td>
+</tr>
+<tr>
+<td><code>bump_map</code></td>
+<td><code>dict</code></td>
+<td><code>None</code></td>
+<td>Dictionary mapping the extracted information to a <code>SemVer</code> increment type (<code>MAJOR</code>, <code>MINOR</code>, <code>PATCH</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Let's see an example.</p>
+<div class="highlight"><span class="filename">cz_strange.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommitizen</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">StrangeCommitizen</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
+    <span class="n">bump_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^(break|new|fix|hotfix)&quot;</span>
+    <span class="n">bump_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;break&quot;</span><span class="p">:</span> <span class="s2">&quot;MAJOR&quot;</span><span class="p">,</span> <span class="s2">&quot;new&quot;</span><span class="p">:</span> <span class="s2">&quot;MINOR&quot;</span><span class="p">,</span> <span class="s2">&quot;fix&quot;</span><span class="p">:</span> <span class="s2">&quot;PATCH&quot;</span><span class="p">,</span> <span class="s2">&quot;hotfix&quot;</span><span class="p">:</span> <span class="s2">&quot;PATCH&quot;</span><span class="p">}</span>
+</code></pre></div>
+<p>That's it, your Commitizen now supports custom rules, and you can run.</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>-n<span class="w"> </span>cz_strange<span class="w"> </span>bump
+</code></pre></div>
+<h3 id="custom-commit-validation-and-error-message">Custom commit validation and error message<a class="headerlink" href="#custom-commit-validation-and-error-message" title="Permanent link">&para;</a></h3>
+<p>The commit message validation can be customized by overriding the <code>validate_commit_message</code> and <code>format_error_message</code>
+methods from <code>BaseCommitizen</code>. This allows for a more detailed feedback to the user where the error originates from.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommitizen</span><span class="p">,</span> <span class="n">ValidationResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">commitizen</span><span class="w"> </span><span class="kn">import</span> <span class="n">git</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomValidationCz</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_commit_message</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">commit_msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">allow_abort</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">allowed_prefixes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">max_msg_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ValidationResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate commit message against the pattern.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">commit_msg</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">allow_abort</span><span class="p">,</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">allow_abort</span> <span class="k">else</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;commit message is empty&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">pattern</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">commit_msg</span><span class="o">.</span><span class="n">startswith</span><span class="p">,</span> <span class="n">allowed_prefixes</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">max_msg_length</span><span class="p">:</span>
+            <span class="n">msg_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">commit_msg</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">msg_len</span> <span class="o">&gt;</span> <span class="n">max_msg_length</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">[</span>
+                    <span class="sa">f</span><span class="s2">&quot;commit message is too long. Max length is </span><span class="si">{</span><span class="n">max_msg_length</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">]</span>
+        <span class="n">pattern_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">commit_msg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pattern_match</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Perform additional validation of the commit message format</span>
+            <span class="c1"># and add custom error messages as needed</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;commit message does not match the pattern&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">format_exception_message</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">ill_formatted_commits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">git</span><span class="o">.</span><span class="n">GitCommit</span><span class="p">,</span> <span class="nb">list</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Format commit errors.&quot;&quot;&quot;</span>
+        <span class="n">displayed_msgs_content</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;commit &quot;</span><span class="si">{</span><span class="n">commit</span><span class="o">.</span><span class="n">rev</span><span class="si">}</span><span class="s1">&quot;: &quot;</span><span class="si">{</span><span class="n">commit</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
+                <span class="sa">f</span><span class="s2">&quot;errors:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">commit</span><span class="p">,</span> <span class="n">errors</span> <span class="ow">in</span> <span class="n">ill_formatted_commits</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="s2">&quot;commit validation: failed!</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;please enter a commit message in the commitizen format.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">displayed_msgs_content</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;pattern: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">schema_pattern</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+</code></pre></div>
+<h2 id="custom-changelog-generator">Custom changelog generator<a class="headerlink" href="#custom-changelog-generator" title="Permanent link">&para;</a></h2>
+<p>The changelog generator should just work in a very basic manner without touching anything.
+You can customize it of course, and the following variables are the ones you need to add to your custom <code>BaseCommitizen</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>commit_parser</code></td>
+<td><code>str</code></td>
+<td>NO</td>
+<td>Regex which should provide the variables explained in the [changelog description][changelog-des]</td>
+</tr>
+<tr>
+<td><code>changelog_pattern</code></td>
+<td><code>str</code></td>
+<td>NO</td>
+<td>Regex to validate the commits, this is useful to skip commits that don't meet your ruling standards like a Merge. Usually the same as bump_pattern</td>
+</tr>
+<tr>
+<td><code>change_type_map</code></td>
+<td><code>dict</code></td>
+<td>NO</td>
+<td>Convert the title of the change type that will appear in the changelog, if a value is not found, the original will be provided</td>
+</tr>
+<tr>
+<td><code>changelog_message_builder_hook</code></td>
+<td><code>method: (dict, git.GitCommit) -&gt; dict | list | None</code></td>
+<td>NO</td>
+<td>Customize with extra information your message output, like adding links, this function is executed per parsed commit. Each GitCommit contains the following attrs: <code>rev</code>, <code>title</code>, <code>body</code>, <code>author</code>, <code>author_email</code>. Returning a falsy value ignore the commit.</td>
+</tr>
+<tr>
+<td><code>changelog_hook</code></td>
+<td><code>method: (full_changelog: str, partial_changelog: Optional[str]) -&gt; str</code></td>
+<td>NO</td>
+<td>Receives the whole and partial (if used incremental) changelog. Useful to send slack messages or notify a compliance department. Must return the full_changelog</td>
+</tr>
+<tr>
+<td><code>changelog_release_hook</code></td>
+<td><code>method: (release: dict, tag: git.GitTag) -&gt; dict</code></td>
+<td>NO</td>
+<td>Receives each generated changelog release and its associated tag. Useful to enrich releases before they are rendered. Must return the update release</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><span class="filename">cz_strange.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommitizen</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">chat</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">compliance</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">StrangeCommitizen</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
+    <span class="n">changelog_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^(break|new|fix|hotfix)&quot;</span>
+    <span class="n">commit_parser</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^(?P&lt;change_type&gt;feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P&lt;scope&gt;[^()\r\n]*)\)|\()?(?P&lt;breaking&gt;!)?:\s(?P&lt;message&gt;.*)?&quot;</span>
+    <span class="n">change_type_map</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;feat&quot;</span><span class="p">:</span> <span class="s2">&quot;Features&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fix&quot;</span><span class="p">:</span> <span class="s2">&quot;Bug Fixes&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;refactor&quot;</span><span class="p">:</span> <span class="s2">&quot;Code Refactor&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;perf&quot;</span><span class="p">:</span> <span class="s2">&quot;Performance improvements&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">changelog_message_builder_hook</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">parsed_message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">commit</span><span class="p">:</span> <span class="n">git</span><span class="o">.</span><span class="n">GitCommit</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">rev</span> <span class="o">=</span> <span class="n">commit</span><span class="o">.</span><span class="n">rev</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">parsed_message</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span>
+        <span class="n">parsed_message</span><span class="p">[</span>
+            <span class="s2">&quot;message&quot;</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">rev</span><span class="si">}</span><span class="s2"> [</span><span class="si">{</span><span class="n">commit</span><span class="o">.</span><span class="n">author</span><span class="si">}</span><span class="s2">](</span><span class="si">{</span><span class="n">commit</span><span class="o">.</span><span class="n">author_email</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="k">return</span> <span class="n">parsed_message</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">changelog_release_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">release</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">git</span><span class="o">.</span><span class="n">GitTag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">release</span><span class="p">[</span><span class="s2">&quot;author&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">author</span>
+        <span class="k">return</span> <span class="n">release</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">changelog_hook</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">full_changelog</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">partial_changelog</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executed at the end of the changelog generation</span>
+
+<span class="sd">        full_changelog: it&#39;s the output about to being written into the file</span>
+<span class="sd">        partial_changelog: it&#39;s the new stuff, this is useful to send slack messages or</span>
+<span class="sd">                           similar</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            the new updated full_changelog</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">partial_changelog</span><span class="p">:</span>
+            <span class="n">chat</span><span class="o">.</span><span class="n">room</span><span class="p">(</span><span class="s2">&quot;#committers&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">partial_changelog</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">full_changelog</span><span class="p">:</span>
+            <span class="n">compliance</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">full_changelog</span><span class="p">)</span>
+        <span class="n">full_changelog</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; fix &quot;</span><span class="p">,</span> <span class="s2">&quot; **fix** &quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">full_changelog</span>
+</code></pre></div>
+<h2 id="raise-customize-exception">Raise Customize Exception<a class="headerlink" href="#raise-customize-exception" title="Permanent link">&para;</a></h2>
+<p>If you want <code>commitizen</code> to catch your exception and print the message, you'll have to inherit <code>CzException</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.exception</span><span class="w"> </span><span class="kn">import</span> <span class="n">CzException</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">NoSubjectProvidedException</span><span class="p">(</span><span class="n">CzException</span><span class="p">):</span>
+    <span class="o">...</span>
+</code></pre></div>
+<h2 id="migrating-from-legacy-plugin-format">Migrating from legacy plugin format<a class="headerlink" href="#migrating-from-legacy-plugin-format" title="Permanent link">&para;</a></h2>
+<p>Commitizen migrated to a new plugin format relying on <code>importlib.metadata.EntryPoint</code>.
+Migration should be straight-forward for legacy plugins:</p>
+<ul>
+<li>Remove the <code>discover_this</code> line from your plugin module</li>
+<li>Expose the plugin class under as a <code>commitizen.plugin</code> entrypoint.</li>
+</ul>
+<p>The name of the plugin is now determined by the name of the entrypoint.</p>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<p>If you were having a <code>CzPlugin</code> class in a <code>cz_plugin.py</code> module like this:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommitizen</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PluginCz</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
+    <span class="o">...</span>
+
+
+<span class="n">discover_this</span> <span class="o">=</span> <span class="n">PluginCz</span>
+</code></pre></div>
+<p>Then remove the <code>discover_this</code> line:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommitizen</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PluginCz</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p>and expose the class as entrypoint in your <code>setuptools</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">setuptools</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;MyPlugin&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
+    <span class="n">py_modules</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cz_plugin&quot;</span><span class="p">],</span>
+    <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;commitizen.plugin&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;plugin = cz_plugin:PluginCz&quot;</span><span class="p">]},</span>
+    <span class="o">...</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Then your plugin will be available under the name <code>plugin</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

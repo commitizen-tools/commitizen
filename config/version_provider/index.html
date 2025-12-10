@@ -1,0 +1,2681 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="commit rules, semantic version, conventional commits">
+      
+      
+      
+      
+        <link rel="prev" href="../configuration_file/">
+      
+      
+        <link rel="next" href="../bump/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Version Provider - Commitizen</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#version-providers" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Commitizen" class="md-header__button md-logo" aria-label="Commitizen" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Commitizen
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Version Provider
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_3" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_3">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/commitizen-tools/commitizen" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    commitizen-tools/commitizen
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Commitizen" class="md-nav__button md-logo" aria-label="Commitizen" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Commitizen
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/commitizen-tools/commitizen" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    commitizen-tools/commitizen
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Commands
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Commands
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/init/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    init
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/commit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    commit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/bump/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    bump
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/check/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    check
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    example
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/info/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    info
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/ls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    version
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Configuration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration_file/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration File
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Version Provider
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Version Provider
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in Providers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Built-in Providers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commitizen-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        commitizen (Default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        scm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pep621" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pep621
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        poetry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        uv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cargo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cargo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        npm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#composer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        composer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provider-comparison-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provider Comparison Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-custom-version-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Custom Version Providers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating Custom Version Providers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-your-provider-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create Your Provider Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-register-as-an-entry-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Register as an Entry Point
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-install-and-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Install and Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provider-implementation-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provider Implementation Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-json-based-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: JSON-based Provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-the-right-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing the Right Provider
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bump/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    bump
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../commit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    commit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../check/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    check
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../option/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Misc Options
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Customization
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced Customization
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../customization/config_file/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration File
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../customization/python_class/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customized Python Class
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../customization/changelog_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/writing_commits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing commits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/tag_format/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Managing tags formats
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/auto_check/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auto check commits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/auto_prepare_commit_message/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auto prepare commit message
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/gitlab_ci/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitLab CI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/github_actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Actions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/jenkins_pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jenkins pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/dev_releases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developmental releases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/monorepo_guidance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monorepo support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features_wont_add/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features we won't add
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../exit_codes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exit Codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Third-Party Commitizen Plugins
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Third-Party Commitizen Plugins
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/commitizen-deno-provider/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    commitizen-deno-provider
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/commitizen-emoji/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Commitizen emoji (Unmaintained)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/conventional-jira/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventional JIRA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/cz-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    cz-ai
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/cz-conventional-gitmoji/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    cz-conventional-gitmoji
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/cz-emoji/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    cz-emoji
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/cz-legacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventional Legacy (cz_legacy)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/cz-path/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    cz-path
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/github-jira-conventional/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub JIRA Conventional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing_tldr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing TL;DR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../external_links/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in Providers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Built-in Providers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commitizen-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        commitizen (Default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        scm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pep621" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pep621
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        poetry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        uv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cargo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cargo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        npm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#composer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        composer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provider-comparison-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provider Comparison Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-custom-version-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Custom Version Providers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating Custom Version Providers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-your-provider-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create Your Provider Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-register-as-an-entry-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Register as an Entry Point
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-install-and-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Install and Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provider-implementation-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provider Implementation Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-json-based-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: JSON-based Provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-the-right-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing the Right Provider
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="version-providers">Version Providers<a class="headerlink" href="#version-providers" title="Permanent link">&para;</a></h1>
+<p>Version providers are the mechanism by which Commitizen reads and writes version information in your project.</p>
+<p>They abstract away the details of where and how version numbers are stored, allowing Commitizen to work seamlessly with different project types and package management systems.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>By default, Commitizen uses the <code>commitizen</code> provider, which stores the version in your Commitizen configuration file.
+However, you can configure Commitizen to use any available provider that matches your project's setup.
+This is particularly useful when you want Commitizen to manage versions in the same location as your package manager (e.g., <code>package.json</code> for Node.js projects, <code>pyproject.toml</code> for Python projects).</p>
+<h2 id="built-in-providers">Built-in Providers<a class="headerlink" href="#built-in-providers" title="Permanent link">&para;</a></h2>
+<p>Commitizen includes several built-in version providers for common package management formats:</p>
+<h3 id="commitizen-default"><code>commitizen</code> (Default)<a class="headerlink" href="#commitizen-default" title="Permanent link">&para;</a></h3>
+<p>The default version provider stores and retrieves the version from your Commitizen configuration file (e.g., <code>pyproject.toml</code>, <code>.cz.toml</code>, etc.).</p>
+<p><strong>Use when:</strong>
+- You want to keep version management separate from your package manager
+- Your project doesn't use a standard package manager
+- You need maximum flexibility in version management</p>
+<p><strong>Configuration:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;commitizen&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span><span class="w">  </span><span class="c1"># Required when using this provider</span>
+</code></pre></div></p>
+<h3 id="scm"><code>scm</code><a class="headerlink" href="#scm" title="Permanent link">&para;</a></h3>
+<p>Fetches the version from Git tags using <code>git describe</code>. This provider <strong>only reads</strong> version information and never writes it back to files. It's designed to work with tools like <code>setuptools-scm</code> or other package manager <code>*-scm</code> plugins that derive version numbers from Git history.</p>
+<p><strong>Use when:</strong>
+- You're using <code>setuptools-scm</code> or similar tools
+- You want version numbers derived from Git tags
+- You don't want Commitizen to modify any files for version management</p>
+<p><strong>Configuration:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;scm&quot;</span>
+<span class="c1"># No version field needed - it&#39;s read from Git tags</span>
+</code></pre></div></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code>scm</code> provider is read-only. When you run <code>cz bump</code>, it will create a Git tag but won't update any files. This is intentional and works well with tools that derive versions from Git tags.</p>
+</div>
+<h3 id="pep621"><code>pep621</code><a class="headerlink" href="#pep621" title="Permanent link">&para;</a></h3>
+<p>Manages version in <code>pyproject.toml</code> under the <code>project.version</code> field, following <a href="https://peps.python.org/pep-0621/">PEP 621</a> standards.</p>
+<p><strong>Use when:</strong>
+- You're using a modern Python project with PEP 621-compliant <code>pyproject.toml</code>
+- You want version management integrated with your Python project metadata</p>
+<p><strong>Configuration:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;pep621&quot;</span>
+</code></pre></div></p>
+<p><strong>Example <code>pyproject.toml</code>:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">[project]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-package&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span><span class="w">  </span><span class="c1"># Managed by Commitizen</span>
+</code></pre></div></p>
+<h3 id="poetry"><code>poetry</code><a class="headerlink" href="#poetry" title="Permanent link">&para;</a></h3>
+<p>Manages version in <code>pyproject.toml</code> under the <code>tool.poetry.version</code> field, which is used by the <a href="https://python-poetry.org/">Poetry</a> package manager. This approach is recommended only for users running Poetry versions earlier than 2.0 or relying on Poetry-specific features. For most users on Poetry 2.0 or later, it is recommended to use <code>pep621</code> instead. <a href="https://python-poetry.org/docs/main/managing-dependencies/">Read More</a></p>
+<p><strong>Use when:</strong>
+- You're using Poetry &lt; 2.0 as your Python package manager
+- You're using Poetry &gt;= 2.0 as your Python package manager, but don't need poetry-specific features
+- You want Commitizen to manage the version that Poetry uses</p>
+<p><strong>Configuration:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;poetry&quot;</span>
+</code></pre></div></p>
+<p><strong>Example <code>pyproject.toml</code>:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.poetry]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-package&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span><span class="w">  </span><span class="c1"># Managed by Commitizen</span>
+</code></pre></div></p>
+<h3 id="uv"><code>uv</code><a class="headerlink" href="#uv" title="Permanent link">&para;</a></h3>
+<p>Manages version in both <code>pyproject.toml</code> (<code>project.version</code>) and <code>uv.lock</code> (<code>package.version</code> for the matching package name). This ensures consistency between your project metadata and lock file.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Even though uv follows PEP 621 format, <code>pep621</code> does not manage the version in <code>uv.lock</code>. <code>uv</code> is still suggested for uv users.</p>
+</div>
+<p><strong>Use when:</strong>
+- You're using <code>uv</code> as your Python package manager
+- You want version synchronization between <code>pyproject.toml</code> and <code>uv.lock</code></p>
+<p><strong>Configuration:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;uv&quot;</span>
+</code></pre></div></p>
+<h3 id="cargo"><code>cargo</code><a class="headerlink" href="#cargo" title="Permanent link">&para;</a></h3>
+<p>Manages version in both <code>Cargo.toml</code> (<code>package.version</code>) and <code>Cargo.lock</code> (<code>package.version</code> for the matching package name). This ensures consistency between your Rust project's manifest and lock file.</p>
+<p><strong>Use when:</strong>
+- You're working with a Rust project using Cargo
+- You want Commitizen to manage Rust package versions</p>
+<p><strong>Configuration:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cargo&quot;</span>
+</code></pre></div></p>
+<p><strong>Example <code>Cargo.toml</code>:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">[package]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-crate&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span><span class="w">  </span><span class="c1"># Managed by Commitizen</span>
+</code></pre></div></p>
+<h3 id="npm"><code>npm</code><a class="headerlink" href="#npm" title="Permanent link">&para;</a></h3>
+<p>Manages version in <code>package.json</code> and optionally synchronizes with <code>package-lock.json</code> and <code>npm-shrinkwrap.json</code> if they exist.</p>
+<p><strong>Use when:</strong>
+- You're working with a Node.js/JavaScript project
+- You want Commitizen to manage npm package versions</p>
+<p><strong>Configuration:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;npm&quot;</span>
+</code></pre></div></p>
+<p><strong>Example <code>package.json</code>:</strong>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-package&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h3 id="composer"><code>composer</code><a class="headerlink" href="#composer" title="Permanent link">&para;</a></h3>
+<p>Manages version in <code>composer.json</code> under the <code>version</code> field, used by PHP's Composer package manager.</p>
+<p><strong>Use when:</strong>
+- You're working with a PHP project using Composer
+- You want Commitizen to manage Composer package versions</p>
+<p><strong>Configuration:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;composer&quot;</span>
+</code></pre></div></p>
+<p><strong>Example <code>composer.json</code>:</strong>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vendor/package&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h2 id="provider-comparison-table">Provider Comparison Table<a class="headerlink" href="#provider-comparison-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>File(s) Modified</th>
+<th>Read-Only</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>commitizen</code></td>
+<td>Commitizen config file</td>
+<td>No</td>
+<td>General use, flexible projects</td>
+</tr>
+<tr>
+<td><code>scm</code></td>
+<td>None (reads from Git tags)</td>
+<td>Yes</td>
+<td><code>setuptools-scm</code> users</td>
+</tr>
+<tr>
+<td><code>pep621</code></td>
+<td><code>pyproject.toml</code> (<code>project.version</code>)</td>
+<td>No</td>
+<td>Modern Python (PEP 621)</td>
+</tr>
+<tr>
+<td><code>poetry</code></td>
+<td><code>pyproject.toml</code> (<code>tool.poetry.version</code>)</td>
+<td>No</td>
+<td>Poetry projects</td>
+</tr>
+<tr>
+<td><code>uv</code></td>
+<td><code>pyproject.toml</code> + <code>uv.lock</code></td>
+<td>No</td>
+<td>uv package manager</td>
+</tr>
+<tr>
+<td><code>cargo</code></td>
+<td><code>Cargo.toml</code> + <code>Cargo.lock</code></td>
+<td>No</td>
+<td>Rust/Cargo projects</td>
+</tr>
+<tr>
+<td><code>npm</code></td>
+<td><code>package.json</code> (+ lock files)</td>
+<td>No</td>
+<td>Node.js/npm projects</td>
+</tr>
+<tr>
+<td><code>composer</code></td>
+<td><code>composer.json</code></td>
+<td>No</td>
+<td>PHP/Composer projects</td>
+</tr>
+</tbody>
+</table>
+<h2 id="creating-custom-version-providers">Creating Custom Version Providers<a class="headerlink" href="#creating-custom-version-providers" title="Permanent link">&para;</a></h2>
+<p>If none of the built-in providers meet your needs, you can create a custom version provider by extending the <code>VersionProvider</code> base class and registering it as a plugin.</p>
+<h3 id="step-1-create-your-provider-class">Step 1: Create Your Provider Class<a class="headerlink" href="#step-1-create-your-provider-class" title="Permanent link">&para;</a></h3>
+<p>Create a Python file (e.g., <code>my_provider.py</code>) that extends <code>VersionProvider</code>:</p>
+<div class="highlight"><span class="filename">my_provider.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.providers</span><span class="w"> </span><span class="kn">import</span> <span class="n">VersionProvider</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyProvider</span><span class="p">(</span><span class="n">VersionProvider</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Custom version provider that reads/writes from a VERSION file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read version from VERSION file.&quot;&quot;&quot;</span>
+        <span class="n">version_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;VERSION&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">version_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">return</span> <span class="s2">&quot;0.0.0&quot;</span>
+        <span class="k">return</span> <span class="n">version_file</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write version to VERSION file.&quot;&quot;&quot;</span>
+        <span class="n">version_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;VERSION&quot;</span><span class="p">)</span>
+        <span class="n">version_file</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="step-2-register-as-an-entry-point">Step 2: Register as an Entry Point<a class="headerlink" href="#step-2-register-as-an-entry-point" title="Permanent link">&para;</a></h3>
+<p>Register your provider using the <code>commitizen.provider</code> entry point. You can do this in your <code>setup.py</code>, <code>setup.cfg</code>, or <code>pyproject.toml</code>:</p>
+<p><strong>Using <code>pyproject.toml</code> (recommended):</strong></p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[project]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-commitizen-provider&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
+<span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;commitizen&quot;</span><span class="p">]</span>
+
+<span class="k">[project.entry-points.</span><span class="s2">&quot;commitizen.provider&quot;</span><span class="k">]</span>
+<span class="n">my-provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my_provider:MyProvider&quot;</span>
+</code></pre></div>
+<p><strong>Using <code>setup.py</code> (for legacy setup):</strong></p>
+<div class="highlight"><span class="filename">setup.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">setuptools</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my-commitizen-provider&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
+    <span class="n">py_modules</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;my_provider&quot;</span><span class="p">],</span>
+    <span class="n">install_requires</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;commitizen&quot;</span><span class="p">],</span>
+    <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;commitizen.provider&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;my-provider = my_provider:MyProvider&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+</code></pre></div>
+<h3 id="step-3-install-and-use">Step 3: Install and Use<a class="headerlink" href="#step-3-install-and-use" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p>Install your provider package:
+   <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</code></pre></div></p>
+</li>
+<li>
+<p>Configure Commitizen to use your provider:
+   <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-provider&quot;</span>
+</code></pre></div></p>
+</li>
+</ol>
+<h3 id="provider-implementation-guidelines">Provider Implementation Guidelines<a class="headerlink" href="#provider-implementation-guidelines" title="Permanent link">&para;</a></h3>
+<p>When creating a custom provider, keep these guidelines in mind:</p>
+<ul>
+<li><strong><code>get_version()</code></strong> should return a string representing the current version. If no version is found, you can return <code>"0.0.0"</code> or raise an appropriate exception.</li>
+<li><strong><code>set_version(version: str)</code></strong> should write the version to your chosen storage location. The version string will be properly formatted according to your <code>version_scheme</code> setting.</li>
+<li>The provider has access to <code>self.config</code>, which is a <code>BaseConfig</code> instance containing all Commitizen settings.</li>
+<li>For file-based providers, consider using the <code>FileProvider</code> or <code>JsonProvider</code>/<code>TomlProvider</code> base classes from <code>commitizen.providers.base_provider</code> to simplify implementation.</li>
+</ul>
+<h3 id="example-json-based-provider">Example: JSON-based Provider<a class="headerlink" href="#example-json-based-provider" title="Permanent link">&para;</a></h3>
+<p>Here's a more complete example using the <code>JsonProvider</code> base class:</p>
+<div class="highlight"><span class="filename">json_version_provider.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.providers.base_provider</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonProvider</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">JsonVersionProvider</span><span class="p">(</span><span class="n">JsonProvider</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Version provider that uses a custom version.json file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;version.json&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract version from JSON document.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">document</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set version in JSON document.&quot;&quot;&quot;</span>
+        <span class="n">document</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">version</span>
+</code></pre></div>
+<p>This example leverages the <code>JsonProvider</code> base class, which handles file reading, writing, and JSON parsing automatically.</p>
+<h2 id="choosing-the-right-provider">Choosing the Right Provider<a class="headerlink" href="#choosing-the-right-provider" title="Permanent link">&para;</a></h2>
+<p>Select a version provider based on your project's characteristics:</p>
+<ul>
+<li><strong>Python projects</strong><ul>
+<li><strong>with <code>uv</code></strong>: Use <code>uv</code></li>
+<li><strong>with <code>pyproject.toml</code> that follows PEP 621</strong>: Use <code>pep621</code></li>
+<li><strong>with Poetry</strong>: Use <code>poetry</code></li>
+<li><strong>setuptools-scm</strong>: Use <code>scm</code></li>
+</ul>
+</li>
+<li><strong>Rust projects</strong>: Use <code>cargo</code></li>
+<li><strong>Node.js projects</strong>: Use <code>npm</code></li>
+<li><strong>PHP projects</strong>: Use <code>composer</code></li>
+<li><strong>Other cases or custom needs</strong>: Use <code>commitizen</code> (default) or create a custom provider</li>
+</ul>
+<p>Remember that you can always use <code>version_files</code> in combination with any provider to update additional files during version bumps, regardless of which provider you choose for reading/writing the primary version.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
