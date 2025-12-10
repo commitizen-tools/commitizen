@@ -437,15 +437,15 @@ Useful for determining the next version based on CI for non-production environme
 
 Allow the project version to be bumped even when there's no eligible version.
 
-!!! note "Example usage"
-    ```sh
-    # bump a minor version even when there's only bug fixes, documentation changes or even no commits
+Example usage:
 
-    cz bump --increment MINOR --allow-no-commit
+```sh
+# Force to bump a minor version
+cz bump --increment MINOR --allow-no-commit
 
-    # bump version to 2.0.0 even when there's no breaking changes or even no commits
-    cz bump --allow-no-commit 2.0.0
-    ```
+# bump version to 2.0.0 even when there's no breaking changes or even no commits
+cz bump --allow-no-commit 2.0.0
+```
 
 !!! note "Default increment"
     The increment is overridden to `PATCH` if there is no increment detected or specified.
@@ -455,7 +455,6 @@ Allow the project version to be bumped even when there's no eligible version.
     ```sh
     # will bump to `1.0.1` if the current version is `1.0.0`.
     cz bump --allow-no-commit
-    ```
 
     # bump version to 2.0.0 even when there's no breaking changes or even no commits
     cz bump --allow-no-commit 2.0.0
