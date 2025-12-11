@@ -821,23 +821,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bump-version-to-200-even-when-theres-no-breaking-changes-or-even-no-commits" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        bump version to 2.0.0 even when there's no breaking changes or even no commits
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="bump version to 2.0.0 even when there&#39;s no breaking changes or even no commits">
-      <ul class="md-nav__list">
-        
           <li class="md-nav__item">
   <a href="#-tag-format" class="md-nav__link">
     <span class="md-ellipsis">
@@ -846,56 +829,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#avoid-raising-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Avoid raising errors
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Avoid raising errors">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#recommended-use-case" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recommended use case
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#easy-way" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Easy way
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#longer-way" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Longer way
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -2690,23 +2623,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bump-version-to-200-even-when-theres-no-breaking-changes-or-even-no-commits" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        bump version to 2.0.0 even when there's no breaking changes or even no commits
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="bump version to 2.0.0 even when there&#39;s no breaking changes or even no commits">
-      <ul class="md-nav__list">
-        
           <li class="md-nav__item">
   <a href="#-tag-format" class="md-nav__link">
     <span class="md-ellipsis">
@@ -2715,56 +2631,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#avoid-raising-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Avoid raising errors
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Avoid raising errors">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#recommended-use-case" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recommended use case
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#easy-way" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Easy way
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#longer-way" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Longer way
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -2789,6 +2655,8 @@
                   
 
 
+
+  <h1>bump</h1>
 
 <p><img alt="Bump version" src="../../images/bump.gif" /></p>
 <h2 id="about">About<a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
@@ -3205,30 +3073,27 @@ increment detected: MINOR
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>The <code>--get-next</code> flag will raise a <code>NoneIncrementExit</code> if the found commits are not eligible for a version bump.</p>
-<p>For information on how to suppress this exit, see <a href="#avoid-raising-errors">avoid raising errors</a>.</p>
+<p>For information on how to suppress this exit, see <a href="../../exit_codes/#ignoring-exit-codes">Ignoring Exit Codes</a>.</p>
 </div>
 <h3 id="-allow-no-commit"><code>--allow-no-commit</code><a class="headerlink" href="#-allow-no-commit" title="Permanent link">&para;</a></h3>
 <p>Allow the project version to be bumped even when there's no eligible version.</p>
-<div class="admonition note">
-<p class="admonition-title">Example usage</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># bump a minor version even when there&#39;s only bug fixes, documentation changes or even no commits</span>
-
+<p>Example usage:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Force to bump a minor version</span>
 cz<span class="w"> </span>bump<span class="w"> </span>--increment<span class="w"> </span>MINOR<span class="w"> </span>--allow-no-commit
 
 <span class="c1"># bump version to 2.0.0 even when there&#39;s no breaking changes or even no commits</span>
 cz<span class="w"> </span>bump<span class="w"> </span>--allow-no-commit<span class="w"> </span><span class="m">2</span>.0.0
 </code></pre></div>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Default increment</p>
 <p>The increment is overridden to <code>PATCH</code> if there is no increment detected or specified.</p>
 <p>In other words, <code>cz bump --allow-no-commit</code> allows you to bump the version to the next patch version even when there is no eligible commit.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># will bump to `1.0.1` if the current version is `1.0.0`.</span>
 cz<span class="w"> </span>bump<span class="w"> </span>--allow-no-commit
+
+<span class="c1"># bump version to 2.0.0 even when there&#39;s no breaking changes or even no commits</span>
+cz<span class="w"> </span>bump<span class="w"> </span>--allow-no-commit<span class="w"> </span><span class="m">2</span>.0.0
 </code></pre></div>
-<h1 id="bump-version-to-200-even-when-theres-no-breaking-changes-or-even-no-commits">bump version to 2.0.0 even when there's no breaking changes or even no commits<a class="headerlink" href="#bump-version-to-200-even-when-theres-no-breaking-changes-or-even-no-commits" title="Permanent link">&para;</a></h1>
-<p>cz bump --allow-no-commit 2.0.0
-```</p>
 </div>
 <h3 id="-tag-format"><code>--tag-format</code><a class="headerlink" href="#-tag-format" title="Permanent link">&para;</a></h3>
 <p><code>tag_format</code> and [version_scheme][version_scheme] are combined to make Git tag names from versions.</p>
@@ -3287,52 +3152,6 @@ cz<span class="w"> </span>bump<span class="w"> </span>--allow-no-commit
 </tr>
 </tbody>
 </table>
-<h2 id="avoid-raising-errors">Avoid raising errors<a class="headerlink" href="#avoid-raising-errors" title="Permanent link">&para;</a></h2>
-<p>Some situations from Commitizen raise an exit code different from 0.
-If the error code is different from 0, any CI or script running Commitizen might be interrupted.</p>
-<p>If you have a special use case, where you don't want to raise one of these error codes, you can
-tell Commitizen to not raise them.</p>
-<h3 id="recommended-use-case">Recommended use case<a class="headerlink" href="#recommended-use-case" title="Permanent link">&para;</a></h3>
-<p>At the moment, we've identified that the most common error code to skip is</p>
-<table>
-<thead>
-<tr>
-<th>Error name</th>
-<th>Exit code</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>NoneIncrementExit</td>
-<td>21</td>
-</tr>
-</tbody>
-</table>
-<p>There are some situations where you don't want to get an error code when some
-commits do not match your rules, you just want those commits to be skipped.</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>-nr<span class="w"> </span><span class="m">21</span><span class="w"> </span>bump
-</code></pre></div>
-<h3 id="easy-way">Easy way<a class="headerlink" href="#easy-way" title="Permanent link">&para;</a></h3>
-<p>Check which error code was raised by Commitizen by running in the terminal</p>
-<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span>
-</code></pre></div>
-<p>The output should be an integer like this</p>
-<div class="highlight"><pre><span></span><code><span class="m">3</span>
-</code></pre></div>
-<p>And then you can tell Commitizen to ignore it:</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>--no-raise<span class="w"> </span><span class="m">3</span>
-</code></pre></div>
-<p>You can tell Commitizen to skip more than one if needed:</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>--no-raise<span class="w"> </span><span class="m">3</span>,4,5
-</code></pre></div>
-<h3 id="longer-way">Longer way<a class="headerlink" href="#longer-way" title="Permanent link">&para;</a></h3>
-<p>Check the list of <a href="../../exit_codes/">exit_codes</a> and understand which one you have
-to skip and why.</p>
-<p>Remember to document somewhere this, because you'll forget.</p>
-<p>For example if the system raises a <code>NoneIncrementExit</code> error, you look it up
-on the list, and then you can use the exit code:</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>-nr<span class="w"> </span><span class="m">21</span><span class="w"> </span>bump
-</code></pre></div>
 
 
 

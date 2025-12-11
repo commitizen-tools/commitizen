@@ -1392,6 +1392,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exit Codes
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1408,6 +1426,164 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#exit-code-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit Code Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ignoring-exit-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ignoring Exit Codes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ignoring Exit Codes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-no-raise-flag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using --no-raise Flag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Use Cases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Use Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ignoring-no-increment-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ignoring No Increment Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignoring-multiple-exit-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ignoring Multiple Exit Codes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finding-the-exit-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding the Exit Code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finding the Exit Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-check-the-exit-code-after-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 1: Check the Exit Code After Running
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-look-up-the-exception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: Look Up the Exception
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-cicd-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: CI/CD Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1848,6 +2024,153 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#exit-code-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exit Code Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ignoring-exit-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ignoring Exit Codes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ignoring Exit Codes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-no-raise-flag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using --no-raise Flag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Use Cases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Use Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ignoring-no-increment-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ignoring No Increment Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignoring-multiple-exit-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ignoring Multiple Exit Codes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finding-the-exit-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding the Exit Code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finding the Exit Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-check-the-exit-code-after-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 1: Check the Exit Code After Running
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-look-up-the-exception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: Look Up the Exception
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-cicd-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: CI/CD Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1864,8 +2187,9 @@
 
 
 <h1 id="exit-codes">Exit Codes<a class="headerlink" href="#exit-codes" title="Permanent link">&para;</a></h1>
-<p>Commitizen handles expected exceptions through <code>CommitizenException</code> and returns different exit codes for different situations. They could be useful if you want to ignore specific errors in your pipeline.</p>
-<p>These exit codes can be found in <code>commitizen/exceptions.py::ExitCode</code>.</p>
+<p>Commitizen handles expected exceptions through <code>CommitizenException</code> and returns different exit codes for different situations. This reference is useful when you need to ignore specific errors in your CI/CD pipeline or automation scripts.</p>
+<p>All exit codes are defined in <a href="https://github.com/commitizen-tools/commitizen/blob/master/commitizen/exceptions.py">commitizen/exceptions.py</a>.</p>
+<h2 id="exit-code-reference">Exit Code Reference<a class="headerlink" href="#exit-code-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1876,162 +2200,241 @@
 </thead>
 <tbody>
 <tr>
-<td>ExpectedExit</td>
+<td><code>ExpectedExit</code></td>
 <td>0</td>
 <td>Expected exit</td>
 </tr>
 <tr>
-<td>DryRunExit</td>
+<td><code>DryRunExit</code></td>
 <td>0</td>
 <td>Exit due to passing <code>--dry-run</code> option</td>
 </tr>
 <tr>
-<td>NoCommitizenFoundException</td>
+<td><code>NoCommitizenFoundException</code></td>
 <td>1</td>
 <td>Using a cz (e.g., <code>cz_jira</code>) that cannot be found in your system</td>
 </tr>
 <tr>
-<td>NotAGitProjectError</td>
+<td><code>NotAGitProjectError</code></td>
 <td>2</td>
 <td>Not in a git project</td>
 </tr>
 <tr>
-<td>NoCommitsFoundError</td>
+<td><code>NoCommitsFoundError</code></td>
 <td>3</td>
-<td>No commit found</td>
+<td>No commits found</td>
 </tr>
 <tr>
-<td>NoVersionSpecifiedError</td>
+<td><code>NoVersionSpecifiedError</code></td>
 <td>4</td>
-<td>Version can not be found in configuration file</td>
+<td>Version is not specified in configuration file</td>
 </tr>
 <tr>
-<td>NoPatternMapError</td>
+<td><code>NoPatternMapError</code></td>
 <td>5</td>
 <td>bump / changelog pattern or map can not be found in configuration file</td>
 </tr>
 <tr>
-<td>BumpCommitFailedError</td>
+<td><code>BumpCommitFailedError</code></td>
 <td>6</td>
-<td>Commit error when bumping version</td>
+<td>Commit failed when bumping version</td>
 </tr>
 <tr>
-<td>BumpTagFailedError</td>
+<td><code>BumpTagFailedError</code></td>
 <td>7</td>
-<td>Tag error when bumping version</td>
+<td>Tag failed when bumping version</td>
 </tr>
 <tr>
-<td>NoAnswersError</td>
+<td><code>NoAnswersError</code></td>
 <td>8</td>
 <td>No user response given</td>
 </tr>
 <tr>
-<td>CommitError</td>
+<td><code>CommitError</code></td>
 <td>9</td>
 <td>git commit error</td>
 </tr>
 <tr>
-<td>NoCommitBackupError</td>
+<td><code>NoCommitBackupError</code></td>
 <td>10</td>
-<td>Commit back up file cannot be found</td>
+<td>Commit backup file is not found</td>
 </tr>
 <tr>
-<td>NothingToCommitError</td>
+<td><code>NothingToCommitError</code></td>
 <td>11</td>
 <td>Nothing in staging to be committed</td>
 </tr>
 <tr>
-<td>CustomError</td>
+<td><code>CustomError</code></td>
 <td>12</td>
 <td><code>CzException</code> raised</td>
 </tr>
 <tr>
-<td>NoCommandFoundError</td>
+<td><code>NoCommandFoundError</code></td>
 <td>13</td>
 <td>No command found when running Commitizen cli (e.g., <code>cz --debug</code>)</td>
 </tr>
 <tr>
-<td>InvalidCommitMessageError</td>
+<td><code>InvalidCommitMessageError</code></td>
 <td>14</td>
 <td>The commit message does not pass <code>cz check</code></td>
 </tr>
 <tr>
-<td>MissingConfigError</td>
+<td><code>MissingConfigError</code></td>
 <td>15</td>
-<td>Configuration missed for <code>cz_customize</code></td>
+<td>Configuration is missing for <code>cz_customize</code></td>
 </tr>
 <tr>
-<td>NoRevisionError</td>
+<td><code>NoRevisionError</code></td>
 <td>16</td>
 <td>No revision found</td>
 </tr>
 <tr>
-<td>CurrentVersionNotFoundError</td>
+<td><code>CurrentVersionNotFoundError</code></td>
 <td>17</td>
-<td>current version cannot be found in <em>version_files</em></td>
+<td>Current version cannot be found in <code>version_files</code></td>
 </tr>
 <tr>
-<td>InvalidCommandArgumentError</td>
+<td><code>InvalidCommandArgumentError</code></td>
 <td>18</td>
-<td>The argument provide to command is invalid (e.g. <code>cz check -commit-msg-file filename --rev-range master..</code>)</td>
+<td>The argument provided to the command is invalid (e.g. <code>cz check -commit-msg-file filename --rev-range master..</code>)</td>
 </tr>
 <tr>
-<td>InvalidConfigurationError</td>
+<td><code>InvalidConfigurationError</code></td>
 <td>19</td>
 <td>An error was found in the Commitizen Configuration, such as duplicates in <code>change_type_order</code></td>
 </tr>
 <tr>
-<td>NotAllowed</td>
+<td><code>NotAllowed</code></td>
 <td>20</td>
-<td><code>--incremental</code> cannot be combined with a <code>rev_range</code></td>
+<td>Invalid combination of command line / configuration file options</td>
 </tr>
 <tr>
-<td>NoneIncrementExit</td>
+<td><code>NoneIncrementExit</code></td>
 <td>21</td>
 <td>The commits found are not eligible to be bumped</td>
 </tr>
 <tr>
-<td>CharacterSetDecodeError</td>
+<td><code>CharacterSetDecodeError</code></td>
 <td>22</td>
 <td>The character encoding of the command output could not be determined</td>
 </tr>
 <tr>
-<td>GitCommandError</td>
+<td><code>GitCommandError</code></td>
 <td>23</td>
 <td>Unexpected failure while calling a git command</td>
 </tr>
 <tr>
-<td>InvalidManualVersion</td>
+<td><code>InvalidManualVersion</code></td>
 <td>24</td>
 <td>Manually provided version is invalid</td>
 </tr>
 <tr>
-<td>InitFailedError</td>
+<td><code>InitFailedError</code></td>
 <td>25</td>
 <td>Failed to initialize pre-commit</td>
 </tr>
 <tr>
-<td>RunHookError</td>
+<td><code>RunHookError</code></td>
 <td>26</td>
 <td>An error occurred during a hook execution</td>
 </tr>
 <tr>
-<td>VersionProviderUnknown</td>
+<td><code>VersionProviderUnknown</code></td>
 <td>27</td>
-<td><code>version_provider</code> setting is set to an unknown version provider identifier</td>
+<td>Unknown <code>version_provider</code></td>
 </tr>
 <tr>
-<td>VersionSchemeUnknown</td>
+<td><code>VersionSchemeUnknown</code></td>
 <td>28</td>
-<td><code>version_scheme</code> setting is set to an unknown version scheme identifier</td>
+<td>Unknown <code>version_scheme</code></td>
 </tr>
 <tr>
-<td>ChangelogFormatUnknown</td>
+<td><code>ChangelogFormatUnknown</code></td>
 <td>29</td>
-<td><code>changelog_format</code> setting is set to an unknown version scheme identifier or could not be guessed</td>
+<td>Unknown <code>changelog_format</code> or cannot be determined by the file extension</td>
+</tr>
+<tr>
+<td><code>ConfigFileNotFound</code></td>
+<td>30</td>
+<td>The configuration file is not found</td>
+</tr>
+<tr>
+<td><code>ConfigFileIsEmpty</code></td>
+<td>31</td>
+<td>The configuration file is empty</td>
+</tr>
+<tr>
+<td><code>CommitMessageLengthLimitExceededError</code></td>
+<td>32</td>
+<td>The commit message length exceeds the given limit.</td>
 </tr>
 </tbody>
 </table>
+<h2 id="ignoring-exit-codes">Ignoring Exit Codes<a class="headerlink" href="#ignoring-exit-codes" title="Permanent link">&para;</a></h2>
+<p>In some scenarios, you may want Commitizen to continue execution even when certain errors occur. This is particularly useful in CI/CD pipelines where you want to handle specific errors gracefully.</p>
+<h3 id="using-no-raise-flag">Using <code>--no-raise</code> Flag<a class="headerlink" href="#using-no-raise-flag" title="Permanent link">&para;</a></h3>
+<p>The <code>--no-raise</code> (or <code>-nr</code>) flag allows you to specify exit codes that should not cause Commitizen to exit with an error. You can use either:</p>
+<ul>
+<li><strong>Exit code numbers</strong>: <code>21</code>, <code>3</code>, <code>4</code></li>
+<li><strong>Exit code names</strong>: <code>NO_INCREMENT</code>, <code>NO_COMMITS_FOUND</code>, <code>NO_VERSION_SPECIFIED</code></li>
+<li><strong>Mixed format</strong>: <code>21,NO_COMMITS_FOUND,4</code></li>
+</ul>
+<p>Multiple exit codes can be specified as a comma-separated list.</p>
+<h3 id="common-use-cases">Common Use Cases<a class="headerlink" href="#common-use-cases" title="Permanent link">&para;</a></h3>
+<h4 id="ignoring-no-increment-errors">Ignoring No Increment Errors<a class="headerlink" href="#ignoring-no-increment-errors" title="Permanent link">&para;</a></h4>
+<p>The most common use case is to ignore <code>NoneIncrementExit</code> (exit code 21) when running <code>cz bump</code>. This allows the command to succeed even when no commits are eligible for a version bump:</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>-nr<span class="w"> </span><span class="m">21</span><span class="w"> </span>bump
+</code></pre></div>
+<p>Or using the exit code name:</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>-nr<span class="w"> </span>NO_INCREMENT<span class="w"> </span>bump
+</code></pre></div>
+<p>This is useful in CI pipelines where you want to run <code>cz bump</code> regularly, but don't want the pipeline to fail when there are no version-worthy commits.</p>
+<h4 id="ignoring-multiple-exit-codes">Ignoring Multiple Exit Codes<a class="headerlink" href="#ignoring-multiple-exit-codes" title="Permanent link">&para;</a></h4>
+<p>You can ignore multiple exit codes at once:</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>--no-raise<span class="w"> </span><span class="m">21</span>,3,4<span class="w"> </span>bump
+</code></pre></div>
+<p>This example ignores:</p>
+<ul>
+<li><code>21</code> (<code>NoneIncrementExit</code>) - No eligible commits for bump</li>
+<li><code>3</code> (<code>NoCommitsFoundError</code>) - No commits found</li>
+<li><code>4</code> (<code>NoVersionSpecifiedError</code>) - Version not specified</li>
+</ul>
+<h3 id="finding-the-exit-code">Finding the Exit Code<a class="headerlink" href="#finding-the-exit-code" title="Permanent link">&para;</a></h3>
+<p>If you encounter an error and want to ignore it, you can find the exit code in two ways:</p>
+<h4 id="method-1-check-the-exit-code-after-running">Method 1: Check the Exit Code After Running<a class="headerlink" href="#method-1-check-the-exit-code-after-running" title="Permanent link">&para;</a></h4>
+<p>After running a Commitizen command that fails, check the exit code:</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>bump
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span><span class="w">  </span><span class="c1"># Prints the exit code (e.g., 21)</span>
+</code></pre></div>
+<p>Then use that exit code with <code>--no-raise</code>:</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>-nr<span class="w"> </span><span class="m">21</span><span class="w"> </span>bump
+</code></pre></div>
+<h4 id="method-2-look-up-the-exception">Method 2: Look Up the Exception<a class="headerlink" href="#method-2-look-up-the-exception" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Check the error message to identify the exception type</li>
+<li>Find the corresponding exit code in the table above</li>
+<li>Use that exit code with <code>--no-raise</code></li>
+</ol>
+<p>For example, if you see <code>NoneIncrementExit</code> in the error, look it up in the table to find it's exit code 21, then use:</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>-nr<span class="w"> </span><span class="m">21</span><span class="w"> </span>bump
+</code></pre></div>
+<h3 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Document your usage</strong>: If you use <code>--no-raise</code> in scripts or CI/CD, document why specific exit codes are ignored</li>
+<li><strong>Be specific</strong>: Only ignore exit codes you understand and have a reason to ignore</li>
+<li><strong>Test thoroughly</strong>: Ensure that ignoring certain exit codes doesn't mask real problems in your workflow</li>
+<li><strong>Use exit code names</strong>: When possible, use exit code names (e.g., <code>NO_INCREMENT</code>) instead of numbers for better readability</li>
+</ul>
+<h3 id="example-cicd-pipeline">Example: CI/CD Pipeline<a class="headerlink" href="#example-cicd-pipeline" title="Permanent link">&para;</a></h3>
+<p>Here's an example of using <code>--no-raise</code> in a CI/CD pipeline:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/release.yml</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bump version</span>
+<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">cz -nr NO_INCREMENT bump || true</span>
+<span class="w">    </span><span class="no"># Continue even if no version bump is needed</span>
+</code></pre></div>
+<p>This ensures the pipeline continues even when there are no commits eligible for a version bump.</p>
 
 
 
