@@ -45,7 +45,7 @@ version.workspace = true
         "content": """\
 [package]
 name = "member2"
-version.workspace = "1.1.1"
+version = "1.1.1"
 """,
     },
     {
