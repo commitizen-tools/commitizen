@@ -1,3 +1,25 @@
+## v4.10.1 (2025-12-11)
+
+### Fix
+
+- **version**: fix the behavior of cz version --major
+- **cli**: debug and no_raise can be used together in sys.excepthook
+- **git**: replace lstrip with strip for compatibility issue
+- **bump**: remove NotAllowed related to --get-next option, other related refactoring
+
+### Refactor
+
+- **version**: rename class member to align with other classes
+- **cargo_provider**: cleanup and get rid of potential type errors
+- **bump**: extract option validation and new version resolution to new functions
+- **changelog**: raise NotAllow when file_name not passed instead of using assert
+- **bump**: rename parameter and variables
+
+### Perf
+
+- **ruff**: enable ruff rules TC001~TC006
+- add TYPE_CHECKING to CzQuestion imports
+
 ## v4.10.0 (2025-11-10)
 
 ### Feat
