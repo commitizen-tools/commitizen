@@ -1,4 +1,5 @@
 site_name: Commitizen
+site_url: https://commitizen-tools.github.io/commitizen/
 site_description: commit rules, semantic version, conventional commits
 
 theme:
