@@ -21,10 +21,10 @@ class EOLType(Enum):
     def for_open(cls) -> str:
         c = cmd.run("git config core.eol")
         eol = c.out.strip().upper()
-        return cls._char_for_open()[cls._safe_cast(eol)]
+        return cls._char_for_open()[cls._from_value(eol)]
 
     @classmethod
-    def _safe_cast(cls, eol: str) -> EOLType:
+    def _from_value(cls, eol: str) -> EOLType:
         try:
             return cls[eol]
         except KeyError:
