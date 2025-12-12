@@ -185,11 +185,11 @@ version_files = [
 
     ```json title="setup.json"
     {
-    "name": "magictool",
-    "version": "1.2.3",
-    "dependencies": {
-        "lodash": "1.2.3"
-    }
+        "name": "magictool",
+        "version": "1.2.3",
+        "dependencies": {
+            "lodash": "1.2.3"
+        }
     }
     ```
 
@@ -197,12 +197,12 @@ version_files = [
 
     ```diff title="setup.json"
     {
-    "name": "magictool",
-    - "version": "1.2.3",
-    + "version": "2.0.0",
-    "dependencies": {
-        "lodash": "1.2.3"
-    }
+        "name": "magictool",
+    -   "version": "1.2.3",
+    +   "version": "2.0.0",
+        "dependencies": {
+            "lodash": "1.2.3"
+        }
     }
     ```
 
