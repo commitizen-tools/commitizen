@@ -2337,10 +2337,12 @@ This is particularly useful when you want Commitizen to manage versions in the s
 <p>Commitizen includes several built-in version providers for common package management formats:</p>
 <h3 id="commitizen-default"><code>commitizen</code> (Default)<a class="headerlink" href="#commitizen-default" title="Permanent link">&para;</a></h3>
 <p>The default version provider stores and retrieves the version from your Commitizen configuration file (e.g., <code>pyproject.toml</code>, <code>.cz.toml</code>, etc.).</p>
-<p><strong>Use when:</strong>
-- You want to keep version management separate from your package manager
-- Your project doesn't use a standard package manager
-- You need maximum flexibility in version management</p>
+<p><strong>Use when:</strong></p>
+<ul>
+<li>You want to keep version management separate from your package manager</li>
+<li>Your project doesn't use a standard package manager</li>
+<li>You need maximum flexibility in version management</li>
+</ul>
 <p><strong>Configuration:</strong>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;commitizen&quot;</span>
@@ -2348,10 +2350,12 @@ This is particularly useful when you want Commitizen to manage versions in the s
 </code></pre></div></p>
 <h3 id="scm"><code>scm</code><a class="headerlink" href="#scm" title="Permanent link">&para;</a></h3>
 <p>Fetches the version from Git tags using <code>git describe</code>. This provider <strong>only reads</strong> version information and never writes it back to files. It's designed to work with tools like <code>setuptools-scm</code> or other package manager <code>*-scm</code> plugins that derive version numbers from Git history.</p>
-<p><strong>Use when:</strong>
-- You're using <code>setuptools-scm</code> or similar tools
-- You want version numbers derived from Git tags
-- You don't want Commitizen to modify any files for version management</p>
+<p><strong>Use when:</strong></p>
+<ul>
+<li>You're using <code>setuptools-scm</code> or similar tools</li>
+<li>You want version numbers derived from Git tags</li>
+<li>You don't want Commitizen to modify any files for version management</li>
+</ul>
 <p><strong>Configuration:</strong>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;scm&quot;</span>
@@ -2363,9 +2367,11 @@ This is particularly useful when you want Commitizen to manage versions in the s
 </div>
 <h3 id="pep621"><code>pep621</code><a class="headerlink" href="#pep621" title="Permanent link">&para;</a></h3>
 <p>Manages version in <code>pyproject.toml</code> under the <code>project.version</code> field, following <a href="https://peps.python.org/pep-0621/">PEP 621</a> standards.</p>
-<p><strong>Use when:</strong>
-- You're using a modern Python project with PEP 621-compliant <code>pyproject.toml</code>
-- You want version management integrated with your Python project metadata</p>
+<p><strong>Use when:</strong></p>
+<ul>
+<li>You're using a modern Python project with PEP 621-compliant <code>pyproject.toml</code></li>
+<li>You want version management integrated with your Python project metadata</li>
+</ul>
 <p><strong>Configuration:</strong>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;pep621&quot;</span>
@@ -2377,10 +2383,12 @@ This is particularly useful when you want Commitizen to manage versions in the s
 </code></pre></div></p>
 <h3 id="poetry"><code>poetry</code><a class="headerlink" href="#poetry" title="Permanent link">&para;</a></h3>
 <p>Manages version in <code>pyproject.toml</code> under the <code>tool.poetry.version</code> field, which is used by the <a href="https://python-poetry.org/">Poetry</a> package manager. This approach is recommended only for users running Poetry versions earlier than 2.0 or relying on Poetry-specific features. For most users on Poetry 2.0 or later, it is recommended to use <code>pep621</code> instead. <a href="https://python-poetry.org/docs/main/managing-dependencies/">Read More</a></p>
-<p><strong>Use when:</strong>
-- You're using Poetry &lt; 2.0 as your Python package manager
-- You're using Poetry &gt;= 2.0 as your Python package manager, but don't need poetry-specific features
-- You want Commitizen to manage the version that Poetry uses</p>
+<p><strong>Use when:</strong></p>
+<ul>
+<li>You're using Poetry &lt; 2.0 as your Python package manager</li>
+<li>You're using Poetry &gt;= 2.0 as your Python package manager, but don't need poetry-specific features</li>
+<li>You want Commitizen to manage the version that Poetry uses</li>
+</ul>
 <p><strong>Configuration:</strong>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;poetry&quot;</span>
@@ -2396,18 +2404,22 @@ This is particularly useful when you want Commitizen to manage versions in the s
 <p class="admonition-title">Note</p>
 <p>Even though uv follows PEP 621 format, <code>pep621</code> does not manage the version in <code>uv.lock</code>. <code>uv</code> is still suggested for uv users.</p>
 </div>
-<p><strong>Use when:</strong>
-- You're using <code>uv</code> as your Python package manager
-- You want version synchronization between <code>pyproject.toml</code> and <code>uv.lock</code></p>
+<p><strong>Use when:</strong></p>
+<ul>
+<li>You're using <code>uv</code> as your Python package manager</li>
+<li>You want version synchronization between <code>pyproject.toml</code> and <code>uv.lock</code></li>
+</ul>
 <p><strong>Configuration:</strong>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;uv&quot;</span>
 </code></pre></div></p>
 <h3 id="cargo"><code>cargo</code><a class="headerlink" href="#cargo" title="Permanent link">&para;</a></h3>
 <p>Manages version in both <code>Cargo.toml</code> (<code>package.version</code>) and <code>Cargo.lock</code> (<code>package.version</code> for the matching package name). This ensures consistency between your Rust project's manifest and lock file.</p>
-<p><strong>Use when:</strong>
-- You're working with a Rust project using Cargo
-- You want Commitizen to manage Rust package versions</p>
+<p><strong>Use when:</strong></p>
+<ul>
+<li>You're working with a Rust project using Cargo</li>
+<li>You want Commitizen to manage Rust package versions</li>
+</ul>
 <p><strong>Configuration:</strong>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cargo&quot;</span>
@@ -2419,9 +2431,11 @@ This is particularly useful when you want Commitizen to manage versions in the s
 </code></pre></div></p>
 <h3 id="npm"><code>npm</code><a class="headerlink" href="#npm" title="Permanent link">&para;</a></h3>
 <p>Manages version in <code>package.json</code> and optionally synchronizes with <code>package-lock.json</code> and <code>npm-shrinkwrap.json</code> if they exist.</p>
-<p><strong>Use when:</strong>
-- You're working with a Node.js/JavaScript project
-- You want Commitizen to manage npm package versions</p>
+<p><strong>Use when:</strong></p>
+<ul>
+<li>You're working with a Node.js/JavaScript project</li>
+<li>You want Commitizen to manage npm package versions</li>
+</ul>
 <p><strong>Configuration:</strong>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;npm&quot;</span>
@@ -2434,9 +2448,11 @@ This is particularly useful when you want Commitizen to manage versions in the s
 </code></pre></div></p>
 <h3 id="composer"><code>composer</code><a class="headerlink" href="#composer" title="Permanent link">&para;</a></h3>
 <p>Manages version in <code>composer.json</code> under the <code>version</code> field, used by PHP's Composer package manager.</p>
-<p><strong>Use when:</strong>
-- You're working with a PHP project using Composer
-- You want Commitizen to manage Composer package versions</p>
+<p><strong>Use when:</strong></p>
+<ul>
+<li>You're working with a PHP project using Composer</li>
+<li>You want Commitizen to manage Composer package versions</li>
+</ul>
 <p><strong>Configuration:</strong>
 <div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;composer&quot;</span>

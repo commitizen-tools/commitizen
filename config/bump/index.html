@@ -2399,21 +2399,21 @@ regardless of whether the file is present or not in <code>version_files</code>.<
 <p>For example, if the content of <code>setup.json</code> is:</p>
 <!-- DEPENDENCY: repeated_version_number.json -->
 <div class="highlight"><span class="filename">setup.json</span><pre><span></span><code><span class="p">{</span>
-<span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;magictool&quot;</span><span class="p">,</span>
-<span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.2.3&quot;</span><span class="p">,</span>
-<span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;lodash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.2.3&quot;</span>
-<span class="p">}</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;magictool&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.2.3&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;lodash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.2.3&quot;</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>After running <code>cz bump 2.0.0</code>, its content will be updated to:</p>
 <div class="highlight"><span class="filename">setup.json</span><pre><span></span><code>{
-&quot;name&quot;: &quot;magictool&quot;,
-<span class="gd">- &quot;version&quot;: &quot;1.2.3&quot;,</span>
-<span class="gi">+ &quot;version&quot;: &quot;2.0.0&quot;,</span>
-&quot;dependencies&quot;: {
-<span class="w"> </span>   &quot;lodash&quot;: &quot;1.2.3&quot;
-}
+<span class="w"> </span>   &quot;name&quot;: &quot;magictool&quot;,
+<span class="gd">-   &quot;version&quot;: &quot;1.2.3&quot;,</span>
+<span class="gi">+   &quot;version&quot;: &quot;2.0.0&quot;,</span>
+<span class="w"> </span>   &quot;dependencies&quot;: {
+<span class="w"> </span>       &quot;lodash&quot;: &quot;1.2.3&quot;
+<span class="w"> </span>   }
 }
 </code></pre></div>
 </div>
