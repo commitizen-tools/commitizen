@@ -228,7 +228,7 @@ class TagRules:
         version = self.scheme(version) if isinstance(version, str) else version
         tag_format = tag_format or self.tag_format
 
-        major, minor, patch = version.release
+        major, minor, patch = (list(version.release) + [0, 0, 0])[:3]
         prerelease = version.prerelease or ""
 
         t = Template(tag_format)
