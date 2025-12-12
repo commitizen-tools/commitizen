@@ -1,4 +1,4 @@
-This page contains frequently asked questions about Commitizen.
+This page contains frequently asked how to questions.
 
 ## Support for [`PEP621`](https://peps.python.org/pep-0621/)
 
@@ -23,15 +23,6 @@ version = "2.5.1"
 version_provider = "pep621"
 ```
 
-## Why are `revert` and `chore` valid types in the check pattern of `cz_conventional_commits` but not types we can select?
-
-`revert` and `chore` are added to the `pattern` in `cz check` in order to prevent backward errors, but officially they are not part of conventional commits, we are using the latest [types from Angular](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type) (they used to but were removed).
-However, you can create a customized `cz` with those extra types. (See [Customization](customization/config_file.md)).
-
-See more discussion in
-- [issue #142](https://github.com/commitizen-tools/commitizen/issues/142)
-- [issue #36](https://github.com/commitizen-tools/commitizen/issues/36)
-
 ## How to revert a bump?
 
 If for any reason, the created tag and changelog were to be undone, this is the snippet:
@@ -50,28 +41,6 @@ In case the commit was pushed to the server, you can remove it by running:
 git push --delete origin <created_tag>
 ```
 
-## Is this project affiliated with the [Commitizen JS][cz-js] project?
-
-**It is not affiliated.**
-
-Both are used for similar purposes, parsing commits, generating changelog and version we presume.
-This one is written in python to make integration easier for python projects and the other serves the JS packages.
-
-<!-- TODO: Add more details about the differences between Commitizen and Commitizen JS -->
-
-They differ a bit in design, not sure if cz-js does any of this, but these are some things you can do with our Commitizen:
-
-- create custom rules, version bumps and changelog generation. By default, we use the popular conventional commits (I think cz-js allows this).
-- single package, install one thing and it will work. cz-js is a monorepo, but you have to install different dependencies as far as I know.
-- pre-commit integration
-- works on any language project, as long as you create the `.cz.toml` or `cz.toml` file.
-
-Where do they cross paths?
-
-If you are using conventional commits in your git history, then you could swap one with the other in theory.
-
-Regarding the name, [cz-js][cz-js] came first, they used the word Commitizen first. When this project was created originally, the creator read "be a good commitizen", and thought it was just a cool word that made sense, and this would be a package that helps you be a good "commit citizen".
-
 ## How to handle revert commits?
 
 ```sh
@@ -79,58 +48,17 @@ git revert --no-commit <SHA>
 git commit -m "revert: foo bar"
 ```
 
-## Why don't we use [Pydantic](https://docs.pydantic.dev/)?
-
-While Pydantic is a powerful and popular library for data validation, we intentionally avoid using it in this project to keep our dependency tree minimal and maintainable.
-
-Including Pydantic would increase the chances of version conflicts for users - especially with major changes introduced in Pydantic v3. Because we pin dependencies tightly, adding Pydantic could unintentionally restrict what other tools or libraries users can install alongside `commitizen`.
-
-Moreover we don't rely on the full feature set of Pydantic. Simpler alternatives like Python's built-in `TypedDict` offer sufficient type safety for our use cases, without the runtime overhead or dependency burden.
-
-In short, avoiding Pydantic helps us:
-- Keep dependencies lightweight
-- Reduce compatibility issues for users
-- Maintain clarity about what contributors should and shouldn't use
-
-
 ## I got `Exception [WinError 995] The I/O operation ...` error
 
 This error was caused by a Python bug on Windows. It's been fixed by [cpython #22017](https://github.com/python/cpython/pull/22017), and according to Python's changelog, [3.8.6rc1](https://docs.python.org/3.8/whatsnew/changelog.html#python-3-8-6-release-candidate-1) and [3.9.0rc2](https://docs.python.org/3.9/whatsnew/changelog.html#python-3-9-0-release-candidate-2) should be the accurate versions first contain this fix. In conclusion, upgrade your Python version might solve this issue.
 
 More discussion can be found in issue [#318](https://github.com/commitizen-tools/commitizen/issues/318).
 
-## Why does Commitizen not support CalVer?
-
-`commitizen` could support CalVer alongside SemVer, but in practice implementing CalVer
-creates numerous edge cases that are difficult to maintain ([#385]) and more generally,
-mixing the two version schemes may not be a good idea. If CalVer or other custom
-versioning scheme is needed, `commitizen` could still be used to standardize commits
-and create changelogs, but a separate package should be used for version increments.
-
-Mixing CalVer and SemVer is generally not recommended because each versioning scheme
-serves a different purpose. Diverging from either specification can be confusing to
-users and cause errors with third-party tools that don't expect the non-standard format.
-
-In the future, `commitizen` may support some implementation of CalVer, but at the time
-of writing, there are no plans to implement the feature ([#173]).
-
-If you would like to learn more about both schemes, there are plenty of good resources:
-
-- [Announcing CalVer](https://sedimental.org/calver.html)
-- [API Versioning from Stripe](https://stripe.com/blog/api-versioning)
-- [Discussion about pip's use of CalVer](https://github.com/pypa/pip/issues/5645#issuecomment-407192448)
-- [Git Version Numbering](https://code.erpenbeck.io/git/2021/12/16/git-version-numbering/)
-- [SemVer vs. CalVer and Why I Use Both](https://mikestaszel.com/2021/04/03/semver-vs-calver-and-why-i-use-both/) (but not at the same time)
-- [Semver Will Not Save You](https://hynek.me/articles/semver-will-not-save-you/)
-- [Why I Don't Like SemVer](https://snarky.ca/why-i-dont-like-semver/)
-
-[#173]: https://github.com/commitizen-tools/commitizen/issues/173
-[#385]: https://github.com/commitizen-tools/commitizen/pull/385
-
 ## How to change the tag format ?
 
 You can use the [`legacy_tag_formats`](config/bump.md#legacy_tag_formats) to list old tag formats.
 New bumped tags will be in the new format but old ones will still work for:
+
 - changelog generation (full, incremental and version range)
 - bump new version computation (automatically guessed or increment given)
 
@@ -146,7 +74,7 @@ legacy_tag_formats = [
 ]
 ```
 
-## How to avoid warnings for expected non-version tags
+## How to avoid warnings for expected non-version tags?
 
 You can explicitly ignore them with [`ignored_tag_formats`](config/bump.md#ignored_tag_formats).
 
@@ -159,5 +87,3 @@ ignored_tag_formats = [
     "v${major}.${minor}",
 ]
 ```
-
-[cz-js]: https://github.com/commitizen/cz-cli
