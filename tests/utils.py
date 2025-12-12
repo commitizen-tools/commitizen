@@ -14,11 +14,6 @@ from commitizen import cmd, exceptions, git
 if TYPE_CHECKING:
     from commitizen.version_schemes import Increment, Prerelease
 
-skip_below_py_3_10 = pytest.mark.skipif(
-    sys.version_info < (3, 10),
-    reason="The output message of argparse is different between Python 3.10 and lower than Python 3.10",
-)
-
 skip_below_py_3_13 = pytest.mark.skipif(
     sys.version_info < (3, 13),
     reason="The output message of argparse is different between Python 3.13 and lower than Python 3.13",

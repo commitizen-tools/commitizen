@@ -12,7 +12,6 @@ import yaml
 from commitizen import cli, cmd, commands
 from commitizen.__version__ import __version__
 from commitizen.exceptions import InitFailedError, NoAnswersError
-from tests.utils import skip_below_py_3_10
 
 if TYPE_CHECKING:
     from pytest_mock import MockFixture
@@ -275,7 +274,6 @@ class TestAskTagFormat:
         assert result == "$version"  # This is the default format from DEFAULT_SETTINGS
 
 
-@skip_below_py_3_10
 def test_init_command_shows_description_when_use_help_option(
     mocker: MockFixture, capsys, file_regression
 ):

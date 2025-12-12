@@ -8,7 +8,6 @@ from pytest_mock import MockerFixture
 from commitizen import cli, commands
 from commitizen.__version__ import __version__
 from commitizen.config.base_config import BaseConfig
-from tests.utils import skip_below_py_3_10
 
 
 def test_version_for_showing_project_version_error(config, capsys):
@@ -105,7 +104,6 @@ def test_version_use_version_provider(
     mock.set_version.assert_not_called()
 
 
-@skip_below_py_3_10
 def test_version_command_shows_description_when_use_help_option(
     mocker: MockerFixture, capsys, file_regression
 ):

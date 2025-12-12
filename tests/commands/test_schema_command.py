@@ -4,7 +4,6 @@ import pytest
 from pytest_mock import MockerFixture
 
 from commitizen import cli, commands
-from tests.utils import skip_below_py_3_10
 
 
 def test_schema(config, mocker: MockerFixture):
@@ -13,7 +12,6 @@ def test_schema(config, mocker: MockerFixture):
     write_mock.assert_called_once()
 
 
-@skip_below_py_3_10
 def test_schema_command_shows_description_when_use_help_option(
     mocker: MockerFixture, capsys, file_regression
 ):
