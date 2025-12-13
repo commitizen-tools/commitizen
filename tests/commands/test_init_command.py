@@ -2,17 +2,15 @@ from __future__ import annotations
 
 import json
 import os
-import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import pytest
 import yaml
 
-from commitizen import cli, cmd, commands
+from commitizen import cmd, commands
 from commitizen.__version__ import __version__
 from commitizen.exceptions import InitFailedError, NoAnswersError
-from tests.utils import skip_below_py_3_10
 
 if TYPE_CHECKING:
     from pytest_mock import MockFixture
@@ -273,19 +271,6 @@ class TestAskTagFormat:
 
         result = init._ask_tag_format("v1.0.0")
         assert result == "$version"  # This is the default format from DEFAULT_SETTINGS
-
-
-@skip_below_py_3_10
-def test_init_command_shows_description_when_use_help_option(
-    mocker: MockFixture, capsys, file_regression
-):
-    testargs = ["cz", "init", "--help"]
-    mocker.patch.object(sys, "argv", testargs)
-    with pytest.raises(SystemExit):
-        cli.main()
-
-    out, _ = capsys.readouterr()
-    file_regression.check(out, extension=".txt")
 
 
 def test_init_with_confirmed_tag_format(
