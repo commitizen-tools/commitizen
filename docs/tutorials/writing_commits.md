@@ -46,6 +46,6 @@ Emojis may be added as well (e.g., see [cz-emoji][cz_emoji]), which requires the
 
 [customization]: ../customization/config_file.md
 [conventional_commits]: https://www.conventionalcommits.org
-[cz_emoji]: https://commitizen-tools.github.io/commitizen/third-party-commitizen/#cz-emoji
+[cz_emoji]: https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-emoji/
 [configuration]: ../config/commit.md#encoding
 [breaking-change-config]: ../config/commit.md#breaking_change_exclamation_in_title
