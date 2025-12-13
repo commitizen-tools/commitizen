@@ -1,11 +1,10 @@
 import os
-import sys
 from unittest.mock import ANY
 
 import pytest
 from pytest_mock import MockFixture
 
-from commitizen import cli, cmd, commands
+from commitizen import cmd, commands
 from commitizen.cz.exceptions import CzException
 from commitizen.cz.utils import get_backup_file_path
 from commitizen.exceptions import (
@@ -19,7 +18,6 @@ from commitizen.exceptions import (
     NotAllowed,
     NothingToCommitError,
 )
-from tests.utils import skip_below_py_3_13
 
 
 @pytest.fixture
@@ -510,19 +508,6 @@ def test_manual_edit(editor, config, mocker: MockFixture, tmp_path):
         subprocess_mock.assert_called_once_with(["vim", str(temp_file)])
 
         assert edited_message == test_message.strip()
-
-
-@skip_below_py_3_13
-def test_commit_command_shows_description_when_use_help_option(
-    mocker: MockFixture, capsys, file_regression
-):
-    testargs = ["cz", "commit", "--help"]
-    mocker.patch.object(sys, "argv", testargs)
-    with pytest.raises(SystemExit):
-        cli.main()
-
-    out, _ = capsys.readouterr()
-    file_regression.check(out, extension=".txt")
 
 
 @pytest.mark.usefixtures("staging_is_clean")

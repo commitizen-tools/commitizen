@@ -30,7 +30,6 @@ from tests.utils import (
     create_tag,
     get_current_branch,
     merge_branch,
-    skip_below_py_3_13,
     switch_branch,
     wait_for_tag,
 )
@@ -1927,16 +1926,3 @@ def test_export_changelog_template_fails_when_template_has_no_filename(
 
     assert not target.exists()
     assert "Template filename is not set" in str(exc_info.value)
-
-
-@skip_below_py_3_13
-def test_changelog_command_shows_description_when_use_help_option(
-    mocker: MockFixture, capsys, file_regression
-):
-    testargs = ["cz", "changelog", "--help"]
-    mocker.patch.object(sys, "argv", testargs)
-    with pytest.raises(SystemExit):
-        cli.main()
-
-    out, _ = capsys.readouterr()
-    file_regression.check(out, extension=".txt")

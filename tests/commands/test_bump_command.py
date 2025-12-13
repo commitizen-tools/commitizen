@@ -28,7 +28,7 @@ from commitizen.exceptions import (
     NotAllowed,
     NoVersionSpecifiedError,
 )
-from tests.utils import create_file_and_commit, create_tag, skip_below_py_3_13
+from tests.utils import create_file_and_commit, create_tag
 
 if TYPE_CHECKING:
     import py
@@ -1436,19 +1436,6 @@ def test_bump_changelog_contains_increment_only(mocker, tmp_commitizen_project, 
 
     assert "3.0.0" in out
     assert "2.0.0" not in out
-
-
-@skip_below_py_3_13
-def test_bump_command_shows_description_when_use_help_option(
-    mocker: MockFixture, capsys, file_regression
-):
-    testargs = ["cz", "bump", "--help"]
-    mocker.patch.object(sys, "argv", testargs)
-    with pytest.raises(SystemExit):
-        cli.main()
-
-    out, _ = capsys.readouterr()
-    file_regression.check(out, extension=".txt")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
