@@ -2,11 +2,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from commitizen.config.base_config import BaseConfig
 from commitizen.providers.commitizen_provider import CommitizenProvider
 
 if TYPE_CHECKING:
     from pytest_mock import MockerFixture
+
+    from commitizen.config.base_config import BaseConfig
 
 
 def test_commitizen_provider(config: BaseConfig, mocker: MockerFixture):

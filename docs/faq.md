@@ -10,7 +10,8 @@ name = "spam"
 version = "2.5.1"
 ```
 
-Commitizen provides a `PEP621` [version provider](config.md#version-providers) to get and set version from this field.
+Commitizen provides a [`PEP621` version provider](config/version_provider.md) to get and set version from this field.
+
 You just need to set the proper `version_provider` setting:
 
 ```toml
@@ -24,8 +25,8 @@ version_provider = "pep621"
 
 ## Why are `revert` and `chore` valid types in the check pattern of `cz_conventional_commits` but not types we can select?
 
-`revert` and `chore` are added to `pattern` in `cz check` in order to prevent backward errors, but officially they are not part of conventional commits, we are using the latest [types from Angular](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type) (they used to but were removed).
-However, you can create a customized `cz` with those extra types. See [Customization](customization.md) for more details.
+`revert` and `chore` are added to the `pattern` in `cz check` in order to prevent backward errors, but officially they are not part of conventional commits, we are using the latest [types from Angular](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type) (they used to but were removed).
+However, you can create a customized `cz` with those extra types. (See [Customization](customization/config_file.md)).
 
 See more discussion in
 - [issue #142](https://github.com/commitizen-tools/commitizen/issues/142)
@@ -128,7 +129,7 @@ If you would like to learn more about both schemes, there are plenty of good res
 
 ## How to change the tag format ?
 
-You can use the [`legacy_tag_formats`](config.md#legacy_tag_formats) to list old tag formats.
+You can use the [`legacy_tag_formats`](config/bump.md#legacy_tag_formats) to list old tag formats.
 New bumped tags will be in the new format but old ones will still work for:
 - changelog generation (full, incremental and version range)
 - bump new version computation (automatically guessed or increment given)
@@ -147,7 +148,7 @@ legacy_tag_formats = [
 
 ## How to avoid warnings for expected non-version tags
 
-You can explicitly ignore them with [`ignored_tag_formats`](config.md#ignored_tag_formats).
+You can explicitly ignore them with [`ignored_tag_formats`](config/bump.md#ignored_tag_formats).
 
 ```toml
 tag_format = "v${version}"

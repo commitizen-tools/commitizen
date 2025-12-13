@@ -3,16 +3,19 @@ from __future__ import annotations
 import os
 import re
 from collections import OrderedDict
-from collections.abc import Generator, Iterable
 from glob import iglob
 from logging import getLogger
 from string import Template
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 from commitizen.defaults import BUMP_MESSAGE, MAJOR, MINOR, PATCH
 from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import GitCommit, smart_open
-from commitizen.version_schemes import Increment, Version
+
+if TYPE_CHECKING:
+    from collections.abc import Generator, Iterable
+
+    from commitizen.version_schemes import Increment, Version
 
 VERSION_TYPES = [None, PATCH, MINOR, MAJOR]
 
@@ -56,13 +59,13 @@ def find_increment(
                 if increment == MAJOR:
                     break
 
-    return cast(Increment, increment)
+    return cast("Increment", increment)
 
 
 def update_version_in_files(
     current_version: str,
     new_version: str,
-    files: Iterable[str],
+    version_files: Iterable[str],
     *,
     check_consistency: bool,
     encoding: str,
@@ -77,7 +80,7 @@ def update_version_in_files(
     """
     updated_files = []
 
-    for path, pattern in _resolve_files_and_regexes(files, current_version):
+    for path, pattern in _resolve_files_and_regexes(version_files, current_version):
         current_version_found = False
         bumped_lines = []
 

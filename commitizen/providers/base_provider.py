@@ -2,13 +2,15 @@ from __future__ import annotations
 
 import json
 from abc import ABC, abstractmethod
-from collections.abc import Mapping
 from pathlib import Path
-from typing import Any, ClassVar
+from typing import TYPE_CHECKING, Any, ClassVar
 
 import tomlkit
 
-from commitizen.config.base_config import BaseConfig
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+
+    from commitizen.config.base_config import BaseConfig
 
 
 class VersionProvider(ABC):

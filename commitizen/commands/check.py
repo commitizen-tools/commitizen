@@ -2,16 +2,18 @@ from __future__ import annotations
 
 import re
 import sys
-from typing import TypedDict
+from typing import TYPE_CHECKING, TypedDict
 
 from commitizen import factory, git, out
-from commitizen.config import BaseConfig
 from commitizen.exceptions import (
     CommitMessageLengthExceededError,
     InvalidCommandArgumentError,
     InvalidCommitMessageError,
     NoCommitsFoundError,
 )
+
+if TYPE_CHECKING:
+    from commitizen.config import BaseConfig
 
 
 class CheckArgs(TypedDict, total=False):

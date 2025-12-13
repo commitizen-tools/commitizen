@@ -5,13 +5,11 @@ import os
 import shutil
 import subprocess
 import tempfile
-from pathlib import Path
-from typing import TypedDict
+from typing import TYPE_CHECKING, TypedDict
 
 import questionary
 
 from commitizen import factory, git, out
-from commitizen.config import BaseConfig
 from commitizen.cz.exceptions import CzException
 from commitizen.cz.utils import get_backup_file_path
 from commitizen.exceptions import (
@@ -26,6 +24,11 @@ from commitizen.exceptions import (
     NothingToCommitError,
 )
 from commitizen.git import smart_open
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from commitizen.config import BaseConfig
 
 
 class CommitArgs(TypedDict, total=False):

@@ -4,14 +4,13 @@ import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from unittest.mock import Mock
 
 import pytest
 from jinja2 import FileSystemLoader
 
 from commitizen import changelog, git
-from commitizen.changelog_formats import ChangelogFormat
 from commitizen.commands.changelog import Changelog
 from commitizen.config import BaseConfig
 from commitizen.cz.conventional_commits.conventional_commits import (
@@ -19,6 +18,9 @@ from commitizen.cz.conventional_commits.conventional_commits import (
 )
 from commitizen.exceptions import InvalidConfigurationError
 from commitizen.version_schemes import Pep440
+
+if TYPE_CHECKING:
+    from commitizen.changelog_formats import ChangelogFormat
 
 COMMITS_DATA: list[dict[str, Any]] = [
     {

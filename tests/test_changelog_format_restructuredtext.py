@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
 from textwrap import dedent
 from typing import TYPE_CHECKING
 
@@ -12,10 +11,13 @@ from commitizen.changelog_formats.restructuredtext import (
     _is_overlined_title,
     _is_underlined_title,
 )
-from commitizen.config.base_config import BaseConfig
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from _pytest.mark.structures import ParameterSet
+
+    from commitizen.config.base_config import BaseConfig
 
 
 CASES: list[ParameterSet] = []

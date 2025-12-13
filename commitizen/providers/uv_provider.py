@@ -1,14 +1,11 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import tomlkit
+import tomlkit.items
 
 from commitizen.providers.base_provider import TomlProvider
-
-if TYPE_CHECKING:
-    import tomlkit.items
 
 
 class UvProvider(TomlProvider):

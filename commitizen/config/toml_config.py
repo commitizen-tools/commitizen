@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from tomlkit import TOMLDocument, exceptions, parse, table
@@ -12,6 +11,7 @@ from .base_config import BaseConfig
 
 if TYPE_CHECKING:
     import sys
+    from pathlib import Path
 
     # Self is Python 3.11+ but backported in typing-extensions
     if sys.version_info < (3, 11):

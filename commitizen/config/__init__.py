@@ -1,13 +1,16 @@
 from __future__ import annotations
 
-from collections.abc import Generator
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from commitizen import defaults, git
 from commitizen.config.factory import create_config
 from commitizen.exceptions import ConfigFileIsEmpty, ConfigFileNotFound
 
 from .base_config import BaseConfig
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
 
 
 def _resolve_config_paths(filepath: str | None = None) -> Generator[Path, None, None]:

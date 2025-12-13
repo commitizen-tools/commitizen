@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import pytest
 
-from commitizen.config.base_config import BaseConfig
 from commitizen.providers import get_provider
 from commitizen.providers.scm_provider import ScmProvider
 from tests.utils import (
@@ -12,6 +13,9 @@ from tests.utils import (
     merge_branch,
     switch_branch,
 )
+
+if TYPE_CHECKING:
+    from commitizen.config.base_config import BaseConfig
 
 
 @pytest.mark.parametrize(

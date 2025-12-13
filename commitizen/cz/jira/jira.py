@@ -1,8 +1,14 @@
+from __future__ import annotations
+
 import os
-from collections.abc import Mapping
+from typing import TYPE_CHECKING
 
 from commitizen.cz.base import BaseCommitizen
-from commitizen.question import CzQuestion
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+
+    from commitizen.question import CzQuestion
 
 __all__ = ["JiraSmartCz"]
 

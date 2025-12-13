@@ -1,6 +1,6 @@
 [project]
 name = "commitizen"
-version = "4.10.0"
+version = "4.10.1"
 description = "Python commitizen client tool"
 authors = [{ name = "Santiago Fraire", email = "santiwilly@gmail.com" }]
 maintainers = [
@@ -85,13 +85,43 @@ pep440 = "commitizen.version_schemes:Pep440"
 semver = "commitizen.version_schemes:SemVer"
 semver2 = "commitizen.version_schemes:SemVer2"
 
+[dependency-groups]
+dev = ["ipython>=8.0", "tox>4", "poethepoet>=0.34.0"]
+
+test = [
+    "pytest>=7.2",
+    "pytest-cov>=4",
+    "pytest-mock>=3.10",
+    "pytest-regressions>=2.4.0",
+    "pytest-freezer>=0.4.6",
+    "pytest-xdist>=3.1.0",
+]
+
+linters = [
+    "ruff>=0.11.5",
+    "pre-commit>=3.2.0",
+    "mypy>=1.16.0",
+    "types-deprecated>=1.2.9.2",
+    "types-python-dateutil>=2.8.19.13",
+    "types-PyYAML>=5.4.3",
+    "types-termcolor>=0.1.1",
+    "types-colorama>=0.4.15.20240311",
+]
+
+documentation = ["mkdocs>=1.4.2", "mkdocs-material>=9.1.6"]
+
+script = [
+    # for scripts/gen_cli_help_screenshots.py
+    "rich>=13.7.1",
+]
+
 [build-system]
-requires = ["poetry-core>=2.0"]
+requires = ["poetry-core>=2.2"]
 build-backend = "poetry.core.masonry.api"
 
 
 [tool.commitizen]
-version = "4.10.0"
+version = "4.10.1"
 tag_format = "v$version"
 version_files = [
     "pyproject.toml:version",
@@ -106,38 +136,6 @@ packages = [{ include = "commitizen" }, { include = "commitizen/py.typed" }]
 
 [tool.poetry.requires-plugins]
 "poethepoet" = ">=0.32.2"
-
-[tool.poetry.group.dev.dependencies]
-ipython = "^8.0"
-tox = ">4"
-poethepoet = "^0.34.0"
-
-[tool.poetry.group.test.dependencies]
-pytest = ">=7.2,<9.0"
-pytest-cov = ">=4,<7"
-pytest-mock = "^3.10"
-pytest-regressions = "^2.4.0"
-pytest-freezer = "^0.4.6"
-pytest-xdist = "^3.1.0"
-
-[tool.poetry.group.linters.dependencies]
-ruff = "^0.11.5"
-pre-commit = ">=3.2.0,<5.0"
-mypy = "^1.16.0"
-types-deprecated = "^1.2.9.2"
-types-python-dateutil = "^2.8.19.13"
-types-PyYAML = ">=5.4.3,<7.0.0"
-types-termcolor = "^0.1.1"
-types-colorama = "^0.4.15.20240311"
-
-[tool.poetry.group.documentation.dependencies]
-mkdocs = "^1.4.2"
-mkdocs-material = "^9.1.6"
-
-[tool.poetry.group.script.dependencies]
-# for scripts/gen_cli_help_screenshots.py
-rich = "^13.7.1"
-
 
 [tool.coverage]
 [tool.coverage.report]
@@ -175,7 +173,7 @@ testpaths = ["tests/"]
 
 [tool.tox]
 requires = ["tox>=4.22"]
-env_list = ["3.9", "3.10", "3.11", "3.12", "3.13"]
+env_list = ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
 
 [tool.tox.env_run_base]
 description = "Run tests suite against Python {base_python}"
@@ -208,11 +206,20 @@ select = [
     "RUF022",
     # unused-noqa
     "RUF100",
+    # Checks for uses of the assert keyword.
+    "S101",
+    # flake8-type-checking (TC)
+    "TC001",
+    "TC002",
+    "TC003",
+    "TC004",
+    "TC005",
+    "TC006",
 ]
 ignore = ["E501", "D1", "D415"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["ANN"]
+"tests/*" = ["ANN", "S101"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["commitizen", "tests"]

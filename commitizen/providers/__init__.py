@@ -1,16 +1,14 @@
 from __future__ import annotations
 
 import sys
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 if sys.version_info >= (3, 10):
     from importlib import metadata
 else:
     import importlib_metadata as metadata
 
-from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import VersionProviderUnknown
-from commitizen.providers.base_provider import VersionProvider
 from commitizen.providers.cargo_provider import CargoProvider
 from commitizen.providers.commitizen_provider import CommitizenProvider
 from commitizen.providers.composer_provider import ComposerProvider
@@ -19,6 +17,10 @@ from commitizen.providers.pep621_provider import Pep621Provider
 from commitizen.providers.poetry_provider import PoetryProvider
 from commitizen.providers.scm_provider import ScmProvider
 from commitizen.providers.uv_provider import UvProvider
+
+if TYPE_CHECKING:
+    from commitizen.config.base_config import BaseConfig
+    from commitizen.providers.base_provider import VersionProvider
 
 __all__ = [
     "CargoProvider",
@@ -48,4 +50,4 @@ def get_provider(config: BaseConfig) -> VersionProvider:
     except ValueError:
         raise VersionProviderUnknown(f'Version Provider "{provider_name}" unknown.')
     provider_cls = ep.load()
-    return cast(VersionProvider, provider_cls(config))
+    return cast("VersionProvider", provider_cls(config))

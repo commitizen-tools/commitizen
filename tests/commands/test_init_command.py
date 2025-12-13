@@ -4,17 +4,20 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
 import yaml
-from pytest_mock import MockFixture
 
 from commitizen import cli, cmd, commands
 from commitizen.__version__ import __version__
-from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import InitFailedError, NoAnswersError
 from tests.utils import skip_below_py_3_10
+
+if TYPE_CHECKING:
+    from pytest_mock import MockFixture
+
+    from commitizen.config.base_config import BaseConfig
 
 
 class FakeQuestion:

@@ -277,7 +277,7 @@ class BaseVersion(_BaseVersion):
         current_base = ".".join(str(part) for part in release)
 
         pre_version = (
-            self if base == current_base else cast(BaseVersion, self.scheme(base))
+            self if base == current_base else cast("BaseVersion", self.scheme(base))
         ).generate_prerelease(prerelease, offset=prerelease_offset)
 
         # TODO: post version
@@ -433,7 +433,7 @@ def get_version_scheme(settings: Settings, name: str | None = None) -> VersionSc
         (ep,) = metadata.entry_points(name=name, group=SCHEMES_ENTRYPOINT)
     except ValueError:
         raise VersionSchemeUnknown(f'Version scheme "{name}" unknown.')
-    scheme = cast(VersionScheme, ep.load())
+    scheme = cast("VersionScheme", ep.load())
 
     if not isinstance(scheme, VersionProtocol):
         warnings.warn(f"Version scheme {name} does not implement the VersionProtocol")

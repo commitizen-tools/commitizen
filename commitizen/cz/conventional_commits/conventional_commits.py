@@ -1,10 +1,14 @@
+from __future__ import annotations
+
 import os
-from typing import TypedDict
+from typing import TYPE_CHECKING, TypedDict
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.utils import multiple_line_breaker, required_validator
-from commitizen.question import CzQuestion
+
+if TYPE_CHECKING:
+    from commitizen.question import CzQuestion
 
 __all__ = ["ConventionalCommitsCz"]
 

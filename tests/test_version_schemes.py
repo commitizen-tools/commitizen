@@ -7,12 +7,17 @@ if sys.version_info >= (3, 10):
 else:
     import importlib_metadata as metadata
 
-import pytest
-from pytest_mock import MockerFixture
+from typing import TYPE_CHECKING
 
-from commitizen.config.base_config import BaseConfig
+import pytest
+
 from commitizen.exceptions import VersionSchemeUnknown
 from commitizen.version_schemes import Pep440, SemVer, get_version_scheme
+
+if TYPE_CHECKING:
+    from pytest_mock import MockerFixture
+
+    from commitizen.config.base_config import BaseConfig
 
 
 def test_default_version_scheme_is_pep440(config: BaseConfig):

@@ -16,7 +16,7 @@ If you're a first-time contributor, please check out issues labeled [good first 
 
 1. **Python Environment**
     - Python `>=3.9`
-    - [Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer) `>=2.0.0`
+    - [Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer) `>=2.2.0`
 2. **Version Control & Security**
     - Git
     - Commitizen

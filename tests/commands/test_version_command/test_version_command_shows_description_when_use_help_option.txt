@@ -10,5 +10,7 @@ options:
   -c, --commitizen  get the version of the installed commitizen
   -v, --verbose     get the version of both the installed commitizen and the
                     current project
-  --major           get just the major version
-  --minor           get just the minor version
+  --major           get just the major version. Need to be used with --project
+                    or --verbose.
+  --minor           get just the minor version. Need to be used with --project
+                    or --verbose.

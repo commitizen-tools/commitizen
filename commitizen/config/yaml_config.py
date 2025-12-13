@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 import yaml
@@ -12,6 +11,7 @@ from .base_config import BaseConfig
 
 if TYPE_CHECKING:
     import sys
+    from pathlib import Path
 
     # Self is Python 3.11+ but backported in typing-extensions
     if sys.version_info < (3, 11):

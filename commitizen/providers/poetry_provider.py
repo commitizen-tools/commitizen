@@ -1,8 +1,11 @@
 from __future__ import annotations
 
-import tomlkit
+from typing import TYPE_CHECKING
 
 from commitizen.providers.base_provider import TomlProvider
+
+if TYPE_CHECKING:
+    import tomlkit
 
 
 class PoetryProvider(TomlProvider):

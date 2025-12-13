@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 from abc import ABCMeta
-from typing import IO, Any, ClassVar
+from typing import IO, TYPE_CHECKING, Any, ClassVar
 
 from commitizen.changelog import IncrementalMergeInfo, Metadata
 from commitizen.config.base_config import BaseConfig
@@ -11,6 +11,9 @@ from commitizen.tags import TagRules, VersionTag
 from commitizen.version_schemes import get_version_scheme
 
 from . import ChangelogFormat
+
+if TYPE_CHECKING:
+    from commitizen.config.base_config import BaseConfig
 
 
 class BaseFormat(ChangelogFormat, metaclass=ABCMeta):

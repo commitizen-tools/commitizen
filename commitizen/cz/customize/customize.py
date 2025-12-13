@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any
 
-from commitizen.question import CzQuestion
-
 if TYPE_CHECKING:
+    from collections.abc import Mapping
+
     from jinja2 import Template
+
+    from commitizen.config import BaseConfig
+    from commitizen.question import CzQuestion
 else:
     try:
         from jinja2 import Template
@@ -15,7 +17,6 @@ else:
 
 
 from commitizen import defaults
-from commitizen.config import BaseConfig
 from commitizen.cz.base import BaseCommitizen
 from commitizen.exceptions import MissingCzCustomizeConfigError
 

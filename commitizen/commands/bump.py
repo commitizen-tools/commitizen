@@ -2,21 +2,19 @@ from __future__ import annotations
 
 import warnings
 from logging import getLogger
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 import questionary
 
 from commitizen import bump, factory, git, hooks, out
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.commands.changelog import Changelog
-from commitizen.config import BaseConfig
 from commitizen.defaults import Settings
 from commitizen.exceptions import (
     BumpCommitFailedError,
     BumpTagFailedError,
     DryRunExit,
     ExpectedExit,
-    GetNextExit,
     InvalidManualVersion,
     NoCommitsFoundError,
     NoneIncrementExit,
@@ -30,8 +28,12 @@ from commitizen.version_schemes import (
     Increment,
     InvalidVersion,
     Prerelease,
+    VersionProtocol,
     get_version_scheme,
 )
+
+if TYPE_CHECKING:
+    from commitizen.config import BaseConfig
 
 logger = getLogger("commitizen")
 
@@ -47,7 +49,7 @@ class BumpArgs(Settings, total=False):
     dry_run: bool
     file_name: str
     files_only: bool | None
-    get_next: bool
+    get_next: bool  # TODO: maybe rename to `next_version_to_stdout`
     git_output_to_stderr: bool
     increment_mode: str
     increment: Increment | None
@@ -69,7 +71,7 @@ class Bump:
         self.config: BaseConfig = config
         self.arguments = arguments
         self.bump_settings = cast(
-            BumpArgs,
+            "BumpArgs",
             {
                 **config.settings,
                 **{
@@ -94,7 +96,6 @@ class Bump:
         )
         self.cz = factory.committer_factory(self.config)
         self.changelog_flag = arguments["changelog"]
-        self.changelog_config = self.config.settings.get("update_changelog_on_bump")
         self.changelog_to_stdout = arguments["changelog_to_stdout"]
         self.git_output_to_stderr = arguments["git_output_to_stderr"]
         self.no_verify = arguments["no_verify"]
@@ -158,62 +159,110 @@ class Bump:
             )
         return bump.find_increment(commits, regex=bump_pattern, increments_map=bump_map)
 
+    def _validate_arguments(self, current_version: VersionProtocol) -> None:
+        errors: list[str] = []
+        if self.arguments["manual_version"]:
+            for val, option in (
+                (self.arguments["increment"], "--increment"),
+                (self.arguments["prerelease"], "--prerelease"),
+                (self.arguments["devrelease"] is not None, "--devrelease"),
+                (self.arguments["local_version"], "--local-version"),
+                (self.arguments["build_metadata"], "--build-metadata"),
+                (self.arguments["major_version_zero"], "--major-version-zero"),
+            ):
+                if val:
+                    errors.append(f"{option} cannot be combined with MANUAL_VERSION")
+
+        if self.arguments["major_version_zero"] and current_version.release[0]:
+            errors.append(
+                f"--major-version-zero is meaningless for current version {current_version}"
+            )
+        if self.arguments["build_metadata"] and self.arguments["local_version"]:
+            errors.append("--local-version cannot be combined with --build-metadata")
+
+        if errors:
+            raise NotAllowed("\n".join(errors))
+
+    def _resolve_increment_and_new_version(
+        self, current_version: VersionProtocol, current_tag: git.GitTag | None
+    ) -> tuple[Increment | None, VersionProtocol]:
+        increment = self.arguments["increment"]
+        if manual_version := self.arguments["manual_version"]:
+            try:
+                return increment, self.scheme(manual_version)
+            except InvalidVersion as exc:
+                raise InvalidManualVersion(
+                    "[INVALID_MANUAL_VERSION]\n"
+                    f"Invalid manual version: '{manual_version}'"
+                ) from exc
+
+        if increment is None:
+            commits = git.get_commits(current_tag.name if current_tag else None)
+
+            # No commits, there is no need to create an empty tag.
+            # Unless we previously had a prerelease.
+            if (
+                not commits
+                and not current_version.is_prerelease
+                and not self.arguments["allow_no_commit"]
+            ):
+                raise NoCommitsFoundError("[NO_COMMITS_FOUND]\nNo new commits found.")
+
+            increment = self._find_increment(commits)
+
+        # It may happen that there are commits, but they are not eligible
+        # for an increment, this generates a problem when using prerelease (#281)
+        if (
+            self.arguments["prerelease"]
+            and increment is None
+            and not current_version.is_prerelease
+        ):
+            raise NoCommitsFoundError(
+                "[NO_COMMITS_FOUND]\n"
+                "No commits found to generate a pre-release.\n"
+                "To avoid this error, manually specify the type of increment with `--increment`"
+            )
+
+        # we create an empty PATCH increment for empty tag
+        if increment is None and self.arguments["allow_no_commit"]:
+            increment = "PATCH"
+
+        return increment, current_version.bump(
+            increment,
+            prerelease=self.arguments["prerelease"],
+            prerelease_offset=self.bump_settings["prerelease_offset"],
+            devrelease=self.arguments["devrelease"],
+            is_local_version=self.arguments["local_version"],
+            build_metadata=self.arguments["build_metadata"],
+            exact_increment=self.arguments["increment_mode"] == "exact",
+        )
+
     def __call__(self) -> None:
         """Steps executed to bump."""
         provider = get_provider(self.config)
         current_version = self.scheme(provider.get_version())
+        self._validate_arguments(current_version)
 
-        increment = self.arguments["increment"]
-        prerelease = self.arguments["prerelease"]
-        devrelease = self.arguments["devrelease"]
-        is_local_version = self.arguments["local_version"]
-        manual_version = self.arguments["manual_version"]
-        build_metadata = self.arguments["build_metadata"]
-        get_next = self.arguments["get_next"]
-        allow_no_commit = self.arguments["allow_no_commit"]
-        major_version_zero = self.arguments["major_version_zero"]
-
-        if manual_version:
-            for val, option in (
-                (increment, "--increment"),
-                (prerelease, "--prerelease"),
-                (devrelease is not None, "--devrelease"),
-                (is_local_version, "--local-version"),
-                (build_metadata, "--build-metadata"),
-                (major_version_zero, "--major-version-zero"),
-                (get_next, "--get-next"),
-            ):
-                if val:
-                    raise NotAllowed(f"{option} cannot be combined with MANUAL_VERSION")
-
-        if major_version_zero and current_version.release[0]:
-            raise NotAllowed(
-                f"--major-version-zero is meaningless for current version {current_version}"
-            )
-
-        if build_metadata and is_local_version:
-            raise NotAllowed("--local-version cannot be combined with --build-metadata")
-
-        if get_next:
+        next_version_to_stdout = self.arguments["get_next"]
+        if next_version_to_stdout:
             for value, option in (
                 (self.changelog_flag, "--changelog"),
                 (self.changelog_to_stdout, "--changelog-to-stdout"),
             ):
                 if value:
-                    raise NotAllowed(f"{option} cannot be combined with --get-next")
+                    warnings.warn(f"{option} has no effect when used with --get-next")
 
-            # --get-next is a special case, taking precedence over config for 'update_changelog_on_bump'
-            self.changelog_config = False
-            # Setting dry_run to prevent any unwanted changes to the repo or files
-            self.dry_run = True
-        else:
-            # If user specified changelog_to_stdout, they probably want the
-            # changelog to be generated as well, this is the most intuitive solution
-            self.changelog_flag = any(
-                (self.changelog_flag, self.changelog_to_stdout, self.changelog_config)
+        # If user specified changelog_to_stdout, they probably want the
+        # changelog to be generated as well, this is the most intuitive solution
+        self.changelog_flag = any(
+            (
+                self.changelog_flag,
+                self.changelog_to_stdout,
+                self.config.settings.get("update_changelog_on_bump"),
             )
+        )
 
-        rules = TagRules.from_settings(cast(Settings, self.bump_settings))
+        rules = TagRules.from_settings(cast("Settings", self.bump_settings))
         current_tag = rules.find_tag_for(git.get_tags(), current_version)
         current_tag_version = (
             current_tag.name if current_tag else rules.normalize_tag(current_version)
@@ -221,69 +270,23 @@ class Bump:
 
         is_initial = self._is_initial_tag(current_tag, self.arguments["yes"])
 
-        if manual_version:
-            try:
-                new_version = self.scheme(manual_version)
-            except InvalidVersion as exc:
-                raise InvalidManualVersion(
-                    "[INVALID_MANUAL_VERSION]\n"
-                    f"Invalid manual version: '{manual_version}'"
-                ) from exc
-        else:
-            if increment is None:
-                commits = git.get_commits(current_tag.name if current_tag else None)
-
-                # No commits, there is no need to create an empty tag.
-                # Unless we previously had a prerelease.
-                if (
-                    not commits
-                    and not current_version.is_prerelease
-                    and not allow_no_commit
-                ):
-                    raise NoCommitsFoundError(
-                        "[NO_COMMITS_FOUND]\nNo new commits found."
-                    )
-
-                increment = self._find_increment(commits)
-
-            # It may happen that there are commits, but they are not eligible
-            # for an increment, this generates a problem when using prerelease (#281)
-            if prerelease and increment is None and not current_version.is_prerelease:
-                raise NoCommitsFoundError(
-                    "[NO_COMMITS_FOUND]\n"
-                    "No commits found to generate a pre-release.\n"
-                    "To avoid this error, manually specify the type of increment with `--increment`"
-                )
-
-            # we create an empty PATCH increment for empty tag
-            if increment is None and allow_no_commit:
-                increment = "PATCH"
-
-            new_version = current_version.bump(
-                increment,
-                prerelease=prerelease,
-                prerelease_offset=self.bump_settings["prerelease_offset"],
-                devrelease=devrelease,
-                is_local_version=is_local_version,
-                build_metadata=build_metadata,
-                exact_increment=self.arguments["increment_mode"] == "exact",
-            )
-
-        new_tag_version = rules.normalize_tag(new_version)
-        message = bump.create_commit_message(
-            current_version, new_version, self.bump_settings["bump_message"]
+        increment, new_version = self._resolve_increment_and_new_version(
+            current_version, current_tag
         )
 
-        if get_next:
+        new_tag_version = rules.normalize_tag(new_version)
+        if next_version_to_stdout:
             if increment is None and new_tag_version == current_tag_version:
                 raise NoneIncrementExit(
                     "[NO_COMMITS_TO_BUMP]\n"
                     "The commits found are not eligible to be bumped"
                 )
-
             out.write(str(new_version))
-            raise GetNextExit()
+            raise DryRunExit()
 
+        message = bump.create_commit_message(
+            current_version, new_version, self.bump_settings["bump_message"]
+        )
         # Report found information
         information = f"{message}\ntag to create: {new_tag_version}\n"
         if increment:
@@ -302,35 +305,40 @@ class Bump:
                 "[NO_COMMITS_TO_BUMP]\nThe commits found are not eligible to be bumped"
             )
 
-        files: list[str] = []
+        updated_files: list[str] = []
         dry_run = self.arguments["dry_run"]
         if self.changelog_flag:
-            args = {
+            changelog_args = {
                 "unreleased_version": new_tag_version,
                 "template": self.template,
                 "extras": self.extras,
                 "incremental": True,
                 "dry_run": dry_run,
-                "during_version_bump": prerelease
+                "during_version_bump": self.arguments["prerelease"]
                 is None,  # We let the changelog implementation know that we want to replace prereleases while staying incremental AND the new tag does not exist already
             }
             if self.changelog_to_stdout:
-                changelog_cmd = Changelog(self.config, {**args, "dry_run": True})  # type: ignore[typeddict-item]
+                changelog_cmd = Changelog(
+                    self.config,
+                    {**changelog_args, "dry_run": True},  # type: ignore[typeddict-item]
+                )
                 try:
                     changelog_cmd()
                 except DryRunExit:
                     pass
 
-            args["file_name"] = self.file_name
-            changelog_cmd = Changelog(self.config, args)  # type: ignore[arg-type]
+            changelog_cmd = Changelog(
+                self.config,
+                {**changelog_args, "file_name": self.file_name},  # type: ignore[typeddict-item]
+            )
             changelog_cmd()
-            files.append(changelog_cmd.file_name)
+            updated_files.append(changelog_cmd.file_name)
 
         # Do not perform operations over files or git.
         if dry_run:
             raise DryRunExit()
 
-        files.extend(
+        updated_files.extend(
             bump.update_version_in_files(
                 str(current_version),
                 str(new_version),
@@ -362,13 +370,13 @@ class Bump:
             raise ExpectedExit()
 
         # FIXME: check if any changes have been staged
-        git.add(*files)
+        git.add(*updated_files)
         c = git.commit(message, args=self._get_commit_args())
         if self.retry and c.return_code != 0 and self.changelog_flag:
             # Maybe pre-commit reformatted some files? Retry once
             logger.debug("1st git.commit error: %s", c.err)
             logger.info("1st commit attempt failed; retrying once")
-            git.add(*files)
+            git.add(*updated_files)
             c = git.commit(message, args=self._get_commit_args())
         if c.return_code != 0:
             err = c.err.strip() or c.out

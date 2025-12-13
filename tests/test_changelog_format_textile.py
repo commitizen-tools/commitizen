@@ -1,12 +1,16 @@
 from __future__ import annotations
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 
 from commitizen.changelog import Metadata
 from commitizen.changelog_formats.textile import Textile
-from commitizen.config.base_config import BaseConfig
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from commitizen.config.base_config import BaseConfig
 
 CHANGELOG_A = """
 h1. Changelog

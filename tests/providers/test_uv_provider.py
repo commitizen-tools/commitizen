@@ -2,12 +2,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from commitizen.config.base_config import BaseConfig
 from commitizen.providers import get_provider
 from commitizen.providers.uv_provider import UvProvider
 
 if TYPE_CHECKING:
     from pytest_regressions.file_regression import FileRegressionFixture
+
+    from commitizen.config.base_config import BaseConfig
 
 
 PYPROJECT_TOML = """

@@ -4,13 +4,15 @@ import sys
 import time
 import uuid
 from pathlib import Path
-from typing import NamedTuple
+from typing import TYPE_CHECKING, NamedTuple
 
 import pytest
 from deprecated import deprecated
 
 from commitizen import cmd, exceptions, git
-from commitizen.version_schemes import Increment, Prerelease
+
+if TYPE_CHECKING:
+    from commitizen.version_schemes import Increment, Prerelease
 
 skip_below_py_3_10 = pytest.mark.skipif(
     sys.version_info < (3, 10),
