@@ -113,13 +113,14 @@ jobs:
           poetry install
       - name: Build and publish
         env:
-          PYPI_USERNAME: __token__
-          PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        run: |
-          ./scripts/publish
+          POETRY_HTTP_BASIC_PYPI_USERNAME: __token__
+          POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: poetry publish --build
 ```
 
-Notice that we are using poetry, and we are calling a bash script in `./scripts/publish`. You should configure the action, and publish with your tools (twine, poetry, etc.). Check [Commitizen example](https://github.com/commitizen-tools/commitizen/blob/master/scripts/publish)
+Notice that we are using poetry to publish the package.
+
+
 You can also use [pypa/gh-action-pypi-publish](https://github.com/pypa/gh-action-pypi-publish) to publish your package.
 
 Push the changes and that's it.

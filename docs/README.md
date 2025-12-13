@@ -45,7 +45,7 @@ This standardization makes your commit history more readable and meaningful, whi
 - Intelligent [version bumping](https://commitizen-tools.github.io/commitizen/commands/bump/) using [Semantic Versioning][semver]
 - Automatic [keep a changelog][keepchangelog] generation
 - Built-in commit validation with pre-commit hooks
-- [Customizable](https://commitizen-tools.github.io/commitizen/customization/) commit rules and templates
+- [Customizable](https://commitizen-tools.github.io/commitizen/customization/config_file/) commit rules and templates
 - Multi-format version file support
 - Custom rules and plugins via pip
 
@@ -174,7 +174,7 @@ You can customize:
 
 - [Version files](https://commitizen-tools.github.io/commitizen/commands/bump/#version_files)
 - [Version scheme](https://commitizen-tools.github.io/commitizen/commands/bump/#version_scheme)
-- [Version provider](https://commitizen-tools.github.io/commitizen/config/#version-providers)
+- [Version provider](https://commitizen-tools.github.io/commitizen/config/version_provider/)
 
 For all available options, see the [bump command documentation](https://commitizen-tools.github.io/commitizen/commands/bump/).
 
@@ -249,7 +249,7 @@ Commitizen provides a comprehensive CLI with various commands. Here's the comple
 
 - [Conventional Commits Specification][conventional_commits]
 - [Exit Codes Reference](https://commitizen-tools.github.io/commitizen/exit_codes/)
-- [Configuration Guide](https://commitizen-tools.github.io/commitizen/config/)
+- [Configuration Guide](https://commitizen-tools.github.io/commitizen/config/configuration_file/)
 - [Command Documentation](https://commitizen-tools.github.io/commitizen/commands/init/)
 
 ### Getting Help
