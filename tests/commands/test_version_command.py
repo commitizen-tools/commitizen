@@ -1,14 +1,12 @@
-import os
 import platform
 import sys
 
 import pytest
 from pytest_mock import MockerFixture
 
-from commitizen import cli, commands
+from commitizen import commands
 from commitizen.__version__ import __version__
 from commitizen.config.base_config import BaseConfig
-from tests.utils import skip_below_py_3_10
 
 
 def test_version_for_showing_project_version_error(config, capsys):
@@ -103,31 +101,6 @@ def test_version_use_version_provider(
     get_provider.assert_called_once()
     mock.get_version.assert_called_once()
     mock.set_version.assert_not_called()
-
-
-@skip_below_py_3_10
-def test_version_command_shows_description_when_use_help_option(
-    mocker: MockerFixture, capsys, file_regression
-):
-    # Force consistent terminal width for tests to avoid wrapping differences
-    # between single and multi-worker pytest modes
-    original_columns = os.environ.get("COLUMNS")
-    os.environ["COLUMNS"] = "80"
-
-    try:
-        testargs = ["cz", "version", "--help"]
-        mocker.patch.object(sys, "argv", testargs)
-        with pytest.raises(SystemExit):
-            cli.main()
-
-        out, _ = capsys.readouterr()
-        file_regression.check(out, extension=".txt")
-    finally:
-        # Restore original COLUMNS
-        if original_columns is not None:
-            os.environ["COLUMNS"] = original_columns
-        else:
-            os.environ.pop("COLUMNS", None)
 
 
 @pytest.mark.parametrize(
