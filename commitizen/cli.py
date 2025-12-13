@@ -20,6 +20,7 @@ from commitizen.exceptions import (
     InvalidCommandArgumentError,
     NoCommandFoundError,
 )
+from commitizen.version_increment import VersionIncrement
 
 logger = logging.getLogger(__name__)
 
@@ -543,15 +544,35 @@ data = {
                     },
                     {
                         "name": ["--major"],
-                        "help": "get just the major version. Need to be used with --project or --verbose.",
+                        "help": "Output the major version only. Need to be used with MANUAL_VERSION, --project or --verbose.",
                         "action": "store_true",
                         "exclusive_group": "group2",
                     },
                     {
                         "name": ["--minor"],
-                        "help": "get just the minor version. Need to be used with --project or --verbose.",
+                        "help": "Output the minor version only. Need to be used with MANUAL_VERSION, --project or --verbose.",
                         "action": "store_true",
                         "exclusive_group": "group2",
+                    },
+                    {
+                        "name": ["--patch"],
+                        "help": "Output the patch version only. Need to be used with MANUAL_VERSION, --project or --verbose.",
+                        "action": "store_true",
+                        "exclusive_group": "group2",
+                    },
+                    {
+                        "name": ["--next"],
+                        "help": "Output the next version.",
+                        "type": str,
+                        "choices": [str(increment) for increment in VersionIncrement],
+                        "exclusive_group": "group2",
+                    },
+                    {
+                        "name": "manual_version",
+                        "type": str,
+                        "nargs": "?",
+                        "help": "Use the version provided instead of the version from the project. Can be used to test the selected version scheme",
+                        "metavar": "MANUAL_VERSION",
                     },
                 ],
             },

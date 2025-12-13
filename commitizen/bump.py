@@ -15,7 +15,7 @@ from commitizen.git import GitCommit, smart_open
 if TYPE_CHECKING:
     from collections.abc import Generator, Iterable
 
-    from commitizen.version_schemes import Increment, Version
+    from commitizen.version_schemes import Increment, VersionProtocol
 
 VERSION_TYPES = [None, PATCH, MINOR, MAJOR]
 
@@ -131,8 +131,8 @@ def _resolve_files_and_regexes(
 
 
 def create_commit_message(
-    current_version: Version | str,
-    new_version: Version | str,
+    current_version: VersionProtocol | str,
+    new_version: VersionProtocol | str,
     message_template: str | None = None,
 ) -> str:
     if message_template is None:

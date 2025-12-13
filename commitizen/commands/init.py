@@ -13,7 +13,11 @@ from commitizen.cz import registry
 from commitizen.defaults import CONFIG_FILES, DEFAULT_SETTINGS
 from commitizen.exceptions import InitFailedError, NoAnswersError
 from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
-from commitizen.version_schemes import KNOWN_SCHEMES, Version, get_version_scheme
+from commitizen.version_schemes import (
+    KNOWN_SCHEMES,
+    VersionProtocol,
+    get_version_scheme,
+)
 
 if TYPE_CHECKING:
     from commitizen.config import (
@@ -238,7 +242,7 @@ class Init:
         ).unsafe_ask()
         return scheme
 
-    def _ask_major_version_zero(self, version: Version) -> bool:
+    def _ask_major_version_zero(self, version: VersionProtocol) -> bool:
         """Ask for setting: major_version_zero"""
         if version.major > 0:
             return False
@@ -295,7 +299,7 @@ def _write_config_to_file(
     cz_name: str,
     version_provider: str,
     version_scheme: str,
-    version: Version,
+    version: VersionProtocol,
     tag_format: str,
     update_changelog_on_bump: bool,
     major_version_zero: bool,
