@@ -22,13 +22,13 @@ def test_version_for_showing_project_version_error(config, capsys):
 
 
 def test_version_for_showing_project_version(config, capsys):
-    config.settings["version"] = "v0.0.1"
+    config.settings["version"] = "0.0.1"
     commands.Version(
         config,
         {"project": True},
     )()
     captured = capsys.readouterr()
-    assert "v0.0.1" in captured.out
+    assert "0.0.1" in captured.out
 
 
 @pytest.mark.parametrize("project", (True, False))
@@ -52,14 +52,14 @@ def test_version_for_showing_both_versions_no_project(config, capsys):
 
 
 def test_version_for_showing_both_versions(config, capsys):
-    config.settings["version"] = "v0.0.1"
+    config.settings["version"] = "0.0.1"
     commands.Version(
         config,
         {"verbose": True},
     )()
     captured = capsys.readouterr()
     expected_out = (
-        f"Installed Commitizen Version: {__version__}\nProject Version: v0.0.1"
+        f"Installed Commitizen Version: {__version__}\nProject Version: 0.0.1"
     )
     assert expected_out in captured.out
 
@@ -174,7 +174,7 @@ def test_version_just_minor(config, capsys, version: str, expected_version: str)
     assert expected_version == captured.out
 
 
-@pytest.mark.parametrize("argument", ("major", "minor"))
+@pytest.mark.parametrize("argument", ("major", "minor", "patch"))
 def test_version_just_major_error_no_project(config, capsys, argument: str):
     commands.Version(
         config,
@@ -185,6 +185,58 @@ def test_version_just_major_error_no_project(config, capsys, argument: str):
     captured = capsys.readouterr()
     assert not captured.out
     assert (
-        "Major or minor version can only be used with --project or --verbose."
-        in captured.err
+        "can only be used with MANUAL_VERSION, --project or --verbose." in captured.err
     )
+
+
+@pytest.mark.parametrize(
+    "next_increment, current_version, expected_version",
+    [
+        ("MAJOR", "1.1.0", "2.0.0"),
+        ("MAJOR", "1.0.0", "2.0.0"),
+        ("MAJOR", "0.0.1", "1.0.0"),
+        ("MINOR", "1.1.0", "1.2.0"),
+        ("MINOR", "1.0.0", "1.1.0"),
+        ("MINOR", "0.0.1", "0.1.0"),
+        ("PATCH", "1.1.0", "1.1.1"),
+        ("PATCH", "1.0.0", "1.0.1"),
+        ("PATCH", "0.0.1", "0.0.2"),
+        ("NONE", "1.0.0", "1.0.0"),
+    ],
+)
+def test_next_version_major(
+    config, capsys, next_increment: str, current_version: str, expected_version: str
+):
+    config.settings["version"] = current_version
+    for project in (True, False):
+        commands.Version(
+            config,
+            {
+                "next": next_increment,
+                "project": project,
+            },
+        )()
+        captured = capsys.readouterr()
+        assert expected_version in captured.out
+
+    # Use the same settings to test the manual version
+    commands.Version(
+        config,
+        {
+            "manual_version": current_version,
+            "next": next_increment,
+        },
+    )()
+    captured = capsys.readouterr()
+    assert expected_version in captured.out
+
+
+def test_next_version_invalid_version(config, capsys):
+    commands.Version(
+        config,
+        {
+            "manual_version": "INVALID",
+        },
+    )()
+    captured = capsys.readouterr()
+    assert "Invalid version: 'INVALID'" in captured.err

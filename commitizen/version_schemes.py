@@ -31,7 +31,7 @@ if TYPE_CHECKING:
         from typing import Self
 
 
-Increment: TypeAlias = Literal["MAJOR", "MINOR", "PATCH"]
+Increment: TypeAlias = Literal["MAJOR", "MINOR", "PATCH"]  # TODO: deprecate
 Prerelease: TypeAlias = Literal["alpha", "beta", "rc"]
 _DEFAULT_VERSION_PARSER = re.compile(
     r"v?(?P<version>([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z.]+)?(\w+)?)"
@@ -56,7 +56,7 @@ class VersionProtocol(Protocol):
         raise NotImplementedError("must be implemented")
 
     @property
-    def scheme(self) -> VersionScheme:
+    def scheme(self) -> type[VersionProtocol]:
         """The version scheme this version follows."""
         raise NotImplementedError("must be implemented")
 
@@ -140,9 +140,7 @@ class VersionProtocol(Protocol):
         """
 
 
-# With PEP 440 and SemVer semantic, Scheme is the type, Version is an instance
-Version: TypeAlias = VersionProtocol
-VersionScheme: TypeAlias = type[VersionProtocol]
+# Note: version schemes are classes that initialize a VersionProtocol instance
 
 
 class BaseVersion(_BaseVersion):
@@ -154,7 +152,7 @@ class BaseVersion(_BaseVersion):
     """Regex capturing this version scheme into a `version` group"""
 
     @property
-    def scheme(self) -> VersionScheme:
+    def scheme(self) -> type[VersionProtocol]:
         return self.__class__
 
     @property
@@ -390,7 +388,7 @@ class SemVer2(SemVer):
         return ".".join(prerelease_parts)
 
 
-DEFAULT_SCHEME: VersionScheme = Pep440
+DEFAULT_SCHEME: type[VersionProtocol] = Pep440
 
 SCHEMES_ENTRYPOINT = "commitizen.scheme"
 """Schemes entrypoints group"""
@@ -399,7 +397,9 @@ KNOWN_SCHEMES = [ep.name for ep in metadata.entry_points(group=SCHEMES_ENTRYPOIN
 """All known registered version schemes"""
 
 
-def get_version_scheme(settings: Settings, name: str | None = None) -> VersionScheme:
+def get_version_scheme(
+    settings: Settings, name: str | None = None
+) -> type[VersionProtocol]:
     """
     Get the version scheme as defined in the configuration
     or from an overridden `name`.
@@ -425,7 +425,7 @@ def get_version_scheme(settings: Settings, name: str | None = None) -> VersionSc
         (ep,) = metadata.entry_points(name=name, group=SCHEMES_ENTRYPOINT)
     except ValueError:
         raise VersionSchemeUnknown(f'Version scheme "{name}" unknown.')
-    scheme = cast("VersionScheme", ep.load())
+    scheme = cast("type[VersionProtocol]", ep.load())
 
     if not isinstance(scheme, VersionProtocol):
         warnings.warn(f"Version scheme {name} does not implement the VersionProtocol")
