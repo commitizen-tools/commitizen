@@ -2098,13 +2098,12 @@ newly created version.</p>
 <span class="w">          </span><span class="no">poetry install</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build and publish</span>
 <span class="w">        </span><span class="nt">env</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">PYPI_USERNAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">__token__</span>
-<span class="w">          </span><span class="nt">PYPI_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.PYPI_PASSWORD }}</span>
-<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">          </span><span class="no">./scripts/publish</span>
+<span class="w">          </span><span class="nt">POETRY_HTTP_BASIC_PYPI_USERNAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">__token__</span>
+<span class="w">          </span><span class="nt">POETRY_HTTP_BASIC_PYPI_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.PYPI_PASSWORD }}</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">poetry publish --build</span>
 </code></pre></div>
-<p>Notice that we are using poetry, and we are calling a bash script in <code>./scripts/publish</code>. You should configure the action, and publish with your tools (twine, poetry, etc.). Check <a href="https://github.com/commitizen-tools/commitizen/blob/master/scripts/publish">Commitizen example</a>
-You can also use <a href="https://github.com/pypa/gh-action-pypi-publish">pypa/gh-action-pypi-publish</a> to publish your package.</p>
+<p>Notice that we are using poetry to publish the package.</p>
+<p>You can also use <a href="https://github.com/pypa/gh-action-pypi-publish">pypa/gh-action-pypi-publish</a> to publish your package.</p>
 <p>Push the changes and that's it.</p>
 
 
