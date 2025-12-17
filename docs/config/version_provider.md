@@ -19,6 +19,7 @@ Commitizen includes several built-in version providers for common package manage
 The default version provider stores and retrieves the version from your Commitizen configuration file (e.g., `pyproject.toml`, `.cz.toml`, etc.).
 
 **Use when:**
+
 - You want to keep version management separate from your package manager
 - Your project doesn't use a standard package manager
 - You need maximum flexibility in version management
@@ -35,6 +36,7 @@ version = "0.1.0"  # Required when using this provider
 Fetches the version from Git tags using `git describe`. This provider **only reads** version information and never writes it back to files. It's designed to work with tools like `setuptools-scm` or other package manager `*-scm` plugins that derive version numbers from Git history.
 
 **Use when:**
+
 - You're using `setuptools-scm` or similar tools
 - You want version numbers derived from Git tags
 - You don't want Commitizen to modify any files for version management
@@ -54,6 +56,7 @@ version_provider = "scm"
 Manages version in `pyproject.toml` under the `project.version` field, following [PEP 621](https://peps.python.org/pep-0621/) standards.
 
 **Use when:**
+
 - You're using a modern Python project with PEP 621-compliant `pyproject.toml`
 - You want version management integrated with your Python project metadata
 
@@ -75,6 +78,7 @@ version = "0.1.0"  # Managed by Commitizen
 Manages version in `pyproject.toml` under the `tool.poetry.version` field, which is used by the [Poetry](https://python-poetry.org/) package manager. This approach is recommended only for users running Poetry versions earlier than 2.0 or relying on Poetry-specific features. For most users on Poetry 2.0 or later, it is recommended to use `pep621` instead. [Read More](https://python-poetry.org/docs/main/managing-dependencies/)
 
 **Use when:**
+
 - You're using Poetry < 2.0 as your Python package manager
 - You're using Poetry >= 2.0 as your Python package manager, but don't need poetry-specific features
 - You want Commitizen to manage the version that Poetry uses
@@ -101,6 +105,7 @@ Manages version in both `pyproject.toml` (`project.version`) and `uv.lock` (`pac
     Even though uv follows PEP 621 format, `pep621` does not manage the version in `uv.lock`. `uv` is still suggested for uv users.
 
 **Use when:**
+
 - You're using `uv` as your Python package manager
 - You want version synchronization between `pyproject.toml` and `uv.lock`
 
@@ -115,6 +120,7 @@ version_provider = "uv"
 Manages version in both `Cargo.toml` (`package.version`) and `Cargo.lock` (`package.version` for the matching package name). This ensures consistency between your Rust project's manifest and lock file.
 
 **Use when:**
+
 - You're working with a Rust project using Cargo
 - You want Commitizen to manage Rust package versions
 
@@ -136,6 +142,7 @@ version = "0.1.0"  # Managed by Commitizen
 Manages version in `package.json` and optionally synchronizes with `package-lock.json` and `npm-shrinkwrap.json` if they exist.
 
 **Use when:**
+
 - You're working with a Node.js/JavaScript project
 - You want Commitizen to manage npm package versions
 
@@ -158,6 +165,7 @@ version_provider = "npm"
 Manages version in `composer.json` under the `version` field, used by PHP's Composer package manager.
 
 **Use when:**
+
 - You're working with a PHP project using Composer
 - You want Commitizen to manage Composer package versions
 
