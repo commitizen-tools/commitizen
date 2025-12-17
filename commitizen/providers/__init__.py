@@ -1,13 +1,9 @@
 from __future__ import annotations
 
-import sys
+from importlib import metadata
 from typing import TYPE_CHECKING, cast
 
-if sys.version_info >= (3, 10):
-    from importlib import metadata
-else:
-    import importlib_metadata as metadata
-
+from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import VersionProviderUnknown
 from commitizen.providers.cargo_provider import CargoProvider
 from commitizen.providers.commitizen_provider import CommitizenProvider
