@@ -15,17 +15,16 @@ jobs:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           fetch-depth: 0
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.x"
       - name: Install dependencies
         run: |
-          python -m pip install -U pip poetry poethepoet
-          poetry --version
-          poetry install --only main,script
+          uv --version
+          uv sync --locked --group script
       - name: Update CLI screenshots
         run: |
-          poetry doc:screenshots
+          uv run poe doc:screenshots
       - name: Commit and push updated CLI screenshots
         run: |
           git config --global user.name "github-actions[bot]"
@@ -51,14 +50,13 @@ jobs:
         run: |
           git pull origin master
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.x"
       - name: Install dependencies
         run: |
-          python -m pip install -U pip poetry poethepoet
-          poetry --version
-          poetry install --no-root --only documentation
+          uv --version
+          uv sync --locked --only-group documentation
       - name: Generate Sponsors 💖
         uses: JamesIves/github-sponsors-readme-action@v1
         with:
@@ -69,7 +67,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          poetry doc:build
+          uv run poe doc:build
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:

@@ -86,7 +86,7 @@ semver = "commitizen.version_schemes:SemVer"
 semver2 = "commitizen.version_schemes:SemVer2"
 
 [dependency-groups]
-dev = ["ipython>=8.0", "tox>4", "poethepoet>=0.34.0"]
+dev = ["ipython>=8.0", "tox>4", "poethepoet>=0.32.2"]
 
 test = [
     "pytest>=7.2",
@@ -116,8 +116,8 @@ script = [
 ]
 
 [build-system]
-requires = ["poetry-core>=2.2"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build >= 0.9.17, <0.10.0"]
+build-backend = "uv_build"
 
 
 [tool.commitizen]
@@ -131,11 +131,10 @@ version_files = [
 version_scheme = "pep440"
 
 
-[tool.poetry]
-packages = [{ include = "commitizen" }, { include = "commitizen/py.typed" }]
-
-[tool.poetry.requires-plugins]
-"poethepoet" = ">=0.32.2"
+[tool.uv.build-backend]
+module-name = "commitizen"
+module-root = ""
+include = ["commitizen/py.typed"]
 
 [tool.coverage]
 [tool.coverage.report]
@@ -178,8 +177,8 @@ env_list = ["3.10", "3.11", "3.12", "3.13", "3.14"]
 [tool.tox.env_run_base]
 description = "Run tests suite against Python {base_python}"
 skip_install = true
-deps = ["poetry>=2.0"]
-commands_pre = [["poetry", "install", "--only", "main,test"]]
+deps = ["uv>=0.9.0"]
+commands_pre = [["uv", "sync", "--group", "main, test"]]
 commands = [["pytest", { replace = "posargs", extend = true }]]
 
 [tool.ruff]

@@ -14,7 +14,7 @@ Please fill in the following content to let us know better about this change.
 ### Code Changes
 
 - [ ] Add test cases to all the changes you introduce
-- [ ] Run `poetry all` locally to ensure this change passes linter check and tests
+- [ ] Run `uv run poe all` locally to ensure this change passes linter check and tests
 - [ ] Manually test the changes:
   - [ ] Verify the feature/bug fix works as expected in real-world scenarios
   - [ ] Test edge cases and error conditions
@@ -24,10 +24,10 @@ Please fill in the following content to let us know better about this change.
 
 ### Documentation Changes
 
-- [ ] Run `poetry doc` locally to ensure the documentation pages renders correctly
+- [ ] Run `uv run poe doc` locally to ensure the documentation pages renders correctly
 - [ ] Check and fix any broken links (internal or external) in the documentation
 
-> When running `poetry doc`, any broken internal documentation links will be reported in the console output like this:
+> When running `uv run poe doc`, any broken internal documentation links will be reported in the console output like this:
 >
 > ```text
 > INFO    -  Doc file 'config.md' contains a link 'commands/bump.md#-post_bump_hooks', but the doc 'commands/bump.md' does not contain an anchor '#-post_bump_hooks'.
