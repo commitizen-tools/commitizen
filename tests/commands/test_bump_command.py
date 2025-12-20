@@ -31,6 +31,7 @@ from commitizen.exceptions import (
 if TYPE_CHECKING:
     import py
     from pytest_mock import MockFixture
+    from pytest_regressions.file_regression import FileRegressionFixture
 
     from commitizen.changelog_formats import ChangelogFormat
     from commitizen.cz.base import BaseCommitizen
@@ -1494,3 +1495,65 @@ def test_is_initial_tag(mocker: MockFixture, tmp_commitizen_project, util: UtilF
     # Test case 4: No current tag, user denies
     mocker.patch("questionary.confirm", return_value=mocker.Mock(ask=lambda: False))
     assert bump_cmd._is_initial_tag(None, is_yes=False) is False
+
+
+@pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2025-01-01")
+def test_changelog_config_flag_merge_prerelease(
+    mocker: MockFixture,
+    util: UtilFixture,
+    changelog_path: str,
+    config_path: str,
+    file_regression: FileRegressionFixture,
+    test_input: str,
+):
+    with open(config_path, "a") as f:
+        f.write("changelog_merge_prerelease = true\n")
+        f.write("update_changelog_on_bump = true\n")
+        f.write("annotated_tag = true\n")
+
+    util.create_file_and_commit("irrelevant commit")
+    mocker.patch("commitizen.git.GitTag.date", "1970-01-01")
+    git.tag("0.1.0")
+
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
+    util.run_cli("bump", "--prerelease", test_input, "--yes")
+
+    util.run_cli("bump", "--changelog")
+
+    with open(changelog_path) as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2025-01-01")
+def test_changelog_config_flag_merge_prerelease_only_prerelease_present(
+    util: UtilFixture,
+    changelog_path: str,
+    config_path: str,
+    file_regression: FileRegressionFixture,
+    test_input: str,
+):
+    with open(config_path, "a") as f:
+        f.write("changelog_merge_prerelease = true\n")
+        f.write("update_changelog_on_bump = true\n")
+        f.write("annotated_tag = true\n")
+
+    util.create_file_and_commit("feat: more relevant commit")
+    util.run_cli("bump", "--prerelease", test_input, "--yes")
+
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
+    util.run_cli("bump", "--prerelease", test_input, "--yes")
+
+    util.run_cli("bump", "--changelog")
+
+    with open(changelog_path) as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
