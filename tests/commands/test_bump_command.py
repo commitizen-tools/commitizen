@@ -1692,3 +1692,66 @@ def test_is_initial_tag(mocker: MockFixture, tmp_commitizen_project):
     # Test case 4: No current tag, user denies
     mocker.patch("questionary.confirm", return_value=mocker.Mock(ask=lambda: False))
     assert bump_cmd._is_initial_tag(None, is_yes=False) is False
+
+
+@pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2025-01-01")
+def test_changelog_config_flag_merge_prerelease(
+    mocker: MockFixture, changelog_path, config_path, file_regression, test_input
+):
+    with open(config_path, "a") as f:
+        f.write("changelog_merge_prerelease = true\n")
+        f.write("update_changelog_on_bump = true\n")
+        f.write("annotated_tag = true\n")
+
+    create_file_and_commit("irrelevant commit")
+    mocker.patch("commitizen.git.GitTag.date", "1970-01-01")
+    git.tag("0.1.0")
+
+    create_file_and_commit("feat: add new output")
+    create_file_and_commit("fix: output glitch")
+    testargs = ["cz", "bump", "--prerelease", test_input, "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    testargs = ["cz", "bump", "--changelog"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    with open(changelog_path) as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2025-01-01")
+def test_changelog_config_flag_merge_prerelease_only_prerelease_present(
+    mocker: MockFixture, changelog_path, config_path, file_regression, test_input
+):
+    with open(config_path, "a") as f:
+        f.write("changelog_merge_prerelease = true\n")
+        f.write("update_changelog_on_bump = true\n")
+        f.write("annotated_tag = true\n")
+
+    create_file_and_commit("feat: more relevant commit")
+    testargs = ["cz", "bump", "--prerelease", test_input, "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    create_file_and_commit("feat: add new output")
+    create_file_and_commit("fix: output glitch")
+    testargs = ["cz", "bump", "--prerelease", test_input, "--yes"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    testargs = ["cz", "bump", "--changelog"]
+    mocker.patch.object(sys, "argv", testargs)
+    cli.main()
+
+    with open(changelog_path) as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
