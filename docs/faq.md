@@ -92,13 +92,6 @@ In short, avoiding Pydantic helps us:
 - Reduce compatibility issues for users
 - Maintain clarity about what contributors should and shouldn't use
 
-
-## I got `Exception [WinError 995] The I/O operation ...` error
-
-This error was caused by a Python bug on Windows. It's been fixed by [cpython #22017](https://github.com/python/cpython/pull/22017), and according to Python's changelog, [3.8.6rc1](https://docs.python.org/3.8/whatsnew/changelog.html#python-3-8-6-release-candidate-1) and [3.9.0rc2](https://docs.python.org/3.9/whatsnew/changelog.html#python-3-9-0-release-candidate-2) should be the accurate versions first contain this fix. In conclusion, upgrade your Python version might solve this issue.
-
-More discussion can be found in issue [#318](https://github.com/commitizen-tools/commitizen/issues/318).
-
 ## Why does Commitizen not support CalVer?
 
 `commitizen` could support CalVer alongside SemVer, but in practice implementing CalVer
