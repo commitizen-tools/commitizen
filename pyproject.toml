@@ -177,9 +177,7 @@ env_list = ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
 [tool.tox.env_run_base]
 description = "Run tests suite against Python {base_python}"
-skip_install = true
-deps = ["poetry>=2.0"]
-commands_pre = [["poetry", "install", "--only", "main,test"]]
+dependency_groups = ["test"]
 commands = [["pytest", { replace = "posargs", extend = true }]]
 
 [tool.ruff]
