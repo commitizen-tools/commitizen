@@ -8,7 +8,7 @@ from commitizen.exceptions import ChangelogFormatUnknown
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from commitizen.changelog import Metadata
+    from commitizen.changelog import IncrementalMergeInfo, Metadata
     from commitizen.config.base_config import BaseConfig
 
 CHANGELOG_FORMAT_ENTRYPOINT = "commitizen.changelog_format"
@@ -44,6 +44,12 @@ class ChangelogFormat(Protocol):
     def get_metadata(self, filepath: str) -> Metadata:
         """
         Extract the changelog metadata.
+        """
+        raise NotImplementedError
+
+    def get_latest_full_release(self, filepath: str) -> IncrementalMergeInfo:
+        """
+        Extract metadata for the last non-pre-release.
         """
         raise NotImplementedError
 
