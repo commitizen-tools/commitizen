@@ -1,0 +1,5 @@
+exclude_path = ["./tests"]
+
+exclude = [
+    "https://blog.devgenius.io/continuous-delivery-made-easy-in-python-c085e9c82e69" # Membership only article, sometimes it's 403 forbidden
+]
