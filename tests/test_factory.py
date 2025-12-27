@@ -1,10 +1,6 @@
 import sys
+from importlib import metadata
 from textwrap import dedent
-
-if sys.version_info >= (3, 10):
-    from importlib import metadata
-else:
-    import importlib_metadata as metadata
 
 import pytest
 

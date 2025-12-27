@@ -10,7 +10,7 @@ maintainers = [
 ]
 license = { file = "LICENSE" }
 readme = "docs/README.md"
-requires-python = ">=3.9,<4.0"
+requires-python = ">=3.10,<4.0"
 dependencies = [
     "questionary (>=2.0,<3.0)",
     # Exclude transitive dependency due to known issue in questionary: https://github.com/tmbo/questionary/issues/454
@@ -39,11 +39,11 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: Implementation :: CPython",
     "License :: OSI Approved :: MIT License",
 ]
@@ -173,7 +173,7 @@ testpaths = ["tests/"]
 
 [tool.tox]
 requires = ["tox>=4.22"]
-env_list = ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+env_list = ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
 [tool.tox.env_run_base]
 description = "Run tests suite against Python {base_python}"
