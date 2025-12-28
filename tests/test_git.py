@@ -3,7 +3,6 @@ from __future__ import annotations
 import inspect
 import os
 import platform
-import shutil
 from typing import TYPE_CHECKING
 
 import pytest
@@ -19,6 +18,7 @@ from tests.utils import (
 )
 
 if TYPE_CHECKING:
+    from pytest_gitconfig import GitConfig
     from pytest_mock import MockFixture
 
 
@@ -260,25 +260,18 @@ def test_get_commits_with_and_without_parents(mocker: MockFixture):
     assert commits[2].parents == []
 
 
-def test_get_commits_with_signature():
-    config_file = ".git/config"
-    config_backup = ".git/config.bak"
-    shutil.copy(config_file, config_backup)
+@pytest.mark.usefixtures("in_repo_root")
+def test_get_commits_with_signature(gitconfig: GitConfig):
+    # temporarily turn on --show-signature
+    gitconfig.set("log.showsignature", "true")
 
-    try:
-        # temporarily turn on --show-signature
-        cmd.run("git config log.showsignature true")
+    # retrieve a commit that we know has a signature
+    commit = git.get_commits(
+        start="bec20ebf433f2281c70f1eb4b0b6a1d0ed83e9b2",
+        end="9eae518235d051f145807ddf971ceb79ad49953a",
+    )[0]
 
-        # retrieve a commit that we know has a signature
-        commit = git.get_commits(
-            start="bec20ebf433f2281c70f1eb4b0b6a1d0ed83e9b2",
-            end="9eae518235d051f145807ddf971ceb79ad49953a",
-        )[0]
-
-        assert commit.title.startswith("fix")
-    finally:
-        # restore the repo's original config
-        shutil.move(config_backup, config_file)
+    assert commit.title.startswith("fix")
 
 
 def test_get_tag_names_has_correct_arrow_annotation():
