@@ -36,6 +36,17 @@ def repo_root() -> Path:
 
 
 @pytest.fixture
+def stable_cli_env(monkeypatch: pytest.MonkeyPatch):
+    """Force deterministic CLI / terminal output."""
+    monkeypatch.setenv("COLUMNS", "80")
+    monkeypatch.setenv("TERM", "dumb")
+    monkeypatch.setenv("LC_ALL", "C")
+    monkeypatch.setenv("LANG", "C")
+    monkeypatch.setenv("NO_COLOR", "1")
+    monkeypatch.setenv("PAGER", "cat")
+
+
+@pytest.fixture
 def in_repo_root(repo_root: Path) -> Iterator[Path]:
     cwd = os.getcwd()
     os.chdir(repo_root)
