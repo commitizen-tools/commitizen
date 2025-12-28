@@ -1,5 +1,7 @@
+from collections.abc import Callable
 from pathlib import Path
 from shutil import copyfile
+from typing import TypeAlias
 
 import pytest
 from _pytest.fixtures import FixtureRequest
@@ -10,53 +12,48 @@ from commitizen.exceptions import CurrentVersionNotFoundError
 MULTIPLE_VERSIONS_INCREASE_STRING = 'version = "1.2.9"\n' * 30
 MULTIPLE_VERSIONS_REDUCE_STRING = 'version = "1.2.10"\n' * 30
 
-TESTING_FILE_PREFIX = "tests/data"
+
+SampleFileFixture: TypeAlias = Callable[[str, str], Path]
 
 
-def _copy_sample_file_to_tmpdir(
-    tmp_path: Path, source_filename: str, dest_filename: str
-) -> Path:
-    tmp_file = tmp_path / dest_filename
-    copyfile(f"{TESTING_FILE_PREFIX}/{source_filename}", tmp_file)
-    return tmp_file
+@pytest.fixture
+def sample_file(tmp_path: Path, data_dir: Path) -> SampleFileFixture:
+    def fixture(source: str, destination: str) -> Path:
+        tmp_file = tmp_path / destination
+        copyfile(data_dir / source, tmp_file)
+        return tmp_file
 
-
-@pytest.fixture(scope="function")
-def commitizen_config_file(tmp_path: Path) -> Path:
-    return _copy_sample_file_to_tmpdir(
-        tmp_path, "sample_pyproject.toml", "pyproject.toml"
-    )
+    return fixture
 
 
 @pytest.fixture(scope="function")
-def python_version_file(tmp_path: Path, request: FixtureRequest) -> Path:
-    return _copy_sample_file_to_tmpdir(tmp_path, "sample_version.py", "__version__.py")
+def commitizen_config_file(sample_file: SampleFileFixture) -> Path:
+    return sample_file("sample_pyproject.toml", "pyproject.toml")
 
 
 @pytest.fixture(scope="function")
-def inconsistent_python_version_file(tmp_path: Path) -> Path:
-    return _copy_sample_file_to_tmpdir(
-        tmp_path, "inconsistent_version.py", "__version__.py"
-    )
+def python_version_file(sample_file: SampleFileFixture) -> Path:
+    return sample_file("sample_version.py", "__version__.py")
 
 
 @pytest.fixture(scope="function")
-def random_location_version_file(tmp_path: Path) -> Path:
-    return _copy_sample_file_to_tmpdir(tmp_path, "sample_cargo.lock", "Cargo.lock")
+def inconsistent_python_version_file(sample_file: SampleFileFixture) -> Path:
+    return sample_file("inconsistent_version.py", "__version__.py")
 
 
 @pytest.fixture(scope="function")
-def version_repeated_file(tmp_path: Path) -> Path:
-    return _copy_sample_file_to_tmpdir(
-        tmp_path, "repeated_version_number.json", "package.json"
-    )
+def random_location_version_file(sample_file: SampleFileFixture) -> Path:
+    return sample_file("sample_cargo.lock", "Cargo.lock")
 
 
 @pytest.fixture(scope="function")
-def docker_compose_file(tmp_path: Path) -> Path:
-    return _copy_sample_file_to_tmpdir(
-        tmp_path, "sample_docker_compose.yaml", "docker-compose.yaml"
-    )
+def version_repeated_file(sample_file: SampleFileFixture) -> Path:
+    return sample_file("repeated_version_number.json", "package.json")
+
+
+@pytest.fixture(scope="function")
+def docker_compose_file(sample_file: SampleFileFixture) -> Path:
+    return sample_file("sample_docker_compose.yaml", "docker-compose.yaml")
 
 
 @pytest.fixture(
@@ -68,9 +65,9 @@ def docker_compose_file(tmp_path: Path) -> Path:
     ids=("with_eol", "without_eol"),
 )
 def multiple_versions_to_update_poetry_lock(
-    tmp_path: Path, request: FixtureRequest
+    sample_file: SampleFileFixture, request: FixtureRequest
 ) -> Path:
-    return _copy_sample_file_to_tmpdir(tmp_path, request.param, "pyproject.toml")
+    return sample_file(request.param, "pyproject.toml")
 
 
 @pytest.fixture(scope="function")

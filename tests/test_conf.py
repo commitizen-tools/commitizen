@@ -164,6 +164,7 @@ def config_files_manager(request, tmpdir):
         yield
 
 
+@pytest.mark.usefixtures("in_repo_root")
 def test_find_git_project_root(tmpdir):
     assert git.find_git_project_root() == Path(os.getcwd())
 
