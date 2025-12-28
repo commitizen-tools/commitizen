@@ -578,9 +578,9 @@ def tags() -> list[git.GitTag]:
 
 
 @pytest.fixture
-def changelog_content() -> str:
-    changelog_path = "tests/CHANGELOG_FOR_TEST.md"
-    with open(changelog_path, encoding="utf-8") as f:
+def changelog_content(data_dir: Path) -> str:
+    changelog = data_dir / "CHANGELOG_FOR_TEST.md"
+    with changelog.open(encoding="utf-8") as f:
         return f.read()
 
 
@@ -1657,6 +1657,7 @@ def test_tags_rules_get_version_tags(capsys: pytest.CaptureFixture):
     assert captured.err.count("not-a-version") == 2
 
 
+@pytest.mark.usefixtures("in_repo_root")
 def test_changelog_file_name_from_args_and_config():
     mock_config = Mock(spec=BaseConfig)
     mock_path = Mock(spec=Path)

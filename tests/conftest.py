@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import re
 import tempfile
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
@@ -15,45 +16,46 @@ from commitizen.changelog_formats import (
 from commitizen.config import BaseConfig
 from commitizen.cz import registry
 from commitizen.cz.base import BaseCommitizen
+from tests.utils import create_file_and_commit
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Mapping
-    from pathlib import Path
 
     from pytest_mock import MockerFixture
 
     from commitizen.question import CzQuestion
-from tests.utils import create_file_and_commit
+
 
 SIGNER = "GitHub Action"
 SIGNER_MAIL = "action@github.com"
 
 
-@pytest.fixture(autouse=True)
-def git_sandbox(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
-    """Ensure git commands are executed without the current user settings"""
-    # Clear any GIT_ prefixed environment variable
-    for var in os.environ:
-        if var.startswith("GIT_"):
-            monkeypatch.delenv(var)
+@pytest.fixture
+def repo_root() -> Path:
+    return Path(__file__).parent.parent
 
-    # Define a dedicated temporary git config
-    gitconfig = tmp_path / ".git" / "config"
-    if not gitconfig.parent.exists():
-        gitconfig.parent.mkdir()
 
-    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(gitconfig))
+@pytest.fixture
+def in_repo_root(repo_root: Path) -> Iterator[Path]:
+    cwd = os.getcwd()
+    os.chdir(repo_root)
+    yield repo_root
+    os.chdir(cwd)
 
-    r = cmd.run(f"git config --file {gitconfig} user.name {SIGNER}")
-    assert r.return_code == 0, r.err
-    r = cmd.run(f"git config --file {gitconfig} user.email {SIGNER_MAIL}")
-    assert r.return_code == 0, r.err
 
-    r = cmd.run(f"git config --file {gitconfig} safe.directory '*'")
-    assert r.return_code == 0, r.err
+@pytest.fixture
+def data_dir(repo_root: Path) -> Path:
+    return repo_root / "tests" / "data"
 
-    r = cmd.run("git config --global init.defaultBranch master")
-    assert r.return_code == 0, r.err
+
+@pytest.fixture(scope="session")
+def set_default_gitconfig() -> dict[str, str]:
+    return {
+        "user.name": "SIGNER",
+        "user.email": SIGNER_MAIL,
+        "safe.cirectory": "*",
+        "init.defaultBranch": "master",
+    }
 
 
 @pytest.fixture
