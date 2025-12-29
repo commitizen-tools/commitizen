@@ -1,4 +1,5 @@
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/commitizen-tools/commitizen/pythonpackage.yml?label=python%20package&logo=github&logoColor=white&style=flat-square)](https://github.com/commitizen-tools/commitizen/actions)
+[![Check Links](https://github.com/commitizen-tools/commitizen/actions/workflows/links.yml/badge.svg)](https://github.com/commitizen-tools/commitizen/actions/workflows/links.yml)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square)](https://conventionalcommits.org)
 [![PyPI Package latest release](https://img.shields.io/pypi/v/commitizen.svg?style=flat-square)](https://pypi.org/project/commitizen/)
 [![PyPI Package download count (per month)](https://img.shields.io/pypi/dm/commitizen?style=flat-square)](https://pypi.org/project/commitizen/)
@@ -45,7 +46,7 @@ This standardization makes your commit history more readable and meaningful, whi
 - Intelligent [version bumping](https://commitizen-tools.github.io/commitizen/commands/bump/) using [Semantic Versioning][semver]
 - Automatic [keep a changelog][keepchangelog] generation
 - Built-in commit validation with pre-commit hooks
-- [Customizable](https://commitizen-tools.github.io/commitizen/customization/) commit rules and templates
+- [Customizable](https://commitizen-tools.github.io/commitizen/customization/config_file/) commit rules and templates
 - Multi-format version file support
 - Custom rules and plugins via pip
 
@@ -174,7 +175,7 @@ You can customize:
 
 - [Version files](https://commitizen-tools.github.io/commitizen/commands/bump/#version_files)
 - [Version scheme](https://commitizen-tools.github.io/commitizen/commands/bump/#version_scheme)
-- [Version provider](https://commitizen-tools.github.io/commitizen/config/#version-providers)
+- [Version provider](https://commitizen-tools.github.io/commitizen/config/version_provider/)
 
 For all available options, see the [bump command documentation](https://commitizen-tools.github.io/commitizen/commands/bump/).
 
@@ -249,7 +250,7 @@ Commitizen provides a comprehensive CLI with various commands. Here's the comple
 
 - [Conventional Commits Specification][conventional_commits]
 - [Exit Codes Reference](https://commitizen-tools.github.io/commitizen/exit_codes/)
-- [Configuration Guide](https://commitizen-tools.github.io/commitizen/config/)
+- [Configuration Guide](https://commitizen-tools.github.io/commitizen/config/configuration_file/)
 - [Command Documentation](https://commitizen-tools.github.io/commitizen/commands/init/)
 
 ### Getting Help

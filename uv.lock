@@ -195,7 +195,7 @@ wheels = [
 
 [[package]]
 name = "commitizen"
-version = "4.10.1"
+version = "4.11.0"
 source = { editable = "." }
 dependencies = [
     { name = "argcomplete" },
@@ -241,6 +241,7 @@ test = [
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pytest-freezer" },
+    { name = "pytest-gitconfig" },
     { name = "pytest-mock" },
     { name = "pytest-regressions" },
     { name = "pytest-xdist" },
@@ -289,6 +290,7 @@ test = [
     { name = "pytest", specifier = ">=7.2" },
     { name = "pytest-cov", specifier = ">=4" },
     { name = "pytest-freezer", specifier = ">=0.4.6" },
+    { name = "pytest-gitconfig", specifier = ">=0.9.0" },
     { name = "pytest-mock", specifier = ">=3.10" },
     { name = "pytest-regressions", specifier = ">=2.4.0" },
     { name = "pytest-xdist", specifier = ">=3.1.0" },
@@ -1180,6 +1182,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/81/f0/98dcbc5324064360b19850b14c84cea9ca50785d921741dbfc442346e925/pytest_freezer-0.4.9.tar.gz", hash = "sha256:21bf16bc9cc46bf98f94382c4b5c3c389be7056ff0be33029111ae11b3f1c82a", size = 3177, upload-time = "2024-12-12T08:53:08.684Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c1/e9/30252bc05bcf67200a17f4f0b4cc7598f0a68df4fa9fa356193aa899f145/pytest_freezer-0.4.9-py3-none-any.whl", hash = "sha256:8b6c50523b7d4aec4590b52bfa5ff766d772ce506e2bf4846c88041ea9ccae59", size = 3192, upload-time = "2024-12-12T08:53:07.641Z" },
+]
+
+[[package]]
+name = "pytest-gitconfig"
+version = "0.9.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pytest" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f5/c7/39ad46d239bf49e6c1c8b4f6b99e75c8bee7bfc1e83cd8542d8701190508/pytest_gitconfig-0.9.0.tar.gz", hash = "sha256:5f9e8a29b4a8e55ddd740216ddb0a8a5e97f1c9c7f6bfdac91863473a8c60f9c", size = 10078, upload-time = "2025-12-28T01:52:17.821Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d9/78/460084e968adb270fa1b15d3b125d3d6da25514293e05c811820a19bfc04/pytest_gitconfig-0.9.0-py3-none-any.whl", hash = "sha256:3d855a9dd5fb3906010dbb1f8161366d4d86b34df8c14021fa012f23de3e5354", size = 7113, upload-time = "2025-12-28T01:52:16.395Z" },
 ]
 
 [[package]]

@@ -1,6 +1,6 @@
 [project]
 name = "commitizen"
-version = "4.10.1"
+version = "4.11.0"
 description = "Python commitizen client tool"
 authors = [{ name = "Santiago Fraire", email = "santiwilly@gmail.com" }]
 maintainers = [
@@ -95,6 +95,7 @@ test = [
     "pytest-regressions>=2.4.0",
     "pytest-freezer>=0.4.6",
     "pytest-xdist>=3.1.0",
+    "pytest-gitconfig>=0.9.0",
 ]
 
 linters = [
@@ -121,7 +122,7 @@ build-backend = "uv_build"
 
 
 [tool.commitizen]
-version = "4.10.1"
+version = "4.11.0"
 tag_format = "v$version"
 version_files = [
     "pyproject.toml:version",
@@ -178,7 +179,7 @@ env_list = ["3.10", "3.11", "3.12", "3.13", "3.14"]
 description = "Run tests suite against Python {base_python}"
 skip_install = true
 deps = ["uv>=0.9.0"]
-commands_pre = [["uv", "sync", "--group", "main, test"]]
+commands_pre = [["uv", "sync", "--group", "main"]]
 commands = [["pytest", { replace = "posargs", extend = true }]]
 
 [tool.ruff]
