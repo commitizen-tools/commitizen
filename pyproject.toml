@@ -265,7 +265,7 @@ test.cmd = "pytest -n 3 --dist=loadfile"
 "test:all".cmd = "tox --parallel"
 
 cover.help = "Run the test suite with coverage"
-cover.ref = "test --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen"
+cover.ref = "test --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen  --junitxml=junit.xml -o junit_family=legacy"
 
 all.help = "Run all tasks"
 all.sequence = ["format", "lint", "check-commit", "cover"]
