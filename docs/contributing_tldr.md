@@ -12,6 +12,9 @@ Please check the [pyproject.toml](https://github.com/commitizen-tools/commitizen
 ### Code Changes
 
 ```bash
+# Make sure you have the latest version of poetry installed
+poetry self update
+
 # Ensure you have the correct dependencies, for nix user's see below
 poetry install
 
@@ -34,6 +37,13 @@ pytest -n auto <test_suite>
 ```bash
 # Build the documentation locally and check for broken links
 poetry doc
+```
+
+Also, we use [Lychee](https://lychee.cli.rs/) to check for broken links in the documentation.
+
+```bash
+# Check for broken links in the documentation
+lychee .
 ```
 
 ### Nix Users
