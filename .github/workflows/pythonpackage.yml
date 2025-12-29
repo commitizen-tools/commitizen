@@ -1,6 +1,13 @@
 name: Python package
 
-on: [workflow_dispatch, pull_request]
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "commitizen/**"
+      - "tests/**"
+      - "pyproject.toml"
+      - "poetry.lock"
 
 jobs:
   python-check:
