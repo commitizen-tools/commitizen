@@ -1,21 +1,16 @@
+from __future__ import annotations
+
 import itertools
 import sys
-from datetime import datetime
 from pathlib import Path
 from textwrap import dedent
+from typing import TYPE_CHECKING
 
 import pytest
-from dateutil import relativedelta
 from jinja2 import FileSystemLoader
-from pytest_mock import MockFixture
-from pytest_regressions.file_regression import FileRegressionFixture
 
-from commitizen import __file__ as commitizen_init
 from commitizen import cli, git
-from commitizen.changelog_formats import ChangelogFormat
 from commitizen.commands.changelog import Changelog
-from commitizen.config.base_config import BaseConfig
-from commitizen.cz.base import BaseCommitizen
 from commitizen.exceptions import (
     DryRunExit,
     InvalidCommandArgumentError,
@@ -24,76 +19,69 @@ from commitizen.exceptions import (
     NotAGitProjectError,
     NotAllowed,
 )
-from tests.utils import (
-    create_branch,
-    create_file_and_commit,
-    create_tag,
-    get_current_branch,
-    merge_branch,
-    switch_branch,
-    wait_for_tag,
-)
+
+if TYPE_CHECKING:
+    from pytest_mock import MockFixture
+    from pytest_regressions.file_regression import FileRegressionFixture
+
+    from commitizen.changelog_formats import ChangelogFormat
+    from commitizen.config.base_config import BaseConfig
+    from commitizen.config.json_config import JsonConfig
+    from commitizen.cz.base import BaseCommitizen
+    from tests.utils import UtilFixture
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_from_version_zero_point_two(
-    mocker: MockFixture, capsys, file_regression
+    capsys: pytest.CaptureFixture,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
-    create_file_and_commit("feat: new file")
-    create_file_and_commit("refactor: not in changelog")
+    util.create_file_and_commit("feat: new file")
+    util.create_file_and_commit("refactor: not in changelog")
 
     # create tag
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--yes")
     capsys.readouterr()
 
-    create_file_and_commit("feat: after 0.2.0")
-    create_file_and_commit("feat: after 0.2")
+    util.create_file_and_commit("feat: after 0.2.0")
+    util.create_file_and_commit("feat: after 0.2")
 
-    testargs = ["cz", "changelog", "--start-rev", "0.2.0", "--dry-run"]
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(DryRunExit):
-        cli.main()
+        util.run_cli("changelog", "--dry-run", "--start-rev", "0.2.0")
 
     out, _ = capsys.readouterr()
     file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_with_different_cz(mocker: MockFixture, capsys, file_regression):
-    create_file_and_commit("JRA-34 #comment corrected indent issue")
-    create_file_and_commit("JRA-35 #time 1w 2d 4h 30m Total work logged")
-
-    testargs = ["cz", "-n", "cz_jira", "changelog", "--dry-run"]
-    mocker.patch.object(sys, "argv", testargs)
+def test_changelog_with_different_cz(
+    capsys: pytest.CaptureFixture,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
+):
+    util.create_file_and_commit("JRA-34 #comment corrected indent issue")
+    util.create_file_and_commit("JRA-35 #time 1w 2d 4h 30m Total work logged")
 
     with pytest.raises(DryRunExit):
-        cli.main()
+        util.run_cli("-n", "cz_jira", "changelog", "--dry-run")
     out, _ = capsys.readouterr()
     file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_from_start(
-    mocker: MockFixture, capsys, changelog_format: ChangelogFormat, file_regression
+    changelog_format: ChangelogFormat,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
-    create_file_and_commit("feat: new file")
-    create_file_and_commit("refactor: is in changelog")
-    create_file_and_commit("Merge into master")
+    util.create_file_and_commit("feat: new file")
+    util.create_file_and_commit("refactor: is in changelog")
+    util.create_file_and_commit("Merge into master")
     changelog_file = f"CHANGELOG.{changelog_format.extension}"
     template = f"CHANGELOG.{changelog_format.extension}.j2"
 
-    testargs = [
-        "cz",
-        "changelog",
-        "--file-name",
-        changelog_file,
-        "--template",
-        template,
-    ]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "--file-name", changelog_file, "--template", template)
 
     with open(changelog_file, encoding="utf-8") as f:
         out = f.read()
@@ -101,101 +89,76 @@ def test_changelog_from_start(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-08-14")
 def test_changelog_replacing_unreleased_using_incremental(
-    mocker: MockFixture, capsys, changelog_format: ChangelogFormat, file_regression
+    changelog_format: ChangelogFormat,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
-    create_file_and_commit("feat: add new output")
-    create_file_and_commit("fix: output glitch")
-    create_file_and_commit("Merge into master")
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
+    util.create_file_and_commit("Merge into master")
     changelog_file = f"CHANGELOG.{changelog_format.extension}"
     template = f"CHANGELOG.{changelog_format.extension}.j2"
 
-    testargs = [
-        "cz",
-        "changelog",
-        "--file-name",
-        changelog_file,
-        "--template",
-        template,
-    ]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "--file-name", changelog_file, "--template", template)
 
-    testargs = [
-        "cz",
-        "bump",
-        "--yes",
-        "--file-name",
-        changelog_file,
-        "--template",
-        template,
-    ]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--yes", "--file-name", changelog_file, "--template", template)
 
-    create_file_and_commit("fix: mama gotta work")
-    create_file_and_commit("feat: add more stuff")
-    create_file_and_commit("Merge into master")
+    util.create_file_and_commit("fix: mama gotta work")
+    util.create_file_and_commit("feat: add more stuff")
+    util.create_file_and_commit("Merge into master")
 
-    testargs = [
-        "cz",
+    util.run_cli(
         "changelog",
         "--incremental",
         "--file-name",
         changelog_file,
         "--template",
         template,
-    ]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    )
 
     with open(changelog_file, encoding="utf-8") as f:
-        out = f.read().replace(
-            datetime.strftime(datetime.now(), "%Y-%m-%d"), "2022-08-14"
-        )
+        out = f.read()
 
     file_regression.check(out, extension=changelog_format.ext)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-08-14")
 def test_changelog_is_persisted_using_incremental(
-    mocker: MockFixture, capsys, changelog_path, file_regression
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
-    create_file_and_commit("feat: add new output")
-    create_file_and_commit("fix: output glitch")
-    create_file_and_commit("Merge into master")
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
+    util.create_file_and_commit("Merge into master")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--yes")
 
-    testargs = ["cz", "changelog"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog")
 
     with open(changelog_path, "a", encoding="utf-8") as f:
         f.write("\nnote: this should be persisted using increment\n")
 
-    create_file_and_commit("fix: mama gotta work")
-    create_file_and_commit("feat: add more stuff")
-    create_file_and_commit("Merge into master")
+    util.create_file_and_commit("fix: mama gotta work")
+    util.create_file_and_commit("feat: add more stuff")
+    util.create_file_and_commit("Merge into master")
 
-    testargs = ["cz", "changelog", "--incremental"]
-
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "--incremental")
 
     with open(changelog_path, encoding="utf-8") as f:
-        out = f.read().replace(
-            datetime.strftime(datetime.now(), "%Y-%m-%d"), "2022-08-14"
-        )
+        out = f.read()
 
     file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_incremental_angular_sample(
-    mocker: MockFixture, capsys, changelog_path, file_regression
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
     with open(changelog_path, "w", encoding="utf-8") as f:
         f.write(
@@ -205,19 +168,16 @@ def test_changelog_incremental_angular_sample(
             "\n"
             "* **common:** format day-periods that cross midnight ([#36611](https://github.com/angular/angular/issues/36611)) ([c6e5fc4](https://github.com/angular/angular/commit/c6e5fc4)), closes [#36566](https://github.com/angular/angular/issues/36566)\n"
         )
-    create_file_and_commit("irrelevant commit")
-    git.tag("10.0.0-rc.3")
+    util.create_file_and_commit("irrelevant commit")
+    util.create_tag("10.0.0-rc.3")
 
-    create_file_and_commit("feat: add new output")
-    create_file_and_commit("fix: output glitch")
-    create_file_and_commit("fix: mama gotta work")
-    create_file_and_commit("feat: add more stuff")
-    create_file_and_commit("Merge into master")
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
+    util.create_file_and_commit("fix: mama gotta work")
+    util.create_file_and_commit("feat: add more stuff")
+    util.create_file_and_commit("Merge into master")
 
-    testargs = ["cz", "changelog", "--incremental"]
-
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "--incremental")
 
     with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
@@ -252,23 +212,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_incremental_keep_a_changelog_sample(
-    mocker: MockFixture, capsys, changelog_path, file_regression
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
     with open(changelog_path, "w", encoding="utf-8") as f:
         f.write(KEEP_A_CHANGELOG)
-    create_file_and_commit("irrelevant commit")
-    git.tag("1.0.0")
+    util.create_file_and_commit("irrelevant commit")
+    util.create_tag("1.0.0")
 
-    create_file_and_commit("feat: add new output")
-    create_file_and_commit("fix: output glitch")
-    create_file_and_commit("fix: mama gotta work")
-    create_file_and_commit("feat: add more stuff")
-    create_file_and_commit("Merge into master")
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
+    util.create_file_and_commit("fix: mama gotta work")
+    util.create_file_and_commit("feat: add more stuff")
+    util.create_file_and_commit("Merge into master")
 
-    testargs = ["cz", "changelog", "--incremental"]
-
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "--incremental")
 
     with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
@@ -278,13 +237,15 @@ def test_changelog_incremental_keep_a_changelog_sample(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.parametrize("dry_run", [True, False])
-def test_changelog_hook(mocker: MockFixture, config: BaseConfig, dry_run: bool):
+def test_changelog_hook(
+    mocker: MockFixture, config: BaseConfig, dry_run: bool, util: UtilFixture
+):
     changelog_hook_mock = mocker.Mock()
     changelog_hook_mock.return_value = "cool changelog hook"
 
-    create_file_and_commit("feat: new file")
-    create_file_and_commit("refactor: is in changelog")
-    create_file_and_commit("Merge into master")
+    util.create_file_and_commit("feat: new file")
+    util.create_file_and_commit("refactor: is in changelog")
+    util.create_file_and_commit("Merge into master")
 
     config.settings["change_type_order"] = ["Refactor", "Feat"]  # type: ignore[typeddict-unknown-key]
     changelog = Changelog(
@@ -308,13 +269,15 @@ def test_changelog_hook(mocker: MockFixture, config: BaseConfig, dry_run: bool):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_hook_customize(mocker: MockFixture, config_customize):
+def test_changelog_hook_customize(
+    mocker: MockFixture, config_customize: JsonConfig, util: UtilFixture
+):
     changelog_hook_mock = mocker.Mock()
     changelog_hook_mock.return_value = "cool changelog hook"
 
-    create_file_and_commit("feat: new file")
-    create_file_and_commit("refactor: is in changelog")
-    create_file_and_commit("Merge into master")
+    util.create_file_and_commit("feat: new file")
+    util.create_file_and_commit("refactor: is in changelog")
+    util.create_file_and_commit("Merge into master")
 
     changelog = Changelog(
         config_customize,
@@ -330,15 +293,17 @@ def test_changelog_hook_customize(mocker: MockFixture, config_customize):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_release_hook(mocker: MockFixture, config):
+def test_changelog_release_hook(
+    mocker: MockFixture, config: BaseConfig, util: UtilFixture
+):
     def changelog_release_hook(release: dict, tag: git.GitTag) -> dict:
         return release
 
     for i in range(3):
-        create_file_and_commit("feat: new file")
-        create_file_and_commit("refactor: is in changelog")
-        create_file_and_commit("Merge into master")
-        git.tag(f"0.{i + 1}.0")
+        util.create_file_and_commit("feat: new file")
+        util.create_file_and_commit("refactor: is in changelog")
+        util.create_file_and_commit("Merge into master")
+        util.create_tag(f"0.{i + 1}.0")
 
     # changelog = Changelog(config, {})
     changelog = Changelog(
@@ -353,7 +318,7 @@ def test_changelog_release_hook(mocker: MockFixture, config):
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_with_non_linear_merges_commit_order(
-    mocker: MockFixture, config_customize
+    mocker: MockFixture, config_customize: JsonConfig, util: UtilFixture
 ):
     """Test that commits merged non-linearly are correctly ordered in the changelog
 
@@ -385,23 +350,23 @@ def test_changelog_with_non_linear_merges_commit_order(
     changelog_hook_mock = mocker.Mock()
     changelog_hook_mock.return_value = "cool changelog hook"
 
-    create_file_and_commit("feat: initial commit")
+    util.create_file_and_commit("feat: initial commit")
 
-    main_branch = get_current_branch()
+    main_branch = util.get_current_branch()
 
-    create_branch("branchA")
-    create_branch("branchB")
+    util.create_branch("branchA")
+    util.create_branch("branchB")
 
-    switch_branch("branchA")
-    create_file_and_commit("feat: I will be merged second")
+    util.switch_branch("branchA")
+    util.create_file_and_commit("feat: I will be merged second")
 
-    switch_branch("branchB")
-    create_file_and_commit("feat: I will be merged first")
+    util.switch_branch("branchB")
+    util.create_file_and_commit("feat: I will be merged first")
 
     # Note we merge branches opposite order than author_date
-    switch_branch(main_branch)
-    merge_branch("branchB")
-    merge_branch("branchA")
+    util.switch_branch(main_branch)
+    util.merge_branch("branchB")
+    util.merge_branch("branchA")
 
     changelog = Changelog(
         config_customize,
@@ -422,32 +387,26 @@ def test_changelog_with_non_linear_merges_commit_order(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_multiple_incremental_do_not_add_new_lines(
-    mocker: MockFixture, capsys, changelog_path, file_regression
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
     """Test for bug https://github.com/commitizen-tools/commitizen/issues/192"""
-    create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("feat: add new output")
 
-    testargs = ["cz", "changelog", "--incremental"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "--incremental")
 
-    create_file_and_commit("fix: output glitch")
+    util.create_file_and_commit("fix: output glitch")
 
-    testargs = ["cz", "changelog", "--incremental"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "--incremental")
 
-    create_file_and_commit("fix: no more explosions")
+    util.create_file_and_commit("fix: no more explosions")
 
-    testargs = ["cz", "changelog", "--incremental"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "--incremental")
 
-    create_file_and_commit("feat: add more stuff")
+    util.create_file_and_commit("feat: add more stuff")
 
-    testargs = ["cz", "changelog", "--incremental"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "--incremental")
 
     with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
@@ -457,18 +416,15 @@ def test_changelog_multiple_incremental_do_not_add_new_lines(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_incremental_newline_separates_new_content_from_old(
-    mocker: MockFixture, changelog_path
+    changelog_path: str, util: UtilFixture
 ):
     """Test for https://github.com/commitizen-tools/commitizen/issues/509"""
     with open(changelog_path, "w", encoding="utf-8") as f:
         f.write("Pre-existing content that should be kept\n")
 
-    create_file_and_commit("feat: add more cat videos")
+    util.create_file_and_commit("feat: add more cat videos")
 
-    testargs = ["cz", "changelog", "--incremental"]
-
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "--incremental")
 
     with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
@@ -479,7 +435,7 @@ def test_changelog_incremental_newline_separates_new_content_from_old(
     )
 
 
-def test_changelog_without_revision(mocker: MockFixture, tmp_commitizen_project):
+def test_changelog_without_revision(tmp_commitizen_project, util: UtilFixture):
     changelog_file = tmp_commitizen_project.join("CHANGELOG.md")
     changelog_file.write(
         """
@@ -489,26 +445,19 @@ def test_changelog_without_revision(mocker: MockFixture, tmp_commitizen_project)
         """
     )
 
-    # create_file_and_commit("feat: new file")
-    testargs = ["cz", "changelog", "--incremental"]
-    mocker.patch.object(sys, "argv", testargs)
-
     with pytest.raises(NoRevisionError):
-        cli.main()
+        util.run_cli("changelog", "--incremental")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_incremental_with_revision(mocker):
+def test_changelog_incremental_with_revision(util: UtilFixture):
     """combining incremental with a revision doesn't make sense"""
-    testargs = ["cz", "changelog", "--incremental", "0.2.0"]
-    mocker.patch.object(sys, "argv", testargs)
-
     with pytest.raises(NotAllowed):
-        cli.main()
+        util.run_cli("changelog", "--incremental", "0.2.0")
 
 
 def test_changelog_with_different_tag_name_and_changelog_content(
-    mocker: MockFixture, tmp_commitizen_project
+    tmp_commitizen_project, util: UtilFixture
 ):
     changelog_file = tmp_commitizen_project.join("CHANGELOG.md")
     changelog_file.write(
@@ -518,54 +467,51 @@ def test_changelog_with_different_tag_name_and_changelog_content(
         ## v1.0.0
         """
     )
-    create_file_and_commit("feat: new file")
-    git.tag("2.0.0")
-
-    # create_file_and_commit("feat: new file")
-    testargs = ["cz", "changelog", "--incremental"]
-    mocker.patch.object(sys, "argv", testargs)
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("2.0.0")
 
     with pytest.raises(NoRevisionError):
-        cli.main()
+        util.run_cli("changelog", "--incremental")
 
 
-def test_changelog_in_non_git_project(tmpdir, config, mocker: MockFixture):
-    testargs = ["cz", "changelog", "--incremental"]
-    mocker.patch.object(sys, "argv", testargs)
-
-    with tmpdir.as_cwd():
-        with pytest.raises(NotAGitProjectError):
-            cli.main()
+@pytest.mark.usefixtures("chdir")
+def test_changelog_in_non_git_project(util: UtilFixture):
+    with pytest.raises(NotAGitProjectError):
+        util.run_cli("changelog", "--incremental")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_breaking_change_content_v1_beta(mocker: MockFixture, capsys, file_regression):
+def test_breaking_change_content_v1_beta(
+    capsys: pytest.CaptureFixture,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
+):
     commit_message = (
         "feat(users): email pattern corrected\n\n"
         "BREAKING CHANGE: migrate by renaming user to users\n\n"
         "footer content"
     )
-    create_file_and_commit(commit_message)
-    testargs = ["cz", "changelog", "--dry-run"]
-    mocker.patch.object(sys, "argv", testargs)
+    util.create_file_and_commit(commit_message)
     with pytest.raises(DryRunExit):
-        cli.main()
+        util.run_cli("changelog", "--dry-run")
     out, _ = capsys.readouterr()
     file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_breaking_change_content_v1(mocker: MockFixture, capsys, file_regression):
+def test_breaking_change_content_v1(
+    capsys: pytest.CaptureFixture,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
+):
     commit_message = (
         "feat(users): email pattern corrected\n\n"
         "body content\n\n"
         "BREAKING CHANGE: migrate by renaming user to users"
     )
-    create_file_and_commit(commit_message)
-    testargs = ["cz", "changelog", "--dry-run"]
-    mocker.patch.object(sys, "argv", testargs)
+    util.create_file_and_commit(commit_message)
     with pytest.raises(DryRunExit):
-        cli.main()
+        util.run_cli("changelog", "--dry-run")
     out, _ = capsys.readouterr()
 
     file_regression.check(out, extension=".md")
@@ -573,7 +519,9 @@ def test_breaking_change_content_v1(mocker: MockFixture, capsys, file_regression
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_breaking_change_content_v1_multiline(
-    mocker: MockFixture, capsys, file_regression
+    capsys: pytest.CaptureFixture,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
     commit_message = (
         "feat(users): email pattern corrected\n\n"
@@ -582,25 +530,23 @@ def test_breaking_change_content_v1_multiline(
         "and then connect the thingy with the other thingy\n\n"
         "footer content"
     )
-    create_file_and_commit(commit_message)
-    testargs = ["cz", "changelog", "--dry-run"]
-    mocker.patch.object(sys, "argv", testargs)
+    util.create_file_and_commit(commit_message)
     with pytest.raises(DryRunExit):
-        cli.main()
+        util.run_cli("changelog", "--dry-run")
     out, _ = capsys.readouterr()
     file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_breaking_change_content_v1_with_exclamation_mark(
-    mocker: MockFixture, capsys, file_regression
+    capsys: pytest.CaptureFixture,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
     commit_message = "chore!: drop support for py36"
-    create_file_and_commit(commit_message)
-    testargs = ["cz", "changelog", "--dry-run"]
-    mocker.patch.object(sys, "argv", testargs)
+    util.create_file_and_commit(commit_message)
     with pytest.raises(DryRunExit):
-        cli.main()
+        util.run_cli("changelog", "--dry-run")
     out, _ = capsys.readouterr()
 
     file_regression.check(out, extension=".md")
@@ -608,14 +554,14 @@ def test_breaking_change_content_v1_with_exclamation_mark(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_breaking_change_content_v1_with_exclamation_mark_feat(
-    mocker: MockFixture, capsys, file_regression
+    capsys: pytest.CaptureFixture,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
     commit_message = "feat(pipeline)!: some text with breaking change"
-    create_file_and_commit(commit_message)
-    testargs = ["cz", "changelog", "--dry-run"]
-    mocker.patch.object(sys, "argv", testargs)
+    util.create_file_and_commit(commit_message)
     with pytest.raises(DryRunExit):
-        cli.main()
+        util.run_cli("changelog", "--dry-run")
     out, _ = capsys.readouterr()
 
     file_regression.check(out, extension=".md")
@@ -623,18 +569,19 @@ def test_breaking_change_content_v1_with_exclamation_mark_feat(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_config_flag_increment(
-    mocker: MockFixture, changelog_path, config_path, file_regression
+    changelog_path: str,
+    config_path: str,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
     with open(config_path, "a", encoding="utf-8") as f:
         f.write("changelog_incremental = true\n")
     with open(changelog_path, "a", encoding="utf-8") as f:
         f.write("\nnote: this should be persisted using increment\n")
 
-    create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("feat: add new output")
 
-    testargs = ["cz", "changelog"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog")
 
     with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
@@ -645,31 +592,30 @@ def test_changelog_config_flag_increment(
 
 @pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2025-12-29")
 def test_changelog_config_flag_merge_prerelease(
-    mocker: MockFixture, changelog_path, config_path, file_regression, test_input
+    changelog_path: str,
+    config_path: str,
+    file_regression: FileRegressionFixture,
+    test_input: str,
+    util: UtilFixture,
 ):
     with open(config_path, "a") as f:
         f.write("changelog_merge_prerelease = true\n")
 
-    create_file_and_commit("irrelevant commit")
-    mocker.patch("commitizen.git.GitTag.date", "1970-01-01")
-    git.tag("1.0.0")
+    util.create_file_and_commit("irrelevant commit")
+    util.create_tag("1.0.0")
 
-    create_file_and_commit("feat: add new output")
-    create_file_and_commit("fix: output glitch")
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
 
-    testargs = ["cz", "bump", "--prerelease", test_input, "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", test_input, "--yes")
 
-    create_file_and_commit("fix: mama gotta work")
-    create_file_and_commit("feat: add more stuff")
-    create_file_and_commit("Merge into master")
+    util.create_file_and_commit("fix: mama gotta work")
+    util.create_file_and_commit("feat: add more stuff")
+    util.create_file_and_commit("Merge into master")
 
-    testargs = ["cz", "changelog"]
-
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog")
 
     with open(changelog_path) as f:
         out = f.read()
@@ -679,25 +625,24 @@ def test_changelog_config_flag_merge_prerelease(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_config_start_rev_option(
-    mocker: MockFixture, capsys, config_path, file_regression
+    capsys: pytest.CaptureFixture,
+    config_path: str,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
     # create commit and tag
-    create_file_and_commit("feat: new file")
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.create_file_and_commit("feat: new file")
+    util.run_cli("bump", "--yes")
     capsys.readouterr()
 
-    create_file_and_commit("feat: after 0.2.0")
-    create_file_and_commit("feat: after 0.2")
+    util.create_file_and_commit("feat: after 0.2.0")
+    util.create_file_and_commit("feat: after 0.2")
 
     with open(config_path, "a", encoding="utf-8") as f:
         f.write('changelog_start_rev = "0.2.0"\n')
 
-    testargs = ["cz", "changelog", "--dry-run"]
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(DryRunExit):
-        cli.main()
+        util.run_cli("changelog", "--dry-run")
 
     out, _ = capsys.readouterr()
     file_regression.check(out, extension=".md")
@@ -705,24 +650,23 @@ def test_changelog_config_start_rev_option(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_incremental_keep_a_changelog_sample_with_annotated_tag(
-    mocker: MockFixture, capsys, changelog_path, file_regression
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
     """Fix #378"""
     with open(changelog_path, "w", encoding="utf-8") as f:
         f.write(KEEP_A_CHANGELOG)
-    create_file_and_commit("irrelevant commit")
-    git.tag("1.0.0", annotated=True)
+    util.create_file_and_commit("irrelevant commit")
+    util.create_tag("1.0.0", annotated=True)
 
-    create_file_and_commit("feat: add new output")
-    create_file_and_commit("fix: output glitch")
-    create_file_and_commit("fix: mama gotta work")
-    create_file_and_commit("feat: add more stuff")
-    create_file_and_commit("Merge into master")
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
+    util.create_file_and_commit("fix: mama gotta work")
+    util.create_file_and_commit("feat: add more stuff")
+    util.create_file_and_commit("Merge into master")
 
-    testargs = ["cz", "changelog", "--incremental"]
-
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "--incremental")
 
     with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
@@ -734,29 +678,27 @@ def test_changelog_incremental_keep_a_changelog_sample_with_annotated_tag(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2021-06-11")
 def test_changelog_incremental_with_release_candidate_version(
-    mocker: MockFixture, changelog_path, file_regression, test_input
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    test_input: str,
+    util: UtilFixture,
 ):
     """Fix #357"""
     with open(changelog_path, "w", encoding="utf-8") as f:
         f.write(KEEP_A_CHANGELOG)
-    create_file_and_commit("irrelevant commit")
-    git.tag("1.0.0", annotated=True)
+    util.create_file_and_commit("irrelevant commit")
+    util.create_tag("1.0.0", annotated=True)
 
-    create_file_and_commit("feat: add new output")
-    create_file_and_commit("fix: output glitch")
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
 
-    testargs = ["cz", "bump", "--changelog", "--prerelease", test_input, "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--changelog", "--prerelease", test_input, "--yes")
 
-    create_file_and_commit("fix: mama gotta work")
-    create_file_and_commit("feat: add more stuff")
-    create_file_and_commit("Merge into master")
+    util.create_file_and_commit("fix: mama gotta work")
+    util.create_file_and_commit("feat: add more stuff")
+    util.create_file_and_commit("Merge into master")
 
-    testargs = ["cz", "changelog", "--incremental"]
-
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "--incremental")
 
     with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
@@ -770,23 +712,23 @@ def test_changelog_incremental_with_release_candidate_version(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2021-06-11")
 def test_changelog_incremental_with_prerelease_version_to_prerelease_version(
-    mocker: MockFixture, changelog_path, file_regression, from_pre, to_pre
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    from_pre: str,
+    to_pre: str,
+    util: UtilFixture,
 ):
     with open(changelog_path, "w") as f:
         f.write(KEEP_A_CHANGELOG)
-    create_file_and_commit("irrelevant commit")
-    git.tag("1.0.0", annotated=True)
+    util.create_file_and_commit("irrelevant commit")
+    util.create_tag("1.0.0", annotated=True)
 
-    create_file_and_commit("feat: add new output")
-    create_file_and_commit("fix: output glitch")
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
 
-    testargs = ["cz", "bump", "--changelog", "--prerelease", from_pre, "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--changelog", "--prerelease", from_pre, "--yes")
 
-    testargs = ["cz", "bump", "--changelog", "--prerelease", to_pre, "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--changelog", "--prerelease", to_pre, "--yes")
 
     with open(changelog_path) as f:
         out = f.read()
@@ -796,31 +738,29 @@ def test_changelog_incremental_with_prerelease_version_to_prerelease_version(
 
 @pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2025-12-29")
 def test_changelog_release_candidate_version_with_merge_prerelease(
-    mocker: MockFixture, changelog_path, file_regression, test_input
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    test_input: str,
+    util: UtilFixture,
 ):
     """Fix #357"""
     with open(changelog_path, "w") as f:
         f.write(KEEP_A_CHANGELOG)
-    create_file_and_commit("irrelevant commit")
-    mocker.patch("commitizen.git.GitTag.date", "1970-01-01")
-    git.tag("1.0.0")
+    util.create_file_and_commit("irrelevant commit")
+    util.create_tag("1.0.0")
 
-    create_file_and_commit("feat: add new output")
-    create_file_and_commit("fix: output glitch")
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
 
-    testargs = ["cz", "bump", "--prerelease", test_input, "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", test_input, "--yes")
 
-    create_file_and_commit("fix: mama gotta work")
-    create_file_and_commit("feat: add more stuff")
-    create_file_and_commit("Merge into master")
+    util.create_file_and_commit("fix: mama gotta work")
+    util.create_file_and_commit("feat: add more stuff")
+    util.create_file_and_commit("Merge into master")
 
-    testargs = ["cz", "changelog", "--merge-prerelease"]
-
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "--merge-prerelease")
 
     with open(changelog_path) as f:
         out = f.read()
@@ -832,35 +772,30 @@ def test_changelog_release_candidate_version_with_merge_prerelease(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2023-04-16")
 def test_changelog_incremental_with_merge_prerelease(
-    mocker: MockFixture, changelog_path, file_regression, test_input
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    test_input: str,
+    util: UtilFixture,
 ):
     """Fix #357"""
     with open(changelog_path, "w") as f:
         f.write(KEEP_A_CHANGELOG)
-    create_file_and_commit("irrelevant commit")
-    mocker.patch("commitizen.git.GitTag.date", "1970-01-01")
-    git.tag("1.0.0")
+    util.create_file_and_commit("irrelevant commit")
+    util.create_tag("1.0.0")
 
-    create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("feat: add new output")
 
-    testargs = ["cz", "bump", "--prerelease", test_input, "--yes", "--changelog"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", test_input, "--yes", "--changelog")
 
-    create_file_and_commit("fix: output glitch")
+    util.create_file_and_commit("fix: output glitch")
 
-    testargs = ["cz", "bump", "--prerelease", test_input, "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", test_input, "--yes")
 
-    create_file_and_commit("fix: mama gotta work")
-    create_file_and_commit("feat: add more stuff")
-    create_file_and_commit("Merge into master")
+    util.create_file_and_commit("fix: mama gotta work")
+    util.create_file_and_commit("feat: add more stuff")
+    util.create_file_and_commit("Merge into master")
 
-    testargs = ["cz", "changelog", "--merge-prerelease", "--incremental"]
-
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "--merge-prerelease", "--incremental")
 
     with open(changelog_path) as f:
         out = f.read()
@@ -870,46 +805,38 @@ def test_changelog_incremental_with_merge_prerelease(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_with_filename_as_empty_string(
-    mocker: MockFixture, changelog_path, config_path
+    changelog_path: str, config_path: str, util: UtilFixture
 ):
     with open(config_path, "a", encoding="utf-8") as f:
         f.write("changelog_file = true\n")
 
-    create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("feat: add new output")
 
-    testargs = ["cz", "changelog"]
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(NotAllowed):
-        cli.main()
+        util.run_cli("changelog")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_first_version_from_arg(
-    mocker: MockFixture, config_path, changelog_path, file_regression
+    config_path: str,
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
-    mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
-
     with open(config_path, "a", encoding="utf-8") as f:
         f.write('tag_format = "$version"\n')
 
     # create commit and tag
-    create_file_and_commit("feat: new file")
+    util.create_file_and_commit("feat: new file")
+    util.run_cli("bump", "--yes")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
+    util.create_file_and_commit("feat: after 0.2.0")
+    util.create_file_and_commit("feat: another feature")
 
-    create_file_and_commit("feat: after 0.2.0")
-    create_file_and_commit("feat: another feature")
+    util.run_cli("bump", "--yes")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-
-    testargs = ["cz", "changelog", "0.2.0"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "0.2.0")
     with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
 
@@ -917,33 +844,26 @@ def test_changelog_from_rev_first_version_from_arg(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_latest_version_from_arg(
-    mocker: MockFixture, config_path, changelog_path, file_regression
+    config_path: str,
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
-    mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
-
     with open(config_path, "a", encoding="utf-8") as f:
         f.write('tag_format = "$version"\n')
 
     # create commit and tag
-    create_file_and_commit("feat: new file")
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
+    util.create_file_and_commit("feat: new file")
+    util.run_cli("bump", "--yes")
 
-    create_file_and_commit("feat: after 0.2.0")
-    create_file_and_commit("feat: another feature")
+    util.create_file_and_commit("feat: after 0.2.0")
+    util.create_file_and_commit("feat: another feature")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--yes")
 
-    wait_for_tag()
-
-    testargs = ["cz", "changelog", "0.3.0"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "0.3.0")
 
     with open(changelog_path) as f:
         out = f.read()
@@ -962,43 +882,39 @@ def test_changelog_from_rev_latest_version_from_arg(
     ),
 )
 def test_changelog_from_rev_range_not_found(
-    mocker: MockFixture, config_path, rev_range: str, tag: str
+    config_path: str, rev_range: str, tag: str, util: UtilFixture
 ):
     """Provides an invalid revision ID to changelog command"""
     with open(config_path, "a", encoding="utf-8") as f:
         f.write('tag_format = "$version"\n')
 
     # create commit and tag
-    create_file_and_commit("feat: new file")
-    create_tag(tag)
-    create_file_and_commit("feat: new file")
-    create_tag("1.0.0")
+    util.create_file_and_commit("feat: new file")
+    util.create_tag(tag)
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("1.0.0")
 
-    testargs = ["cz", "changelog", rev_range]  # it shouldn't exist
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(NoCommitsFoundError) as excinfo:
-        cli.main()
+        util.run_cli("changelog", rev_range)  # it shouldn't exist
 
     assert "Could not find a valid revision" in str(excinfo)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_multiple_matching_tags(
-    mocker: MockFixture, config_path, changelog_path
+    config_path: str, changelog_path: str, util: UtilFixture
 ):
     with open(config_path, "a", encoding="utf-8") as f:
         f.write('tag_format = "new-$version"\nlegacy_tag_formats = ["legacy-$version"]')
 
-    create_file_and_commit("feat: new file")
-    create_tag("legacy-1.0.0")
-    create_file_and_commit("feat: new file")
-    create_tag("legacy-2.0.0")
-    create_tag("new-2.0.0")
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("legacy-1.0.0")
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("legacy-2.0.0")
+    util.create_tag("new-2.0.0")
 
-    testargs = ["cz", "changelog", "1.0.0..2.0.0"]  # it shouldn't exist
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.warns() as warnings:
-        cli.main()
+        util.run_cli("changelog", "1.0.0..2.0.0")  # it shouldn't exist
 
     assert len(warnings) == 1
     warning = warnings[0]
@@ -1013,27 +929,19 @@ def test_changelog_multiple_matching_tags(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_from_rev_range_default_tag_format(
-    mocker, config_path, changelog_path
+    config_path: str, changelog_path: str, util: UtilFixture
 ):
     """Checks that rev_range is calculated with the default (None) tag format"""
     # create commit and tag
-    create_file_and_commit("feat: new file")
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
+    util.create_file_and_commit("feat: new file")
+    util.run_cli("bump", "--yes")
 
-    create_file_and_commit("feat: after 0.2.0")
-    create_file_and_commit("feat: another feature")
+    util.create_file_and_commit("feat: after 0.2.0")
+    util.create_file_and_commit("feat: another feature")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
+    util.run_cli("bump", "--yes")
 
-    testargs = ["cz", "changelog", "0.3.0"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "0.3.0")
 
     with open(changelog_path) as f:
         out = f.read()
@@ -1042,30 +950,26 @@ def test_changelog_from_rev_range_default_tag_format(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_version_range_including_first_tag(
-    mocker: MockFixture, config_path, changelog_path, file_regression
+    config_path: str,
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
-    mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
-
     with open(config_path, "a", encoding="utf-8") as f:
         f.write('tag_format = "$version"\n')
 
     # create commit and tag
-    create_file_and_commit("feat: new file")
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.create_file_and_commit("feat: new file")
+    util.run_cli("bump", "--yes")
 
-    create_file_and_commit("feat: after 0.2.0")
-    create_file_and_commit("feat: another feature")
+    util.create_file_and_commit("feat: after 0.2.0")
+    util.create_file_and_commit("feat: another feature")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--yes")
 
-    testargs = ["cz", "changelog", "0.2.0..0.3.0"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "0.2.0..0.3.0")
     with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
 
@@ -1073,38 +977,29 @@ def test_changelog_from_rev_version_range_including_first_tag(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_version_range_from_arg(
-    mocker: MockFixture, config_path, changelog_path, file_regression
+    config_path: str,
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
-    mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
-
     with open(config_path, "a", encoding="utf-8") as f:
         f.write('tag_format = "$version"\n')
 
     # create commit and tag
-    create_file_and_commit("feat: new file")
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
-    create_file_and_commit("feat: after 0.2.0")
-    create_file_and_commit("feat: another feature")
+    util.create_file_and_commit("feat: new file")
+    util.run_cli("bump", "--yes")
+    util.create_file_and_commit("feat: after 0.2.0")
+    util.create_file_and_commit("feat: another feature")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
+    util.run_cli("bump", "--yes")
 
-    create_file_and_commit("feat: getting ready for this")
+    util.create_file_and_commit("feat: getting ready for this")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
+    util.run_cli("bump", "--yes")
 
-    testargs = ["cz", "changelog", "0.3.0..0.4.0"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "0.3.0..0.4.0")
     with open(changelog_path) as f:
         out = f.read()
 
@@ -1112,11 +1007,13 @@ def test_changelog_from_rev_version_range_from_arg(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_version_range_with_legacy_tags(
-    mocker: MockFixture, config_path, changelog_path, file_regression
+    config_path: str,
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
-    mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
-
     changelog = Path(changelog_path)
     Path(config_path).write_text(
         "\n".join(
@@ -1132,72 +1029,48 @@ def test_changelog_from_rev_version_range_with_legacy_tags(
         ),
     )
 
-    create_file_and_commit("feat: new file")
-    create_tag("old-0.2.0")
-    create_file_and_commit("feat: new file")
-    create_tag("legacy-0.3.0")
-    create_file_and_commit("feat: new file")
-    create_tag("legacy-0.4.0")
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("old-0.2.0")
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("legacy-0.3.0")
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("legacy-0.4.0")
 
-    testargs = ["cz", "changelog", "0.2.0..0.4.0"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "0.2.0..0.4.0")
     file_regression.check(changelog.read_text(), extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_version_with_big_range_from_arg(
-    mocker: MockFixture, config_path, changelog_path, file_regression
+    config_path, changelog_path, file_regression, util: UtilFixture
 ):
-    mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
-
     with open(config_path, "a", encoding="utf-8") as f:
         f.write('tag_format = "$version"\n')
 
     # create commit and tag
-    create_file_and_commit("feat: new file")
+    util.create_file_and_commit("feat: new file")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
+    util.run_cli("bump", "--yes")
 
-    create_file_and_commit("feat: after 0.2.0")
-    create_file_and_commit("feat: another feature")
+    util.create_file_and_commit("feat: after 0.2.0")
+    util.create_file_and_commit("feat: another feature")
 
-    testargs = ["cz", "bump", "--yes"]  # 0.3.0
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
-    create_file_and_commit("feat: getting ready for this")
+    util.run_cli("bump", "--yes")  # 0.3.0
+    util.create_file_and_commit("feat: getting ready for this")
 
-    testargs = ["cz", "bump", "--yes"]  # 0.4.0
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
-    create_file_and_commit("fix: small error")
+    util.run_cli("bump", "--yes")  # 0.4.0
+    util.create_file_and_commit("fix: small error")
 
-    testargs = ["cz", "bump", "--yes"]  # 0.4.1
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
-    create_file_and_commit("feat: new shinny feature")
+    util.run_cli("bump", "--yes")  # 0.4.1
+    util.create_file_and_commit("feat: new shinny feature")
 
-    testargs = ["cz", "bump", "--yes"]  # 0.5.0
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
-    create_file_and_commit("feat: amazing different shinny feature")
-    # dirty hack to avoid same time between tags
+    util.run_cli("bump", "--yes")  # 0.5.0
+    util.create_file_and_commit("feat: amazing different shinny feature")
 
-    testargs = ["cz", "bump", "--yes"]  # 0.6.0
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
+    util.run_cli("bump", "--yes")  # 0.6.0
 
-    testargs = ["cz", "changelog", "0.3.0..0.5.0"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "0.3.0..0.5.0")
     with open(changelog_path) as f:
         out = f.read()
 
@@ -1205,34 +1078,29 @@ def test_changelog_from_rev_version_with_big_range_from_arg(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_latest_version_dry_run(
-    mocker: MockFixture, capsys, config_path, changelog_path, file_regression
+    capsys: pytest.CaptureFixture,
+    config_path: str,
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
-    mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
-
     with open(config_path, "a") as f:
         f.write('tag_format = "$version"\n')
 
     # create commit and tag
-    create_file_and_commit("feat: new file")
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
+    util.create_file_and_commit("feat: new file")
+    util.run_cli("bump", "--yes")
 
-    create_file_and_commit("feat: after 0.2.0")
-    create_file_and_commit("feat: another feature")
+    util.create_file_and_commit("feat: after 0.2.0")
+    util.create_file_and_commit("feat: another feature")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--yes")
     capsys.readouterr()
-    wait_for_tag()
 
-    testargs = ["cz", "changelog", "0.3.0", "--dry-run"]
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(DryRunExit):
-        cli.main()
+        util.run_cli("changelog", "0.3.0", "--dry-run")
 
     out, _ = capsys.readouterr()
 
@@ -1240,29 +1108,29 @@ def test_changelog_from_rev_latest_version_dry_run(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_invalid_subject_is_skipped(mocker: MockFixture, capsys):
+def test_invalid_subject_is_skipped(capsys: pytest.CaptureFixture, util: UtilFixture):
     """Fix #510"""
     non_conformant_commit_title = (
         "Merge pull request #487 from manang/master\n\n"
         "feat: skip merge messages that start with Pull request\n"
     )
-    create_file_and_commit(non_conformant_commit_title)
-    create_file_and_commit("feat: a new world")
-    testargs = ["cz", "changelog", "--dry-run"]
-    mocker.patch.object(sys, "argv", testargs)
+    util.create_file_and_commit(non_conformant_commit_title)
+    util.create_file_and_commit("feat: a new world")
     with pytest.raises(DryRunExit):
-        cli.main()
+        util.run_cli("changelog", "--dry-run")
     out, _ = capsys.readouterr()
 
     assert out == ("## Unreleased\n\n### Feat\n\n- a new world\n\n")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_with_customized_change_type_order(
-    mocker, config_path, changelog_path, file_regression
+    config_path: str,
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
-    mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
-
     with open(config_path, "a") as f:
         f.write('tag_format = "$version"\n')
         f.write(
@@ -1270,31 +1138,20 @@ def test_changelog_with_customized_change_type_order(
         )
 
     # create commit and tag
-    create_file_and_commit("feat: new file")
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
-    create_file_and_commit("feat: after 0.2.0")
-    create_file_and_commit("feat: another feature")
-    create_file_and_commit("fix: fix bug")
+    util.create_file_and_commit("feat: new file")
+    util.run_cli("bump", "--yes")
+    util.create_file_and_commit("feat: after 0.2.0")
+    util.create_file_and_commit("feat: another feature")
+    util.create_file_and_commit("fix: fix bug")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
+    util.run_cli("bump", "--yes")
 
-    create_file_and_commit("feat: getting ready for this")
-    create_file_and_commit("perf: perf improvement")
+    util.create_file_and_commit("feat: getting ready for this")
+    util.create_file_and_commit("perf: perf improvement")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
+    util.run_cli("bump", "--yes")
 
-    testargs = ["cz", "changelog", "0.3.0..0.4.0"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "0.3.0..0.4.0")
     with open(changelog_path) as f:
         out = f.read()
 
@@ -1302,67 +1159,56 @@ def test_changelog_with_customized_change_type_order(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_empty_commit_list(mocker):
-    create_file_and_commit("feat: a new world")
+def test_empty_commit_list(mocker: MockFixture, util: UtilFixture):
+    util.create_file_and_commit("feat: a new world")
 
     # test changelog properly handles when no commits are found for the revision
     mocker.patch("commitizen.git.get_commits", return_value=[])
-    testargs = ["cz", "changelog"]
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(NoCommitsFoundError):
-        cli.main()
+        util.run_cli("changelog")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_prerelease_rev_with_use_scheme_semver(
-    mocker: MockFixture, capsys, config_path, changelog_path, file_regression
+    mocker: MockFixture,
+    capsys: pytest.CaptureFixture,
+    config_path: str,
+    changelog_path: str,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
-    mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
-
     with open(config_path, "a") as f:
         f.write('tag_format = "$version"\nversion_scheme = "semver"')
 
     # create commit and tag
-    create_file_and_commit("feat: new file")
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
+    util.create_file_and_commit("feat: new file")
+    util.run_cli("bump", "--yes")
 
-    create_file_and_commit("feat: after 0.2.0")
-    create_file_and_commit("feat: another feature")
+    util.create_file_and_commit("feat: after 0.2.0")
+    util.create_file_and_commit("feat: another feature")
 
-    testargs = ["cz", "bump", "--yes", "--prerelease", "alpha"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--yes", "--prerelease", "alpha")
     capsys.readouterr()
-    wait_for_tag()
 
     tag_exists = git.tag_exist("0.3.0-a0")
     assert tag_exists is True
 
-    testargs = ["cz", "changelog", "0.3.0-a0", "--dry-run"]
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(DryRunExit):
-        cli.main()
+        util.run_cli("changelog", "0.3.0-a0", "--dry-run")
 
     out, _ = capsys.readouterr()
 
     file_regression.check(out, extension=".md")
 
-    testargs = ["cz", "bump", "--yes", "--prerelease", "alpha"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--yes", "--prerelease", "alpha")
     capsys.readouterr()
-    wait_for_tag()
 
     tag_exists = git.tag_exist("0.3.0-a1")
     assert tag_exists is True
 
-    testargs = ["cz", "changelog", "0.3.0-a1", "--dry-run"]
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(DryRunExit):
-        cli.main()
+        util.run_cli("changelog", "0.3.0-a1", "--dry-run")
 
     out, _ = capsys.readouterr()
 
@@ -1370,16 +1216,18 @@ def test_changelog_prerelease_rev_with_use_scheme_semver(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_uses_version_tags_for_header(mocker: MockFixture, config):
+def test_changelog_uses_version_tags_for_header(
+    mocker: MockFixture, config: BaseConfig, util: UtilFixture
+):
     """Tests that changelog headers always use version tags even if there are non-version tags
 
     This tests a scenario fixed in this commit:
     The first header was using a non-version tag and outputting "## 0-not-a-version" instead of "## 1.0.0
     """
-    create_file_and_commit("feat: commit in 1.0.0")
-    create_tag("0-not-a-version")
-    create_tag("1.0.0")
-    create_tag("also-not-a-version")
+    util.create_file_and_commit("feat: commit in 1.0.0")
+    util.create_tag("0-not-a-version")
+    util.create_tag("1.0.0")
+    util.create_tag("also-not-a-version")
 
     write_patch = mocker.patch("commitizen.commands.changelog.out.write")
 
@@ -1398,8 +1246,9 @@ def test_changelog_uses_version_tags_for_header(mocker: MockFixture, config):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_current_version_tag_with_nonversion_tag(
-    mocker: MockFixture, config
+    mocker: MockFixture, config: BaseConfig, util: UtilFixture
 ):
     """Tests that changelog generation for a single version works even if
     there is a non-version tag in the list of tags
@@ -1408,33 +1257,17 @@ def test_changelog_from_current_version_tag_with_nonversion_tag(
     You have a commit in between two versions (1.0.0..2.0.0) which is tagged with a non-version tag (not-a-version).
     In this case commitizen should disregard the non-version tag when determining the rev-range & generating the changelog.
     """
-    create_file_and_commit(
-        "feat: initial commit",
-        committer_date=(
-            datetime.now() - relativedelta.relativedelta(seconds=3)
-        ).isoformat(),
-    )
-    create_tag("1.0.0")
+    util.create_file_and_commit("feat: initial commit")
+    util.create_tag("1.0.0")
 
-    create_file_and_commit(
-        "feat: commit 1",
-        committer_date=(
-            datetime.now() - relativedelta.relativedelta(seconds=2)
-        ).isoformat(),
-    )
-    create_tag("1-not-a-version")
+    util.create_file_and_commit("feat: commit 1")
+    util.create_tag("1-not-a-version")
 
-    create_file_and_commit(
-        "feat: commit 2",
-        committer_date=(
-            datetime.now() - relativedelta.relativedelta(seconds=1)
-        ).isoformat(),
-    )
+    util.create_file_and_commit("feat: commit 2")
 
-    create_file_and_commit("bump: version 1.0.0 → 2.0.0")
-    create_tag("2.0.0")
+    util.create_file_and_commit("bump: version 1.0.0 → 2.0.0")
+    util.create_tag("2.0.0")
 
-    mocker.patch("commitizen.git.GitTag.date", "2022-02-13")
     write_patch = mocker.patch("commitizen.commands.changelog.out.write")
 
     changelog = Changelog(
@@ -1476,6 +1309,7 @@ def test_changelog_template_option_precedence(
     arg: str,
     cfg: str,
     expected: str,
+    util: UtilFixture,
 ):
     project_root = Path(tmp_commitizen_project)
     cfg_template = project_root / "changelog.cfg"
@@ -1487,7 +1321,7 @@ def test_changelog_template_option_precedence(
     cmd_template.write_text("from cmd")
     default_template.write_text("default")
 
-    create_file_and_commit("feat: new file")
+    util.create_file_and_commit("feat: new file")
 
     if cfg:
         pyproject = project_root / "pyproject.toml"
@@ -1501,11 +1335,10 @@ def test_changelog_template_option_precedence(
             )
         )
 
-    testargs = ["cz", "changelog"]
+    testargs = ["changelog"]
     if arg:
         testargs.append(arg)
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli(*testargs)
 
     out = changelog.read_text()
     assert out == expected
@@ -1516,6 +1349,7 @@ def test_changelog_template_extras_precedence(
     tmp_commitizen_project: Path,
     mock_plugin: BaseCommitizen,
     any_changelog_format: ChangelogFormat,
+    util: UtilFixture,
 ):
     project_root = Path(tmp_commitizen_project)
     changelog_tpl = project_root / any_changelog_format.template
@@ -1538,11 +1372,9 @@ def test_changelog_template_extras_precedence(
         )
     )
 
-    create_file_and_commit("feat: new file")
+    util.create_file_and_commit("feat: new file")
 
-    testargs = ["cz", "changelog", "--extra", "first=from-command"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "--extra", "first=from-command")
 
     changelog = project_root / any_changelog_format.default_changelog_file
     assert changelog.read_text() == "from-command - from-config - from-plugin"
@@ -1554,20 +1386,18 @@ def test_changelog_only_tag_matching_tag_format_included_prefix(
     mocker: MockFixture,
     changelog_path: Path,
     config_path: Path,
+    util: UtilFixture,
 ):
     with open(config_path, "a", encoding="utf-8") as f:
         f.write('\ntag_format = "custom${version}"\n')
-    create_file_and_commit("feat: new file")
-    git.tag("v0.2.0")
-    create_file_and_commit("feat: another new file")
-    git.tag("0.2.0")
-    git.tag("random0.2.0")
-    testargs = ["cz", "bump", "--changelog", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
-    create_file_and_commit("feat: another new file")
-    cli.main()
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("v0.2.0")
+    util.create_file_and_commit("feat: another new file")
+    util.create_tag("0.2.0")
+    util.create_tag("random0.2.0")
+    util.run_cli("bump", "--changelog", "--yes")
+    util.create_file_and_commit("feat: another new file")
+    util.run_cli("bump", "--changelog", "--yes")
     with open(changelog_path) as f:
         out = f.read()
     assert out.startswith("## custom0.3.0 (2021-06-11)")
@@ -1580,25 +1410,21 @@ def test_changelog_only_tag_matching_tag_format_included_prefix_sep(
     mocker: MockFixture,
     changelog_path: Path,
     config_path: Path,
+    util: UtilFixture,
 ):
     with open(config_path, "a", encoding="utf-8") as f:
         f.write('\ntag_format = "custom-${version}"\n')
-    create_file_and_commit("feat: new file")
-    git.tag("v0.2.0")
-    create_file_and_commit("feat: another new file")
-    git.tag("0.2.0")
-    git.tag("random0.2.0")
-    wait_for_tag()
-    testargs = ["cz", "bump", "--changelog", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("v0.2.0")
+    util.create_file_and_commit("feat: another new file")
+    util.create_tag("0.2.0")
+    util.create_tag("random0.2.0")
+    util.run_cli("bump", "--changelog", "--yes")
     with open(changelog_path) as f:
         out = f.read()
-    create_file_and_commit("feat: new version another new file")
-    create_file_and_commit("feat: new version some new file")
-    testargs = ["cz", "bump", "--changelog"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.create_file_and_commit("feat: new version another new file")
+    util.create_file_and_commit("feat: new version some new file")
+    util.run_cli("bump", "--changelog")
     with open(changelog_path) as f:
         out = f.read()
     assert out.startswith("## custom-0.3.0")
@@ -1609,26 +1435,23 @@ def test_changelog_only_tag_matching_tag_format_included_prefix_sep(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2021-06-11")
 def test_changelog_only_tag_matching_tag_format_included_suffix(
-    mocker: MockFixture,
     changelog_path: Path,
     config_path: Path,
+    util: UtilFixture,
 ):
     with open(config_path, "a", encoding="utf-8") as f:
         f.write('\ntag_format = "${version}custom"\n')
-    create_file_and_commit("feat: new file")
-    git.tag("v0.2.0")
-    create_file_and_commit("feat: another new file")
-    git.tag("0.2.0")
-    git.tag("random0.2.0")
-    testargs = ["cz", "bump", "--changelog", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("v0.2.0")
+    util.create_file_and_commit("feat: another new file")
+    util.create_tag("0.2.0")
+    util.create_tag("random0.2.0")
     # bump to 0.2.0custom
-    cli.main()
-    wait_for_tag()
-    create_file_and_commit("feat: another new file")
+    util.run_cli("bump", "--changelog", "--yes")
+
+    util.create_file_and_commit("feat: another new file")
     # bump to 0.3.0custom
-    cli.main()
-    wait_for_tag()
+    util.run_cli("bump", "--changelog", "--yes")
     with open(changelog_path) as f:
         out = f.read()
     assert out.startswith("## 0.3.0custom (2021-06-11)")
@@ -1639,24 +1462,20 @@ def test_changelog_only_tag_matching_tag_format_included_suffix(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2021-06-11")
 def test_changelog_only_tag_matching_tag_format_included_suffix_sep(
-    mocker: MockFixture,
     changelog_path: Path,
     config_path: Path,
+    util: UtilFixture,
 ):
     with open(config_path, "a", encoding="utf-8") as f:
         f.write('\ntag_format = "${version}-custom"\n')
-    create_file_and_commit("feat: new file")
-    git.tag("v0.2.0")
-    create_file_and_commit("feat: another new file")
-    git.tag("0.2.0")
-    git.tag("random0.2.0")
-    testargs = ["cz", "bump", "--changelog", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-    wait_for_tag()
-    create_file_and_commit("feat: another new file")
-    cli.main()
-    wait_for_tag()
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("v0.2.0")
+    util.create_file_and_commit("feat: another new file")
+    util.create_tag("0.2.0")
+    util.create_tag("random0.2.0")
+    util.run_cli("bump", "--changelog", "--yes")
+    util.create_file_and_commit("feat: another new file")
+    util.run_cli("bump", "--changelog", "--yes")
     with open(changelog_path) as f:
         out = f.read()
     assert out.startswith("## 0.3.0-custom (2021-06-11)")
@@ -1669,6 +1488,7 @@ def test_changelog_legacy_tags(
     mocker: MockFixture,
     changelog_path: Path,
     config_path: Path,
+    util: UtilFixture,
 ):
     with open(config_path, "a", encoding="utf-8") as f:
         f.writelines(
@@ -1680,17 +1500,15 @@ def test_changelog_legacy_tags(
                 "]\n",
             ]
         )
-    create_file_and_commit("feat: new file")
-    git.tag("oldest-0.1.0")
-    create_file_and_commit("feat: new file")
-    git.tag("older-0.2.0")
-    create_file_and_commit("feat: another new file")
-    git.tag("v0.3.0")
-    create_file_and_commit("feat: another new file")
-    git.tag("not-0.3.1")
-    testargs = ["cz", "bump", "--changelog", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("oldest-0.1.0")
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("older-0.2.0")
+    util.create_file_and_commit("feat: another new file")
+    util.create_tag("v0.3.0")
+    util.create_file_and_commit("feat: another new file")
+    util.create_tag("not-0.3.1")
+    util.run_cli("bump", "--changelog", "--yes")
     out = open(changelog_path).read()
     assert "## v0.3.0" in out
     assert "## older-0.2.0" in out
@@ -1706,8 +1524,9 @@ def test_changelog_incremental_change_tag_format(
     changelog_path: Path,
     config_path: Path,
     file_regression: FileRegressionFixture,
+    util: UtilFixture,
 ):
-    mocker.patch("commitizen.git.GitTag.date", "2024-11-18")
+    util.freezer.move_to("2024-11-18")
     config = Path(config_path)
     base_config = config.read_text()
     config.write_text(
@@ -1718,12 +1537,11 @@ def test_changelog_incremental_change_tag_format(
             )
         )
     )
-    create_file_and_commit("feat: new file")
-    git.tag("older-0.1.0")
-    create_file_and_commit("feat: new file")
-    git.tag("older-0.2.0")
-    mocker.patch.object(sys, "argv", ["cz", "changelog"])
-    cli.main()
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("older-0.1.0")
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("older-0.2.0")
+    util.run_cli("changelog")
 
     config.write_text(
         "\n".join(
@@ -1734,10 +1552,9 @@ def test_changelog_incremental_change_tag_format(
             )
         )
     )
-    create_file_and_commit("feat: another new file")
-    git.tag("v0.3.0")
-    mocker.patch.object(sys, "argv", ["cz", "changelog", "--incremental"])
-    cli.main()
+    util.create_file_and_commit("feat: another new file")
+    util.create_tag("v0.3.0")
+    util.run_cli("changelog", "--incremental")
     out = open(changelog_path).read()
     assert "## v0.3.0" in out
     assert "## older-0.2.0" in out
@@ -1751,6 +1568,7 @@ def test_changelog_ignored_tags(
     changelog_path: Path,
     config_path: Path,
     capsys: pytest.CaptureFixture,
+    util: UtilFixture,
 ):
     with open(config_path, "a", encoding="utf-8") as f:
         f.writelines(
@@ -1762,17 +1580,15 @@ def test_changelog_ignored_tags(
                 "]\n",
             ]
         )
-    create_file_and_commit("feat: new file")
-    git.tag("ignore-0.1.0")
-    create_file_and_commit("feat: new file")
-    git.tag("ignored")
-    create_file_and_commit("feat: another new file")
-    git.tag("v0.3.0")
-    create_file_and_commit("feat: another new file")
-    git.tag("not-ignored")
-    testargs = ["cz", "bump", "--changelog", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("ignore-0.1.0")
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("ignored")
+    util.create_file_and_commit("feat: another new file")
+    util.create_tag("v0.3.0")
+    util.create_file_and_commit("feat: another new file")
+    util.create_tag("not-ignored")
+    util.run_cli("bump", "--changelog", "--yes")
     out = open(changelog_path).read()
     _, err = capsys.readouterr()
     assert "## ignore-0.1.0" not in out
@@ -1786,18 +1602,17 @@ def test_changelog_ignored_tags(
 
 
 def test_changelog_template_extra_quotes(
-    mocker: MockFixture,
     tmp_commitizen_project: Path,
     any_changelog_format: ChangelogFormat,
+    util: UtilFixture,
 ):
     project_root = Path(tmp_commitizen_project)
     changelog_tpl = project_root / any_changelog_format.template
     changelog_tpl.write_text("{{first}} - {{second}} - {{third}}")
 
-    create_file_and_commit("feat: new file")
+    util.create_file_and_commit("feat: new file")
 
-    testargs = [
-        "cz",
+    util.run_cli(
         "changelog",
         "-e",
         "first=no-quote",
@@ -1805,9 +1620,7 @@ def test_changelog_template_extra_quotes(
         "second='single quotes'",
         "-e",
         'third="double quotes"',
-    ]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    )
 
     changelog = project_root / any_changelog_format.default_changelog_file
     assert changelog.read_text() == "no-quote - single quotes - double quotes"
@@ -1822,21 +1635,19 @@ def test_changelog_template_extra_quotes(
     ),
 )
 def test_changelog_template_extra_weird_but_valid(
-    mocker: MockFixture,
     tmp_commitizen_project: Path,
     any_changelog_format: ChangelogFormat,
     extra: str,
-    expected,
+    expected: str,
+    util: UtilFixture,
 ):
     project_root = Path(tmp_commitizen_project)
     changelog_tpl = project_root / any_changelog_format.template
     changelog_tpl.write_text("{{key}}")
 
-    create_file_and_commit("feat: new file")
+    util.create_file_and_commit("feat: new file")
 
-    testargs = ["cz", "changelog", "-e", extra]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("changelog", "-e", extra)
 
     changelog = project_root / any_changelog_format.default_changelog_file
     assert changelog.read_text() == expected
@@ -1844,36 +1655,32 @@ def test_changelog_template_extra_weird_but_valid(
 
 @pytest.mark.parametrize("extra", ("no-equal", "", "=no-key"))
 def test_changelog_template_extra_bad_format(
-    mocker: MockFixture,
     tmp_commitizen_project: Path,
     any_changelog_format: ChangelogFormat,
     extra: str,
+    util: UtilFixture,
 ):
     project_root = Path(tmp_commitizen_project)
     changelog_tpl = project_root / any_changelog_format.template
     changelog_tpl.write_text("")
 
-    create_file_and_commit("feat: new file")
+    util.create_file_and_commit("feat: new file")
 
-    testargs = ["cz", "changelog", "-e", extra]
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(InvalidCommandArgumentError):
-        cli.main()
+        util.run_cli("changelog", "-e", extra)
 
 
 def test_export_changelog_template_from_default(
-    mocker: MockFixture,
     tmp_commitizen_project: Path,
     any_changelog_format: ChangelogFormat,
+    util: UtilFixture,
+    repo_root: Path,
 ):
     project_root = Path(tmp_commitizen_project)
     target = project_root / "changelog.jinja"
-    src = Path(commitizen_init).parent / "templates" / any_changelog_format.template
+    src = repo_root / "commitizen" / "templates" / any_changelog_format.template
 
-    args = ["cz", "changelog", "--export-template", str(target)]
-
-    mocker.patch.object(sys, "argv", args)
-    cli.main()
+    util.run_cli("changelog", "--export-template", str(target))
 
     assert target.exists()
     assert target.read_text() == src.read_text()
