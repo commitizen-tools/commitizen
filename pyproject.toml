@@ -255,7 +255,7 @@ lint.help = "Lint the code"
 lint.sequence = [{ cmd = "ruff check" }, { cmd = "mypy" }]
 
 check-commit.help = "Check the commit messages"
-check-commit.cmd = "poetry run cz --no-raise 3 check --rev-range origin/master.."
+check-commit.cmd = "uv run cz --no-raise 3 check --rev-range origin/master.."
 
 test.help = "Run the test suite"
 test.cmd = "pytest -n 3 --dist=loadfile"
