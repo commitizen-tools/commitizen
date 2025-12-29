@@ -1,0 +1,6 @@
+usage: cz ls [-h]
+
+show available commitizens
+
+options:
+  -h, --help  show this help message and exit
