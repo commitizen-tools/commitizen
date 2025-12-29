@@ -170,6 +170,10 @@ omit = [
 [tool.pytest.ini_options]
 addopts = "--strict-markers"
 testpaths = ["tests/"]
+filterwarnings = [
+    # get_smart_tag_range is deprecated and will be removed in v5
+    "ignore:Call to deprecated function \\(or staticmethod\\) get_smart_tag_range:DeprecationWarning",
+]
 
 [tool.tox]
 requires = ["tox>=4.22"]
