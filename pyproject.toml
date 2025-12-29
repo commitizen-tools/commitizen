@@ -263,6 +263,12 @@ test.cmd = "pytest -n 3 --dist=loadfile"
 "test:all".help = "Run the test suite on all supported Python versions"
 "test:all".cmd = "tox --parallel"
 
+"test:regen".help = "Regenerate the test fixtures"
+"test:regen".parallel = [
+    { ref = "test -k 'not py_' --regen-all" },
+    { ref = "test:all -- -k py_ --regen-all" },
+]
+
 cover.help = "Run the test suite with coverage"
 cover.ref = "test --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen  --junitxml=junit.xml -o junit_family=legacy"
 
