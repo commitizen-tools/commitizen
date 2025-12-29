@@ -86,7 +86,7 @@ semver = "commitizen.version_schemes:SemVer"
 semver2 = "commitizen.version_schemes:SemVer2"
 
 [dependency-groups]
-dev = ["ipython>=8.0", "tox>4", "poethepoet>=0.32.2"]
+dev = ["ipython>=8.0", "tox>4", "poethepoet>=0.34.0"]
 
 test = [
     "pytest>=7.2",

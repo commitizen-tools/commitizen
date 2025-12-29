@@ -268,7 +268,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "ipython", specifier = ">=8.0" },
-    { name = "poethepoet", specifier = ">=0.32.2" },
+    { name = "poethepoet", specifier = ">=0.34.0" },
     { name = "tox", specifier = ">4" },
 ]
 documentation = [
