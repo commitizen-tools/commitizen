@@ -16,7 +16,6 @@ from commitizen.changelog_formats import (
 from commitizen.config import BaseConfig
 from commitizen.cz import registry
 from commitizen.cz.base import BaseCommitizen
-from tests.utils import create_file_and_commit
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Mapping
@@ -24,10 +23,15 @@ if TYPE_CHECKING:
     from pytest_mock import MockerFixture
 
     from commitizen.question import CzQuestion
+    from tests.utils import UtilFixture
 
 
 SIGNER = "GitHub Action"
 SIGNER_MAIL = "action@github.com"
+
+pytest_plugins = [
+    "tests.utils",
+]
 
 
 @pytest.fixture
@@ -83,7 +87,7 @@ def tmp_commitizen_project(tmp_git_project):
 
 
 @pytest.fixture(scope="function")
-def tmp_commitizen_project_initial(tmp_git_project):
+def tmp_commitizen_project_initial(tmp_git_project, util: UtilFixture):
     def _initial(
         config_extra: str | None = None,
         version="0.1.0",
@@ -102,7 +106,7 @@ def tmp_commitizen_project_initial(tmp_git_project):
             )
             if config_extra:
                 tmp_commitizen_cfg_file.write(config_extra, mode="a")
-            create_file_and_commit(initial_commit)
+            util.create_file_and_commit(initial_commit)
 
             return tmp_git_project
 
