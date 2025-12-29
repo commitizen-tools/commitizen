@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import os
 import re
+import sys
 import tempfile
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import pytest
 
@@ -28,6 +29,7 @@ if TYPE_CHECKING:
 
 SIGNER = "GitHub Action"
 SIGNER_MAIL = "action@github.com"
+PYTHON_VERSION = f"{sys.version_info.major}.{sys.version_info.minor}"
 
 pytest_plugins = [
     "tests.utils",
@@ -294,3 +296,9 @@ def any_changelog_format(config: BaseConfig) -> ChangelogFormat:
     """For test not relying on formats specifics, use the default"""
     config.settings["changelog_format"] = defaults.CHANGELOG_FORMAT
     return get_changelog_format(config)
+
+
+@pytest.fixture(params=[pytest.param(PYTHON_VERSION, id=f"py_{PYTHON_VERSION}")])
+def python_version(request: pytest.FixtureRequest) -> str:
+    """The current python version in '{major}.{minor}' format"""
+    return cast("str", request.param)
