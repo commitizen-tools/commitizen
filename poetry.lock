@@ -1415,6 +1415,21 @@ freezegun = ">=1.1"
 pytest = ">=3.6"
 
 [[package]]
+name = "pytest-gitconfig"
+version = "0.9.0"
+description = "Provide a Git config sandbox for testing"
+optional = false
+python-versions = ">=3.10"
+groups = ["test"]
+files = [
+    {file = "pytest_gitconfig-0.9.0-py3-none-any.whl", hash = "sha256:3d855a9dd5fb3906010dbb1f8161366d4d86b34df8c14021fa012f23de3e5354"},
+    {file = "pytest_gitconfig-0.9.0.tar.gz", hash = "sha256:5f9e8a29b4a8e55ddd740216ddb0a8a5e97f1c9c7f6bfdac91863473a8c60f9c"},
+]
+
+[package.dependencies]
+pytest = ">=7.1.2"
+
+[[package]]
 name = "pytest-mock"
 version = "3.15.1"
 description = "Thin-wrapper around the mock package for easier use with pytest"

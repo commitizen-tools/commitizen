@@ -120,7 +120,7 @@ If you would like to learn more about both schemes, there are plenty of good res
 - [API Versioning from Stripe](https://stripe.com/blog/api-versioning)
 - [Discussion about pip's use of CalVer](https://github.com/pypa/pip/issues/5645#issuecomment-407192448)
 - [Git Version Numbering](https://code.erpenbeck.io/git/2021/12/16/git-version-numbering/)
-- [SemVer vs. CalVer and Why I Use Both](https://mikestaszel.com/2021/04/03/semver-vs-calver-and-why-i-use-both/) (but not at the same time)
+- [SemVer vs. CalVer and Why I Use Both](https://mikestaszel.com/post/semver-vs-calver-and-why-i-use-both/) (but not at the same time)
 - [Semver Will Not Save You](https://hynek.me/articles/semver-will-not-save-you/)
 - [Why I Don't Like SemVer](https://snarky.ca/why-i-dont-like-semver/)
 

@@ -1,3 +1,10 @@
+## v4.11.0 (2025-12-29)
+
+### Feat
+
+- Drop support for Python 3.9 as EOL reached and add Python 3.14 support
+- add custom validation
+
 ## v4.10.1 (2025-12-11)
 
 ### Fix
