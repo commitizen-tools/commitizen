@@ -1,6 +1,11 @@
 name: Python package
 
-on: [workflow_dispatch, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   python-check:
@@ -29,10 +34,12 @@ jobs:
           poetry ci
         shell: bash
       - name: Upload coverage to Codecov
-        if: runner.os == 'Linux'
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
-          flags: unittests
-          name: codecov-umbrella
+      - name: Upload test results to Codecov
+        uses: codecov/codecov-action@v5
+        if: ${{ !cancelled() }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          report_type: test_results
