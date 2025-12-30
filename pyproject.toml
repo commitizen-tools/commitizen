@@ -117,8 +117,8 @@ script = [
 ]
 
 [build-system]
-requires = ["poetry-core>=2.2"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build >= 0.9.17, <0.10.0"]
+build-backend = "uv_build"
 
 
 [tool.commitizen]
@@ -132,11 +132,10 @@ version_files = [
 version_scheme = "pep440"
 
 
-[tool.poetry]
-packages = [{ include = "commitizen" }, { include = "commitizen/py.typed" }]
-
-[tool.poetry.requires-plugins]
-"poethepoet" = ">=0.32.2"
+[tool.uv.build-backend]
+module-name = "commitizen"
+module-root = ""
+include = ["commitizen/py.typed"]
 
 [tool.coverage]
 [tool.coverage.report]
@@ -246,7 +245,7 @@ check-hidden = true
 ignore-words-list = 'asend'
 
 [tool.poe]
-poetry_command = ""
+executor.type = "uv"
 
 [tool.poe.tasks]
 format.help = "Format the code"
@@ -256,7 +255,7 @@ lint.help = "Lint the code"
 lint.sequence = [{ cmd = "ruff check" }, { cmd = "mypy" }]
 
 check-commit.help = "Check the commit messages"
-check-commit.cmd = "poetry run cz --no-raise 3 check --rev-range origin/master.."
+check-commit.cmd = "uv run cz --no-raise 3 check --rev-range origin/master.."
 
 test.help = "Run the test suite"
 test.cmd = "pytest -n 3 --dist=loadfile"
