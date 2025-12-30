@@ -244,6 +244,9 @@ skip = '.git*,*.svg,*.lock'
 check-hidden = true
 ignore-words-list = 'asend'
 
+[tool.poe]
+executor.type = "uv"
+
 [tool.poe.tasks]
 format.help = "Format the code"
 format.sequence = [{ cmd = "ruff check --fix" }, { cmd = "ruff format" }]
