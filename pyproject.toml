@@ -258,7 +258,7 @@ check-commit.help = "Check the commit messages"
 check-commit.cmd = "cz --no-raise 3 check --rev-range origin/master.."
 
 test.help = "Run the test suite"
-test.cmd = "pytest -n 3 --dist=loadfile"
+test.cmd = "pytest -n auto --dist=loadfile"
 
 "test:all".help = "Run the test suite on all supported Python versions"
 "test:all".cmd = "tox --parallel"
