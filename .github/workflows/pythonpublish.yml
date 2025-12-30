@@ -15,8 +15,6 @@ jobs:
           fetch-depth: 0
       - name: Set up Python
         uses: astral-sh/setup-uv@v7
-        with:
-          python-version: "3.x"
       - name: Build
         run: uv build
       - name: Publish
