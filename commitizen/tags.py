@@ -245,6 +245,25 @@ class TagRules:
     ) -> GitTag | None:
         """Find the first matching tag for a given version."""
         version = self.scheme(version) if isinstance(version, str) else version
+        release = version.release
+
+        # If the requested version is incomplete (e.g., "1.2"), try to find the latest
+        # matching tag that shares the provided prefix.
+        if len(release) < 3:
+            matching_versions: list[tuple[Version, GitTag]] = []
+            for tag in tags:
+                try:
+                    tag_version = self.extract_version(tag)
+                except InvalidVersion:
+                    continue
+                if tag_version.release[: len(release)] != release:
+                    continue
+                matching_versions.append((tag_version, tag))
+
+            if matching_versions:
+                _, latest_tag = max(matching_versions, key=lambda vt: vt[0])
+                return latest_tag
+
         possible_tags = set(self.normalize_tag(version, f) for f in self.tag_formats)
         candidates = [t for t in tags if t.name in possible_tags]
         if len(candidates) > 1:
