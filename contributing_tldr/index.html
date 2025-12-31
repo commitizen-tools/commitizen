@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1867,17 +1867,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#nix-users" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Nix Users
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1987,17 +1976,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#nix-users" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Nix Users
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -2026,19 +2004,19 @@
 <h2 id="environment">Environment<a class="headerlink" href="#environment" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Python <code>&gt;=3.10</code></li>
-<li><a href="https://python-poetry.org/docs/#installing-with-the-official-installer">Poetry</a> <code>&gt;=2.2.0</code></li>
+<li><a href="https://docs.astral.sh/uv/getting-started/installation/">uv</a> <code>&gt;=0.9.0</code></li>
 </ul>
 <h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
 <p>Please check the <a href="https://github.com/commitizen-tools/commitizen/blob/master/pyproject.toml">pyproject.toml</a> for a comprehensive list of commands.</p>
 <h3 id="code-changes">Code Changes<a class="headerlink" href="#code-changes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Ensure you have the correct dependencies, for nix user&#39;s see below</span>
-poetry<span class="w"> </span>install
+<div class="highlight"><pre><span></span><code><span class="c1"># Ensure you have the correct dependencies</span>
+uv<span class="w"> </span>sync<span class="w"> </span>--dev
 
 <span class="c1"># Make ruff happy</span>
-poetry<span class="w"> </span>format
+uv<span class="w"> </span>run<span class="w"> </span>poe<span class="w"> </span>format
 
 <span class="c1"># Check if ruff and mypy are happy</span>
-poetry<span class="w"> </span>lint
+uv<span class="w"> </span>run<span class="w"> </span>poe<span class="w"> </span>lint
 
 <span class="c1"># Check if mypy is happy in python 3.10</span>
 mypy<span class="w"> </span>--python-version<span class="w"> </span><span class="m">3</span>.10
@@ -2049,14 +2027,7 @@ pytest<span class="w"> </span>-n<span class="w"> </span>auto<span class="w"> </s
 </code></pre></div>
 <h3 id="documentation-changes">Documentation Changes<a class="headerlink" href="#documentation-changes" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Build the documentation locally and check for broken links</span>
-poetry<span class="w"> </span>doc
-</code></pre></div>
-<h3 id="nix-users">Nix Users<a class="headerlink" href="#nix-users" title="Permanent link">&para;</a></h3>
-<p>If you are using Nix, you can install poetry locally by running:</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
-.<span class="w"> </span>.venv/bin/activate
-pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pip<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>poetry
-poetry<span class="w"> </span>install
+uv<span class="w"> </span>run<span class="w"> </span>poe<span class="w"> </span>doc
 </code></pre></div>
 
 
@@ -2107,10 +2078,10 @@ poetry<span class="w"> </span>install
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
