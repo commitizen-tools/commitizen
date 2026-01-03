@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from commitizen.changelog import Metadata
+from commitizen.changelog import IncrementalMergeInfo, Metadata
 from commitizen.changelog_formats.asciidoc import AsciiDoc
 
 if TYPE_CHECKING:
@@ -171,6 +171,10 @@ def test_get_metadata(
     changelog.write_text(content)
 
     assert format.get_metadata(str(changelog)) == expected
+
+
+def test_get_latest_full_release_no_file(format: AsciiDoc):
+    assert format.get_latest_full_release("/nonexistent") == IncrementalMergeInfo()
 
 
 @pytest.mark.parametrize(

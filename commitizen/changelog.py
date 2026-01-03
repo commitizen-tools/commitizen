@@ -72,6 +72,19 @@ class Metadata:
             self.latest_version_tag = self.latest_version
 
 
+@dataclass
+class IncrementalMergeInfo:
+    """
+    Information regarding the last non-pre-release, parsed from the changelog.
+
+    Required to merge pre-releases on bump.
+    Separate from Metadata to not mess with the interface.
+    """
+
+    name: str | None = None
+    index: int | None = None
+
+
 def get_commit_tag(commit: GitCommit, tags: list[GitTag]) -> GitTag | None:
     return next((tag for tag in tags if tag.rev == commit.rev), None)
 
@@ -86,6 +99,7 @@ def generate_tree_from_commits(
     changelog_message_builder_hook: MessageBuilderHook | None = None,
     changelog_release_hook: ChangelogReleaseHook | None = None,
     rules: TagRules | None = None,
+    during_version_bump: bool = False,
 ) -> Generator[dict[str, Any], None, None]:
     pat = re.compile(changelog_pattern)
     map_pat = re.compile(commit_parser, re.MULTILINE)
@@ -93,8 +107,10 @@ def generate_tree_from_commits(
     rules = rules or TagRules()
 
     # Check if the latest commit is not tagged
-
-    current_tag = get_commit_tag(commits[0], tags) if commits else None
+    if during_version_bump and rules.merge_prereleases:
+        current_tag = None
+    else:
+        current_tag = get_commit_tag(commits[0], tags) if commits else None
     current_tag_name = unreleased_version or "Unreleased"
     current_tag_date = (
         date.today().isoformat() if unreleased_version is not None else ""
