@@ -127,4 +127,4 @@ def _lock_set_versions(packages: Any, names: set[str], version: str) -> None:
         return
     for i, p in enumerate(packages):
         if getattr(p, "get", None) and p.get("name") in names:
-            packages[i]["version"] = version  # type: ignore[index]
+            packages[i]["version"] = version
