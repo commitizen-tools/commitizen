@@ -264,8 +264,10 @@ setup(
 ### Step 3: Install and Use
 
 1. Install your provider package:
+    Once your custom Commitizen provider is packaged and published (for example, to PyPI), install it like any standard Python dependency:
+
    ```bash
-   pip install -e .
+   pip install my-commitizen-provider
    ```
 
 2. Configure Commitizen to use your provider:
