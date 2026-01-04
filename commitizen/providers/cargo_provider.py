@@ -1,14 +1,18 @@
 from __future__ import annotations
 
-import fnmatch, glob
+import fnmatch
+import glob
 from pathlib import Path
-from typing import TYPE_CHECKING, Iterable, Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from tomlkit import TOMLDocument, dumps, parse
 from tomlkit.exceptions import NonExistentKey
+
 from commitizen.providers.base_provider import TomlProvider
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     from tomlkit.items import AoT
 
 
@@ -56,8 +60,8 @@ class CargoProvider(TomlProvider):
             return
 
         ws = _table_get(cargo_toml, "workspace") or {}
-        members = cast(list[str], ws.get("members", []) or [])
-        excludes = cast(list[str], ws.get("exclude", []) or [])
+        members = cast("list[str]", ws.get("members", []) or [])
+        excludes = cast("list[str]", ws.get("exclude", []) or [])
         inheriting = _workspace_inheriting_member_names(members, excludes)
         _lock_set_versions(packages, inheriting, version)
         self.lock_file.write_text(dumps(cargo_lock))
@@ -69,7 +73,7 @@ def _table_get(doc: TOMLDocument, key: str) -> DictLike | None:
         v = doc[key]  # tomlkit returns Container/Table-like; typing is loose
     except NonExistentKey:
         return None
-    return cast(DictLike, v) if hasattr(v, "get") else None
+    return cast("DictLike", v) if hasattr(v, "get") else None
 
 
 def _root_version_table(doc: TOMLDocument) -> DictLike:
@@ -78,18 +82,20 @@ def _root_version_table(doc: TOMLDocument) -> DictLike:
     if ws is not None:
         pkg = ws.get("package")
         if hasattr(pkg, "get"):
-            return cast(DictLike, pkg)
+            return cast("DictLike", pkg)
     pkg = _table_get(doc, "package")
     if pkg is None:
-        raise NonExistentKey('expected either [workspace.package] or [package]')
+        raise NonExistentKey("expected either [workspace.package] or [package]")
     return pkg
 
 
 def _is_workspace_inherited_version(v: Any) -> bool:
-    return hasattr(v, "get") and cast(DictLike, v).get("workspace") is True
+    return hasattr(v, "get") and cast("DictLike", v).get("workspace") is True
 
 
-def _iter_member_dirs(members: Iterable[str], excludes: Iterable[str]) -> Iterable[Path]:
+def _iter_member_dirs(
+    members: Iterable[str], excludes: Iterable[str]
+) -> Iterable[Path]:
     for pat in members:
         for p in glob.glob(pat, recursive=True):
             if any(fnmatch.fnmatch(p, ex) for ex in excludes):
@@ -97,7 +103,9 @@ def _iter_member_dirs(members: Iterable[str], excludes: Iterable[str]) -> Iterab
             yield Path(p)
 
 
-def _workspace_inheriting_member_names(members: Iterable[str], excludes: Iterable[str]) -> set[str]:
+def _workspace_inheriting_member_names(
+    members: Iterable[str], excludes: Iterable[str]
+) -> set[str]:
     out: set[str] = set()
     for d in _iter_member_dirs(members, excludes):
         cargo_file = d / "Cargo.toml"
@@ -106,7 +114,7 @@ def _workspace_inheriting_member_names(members: Iterable[str], excludes: Iterabl
         pkg = parse(cargo_file.read_text()).get("package")
         if not hasattr(pkg, "get"):
             continue
-        pkgd = cast(DictLike, pkg)
+        pkgd = cast("DictLike", pkg)
         if _is_workspace_inherited_version(pkgd.get("version")):
             name = pkgd.get("name")
             if isinstance(name, str):
