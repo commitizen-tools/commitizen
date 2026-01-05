@@ -8,25 +8,50 @@ on:
   workflow_dispatch:
 
 jobs:
+  detect_changes:
+    runs-on: ubuntu-latest
+    outputs:
+      relevant: ${{ steps.filter.outputs.relevant }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            relevant:
+              - "commitizen/**"
+              - "tests/**"
+              - ".github/workflows/**"
   python-check:
+    needs: detect_changes
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         platform: [ubuntu-22.04, macos-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:
+      - name: No relevant changes, fast-path success
+        if: ${{ needs.detect_changes.outputs.relevant != 'true' }}
+        run: |
+          echo "No relevant file changes; skipping tests and linters."
       - uses: actions/checkout@v6
+        if: ${{ needs.detect_changes.outputs.relevant == 'true' }}
         with:
           fetch-depth: 0
       - name: Set up Python ${{ matrix.python-version }}
         uses: astral-sh/setup-uv@v7
+        if: ${{ needs.detect_changes.outputs.relevant == 'true' }}
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
+        if: ${{ needs.detect_changes.outputs.relevant == 'true' }}
         run: |
           uv --version
           uv sync --frozen --group base --group test --group linters
       - name: Run tests and linters
+        if: ${{ needs.detect_changes.outputs.relevant == 'true' }}
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
@@ -34,11 +59,12 @@ jobs:
         shell: bash
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
+        if: ${{ needs.detect_changes.outputs.relevant == 'true' }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
       - name: Upload test results to Codecov
         uses: codecov/codecov-action@v5
-        if: ${{ !cancelled() }}
+        if: ${{ needs.detect_changes.outputs.relevant == 'true' && !cancelled() }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           report_type: test_results
