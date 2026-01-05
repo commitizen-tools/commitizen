@@ -30,7 +30,7 @@ jobs:
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
-          uv run poe ci
+          uv run --no-sync poe ci
         shell: bash
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5

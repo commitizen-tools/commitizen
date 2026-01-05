@@ -74,12 +74,12 @@ repos:
         name: Format Python code
         language: system
         pass_filenames: false
-        entry: uv run poe format
+        entry: uv run --no-sync poe format
         types: [ python ]
 
       - id: linter and test
         name: Linters
         language: system
         pass_filenames: false
-        entry: uv run poe lint
+        entry: uv run --no-sync poe lint
         types: [ python ]
