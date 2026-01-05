@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: |
           uv --version
-          uv sync --locked --dev --group test --group linters
+          uv sync --frozen --group test --group linters
       - name: Run tests and linters
         run: |
           git config --global user.email "action@github.com"

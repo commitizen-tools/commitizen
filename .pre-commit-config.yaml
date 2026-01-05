@@ -34,7 +34,7 @@ repos:
     hooks:
       - id: uv-lock
       - id: uv-sync
-        args: [ --locked, --all-groups ]
+        args: [ --frozen, --all-groups ]
         stages: [ pre-commit, post-checkout, post-merge, post-rewrite ]
 
   - repo: https://github.com/asottile/blacken-docs
