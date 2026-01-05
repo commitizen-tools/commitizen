@@ -8,6 +8,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v6
         with:
@@ -17,5 +20,5 @@ jobs:
         uses: astral-sh/setup-uv@v7
       - name: Build
         run: uv build
-      - name: Publish
-        run: uv publish
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

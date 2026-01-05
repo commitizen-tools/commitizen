@@ -9,17 +9,12 @@ import pytest
 
 from commitizen import cmd, git
 from commitizen.exceptions import GitCommandError
-from tests.utils import (
-    FakeCommand,
-    create_branch,
-    create_file_and_commit,
-    create_tag,
-    switch_branch,
-)
 
 if TYPE_CHECKING:
     from pytest_gitconfig import GitConfig
     from pytest_mock import MockFixture
+
+    from tests.utils import UtilFixture
 
 
 @pytest.mark.parametrize("date", ["2020-01-21", "1970-01-01"])
@@ -39,13 +34,13 @@ def test_git_object_eq():
     assert git_commit != "sha1-code"
 
 
-def test_get_tags(mocker: MockFixture):
+def test_get_tags(util: UtilFixture):
     tag_str = (
         "v1.0.0---inner_delimiter---333---inner_delimiter---2020-01-20---inner_delimiter---\n"
         "v0.5.0---inner_delimiter---222---inner_delimiter---2020-01-17---inner_delimiter---\n"
         "v0.0.1---inner_delimiter---111---inner_delimiter---2020-01-17---inner_delimiter---\n"
     )
-    mocker.patch("commitizen.cmd.run", return_value=FakeCommand(out=tag_str))
+    util.mock_cmd(out=tag_str)
 
     git_tags = git.get_tags()
     latest_git_tag = git_tags[0]
@@ -53,55 +48,49 @@ def test_get_tags(mocker: MockFixture):
     assert latest_git_tag.name == "v1.0.0"
     assert latest_git_tag.date == "2020-01-20"
 
-    mocker.patch(
-        "commitizen.cmd.run", return_value=FakeCommand(out="", err="No tag available")
-    )
+    util.mock_cmd(out="", err="No tag available")
     assert git.get_tags() == []
 
 
-def test_get_reachable_tags(tmp_commitizen_project):
-    with tmp_commitizen_project.as_cwd():
-        create_file_and_commit("Initial state")
-        create_tag("1.0.0")
-        # create develop
-        create_branch("develop")
-        switch_branch("develop")
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_get_reachable_tags(util: UtilFixture):
+    util.create_file_and_commit("Initial state")
+    util.create_tag("1.0.0")
+    # create develop
+    util.create_branch("develop")
+    util.switch_branch("develop")
 
-        # add a feature to develop
-        create_file_and_commit("develop")
-        create_tag("1.1.0b0")
+    # add a feature to develop
+    util.create_file_and_commit("develop")
+    util.create_tag("1.1.0b0")
 
-        # create staging
-        switch_branch("master")
-        create_file_and_commit("master")
-        create_tag("1.0.1")
+    # create staging
+    util.switch_branch("master")
+    util.create_file_and_commit("master")
+    util.create_tag("1.0.1")
 
-        tags = git.get_tags(reachable_only=True)
-        tag_names = set([t.name for t in tags])
-        # 1.1.0b0 is not present
-        assert tag_names == {"1.0.0", "1.0.1"}
+    tags = git.get_tags(reachable_only=True)
+    tag_names = set([t.name for t in tags])
+    # 1.1.0b0 is not present
+    assert tag_names == {"1.0.0", "1.0.1"}
 
 
+@pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.parametrize("locale", ["en_US", "fr_FR"])
-def test_get_reachable_tags_with_commits(
-    tmp_commitizen_project, locale: str, monkeypatch: pytest.MonkeyPatch
-):
+def test_get_reachable_tags_with_commits(locale: str, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setenv("LANG", f"{locale}.UTF-8")
     monkeypatch.setenv("LANGUAGE", f"{locale}.UTF-8")
     monkeypatch.setenv("LC_ALL", f"{locale}.UTF-8")
-    with tmp_commitizen_project.as_cwd():
-        assert git.get_tags(reachable_only=True) == []
+    assert git.get_tags(reachable_only=True) == []
 
 
-def test_get_tag_names(mocker: MockFixture):
+def test_get_tag_names(util: UtilFixture):
     tag_str = "v1.0.0\nv0.5.0\nv0.0.1\n"
-    mocker.patch("commitizen.cmd.run", return_value=FakeCommand(out=tag_str))
+    util.mock_cmd(out=tag_str)
 
     assert git.get_tag_names() == ["v1.0.0", "v0.5.0", "v0.0.1"]
 
-    mocker.patch(
-        "commitizen.cmd.run", return_value=FakeCommand(out="", err="No tag available")
-    )
+    util.mock_cmd(out="", err="No tag available")
     assert git.get_tag_names() == []
 
 
@@ -126,23 +115,23 @@ def test_get_log_as_str_list_empty():
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_get_commits():
-    create_file_and_commit("feat(users): add username")
-    create_file_and_commit("fix: username exception")
+def test_get_commits(util: UtilFixture):
+    util.create_file_and_commit("feat(users): add username")
+    util.create_file_and_commit("fix: username exception")
     commits = git.get_commits()
     assert len(commits) == 2
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_get_commits_author_and_email():
-    create_file_and_commit("fix: username exception")
+def test_get_commits_author_and_email(util: UtilFixture):
+    util.create_file_and_commit("fix: username exception")
     commit = git.get_commits()[0]
 
     assert commit.author != ""
     assert "@" in commit.author_email
 
 
-def test_get_commits_without_email(mocker: MockFixture):
+def test_get_commits_without_email(util: UtilFixture):
     raw_commit = (
         "a515bb8f71c403f6f7d1c17b9d8ebf2ce3959395\n"
         "95bbfc703eb99cb49ba0d6ffd8469911303dbe63 12d3b4bdaa996ea7067a07660bb5df4772297bdd\n"
@@ -157,7 +146,7 @@ def test_get_commits_without_email(mocker: MockFixture):
         "\n"
         "----------commit-delimiter----------\n"
     )
-    mocker.patch("commitizen.cmd.run", return_value=FakeCommand(out=raw_commit))
+    util.mock_cmd(out=raw_commit)
 
     commits = git.get_commits()
 
@@ -171,7 +160,7 @@ def test_get_commits_without_email(mocker: MockFixture):
     assert commits[1].title == "feat(users): add username"
 
 
-def test_get_commits_without_breakline_in_each_commit(mocker: MockFixture):
+def test_get_commits_without_breakline_in_each_commit(util: UtilFixture):
     raw_commit = (
         "ae9ba6fc5526cf478f52ef901418d85505109744\n"
         "ff2f56ca844de72a9d59590831087bf5a97bac84\n"
@@ -192,7 +181,7 @@ def test_get_commits_without_breakline_in_each_commit(mocker: MockFixture):
         "user@email.edu\n"
         "----------commit-delimiter----------\n"
     )
-    mocker.patch("commitizen.cmd.run", return_value=FakeCommand(out=raw_commit))
+    util.mock_cmd(out=raw_commit)
 
     commits = git.get_commits()
 
@@ -211,7 +200,7 @@ def test_get_commits_without_breakline_in_each_commit(mocker: MockFixture):
     )
 
 
-def test_get_commits_with_and_without_parents(mocker: MockFixture):
+def test_get_commits_with_and_without_parents(util: UtilFixture):
     raw_commit = (
         "4206e661bacf9643373255965f34bbdb382cb2b9\n"
         "ae9ba6fc5526cf478f52ef901418d85505109744 bf8479e7aa1a5b9d2f491b79e3a4d4015519903e\n"
@@ -232,7 +221,7 @@ def test_get_commits_with_and_without_parents(mocker: MockFixture):
         "user@email.com\n"
         "----------commit-delimiter----------\n"
     )
-    mocker.patch("commitizen.cmd.run", return_value=FakeCommand(out=raw_commit))
+    util.mock_cmd(out=raw_commit)
 
     commits = git.get_commits()
 
@@ -280,93 +269,86 @@ def test_get_tag_names_has_correct_arrow_annotation():
     assert arrow_annotation == "list[str]"
 
 
-def test_get_latest_tag_name(tmp_commitizen_project):
-    with tmp_commitizen_project.as_cwd():
-        tag_name = git.get_latest_tag_name()
-        assert tag_name is None
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_get_latest_tag_name(util: UtilFixture):
+    tag_name = git.get_latest_tag_name()
+    assert tag_name is None
 
-        create_file_and_commit("feat(test): test")
-        cmd.run("git tag 1.0")
-        tag_name = git.get_latest_tag_name()
-        assert tag_name == "1.0"
-
-
-def test_is_staging_clean_when_adding_file(tmp_commitizen_project):
-    with tmp_commitizen_project.as_cwd():
-        assert git.is_staging_clean() is True
-
-        cmd.run("touch test_file")
-
-        assert git.is_staging_clean() is True
-
-        cmd.run("git add test_file")
-
-        assert git.is_staging_clean() is False
+    util.create_file_and_commit("feat(test): test")
+    util.create_tag("1.0")
+    tag_name = git.get_latest_tag_name()
+    assert tag_name == "1.0"
 
 
-def test_is_staging_clean_when_updating_file(tmp_commitizen_project):
-    with tmp_commitizen_project.as_cwd():
-        assert git.is_staging_clean() is True
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_is_staging_clean_when_adding_file():
+    assert git.is_staging_clean() is True
 
-        cmd.run("touch test_file")
-        cmd.run("git add test_file")
-        if os.name == "nt":
-            cmd.run('git commit -m "add test_file"')
-        else:
-            cmd.run("git commit -m 'add test_file'")
-        cmd.run("echo 'test' > test_file")
+    cmd.run("touch test_file")
 
-        assert git.is_staging_clean() is True
+    assert git.is_staging_clean() is True
 
-        cmd.run("git add test_file")
+    cmd.run("git add test_file")
 
-        assert git.is_staging_clean() is False
+    assert git.is_staging_clean() is False
 
 
-def test_get_eol_for_open(tmp_commitizen_project):
-    with tmp_commitizen_project.as_cwd():
-        assert git.EOLType.for_open() == os.linesep
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_is_staging_clean_when_updating_file():
+    assert git.is_staging_clean() is True
 
-        cmd.run("git config core.eol lf")
-        assert git.EOLType.for_open() == "\n"
+    cmd.run("touch test_file")
+    cmd.run("git add test_file")
+    if os.name == "nt":
+        cmd.run('git commit -m "add test_file"')
+    else:
+        cmd.run("git commit -m 'add test_file'")
+    cmd.run("echo 'test' > test_file")
 
-        cmd.run("git config core.eol crlf")
-        assert git.EOLType.for_open() == "\r\n"
+    assert git.is_staging_clean() is True
 
-        cmd.run("git config core.eol native")
-        assert git.EOLType.for_open() == os.linesep
+    cmd.run("git add test_file")
+
+    assert git.is_staging_clean() is False
 
 
-def test_get_core_editor(mocker):
-    mocker.patch.dict(os.environ, {"GIT_EDITOR": "nano"})
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_get_eol_for_open():
+    assert git.EOLType.for_open() == os.linesep
+
+    cmd.run("git config core.eol lf")
+    assert git.EOLType.for_open() == "\n"
+
+    cmd.run("git config core.eol crlf")
+    assert git.EOLType.for_open() == "\r\n"
+
+    cmd.run("git config core.eol native")
+    assert git.EOLType.for_open() == os.linesep
+
+
+def test_get_core_editor(monkeypatch: pytest.MonkeyPatch, util: UtilFixture):
+    monkeypatch.setenv("GIT_EDITOR", "nano")
     assert git.get_core_editor() == "nano"
 
-    mocker.patch.dict(os.environ, clear=True)
-    mocker.patch(
-        "commitizen.cmd.run",
-        return_value=cmd.Command(
-            out="vim", err="", stdout=b"", stderr=b"", return_code=0
-        ),
-    )
+    monkeypatch.delenv("GIT_EDITOR")
+
+    util.mock_cmd(out="vim")
     assert git.get_core_editor() == "vim"
 
-    mocker.patch(
-        "commitizen.cmd.run",
-        return_value=cmd.Command(out="", err="", stdout=b"", stderr=b"", return_code=1),
-    )
+    util.mock_cmd()
     assert git.get_core_editor() is None
 
 
-def test_create_tag_with_message(tmp_commitizen_project):
-    with tmp_commitizen_project.as_cwd():
-        create_file_and_commit("feat(test): test")
-        tag_name = "1.0"
-        tag_message = "test message"
-        create_tag(tag_name, tag_message)
-        assert git.get_latest_tag_name() == tag_name
-        assert git.get_tag_message(tag_name) == (
-            tag_message if platform.system() != "Windows" else f"'{tag_message}'"
-        )
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_create_tag_with_message(util: UtilFixture):
+    util.create_file_and_commit("feat(test): test")
+    tag_name = "1.0"
+    tag_message = "test message"
+    util.create_tag(tag_name, tag_message)
+    assert git.get_latest_tag_name() == tag_name
+    assert git.get_tag_message(tag_name) == (
+        tag_message if platform.system() != "Windows" else f"'{tag_message}'"
+    )
 
 
 @pytest.mark.parametrize(
@@ -391,8 +373,10 @@ def test_create_tag_with_message(tmp_commitizen_project):
         "Path does not contain spaces",
     ],
 )
-def test_commit_with_spaces_in_path(mocker, file_path, expected_cmd):
-    mock_run = mocker.patch("commitizen.cmd.run", return_value=FakeCommand())
+def test_commit_with_spaces_in_path(
+    mocker: MockFixture, file_path: str, expected_cmd: str, util: UtilFixture
+):
+    mock_run = util.mock_cmd()
     mock_unlink = mocker.patch("os.unlink")
     mock_temp_file = mocker.patch("commitizen.git.NamedTemporaryFile")
     mock_temp_file.return_value.name = file_path
@@ -403,12 +387,9 @@ def test_commit_with_spaces_in_path(mocker, file_path, expected_cmd):
     mock_unlink.assert_called_once_with(file_path)
 
 
-def test_get_filenames_in_commit_error(mocker: MockFixture):
+def test_get_filenames_in_commit_error(util: UtilFixture):
     """Test that GitCommandError is raised when git command fails."""
-    mocker.patch(
-        "commitizen.cmd.run",
-        return_value=FakeCommand(out="", err="fatal: bad object HEAD", return_code=1),
-    )
+    util.mock_cmd(err="fatal: bad object HEAD", return_code=1)
     with pytest.raises(GitCommandError) as excinfo:
         git.get_filenames_in_commit()
     assert str(excinfo.value) == "fatal: bad object HEAD"
@@ -475,27 +456,23 @@ def test_git_commit_from_rev_and_commit():
         ("posix", None, 'git commit  -F "temp.txt"'),
     ],
 )
-def test_create_commit_cmd_string(mocker, os_name, committer_date, expected_cmd):
+def test_create_commit_cmd_string(
+    mocker: MockFixture, os_name: str, committer_date: str, expected_cmd: str
+):
     """Test the OS-specific behavior of _create_commit_cmd_string"""
     mocker.patch("os.name", os_name)
     result = git._create_commit_cmd_string("", committer_date, "temp.txt")
     assert result == expected_cmd
 
 
-def test_get_default_branch_success(mocker: MockFixture):
-    mocker.patch(
-        "commitizen.cmd.run", return_value=FakeCommand(out="refs/remotes/origin/main\n")
-    )
+def test_get_default_branch_success(util: UtilFixture):
+    util.mock_cmd(out="refs/remotes/origin/main\n")
     assert git.get_default_branch() == "refs/remotes/origin/main"
 
 
-def test_get_default_branch_error(mocker: MockFixture):
-    mocker.patch(
-        "commitizen.cmd.run",
-        return_value=FakeCommand(
-            err="fatal: ref refs/remotes/origin/HEAD is not a symbolic ref",
-            return_code=1,
-        ),
+def test_get_default_branch_error(util: UtilFixture):
+    util.mock_cmd(
+        err="fatal: ref refs/remotes/origin/HEAD is not a symbolic ref", return_code=1
     )
     with pytest.raises(GitCommandError):
         git.get_default_branch()

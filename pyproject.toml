@@ -1,6 +1,6 @@
 [project]
 name = "commitizen"
-version = "4.11.0"
+version = "4.11.1"
 description = "Python commitizen client tool"
 authors = [{ name = "Santiago Fraire", email = "santiwilly@gmail.com" }]
 maintainers = [
@@ -86,7 +86,18 @@ semver = "commitizen.version_schemes:SemVer"
 semver2 = "commitizen.version_schemes:SemVer2"
 
 [dependency-groups]
-dev = ["ipython>=8.0", "tox>4", "poethepoet>=0.34.0"]
+dev = [
+    { include-group = "base" },
+    { include-group = "test" },
+    { include-group = "linters" },
+    { include-group = "documentation" },
+    { include-group = "script" },
+    "ipython>=8.0",
+    "tox>4",
+    "tox-uv",
+]
+
+base = ["poethepoet>=0.34.0"]
 
 test = [
     "pytest>=7.2",
@@ -122,13 +133,12 @@ build-backend = "uv_build"
 
 
 [tool.commitizen]
-version = "4.11.0"
 tag_format = "v$version"
 version_files = [
-    "pyproject.toml:version",
     "commitizen/__version__.py",
     ".pre-commit-config.yaml:rev:.+Commitizen",
 ]
+version_provider = "uv"
 version_scheme = "pep440"
 
 
@@ -170,6 +180,10 @@ omit = [
 [tool.pytest.ini_options]
 addopts = "--strict-markers"
 testpaths = ["tests/"]
+filterwarnings = [
+    # get_smart_tag_range is deprecated and will be removed in v5
+    "ignore:Call to deprecated function \\(or staticmethod\\) get_smart_tag_range:DeprecationWarning",
+]
 
 [tool.tox]
 requires = ["tox>=4.22"]
@@ -215,6 +229,10 @@ select = [
     "TC006",
 ]
 ignore = ["E501", "D1", "D415"]
+extend-safe-fixes = [
+    "TC", # Move imports inside/outside TYPE_CHECKING blocks
+    "UP", # Update syntaxes for current Python version recommendations
+]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["ANN", "S101"]
@@ -262,6 +280,12 @@ test.cmd = "pytest -n auto --dist=loadfile"
 
 "test:all".help = "Run the test suite on all supported Python versions"
 "test:all".cmd = "tox --parallel"
+
+"test:regen".help = "Regenerate the test fixtures"
+"test:regen".parallel = [
+    { ref = "test -k 'not py_' --regen-all" },
+    { ref = "test:all -- -k py_ --regen-all" },
+]
 
 cover.help = "Run the test suite with coverage"
 cover.ref = "test --cov-report term-missing --cov-report=xml:coverage.xml --cov=commitizen  --junitxml=junit.xml -o junit_family=legacy"

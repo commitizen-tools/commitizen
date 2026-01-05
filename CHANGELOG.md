@@ -1,3 +1,9 @@
+## v4.11.1 (2026-01-03)
+
+### Fix
+
+- **providers**: normalize package names in uv provider for uv.lock matching
+
 ## v4.11.0 (2025-12-29)
 
 ### Feat

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import pytest
+
 from commitizen.providers import get_provider
 from commitizen.providers.uv_provider import UvProvider
 
@@ -14,6 +16,16 @@ if TYPE_CHECKING:
 PYPROJECT_TOML = """
 [project]
 name = "test-uv"
+version = "4.2.1"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = ["commitizen==4.2.1"]
+"""
+
+PYPROJECT_TOML_UNDERSCORE = """
+[project]
+name = "test_uv"
 version = "4.2.1"
 description = "Add your description here"
 readme = "README.md"
@@ -66,12 +78,22 @@ dependencies = [
 """
 
 
+@pytest.mark.parametrize(
+    "pyproject_content",
+    [
+        pytest.param(PYPROJECT_TOML, id="hyphenated"),
+        pytest.param(PYPROJECT_TOML_UNDERSCORE, id="underscore"),
+    ],
+)
 def test_uv_provider(
-    config: BaseConfig, tmpdir, file_regression: FileRegressionFixture
+    config: BaseConfig,
+    tmpdir,
+    file_regression: FileRegressionFixture,
+    pyproject_content: str,
 ):
     with tmpdir.as_cwd():
         pyproject_toml_file = tmpdir / UvProvider.filename
-        pyproject_toml_file.write_text(PYPROJECT_TOML, encoding="utf-8")
+        pyproject_toml_file.write_text(pyproject_content, encoding="utf-8")
 
         uv_lock_file = tmpdir / UvProvider.lock_filename
         uv_lock_file.write_text(UV_LOCK_SIMPLIFIED, encoding="utf-8")

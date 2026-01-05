@@ -1,0 +1,16 @@
+usage: cz version [-h] [-r | -p | -c | -v] [--major | --minor]
+
+get the version of the installed commitizen or the current project (default:
+installed commitizen)
+
+options:
+  -h, --help        show this help message and exit
+  -r, --report      get system information for reporting bugs
+  -p, --project     get the version of the current project
+  -c, --commitizen  get the version of the installed commitizen
+  -v, --verbose     get the version of both the installed commitizen and the
+                    current project
+  --major           get just the major version. Need to be used with --project
+                    or --verbose.
+  --minor           get just the minor version. Need to be used with --project
+                    or --verbose.
