@@ -22,7 +22,7 @@ jobs:
           uv sync --frozen --group base --group script
       - name: Update CLI screenshots
         run: |
-          uv run poe doc:screenshots
+          uv run --no-sync poe doc:screenshots
       - name: Commit and push updated CLI screenshots
         run: |
           git config --global user.name "github-actions[bot]"
@@ -63,7 +63,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          uv run poe doc:build
+          uv run --no-sync poe doc:build
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
