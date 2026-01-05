@@ -2010,7 +2010,7 @@
 <p>Please check the <a href="https://github.com/commitizen-tools/commitizen/blob/master/pyproject.toml">pyproject.toml</a> for a comprehensive list of commands.</p>
 <h3 id="code-changes">Code Changes<a class="headerlink" href="#code-changes" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Ensure you have the correct dependencies</span>
-uv<span class="w"> </span>sync<span class="w"> </span>--dev
+uv<span class="w"> </span>sync<span class="w"> </span>--dev<span class="w"> </span>--frozen
 
 <span class="c1"># Make ruff happy</span>
 uv<span class="w"> </span>run<span class="w"> </span>poe<span class="w"> </span>format
