@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import itertools
-import sys
 from pathlib import Path
 from textwrap import dedent
 from typing import TYPE_CHECKING
@@ -9,7 +8,7 @@ from typing import TYPE_CHECKING
 import pytest
 from jinja2 import FileSystemLoader
 
-from commitizen import cli, git
+from commitizen import git
 from commitizen.commands.changelog import Changelog
 from commitizen.exceptions import (
     DryRunExit,
@@ -1692,6 +1691,7 @@ def test_export_changelog_template_from_plugin(
     mock_plugin: BaseCommitizen,
     changelog_format: ChangelogFormat,
     tmp_path: Path,
+    util: UtilFixture,
 ):
     project_root = Path(tmp_commitizen_project)
     target = project_root / "changelog.jinja"
@@ -1700,10 +1700,7 @@ def test_export_changelog_template_from_plugin(
     src.write_text(tpl)
     mock_plugin.template_loader = FileSystemLoader(tmp_path)
 
-    args = ["cz", "changelog", "--export-template", str(target)]
-
-    mocker.patch.object(sys, "argv", args)
-    cli.main()
+    util.run_cli("changelog", "--export-template", str(target))
 
     assert target.exists()
     assert target.read_text() == tpl
@@ -1712,6 +1709,7 @@ def test_export_changelog_template_from_plugin(
 def test_export_changelog_template_fails_when_template_has_no_filename(
     mocker: MockFixture,
     tmp_commitizen_project: Path,
+    util: UtilFixture,
 ):
     project_root = Path(tmp_commitizen_project)
     target = project_root / "changelog.jinja"
@@ -1725,11 +1723,8 @@ def test_export_changelog_template_fails_when_template_has_no_filename(
         "commitizen.changelog.get_changelog_template", return_value=FakeTemplate()
     )
 
-    args = ["cz", "changelog", "--export-template", str(target)]
-    mocker.patch.object(sys, "argv", args)
-
     with pytest.raises(NotAllowed) as exc_info:
-        cli.main()
+        util.run_cli("changelog", "--export-template", str(target))
 
     assert not target.exists()
     assert "Template filename is not set" in str(exc_info.value)
