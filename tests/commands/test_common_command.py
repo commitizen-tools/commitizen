@@ -7,10 +7,6 @@ from commitizen import cli
 from commitizen.commands import Example, Info, ListCz, Schema
 
 
-@pytest.mark.skipif(
-    sys.version_info < (3, 13),
-    reason="The output message of argparse is different between Python 3.13 and lower than Python 3.13",
-)
 @pytest.mark.parametrize(
     "command",
     [
@@ -26,6 +22,7 @@ from commitizen.commands import Example, Info, ListCz, Schema
         "version",
     ],
 )
+@pytest.mark.usefixtures("python_version")
 def test_command_shows_description_when_use_help_option(
     mocker: MockFixture,
     capsys,
@@ -35,7 +32,7 @@ def test_command_shows_description_when_use_help_option(
 ):
     """Test that the command shows the description when the help option is used.
 
-    Note: If the command description changes, please run `pytest tests/commands/test_common_command.py --regen-all` to regenerate the test files.
+    Note: If the command description changes, please run `poe test:regen` to regenerate the test files.
     """
     # Force consistent terminal output
     monkeypatch.setenv("COLUMNS", "80")

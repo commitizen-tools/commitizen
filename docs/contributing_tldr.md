@@ -13,7 +13,7 @@ Please check the [pyproject.toml](https://github.com/commitizen-tools/commitizen
 
 ```bash
 # Ensure you have the correct dependencies
-uv sync --dev
+uv sync --dev --frozen
 
 # Make ruff happy
 uv run poe format

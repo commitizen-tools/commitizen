@@ -504,6 +504,14 @@ Supported variables:
 | `$prerelease`, `${prerelease}` | Prerelease (alpha, beta, release candidate) |
 | `$devrelease`, `${devrelease}` | Development release                         |
 
+### `--yes`
+
+Automatically answers “yes” to all interactive prompts during the bump process, allowing the command to run without manual confirmation.
+
+```bash
+cz bump --yes
+```
+
 [pep440]: https://www.python.org/dev/peps/pep-0440/
 [semver]: https://semver.org/
 [version_files]: ../config/bump.md#version_files

@@ -4,6 +4,8 @@ The basic steps are:
 
 1. Define your custom committing or bumping rules in the configuration file.
 2. Declare `name = "cz_customize"` in your configuration file, or add `-n cz_customize` when running Commitizen.
+!!! warning
+    `cz_customize` is likely to be removed or renamed in the next major release.
 
 Example:
 
