@@ -239,6 +239,90 @@ class TestReadCfg:
             with pytest.raises(ConfigFileIsEmpty):
                 config.read_cfg(filepath="./not_in_root/pyproject.toml")
 
+    def test_warn_multiple_config_files(_, tmpdir, capsys):
+        """Test that a warning is issued when multiple config files exist."""
+        with tmpdir.as_cwd():
+            # Create multiple config files
+            tmpdir.join(".cz.toml").write(PYPROJECT)
+            tmpdir.join(".cz.json").write(JSON_STR)
+
+            # Read config
+            cfg = config.read_cfg()
+
+            # Check that the warning was issued
+            captured = capsys.readouterr()
+            assert "Multiple config files detected" in captured.err
+            assert ".cz.toml" in captured.err
+            assert ".cz.json" in captured.err
+            assert "Using" in captured.err
+
+            # Verify the correct config is loaded (first in priority order)
+            assert cfg.settings == _settings
+
+    def test_warn_multiple_config_files_with_pyproject(_, tmpdir, capsys):
+        """Test warning excludes pyproject.toml from the warning message."""
+        with tmpdir.as_cwd():
+            # Create multiple config files including pyproject.toml
+            tmpdir.join("pyproject.toml").write(PYPROJECT)
+            tmpdir.join(".cz.json").write(JSON_STR)
+
+            # Read config - should use pyproject.toml (first in priority)
+            cfg = config.read_cfg()
+
+            # No warning should be issued as only one non-pyproject config exists
+            captured = capsys.readouterr()
+            assert "Multiple config files detected" not in captured.err
+
+            # Verify the correct config is loaded
+            assert cfg.settings == _settings
+
+    def test_warn_multiple_config_files_uses_correct_one(_, tmpdir, capsys):
+        """Test that the correct config file is used when multiple exist."""
+        with tmpdir.as_cwd():
+            # Create .cz.json with different settings
+            json_different = """
+            {
+                "commitizen": {
+                    "name": "cz_conventional_commits",
+                    "version": "2.0.0"
+                }
+            }
+            """
+            tmpdir.join(".cz.json").write(json_different)
+            tmpdir.join(".cz.toml").write(PYPROJECT)
+
+            # Read config - should use pyproject.toml (first in defaults.CONFIG_FILES)
+            # But since pyproject.toml doesn't exist, .cz.toml is second in priority
+            cfg = config.read_cfg()
+
+            # Check that warning mentions both files
+            captured = capsys.readouterr()
+            assert "Multiple config files detected" in captured.err
+            assert ".cz.toml" in captured.err
+            assert ".cz.json" in captured.err
+
+            # Verify .cz.toml was used (second in priority after pyproject.toml)
+            assert cfg.settings["name"] == "cz_jira"  # from PYPROJECT
+            assert cfg.settings["version"] == "1.0.0"
+
+    def test_no_warn_with_explicit_config_path(_, tmpdir, capsys):
+        """Test that no warning is issued when user explicitly specifies config."""
+        with tmpdir.as_cwd():
+            # Create multiple config files
+            tmpdir.join(".cz.toml").write(PYPROJECT)
+            tmpdir.join(".cz.json").write(JSON_STR)
+
+            # Read config with explicit path
+            cfg = config.read_cfg(filepath=".cz.json")
+
+            # No warning should be issued
+            captured = capsys.readouterr()
+            assert "Multiple config files detected" not in captured.err
+
+            # Verify the explicitly specified config is loaded (compare to expected JSON config)
+            json_cfg_expected = JsonConfig(data=JSON_STR, path=Path(".cz.json"))
+            assert cfg.settings == json_cfg_expected.settings
+
 
 @pytest.mark.parametrize(
     "config_file, exception_string",
