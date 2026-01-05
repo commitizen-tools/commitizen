@@ -10,8 +10,11 @@ from typing import TYPE_CHECKING, NamedTuple
 import pytest
 
 from commitizen import cli, cmd, exceptions, git
+from commitizen.cmd import Command
 
 if TYPE_CHECKING:
+    from unittest.mock import Mock
+
     from freezegun.api import FrozenDateTimeFactory
     from pytest_mock import MockerFixture
 
@@ -24,52 +27,6 @@ class VersionSchemeTestArgs(NamedTuple):
     prerelease: Prerelease | None
     prerelease_offset: int
     devrelease: int | None
-
-
-class FakeCommand:
-    def __init__(self, out=None, err=None, return_code=0):
-        self.out = out
-        self.err = err
-        self.return_code = return_code
-
-
-def create_file_and_commit(
-    message: str, filename: str | None = None, committer_date: str | None = None
-):
-    if not filename:
-        filename = str(uuid.uuid4())
-
-    Path(filename).touch()
-    c = cmd.run("git add .")
-    if c.return_code != 0:
-        raise exceptions.CommitError(c.err)
-    c = git.commit(message, committer_date=committer_date)
-    if c.return_code != 0:
-        raise exceptions.CommitError(c.err)
-
-
-def create_branch(name: str):
-    c = cmd.run(f"git branch {name}")
-    if c.return_code != 0:
-        raise exceptions.GitCommandError(c.err)
-
-
-def switch_branch(branch: str):
-    c = cmd.run(f"git switch {branch}")
-    if c.return_code != 0:
-        raise exceptions.GitCommandError(c.err)
-
-
-def merge_branch(branch: str):
-    c = cmd.run(f"git merge {branch}")
-    if c.return_code != 0:
-        raise exceptions.GitCommandError(c.err)
-
-
-def create_tag(tag: str, message: str | None = None) -> None:
-    c = git.tag(tag, annotated=(message is not None), msg=message)
-    if c.return_code != 0:
-        raise exceptions.CommitError(c.err)
 
 
 @dataclass
@@ -159,6 +116,11 @@ class UtilFixture:
         """Advance time by 1 second."""
         self.freezer.tick()
         self.patch_env()
+
+    def mock_cmd(self, out: str = "", err: str = "", return_code: int = 0) -> Mock:
+        """Mock cmd.run command."""
+        return_value = Command(out, err, b"", b"", return_code)
+        return self.mocker.patch("commitizen.cmd.run", return_value=return_value)
 
 
 @pytest.fixture

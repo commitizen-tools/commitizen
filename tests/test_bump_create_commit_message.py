@@ -3,9 +3,9 @@ from pathlib import Path
 from textwrap import dedent
 
 import pytest
-from pytest_mock import MockFixture
 
-from commitizen import bump, cli, cmd, exceptions
+from commitizen import bump, cmd, exceptions
+from tests.utils import UtilFixture
 
 conversion = [
     (
@@ -38,14 +38,13 @@ def test_create_tag(test_input, expected):
     ),
 )
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_pre_commit_changelog(mocker: MockFixture, freezer, retry):
-    freezer.move_to("2022-04-01")
-    testargs = ["cz", "bump", "--changelog", "--yes"]
+def test_bump_pre_commit_changelog(util: UtilFixture, retry):
+    util.freezer.move_to("2022-04-01")
+    bump_args = ["bump", "--changelog", "--yes"]
     if retry:
-        testargs.append("--retry")
+        bump_args.append("--retry")
     else:
         pytest.xfail("it will fail because pre-commit will reformat CHANGELOG.md")
-    mocker.patch.object(sys, "argv", testargs)
     # Configure prettier as a pre-commit hook
     Path(".pre-commit-config.yaml").write_text(
         dedent(
@@ -71,7 +70,7 @@ def test_bump_pre_commit_changelog(mocker: MockFixture, freezer, retry):
     cmd.run("git add -A")
     cmd.run('git commit -m "fix: _test"')
     cmd.run("pre-commit install")
-    cli.main()
+    util.run_cli(*bump_args)
     # Pre-commit fixed last line adding extra indent and "\" char
     assert Path("CHANGELOG.md").read_text() == dedent(
         """\
@@ -86,12 +85,11 @@ def test_bump_pre_commit_changelog(mocker: MockFixture, freezer, retry):
 
 @pytest.mark.parametrize("retry", (True, False))
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_pre_commit_changelog_fails_always(mocker: MockFixture, freezer, retry):
-    freezer.move_to("2022-04-01")
-    testargs = ["cz", "bump", "--changelog", "--yes"]
+def test_bump_pre_commit_changelog_fails_always(util: UtilFixture, retry):
+    util.freezer.move_to("2022-04-01")
+    bump_args = ["bump", "--changelog", "--yes"]
     if retry:
-        testargs.append("--retry")
-    mocker.patch.object(sys, "argv", testargs)
+        bump_args.append("--retry")
     Path(".pre-commit-config.yaml").write_text(
         dedent(
             """\
@@ -110,20 +108,19 @@ def test_bump_pre_commit_changelog_fails_always(mocker: MockFixture, freezer, re
     cmd.run('git commit -m "feat: forbid changelogs"')
     cmd.run("pre-commit install")
     with pytest.raises(exceptions.BumpCommitFailedError):
-        cli.main()
+        util.run_cli(*bump_args)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_with_build_metadata(mocker: MockFixture, freezer):
+def test_bump_with_build_metadata(util: UtilFixture):
     def _add_entry(test_str: str, args: list):
         Path(test_str).write_text("")
         cmd.run("git add -A")
         cmd.run(f'git commit -m "fix: test-{test_str}"')
-        cz_args = ["cz", "bump", "--changelog", "--yes"] + args
-        mocker.patch.object(sys, "argv", cz_args)
-        cli.main()
+        cz_args = ["bump", "--changelog", "--yes"] + args
+        util.run_cli(*cz_args)
 
-    freezer.move_to("2024-01-01")
+    util.freezer.move_to("2024-01-01")
 
     _add_entry("a", ["--build-metadata", "a.b.c"])
     _add_entry("b", [])
