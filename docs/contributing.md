@@ -64,6 +64,7 @@ If you're a first-time contributor, please check out issues labeled [good first 
     - Run the full test suite: `uv run poe all`
     - Ensure test coverage doesn't drop (we use [CodeCov](https://app.codecov.io/gh/commitizen-tools/commitizen))
     - For documentation changes, run `uv run poe doc` to check for warnings/errors
+    - If you need to change some file regression snapshots, run: `uv run poe test:regen`
 4. **Committing Changes**
     - Use Commitizen to make commits (we follow [conventional commits](https://www.conventionalcommits.org/))
     - Example: `cz commit`

@@ -10,4 +10,4 @@
 - mama gotta work
 - output glitch
 
-## 1.0.0 (1970-01-01)
+## 1.0.0 (2025-12-29)
