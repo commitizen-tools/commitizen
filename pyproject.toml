@@ -131,13 +131,12 @@ build-backend = "uv_build"
 
 
 [tool.commitizen]
-version = "4.11.1"
 tag_format = "v$version"
 version_files = [
-    "pyproject.toml:version",
     "commitizen/__version__.py",
     ".pre-commit-config.yaml:rev:.+Commitizen",
 ]
+version_provider = "uv"
 version_scheme = "pep440"
 
 
