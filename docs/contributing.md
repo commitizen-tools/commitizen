@@ -40,7 +40,7 @@ If you're a first-time contributor, please check out issues labeled [good first 
     ```
 4. Set up the development environment:
     ```bash
-    uv sync --dev
+    uv sync --dev --frozen
     ```
 5. Set up pre-commit hooks:
     ```bash

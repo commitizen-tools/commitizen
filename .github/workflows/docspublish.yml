@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           uv --version
-          uv sync --locked --group script
+          uv sync --frozen --group script
       - name: Update CLI screenshots
         run: |
           uv run poe doc:screenshots
@@ -52,7 +52,7 @@ jobs:
       - name: Install dependencies
         run: |
           uv --version
-          uv sync --locked --only-group documentation
+          uv sync --frozen --only-group documentation
       - name: Generate Sponsors 💖
         uses: JamesIves/github-sponsors-readme-action@v1
         with:
