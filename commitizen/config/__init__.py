@@ -55,26 +55,10 @@ def _check_and_warn_multiple_configs(filepath: str | None = None) -> None:
 
         # If more than one config file exists, warn the user
         if len(existing_files) > 1:
-            # Find which one will be used (first non-empty one in the priority order)
-            used_config = None
-            for filename in defaults.CONFIG_FILES:
-                config_path = path / filename
-                if config_path.exists():
-                    try:
-                        with open(config_path, "rb") as f:
-                            data = f.read()
-                        conf = create_config(data=data, path=config_path)
-                        if not conf.is_empty_config:
-                            used_config = filename
-                            break
-                    except Exception:
-                        continue
-
-            if used_config:
-                out.warn(
-                    f"Multiple config files detected: {', '.join(existing_files)}. "
-                    f"Using {used_config}."
-                )
+            out.warn(
+                f"Multiple config files detected: {', '.join(existing_files)}. "
+                f"Using {existing_files[0]}."
+            )
             break
 
 
