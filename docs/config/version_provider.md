@@ -264,11 +264,18 @@ setup(
 ### Step 3: Install and Use
 
 1. Install your provider package:
-    Once your custom Commitizen provider is packaged and published (for example, to PyPI), install it like any standard Python dependency:
 
-   ```bash
-   pip install my-commitizen-provider
-   ```
+    - Once your custom Commitizen provider is packaged and published (for example, to PyPI), install it like any standard Python dependency:
+
+    ```bash
+    pip install my-commitizen-provider
+    ```
+
+    - If you want to use provider directly from the current project source(during development), install it in editable mode ([See pip documentation](https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-e)):
+
+    ```bash
+    pip install -e .
+    ```
 
 2. Configure Commitizen to use your provider:
    ```toml
