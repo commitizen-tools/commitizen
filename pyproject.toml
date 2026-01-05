@@ -229,6 +229,10 @@ select = [
     "TC006",
 ]
 ignore = ["E501", "D1", "D415"]
+extend-safe-fixes = [
+    "TC", # Move imports inside/outside TYPE_CHECKING blocks
+    "UP", # Update syntaxes for current Python version recommendations
+]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["ANN", "S101"]
