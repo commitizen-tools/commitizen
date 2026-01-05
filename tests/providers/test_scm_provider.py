@@ -6,16 +6,10 @@ import pytest
 
 from commitizen.providers import get_provider
 from commitizen.providers.scm_provider import ScmProvider
-from tests.utils import (
-    create_branch,
-    create_file_and_commit,
-    create_tag,
-    merge_branch,
-    switch_branch,
-)
 
 if TYPE_CHECKING:
     from commitizen.config.base_config import BaseConfig
+    from tests.utils import UtilFixture
 
 
 @pytest.mark.parametrize(
@@ -46,12 +40,16 @@ if TYPE_CHECKING:
 )
 @pytest.mark.usefixtures("tmp_git_project")
 def test_scm_provider(
-    config: BaseConfig, tag_format: str, tag: str, expected_version: str
+    config: BaseConfig,
+    tag_format: str,
+    tag: str,
+    expected_version: str,
+    util: UtilFixture,
 ):
-    create_file_and_commit("test: fake commit")
-    create_tag(tag)
-    create_file_and_commit("test: fake commit")
-    create_tag("should-not-match")
+    util.create_file_and_commit("test: fake commit")
+    util.create_tag(tag)
+    util.create_file_and_commit("test: fake commit")
+    util.create_tag("should-not-match")
 
     config.settings["version_provider"] = "scm"
     config.settings["tag_format"] = tag_format
@@ -75,52 +73,54 @@ def test_scm_provider_default_without_commits_and_tags(config: BaseConfig):
 
 
 @pytest.mark.usefixtures("tmp_git_project")
-def test_scm_provider_default_with_commits_and_tags(config: BaseConfig):
+def test_scm_provider_default_with_commits_and_tags(
+    config: BaseConfig, util: UtilFixture
+):
     config.settings["version_provider"] = "scm"
 
     provider = get_provider(config)
     assert isinstance(provider, ScmProvider)
     assert provider.get_version() == "0.0.0"
 
-    create_file_and_commit("Initial state")
-    create_tag("1.0.0")
+    util.create_file_and_commit("Initial state")
+    util.create_tag("1.0.0")
     # create develop
-    create_branch("develop")
-    switch_branch("develop")
+    util.create_branch("develop")
+    util.switch_branch("develop")
 
     # add a feature to develop
-    create_file_and_commit("develop: add beta feature1")
+    util.create_file_and_commit("develop: add beta feature1")
     assert provider.get_version() == "1.0.0"
-    create_tag("1.1.0b0")
+    util.create_tag("1.1.0b0")
 
     # create staging
-    create_branch("staging")
-    switch_branch("staging")
-    create_file_and_commit("staging: Starting release candidate")
+    util.create_branch("staging")
+    util.switch_branch("staging")
+    util.create_file_and_commit("staging: Starting release candidate")
     assert provider.get_version() == "1.1.0b0"
-    create_tag("1.1.0rc0")
+    util.create_tag("1.1.0rc0")
 
     # add another feature to develop
-    switch_branch("develop")
-    create_file_and_commit("develop: add beta feature2")
+    util.switch_branch("develop")
+    util.create_file_and_commit("develop: add beta feature2")
     assert provider.get_version() == "1.1.0b0"
-    create_tag("1.2.0b0")
+    util.create_tag("1.2.0b0")
 
     # add a hotfix to master
-    switch_branch("master")
-    create_file_and_commit("master: add hotfix")
+    util.switch_branch("master")
+    util.create_file_and_commit("master: add hotfix")
     assert provider.get_version() == "1.0.0"
-    create_tag("1.0.1")
+    util.create_tag("1.0.1")
 
     # merge the hotfix to staging
-    switch_branch("staging")
-    merge_branch("master")
+    util.switch_branch("staging")
+    util.merge_branch("master")
 
     assert provider.get_version() == "1.1.0rc0"
 
 
 @pytest.mark.usefixtures("tmp_git_project")
-def test_scm_provider_detect_legacy_tags(config: BaseConfig):
+def test_scm_provider_detect_legacy_tags(config: BaseConfig, util: UtilFixture):
     config.settings["version_provider"] = "scm"
     config.settings["tag_format"] = "v${version}"
     config.settings["legacy_tag_formats"] = [
@@ -129,14 +129,14 @@ def test_scm_provider_detect_legacy_tags(config: BaseConfig):
     ]
     provider = get_provider(config)
 
-    create_file_and_commit("test: fake commit")
-    create_tag("old-0.4.1")
+    util.create_file_and_commit("test: fake commit")
+    util.create_tag("old-0.4.1")
     assert provider.get_version() == "0.4.1"
 
-    create_file_and_commit("test: fake commit")
-    create_tag("legacy-0.4.2")
+    util.create_file_and_commit("test: fake commit")
+    util.create_tag("legacy-0.4.2")
     assert provider.get_version() == "0.4.2"
 
-    create_file_and_commit("test: fake commit")
-    create_tag("v0.5.0")
+    util.create_file_and_commit("test: fake commit")
+    util.create_tag("v0.5.0")
     assert provider.get_version() == "0.5.0"

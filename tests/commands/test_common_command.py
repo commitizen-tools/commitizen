@@ -1,10 +1,8 @@
-import sys
-
 import pytest
 from pytest_mock import MockFixture
 
-from commitizen import cli
 from commitizen.commands import Example, Info, ListCz, Schema
+from tests.utils import UtilFixture
 
 
 @pytest.mark.parametrize(
@@ -24,11 +22,11 @@ from commitizen.commands import Example, Info, ListCz, Schema
 )
 @pytest.mark.usefixtures("python_version")
 def test_command_shows_description_when_use_help_option(
-    mocker: MockFixture,
     capsys,
     file_regression,
     monkeypatch: pytest.MonkeyPatch,
     command: str,
+    util: UtilFixture,
 ):
     """Test that the command shows the description when the help option is used.
 
@@ -42,10 +40,8 @@ def test_command_shows_description_when_use_help_option(
     monkeypatch.setenv("NO_COLOR", "1")
     monkeypatch.setenv("PAGER", "cat")
 
-    testargs = ["cz", command, "--help"]
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(SystemExit):
-        cli.main()
+        util.run_cli(command, "--help")
 
     out, _ = capsys.readouterr()
     file_regression.check(out, extension=".txt")
