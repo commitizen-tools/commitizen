@@ -87,6 +87,7 @@ semver2 = "commitizen.version_schemes:SemVer2"
 
 [dependency-groups]
 dev = [
+    { include-group = "base" },
     { include-group = "test" },
     { include-group = "linters" },
     { include-group = "documentation" },
@@ -94,8 +95,9 @@ dev = [
     "ipython>=8.0",
     "tox>4",
     "tox-uv",
-    "poethepoet>=0.34.0",
 ]
+
+base = ["poethepoet>=0.34.0"]
 
 test = [
     "pytest>=7.2",

@@ -214,6 +214,9 @@ dependencies = [
 ]
 
 [package.dev-dependencies]
+base = [
+    { name = "poethepoet" },
+]
 dev = [
     { name = "ipython", version = "8.37.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "ipython", version = "9.8.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
@@ -285,6 +288,7 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
+base = [{ name = "poethepoet", specifier = ">=0.34.0" }]
 dev = [
     { name = "ipython", specifier = ">=8.0" },
     { name = "mkdocs", specifier = ">=1.4.2" },
