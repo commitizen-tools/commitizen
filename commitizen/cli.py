@@ -67,7 +67,7 @@ tpl_arguments = (
     {
         "name": ["--template", "-t"],
         "help": (
-            "changelog template file name (relative to the current working directory)"
+            "Changelog template file name (relative to the current working directory)."
         ),
     },
     {
@@ -75,7 +75,7 @@ tpl_arguments = (
         "action": ParseKwargs,
         "dest": "extras",
         "metavar": "EXTRA",
-        "help": "a changelog extra variable (in the form 'key=value')",
+        "help": "Changelog extra variables (in the form 'key=value').",
     },
 )
 
@@ -89,18 +89,18 @@ data = {
     "arguments": [
         {
             "name": "--config",
-            "help": "the path of configuration file",
+            "help": "The path to the configuration file.",
         },
-        {"name": "--debug", "action": "store_true", "help": "use debug mode"},
+        {"name": "--debug", "action": "store_true", "help": "Use debug mode."},
         {
             "name": ["-n", "--name"],
-            "help": "use the given commitizen (default: cz_conventional_commits)",
+            "help": "Use the given commitizen (default: cz_conventional_commits).",
         },
         {
             "name": ["-nr", "--no-raise"],
             "type": str,
             "required": False,
-            "help": "comma separated error codes that won't raise error, e.g: cz -nr 1,2,3 bump. See codes at https://commitizen-tools.github.io/commitizen/exit_codes/",
+            "help": "Comma-separated error codes that won't raise error, e.g., cz -nr 1,2,3 bump. See codes at https://commitizen-tools.github.io/commitizen/exit_codes/",
         },
     ],
     "subcommands": {
@@ -109,157 +109,157 @@ data = {
         "commands": [
             {
                 "name": ["init"],
-                "description": "init commitizen configuration",
-                "help": "init commitizen configuration",
+                "description": "Initialize commitizen configuration",
+                "help": "Initialize commitizen configuration.",
                 "func": commands.Init,
             },
             {
                 "name": ["commit", "c"],
-                "description": "create new commit",
-                "help": "create new commit",
+                "description": "Create new commit",
+                "help": "Create new commit.",
                 "func": commands.Commit,
                 "arguments": [
                     {
                         "name": ["--retry"],
                         "action": "store_true",
-                        "help": "retry last commit",
+                        "help": "Retry the last commit.",
                     },
                     {
                         "name": ["--no-retry"],
                         "action": "store_true",
                         "default": False,
-                        "help": "skip retry if retry_after_failure is set to true",
+                        "help": "Skip retry if --retry or `retry_after_failure` is set to true.",
                     },
                     {
                         "name": "--dry-run",
                         "action": "store_true",
-                        "help": "show output to stdout, no commit, no modified files",
+                        "help": "Perform a dry run, without committing or modifying files.",
                     },
                     {
                         "name": "--write-message-to-file",
                         "type": Path,
                         "metavar": "FILE_PATH",
-                        "help": "write message to file before committing (can be combined with --dry-run)",
+                        "help": "Write message to FILE_PATH before committing (can be used with --dry-run).",
                     },
                     {
                         "name": ["-s", "--signoff"],
                         "action": "store_true",
-                        "help": "Deprecated, use 'cz commit -- -s' instead",
+                        "help": "Deprecated, use `cz commit -- -s` instead.",
                     },
                     {
                         "name": ["-a", "--all"],
                         "action": "store_true",
-                        "help": "Tell the command to automatically stage files that have been modified and deleted, but new files you have not told Git about are not affected.",
+                        # The help text aligns with the description of git commit --all
+                        "help": "Automatically stage files that have been modified and deleted, but new files you have not told Git about are not affected.",
                     },
                     {
                         "name": ["-e", "--edit"],
                         "action": "store_true",
                         "default": False,
-                        "help": "edit the commit message before committing",
+                        "help": "Edit the commit message before committing.",
                     },
                     {
                         "name": ["-l", "--message-length-limit"],
                         "type": int,
-                        "help": "length limit of the commit message; 0 for no limit",
+                        "help": "Set the length limit of the commit message; 0 for no limit.",
                     },
                     {
                         "name": ["--"],
                         "action": "store_true",
                         "dest": "double_dash",
-                        "help": "Positional arguments separator (recommended)",
+                        "help": "Positional arguments separator (recommended).",
                     },
                 ],
             },
             {
                 "name": "ls",
-                "description": "show available commitizens",
-                "help": "show available commitizens",
+                "description": "Show available Commitizens",
+                "help": "Show available Commitizens.",
                 "func": commands.ListCz,
             },
             {
                 "name": "example",
-                "description": "show commit example",
-                "help": "show commit example",
+                "description": "Show commit example",
+                "help": "Show commit example.",
                 "func": commands.Example,
             },
             {
                 "name": "info",
-                "description": "show information about the cz",
-                "help": "show information about the cz",
+                "description": "Show information about the cz",
+                "help": "Show information about the cz.",
                 "func": commands.Info,
             },
             {
                 "name": "schema",
-                "description": "show commit schema",
-                "help": "show commit schema",
+                "description": "Show commit schema",
+                "help": "Show commit schema.",
                 "func": commands.Schema,
             },
             {
                 "name": "bump",
-                "description": "bump semantic version based on the git log",
-                "help": "bump semantic version based on the git log",
+                "description": "Bump semantic version based on the git log",
+                "help": "Bump semantic version based on the git log.",
                 "func": commands.Bump,
                 "arguments": [
                     {
                         "name": "--dry-run",
                         "action": "store_true",
-                        "help": "show output to stdout, no commit, no modified files",
+                        "help": "Perform a dry run, without committing or modifying files.",
                     },
                     {
-                        "name": "--files-only",
+                        "name": "--files-only",  # TODO: rename to --version-files-only
                         "action": "store_true",
-                        "help": "bump version in the files from the config",
+                        "help": "Bump version in the `version_files` specified in the configuration file only.",
                     },
                     {
                         "name": "--local-version",
                         "action": "store_true",
-                        "help": "bump only the local version portion",
+                        "help": "Bump version only the local version portion (ignoring the public version).",
                     },
                     {
                         "name": ["--changelog", "-ch"],
                         "action": "store_true",
                         "default": False,
-                        "help": "generate the changelog for the newest version",
+                        "help": "Generate the changelog for the latest version.",
                     },
                     {
                         "name": ["--no-verify"],
                         "action": "store_true",
                         "default": False,
-                        "help": "this option bypasses the pre-commit and commit-msg hooks",
+                        # The help text aligns with the description of git commit --no-verify
+                        "help": "Bypass the pre-commit and commit-msg hooks.",
                     },
                     {
                         "name": "--yes",
                         "action": "store_true",
-                        "help": "accept automatically questions done",
+                        "help": "Accept automatically answered questions.",
                     },
                     {
                         "name": "--tag-format",
                         "help": (
-                            "the format used to tag the commit and read it, "
-                            "use it in existing projects, "
-                            "wrap around simple quotes"
+                            "The format used to tag the commit and read it. "
+                            "Use it in existing projects, and wrap around simple quotes."
                         ),
                     },
                     {
                         "name": "--bump-message",
                         "help": (
-                            "template used to create the release commit, "
-                            "useful when working with CI"
+                            "Template used to create the release commit, useful when working with CI."
                         ),
                     },
                     {
                         "name": ["--prerelease", "-pr"],
-                        "help": "choose type of prerelease",
+                        "help": "Type of prerelease.",
                         "choices": ["alpha", "beta", "rc"],
                     },
                     {
                         "name": ["--devrelease", "-d"],
-                        "help": "specify non-negative integer for dev. release",
+                        "help": "Specify non-negative integer for dev release.",
                         "type": int,
                     },
                     {
                         "name": ["--increment"],
-                        "help": "manually specify the desired increment",
+                        "help": "Specify the desired increment.",
                         "choices": ["MAJOR", "MINOR", "PATCH"],
                         "type": str.upper,
                     },
@@ -268,35 +268,34 @@ data = {
                         "choices": ["linear", "exact"],
                         "default": "linear",
                         "help": (
-                            "set the method by which the new version is chosen. "
-                            "'linear' (default) guesses the next version based on typical linear version progression, "
-                            "such that bumping of a pre-release with lower precedence than the current pre-release "
+                            "Set the method by which the new version is chosen. "
+                            "'linear' (default) resolves the next version based on typical linear version progression, "
+                            "where bumping of a pre-release with lower precedence than the current pre-release "
                             "phase maintains the current phase of higher precedence. "
                             "'exact' applies the changes that have been specified (or determined from the commit log) "
-                            "without interpretation, such that the increment and pre-release are always honored"
+                            "without interpretation, ensuring the increment and pre-release are always honored."
                         ),
                     },
                     {
                         "name": ["--check-consistency", "-cc"],
                         "help": (
-                            "check consistency among versions defined in "
-                            "commitizen configuration and version_files"
+                            "Check consistency among versions defined in Commitizen configuration file and `version_files`."
                         ),
                         "action": "store_true",
                     },
                     {
                         "name": ["--annotated-tag", "-at"],
-                        "help": "create annotated tag instead of lightweight one",
+                        "help": "Create annotated tag instead of lightweight one.",
                         "action": "store_true",
                     },
                     {
                         "name": ["--annotated-tag-message", "-atm"],
-                        "help": "create annotated tag message",
+                        "help": "Create annotated tag message.",
                         "type": str,
                     },
                     {
                         "name": ["--gpg-sign", "-s"],
-                        "help": "sign tag instead of lightweight one",
+                        "help": "Sign tag instead of lightweight one.",
                         "default": False,
                         "action": "store_true",
                     },
@@ -304,46 +303,46 @@ data = {
                         "name": ["--changelog-to-stdout"],
                         "action": "store_true",
                         "default": False,
-                        "help": "Output changelog to the stdout",
+                        "help": "Output changelog to stdout.",
                     },
                     {
                         "name": ["--git-output-to-stderr"],
                         "action": "store_true",
                         "default": False,
-                        "help": "Redirect git output to stderr",
+                        "help": "Redirect git output to stderr.",
                     },
                     {
                         "name": ["--retry"],
                         "action": "store_true",
                         "default": False,
-                        "help": "retry commit if it fails the 1st time",
+                        "help": "Retry commit if it fails for the first time.",
                     },
                     {
                         "name": ["--major-version-zero"],
                         "action": "store_true",
                         "default": None,
-                        "help": "keep major version at zero, even for breaking changes",
+                        "help": "Keep major version at zero, even for breaking changes.",
                     },
                     *deepcopy(tpl_arguments),
                     {
                         "name": "--file-name",
-                        "help": "file name of changelog (default: 'CHANGELOG.md')",
+                        "help": "File name of changelog (default: 'CHANGELOG.md').",
                     },
                     {
                         "name": ["--prerelease-offset"],
                         "type": int,
                         "default": None,
-                        "help": "start pre-releases with this offset",
+                        "help": "Start pre-releases with this offset.",
                     },
                     {
                         "name": ["--version-scheme"],
-                        "help": "choose version scheme",
+                        "help": "Choose version scheme.",
                         "default": None,
                         "choices": version_schemes.KNOWN_SCHEMES,
                     },
                     {
                         "name": ["--version-type"],
-                        "help": "Deprecated, use --version-scheme instead",
+                        "help": "Deprecated, use `--version-scheme` instead.",
                         "default": None,
                         "choices": version_schemes.KNOWN_SCHEMES,
                     },
@@ -351,24 +350,24 @@ data = {
                         "name": "manual_version",
                         "type": str,
                         "nargs": "?",
-                        "help": "bump to the given version (e.g: 1.5.3)",
+                        "help": "Bump to the given version (e.g., 1.5.3).",
                         "metavar": "MANUAL_VERSION",
                     },
                     {
                         "name": ["--build-metadata"],
-                        "help": "Add additional build-metadata to the version-number",
+                        "help": "Add additional build-metadata to the version-number.",
                         "default": None,
                     },
                     {
                         "name": ["--get-next"],
                         "action": "store_true",
-                        "help": "Determine the next version and write to stdout",
+                        "help": "Determine the next version and write to stdout.",
                         "default": False,
                     },
                     {
                         "name": ["--allow-no-commit"],
                         "default": False,
-                        "help": "bump version without eligible commits",
+                        "help": "Bump version without eligible commits.",
                         "action": "store_true",
                     },
                 ],
@@ -376,10 +375,10 @@ data = {
             {
                 "name": ["changelog", "ch"],
                 "description": (
-                    "generate changelog (note that it will overwrite existing file)"
+                    "Generate changelog (note that it will overwrite existing files)"
                 ),
                 "help": (
-                    "generate changelog (note that it will overwrite existing file)"
+                    "Generate changelog (note that it will overwrite existing files)."
                 ),
                 "func": commands.Changelog,
                 "arguments": [
@@ -387,17 +386,17 @@ data = {
                         "name": "--dry-run",
                         "action": "store_true",
                         "default": False,
-                        "help": "show changelog to stdout",
+                        "help": "Show changelog to stdout.",
                     },
                     {
                         "name": "--file-name",
-                        "help": "file name of changelog (default: 'CHANGELOG.md')",
+                        "help": "File name of changelog (default: 'CHANGELOG.md').",
                     },
                     {
                         "name": "--unreleased-version",
                         "help": (
-                            "set the value for the new version (use the tag value), "
-                            "instead of using unreleased"
+                            "Set the value for the new version (use the tag value), "
+                            "instead of using unreleased versions."
                         ),
                     },
                     {
@@ -405,22 +404,22 @@ data = {
                         "action": "store_true",
                         "default": False,
                         "help": (
-                            "generates changelog from last created version, "
-                            "useful if the changelog has been manually modified"
+                            "Generate changelog from the last created version, "
+                            "useful if the changelog has been manually modified."
                         ),
                     },
                     {
                         "name": "rev_range",
                         "type": str,
                         "nargs": "?",
-                        "help": "generates changelog for the given version (e.g: 1.5.3) or version range (e.g: 1.5.3..1.7.9)",
+                        "help": "Generate changelog for the given version (e.g., 1.5.3) or version range (e.g., 1.5.3..1.7.9).",
                     },
                     {
                         "name": "--start-rev",
                         "default": None,
                         "help": (
-                            "start rev of the changelog. "
-                            "If not set, it will generate changelog from the start"
+                            "Start rev of the changelog. "
+                            "If not set, it will generate changelog from the beginning."
                         ),
                     },
                     {
@@ -428,128 +427,122 @@ data = {
                         "action": "store_true",
                         "default": False,
                         "help": (
-                            "collect all changes from prereleases into next non-prerelease. "
-                            "If not set, it will include prereleases in the changelog"
+                            "Collect all changes from prereleases into the next non-prerelease. "
+                            "If not set, it will include prereleases in the changelog."
                         ),
                     },
                     {
                         "name": ["--version-scheme"],
-                        "help": "choose version scheme",
+                        "help": "Choose version scheme.",
                         "default": None,
                         "choices": version_schemes.KNOWN_SCHEMES,
                     },
                     {
                         "name": "--export-template",
                         "default": None,
-                        "help": "Export the changelog template into this file instead of rendering it",
+                        "help": "Export the changelog template into this file instead of rendering it.",
                     },
                     *deepcopy(tpl_arguments),
                     {
                         "name": "--tag-format",
-                        "help": "The format of the tag, wrap around simple quotes",
+                        "help": "The format of the tag, wrap around simple quotes.",
                     },
                 ],
             },
             {
                 "name": ["check"],
-                "description": "validates that a commit message matches the commitizen schema",
-                "help": "validates that a commit message matches the commitizen schema",
+                "description": "Validate that a commit message matches the commitizen schema",
+                "help": "Validate that a commit message matches the commitizen schema.",
                 "func": commands.Check,
                 "arguments": [
                     {
                         "name": "--commit-msg-file",
                         "help": (
-                            "ask for the name of the temporal file that contains "
-                            "the commit message. "
-                            "Using it in a git hook script: MSG_FILE=$1"
+                            "Ask for the name of the temporary file that contains the commit message. "
+                            "Use it in a git hook script: MSG_FILE=$1."
                         ),
                         "exclusive_group": "group1",
                     },
                     {
                         "name": "--rev-range",
-                        "help": "a range of git rev to check. e.g, master..HEAD",
+                        "help": "Validate the commits in the given range of git rev, e.g., master..HEAD.",
                         "exclusive_group": "group1",
                     },
                     {
                         "name": ["-d", "--use-default-range"],
                         "action": "store_true",
                         "default": False,
-                        "help": "check from the default branch to HEAD. e.g, refs/remotes/origin/master..HEAD",
+                        "help": "Validate the commits from the default branch to HEAD, e.g., refs/remotes/origin/master..HEAD.",
                         "exclusive_group": "group1",
                     },
                     {
                         "name": ["-m", "--message"],
-                        "help": "commit message that needs to be checked",
+                        "help": "Validate the given commit message.",
                         "exclusive_group": "group1",
                     },
                     {
                         "name": ["--allow-abort"],
                         "action": "store_true",
                         "default": False,
-                        "help": "allow empty commit messages, which typically abort a commit",
+                        "help": "Allow empty commit messages, which typically abort a commit.",
                     },
                     {
                         "name": ["--allowed-prefixes"],
                         "nargs": "*",
-                        "help": "allowed commit message prefixes. "
-                        "If the message starts by one of these prefixes, "
-                        "the message won't be checked against the regex",
+                        "help": "Skip validation for commit messages that start with the specified prefixes.",
                     },
                     {
                         "name": ["-l", "--message-length-limit"],
                         "type": int,
-                        "help": "length limit of the commit message; 0 for no limit",
+                        "help": "Restrict the length of the **first line** of the commit message; 0 for no limit.",
                     },
                 ],
             },
             {
                 "name": ["version"],
                 "description": (
-                    "get the version of the installed commitizen or the current project"
-                    " (default: installed commitizen)"
+                    "Get the version of the installed commitizen or the current project (default: installed commitizen)"
                 ),
                 "help": (
-                    "get the version of the installed commitizen or the current project"
-                    " (default: installed commitizen)"
+                    "Get the version of the installed commitizen or the current project (default: installed commitizen)."
                 ),
                 "func": commands.Version,
                 "arguments": [
                     {
                         "name": ["-r", "--report"],
-                        "help": "get system information for reporting bugs",
+                        "help": "Output the system information for reporting bugs.",
                         "action": "store_true",
                         "exclusive_group": "group1",
                     },
                     {
                         "name": ["-p", "--project"],
-                        "help": "get the version of the current project",
+                        "help": "Output the version of the current project.",
                         "action": "store_true",
                         "exclusive_group": "group1",
                     },
                     {
                         "name": ["-c", "--commitizen"],
-                        "help": "get the version of the installed commitizen",
+                        "help": "Output the version of the installed commitizen.",
                         "action": "store_true",
                         "exclusive_group": "group1",
                     },
                     {
                         "name": ["-v", "--verbose"],
                         "help": (
-                            "get the version of both the installed commitizen "
-                            "and the current project"
+                            "Output the version of both the installed commitizen and the current project."
                         ),
                         "action": "store_true",
                         "exclusive_group": "group1",
                     },
                     {
                         "name": ["--major"],
-                        "help": "get just the major version. Need to be used with --project or --verbose.",
+                        "help": "Output just the major version. Must be used with --project or --verbose.",
                         "action": "store_true",
                         "exclusive_group": "group2",
                     },
                     {
                         "name": ["--minor"],
-                        "help": "get just the minor version. Need to be used with --project or --verbose.",
+                        "help": "Output just the minor version. Must be used with --project or --verbose.",
                         "action": "store_true",
                         "exclusive_group": "group2",
                     },
