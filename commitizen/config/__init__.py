@@ -56,7 +56,7 @@ def _check_and_warn_multiple_configs(filepath: str | None = None) -> None:
         if len(existing_files) > 1:
             out.warn(
                 f"Multiple config files detected: {', '.join(existing_files)}. "
-                f"Using {existing_files[0]}."
+                f"Using config file: '{existing_files[0]}'."
             )
             break
 
