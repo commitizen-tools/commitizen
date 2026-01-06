@@ -2132,6 +2132,13 @@
 <li><code>cz.toml</code></li>
 </ol>
 <p>The first valid configuration file found will be used. If no configuration file is found, Commitizen will use its default settings.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Commitizen supports explicitly specifying a configuration file using the <code>--config</code> option, which is useful when the configuration file is not located in the project root directory.
+When <code>--config</code> is provided, Commitizen will only load configuration from the specified file and will not search for configuration files using the default search order described above. If the specified configuration file does not exist, Commitizen raises the <code>ConfigFileNotFound</code> error. If the specified configuration file exists but is empty, Commitizen raises the <code>ConfigFileIsEmpty</code> error.</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>--config<span class="w"> </span>&lt;PATH&gt;<span class="w"> </span>&lt;command&gt;
+</code></pre></div>
+</div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>For Python projects, it's recommended to add your Commitizen configuration to <code>pyproject.toml</code> to keep all project configuration in one place.</p>
