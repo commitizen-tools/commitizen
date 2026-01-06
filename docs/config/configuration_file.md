@@ -22,7 +22,7 @@ The first valid configuration file found will be used. If no configuration file 
 
 !!! note
     Commitizen supports explicitly specifying a configuration file using the `--config` option, which is useful when the configuration file is not located in the project root directory.
-    When `--config` is provided, Commitizen will only load configuration from the specified file and will not search for configuration files using the default search order described above. If the specified configuration file does not exist, Commitizen raises the `ConfigFileNotFound` error.If the specified configuration file exists but is empty, Commitizen raises the `ConfigFileIsEmpty` error.
+    When `--config` is provided, Commitizen will only load configuration from the specified file and will not search for configuration files using the default search order described above. If the specified configuration file does not exist, Commitizen raises the `ConfigFileNotFound` error. If the specified configuration file exists but is empty, Commitizen raises the `ConfigFileIsEmpty` error.
 
     ```bash
     cz --config <PATH> <command>
