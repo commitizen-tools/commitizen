@@ -34,38 +34,22 @@ def _resolve_config_paths(filepath: str | None = None) -> Generator[Path, None, 
                 yield out_path
 
 
-def _check_and_warn_multiple_configs(filepath: str | None = None) -> None:
-    """Check if multiple config files exist and warn the user."""
-    if filepath is not None:
-        # If user explicitly specified a config file, no need to warn
-        return
-
-    cfg_search_paths = [Path(".")]
-    if (git_project_root := git.find_git_project_root()):
-        cfg_search_paths.append(git_project_root)
-
-    for path in cfg_search_paths:
-        # Find all existing config files (excluding pyproject.toml for clearer warning)
-        existing_files = [
-            filename
-            for filename in defaults.CONFIG_FILES
-            if filename != "pyproject.toml" and (path / filename).exists()
-        ]
-
-        # If more than one config file exists, warn the user
-        if len(existing_files) > 1:
-            out.warn(
-                f"Multiple config files detected: {', '.join(existing_files)}. "
-                f"Using config file: '{existing_files[0]}'."
-            )
-            break
-
-
 def read_cfg(filepath: str | None = None) -> BaseConfig:
-    if filepath is None:
-        _check_and_warn_multiple_configs()
+    config_candidates = list(_resolve_config_paths(filepath))
 
-    for filename in _resolve_config_paths(filepath):
+    # Check for multiple config files and warn the user
+    if filepath is None:
+        config_candidates_exclude_pyproject = [
+            path for path in config_candidates if path.name != "pyproject.toml"
+        ]
+        if len(config_candidates_exclude_pyproject) > 1:
+            filenames = [path.name for path in config_candidates_exclude_pyproject]
+            out.warn(
+                f"Multiple config files detected: {', '.join(filenames)}. "
+                f"Using config file: '{filenames[0]}'."
+            )
+
+    for filename in config_candidates:
         with open(filename, "rb") as f:
             data: bytes = f.read()
 
