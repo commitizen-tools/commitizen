@@ -81,8 +81,10 @@ nav:
     - "third-party-plugins/cz-legacy.md"
     - "third-party-plugins/cz-path.md"
     - "third-party-plugins/github-jira-conventional.md"
-  - Contributing: "contributing.md"
-  - Contributing TL;DR: "contributing_tldr.md"
+  - Contributing:
+    - "contributing/contributing.md"
+    - "contributing/contributing_tldr.md"
+    - "contributing/pull_request.md"
   - Resources: "external_links.md"
 
 markdown_extensions:

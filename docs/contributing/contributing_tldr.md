@@ -1,3 +1,5 @@
+# Contributing TL;DR
+
 Feel free to send a PR to update this file if you find anything useful. 🙇
 
 ## Environment
