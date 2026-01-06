@@ -395,18 +395,21 @@ def test_get_filenames_in_commit_error(util: UtilFixture):
     assert str(excinfo.value) == "fatal: bad object HEAD"
 
 
-def test_git_commit_from_rev_and_commit():
+@pytest.mark.parametrize(
+    "body_newline", ["\n", "\r\n"], ids=["line_feed", "carriage_return"]
+)
+def test_git_commit_from_rev_and_commit(body_newline):
     # Test data with all fields populated
+    body = body_newline.join(
+        ["This is a detailed description", "of the new feature", "with multiple lines"]
+    )
     rev_and_commit = (
         "abc123\n"  # rev
         "def456 ghi789\n"  # parents
         "feat: add new feature\n"  # title
         "John Doe\n"  # author
         "john@example.com\n"  # author_email
-        "This is a detailed description\n"  # body
-        "of the new feature\n"
-        "with multiple lines"
-    )
+    ) + body
 
     commit = git.GitCommit.from_rev_and_commit(rev_and_commit)
 
