@@ -40,9 +40,8 @@ def _check_and_warn_multiple_configs(filepath: str | None = None) -> None:
         # If user explicitly specified a config file, no need to warn
         return
 
-    git_project_root = git.find_git_project_root()
     cfg_search_paths = [Path(".")]
-    if git_project_root:
+    if (git_project_root := git.find_git_project_root()):
         cfg_search_paths.append(git_project_root)
 
     for path in cfg_search_paths:
