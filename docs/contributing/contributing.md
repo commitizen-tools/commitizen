@@ -1,10 +1,10 @@
-## Contributing to Commitizen
+# Contributing to Commitizen
 
 First, thank you for taking the time to contribute! 🎉 Your contributions help make Commitizen better for everyone.
 
 When contributing to Commitizen, we encourage you to:
 
-1. First, check out the [issues](https://github.com/commitizen-tools/commitizen/issues) and [Features we won't add](features_wont_add.md) to see if there's already a discussion about the change you wish to make.
+1. First, check out the [issues](https://github.com/commitizen-tools/commitizen/issues) and [Features we won't add](../features_wont_add.md) to see if there's already a discussion about the change you wish to make.
 2. If there's no discussion, [create an issue](https://github.com/commitizen-tools/commitizen/issues/new) to discuss your proposed changes.
 3. Follow our [development workflow](#development-workflow) and guidelines below.
 
