@@ -62,7 +62,8 @@ def _check_and_warn_multiple_configs(filepath: str | None = None) -> None:
 
 
 def read_cfg(filepath: str | None = None) -> BaseConfig:
-    _check_and_warn_multiple_configs(filepath)
+    if filepath is None:
+        _check_and_warn_multiple_configs()
 
     for filename in _resolve_config_paths(filepath):
         with open(filename, "rb") as f:
