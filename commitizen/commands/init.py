@@ -78,7 +78,9 @@ class Init:
 
     def __call__(self) -> None:
         if self.config.path:
-            out.line(f"Config file {self.config.path} already exists")
+            out.line(
+                f"Config file {self.config.path} already exists."
+            )  # Check if the change triggers the pipeline
             return
 
         out.info("Welcome to commitizen!\n")
