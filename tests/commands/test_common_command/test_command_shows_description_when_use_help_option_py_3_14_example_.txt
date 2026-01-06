@@ -1,6 +1,6 @@
 usage: cz example [-h]
 
-show commit example
+Show commit example
 
 options:
   -h, --help  show this help message and exit
