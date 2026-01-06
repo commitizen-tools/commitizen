@@ -38,16 +38,15 @@ def read_cfg(filepath: str | None = None) -> BaseConfig:
     config_candidates = list(_resolve_config_paths(filepath))
 
     # Check for multiple config files and warn the user
-    if filepath is None:
-        config_candidates_exclude_pyproject = [
-            path for path in config_candidates if path.name != "pyproject.toml"
-        ]
-        if len(config_candidates_exclude_pyproject) > 1:
-            filenames = [path.name for path in config_candidates_exclude_pyproject]
-            out.warn(
-                f"Multiple config files detected: {', '.join(filenames)}. "
-                f"Using config file: '{filenames[0]}'."
-            )
+    config_candidates_exclude_pyproject = [
+        path for path in config_candidates if path.name != "pyproject.toml"
+    ]
+    if len(config_candidates_exclude_pyproject) > 1:
+        filenames = [path.name for path in config_candidates_exclude_pyproject]
+        out.warn(
+            f"Multiple config files detected: {', '.join(filenames)}. "
+            f"Using config file: '{filenames[0]}'."
+        )
 
     for filename in config_candidates:
         with open(filename, "rb") as f:
