@@ -45,48 +45,72 @@ class CargoProvider(TomlProvider):
             self.set_lock_version(version)
 
     def set_lock_version(self, version: str) -> None:
-        cargo_toml = parse(self.file.read_text())
-        cargo_lock = parse(self.lock_file.read_text())
-        packages = cargo_lock["package"]
+        cargo_toml_content = parse(self.file.read_text())
+        cargo_lock_content = parse(self.lock_file.read_text())
+        packages = cargo_lock_content["package"]
+
         if TYPE_CHECKING:
             assert isinstance(packages, AoT)
 
-        root_pkg = _table_get(cargo_toml, "package")
+        root_pkg = _table_get(cargo_toml_content, "package")
         if root_pkg is not None:
             name = root_pkg.get("name")
             if isinstance(name, str):
                 _lock_set_versions(packages, {name}, version)
-            self.lock_file.write_text(dumps(cargo_lock))
+            self.lock_file.write_text(dumps(cargo_lock_content))
             return
 
-        ws = _table_get(cargo_toml, "workspace") or {}
-        members = cast("list[str]", ws.get("members", []) or [])
-        excludes = cast("list[str]", ws.get("exclude", []) or [])
-        inheriting = _workspace_inheriting_member_names(members, excludes)
+        ws = _table_get(cargo_toml_content, "workspace") or {}
+        member_globs = cast("list[str]", ws.get("members", []) or [])
+        exclude_globs = cast("list[str]", ws.get("exclude", []) or [])
+        inheriting = _workspace_inheriting_member_names(member_globs, exclude_globs)
         _lock_set_versions(packages, inheriting, version)
-        self.lock_file.write_text(dumps(cargo_lock))
+        self.lock_file.write_text(dumps(cargo_lock_content))
 
 
 def _table_get(doc: TOMLDocument, key: str) -> DictLike | None:
-    """Return a dict-like table for `key` if present, else None (type-safe for Pylance)."""
+    """Get a TOML table by key as a dict-like object.
+
+    Returns:
+        The value at `doc[key]` cast to a dict-like table (supports `.get`) if it
+        exists and is table/container-like; otherwise returns None.
+
+    Rationale:
+        tomlkit returns loosely-typed Container/Table objects; using a small
+        helper keeps call sites readable and makes type-checkers happier.
+    """
     try:
-        v = doc[key]  # tomlkit returns Container/Table-like; typing is loose
+        value = doc[key]
     except NonExistentKey:
         return None
-    return cast("DictLike", v) if hasattr(v, "get") else None
+    return cast("DictLike", value) if hasattr(value, "get") else None
 
 
 def _root_version_table(doc: TOMLDocument) -> DictLike:
-    """Prefer [workspace.package]; fallback to [package]."""
-    ws = _table_get(doc, "workspace")
-    if ws is not None:
-        pkg = ws.get("package")
-        if hasattr(pkg, "get"):
-            return cast("DictLike", pkg)
-    pkg = _table_get(doc, "package")
-    if pkg is None:
+    """Return the table that owns the "root" version field.
+
+    This provider supports two layouts:
+
+    1) Workspace virtual manifests:
+            [workspace.package]
+            version = "x.y.z"
+
+    2) Regular crate（non-workspace root manifest）:
+            [package]
+            version = "x.y.z"
+
+    The selected table is where `get()` reads from and `set()` writes to.
+    """
+    workspace_table = _table_get(doc, "workspace")
+    if workspace_table is not None:
+        workspace_package_table = workspace_table.get("package")
+        if hasattr(workspace_package_table, "get"):
+            return cast("DictLike", workspace_package_table)
+
+    package_table = _table_get(doc, "package")
+    if package_table is None:
         raise NonExistentKey("expected either [workspace.package] or [package]")
-    return pkg
+    return package_table
 
 
 def _is_workspace_inherited_version(v: Any) -> bool:
@@ -94,19 +118,38 @@ def _is_workspace_inherited_version(v: Any) -> bool:
 
 
 def _iter_member_dirs(
-    members: Iterable[str], excludes: Iterable[str]
+    member_globs: Iterable[str], exclude_globs: Iterable[str]
 ) -> Iterable[Path]:
-    for pat in members:
-        for p in glob.glob(pat, recursive=True):
-            if any(fnmatch.fnmatch(p, ex) for ex in excludes):
+    """Yield workspace member directories matched by `member_globs`, excluding `exclude_globs`.
+
+    Cargo workspaces define members/exclude as glob patterns (e.g. "crates/*").
+    This helper expands those patterns and yields the corresponding directories
+    as `Path` objects, skipping any matches that satisfy an exclude glob.
+
+    Kept as a helper to make call sites read as domain logic ("iterate member dirs")
+    rather than glob/filter plumbing.
+    """
+    for member_glob in member_globs:
+        for match in glob.glob(member_glob, recursive=True):
+            if any(fnmatch.fnmatch(match, ex) for ex in exclude_globs):
                 continue
-            yield Path(p)
+            yield Path(match)
 
 
 def _workspace_inheriting_member_names(
     members: Iterable[str], excludes: Iterable[str]
 ) -> set[str]:
-    out: set[str] = set()
+    """Return workspace member crate names that inherit the workspace version.
+
+    A member is considered "inheriting" when its Cargo.toml has:
+        [package]
+        version.workspace = true
+
+    This scans `members` globs (respecting `excludes`) and returns the set of
+    `[package].name` values for matching crates. Missing/invalid Cargo.toml files
+    are ignored.
+    """
+    inheriting_member_names: set[str] = set()
     for d in _iter_member_dirs(members, excludes):
         cargo_file = d / "Cargo.toml"
         if not cargo_file.exists():
@@ -118,13 +161,25 @@ def _workspace_inheriting_member_names(
         if _is_workspace_inherited_version(pkgd.get("version")):
             name = pkgd.get("name")
             if isinstance(name, str):
-                out.add(name)
-    return out
+                inheriting_member_names.add(name)
+    return inheriting_member_names
 
 
-def _lock_set_versions(packages: Any, names: set[str], version: str) -> None:
-    if not names:
+def _lock_set_versions(packages: Any, package_names: set[str], version: str) -> None:
+    """Update Cargo.lock package entries in-place.
+
+    Args:
+        packages: `Cargo.lock` parsed TOML "package" array (AoT-like). Mutated in-place.
+        package_names: Set of package names whose `version` field should be updated.
+        version: New version string to write.
+
+    Notes:
+        We use `enumerate` + index assignment because tomlkit AoT entries may be
+        Container-like and direct mutation patterns vary; indexed assignment is
+        reliable for updating the underlying document.
+    """
+    if not package_names:
         return
-    for i, p in enumerate(packages):
-        if getattr(p, "get", None) and p.get("name") in names:
+    for i, pkg_entry in enumerate(packages):
+        if getattr(pkg_entry, "get", None) and pkg_entry.get("name") in package_names:
             packages[i]["version"] = version
