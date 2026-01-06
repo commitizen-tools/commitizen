@@ -296,7 +296,7 @@ dev = [
     { name = "mypy", specifier = ">=1.16.0" },
     { name = "poethepoet", specifier = ">=0.34.0" },
     { name = "pre-commit", specifier = ">=3.2.0" },
-    { name = "pytest", specifier = ">=7.2" },
+    { name = "pytest", specifier = ">=9" },
     { name = "pytest-cov", specifier = ">=4" },
     { name = "pytest-freezer", specifier = ">=0.4.6" },
     { name = "pytest-gitconfig", specifier = ">=0.9.0" },
@@ -329,7 +329,7 @@ linters = [
 ]
 script = [{ name = "rich", specifier = ">=13.7.1" }]
 test = [
-    { name = "pytest", specifier = ">=7.2" },
+    { name = "pytest", specifier = ">=9" },
     { name = "pytest-cov", specifier = ">=4" },
     { name = "pytest-freezer", specifier = ">=0.4.6" },
     { name = "pytest-gitconfig", specifier = ">=0.9.0" },

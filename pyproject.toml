@@ -100,7 +100,7 @@ dev = [
 base = ["poethepoet>=0.34.0"]
 
 test = [
-    "pytest>=7.2",
+    "pytest>=9",
     "pytest-cov>=4",
     "pytest-mock>=3.10",
     "pytest-regressions>=2.4.0",
@@ -177,8 +177,8 @@ omit = [
 ]
 
 
-[tool.pytest.ini_options]
-addopts = "--strict-markers"
+[tool.pytest]
+addopts = ["--strict-markers"]
 testpaths = ["tests/"]
 filterwarnings = [
     # get_smart_tag_range is deprecated and will be removed in v5
