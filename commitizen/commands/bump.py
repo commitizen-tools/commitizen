@@ -314,6 +314,8 @@ class Bump:
                 "extras": self.extras,
                 "incremental": True,
                 "dry_run": dry_run,
+                # governs logic for merge_prerelease
+                "during_version_bump": self.arguments["prerelease"] is None,
             }
             if self.changelog_to_stdout:
                 changelog_cmd = Changelog(
