@@ -1,26 +1,49 @@
 ## Create a new release with GitHub Actions
 
-### Automatic bumping of version
+This guide shows you how to automatically bump versions, create changelogs, and publish releases using Commitizen in GitHub Actions.
 
-To execute `cz bump` in your CI, and push the new commit and
-the new tag, back to your master branch, we have to:
+### Prerequisites
 
-1. Create a personal access token. [Follow the instructions here](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token). And copy the generated key
-2. Create a secret called `PERSONAL_ACCESS_TOKEN`, with the copied key, by going to your
-   project repository and then `Settings > Secrets > Add new secret`.
-3. In your repository create a new file `.github/workflows/bumpversion.yml`
-   with the following content.
+Before setting up the workflow, you'll need:
 
-!!! warning
-    If you use `GITHUB_TOKEN` instead of `PERSONAL_ACCESS_TOKEN`, the job won't trigger another workflow. It's like using `[skip ci]` in other CI's.
+1. A personal access token with repository write permissions
+2. Commitizen configured in your project (see [configuration documentation](../config/configuration_file.md))
 
-```yaml
+### Automatic version bumping
+
+To automatically execute `cz bump` in your CI and push the new commit and tag back to your repository, follow these steps:
+
+#### Step 1: Create a personal access token
+
+1. Go to [GitHub Settings > Developer settings > Personal access tokens](https://github.com/settings/tokens)
+2. Click "Generate new token (classic)"
+3. Give it a descriptive name (e.g., "Commitizen CI")
+4. Select the `repo` scope to grant full repository access
+5. Click "Generate token" and **copy the token immediately** (you won't be able to see it again)
+
+!!! warning "Important: Use Personal Access Token, not GITHUB_TOKEN"
+    If you use `GITHUB_TOKEN` instead of `PERSONAL_ACCESS_TOKEN`, the workflow won't trigger another workflow run. This is a GitHub security feature to prevent infinite loops. The `GITHUB_TOKEN` is treated like using `[skip ci]` in other CI systems.
+
+#### Step 2: Add the token as a repository secret
+
+1. Go to your repository on GitHub
+2. Navigate to `Settings > Secrets and variables > Actions`
+3. Click "New repository secret"
+4. Name it `PERSONAL_ACCESS_TOKEN`
+5. Paste the token you copied in Step 1
+6. Click "Add secret"
+
+#### Step 3: Create the workflow file
+
+Create a new file `.github/workflows/bumpversion.yml` in your repository with the following content:
+
+```yaml title=".github/workflows/bumpversion.yml"
 name: Bump version
 
 on:
   push:
     branches:
-      - master
+      - master  # or 'main' if that's your default branch
 
 jobs:
   bump-version:
@@ -29,7 +52,7 @@ jobs:
     name: "Bump version and create changelog with commitizen"
     steps:
       - name: Check out
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
           fetch-depth: 0
@@ -39,62 +62,106 @@ jobs:
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 ```
 
-Push to master and that's it.
+#### How it works
+
+- **Trigger**: The workflow runs on every push to the `master` branch (or `main` if you change it)
+- **Conditional check**: The `if` condition prevents infinite loops by skipping the job if the commit message starts with `bump:`
+- **Checkout**: Uses your personal access token to check out the repository with full history (`fetch-depth: 0`)
+- **Bump**: The `commitizen-action` automatically:
+    - Determines the version increment based on your commit messages
+    - Updates version files (as configured in your `pyproject.toml` or other config)
+    - Creates a new git tag
+    - Generates/updates the changelog
+    - Pushes the commit and tag back to the repository
+
+Once you push this workflow file to your repository, it will automatically run on the next push to your default branch.
+
+Check out [commitizen-action](https://github.com/commitizen-tools/commitizen-action) for more details.
 
 ### Creating a GitHub release
 
-You can modify the previous action.
+To automatically create a GitHub release when a new version is bumped, you can extend the workflow above.
 
-Add the variable `changelog_increment_filename` in the `commitizen-action`, specifying
-where to output the content of the changelog for the newly created version.
+The `commitizen-action` creates an environment variable called `REVISION` containing the newly created version. You can use this to create a release with the changelog content.
 
-And then add a step using a GitHub action to create the release: `softprops/action-gh-release`
+```yaml title=".github/workflows/bumpversion.yml"
+name: Bump version
 
-Commitizen action creates an env variable called `REVISION`, containing the
-newly created version.
+on:
+  push:
+    branches:
+      - master  # or 'main' if that's your default branch
 
-```yaml
-- name: Create bump and changelog
-  uses: commitizen-tools/commitizen-action@master
-  with:
-    github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-    changelog_increment_filename: body.md
-- name: Release
-  uses: softprops/action-gh-release@v1
-  with:
-    body_path: "body.md"
-    tag_name: ${{ env.REVISION }}
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+jobs:
+  bump-version:
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    runs-on: ubuntu-latest
+    name: "Bump version and create changelog with commitizen"
+    steps:
+      - name: Check out
+        uses: actions/checkout@v6
+        with:
+          token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
+          fetch-depth: 0
+      - name: Create bump and changelog
+        uses: commitizen-tools/commitizen-action@master
+        with:
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          changelog_increment_filename: body.md
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: v${{ env.REVISION }}
+          bodyFile: "body.md"
+          skipIfReleaseExists: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-### Publishing a python package
+You can find the complete workflow in our repository at [bumpversion.yml](https://github.com/commitizen-tools/commitizen/blob/master/.github/workflows/bumpversion.yml).
 
-Once the new tag is created, triggering an automatic publish command would be desired.
+### Publishing a Python package
 
-In order to do so, the credential needs to be added with the information of our PyPI account.
+After a new version tag is created by the bump workflow, you can automatically publish your package to PyPI.
 
-Instead of using username and password, we suggest using [api token](https://pypi.org/help/#apitoken) generated from PyPI.
+#### Step 1: Create a PyPI API token
 
-After generate api token, use the token as the PyPI password and `__token__` as the username.
+1. Go to [PyPI Account Settings](https://pypi.org/manage/account/)
+2. Scroll to the "API tokens" section
+3. Click "Add API token"
+4. Give it a name (e.g., "GitHub Actions")
+5. Set the scope (project-specific or account-wide)
+6. Click "Add token" and **copy the token immediately**
 
-Go to `Settings > Secrets > Add new secret` and add the secret: `PYPI_PASSWORD`.
+!!! tip "Using API tokens"
+    PyPI API tokens are more secure than passwords. Use `__token__` as the username and the token as the password.
 
-Create a file in `.github/workflows/pythonpublish.yaml` with the following content:
+#### Step 2: Add the token as a repository secret
 
-```yaml
+1. Go to your repository on GitHub
+2. Navigate to `Settings > Secrets and variables > Actions`
+3. Click "New repository secret"
+4. Name it `PYPI_PASSWORD`
+5. Paste the PyPI token
+6. Click "Add secret"
+
+#### Step 3: Create the publish workflow
+
+Create a new file `.github/workflows/pythonpublish.yml` that triggers on tag pushes:
+
+```yaml title=".github/workflows/pythonpublish.yml"
 name: Upload Python Package
 
 on:
   push:
     tags:
-      - "*" # Will trigger for every tag, alternative: 'v*'
+      - "*"  # Will trigger for every tag, alternative: 'v*'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Set up Python
@@ -118,9 +185,7 @@ jobs:
         run: poetry publish --build
 ```
 
-Notice that we are using poetry to publish the package.
+This workflow uses Poetry to build and publish the package. You can find the complete workflow in our repository at [pythonpublish.yml](https://github.com/commitizen-tools/commitizen/blob/master/.github/workflows/pythonpublish.yml).
 
-
-You can also use [pypa/gh-action-pypi-publish](https://github.com/pypa/gh-action-pypi-publish) to publish your package.
-
-Push the changes and that's it.
+!!! note "Alternative publishing methods"
+    You can also use [pypa/gh-action-pypi-publish](https://github.com/pypa/gh-action-pypi-publish) or other build tools like `setuptools`, `flit`, or `hatchling` to publish your package.
