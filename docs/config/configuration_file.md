@@ -31,6 +31,9 @@ The first valid configuration file found will be used. If no configuration file 
 !!! tip
     For Python projects, it's recommended to add your Commitizen configuration to `pyproject.toml` to keep all project configuration in one place.
 
+!!! warning "Multiple Configuration Files"
+    If Commitizen detects more than one configuration file in your project directory (excluding `pyproject.toml`), it will display a warning message and identify which file is being used. To avoid confusion, ensure you have only one Commitizen configuration file in your project.
+
 ## Supported Formats
 
 Commitizen supports three configuration file formats:
