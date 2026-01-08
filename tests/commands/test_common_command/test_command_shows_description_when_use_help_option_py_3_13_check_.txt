@@ -3,26 +3,27 @@ usage: cz check [-h] [--commit-msg-file COMMIT_MSG_FILE |
                 [--allowed-prefixes [ALLOWED_PREFIXES ...]]
                 [-l MESSAGE_LENGTH_LIMIT]
 
-validates that a commit message matches the commitizen schema
+Validate that a commit message matches the commitizen schema
 
 options:
   -h, --help            show this help message and exit
   --commit-msg-file COMMIT_MSG_FILE
-                        ask for the name of the temporal file that contains
-                        the commit message. Using it in a git hook script:
-                        MSG_FILE=$1
+                        Ask for the name of the temporary file that contains
+                        the commit message. Use it in a git hook script:
+                        MSG_FILE=$1.
   --rev-range REV_RANGE
-                        a range of git rev to check. e.g, master..HEAD
+                        Validate the commits in the given range of git rev,
+                        e.g., master..HEAD.
   -d, --use-default-range
-                        check from the default branch to HEAD. e.g,
-                        refs/remotes/origin/master..HEAD
+                        Validate the commits from the default branch to HEAD,
+                        e.g., refs/remotes/origin/master..HEAD.
   -m, --message MESSAGE
-                        commit message that needs to be checked
-  --allow-abort         allow empty commit messages, which typically abort a
-                        commit
+                        Validate the given commit message.
+  --allow-abort         Allow empty commit messages, which typically abort a
+                        commit.
   --allowed-prefixes [ALLOWED_PREFIXES ...]
-                        allowed commit message prefixes. If the message starts
-                        by one of these prefixes, the message won't be checked
-                        against the regex
+                        Skip validation for commit messages that start with
+                        the specified prefixes.
   -l, --message-length-limit MESSAGE_LENGTH_LIMIT
-                        length limit of the commit message; 0 for no limit
+                        Restrict the length of the **first line** of the
+                        commit message; 0 for no limit.
