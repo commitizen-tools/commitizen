@@ -396,20 +396,21 @@ def test_get_filenames_in_commit_error(util: UtilFixture):
 
 
 @pytest.mark.parametrize(
-    "body_newline", ["\n", "\r\n"], ids=["line_feed", "carriage_return"]
+    "linebreak", ["\n", "\r\n"], ids=["line_feed", "carriage_return"]
 )
-def test_git_commit_from_rev_and_commit(body_newline):
-    # Test data with all fields populated
-    body = body_newline.join(
-        ["This is a detailed description", "of the new feature", "with multiple lines"]
+def test_git_commit_from_rev_and_commit(linebreak):
+    rev_and_commit = linebreak.join(
+        [
+            "abc123",  # rev
+            "def456 ghi789",  # parents
+            "feat: add new feature",  # title
+            "John Doe",  # author
+            "john@example.com",  # author_email
+            "This is a detailed description",  # body
+            "of the new feature",
+            "with multiple lines",
+        ]
     )
-    rev_and_commit = (
-        "abc123\n"  # rev
-        "def456 ghi789\n"  # parents
-        "feat: add new feature\n"  # title
-        "John Doe\n"  # author
-        "john@example.com\n"  # author_email
-    ) + body
 
     commit = git.GitCommit.from_rev_and_commit(rev_and_commit)
 
@@ -424,12 +425,14 @@ def test_git_commit_from_rev_and_commit(body_newline):
     assert commit.parents == ["def456", "ghi789"]
 
     # Test with minimal data
-    minimal_commit = (
-        "abc123\n"  # rev
-        "\n"  # no parents
-        "feat: minimal commit\n"  # title
-        "John Doe\n"  # author
-        "john@example.com\n"  # author_email
+    minimal_commit = linebreak.join(
+        [
+            "abc123",  # rev
+            "",  # no parents
+            "feat: minimal commit",  # title
+            "John Doe",  # author
+            "john@example.com",  # author_email
+        ]
     )
 
     commit = git.GitCommit.from_rev_and_commit(minimal_commit)
