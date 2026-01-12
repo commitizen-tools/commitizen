@@ -4,6 +4,8 @@ site_description: commit rules, semantic version, conventional commits
 
 theme:
   name: material
+  logo: images/cz_logo.png
+  favicon: images/cz_logo.png
   palette:
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
