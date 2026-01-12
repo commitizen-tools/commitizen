@@ -2170,6 +2170,10 @@ When <code>--config</code> is provided, Commitizen will only load configuration 
 <p class="admonition-title">Tip</p>
 <p>For Python projects, it's recommended to add your Commitizen configuration to <code>pyproject.toml</code> to keep all project configuration in one place.</p>
 </div>
+<div class="admonition warning">
+<p class="admonition-title">Multiple Configuration Files</p>
+<p>If Commitizen detects more than one configuration file in your project directory (excluding <code>pyproject.toml</code>), it will display a warning message and identify which file is being used. To avoid confusion, ensure you have only one Commitizen configuration file in your project.</p>
+</div>
 <h2 id="supported-formats">Supported Formats<a class="headerlink" href="#supported-formats" title="Permanent link">&para;</a></h2>
 <p>Commitizen supports three configuration file formats:</p>
 <ul>
