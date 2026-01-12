@@ -10,13 +10,15 @@ It is recommended to create a configuration file via our [`cz init`](../commands
 
 Configuration files are typically located in the root of your project directory. Commitizen searches for configuration files in the following order:
 
-1. `pyproject.toml` (in the `[tool.commitizen]` section)
-2. `.cz.toml`
+<!-- DEPENDENCY: commitizen/defaults.py CONFIG_FILES -->
+
+1. `.cz.toml`
+2. `cz.toml`
 3. `.cz.json`
 4. `cz.json`
 5. `.cz.yaml`
 6. `cz.yaml`
-7. `cz.toml`
+7. `pyproject.toml` (in the `[tool.commitizen]` section)
 
 The first valid configuration file found will be used. If no configuration file is found, Commitizen will use its default settings.
 
@@ -29,7 +31,7 @@ The first valid configuration file found will be used. If no configuration file 
     ```
 
 !!! tip
-    For Python projects, it's recommended to add your Commitizen configuration to `pyproject.toml` to keep all project configuration in one place.
+    For Python projects, you can add your Commitizen configuration to `pyproject.toml` to keep all project configuration in one place.
 
 !!! warning "Multiple Configuration Files"
     If Commitizen detects more than one configuration file in your project directory (excluding `pyproject.toml`), it will display a warning message and identify which file is being used. To avoid confusion, ensure you have only one Commitizen configuration file in your project.
