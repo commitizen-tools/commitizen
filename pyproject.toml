@@ -1,6 +1,6 @@
 [project]
 name = "commitizen"
-version = "4.11.1"
+version = "4.11.2"
 description = "Python commitizen client tool"
 authors = [{ name = "Santiago Fraire", email = "santiwilly@gmail.com" }]
 maintainers = [

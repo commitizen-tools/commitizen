@@ -1,3 +1,9 @@
+## v4.11.2 (2026-01-12)
+
+### Fix
+
+- **config**: add warning for multiple configuration files and update documentation (#1773)
+
 ## v4.11.1 (2026-01-03)
 
 ### Fix
