@@ -44,6 +44,7 @@ class ChangelogArgs(TypedDict, total=False):
     template: str
     extras: dict[str, Any]
     export_template: str
+    during_version_bump: bool | None
 
 
 class Changelog:
@@ -123,6 +124,8 @@ class Changelog:
         )
         self.extras = arguments.get("extras") or {}
         self.export_template_to = arguments.get("export_template")
+
+        self.during_version_bump: bool = arguments.get("during_version_bump") or False
 
     def _find_incremental_rev(self, latest_version: str, tags: Iterable[GitTag]) -> str:
         """Try to find the 'start_rev'.
@@ -222,6 +225,21 @@ class Changelog:
                 self.tag_rules,
             )
 
+        if self.during_version_bump and self.tag_rules.merge_prereleases:
+            latest_full_release_info = self.changelog_format.get_latest_full_release(
+                self.file_name
+            )
+            if latest_full_release_info.index:
+                changelog_meta.unreleased_start = 0
+                changelog_meta.latest_version_position = latest_full_release_info.index
+                changelog_meta.unreleased_end = latest_full_release_info.index - 1
+
+            start_rev = latest_full_release_info.name or ""
+            if not start_rev and latest_full_release_info.index:
+                # Only pre-releases in changelog
+                changelog_meta.latest_version_position = None
+                changelog_meta.unreleased_end = latest_full_release_info.index + 1
+
         commits = git.get_commits(start=start_rev, end=end_rev, args="--topo-order")
         if not commits and (
             self.current_version is None or not self.current_version.is_prerelease
@@ -238,6 +256,7 @@ class Changelog:
             changelog_message_builder_hook=self.cz.changelog_message_builder_hook,
             changelog_release_hook=self.cz.changelog_release_hook,
             rules=self.tag_rules,
+            during_version_bump=self.during_version_bump,
         )
         if self.change_type_order:
             tree = changelog.generate_ordered_changelog_tree(
