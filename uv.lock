@@ -195,7 +195,7 @@ wheels = [
 
 [[package]]
 name = "commitizen"
-version = "4.11.2"
+version = "4.11.3"
 source = { editable = "." }
 dependencies = [
     { name = "argcomplete" },

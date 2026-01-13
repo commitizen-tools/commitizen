@@ -1,3 +1,9 @@
+## v4.11.3 (2026-01-13)
+
+### Fix
+
+- **bump**: fix the issue that changelog_merge_prerelease not working on cz bump
+
 ## v4.11.2 (2026-01-12)
 
 ### Fix
