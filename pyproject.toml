@@ -97,7 +97,7 @@ dev = [
     "tox-uv",
 ]
 
-base = ["poethepoet>=0.34.0"]
+base = ["poethepoet>=0.41.0"]
 
 test = [
     "pytest>=9",
@@ -270,8 +270,10 @@ skip = '.git*,*.svg,*.lock'
 check-hidden = true
 ignore-words-list = 'asend'
 
-[tool.poe]
-executor.type = "uv"
+[tool.poe.executor]
+type = "uv"
+no-sync = true
+frozen = true
 
 [tool.poe.tasks]
 format.help = "Format the code"
