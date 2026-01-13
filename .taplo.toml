@@ -1,4 +1,4 @@
-include = ["pyproject.toml", ".taplo.toml"]
+include = ["pyproject.toml", ".taplo.toml", ".cz.toml"]
 
 [formatting]
 indent_string = "    "

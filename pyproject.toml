@@ -131,17 +131,6 @@ script = [
 requires = ["uv_build >= 0.9.17, <0.10.0"]
 build-backend = "uv_build"
 
-
-[tool.commitizen]
-tag_format = "v$version"
-version_files = [
-    "commitizen/__version__.py",
-    ".pre-commit-config.yaml:rev:.+Commitizen",
-]
-version_provider = "uv"
-version_scheme = "pep440"
-
-
 [tool.uv.build-backend]
 module-name = "commitizen"
 module-root = ""

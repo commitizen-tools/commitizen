@@ -1,0 +1,9 @@
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "v$version"
+version_files = [
+    "commitizen/__version__.py",
+    ".pre-commit-config.yaml:rev:.+Commitizen",
+]
+version_provider = "uv"
+version_scheme = "pep440"
