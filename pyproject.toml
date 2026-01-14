@@ -300,7 +300,7 @@ all.sequence = ["format", "lint", "check-commit", "cover"]
 "doc:build".cmd = "mkdocs build"
 
 doc.help = "Live documentation server"
-doc.cmd = "mkdocs serve"
+doc.cmd = "mkdocs serve --livereload"  # mkdocs hot reload failure workaround. Ref: https://github.com/mkdocs/mkdocs/issues/4032#issuecomment-3591002290
 
 ci.help = "Run all tasks in CI"
 ci.sequence = ["check-commit", { cmd = "pre-commit run --all-files" }, "cover"]
