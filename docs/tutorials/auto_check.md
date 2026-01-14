@@ -2,9 +2,9 @@
 
 ## About
 
-To automatically check a commit message prior to committing, you can use a [Git hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks). This ensures that all commit messages follow your project's commitizen format before they are accepted into the repository.
+To automatically check a commit message before committing, use a [Git hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks). This ensures all commit messages match your project's commitizen format before they are accepted into the repository.
 
-When a commit message fails validation, Git will reject the commit and display an error message explaining what went wrong. You'll need to amend your commit message to follow the required format before the commit can proceed.
+When a commit message fails validation, Git rejects the commit and displays an error explaining what went wrong. Update the message to the required format before trying again.
 
 ## How to
 
@@ -12,17 +12,18 @@ There are two common methods for installing the hooks:
 
 ### Method 1: Using pre-commit hook frameworks (Recommended)
 
-Using pre-commit frameworks is the recommended approach as hook installation, updates, and execution are handled automatically.
-These are two common pre-commit hooks:
+Using pre-commit hook frameworks is the recommended approach because hook installation, updates, and execution are handled automatically.
+Two common frameworks are:
 - [prek](https://prek.j178.dev) (faster)
 - [pre-commit](https://pre-commit.com/)
+
+In the steps below, we'll use `prek`.
 
 #### Step 1: Install prek
 
 ```sh
 python -m pip install prek
 ```
-
 
 #### Step 2: Create `.pre-commit-config.yaml`
 
@@ -49,12 +50,11 @@ Install the configuration into Git's hook system:
 prek install --hook-type commit-msg
 ```
 
-
 The hook is now active! Every time you create a commit, commitizen will automatically validate your commit message.
 
 ### Method 2: Manual Git hook installation
 
-If you prefer not to use pre-commit, you can manually create a Git hook. This gives you full control over the hook script but requires manual maintenance.
+If you prefer not to use a pre-commit framework, you can manually create a Git hook. This gives you full control over the hook script but requires manual maintenance.
 
 #### Step 1: Create the commit-msg hook
 
@@ -95,7 +95,7 @@ git commit -m "invalid commit message"
 git commit -m "feat: add new feature"
 ```
 
-If the hook is working correctly, invalid commit messages will be rejected with an error message explaining what's wrong.
+If the hook is working correctly, invalid commit messages are rejected with an error explaining what's wrong.
 
 ## What happens when validation fails?
 
@@ -128,12 +128,12 @@ pattern: ^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))
 - **Verify commitizen is installed**: Run `cz --version` to confirm commitizen is available in your PATH
 - **Check Git version**: Ensure you're using a recent version of Git that supports hooks
 
-### Pre-commit hook not working
+### Prek hook not working
 
-- **Verify installation**: Run `pre-commit --version` to confirm pre-commit is installed
-- **Reinstall the hook**: Try running `pre-commit install --hook-type commit-msg` again
+- **Verify installation**: Run `prek --version` to confirm pre-commit is installed
+- **Reinstall the hook**: Try running `prek install --hook-type commit-msg` again
 - **Check configuration**: Verify your `.pre-commit-config.yaml` file is valid YAML and in the project root
-- **Update hooks**: Run `pre-commit autoupdate` to update to the latest versions
+- **Update hooks**: Run `prek autoupdate` to update to the latest versions
 
 ### Bypassing the hook (when needed)
 
@@ -150,4 +150,5 @@ git commit --no-verify -m "your message"
 
 - Learn more about [Git hooks](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks)
 - See the [check command documentation](../commands/check.md) for more validation options
+- Check out [prek documentation](https://prek.j178.dev/) for advanced hook management
 - Check out [pre-commit documentation](https://pre-commit.com/) for advanced hook management
