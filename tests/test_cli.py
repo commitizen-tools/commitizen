@@ -8,6 +8,7 @@ import pytest
 from pytest_mock import MockFixture
 
 from commitizen import cli
+from commitizen.__version__ import __version__
 from commitizen.exceptions import (
     ConfigFileNotFound,
     ExpectedExit,
@@ -53,6 +54,24 @@ def test_cz_with_arg_but_without_command(util: UtilFixture):
     with pytest.raises(NoCommandFoundError) as excinfo:
         util.run_cli("--name", "cz_jira")
     assert "Command is required" in str(excinfo.value)
+
+
+def test_cz_with_version_arg(util: UtilFixture, capsys):
+    """Test that cz shows the version when --version is used."""
+    with pytest.raises(ExpectedExit):
+        util.run_cli("--version")
+    out, _ = capsys.readouterr()
+    assert __version__ in out
+
+
+def test_cz_with_report_arg(util: UtilFixture, capsys):
+    """Test that cz shows the report when --report is used."""
+    with pytest.raises(ExpectedExit):
+        util.run_cli("--report")
+    out, _ = capsys.readouterr()
+    assert "Commitizen Version:" in out
+    assert "Python Version:" in out
+    assert "Operating System:" in out
 
 
 def test_name(util: UtilFixture, capsys):
