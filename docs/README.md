@@ -125,19 +125,7 @@ pdm add -d commitizen
 
 #### Initialize Commitizen
 
-To get started, you'll need to set up your configuration. You have two options:
-
-1. Use the interactive setup:
-```sh
-cz init
-```
-
-2. Manually create a configuration file (`.cz.toml` or `cz.toml`):
-```toml
-[tool.commitizen]
-version = "0.1.0"
-update_changelog_on_bump = true
-```
+To get started, run the `cz init` command. This will guide you through the process of creating a configuration file with your preferred settings.
 
 #### Create Commits
 
