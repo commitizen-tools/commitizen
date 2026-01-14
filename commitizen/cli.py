@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import platform
 import sys
 from copy import deepcopy
 from functools import partial
@@ -13,6 +14,7 @@ import argcomplete
 from decli import cli
 
 from commitizen import commands, config, out, version_schemes
+from commitizen.__version__ import __version__
 from commitizen.exceptions import (
     CommitizenException,
     ExitCode,
@@ -101,6 +103,16 @@ data = {
             "type": str,
             "required": False,
             "help": "comma separated error codes that won't raise error, e.g: cz -nr 1,2,3 bump. See codes at https://commitizen-tools.github.io/commitizen/exit_codes/",
+        },
+        {
+            "name": ["-v", "--version"],
+            "action": "store_true",
+            "help": "Show the version of the installed commitizen",
+        },
+        {
+            "name": ["--report"],
+            "action": "store_true",
+            "help": "Show system information for reporting bugs",
         },
     ],
     "subcommands": {
@@ -629,11 +641,25 @@ if TYPE_CHECKING:
 
 
 def main() -> None:
+    sys.excepthook = commitizen_excepthook
+
     parser: argparse.ArgumentParser = cli(data)
     argcomplete.autocomplete(parser)
     # Show help if no arg provided
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
+        raise ExpectedExit()
+
+    # TODO(bearomorphism): mark `cz version --commitizen` as deprecated after `cz version` feature is stable
+    if "--version" in sys.argv:
+        out.write(__version__)
+        raise ExpectedExit()
+
+    # TODO(bearomorphism): mark `cz version --report` as deprecated after `cz version` feature is stable
+    if "--report" in sys.argv:
+        out.write(f"Commitizen Version: {__version__}")
+        out.write(f"Python Version: {sys.version}")
+        out.write(f"Operating System: {platform.system()}")
         raise ExpectedExit()
 
     # This is for the command required constraint in 2.0
@@ -673,7 +699,6 @@ def main() -> None:
     elif not conf.path:
         conf.update({"name": "cz_conventional_commits"})
 
-    sys.excepthook = commitizen_excepthook
     if args.debug:
         logging.getLogger("commitizen").setLevel(logging.DEBUG)
         sys.excepthook = partial(sys.excepthook, debug=True)
