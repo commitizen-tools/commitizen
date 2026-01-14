@@ -19,6 +19,10 @@ Two common frameworks are:
 
 In the steps below, we'll use `prek`.
 
+!!! tip "Using pre-commit framework"
+    Replace `prek` with `pre-commit` in the steps below if you prefer that tool. The configuration format is similar.
+
+
 #### Step 1: Install prek
 
 ```sh
