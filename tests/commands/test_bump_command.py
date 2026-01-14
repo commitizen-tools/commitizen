@@ -853,16 +853,12 @@ def test_bump_manual_version_disallows_major_version_zero(util: UtilFixture):
 )
 def test_bump_version_with_less_components_in_config(
     tmp_commitizen_project_initial,
-    mocker: MockFixture,
     initial_version,
     expected_version_after_bump,
+    util: UtilFixture,
 ):
     tmp_commitizen_project = tmp_commitizen_project_initial(version=initial_version)
-
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-
-    cli.main()
+    util.run_cli("bump", "--yes")
 
     tag_exists = git.tag_exist(expected_version_after_bump)
     assert tag_exists is True
