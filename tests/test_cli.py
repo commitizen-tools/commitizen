@@ -119,34 +119,31 @@ def test_commitizen_excepthook_no_raises(capsys):
     assert excinfo.value.code == 0
 
 
-def test_parse_no_raise_single_integer():
-    input_str = "1"
+@pytest.mark.parametrize(
+    "input_str, expected_result",
+    [
+        pytest.param("1", [1], id="single_code"),
+        pytest.param("1,2,3", [1, 2, 3], id="multiple_number_codes"),
+        pytest.param(
+            "NO_COMMITIZEN_FOUND,NO_COMMITS_FOUND,NO_PATTERN_MAP",
+            [1, 3, 5],
+            id="string_codes",
+        ),
+        pytest.param(
+            "NO_COMMITIZEN_FOUND,2,NO_COMMITS_FOUND,4",
+            [1, 2, 3, 4],
+            id="number_and_string_codes",
+        ),
+        pytest.param(
+            "NO_COMMITIZEN_FOUND,2,nothing,4",
+            [1, 2, 4],
+            id="number_and_string_codes_and_invalid_code",
+        ),
+    ],
+)
+def test_parse_no_raise(input_str, expected_result):
     result = cli.parse_no_raise(input_str)
-    assert result == [1]
-
-
-def test_parse_no_raise_integers():
-    input_str = "1,2,3"
-    result = cli.parse_no_raise(input_str)
-    assert result == [1, 2, 3]
-
-
-def test_parse_no_raise_error_code():
-    input_str = "NO_COMMITIZEN_FOUND,NO_COMMITS_FOUND,NO_PATTERN_MAP"
-    result = cli.parse_no_raise(input_str)
-    assert result == [1, 3, 5]
-
-
-def test_parse_no_raise_mix_integer_error_code():
-    input_str = "NO_COMMITIZEN_FOUND,2,NO_COMMITS_FOUND,4"
-    result = cli.parse_no_raise(input_str)
-    assert result == [1, 2, 3, 4]
-
-
-def test_parse_no_raise_mix_invalid_arg_is_skipped():
-    input_str = "NO_COMMITIZEN_FOUND,2,nothing,4"
-    result = cli.parse_no_raise(input_str)
-    assert result == [1, 2, 4]
+    assert result == expected_result
 
 
 def test_unknown_args_raises(util: UtilFixture):
