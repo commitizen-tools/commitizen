@@ -10,21 +10,19 @@ When a commit message fails validation, Git will reject the commit and display a
 
 There are two common methods for installing the hooks:
 
-### Method 1: Using [pre-commit](https://pre-commit.com/) or [prek](https://prek.j178.dev) (Recommended)
+### Method 1: Using pre-commit hook frameworks (Recommended)
 
-[pre-commit](https://pre-commit.com/) and [prek](https://prek.j178.dev) are frameworks for managing and maintaining multi-language pre-commit hooks. It's the recommended approach as it handles hook installation, updates, and execution automatically.
+Using pre-commit frameworks is the recommended approach as hook installation, updates, and execution are handled automatically.
+These are two common pre-commit hooks:
+- [prek](https://prek.j178.dev) (faster)
+- [pre-commit](https://pre-commit.com/)
 
-#### Step 1: Install pre-commit
-
-```sh
-python -m pip install pre-commit
-```
-
-or
+#### Step 1: Install prek
 
 ```sh
 python -m pip install prek
 ```
+
 
 #### Step 2: Create `.pre-commit-config.yaml`
 
@@ -48,14 +46,9 @@ repos:
 Install the configuration into Git's hook system:
 
 ```bash
-pre-commit install --hook-type commit-msg
-```
-
-or
-
-```bash
 prek install --hook-type commit-msg
 ```
+
 
 The hook is now active! Every time you create a commit, commitizen will automatically validate your commit message.
 
