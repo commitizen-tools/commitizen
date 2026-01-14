@@ -1,6 +1,7 @@
 import os
 
 import pytest
+from pytest_mock import MockerFixture
 
 from commitizen import defaults
 from commitizen.config import BaseConfig
@@ -52,3 +53,8 @@ def changelog_path() -> str:
 @pytest.fixture()
 def config_path() -> str:
     return os.path.join(os.getcwd(), "pyproject.toml")
+
+
+@pytest.fixture()
+def success_mock(mocker: MockerFixture):
+    return mocker.patch("commitizen.out.success")

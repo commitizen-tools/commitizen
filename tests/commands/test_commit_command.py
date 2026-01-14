@@ -2,7 +2,7 @@ import os
 from unittest.mock import ANY
 
 import pytest
-from pytest_mock import MockFixture
+from pytest_mock import MockFixture, MockType
 
 from commitizen import cmd, commands
 from commitizen.cz.exceptions import CzException
@@ -21,6 +21,13 @@ from commitizen.exceptions import (
 
 
 @pytest.fixture
+def commit_mock(mocker: MockFixture):
+    commit_mock = mocker.patch("commitizen.git.commit")
+    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
+    return commit_mock
+
+
+@pytest.fixture
 def staging_is_clean(mocker: MockFixture, tmp_git_project):
     is_staging_clean_mock = mocker.patch("commitizen.git.is_staging_clean")
     is_staging_clean_mock.return_value = False
@@ -33,8 +40,8 @@ def backup_file(tmp_git_project):
         backup_file.write("backup commit")
 
 
-@pytest.mark.usefixtures("staging_is_clean")
-def test_commit(config, mocker: MockFixture):
+@pytest.mark.usefixtures("staging_is_clean", "commit_mock")
+def test_commit(config, success_mock: MockType, mocker: MockFixture):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
         "prefix": "feat",
@@ -44,10 +51,6 @@ def test_commit(config, mocker: MockFixture):
         "body": "",
         "footer": "",
     }
-
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
 
     commands.Commit(config, {})()
     success_mock.assert_called_once()
@@ -65,13 +68,14 @@ def test_commit_backup_on_failure(config, mocker: MockFixture):
         "footer": "",
     }
 
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("", "error", b"", b"", 9)
+    mocker.patch("commitizen.git.commit").return_value = cmd.Command(
+        "", "error", b"", b"", 9
+    )
     error_mock = mocker.patch("commitizen.out.error")
 
+    commit_cmd = commands.Commit(config, {})
+    temp_file = commit_cmd.backup_file_path
     with pytest.raises(CommitError):
-        commit_cmd = commands.Commit(config, {})
-        temp_file = commit_cmd.backup_file_path
         commit_cmd()
 
     prompt_mock.assert_called_once()
@@ -79,11 +83,8 @@ def test_commit_backup_on_failure(config, mocker: MockFixture):
     assert os.path.isfile(temp_file)
 
 
-@pytest.mark.usefixtures("staging_is_clean")
-def test_commit_retry_fails_no_backup(config, mocker: MockFixture):
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-
+@pytest.mark.usefixtures("staging_is_clean", "commit_mock")
+def test_commit_retry_fails_no_backup(config):
     with pytest.raises(NoCommitBackupError) as excinfo:
         commands.Commit(config, {"retry": True})()
 
@@ -91,12 +92,10 @@ def test_commit_retry_fails_no_backup(config, mocker: MockFixture):
 
 
 @pytest.mark.usefixtures("staging_is_clean", "backup_file")
-def test_commit_retry_works(config, mocker: MockFixture):
+def test_commit_retry_works(
+    config, success_mock: MockType, mocker: MockFixture, commit_mock: MockType
+):
     prompt_mock = mocker.patch("questionary.prompt")
-
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
 
     commit_cmd = commands.Commit(config, {"retry": True})
     temp_file = commit_cmd.backup_file_path
@@ -109,7 +108,9 @@ def test_commit_retry_works(config, mocker: MockFixture):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_retry_after_failure_no_backup(config, mocker: MockFixture):
+def test_commit_retry_after_failure_no_backup(
+    config, success_mock: MockType, mocker: MockFixture, commit_mock: MockType
+):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
         "prefix": "feat",
@@ -120,10 +121,6 @@ def test_commit_retry_after_failure_no_backup(config, mocker: MockFixture):
         "footer": "",
     }
 
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
-
     config.settings["retry_after_failure"] = True
     commands.Commit(config, {})()
 
@@ -133,12 +130,10 @@ def test_commit_retry_after_failure_no_backup(config, mocker: MockFixture):
 
 
 @pytest.mark.usefixtures("staging_is_clean", "backup_file")
-def test_commit_retry_after_failure_works(config, mocker: MockFixture):
+def test_commit_retry_after_failure_works(
+    config, success_mock: MockType, mocker: MockFixture, commit_mock: MockType
+):
     prompt_mock = mocker.patch("questionary.prompt")
-
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
 
     config.settings["retry_after_failure"] = True
     commit_cmd = commands.Commit(config, {})
@@ -152,7 +147,9 @@ def test_commit_retry_after_failure_works(config, mocker: MockFixture):
 
 
 @pytest.mark.usefixtures("staging_is_clean", "backup_file")
-def test_commit_retry_after_failure_with_no_retry_works(config, mocker: MockFixture):
+def test_commit_retry_after_failure_with_no_retry_works(
+    config, success_mock: MockType, mocker: MockFixture, commit_mock: MockType
+):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
         "prefix": "feat",
@@ -162,10 +159,6 @@ def test_commit_retry_after_failure_with_no_retry_works(config, mocker: MockFixt
         "body": "closes #21",
         "footer": "",
     }
-
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
 
     config.settings["retry_after_failure"] = True
     commit_cmd = commands.Commit(config, {"no_retry": True})
@@ -191,13 +184,12 @@ def test_commit_command_with_dry_run_option(config, mocker: MockFixture):
     }
 
     with pytest.raises(DryRunExit):
-        commit_cmd = commands.Commit(config, {"dry_run": True})
-        commit_cmd()
+        commands.Commit(config, {"dry_run": True})()
 
 
-@pytest.mark.usefixtures("staging_is_clean")
+@pytest.mark.usefixtures("staging_is_clean", "commit_mock")
 def test_commit_command_with_write_message_to_file_option(
-    config, tmp_path, mocker: MockFixture
+    config, tmp_path, success_mock: MockType, mocker: MockFixture
 ):
     tmp_file = tmp_path / "message"
 
@@ -210,10 +202,6 @@ def test_commit_command_with_write_message_to_file_option(
         "body": "",
         "footer": "",
     }
-
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
 
     commands.Commit(config, {"write_message_to_file": tmp_file})()
     success_mock.assert_called_once()
@@ -236,58 +224,12 @@ def test_commit_command_with_invalid_write_message_to_file_option(
     }
 
     with pytest.raises(NotAllowed):
-        commit_cmd = commands.Commit(config, {"write_message_to_file": tmp_path})
-        commit_cmd()
+        commands.Commit(config, {"write_message_to_file": tmp_path})()
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_command_with_signoff_option(config, mocker: MockFixture):
-    prompt_mock = mocker.patch("questionary.prompt")
-    prompt_mock.return_value = {
-        "prefix": "feat",
-        "subject": "user created",
-        "scope": "",
-        "is_breaking_change": False,
-        "body": "",
-        "footer": "",
-    }
-
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
-
-    commands.Commit(config, {"signoff": True})()
-
-    commit_mock.assert_called_once_with(ANY, args="-s")
-    success_mock.assert_called_once()
-
-
-@pytest.mark.usefixtures("staging_is_clean")
-def test_commit_command_with_always_signoff_enabled(config, mocker: MockFixture):
-    prompt_mock = mocker.patch("questionary.prompt")
-    prompt_mock.return_value = {
-        "prefix": "feat",
-        "subject": "user created",
-        "scope": "",
-        "is_breaking_change": False,
-        "body": "",
-        "footer": "",
-    }
-
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
-
-    config.settings["always_signoff"] = True
-    commands.Commit(config, {})()
-
-    commit_mock.assert_called_once_with(ANY, args="-s")
-    success_mock.assert_called_once()
-
-
-@pytest.mark.usefixtures("staging_is_clean")
-def test_commit_command_with_gpgsign_and_always_signoff_enabled(
-    config, mocker: MockFixture
+def test_commit_command_with_signoff_option(
+    config, success_mock: MockType, mocker: MockFixture, commit_mock: MockType
 ):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
@@ -299,9 +241,46 @@ def test_commit_command_with_gpgsign_and_always_signoff_enabled(
         "footer": "",
     }
 
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
+    commands.Commit(config, {"signoff": True})()
+
+    commit_mock.assert_called_once_with(ANY, args="-s")
+    success_mock.assert_called_once()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_with_always_signoff_enabled(
+    config, success_mock: MockType, mocker: MockFixture, commit_mock: MockType
+):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "",
+        "footer": "",
+    }
+
+    config.settings["always_signoff"] = True
+    commands.Commit(config, {})()
+
+    commit_mock.assert_called_once_with(ANY, args="-s")
+    success_mock.assert_called_once()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_with_gpgsign_and_always_signoff_enabled(
+    config, success_mock: MockType, mocker: MockFixture, commit_mock: MockType
+):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prompt_mock.return_value = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "",
+        "footer": "",
+    }
 
     config.settings["always_signoff"] = True
     commands.Commit(config, {"extra_cli_args": "-S"})()
@@ -316,14 +295,15 @@ def test_commit_when_nothing_to_commit(config, mocker: MockFixture):
     is_staging_clean_mock.return_value = True
 
     with pytest.raises(NothingToCommitError) as excinfo:
-        commit_cmd = commands.Commit(config, {})
-        commit_cmd()
+        commands.Commit(config, {})()
 
     assert "No files added to staging!" in str(excinfo.value)
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_with_allow_empty(config, mocker: MockFixture):
+def test_commit_with_allow_empty(
+    config, success_mock: MockType, mocker: MockFixture, commit_mock: MockType
+):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
         "prefix": "feat",
@@ -333,10 +313,6 @@ def test_commit_with_allow_empty(config, mocker: MockFixture):
         "body": "closes #21",
         "footer": "",
     }
-
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
 
     commands.Commit(config, {"extra_cli_args": "--allow-empty"})()
 
@@ -347,7 +323,9 @@ def test_commit_with_allow_empty(config, mocker: MockFixture):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_with_signoff_and_allow_empty(config, mocker: MockFixture):
+def test_commit_with_signoff_and_allow_empty(
+    config, success_mock: MockType, mocker: MockFixture, commit_mock: MockType
+):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
         "prefix": "feat",
@@ -357,10 +335,6 @@ def test_commit_with_signoff_and_allow_empty(config, mocker: MockFixture):
         "body": "closes #21",
         "footer": "",
     }
-
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
 
     config.settings["always_signoff"] = True
     commands.Commit(config, {"extra_cli_args": "--allow-empty"})()
@@ -379,8 +353,7 @@ def test_commit_when_customized_expected_raised(config, mocker: MockFixture, cap
     prompt_mock.side_effect = _err
 
     with pytest.raises(CustomError) as excinfo:
-        commit_cmd = commands.Commit(config, {})
-        commit_cmd()
+        commands.Commit(config, {})()
 
     # Assert only the content in the formatted text
     assert "This is the root custom err" in str(excinfo.value)
@@ -395,8 +368,7 @@ def test_commit_when_non_customized_expected_raised(
     prompt_mock.side_effect = _err
 
     with pytest.raises(ValueError):
-        commit_cmd = commands.Commit(config, {})
-        commit_cmd()
+        commands.Commit(config, {})()
 
 
 @pytest.mark.usefixtures("staging_is_clean")
@@ -405,8 +377,7 @@ def test_commit_when_no_user_answer(config, mocker: MockFixture, capsys):
     prompt_mock.return_value = None
 
     with pytest.raises(NoAnswersError):
-        commit_cmd = commands.Commit(config, {})
-        commit_cmd()
+        commands.Commit(config, {})()
 
 
 def test_commit_in_non_git_project(tmpdir, config):
@@ -415,8 +386,10 @@ def test_commit_in_non_git_project(tmpdir, config):
             commands.Commit(config, {})
 
 
-@pytest.mark.usefixtures("staging_is_clean")
-def test_commit_command_with_all_option(config, mocker: MockFixture):
+@pytest.mark.usefixtures("staging_is_clean", "commit_mock")
+def test_commit_command_with_all_option(
+    config, success_mock: MockType, mocker: MockFixture
+):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
         "prefix": "feat",
@@ -427,9 +400,6 @@ def test_commit_command_with_all_option(config, mocker: MockFixture):
         "footer": "",
     }
 
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
     add_mock = mocker.patch("commitizen.git.add")
     commands.Commit(config, {"all": True})()
     add_mock.assert_called()
@@ -437,7 +407,9 @@ def test_commit_command_with_all_option(config, mocker: MockFixture):
 
 
 @pytest.mark.usefixtures("staging_is_clean")
-def test_commit_command_with_extra_args(config, mocker: MockFixture):
+def test_commit_command_with_extra_args(
+    config, success_mock: MockType, mocker: MockFixture, commit_mock: MockType
+):
     prompt_mock = mocker.patch("questionary.prompt")
     prompt_mock.return_value = {
         "prefix": "feat",
@@ -448,16 +420,15 @@ def test_commit_command_with_extra_args(config, mocker: MockFixture):
         "footer": "",
     }
 
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
     commands.Commit(config, {"extra_cli_args": "-- -extra-args1 -extra-arg2"})()
     commit_mock.assert_called_once_with(ANY, args="-- -extra-args1 -extra-arg2")
     success_mock.assert_called_once()
 
 
-@pytest.mark.usefixtures("staging_is_clean")
-def test_commit_command_with_message_length_limit(config, mocker: MockFixture):
+@pytest.mark.usefixtures("staging_is_clean", "commit_mock")
+def test_commit_command_with_message_length_limit(
+    config, success_mock: MockType, mocker: MockFixture
+):
     prompt_mock = mocker.patch("questionary.prompt")
     prefix = "feat"
     subject = "random subject"
@@ -470,10 +441,6 @@ def test_commit_command_with_message_length_limit(config, mocker: MockFixture):
         "body": "random body",
         "footer": "random footer",
     }
-
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
 
     commands.Commit(config, {"message_length_limit": message_length})()
     success_mock.assert_called_once()
@@ -504,9 +471,7 @@ def test_manual_edit(editor, config, mocker: MockFixture, tmp_path):
             commit_cmd.manual_edit(test_message)
     else:
         edited_message = commit_cmd.manual_edit(test_message)
-
         subprocess_mock.assert_called_once_with(["vim", str(temp_file)])
-
         assert edited_message == test_message.strip()
 
 
@@ -541,37 +506,9 @@ def test_commit_when_nothing_added_to_commit(config, mocker: MockFixture, out):
     error_mock.assert_called_once_with(out)
 
 
-@pytest.mark.usefixtures("staging_is_clean")
-def test_commit_command_with_config_message_length_limit(config, mocker: MockFixture):
-    prompt_mock = mocker.patch("questionary.prompt")
-    prefix = "feat"
-    subject = "random subject"
-    message_length = len(prefix) + len(": ") + len(subject)
-    prompt_mock.return_value = {
-        "prefix": prefix,
-        "subject": subject,
-        "scope": "",
-        "is_breaking_change": False,
-        "body": "random body",
-        "footer": "random footer",
-    }
-
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
-
-    config.settings["message_length_limit"] = message_length
-    commands.Commit(config, {})()
-    success_mock.assert_called_once()
-
-    config.settings["message_length_limit"] = message_length - 1
-    with pytest.raises(CommitMessageLengthExceededError):
-        commands.Commit(config, {})()
-
-
-@pytest.mark.usefixtures("staging_is_clean")
-def test_commit_command_cli_overrides_config_message_length_limit(
-    config, mocker: MockFixture
+@pytest.mark.usefixtures("staging_is_clean", "commit_mock")
+def test_commit_command_with_config_message_length_limit(
+    config, success_mock: MockType, mocker: MockFixture
 ):
     prompt_mock = mocker.patch("questionary.prompt")
     prefix = "feat"
@@ -586,9 +523,31 @@ def test_commit_command_cli_overrides_config_message_length_limit(
         "footer": "random footer",
     }
 
-    commit_mock = mocker.patch("commitizen.git.commit")
-    commit_mock.return_value = cmd.Command("success", "", b"", b"", 0)
-    success_mock = mocker.patch("commitizen.out.success")
+    config.settings["message_length_limit"] = message_length
+    commands.Commit(config, {})()
+    success_mock.assert_called_once()
+
+    config.settings["message_length_limit"] = message_length - 1
+    with pytest.raises(CommitMessageLengthExceededError):
+        commands.Commit(config, {})()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_cli_overrides_config_message_length_limit(
+    config, success_mock: MockType, mocker: MockFixture, commit_mock: MockType
+):
+    prompt_mock = mocker.patch("questionary.prompt")
+    prefix = "feat"
+    subject = "random subject"
+    message_length = len(prefix) + len(": ") + len(subject)
+    prompt_mock.return_value = {
+        "prefix": prefix,
+        "subject": subject,
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "random body",
+        "footer": "random footer",
+    }
 
     config.settings["message_length_limit"] = message_length - 1
 

@@ -376,9 +376,9 @@ def config_with_unicode(request):
 
 
 def test_initialize_cz_customize_failed():
+    config = BaseConfig()
     with pytest.raises(MissingCzCustomizeConfigError) as excinfo:
-        config = BaseConfig()
-        _ = CustomizeCommitsCz(config)
+        CustomizeCommitsCz(config)
 
     assert MissingCzCustomizeConfigError.message in str(excinfo.value)
 
