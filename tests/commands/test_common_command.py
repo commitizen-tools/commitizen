@@ -20,11 +20,10 @@ from tests.utils import UtilFixture
         "version",
     ],
 )
-@pytest.mark.usefixtures("python_version")
+@pytest.mark.usefixtures("python_version", "consistent_terminal_output")
 def test_command_shows_description_when_use_help_option(
     capsys,
     file_regression,
-    monkeypatch: pytest.MonkeyPatch,
     command: str,
     util: UtilFixture,
 ):
@@ -32,13 +31,6 @@ def test_command_shows_description_when_use_help_option(
 
     Note: If the command description changes, please run `poe test:regen` to regenerate the test files.
     """
-    # Force consistent terminal output
-    monkeypatch.setenv("COLUMNS", "80")
-    monkeypatch.setenv("TERM", "dumb")
-    monkeypatch.setenv("LC_ALL", "C")
-    monkeypatch.setenv("LANG", "C")
-    monkeypatch.setenv("NO_COLOR", "1")
-    monkeypatch.setenv("PAGER", "cat")
 
     with pytest.raises(SystemExit):
         util.run_cli(command, "--help")
