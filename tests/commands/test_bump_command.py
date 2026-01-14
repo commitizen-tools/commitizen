@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import inspect
 import re
-import sys
 from pathlib import Path
 from textwrap import dedent
 from typing import TYPE_CHECKING
@@ -11,7 +10,7 @@ from unittest.mock import MagicMock, call
 import pytest
 
 import commitizen.commands.bump as bump
-from commitizen import cli, cmd, defaults, git, hooks
+from commitizen import cmd, defaults, git, hooks
 from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import (
     BumpTagFailedError,
@@ -28,14 +27,15 @@ from commitizen.exceptions import (
     NotAllowed,
     NoVersionSpecifiedError,
 )
-from tests.utils import create_file_and_commit, create_tag
 
 if TYPE_CHECKING:
     import py
     from pytest_mock import MockFixture
+    from pytest_regressions.file_regression import FileRegressionFixture
 
     from commitizen.changelog_formats import ChangelogFormat
     from commitizen.cz.base import BaseCommitizen
+    from tests.utils import UtilFixture
 
 
 @pytest.mark.parametrize(
@@ -50,22 +50,18 @@ if TYPE_CHECKING:
     ),
 )
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_patch_increment(commit_msg, mocker: MockFixture):
-    create_file_and_commit(commit_msg)
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+def test_bump_patch_increment(commit_msg: str, util: UtilFixture):
+    util.create_file_and_commit(commit_msg)
+    util.run_cli("bump", "--yes")
     tag_exists = git.tag_exist("0.1.1")
     assert tag_exists is True
 
 
 @pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_minor_increment(commit_msg, mocker: MockFixture):
-    create_file_and_commit(commit_msg)
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+def test_bump_minor_increment(commit_msg: str, util: UtilFixture):
+    util.create_file_and_commit(commit_msg)
+    util.run_cli("bump", "--yes")
     tag_exists = git.tag_exist("0.2.0")
     cmd_res = cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"')
     assert tag_exists is True and "commit:refs/tags/0.2.0\n" in cmd_res.out
@@ -73,11 +69,9 @@ def test_bump_minor_increment(commit_msg, mocker: MockFixture):
 
 @pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_minor_increment_annotated(commit_msg, mocker: MockFixture):
-    create_file_and_commit(commit_msg)
-    testargs = ["cz", "bump", "--yes", "--annotated-tag"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+def test_bump_minor_increment_annotated(commit_msg: str, util: UtilFixture):
+    util.create_file_and_commit(commit_msg)
+    util.run_cli("bump", "--yes", "--annotated-tag")
     tag_exists = git.tag_exist("0.2.0")
     cmd_res = cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"')
     assert tag_exists is True and "tag:refs/tags/0.2.0\n" in cmd_res.out
@@ -88,11 +82,9 @@ def test_bump_minor_increment_annotated(commit_msg, mocker: MockFixture):
 
 @pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
 @pytest.mark.usefixtures("tmp_commitizen_project_with_gpg")
-def test_bump_minor_increment_signed(commit_msg, mocker: MockFixture):
-    create_file_and_commit(commit_msg)
-    testargs = ["cz", "bump", "--yes", "--gpg-sign"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+def test_bump_minor_increment_signed(commit_msg: str, util: UtilFixture):
+    util.create_file_and_commit(commit_msg)
+    util.run_cli("bump", "--yes", "--gpg-sign")
     tag_exists = git.tag_exist("0.2.0")
     cmd_res = cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"')
     assert tag_exists is True and "tag:refs/tags/0.2.0\n" in cmd_res.out
@@ -103,16 +95,14 @@ def test_bump_minor_increment_signed(commit_msg, mocker: MockFixture):
 
 @pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
 def test_bump_minor_increment_annotated_config_file(
-    commit_msg, mocker: MockFixture, tmp_commitizen_project
+    commit_msg: str, util: UtilFixture, tmp_commitizen_project
 ):
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
     tmp_commitizen_cfg_file.write(
         f"{tmp_commitizen_cfg_file.read()}\nannotated_tag = 1"
     )
-    create_file_and_commit(commit_msg)
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.create_file_and_commit(commit_msg)
+    util.run_cli("bump", "--yes")
     tag_exists = git.tag_exist("0.2.0")
     cmd_res = cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"')
     assert tag_exists is True and "tag:refs/tags/0.2.0\n" in cmd_res.out
@@ -123,14 +113,12 @@ def test_bump_minor_increment_annotated_config_file(
 
 @pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
 def test_bump_minor_increment_signed_config_file(
-    commit_msg, mocker: MockFixture, tmp_commitizen_project_with_gpg
+    commit_msg: str, util: UtilFixture, tmp_commitizen_project_with_gpg
 ):
     tmp_commitizen_cfg_file = tmp_commitizen_project_with_gpg.join("pyproject.toml")
     tmp_commitizen_cfg_file.write(f"{tmp_commitizen_cfg_file.read()}\ngpg_sign = 1")
-    create_file_and_commit(commit_msg)
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.create_file_and_commit(commit_msg)
+    util.run_cli("bump", "--yes")
     tag_exists = git.tag_exist("0.2.0")
     cmd_res = cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"')
     assert tag_exists is True and "tag:refs/tags/0.2.0\n" in cmd_res.out
@@ -153,12 +141,10 @@ def test_bump_minor_increment_signed_config_file(
         "BREAKING-CHANGE: age is no longer supported",
     ),
 )
-def test_bump_major_increment(commit_msg, mocker: MockFixture):
-    create_file_and_commit(commit_msg)
+def test_bump_major_increment(commit_msg: str, util: UtilFixture):
+    util.create_file_and_commit(commit_msg)
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--yes")
 
     tag_exists = git.tag_exist("1.0.0")
     assert tag_exists is True
@@ -178,12 +164,10 @@ def test_bump_major_increment(commit_msg, mocker: MockFixture):
         "BREAKING-CHANGE: age is no longer supported",
     ),
 )
-def test_bump_major_increment_major_version_zero(commit_msg, mocker):
-    create_file_and_commit(commit_msg)
+def test_bump_major_increment_major_version_zero(commit_msg: str, util: UtilFixture):
+    util.create_file_and_commit(commit_msg)
 
-    testargs = ["cz", "bump", "--yes", "--major-version-zero"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--yes", "--major-version-zero")
 
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
@@ -200,43 +184,35 @@ def test_bump_major_increment_major_version_zero(commit_msg, mocker):
     ],
 )
 def test_bump_command_increment_option(
-    commit_msg, increment, expected_tag, mocker: MockFixture
+    commit_msg: str, increment: str, expected_tag: str, util: UtilFixture
 ):
-    create_file_and_commit(commit_msg)
+    util.create_file_and_commit(commit_msg)
 
-    testargs = ["cz", "bump", "--increment", increment, "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--increment", increment, "--yes")
 
     tag_exists = git.tag_exist(expected_tag)
     assert tag_exists is True
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_command_prerelease(mocker: MockFixture):
-    create_file_and_commit("feat: location")
+def test_bump_command_prerelease(util: UtilFixture):
+    util.create_file_and_commit("feat: location")
 
     # Create an alpha pre-release.
-    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", "alpha", "--yes")
 
     tag_exists = git.tag_exist("0.2.0a0")
     assert tag_exists is True
 
     # Create a beta pre-release.
-    testargs = ["cz", "bump", "--prerelease", "beta", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", "beta", "--yes")
 
     tag_exists = git.tag_exist("0.2.0b0")
     assert tag_exists is True
 
     # With a current beta pre-release, bumping alpha must bump beta
     # because we can't bump "backwards".
-    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", "alpha", "--yes")
 
     tag_exists = git.tag_exist("0.2.0a1")
     assert tag_exists is False
@@ -244,17 +220,13 @@ def test_bump_command_prerelease(mocker: MockFixture):
     assert tag_exists is True
 
     # Create a rc pre-release.
-    testargs = ["cz", "bump", "--prerelease", "rc", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", "rc", "--yes")
 
     tag_exists = git.tag_exist("0.2.0rc0")
     assert tag_exists is True
 
     # With a current rc pre-release, bumping alpha must bump rc.
-    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", "alpha", "--yes")
 
     tag_exists = git.tag_exist("0.2.0a1")
     assert tag_exists is False
@@ -264,9 +236,7 @@ def test_bump_command_prerelease(mocker: MockFixture):
     assert tag_exists is True
 
     # With a current rc pre-release, bumping beta must bump rc.
-    testargs = ["cz", "bump", "--prerelease", "beta", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", "beta", "--yes")
 
     tag_exists = git.tag_exist("0.2.0a2")
     assert tag_exists is False
@@ -276,115 +246,81 @@ def test_bump_command_prerelease(mocker: MockFixture):
     assert tag_exists is True
 
     # Create a final release from the current pre-release.
-    testargs = ["cz", "bump"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump")
 
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_command_prerelease_increment(mocker: MockFixture):
+def test_bump_command_prerelease_increment(util: UtilFixture):
     # FINAL RELEASE
-    create_file_and_commit("fix: location")
+    util.create_file_and_commit("fix: location")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--yes")
     assert git.tag_exist("0.1.1")
 
     # PRERELEASE
-    create_file_and_commit("fix: location")
+    util.create_file_and_commit("fix: location")
 
-    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", "alpha", "--yes")
 
     assert git.tag_exist("0.1.2a0")
 
-    create_file_and_commit("feat: location")
+    util.create_file_and_commit("feat: location")
 
-    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", "alpha", "--yes")
 
     assert git.tag_exist("0.2.0a0")
 
-    create_file_and_commit("feat!: breaking")
+    util.create_file_and_commit("feat!: breaking")
 
-    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", "alpha", "--yes")
 
     assert git.tag_exist("1.0.0a0")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_command_prerelease_exact_mode(mocker: MockFixture):
+def test_bump_command_prerelease_exact_mode(util: UtilFixture):
     # PRERELEASE
-    create_file_and_commit("feat: location")
+    util.create_file_and_commit("feat: location")
 
-    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", "alpha", "--yes")
 
     tag_exists = git.tag_exist("0.2.0a0")
     assert tag_exists is True
 
     # PRERELEASE + PATCH BUMP
-    testargs = [
-        "cz",
-        "bump",
-        "--prerelease",
-        "alpha",
-        "--yes",
-        "--increment-mode=exact",
-    ]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
-
+    util.run_cli("bump", "--prerelease", "alpha", "--yes", "--increment-mode=exact")
     tag_exists = git.tag_exist("0.2.0a1")
     assert tag_exists is True
 
     # PRERELEASE + MINOR BUMP
     # --increment-mode allows the minor version to bump, and restart the prerelease
-    create_file_and_commit("feat: location")
+    util.create_file_and_commit("feat: location")
 
-    testargs = [
-        "cz",
-        "bump",
-        "--prerelease",
-        "alpha",
-        "--yes",
-        "--increment-mode=exact",
-    ]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", "alpha", "--yes", "--increment-mode=exact")
 
     tag_exists = git.tag_exist("0.3.0a0")
     assert tag_exists is True
 
     # PRERELEASE + MAJOR BUMP
     # --increment-mode=exact allows the major version to bump, and restart the prerelease
-    testargs = [
-        "cz",
+    util.run_cli(
         "bump",
         "--prerelease",
         "alpha",
         "--yes",
         "--increment=MAJOR",
         "--increment-mode=exact",
-    ]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    )
 
     tag_exists = git.tag_exist("1.0.0a0")
     assert tag_exists is True
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_on_git_with_hooks_no_verify_disabled(mocker: MockFixture):
+def test_bump_on_git_with_hooks_no_verify_disabled(util: UtilFixture):
     """Bump commit without --no-verify"""
     cmd.run("mkdir .git/hooks")
     with open(".git/hooks/pre-commit", "w", encoding="utf-8") as f:
@@ -392,103 +328,84 @@ def test_bump_on_git_with_hooks_no_verify_disabled(mocker: MockFixture):
     cmd.run("chmod +x .git/hooks/pre-commit")
 
     # MINOR
-    create_file_and_commit("feat: new file")
+    util.create_file_and_commit("feat: new file")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-
-    cli.main()
+    util.run_cli("bump", "--yes")
 
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_tag_exists_raises_exception(mocker: MockFixture):
+def test_bump_tag_exists_raises_exception(util: UtilFixture):
     cmd.run("mkdir .git/hooks")
     with open(".git/hooks/post-commit", "w", encoding="utf-8") as f:
         f.write("#!/usr/bin/env bash\nexit 9")
     cmd.run("chmod +x .git/hooks/post-commit")
 
     # MINOR
-    create_file_and_commit("feat: new file")
+    util.create_file_and_commit("feat: new file")
     git.tag("0.2.0")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-
     with pytest.raises(BumpTagFailedError) as excinfo:
-        cli.main()
+        util.run_cli("bump", "--yes")
     assert "0.2.0" in str(excinfo.value)  # This should be a fatal error
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_on_git_with_hooks_no_verify_enabled(mocker: MockFixture):
+def test_bump_on_git_with_hooks_no_verify_enabled(util: UtilFixture):
     cmd.run("mkdir .git/hooks")
     with open(".git/hooks/pre-commit", "w", encoding="utf-8") as f:
         f.write('#!/usr/bin/env bash\necho "0.1.0"')
     cmd.run("chmod +x .git/hooks/pre-commit")
 
     # MINOR
-    create_file_and_commit("feat: new file")
+    util.create_file_and_commit("feat: new file")
 
-    testargs = ["cz", "bump", "--yes", "--no-verify"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--yes", "--no-verify")
 
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_when_bumping_is_not_support(mocker: MockFixture):
-    create_file_and_commit(
+def test_bump_when_bumping_is_not_support(util: UtilFixture):
+    util.create_file_and_commit(
         "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported"
     )
 
-    testargs = ["cz", "-n", "cz_jira", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-
     with pytest.raises(NoPatternMapError) as excinfo:
-        cli.main()
+        util.run_cli("-n", "cz_jira", "bump", "--yes")
 
     assert "'cz_jira' rule does not support bump" in str(excinfo.value)
 
 
 @pytest.mark.usefixtures("tmp_git_project")
-def test_bump_when_version_is_not_specify(mocker: MockFixture):
-    mocker.patch.object(sys, "argv", ["cz", "bump"])
-
+def test_bump_when_version_is_not_specify(util: UtilFixture):
     with pytest.raises(NoVersionSpecifiedError) as excinfo:
-        cli.main()
+        util.run_cli("bump")
 
     assert NoVersionSpecifiedError.message in str(excinfo.value)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_when_no_new_commit(mocker: MockFixture):
+def test_bump_when_no_new_commit(util: UtilFixture):
     """bump without any commits since the last bump."""
     # We need this first commit otherwise the revision is invalid.
-    create_file_and_commit("feat: initial")
+    util.create_file_and_commit("feat: initial")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-
-    # First bump.
-    # The next bump should fail since
-    # there is not a commit between the two bumps.
-    cli.main()
+    util.run_cli("bump", "--yes")
 
     # bump without a new commit.
     with pytest.raises(NoCommitsFoundError) as excinfo:
-        cli.main()
+        util.run_cli("bump", "--yes")
 
     expected_error_message = "[NO_COMMITS_FOUND]\nNo new commits found."
     assert expected_error_message in str(excinfo.value)
 
 
 def test_bump_when_version_inconsistent_in_version_files(
-    tmp_commitizen_project, mocker: MockFixture
+    tmp_commitizen_project, util: UtilFixture
 ):
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_version_file.write("100.999.10000")
@@ -499,19 +416,18 @@ def test_bump_when_version_inconsistent_in_version_files(
         f'version_files = ["{tmp_version_file_string}"]'
     )
 
-    create_file_and_commit("feat: new file")
-
-    testargs = ["cz", "bump", "--yes", "--check-consistency"]
-    mocker.patch.object(sys, "argv", testargs)
+    util.create_file_and_commit("feat: new file")
 
     with pytest.raises(CurrentVersionNotFoundError) as excinfo:
-        cli.main()
+        util.run_cli("bump", "--yes", "--check-consistency")
 
     partial_expected_error_message = "Current version 0.1.0 is not found in"
     assert partial_expected_error_message in str(excinfo.value)
 
 
-def test_bump_major_version_zero_when_major_is_not_zero(mocker, tmp_commitizen_project):
+def test_bump_major_version_zero_when_major_is_not_zero(
+    tmp_commitizen_project, util: UtilFixture
+):
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_version_file.write("1.0.0")
     tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
@@ -524,15 +440,12 @@ def test_bump_major_version_zero_when_major_is_not_zero(mocker, tmp_commitizen_p
     tmp_changelog_file = tmp_commitizen_project.join("CHANGELOG.md")
     tmp_changelog_file.write("## v1.0.0")
 
-    create_file_and_commit("feat(user): new file")
-    create_tag("v1.0.0")
-    create_file_and_commit("feat(user)!: new file")
-
-    testargs = ["cz", "bump", "--yes", "--major-version-zero"]
-    mocker.patch.object(sys, "argv", testargs)
+    util.create_file_and_commit("feat(user): new file")
+    util.create_tag("v1.0.0")
+    util.create_file_and_commit("feat(user)!: new file")
 
     with pytest.raises(NotAllowed) as excinfo:
-        cli.main()
+        util.run_cli("bump", "--yes", "--major-version-zero")
 
     expected_error_message = (
         "--major-version-zero is meaningless for current version 1.0.0"
@@ -540,7 +453,7 @@ def test_bump_major_version_zero_when_major_is_not_zero(mocker, tmp_commitizen_p
     assert expected_error_message in str(excinfo.value)
 
 
-def test_bump_files_only(mocker: MockFixture, tmp_commitizen_project):
+def test_bump_files_only(tmp_commitizen_project, util: UtilFixture):
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_version_file.write("0.1.0")
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
@@ -550,18 +463,14 @@ def test_bump_files_only(mocker: MockFixture, tmp_commitizen_project):
         f'version_files = ["{tmp_version_file_string}"]'
     )
 
-    create_file_and_commit("feat: new user interface")
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.create_file_and_commit("feat: new user interface")
+    util.run_cli("bump", "--yes")
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
-    create_file_and_commit("feat: another new feature")
-    testargs = ["cz", "bump", "--yes", "--files-only"]
-    mocker.patch.object(sys, "argv", testargs)
+    util.create_file_and_commit("feat: another new feature")
     with pytest.raises(ExpectedExit):
-        cli.main()
+        util.run_cli("bump", "--yes", "--files-only")
 
     tag_exists = git.tag_exist("0.3.0")
     assert tag_exists is False
@@ -573,7 +482,7 @@ def test_bump_files_only(mocker: MockFixture, tmp_commitizen_project):
         assert "0.3.0" in f.read()
 
 
-def test_bump_local_version(mocker: MockFixture, tmp_commitizen_project):
+def test_bump_local_version(tmp_commitizen_project, util: UtilFixture):
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_version_file.write("4.5.1+0.1.0")
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
@@ -584,10 +493,8 @@ def test_bump_local_version(mocker: MockFixture, tmp_commitizen_project):
         f'version_files = ["{tmp_version_file_string}"]'
     )
 
-    create_file_and_commit("feat: new user interface")
-    testargs = ["cz", "bump", "--yes", "--local-version"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.create_file_and_commit("feat: new user interface")
+    util.run_cli("bump", "--yes", "--local-version")
     tag_exists = git.tag_exist("4.5.1+0.2.0")
     assert tag_exists is True
 
@@ -596,13 +503,11 @@ def test_bump_local_version(mocker: MockFixture, tmp_commitizen_project):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_dry_run(mocker: MockFixture, capsys):
-    create_file_and_commit("feat: new file")
+def test_bump_dry_run(util: UtilFixture, capsys):
+    util.create_file_and_commit("feat: new file")
 
-    testargs = ["cz", "bump", "--yes", "--dry-run"]
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(DryRunExit):
-        cli.main()
+        util.run_cli("bump", "--yes", "--dry-run")
 
     out, _ = capsys.readouterr()
     assert "0.2.0" in out
@@ -611,14 +516,11 @@ def test_bump_dry_run(mocker: MockFixture, capsys):
     assert tag_exists is False
 
 
-def test_bump_in_non_git_project(tmpdir, config, mocker: MockFixture):
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-
+def test_bump_in_non_git_project(tmpdir, config, util: UtilFixture):
     with tmpdir.as_cwd():
         with pytest.raises(NotAGitProjectError):
             with pytest.raises(ExpectedExit):
-                cli.main()
+                util.run_cli("bump", "--yes")
 
 
 def test_none_increment_exit_should_be_a_class():
@@ -639,11 +541,9 @@ def test_none_increment_exit_is_exception():
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_none_increment_should_not_call_git_tag_and_error_code_is_not_zero(
-    mocker: MockFixture,
+    mocker: MockFixture, util: UtilFixture
 ):
-    create_file_and_commit("test(test_get_all_droplets): fix bad comparison test")
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
+    util.create_file_and_commit("test(test_get_all_droplets): fix bad comparison test")
 
     # stash git.tag for later restore
     stashed_git_tag = git.tag
@@ -651,7 +551,7 @@ def test_none_increment_should_not_call_git_tag_and_error_code_is_not_zero(
     git.tag = MagicMock(return_value=dummy_value)
 
     with pytest.raises(NoneIncrementExit) as e:
-        cli.main()
+        util.run_cli("bump", "--yes")
 
     git.tag.assert_not_called()
     assert e.value.exit_code == ExitCode.NO_INCREMENT
@@ -661,11 +561,9 @@ def test_none_increment_should_not_call_git_tag_and_error_code_is_not_zero(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_with_changelog_arg(mocker: MockFixture, changelog_path):
-    create_file_and_commit("feat(user): new file")
-    testargs = ["cz", "bump", "--yes", "--changelog"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+def test_bump_with_changelog_arg(util: UtilFixture, changelog_path):
+    util.create_file_and_commit("feat(user): new file")
+    util.run_cli("bump", "--yes", "--changelog")
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
@@ -676,14 +574,12 @@ def test_bump_with_changelog_arg(mocker: MockFixture, changelog_path):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_with_changelog_config(mocker: MockFixture, changelog_path, config_path):
-    create_file_and_commit("feat(user): new file")
+def test_bump_with_changelog_config(util: UtilFixture, changelog_path, config_path):
+    util.create_file_and_commit("feat(user): new file")
     with open(config_path, "a", encoding="utf-8") as fp:
         fp.write("update_changelog_on_bump = true\n")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--yes")
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
@@ -694,23 +590,18 @@ def test_bump_with_changelog_config(mocker: MockFixture, changelog_path, config_
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_prevent_prerelease_when_no_increment_detected(mocker: MockFixture, capsys):
-    create_file_and_commit("feat: new file")
+def test_prevent_prerelease_when_no_increment_detected(util: UtilFixture, capsys):
+    util.create_file_and_commit("feat: new file")
 
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-
-    cli.main()
+    util.run_cli("bump", "--yes")
     out, _ = capsys.readouterr()
 
     assert "0.2.0" in out
 
-    create_file_and_commit("test: new file")
-    testargs = ["cz", "bump", "-pr", "beta"]
-    mocker.patch.object(sys, "argv", testargs)
+    util.create_file_and_commit("test: new file")
 
     with pytest.raises(NoCommitsFoundError) as excinfo:
-        cli.main()
+        util.run_cli("bump", "-pr", "beta")
 
     expected_error_message = (
         "[NO_COMMITS_FOUND]\nNo commits found to generate a pre-release."
@@ -719,11 +610,9 @@ def test_prevent_prerelease_when_no_increment_detected(mocker: MockFixture, caps
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_with_changelog_to_stdout_arg(mocker: MockFixture, capsys, changelog_path):
-    create_file_and_commit("feat(user): this should appear in stdout")
-    testargs = ["cz", "bump", "--yes", "--changelog-to-stdout"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+def test_bump_with_changelog_to_stdout_arg(util: UtilFixture, capsys, changelog_path):
+    util.create_file_and_commit("feat(user): this should appear in stdout")
+    util.run_cli("bump", "--yes", "--changelog-to-stdout")
     out, _ = capsys.readouterr()
 
     assert "this should appear in stdout" in out
@@ -738,15 +627,13 @@ def test_bump_with_changelog_to_stdout_arg(mocker: MockFixture, capsys, changelo
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_with_changelog_to_stdout_dry_run_arg(
-    mocker: MockFixture, capsys, changelog_path
+    util: UtilFixture, capsys, changelog_path
 ):
-    create_file_and_commit(
+    util.create_file_and_commit(
         "feat(user): this should appear in stdout with dry-run enabled"
     )
-    testargs = ["cz", "bump", "--yes", "--changelog-to-stdout", "--dry-run"]
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(DryRunExit):
-        cli.main()
+        util.run_cli("bump", "--yes", "--changelog-to-stdout", "--dry-run")
     out, _ = capsys.readouterr()
 
     tag_exists = git.tag_exist("0.2.0")
@@ -757,11 +644,9 @@ def test_bump_with_changelog_to_stdout_dry_run_arg(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_without_git_to_stdout_arg(mocker: MockFixture, capsys, changelog_path):
-    create_file_and_commit("feat(user): this should appear in stdout")
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+def test_bump_without_git_to_stdout_arg(util: UtilFixture, capsys, changelog_path):
+    util.create_file_and_commit("feat(user): this should appear in stdout")
+    util.run_cli("bump", "--yes")
     out, _ = capsys.readouterr()
 
     assert (
@@ -771,11 +656,9 @@ def test_bump_without_git_to_stdout_arg(mocker: MockFixture, capsys, changelog_p
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_with_git_to_stdout_arg(mocker: MockFixture, capsys, changelog_path):
-    create_file_and_commit("feat(user): this should appear in stdout")
-    testargs = ["cz", "bump", "--yes", "--git-output-to-stderr"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+def test_bump_with_git_to_stdout_arg(util: UtilFixture, capsys, changelog_path):
+    util.create_file_and_commit("feat(user): this should appear in stdout")
+    util.run_cli("bump", "--yes", "--git-output-to-stderr")
     out, _ = capsys.readouterr()
 
     assert (
@@ -831,9 +714,8 @@ version = "0.1.0"
 @pytest.mark.parametrize(
     "cli_bump_changelog_args",
     [
-        ("cz", "bump", "--changelog", "--yes"),
+        ("bump", "--changelog", "--yes"),
         (
-            "cz",
             "bump",
             "--changelog",
             "--changelog-to-stdout",
@@ -842,11 +724,13 @@ version = "0.1.0"
             "--yes",
         ),
     ],
-    ids=lambda cmd_tuple: " ".join(cmd_tuple),
+    ids=lambda cmd_tuple: " ".join(["cz", *cmd_tuple])
+    if isinstance(cmd_tuple, tuple)
+    else cmd_tuple,
 )
 def test_bump_changelog_command_commits_untracked_changelog_and_version_files(
     tmp_commitizen_project,
-    mocker,
+    util: UtilFixture,
     cli_bump_changelog_args: tuple[str, ...],
     version_filepath: str,
     version_regex: str,
@@ -872,10 +756,9 @@ def test_bump_changelog_command_commits_untracked_changelog_and_version_files(
     ) as version_file:
         version_file.write(version_file_content)
 
-    create_file_and_commit("fix: some test commit")
+    util.create_file_and_commit("fix: some test commit")
 
-    mocker.patch.object(sys, "argv", cli_bump_changelog_args)
-    cli.main()
+    util.run_cli(*cli_bump_changelog_args)
 
     commit_file_names = git.get_filenames_in_commit()
     assert "CHANGELOG.md" in commit_file_names
@@ -885,21 +768,19 @@ def test_bump_changelog_command_commits_untracked_changelog_and_version_files(
 @pytest.mark.parametrize(
     "testargs",
     [
-        ["cz", "bump", "--local-version", "1.2.3"],
-        ["cz", "bump", "--prerelease", "rc", "1.2.3"],
-        ["cz", "bump", "--devrelease", "0", "1.2.3"],
-        ["cz", "bump", "--devrelease", "1", "1.2.3"],
-        ["cz", "bump", "--increment", "PATCH", "1.2.3"],
-        ["cz", "bump", "--build-metadata=a.b.c", "1.2.3"],
-        ["cz", "bump", "--local-version", "--build-metadata=a.b.c"],
+        ["--local-version", "1.2.3"],
+        ["--prerelease", "rc", "1.2.3"],
+        ["--devrelease", "0", "1.2.3"],
+        ["--devrelease", "1", "1.2.3"],
+        ["--increment", "PATCH", "1.2.3"],
+        ["--build-metadata=a.b.c", "1.2.3"],
+        ["--local-version", "--build-metadata=a.b.c"],
     ],
 )
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_invalid_manual_args_raises_exception(mocker, testargs):
-    mocker.patch.object(sys, "argv", testargs)
-
+def test_bump_invalid_manual_args_raises_exception(util: UtilFixture, testargs):
     with pytest.raises(NotAllowed):
-        cli.main()
+        util.run_cli("bump", *testargs)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -910,14 +791,13 @@ def test_bump_invalid_manual_args_raises_exception(mocker, testargs):
         "1.2..3",
     ],
 )
-def test_bump_invalid_manual_version_raises_exception(mocker, manual_version):
-    create_file_and_commit("feat: new file")
-
-    testargs = ["cz", "bump", "--yes", manual_version]
-    mocker.patch.object(sys, "argv", testargs)
+def test_bump_invalid_manual_version_raises_exception(
+    util: UtilFixture, manual_version
+):
+    util.create_file_and_commit("feat: new file")
 
     with pytest.raises(InvalidManualVersion) as excinfo:
-        cli.main()
+        util.run_cli("bump", "--yes", manual_version)
 
     expected_error_message = (
         f"[INVALID_MANUAL_VERSION]\nInvalid manual version: '{manual_version}'"
@@ -941,26 +821,22 @@ def test_bump_invalid_manual_version_raises_exception(mocker, manual_version):
         "1",
     ],
 )
-def test_bump_manual_version(mocker, manual_version):
-    create_file_and_commit("feat: new file")
+def test_bump_manual_version(util: UtilFixture, manual_version):
+    util.create_file_and_commit("feat: new file")
 
-    testargs = ["cz", "bump", "--yes", manual_version]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--yes", manual_version)
     tag_exists = git.tag_exist(manual_version)
     assert tag_exists is True
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_manual_version_disallows_major_version_zero(mocker):
-    create_file_and_commit("feat: new file")
+def test_bump_manual_version_disallows_major_version_zero(util: UtilFixture):
+    util.create_file_and_commit("feat: new file")
 
     manual_version = "0.2.0"
-    testargs = ["cz", "bump", "--yes", "--major-version-zero", manual_version]
-    mocker.patch.object(sys, "argv", testargs)
 
     with pytest.raises(NotAllowed) as excinfo:
-        cli.main()
+        util.run_cli("bump", "--yes", "--major-version-zero", manual_version)
 
     expected_error_message = (
         "--major-version-zero cannot be combined with MANUAL_VERSION"
@@ -1001,7 +877,7 @@ def test_bump_version_with_less_components_in_config(
 
 @pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
 def test_bump_with_pre_bump_hooks(
-    commit_msg, mocker: MockFixture, tmp_commitizen_project
+    commit_msg, mocker: MockFixture, tmp_commitizen_project, util: UtilFixture
 ):
     pre_bump_hook = "scripts/pre_bump_hook.sh"
     post_bump_hook = "scripts/post_bump_hook.sh"
@@ -1016,10 +892,8 @@ def test_bump_with_pre_bump_hooks(
     run_mock = mocker.Mock()
     mocker.patch.object(hooks, "run", run_mock)
 
-    create_file_and_commit(commit_msg)
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.create_file_and_commit(commit_msg)
+    util.run_cli("bump", "--yes")
 
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
@@ -1054,7 +928,9 @@ def test_bump_with_pre_bump_hooks(
     )
 
 
-def test_bump_with_hooks_and_increment(mocker: MockFixture, tmp_commitizen_project):
+def test_bump_with_hooks_and_increment(
+    mocker: MockFixture, tmp_commitizen_project, util: UtilFixture
+):
     pre_bump_hook = "scripts/pre_bump_hook.sh"
     post_bump_hook = "scripts/post_bump_hook.sh"
 
@@ -1068,28 +944,23 @@ def test_bump_with_hooks_and_increment(mocker: MockFixture, tmp_commitizen_proje
     run_mock = mocker.Mock()
     mocker.patch.object(hooks, "run", run_mock)
 
-    create_file_and_commit("test: some test")
-    testargs = ["cz", "bump", "--yes", "--increment", "MINOR"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.create_file_and_commit("test: some test")
+    util.run_cli("bump", "--yes", "--increment", "MINOR")
 
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
 
 
 @pytest.mark.usefixtures("tmp_git_project")
-def test_bump_use_version_provider(mocker: MockFixture):
+def test_bump_use_version_provider(mocker: MockFixture, util: UtilFixture):
     mock = mocker.MagicMock(name="provider")
     mock.get_version.return_value = "0.0.0"
     get_provider = mocker.patch(
         "commitizen.commands.bump.get_provider", return_value=mock
     )
 
-    create_file_and_commit("fix: fake commit")
-    testargs = ["cz", "bump", "--yes", "--changelog"]
-    mocker.patch.object(sys, "argv", testargs)
-
-    cli.main()
+    util.create_file_and_commit("fix: fake commit")
+    util.run_cli("bump", "--yes", "--changelog")
 
     assert git.tag_exist("0.0.1")
     get_provider.assert_called_once()
@@ -1098,23 +969,20 @@ def test_bump_use_version_provider(mocker: MockFixture):
 
 
 def test_bump_command_prerelease_scheme_via_cli(
-    tmp_commitizen_project_initial, mocker: MockFixture
+    tmp_commitizen_project_initial, util: UtilFixture
 ):
     tmp_commitizen_project = tmp_commitizen_project_initial()
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
 
-    testargs = [
-        "cz",
+    util.run_cli(
         "bump",
         "--prerelease",
         "alpha",
         "--yes",
         "--version-scheme",
         "semver",
-    ]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    )
 
     tag_exists = git.tag_exist("0.2.0-a0")
     assert tag_exists is True
@@ -1124,9 +992,7 @@ def test_bump_command_prerelease_scheme_via_cli(
             assert "0.2.0-a0" in f.read()
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--yes")
 
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
@@ -1137,7 +1003,7 @@ def test_bump_command_prerelease_scheme_via_cli(
 
 
 def test_bump_command_prerelease_scheme_via_config(
-    tmp_commitizen_project_initial, mocker: MockFixture
+    tmp_commitizen_project_initial, util: UtilFixture
 ):
     tmp_commitizen_project = tmp_commitizen_project_initial(
         config_extra='version_scheme = "semver"\n',
@@ -1145,9 +1011,7 @@ def test_bump_command_prerelease_scheme_via_config(
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
 
-    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", "alpha", "--yes")
 
     tag_exists = git.tag_exist("0.2.0-a0")
     assert tag_exists is True
@@ -1156,9 +1020,7 @@ def test_bump_command_prerelease_scheme_via_config(
         with open(version_file) as f:
             assert "0.2.0-a0" in f.read()
 
-    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", "alpha", "--yes")
 
     tag_exists = git.tag_exist("0.2.0-a1")
     assert tag_exists is True
@@ -1168,9 +1030,7 @@ def test_bump_command_prerelease_scheme_via_config(
             assert "0.2.0-a1" in f.read()
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--yes")
 
     tag_exists = git.tag_exist("0.2.0")
     assert tag_exists is True
@@ -1181,7 +1041,7 @@ def test_bump_command_prerelease_scheme_via_config(
 
 
 def test_bump_command_prerelease_scheme_check_old_tags(
-    tmp_commitizen_project_initial, mocker: MockFixture
+    tmp_commitizen_project_initial, util: UtilFixture
 ):
     tmp_commitizen_project = tmp_commitizen_project_initial(
         config_extra=('tag_format = "v$version"\nversion_scheme = "semver"\n'),
@@ -1189,9 +1049,7 @@ def test_bump_command_prerelease_scheme_check_old_tags(
     tmp_version_file = tmp_commitizen_project.join("__version__.py")
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
 
-    testargs = ["cz", "bump", "--prerelease", "alpha", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", "alpha", "--yes")
 
     tag_exists = git.tag_exist("v0.2.0-a0")
     assert tag_exists is True
@@ -1200,9 +1058,7 @@ def test_bump_command_prerelease_scheme_check_old_tags(
         with open(version_file) as f:
             assert "0.2.0-a0" in f.read()
 
-    testargs = ["cz", "bump", "--prerelease", "alpha"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--prerelease", "alpha")
 
     tag_exists = git.tag_exist("v0.2.0-a1")
     assert tag_exists is True
@@ -1212,9 +1068,7 @@ def test_bump_command_prerelease_scheme_check_old_tags(
             assert "0.2.0-a1" in f.read()
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
-    testargs = ["cz", "bump"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump")
 
     tag_exists = git.tag_exist("v0.2.0")
     assert tag_exists is True
@@ -1234,12 +1088,10 @@ def test_bump_command_prerelease_scheme_check_old_tags(
         ("major: bug affecting users", "1.0.0"),
     ],
 )
-def test_bump_with_plugin(mocker: MockFixture, message: str, expected_tag: str):
-    create_file_and_commit(message)
+def test_bump_with_plugin(util: UtilFixture, message: str, expected_tag: str):
+    util.create_file_and_commit(message)
 
-    testargs = ["cz", "--name", "cz_semver", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("--name", "cz_semver", "bump", "--yes")
 
     tag_exists = git.tag_exist(expected_tag)
     assert tag_exists is True
@@ -1256,56 +1108,48 @@ def test_bump_with_plugin(mocker: MockFixture, message: str, expected_tag: str):
     ],
 )
 def test_bump_with_major_version_zero_with_plugin(
-    mocker: MockFixture, message: str, expected_tag: str
+    util: UtilFixture, message: str, expected_tag: str
 ):
-    create_file_and_commit(message)
+    util.create_file_and_commit(message)
 
-    testargs = ["cz", "--name", "cz_semver", "bump", "--yes", "--major-version-zero"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("--name", "cz_semver", "bump", "--yes", "--major-version-zero")
 
     tag_exists = git.tag_exist(expected_tag)
     assert tag_exists is True
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_command_version_type_deprecation(mocker: MockFixture):
-    create_file_and_commit("feat: check deprecation on --version-type")
+def test_bump_command_version_type_deprecation(util: UtilFixture):
+    util.create_file_and_commit("feat: check deprecation on --version-type")
 
-    testargs = [
-        "cz",
-        "bump",
-        "--prerelease",
-        "alpha",
-        "--yes",
-        "--version-type",
-        "semver",
-    ]
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.warns(DeprecationWarning):
-        cli.main()
+        util.run_cli(
+            "bump",
+            "--prerelease",
+            "alpha",
+            "--yes",
+            "--version-type",
+            "semver",
+        )
 
     assert git.tag_exist("0.2.0-a0")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_command_version_scheme_priority_over_version_type(mocker: MockFixture):
-    create_file_and_commit("feat: check deprecation on --version-type")
+def test_bump_command_version_scheme_priority_over_version_type(util: UtilFixture):
+    util.create_file_and_commit("feat: check deprecation on --version-type")
 
-    testargs = [
-        "cz",
-        "bump",
-        "--prerelease",
-        "alpha",
-        "--yes",
-        "--version-type",
-        "semver",
-        "--version-scheme",
-        "pep440",
-    ]
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.warns(DeprecationWarning):
-        cli.main()
+        util.run_cli(
+            "bump",
+            "--prerelease",
+            "alpha",
+            "--yes",
+            "--version-type",
+            "semver",
+            "--version-scheme",
+            "pep440",
+        )
 
     assert git.tag_exist("0.2.0a0")
 
@@ -1321,8 +1165,8 @@ def test_bump_command_version_scheme_priority_over_version_type(mocker: MockFixt
     ),
 )
 def test_bump_template_option_precedence(
-    mocker: MockFixture,
     tmp_commitizen_project: Path,
+    util: UtilFixture,
     any_changelog_format: ChangelogFormat,
     arg: str,
     cfg: str,
@@ -1338,7 +1182,7 @@ def test_bump_template_option_precedence(
     cmd_template.write_text("from cmd")
     default_template.write_text("default")
 
-    create_file_and_commit("feat: new file")
+    util.create_file_and_commit("feat: new file")
 
     if cfg:
         pyproject = project_root / "pyproject.toml"
@@ -1352,19 +1196,19 @@ def test_bump_template_option_precedence(
             )
         )
 
-    testargs = ["cz", "bump", "--yes", "--changelog"]
+    args = ["bump", "--yes", "--changelog"]
     if arg:
-        testargs.append(arg)
-    mocker.patch.object(sys, "argv", testargs + ["0.1.1"])
-    cli.main()
+        args.append(arg)
+    args.append("0.1.1")
+    util.run_cli(*args)
 
     out = changelog.read_text()
     assert out == expected
 
 
 def test_bump_template_extras_precedence(
-    mocker: MockFixture,
     tmp_commitizen_project: Path,
+    util: UtilFixture,
     any_changelog_format: ChangelogFormat,
     mock_plugin: BaseCommitizen,
 ):
@@ -1389,37 +1233,33 @@ def test_bump_template_extras_precedence(
         )
     )
 
-    create_file_and_commit("feat: new file")
+    util.create_file_and_commit("feat: new file")
 
-    testargs = [
-        "cz",
+    util.run_cli(
         "bump",
         "--yes",
         "--changelog",
         "--extra",
         "first=from-command",
         "0.1.1",
-    ]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    )
 
     changelog = project_root / any_changelog_format.default_changelog_file
     assert changelog.read_text() == "from-command - from-config - from-plugin"
 
 
 def test_bump_template_extra_quotes(
-    mocker: MockFixture,
     tmp_commitizen_project: Path,
+    util: UtilFixture,
     any_changelog_format: ChangelogFormat,
 ):
     project_root = Path(tmp_commitizen_project)
     changelog_tpl = project_root / any_changelog_format.template
     changelog_tpl.write_text("{{first}} - {{second}} - {{third}}")
 
-    create_file_and_commit("feat: new file")
+    util.create_file_and_commit("feat: new file")
 
-    testargs = [
-        "cz",
+    util.run_cli(
         "bump",
         "--changelog",
         "--yes",
@@ -1430,15 +1270,15 @@ def test_bump_template_extra_quotes(
         "-e",
         'third="double quotes"',
         "0.1.1",
-    ]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    )
 
     changelog = project_root / any_changelog_format.default_changelog_file
     assert changelog.read_text() == "no-quote - single quotes - double quotes"
 
 
-def test_bump_changelog_contains_increment_only(mocker, tmp_commitizen_project, capsys):
+def test_bump_changelog_contains_increment_only(
+    tmp_commitizen_project, util: UtilFixture, capsys
+):
     """Issue 1024"""
     # Initialize commitizen up to v1.0.0
     project_root = Path(tmp_commitizen_project)
@@ -1448,23 +1288,19 @@ def test_bump_changelog_contains_increment_only(mocker, tmp_commitizen_project, 
     )
     tmp_changelog_file = project_root / "CHANGELOG.md"
     tmp_changelog_file.write_text("## v1.0.0")
-    create_file_and_commit("feat(user): new file")
-    create_tag("v1.0.0")
+    util.create_file_and_commit("feat(user): new file")
+    util.create_tag("v1.0.0")
 
     # Add a commit and bump to v2.0.0
-    create_file_and_commit("feat(user)!: new file")
-    testargs = ["cz", "bump", "--yes"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.create_file_and_commit("feat(user)!: new file")
+    util.run_cli("bump", "--yes")
     _ = capsys.readouterr()
 
     # Add a commit and create the incremental changelog to v3.0.0
     # it should only include v3 changes
-    create_file_and_commit("feat(next)!: next version")
-    testargs = ["cz", "bump", "--yes", "--files-only", "--changelog-to-stdout"]
-    mocker.patch.object(sys, "argv", testargs)
+    util.create_file_and_commit("feat(next)!: next version")
     with pytest.raises(ExpectedExit):
-        cli.main()
+        util.run_cli("bump", "--yes", "--files-only", "--changelog-to-stdout")
     out, _ = capsys.readouterr()
 
     assert "3.0.0" in out
@@ -1472,13 +1308,11 @@ def test_bump_changelog_contains_increment_only(mocker, tmp_commitizen_project, 
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_get_next(mocker: MockFixture, capsys):
-    create_file_and_commit("feat: new file")
+def test_bump_get_next(util: UtilFixture, capsys):
+    util.create_file_and_commit("feat: new file")
 
-    testargs = ["cz", "bump", "--yes", "--get-next"]
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(DryRunExit):
-        cli.main()
+        util.run_cli("bump", "--yes", "--get-next")
 
     out, _ = capsys.readouterr()
     assert "0.2.0" in out
@@ -1488,17 +1322,13 @@ def test_bump_get_next(mocker: MockFixture, capsys):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_get_next_update_changelog_on_bump(
-    mocker: MockFixture, capsys, config_path
-):
-    create_file_and_commit("feat: new file")
+def test_bump_get_next_update_changelog_on_bump(util: UtilFixture, capsys, config_path):
+    util.create_file_and_commit("feat: new file")
     with open(config_path, "a", encoding="utf-8") as fp:
         fp.write("update_changelog_on_bump = true\n")
 
-    testargs = ["cz", "bump", "--yes", "--get-next"]
-    mocker.patch.object(sys, "argv", testargs)
     with pytest.raises(DryRunExit):
-        cli.main()
+        util.run_cli("bump", "--yes", "--get-next")
 
     out, _ = capsys.readouterr()
     assert "0.2.0" in out
@@ -1508,119 +1338,96 @@ def test_bump_get_next_update_changelog_on_bump(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_get_next__no_eligible_commits_raises(mocker: MockFixture):
-    create_file_and_commit("chore: new commit")
-
-    testargs = ["cz", "bump", "--yes", "--get-next"]
-    mocker.patch.object(sys, "argv", testargs)
+def test_bump_get_next__no_eligible_commits_raises(util: UtilFixture):
+    util.create_file_and_commit("chore: new commit")
 
     with pytest.raises(NoneIncrementExit):
-        cli.main()
+        util.run_cli("bump", "--yes", "--get-next")
 
 
-def test_bump_allow_no_commit_with_no_commit(mocker, tmp_commitizen_project, capsys):
+def test_bump_allow_no_commit_with_no_commit(
+    tmp_commitizen_project, util: UtilFixture, capsys
+):
     with tmp_commitizen_project.as_cwd():
         # Create the first commit and bump to 1.0.0
-        create_file_and_commit("feat(user)!: new file")
-        testargs = ["cz", "bump", "--yes"]
-        mocker.patch.object(sys, "argv", testargs)
-        cli.main()
+        util.create_file_and_commit("feat(user)!: new file")
+        util.run_cli("bump", "--yes")
 
         # Verify NoCommitsFoundError should be raised
         # when there's no new commit and "--allow-no-commit" is not set
         with pytest.raises(NoCommitsFoundError):
-            testargs = ["cz", "bump"]
-            mocker.patch.object(sys, "argv", testargs)
-            cli.main()
+            util.run_cli("bump")
 
         # bump to 1.0.1 with new commit when "--allow-no-commit" is set
-        testargs = ["cz", "bump", "--allow-no-commit"]
-        mocker.patch.object(sys, "argv", testargs)
-        cli.main()
+        util.run_cli("bump", "--allow-no-commit")
         out, _ = capsys.readouterr()
         assert "bump: version 1.0.0 → 1.0.1" in out
 
 
 def test_bump_allow_no_commit_with_no_eligible_commit(
-    mocker, tmp_commitizen_project, capsys
+    tmp_commitizen_project, util: UtilFixture, capsys
 ):
     with tmp_commitizen_project.as_cwd():
         # Create the first commit and bump to 1.0.0
-        create_file_and_commit("feat(user)!: new file")
-        testargs = ["cz", "bump", "--yes"]
-        mocker.patch.object(sys, "argv", testargs)
-        cli.main()
+        util.create_file_and_commit("feat(user)!: new file")
+        util.run_cli("bump", "--yes")
 
         # Create a commit that is ineligible to bump
-        create_file_and_commit("docs(bump): add description for allow no commit")
+        util.create_file_and_commit("docs(bump): add description for allow no commit")
 
         # Verify NoneIncrementExit should be raised
         # when there's no eligible bumping commit and "--allow-no-commit" is not set
         with pytest.raises(NoneIncrementExit):
-            testargs = ["cz", "bump", "--yes"]
-            mocker.patch.object(sys, "argv", testargs)
-            cli.main()
+            util.run_cli("bump", "--yes")
 
         # bump to 1.0.1 with ineligible commit when "--allow-no-commit" is set
-        testargs = ["cz", "bump", "--allow-no-commit"]
-        mocker.patch.object(sys, "argv", testargs)
-        cli.main()
+        util.run_cli("bump", "--allow-no-commit")
         out, _ = capsys.readouterr()
         assert "bump: version 1.0.0 → 1.0.1" in out
 
 
-def test_bump_allow_no_commit_with_increment(mocker, tmp_commitizen_project, capsys):
+def test_bump_allow_no_commit_with_increment(
+    tmp_commitizen_project, util: UtilFixture, capsys
+):
     with tmp_commitizen_project.as_cwd():
         # # Create the first commit and bump to 1.0.0
-        create_file_and_commit("feat(user)!: new file")
-        testargs = ["cz", "bump", "--yes"]
-        mocker.patch.object(sys, "argv", testargs)
-        cli.main()
+        util.create_file_and_commit("feat(user)!: new file")
+        util.run_cli("bump", "--yes")
 
         # Verify NoCommitsFoundError should be raised
         # when there's no new commit and "--allow-no-commit" is not set
         with pytest.raises(NoCommitsFoundError):
-            testargs = ["cz", "bump", "--yes"]
-            mocker.patch.object(sys, "argv", testargs)
-            cli.main()
+            util.run_cli("bump", "--yes")
 
         # bump to 1.1.0 with no new commit when "--allow-no-commit" is set
         # and increment is specified
-        testargs = ["cz", "bump", "--yes", "--allow-no-commit", "--increment", "MINOR"]
-        mocker.patch.object(sys, "argv", testargs)
-        cli.main()
+        util.run_cli("bump", "--yes", "--allow-no-commit", "--increment", "MINOR")
         out, _ = capsys.readouterr()
         assert "bump: version 1.0.0 → 1.1.0" in out
 
 
 def test_bump_allow_no_commit_with_manual_version(
-    mocker, tmp_commitizen_project, capsys
+    tmp_commitizen_project, util: UtilFixture, capsys
 ):
     with tmp_commitizen_project.as_cwd():
         # # Create the first commit and bump to 1.0.0
-        create_file_and_commit("feat(user)!: new file")
-        testargs = ["cz", "bump", "--yes"]
-        mocker.patch.object(sys, "argv", testargs)
-        cli.main()
+        util.create_file_and_commit("feat(user)!: new file")
+        util.run_cli("bump", "--yes")
 
         # Verify NoCommitsFoundError should be raised
         # when there's no new commit and "--allow-no-commit" is not set
         with pytest.raises(NoCommitsFoundError):
-            testargs = ["cz", "bump", "--yes"]
-            mocker.patch.object(sys, "argv", testargs)
-            cli.main()
+            util.run_cli("bump", "--yes")
 
         # bump to 1.1.0 with no new commit when "--allow-no-commit" is set
         # and increment is specified
-        testargs = ["cz", "bump", "--yes", "--allow-no-commit", "2.0.0"]
-        mocker.patch.object(sys, "argv", testargs)
-        cli.main()
+        util.run_cli("bump", "--yes", "--allow-no-commit", "2.0.0")
         out, _ = capsys.readouterr()
         assert "bump: version 1.0.0 → 2.0.0" in out
 
 
 def test_bump_detect_legacy_tags_from_scm(
-    tmp_commitizen_project: py.path.local, mocker: MockFixture
+    tmp_commitizen_project: py.path.local, util: UtilFixture
 ):
     project_root = Path(tmp_commitizen_project)
     tmp_commitizen_cfg_file = project_root / "pyproject.toml"
@@ -1636,20 +1443,18 @@ def test_bump_detect_legacy_tags_from_scm(
             ]
         ),
     )
-    create_file_and_commit("feat: new file")
-    create_tag("legacy-0.4.2")
-    create_file_and_commit("feat: new file")
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("legacy-0.4.2")
+    util.create_file_and_commit("feat: new file")
 
-    testargs = ["cz", "bump", "--increment", "patch", "--changelog"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--increment", "patch", "--changelog")
 
     assert git.tag_exist("v0.4.3")
 
 
 def test_bump_warn_but_dont_fail_on_invalid_tags(
     tmp_commitizen_project: py.path.local,
-    mocker: MockFixture,
+    util: UtilFixture,
     capsys: pytest.CaptureFixture,
 ):
     project_root = Path(tmp_commitizen_project)
@@ -1663,15 +1468,13 @@ def test_bump_warn_but_dont_fail_on_invalid_tags(
             ]
         ),
     )
-    create_file_and_commit("feat: new file")
-    create_tag("0.4.2")
-    create_file_and_commit("feat: new file")
-    create_tag("0.4.3.deadbeaf")
-    create_file_and_commit("feat: new file")
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("0.4.2")
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("0.4.3.deadbeaf")
+    util.create_file_and_commit("feat: new file")
 
-    testargs = ["cz", "bump", "--increment", "patch", "--changelog"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+    util.run_cli("bump", "--increment", "patch", "--changelog")
 
     _, err = capsys.readouterr()
 
@@ -1679,10 +1482,10 @@ def test_bump_warn_but_dont_fail_on_invalid_tags(
     assert git.tag_exist("0.4.3")
 
 
-def test_is_initial_tag(mocker: MockFixture, tmp_commitizen_project):
+def test_is_initial_tag(mocker: MockFixture, tmp_commitizen_project, util: UtilFixture):
     """Test the _is_initial_tag method behavior."""
     # Create a commit but no tags
-    create_file_and_commit("feat: initial commit")
+    util.create_file_and_commit("feat: initial commit")
 
     # Initialize Bump with minimal config
     config = BaseConfig()
@@ -1725,3 +1528,65 @@ def test_is_initial_tag(mocker: MockFixture, tmp_commitizen_project):
     # Test case 4: No current tag, user denies
     mocker.patch("questionary.confirm", return_value=mocker.Mock(ask=lambda: False))
     assert bump_cmd._is_initial_tag(None, is_yes=False) is False
+
+
+@pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2025-01-01")
+def test_changelog_config_flag_merge_prerelease(
+    mocker: MockFixture,
+    util: UtilFixture,
+    changelog_path: str,
+    config_path: str,
+    file_regression: FileRegressionFixture,
+    test_input: str,
+):
+    with open(config_path, "a") as f:
+        f.write("changelog_merge_prerelease = true\n")
+        f.write("update_changelog_on_bump = true\n")
+        f.write("annotated_tag = true\n")
+
+    util.create_file_and_commit("irrelevant commit")
+    mocker.patch("commitizen.git.GitTag.date", "1970-01-01")
+    git.tag("0.1.0")
+
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
+    util.run_cli("bump", "--prerelease", test_input, "--yes")
+
+    util.run_cli("bump", "--changelog")
+
+    with open(changelog_path) as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2025-01-01")
+def test_changelog_config_flag_merge_prerelease_only_prerelease_present(
+    util: UtilFixture,
+    changelog_path: str,
+    config_path: str,
+    file_regression: FileRegressionFixture,
+    test_input: str,
+):
+    with open(config_path, "a") as f:
+        f.write("changelog_merge_prerelease = true\n")
+        f.write("update_changelog_on_bump = true\n")
+        f.write("annotated_tag = true\n")
+
+    util.create_file_and_commit("feat: more relevant commit")
+    util.run_cli("bump", "--prerelease", test_input, "--yes")
+
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
+    util.run_cli("bump", "--prerelease", test_input, "--yes")
+
+    util.run_cli("bump", "--changelog")
+
+    with open(changelog_path) as f:
+        out = f.read()
+
+    file_regression.check(out, extension=".md")

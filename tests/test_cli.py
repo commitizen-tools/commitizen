@@ -15,69 +15,51 @@ from commitizen.exceptions import (
     NoCommandFoundError,
     NotAGitProjectError,
 )
+from tests.utils import UtilFixture
 
 
-def test_sysexit_no_argv(mocker: MockFixture, capsys):
-    testargs = ["cz"]
-    mocker.patch.object(sys, "argv", testargs)
-
+def test_sysexit_no_argv(util: UtilFixture, capsys):
     with pytest.raises(ExpectedExit):
-        cli.main()
+        util.run_cli()
         out, _ = capsys.readouterr()
         assert out.startswith("usage")
 
 
-def test_cz_config_file_without_correct_file_path(mocker: MockFixture, capsys):
-    testargs = ["cz", "--config", "./config/pyproject.toml", "example"]
-    mocker.patch.object(sys, "argv", testargs)
-
+def test_cz_config_file_without_correct_file_path(util: UtilFixture, capsys):
     with pytest.raises(ConfigFileNotFound) as excinfo:
-        cli.main()
+        util.run_cli("--config", "./config/pyproject.toml", "example")
     assert "Cannot found the config file" in str(excinfo.value)
 
 
-def test_cz_with_arg_but_without_command(mocker: MockFixture):
-    testargs = ["cz", "--name", "cz_jira"]
-    mocker.patch.object(sys, "argv", testargs)
-
+def test_cz_with_arg_but_without_command(util: UtilFixture):
     with pytest.raises(NoCommandFoundError) as excinfo:
-        cli.main()
+        util.run_cli("--name", "cz_jira")
     assert "Command is required" in str(excinfo.value)
 
 
-def test_name(mocker: MockFixture, capsys):
-    testargs = ["cz", "-n", "cz_jira", "example"]
-    mocker.patch.object(sys, "argv", testargs)
-
-    cli.main()
+def test_name(util: UtilFixture, capsys):
+    util.run_cli("-n", "cz_jira", "example")
     out, _ = capsys.readouterr()
     assert out.startswith("JRA")
 
 
 @pytest.mark.usefixtures("tmp_git_project")
-def test_name_default_value(mocker: MockFixture, capsys):
-    testargs = ["cz", "example"]
-    mocker.patch.object(sys, "argv", testargs)
-
-    cli.main()
+def test_name_default_value(util: UtilFixture, capsys):
+    util.run_cli("example")
     out, _ = capsys.readouterr()
     assert out.startswith("fix: correct minor typos in code")
 
 
-def test_ls(mocker: MockFixture, capsys):
-    testargs = ["cz", "-n", "cz_jira", "ls"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+def test_ls(util: UtilFixture, capsys):
+    util.run_cli("-n", "cz_jira", "ls")
     out, err = capsys.readouterr()
 
     assert "cz_conventional_commits" in out
     assert isinstance(out, str)
 
 
-def test_arg_debug(mocker: MockFixture):
-    testargs = ["cz", "--debug", "info"]
-    mocker.patch.object(sys, "argv", testargs)
-    cli.main()
+def test_arg_debug(util: UtilFixture):
+    util.run_cli("--debug", "info")
     excepthook = sys.excepthook
     # `sys.excepthook` is replaced by a `partial` in `cli.main`
     # it's not a normal function
@@ -167,19 +149,15 @@ def test_parse_no_raise_mix_invalid_arg_is_skipped():
     assert result == [1, 2, 4]
 
 
-def test_unknown_args_raises(mocker: MockFixture):
-    testargs = ["cz", "c", "-this_arg_is_not_supported"]
-    mocker.patch.object(sys, "argv", testargs)
+def test_unknown_args_raises(util: UtilFixture):
     with pytest.raises(InvalidCommandArgumentError) as excinfo:
-        cli.main()
+        util.run_cli("c", "-this_arg_is_not_supported")
     assert "Invalid commitizen arguments were found" in str(excinfo.value)
 
 
-def test_unknown_args_before_double_dash_raises(mocker: MockFixture):
-    testargs = ["cz", "c", "-this_arg_is_not_supported", "--"]
-    mocker.patch.object(sys, "argv", testargs)
+def test_unknown_args_before_double_dash_raises(util: UtilFixture):
     with pytest.raises(InvalidCommandArgumentError) as excinfo:
-        cli.main()
+        util.run_cli("c", "-this_arg_is_not_supported", "--")
     assert "Invalid commitizen arguments were found before -- separator" in str(
         excinfo.value
     )

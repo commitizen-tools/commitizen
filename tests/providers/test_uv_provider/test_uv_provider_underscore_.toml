@@ -1,0 +1,8 @@
+
+[project]
+name = "test_uv"
+version = "100.100.100"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = ["commitizen==4.2.1"]

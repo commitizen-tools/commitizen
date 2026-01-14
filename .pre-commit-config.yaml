@@ -29,6 +29,14 @@ repos:
         args: [ '--unsafe' ] # for mkdocs.yml
       - id: detect-private-key
 
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.9.18
+    hooks:
+      - id: uv-lock
+      - id: uv-sync
+        args: [ --frozen, --all-groups ]
+        stages: [ pre-commit, post-checkout, post-merge, post-rewrite ]
+
   - repo: https://github.com/asottile/blacken-docs
     rev: 1.19.1
     hooks:
@@ -48,7 +56,7 @@ repos:
           - tomli
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.11.0 # automatically updated by Commitizen
+    rev: v4.11.3 # automatically updated by Commitizen
     hooks:
       - id: commitizen
       - id: commitizen-branch
@@ -63,15 +71,15 @@ repos:
   - repo: local
     hooks:
       - id: format
-        name: Format Python code via Poetry
+        name: Format Python code
         language: system
         pass_filenames: false
-        entry: poetry format
+        entry: uv run --no-sync poe format
         types: [ python ]
 
       - id: linter and test
-        name: Linters via Poetry
+        name: Linters
         language: system
         pass_filenames: false
-        entry: poetry lint
+        entry: uv run --no-sync poe lint
         types: [ python ]

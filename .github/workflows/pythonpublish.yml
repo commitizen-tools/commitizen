@@ -8,21 +8,17 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v6
         with:
           token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
           fetch-depth: 0
       - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.x"
-      - name: Install dependencies
-        run: |
-          python -m pip install -U pip poetry
-          poetry --version
-      - name: Publish
-        env:
-          POETRY_HTTP_BASIC_PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        run: poetry publish --build
+        uses: astral-sh/setup-uv@v7
+      - name: Build
+        run: uv build
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

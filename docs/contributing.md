@@ -16,7 +16,7 @@ If you're a first-time contributor, please check out issues labeled [good first 
 
 1. **Python Environment**
     - Python `>=3.10`
-    - [Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer) `>=2.2.0`
+    - [uv](https://docs.astral.sh/uv/getting-started/installation/) `>=0.9.0`
 2. **Version Control & Security**
     - Git
     - Commitizen
@@ -38,13 +38,13 @@ If you're a first-time contributor, please check out issues labeled [good first 
     ```bash
     git remote add upstream https://github.com/commitizen-tools/commitizen.git
     ```
-4. Set up the development environment (nix users go to [nix section](#nix)):
+4. Set up the development environment:
     ```bash
-    poetry install
+    uv sync --dev --frozen
     ```
 5. Set up pre-commit hooks:
     ```bash
-    poetry setup-pre-commit
+    uv run poe setup-pre-commit
     ```
 
 ## Development Workflow
@@ -61,15 +61,16 @@ If you're a first-time contributor, please check out issues labeled [good first 
     - Update documentation if needed
     - Follow the existing code style
 3. **Testing**
-    - Run the full test suite: `poetry all`
+    - Run the full test suite: `uv run poe all`
     - Ensure test coverage doesn't drop (we use [CodeCov](https://app.codecov.io/gh/commitizen-tools/commitizen))
-    - For documentation changes, run `poetry doc` to check for warnings/errors
+    - For documentation changes, run `uv run poe doc` to check for warnings/errors
+    - If you need to change some file regression snapshots, run: `uv run poe test:regen`
 4. **Committing Changes**
     - Use Commitizen to make commits (we follow [conventional commits](https://www.conventionalcommits.org/))
     - Example: `cz commit`
 5. **Documentation**
     - Update `docs/README.md` if needed
-    - For CLI help screenshots: `poetry doc:screenshots`
+    - For CLI help screenshots: `uv run poe doc:screenshots`
     - Prefer [Google style documentation](https://github.com/google/styleguide/blob/gh-pages/pyguide.md#38-comments-and-docstrings), which works well with editors like VSCode and PyCharm
     - **DO NOT** update `CHANGELOG.md` (automatically generated)
     - **DO NOT** update version numbers (automatically handled)
@@ -153,17 +154,4 @@ flowchart TD
     wait-for-modification
     --modification-received-->
     review
-```
-
-## Nix
-
-If you have installed poetry globally, the project won't work because it requires `poethepoet` for command management.
-
-You'll have to install poetry locally.
-
-```sh
-python -m venv .venv
-. .venv/bin/activate
-pip install -U pip && pip install poetry
-poetry install
 ```

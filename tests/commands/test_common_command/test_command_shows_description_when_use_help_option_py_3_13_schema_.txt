@@ -1,0 +1,6 @@
+usage: cz schema [-h]
+
+show commit schema
+
+options:
+  -h, --help  show this help message and exit
