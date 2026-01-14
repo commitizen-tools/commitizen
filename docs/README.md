@@ -208,8 +208,7 @@ prek install --hook-type commit-msg --hook-type pre-push
 | commitizen        | commit-msg        |
 | commitizen-branch | pre-push          |
 
-> [!Note]
-> Replace `master` with the [latest tag](https://github.com/commitizen-tools/commitizen/tags) to avoid warnings. You can automatically update this with:
+> **Note**: Replace `master` with the [latest tag](https://github.com/commitizen-tools/commitizen/tags) to avoid warnings. You can automatically update this with:
 > ```sh
 > prek autoupdate
 > ```

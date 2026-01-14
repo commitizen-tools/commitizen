@@ -14,13 +14,17 @@ There are two common methods for installing the hooks:
 
 Using pre-commit hook frameworks is the recommended approach because hook installation, updates, and execution are handled automatically.
 Two common frameworks are:
-- [prek](https://prek.j178.dev) (faster)
-- [pre-commit](https://pre-commit.com/)
+
+1. [prek](https://prek.j178.dev) (faster)
+2. [pre-commit](https://pre-commit.com/)
+
 
 In the steps below, we'll use `prek`.
 
+
 !!! tip "Using pre-commit framework"
     Replace `prek` with `pre-commit` in the steps below if you prefer that tool. The configuration format is similar.
+
 
 
 #### Step 1: Install prek
