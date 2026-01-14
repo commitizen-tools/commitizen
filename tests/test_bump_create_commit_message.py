@@ -24,6 +24,7 @@ def test_create_tag(test_input, expected):
     assert new_tag == expected
 
 
+@pytest.mark.parametrize("hook_runner", ("pre-commit", "prek"))
 @pytest.mark.parametrize(
     "retry",
     (
@@ -38,7 +39,7 @@ def test_create_tag(test_input, expected):
     ),
 )
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_pre_commit_changelog(util: UtilFixture, retry):
+def test_bump_pre_commit_changelog(util: UtilFixture, retry, hook_runner):
     util.freezer.move_to("2022-04-01")
     bump_args = ["bump", "--changelog", "--yes"]
     if retry:
@@ -69,7 +70,7 @@ def test_bump_pre_commit_changelog(util: UtilFixture, retry):
     )
     cmd.run("git add -A")
     cmd.run('git commit -m "fix: _test"')
-    cmd.run("prek install")
+    cmd.run(f"{hook_runner} install")
     util.run_cli(*bump_args)
     # Pre-commit fixed last line adding extra indent and "\" char
     assert Path("CHANGELOG.md").read_text() == dedent(
@@ -83,9 +84,10 @@ def test_bump_pre_commit_changelog(util: UtilFixture, retry):
     )
 
 
+@pytest.mark.parametrize("hook_runner", ("pre-commit", "prek"))
 @pytest.mark.parametrize("retry", (True, False))
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_bump_pre_commit_changelog_fails_always(util: UtilFixture, retry):
+def test_bump_pre_commit_changelog_fails_always(util: UtilFixture, retry, hook_runner):
     util.freezer.move_to("2022-04-01")
     bump_args = ["bump", "--changelog", "--yes"]
     if retry:
@@ -106,7 +108,7 @@ def test_bump_pre_commit_changelog_fails_always(util: UtilFixture, retry):
     )
     cmd.run("git add -A")
     cmd.run('git commit -m "feat: forbid changelogs"')
-    cmd.run("prek install")
+    cmd.run(f"{hook_runner} install")
     with pytest.raises(exceptions.BumpCommitFailedError):
         util.run_cli(*bump_args)
 
