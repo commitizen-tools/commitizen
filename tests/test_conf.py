@@ -370,16 +370,15 @@ class TestWarnMultipleConfigFiles:
 
 
 @pytest.mark.parametrize(
-    "config_file, exception_string",
+    "config_file",
     [
-        (".cz.toml", r"\.cz\.toml"),
-        ("cz.toml", r"cz\.toml"),
-        ("pyproject.toml", r"pyproject\.toml"),
+        ".cz.toml",
+        "cz.toml",
+        "pyproject.toml",
     ],
-    ids=[".cz.toml", "cz.toml", "pyproject.toml"],
 )
 class TestTomlConfig:
-    def test_init_empty_config_content(self, tmpdir, config_file, exception_string):
+    def test_init_empty_config_content(self, tmpdir, config_file):
         path = tmpdir.mkdir("commitizen").join(config_file)
         toml_config = TomlConfig(data="", path=path)
         toml_config.init_empty_config_content()
@@ -387,9 +386,7 @@ class TestTomlConfig:
         with open(path, encoding="utf-8") as toml_file:
             assert toml_file.read() == "[tool.commitizen]\n"
 
-    def test_init_empty_config_content_with_existing_content(
-        self, tmpdir, config_file, exception_string
-    ):
+    def test_init_empty_config_content_with_existing_content(self, tmpdir, config_file):
         existing_content = "[tool.black]\nline-length = 88\n"
 
         path = tmpdir.mkdir("commitizen").join(config_file)
@@ -400,26 +397,24 @@ class TestTomlConfig:
         with open(path, encoding="utf-8") as toml_file:
             assert toml_file.read() == existing_content + "\n[tool.commitizen]\n"
 
-    def test_init_with_invalid_config_content(
-        self, tmpdir, config_file, exception_string
-    ):
+    def test_init_with_invalid_config_content(self, tmpdir, config_file):
         existing_content = "invalid toml content"
         path = tmpdir.mkdir("commitizen").join(config_file)
 
-        with pytest.raises(InvalidConfigurationError, match=exception_string):
+        with pytest.raises(InvalidConfigurationError) as excinfo:
             TomlConfig(data=existing_content, path=path)
+        assert config_file in str(excinfo.value)
 
 
 @pytest.mark.parametrize(
-    "config_file, exception_string",
+    "config_file",
     [
-        (".cz.json", r"\.cz\.json"),
-        ("cz.json", r"cz\.json"),
+        ".cz.json",
+        "cz.json",
     ],
-    ids=[".cz.json", "cz.json"],
 )
 class TestJsonConfig:
-    def test_init_empty_config_content(self, tmpdir, config_file, exception_string):
+    def test_init_empty_config_content(self, tmpdir, config_file):
         path = tmpdir.mkdir("commitizen").join(config_file)
         json_config = JsonConfig(data="{}", path=path)
         json_config.init_empty_config_content()
@@ -427,26 +422,24 @@ class TestJsonConfig:
         with open(path, encoding="utf-8") as json_file:
             assert json.load(json_file) == {"commitizen": {}}
 
-    def test_init_with_invalid_config_content(
-        self, tmpdir, config_file, exception_string
-    ):
+    def test_init_with_invalid_config_content(self, tmpdir, config_file):
         existing_content = "invalid json content"
         path = tmpdir.mkdir("commitizen").join(config_file)
 
-        with pytest.raises(InvalidConfigurationError, match=exception_string):
+        with pytest.raises(InvalidConfigurationError) as excinfo:
             JsonConfig(data=existing_content, path=path)
+        assert config_file in str(excinfo.value)
 
 
 @pytest.mark.parametrize(
-    "config_file, exception_string",
+    "config_file",
     [
-        (".cz.yaml", r"\.cz\.yaml"),
-        ("cz.yaml", r"cz\.yaml"),
+        ".cz.yaml",
+        "cz.yaml",
     ],
-    ids=[".cz.yaml", "cz.yaml"],
 )
 class TestYamlConfig:
-    def test_init_empty_config_content(self, tmpdir, config_file, exception_string):
+    def test_init_empty_config_content(self, tmpdir, config_file):
         path = tmpdir.mkdir("commitizen").join(config_file)
         yaml_config = YAMLConfig(data="{}", path=path)
         yaml_config.init_empty_config_content()
@@ -454,9 +447,10 @@ class TestYamlConfig:
         with open(path) as yaml_file:
             assert yaml.safe_load(yaml_file) == {"commitizen": {}}
 
-    def test_init_with_invalid_content(self, tmpdir, config_file, exception_string):
+    def test_init_with_invalid_content(self, tmpdir, config_file):
         existing_content = "invalid: .cz.yaml: content: maybe?"
         path = tmpdir.mkdir("commitizen").join(config_file)
 
-        with pytest.raises(InvalidConfigurationError, match=exception_string):
+        with pytest.raises(InvalidConfigurationError) as excinfo:
             YAMLConfig(data=existing_content, path=path)
+        assert config_file in str(excinfo.value)
