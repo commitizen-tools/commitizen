@@ -1,0 +1,3 @@
+usage: cz [-h] [--config CONFIG] [--debug] [-n NAME] [-nr NO_RAISE]
+          {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version} ...
+cz: error: the following arguments are required: {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version}

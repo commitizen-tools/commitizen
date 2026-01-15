@@ -561,7 +561,7 @@ data = {
 
 
 def commitizen_excepthook(
-    type: type[BaseException],
+    exctype: type[BaseException],
     value: BaseException,
     traceback: TracebackType | None,
     debug: bool = False,
@@ -569,13 +569,13 @@ def commitizen_excepthook(
 ) -> None:
     traceback = traceback if isinstance(traceback, TracebackType) else None
     if not isinstance(value, CommitizenException):
-        sys.__excepthook__(type, value, traceback)
+        sys.__excepthook__(exctype, value, traceback)
         return
 
     if value.message:
         value.output_method(value.message)
     if debug:
-        sys.__excepthook__(type, value, traceback)
+        sys.__excepthook__(exctype, value, traceback)
     exit_code = value.exit_code
     if no_raise is not None and exit_code in no_raise:
         sys.exit(ExitCode.EXPECTED_EXIT)
@@ -629,6 +629,8 @@ if TYPE_CHECKING:
 
 
 def main() -> None:
+    sys.excepthook = commitizen_excepthook
+
     parser: argparse.ArgumentParser = cli(data)
     argcomplete.autocomplete(parser)
     # Show help if no arg provided
@@ -673,7 +675,6 @@ def main() -> None:
     elif not conf.path:
         conf.update({"name": "cz_conventional_commits"})
 
-    sys.excepthook = commitizen_excepthook
     if args.debug:
         logging.getLogger("commitizen").setLevel(logging.DEBUG)
         sys.excepthook = partial(sys.excepthook, debug=True)

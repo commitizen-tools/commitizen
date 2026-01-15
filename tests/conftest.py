@@ -302,3 +302,14 @@ def any_changelog_format(config: BaseConfig) -> ChangelogFormat:
 def python_version(request: pytest.FixtureRequest) -> str:
     """The current python version in '{major}.{minor}' format"""
     return cast("str", request.param)
+
+
+@pytest.fixture
+def consistent_terminal_output(monkeypatch: pytest.MonkeyPatch):
+    """Force consistent terminal output."""
+    monkeypatch.setenv("COLUMNS", "80")
+    monkeypatch.setenv("TERM", "dumb")
+    monkeypatch.setenv("LC_ALL", "C")
+    monkeypatch.setenv("LANG", "C")
+    monkeypatch.setenv("NO_COLOR", "1")
+    monkeypatch.setenv("PAGER", "cat")

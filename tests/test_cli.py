@@ -18,11 +18,29 @@ from commitizen.exceptions import (
 from tests.utils import UtilFixture
 
 
-def test_sysexit_no_argv(util: UtilFixture, capsys):
+@pytest.mark.usefixtures("python_version", "consistent_terminal_output")
+def test_no_argv(util: UtilFixture, capsys, file_regression):
     with pytest.raises(ExpectedExit):
         util.run_cli()
-        out, _ = capsys.readouterr()
-        assert out.startswith("usage")
+    out, err = capsys.readouterr()
+    assert out == ""
+    file_regression.check(err, extension=".txt")
+
+
+@pytest.mark.parametrize(
+    "arg",
+    [
+        "--invalid-arg",
+        "invalidCommand",
+    ],
+)
+@pytest.mark.usefixtures("python_version", "consistent_terminal_output")
+def test_invalid_command(util: UtilFixture, capsys, file_regression, arg):
+    with pytest.raises(NoCommandFoundError):
+        util.run_cli(arg)
+    out, err = capsys.readouterr()
+    assert out == ""
+    file_regression.check(err, extension=".txt")
 
 
 def test_cz_config_file_without_correct_file_path(util: UtilFixture, capsys):
