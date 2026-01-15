@@ -2603,9 +2603,19 @@ This is particularly useful when you want Commitizen to manage versions in the s
 <h3 id="step-3-install-and-use">Step 3: Install and Use<a class="headerlink" href="#step-3-install-and-use" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
-<p>Install your provider package:
-   <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-</code></pre></div></p>
+<p>Install your provider package:</p>
+<ul>
+<li>
+<p>Once your custom Commitizen provider is packaged and published (for example, to PyPI), install it like any standard Python package:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>my-commitizen-provider
+</code></pre></div>
+</li>
+<li>
+<p>If you want to use the provider directly from the current project source (during development), install it in editable mode (<a href="https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-e">See pip documentation</a>):</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</code></pre></div>
+</li>
+</ul>
 </li>
 <li>
 <p>Configure Commitizen to use your provider:
