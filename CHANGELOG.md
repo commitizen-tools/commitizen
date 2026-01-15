@@ -1,3 +1,9 @@
+## v4.11.4 (2026-01-15)
+
+### Fix
+
+- **cli**: move sys.excepthook override to correct line, rename 'type' parameter, fix no argv test (#1791)
+
 ## v4.11.3 (2026-01-13)
 
 ### Fix
