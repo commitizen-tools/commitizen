@@ -67,15 +67,15 @@ class Settings(TypedDict, total=False):
     breaking_change_exclamation_in_title: bool
 
 
-CONFIG_FILES: list[str] = [
-    "pyproject.toml",
+CONFIG_FILES: tuple[str, ...] = (
     ".cz.toml",
+    "cz.toml",
     ".cz.json",
     "cz.json",
     ".cz.yaml",
     "cz.yaml",
-    "cz.toml",
-]
+    "pyproject.toml",
+)
 ENCODING = "utf-8"
 
 DEFAULT_SETTINGS: Settings = {
