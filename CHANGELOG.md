@@ -1,3 +1,9 @@
+## v4.11.6 (2026-01-15)
+
+### Fix
+
+- **git**: commit bodies with carriage returns are correctly split by … (#1780)
+
 ## v4.11.5 (2026-01-15)
 
 ### Fix
