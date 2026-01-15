@@ -1,3 +1,9 @@
+## v4.11.5 (2026-01-15)
+
+### Fix
+
+- **config**: ensure the actually used config file is correct, better test coverage (#1784)
+
 ## v4.11.4 (2026-01-15)
 
 ### Fix
