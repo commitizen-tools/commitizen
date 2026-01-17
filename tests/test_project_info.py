@@ -22,6 +22,7 @@ def _create_project_files(files: dict[str, str | None]) -> None:
     "which_return, expected",
     [
         ("/usr/local/bin/pre-commit", True),
+        ("/usr/local/bin/prek", True),
         (None, False),
         ("", False),
     ],

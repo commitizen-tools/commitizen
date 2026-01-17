@@ -7,7 +7,7 @@
 [![Conda Version](https://img.shields.io/conda/vn/conda-forge/commitizen?style=flat-square)](https://anaconda.org/conda-forge/commitizen)
 [![homebrew](https://img.shields.io/homebrew/v/commitizen?color=teal&style=flat-square)](https://formulae.brew.sh/formula/commitizen)
 [![Codecov](https://img.shields.io/codecov/c/github/commitizen-tools/commitizen.svg?style=flat-square)](https://codecov.io/gh/commitizen-tools/commitizen)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?style=flat-square&logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![prek](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/j178/prek/master/docs/assets/badge-v0.json&style=flat-square&color=brightgreen)](https://github.com/j178/prek)
 
 ![Using Commitizen cli](images/demo.gif)
 
@@ -182,7 +182,7 @@ This command is particularly useful for automation scripts and CI/CD pipelines.
 
 For example, you can use the output of the command `cz changelog --dry-run "$(cz version -p)"` to notify your team about a new release in Slack.
 
-#### Pre-commit Integration
+#### Prek and Pre-commit Integration
 
 Commitizen can automatically validate your commit messages using pre-commit hooks.
 
@@ -200,7 +200,7 @@ repos:
 
 2. Install the hooks:
 ```sh
-pre-commit install --hook-type commit-msg --hook-type pre-push
+prek install --hook-type commit-msg --hook-type pre-push
 ```
 
 | Hook              | Recommended Stage |
@@ -210,7 +210,7 @@ pre-commit install --hook-type commit-msg --hook-type pre-push
 
 > **Note**: Replace `master` with the [latest tag](https://github.com/commitizen-tools/commitizen/tags) to avoid warnings. You can automatically update this with:
 > ```sh
-> pre-commit autoupdate
+> prek autoupdate
 > ```
 
 For more details about commit validation, see the [check command documentation](https://commitizen-tools.github.io/commitizen/commands/check/).

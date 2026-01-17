@@ -6,7 +6,7 @@ from typing import Literal
 
 
 def is_pre_commit_installed() -> bool:
-    return bool(shutil.which("pre-commit"))
+    return any(shutil.which(tool) for tool in ("pre-commit", "prek"))
 
 
 def get_default_version_provider() -> Literal[
