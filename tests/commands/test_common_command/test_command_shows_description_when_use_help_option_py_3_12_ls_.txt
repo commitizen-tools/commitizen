@@ -1,6 +1,6 @@
 usage: cz ls [-h]
 
-show available commitizens
+Show available Commitizens
 
 options:
   -h, --help  show this help message and exit
