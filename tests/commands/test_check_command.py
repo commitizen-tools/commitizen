@@ -28,7 +28,7 @@ if TYPE_CHECKING:
 
 COMMIT_LOG = [
     "refactor: A code change that neither fixes a bug nor adds a feature",
-    r"refactor(cz/connventional_commit): use \S to check scope",
+    r"refactor(cz/conventional_commit): use \S to check scope",
     "refactor(git): remove unnecessary dot between git range",
     "bump: version 1.16.3 → 1.16.4",
     (
@@ -79,46 +79,21 @@ def test_check_jira_fails(mocker: MockFixture, util: UtilFixture):
     assert "commit validation: failed!" in str(excinfo.value)
 
 
-def test_check_jira_command_after_issue_one_space(
-    mocker: MockFixture, capsys, util: UtilFixture
+@pytest.mark.parametrize(
+    "commit_msg",
+    [
+        "JR-23 #command some arguments etc",
+        "JR-2  #command some arguments etc",
+        "JR-234 some text #command some arguments etc",
+        "JRA-23 some text #command1 args #command2 args",
+    ],
+)
+def test_check_jira_command_after_issue(
+    mocker: MockFixture, capsys, util: UtilFixture, commit_msg: str
 ):
     mocker.patch(
         "commitizen.commands.check.open",
-        mocker.mock_open(read_data="JR-23 #command some arguments etc"),
-    )
-    util.run_cli("-n", "cz_jira", "check", "--commit-msg-file", "some_file")
-    out, _ = capsys.readouterr()
-    assert "Commit validation: successful!" in out
-
-
-def test_check_jira_command_after_issue_two_spaces(
-    mocker: MockFixture, capsys, util: UtilFixture
-):
-    mocker.patch(
-        "commitizen.commands.check.open",
-        mocker.mock_open(read_data="JR-2  #command some arguments etc"),
-    )
-    util.run_cli("-n", "cz_jira", "check", "--commit-msg-file", "some_file")
-    out, _ = capsys.readouterr()
-    assert "Commit validation: successful!" in out
-
-
-def test_check_jira_text_between_issue_and_command(
-    mocker: MockFixture, capsys, util: UtilFixture
-):
-    mocker.patch(
-        "commitizen.commands.check.open",
-        mocker.mock_open(read_data="JR-234 some text #command some arguments etc"),
-    )
-    util.run_cli("-n", "cz_jira", "check", "--commit-msg-file", "some_file")
-    out, _ = capsys.readouterr()
-    assert "Commit validation: successful!" in out
-
-
-def test_check_jira_multiple_commands(mocker: MockFixture, capsys, util: UtilFixture):
-    mocker.patch(
-        "commitizen.commands.check.open",
-        mocker.mock_open(read_data="JRA-23 some text #command1 args #command2 args"),
+        mocker.mock_open(read_data=commit_msg),
     )
     util.run_cli("-n", "cz_jira", "check", "--commit-msg-file", "some_file")
     out, _ = capsys.readouterr()
@@ -237,9 +212,7 @@ def test_check_a_range_of_failed_git_commits(config, mocker: MockFixture):
     assert all([msg in str(excinfo.value) for msg in ill_formatted_commits_msgs])
 
 
-def test_check_command_with_valid_message(
-    config, success_mock: MockType, mocker: MockFixture
-):
+def test_check_command_with_valid_message(config, success_mock: MockType):
     commands.Check(
         config=config, arguments={"message": "fix(scope): some commit message"}
     )()
@@ -335,28 +308,29 @@ def test_check_command_with_comment_in_message_file(
 def test_check_conventional_commit_succeed_with_git_diff(
     mocker, capsys, util: UtilFixture
 ):
-    commit_msg = (
-        "feat: This is a test commit\n"
-        "# Please enter the commit message for your changes. Lines starting\n"
-        "# with '#' will be ignored, and an empty message aborts the commit.\n"
-        "#\n"
-        "# On branch ...\n"
-        "# Changes to be committed:\n"
-        "#	modified:  ...\n"
-        "#\n"
-        "# ------------------------ >8 ------------------------\n"
-        "# Do not modify or remove the line above.\n"
-        "# Everything below it will be ignored.\n"
-        "diff --git a/... b/...\n"
-        "index f1234c..1c5678 1234\n"
-        "--- a/...\n"
-        "+++ b/...\n"
-        "@@ -92,3 +92,4 @@ class Command(BaseCommand):\n"
-        '+            "this is a test"\n'
-    )
     mocker.patch(
         "commitizen.commands.check.open",
-        mocker.mock_open(read_data=commit_msg),
+        mocker.mock_open(
+            read_data=(
+                "feat: This is a test commit\n"
+                "# Please enter the commit message for your changes. Lines starting\n"
+                "# with '#' will be ignored, and an empty message aborts the commit.\n"
+                "#\n"
+                "# On branch ...\n"
+                "# Changes to be committed:\n"
+                "#	modified:  ...\n"
+                "#\n"
+                "# ------------------------ >8 ------------------------\n"
+                "# Do not modify or remove the line above.\n"
+                "# Everything below it will be ignored.\n"
+                "diff --git a/... b/...\n"
+                "index f1234c..1c5678 1234\n"
+                "--- a/...\n"
+                "+++ b/...\n"
+                "@@ -92,3 +92,4 @@ class Command(BaseCommand):\n"
+                '+            "this is a test"\n'
+            )
+        ),
     )
     util.run_cli("check", "--commit-msg-file", "some_file")
     out, _ = capsys.readouterr()
@@ -407,7 +381,7 @@ def test_check_command_with_config_message_length_limit_exceeded(config):
 
 
 def test_check_command_cli_overrides_config_message_length_limit(
-    config, success_mock: MockType, mocker: MockFixture
+    config, success_mock: MockType
 ):
     message = "fix(scope): some commit message"
     config.settings["message_length_limit"] = len(message) - 1
