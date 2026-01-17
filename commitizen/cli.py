@@ -20,6 +20,7 @@ from commitizen.exceptions import (
     InvalidCommandArgumentError,
     NoCommandFoundError,
 )
+from commitizen.version_increment import VersionIncrement
 
 logger = logging.getLogger(__name__)
 
@@ -505,37 +506,38 @@ data = {
             {
                 "name": ["version"],
                 "description": (
-                    "get the version of the installed commitizen or the current project"
-                    " (default: installed commitizen)"
+                    "Shows version of Commitizen or the version of the current project. "
+                    "Combine with other options to simulate the version increment process and play with the selected version scheme. "
+                    "If no arguments are provided, just show the installed Commitizen version."
                 ),
                 "help": (
-                    "get the version of the installed commitizen or the current project"
-                    " (default: installed commitizen)"
+                    "Shows version of Commitizen or the version of the current project. "
+                    "Combine with other options to simulate the version increment process and play with the selected version scheme."
                 ),
                 "func": commands.Version,
                 "arguments": [
                     {
                         "name": ["-r", "--report"],
-                        "help": "get system information for reporting bugs",
+                        "help": "Get system information for reporting bugs",
                         "action": "store_true",
                         "exclusive_group": "group1",
                     },
                     {
                         "name": ["-p", "--project"],
-                        "help": "get the version of the current project",
+                        "help": "Get the version of the current project",
                         "action": "store_true",
                         "exclusive_group": "group1",
                     },
                     {
                         "name": ["-c", "--commitizen"],
-                        "help": "get the version of the installed commitizen",
+                        "help": "Get the version of the installed commitizen",
                         "action": "store_true",
                         "exclusive_group": "group1",
                     },
                     {
                         "name": ["-v", "--verbose"],
                         "help": (
-                            "get the version of both the installed commitizen "
+                            "Get the version of both the installed commitizen "
                             "and the current project"
                         ),
                         "action": "store_true",
@@ -543,15 +545,39 @@ data = {
                     },
                     {
                         "name": ["--major"],
-                        "help": "get just the major version. Need to be used with --project or --verbose.",
+                        "help": "Output the major version only. Need to be used with MANUAL_VERSION, --project or --verbose.",
                         "action": "store_true",
                         "exclusive_group": "group2",
                     },
                     {
                         "name": ["--minor"],
-                        "help": "get just the minor version. Need to be used with --project or --verbose.",
+                        "help": "Output the minor version only. Need to be used with MANUAL_VERSION, --project or --verbose.",
                         "action": "store_true",
                         "exclusive_group": "group2",
+                    },
+                    {
+                        "name": ["--patch"],
+                        "help": "Output the patch version only. Need to be used with MANUAL_VERSION, --project or --verbose.",
+                        "action": "store_true",
+                        "exclusive_group": "group2",
+                    },
+                    {
+                        "name": ["--next"],
+                        "help": "Output the next version.",
+                        "type": str,
+                        "nargs": "?",
+                        "default": None,
+                        "const": "USE_GIT_COMMITS",
+                        "choices": ["USE_GIT_COMMITS"]
+                        + [str(increment) for increment in VersionIncrement],
+                        "exclusive_group": "group2",
+                    },
+                    {
+                        "name": "manual_version",
+                        "type": str,
+                        "nargs": "?",
+                        "help": "Use the version provided instead of the version from the project. Can be used to test the selected version scheme.",
+                        "metavar": "MANUAL_VERSION",
                     },
                 ],
             },
