@@ -26,32 +26,32 @@ def sample_file(tmp_path: Path, data_dir: Path) -> SampleFileFixture:
     return fixture
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def commitizen_config_file(sample_file: SampleFileFixture) -> Path:
     return sample_file("sample_pyproject.toml", "pyproject.toml")
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def python_version_file(sample_file: SampleFileFixture) -> Path:
     return sample_file("sample_version.py", "__version__.py")
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def inconsistent_python_version_file(sample_file: SampleFileFixture) -> Path:
     return sample_file("inconsistent_version.py", "__version__.py")
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def random_location_version_file(sample_file: SampleFileFixture) -> Path:
     return sample_file("sample_cargo.lock", "Cargo.lock")
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def version_repeated_file(sample_file: SampleFileFixture) -> Path:
     return sample_file("repeated_version_number.json", "package.json")
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def docker_compose_file(sample_file: SampleFileFixture) -> Path:
     return sample_file("sample_docker_compose.yaml", "docker-compose.yaml")
 
@@ -70,21 +70,21 @@ def multiple_versions_to_update_poetry_lock(
     return sample_file(request.param, "pyproject.toml")
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def multiple_versions_increase_string(tmp_path: Path) -> str:
     tmp_file = tmp_path / "anyfile"
     tmp_file.write_text(MULTIPLE_VERSIONS_INCREASE_STRING)
     return str(tmp_file)
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def multiple_versions_reduce_string(tmp_path: Path) -> str:
     tmp_file = tmp_path / "anyfile"
     tmp_file.write_text(MULTIPLE_VERSIONS_REDUCE_STRING)
     return str(tmp_file)
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def version_files(
     commitizen_config_file: Path,
     python_version_file: Path,

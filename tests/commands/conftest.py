@@ -1,22 +1,23 @@
 import os
+from pathlib import Path
 
 import pytest
-from pytest_mock import MockerFixture
+from pytest_mock import MockerFixture, MockType
 
 from commitizen import defaults
 from commitizen.config import BaseConfig
 from commitizen.config.json_config import JsonConfig
 
 
-@pytest.fixture()
-def config():
+@pytest.fixture
+def config() -> BaseConfig:
     _config = BaseConfig()
     _config.settings.update({"name": defaults.DEFAULT_SETTINGS["name"]})
     return _config
 
 
-@pytest.fixture()
-def config_customize():
+@pytest.fixture
+def config_customize() -> JsonConfig:
     json_string = r"""{
       "commitizen": {
         "name": "cz_customize",
@@ -41,20 +42,19 @@ def config_customize():
         }
       }
     }"""
-    _config = JsonConfig(data=json_string, path="not_exist.json")
-    return _config
+    return JsonConfig(data=json_string, path=Path("not_exist.json"))
 
 
-@pytest.fixture()
+@pytest.fixture
 def changelog_path() -> str:
     return os.path.join(os.getcwd(), "CHANGELOG.md")
 
 
-@pytest.fixture()
+@pytest.fixture
 def config_path() -> str:
     return os.path.join(os.getcwd(), "pyproject.toml")
 
 
-@pytest.fixture()
-def success_mock(mocker: MockerFixture):
+@pytest.fixture
+def success_mock(mocker: MockerFixture) -> MockType:
     return mocker.patch("commitizen.out.success")

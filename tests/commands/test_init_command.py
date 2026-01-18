@@ -119,7 +119,7 @@ def test_init_without_choosing_tag(config: BaseConfig, mocker: MockFixture, tmpd
             commands.Init(config)()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def pre_commit_installed(mocker: MockFixture):
     # Assume the `pre-commit` is installed
     mocker.patch(

@@ -72,7 +72,7 @@ def chdir(tmp_path: Path) -> Iterator[Path]:
     os.chdir(cwd)
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def tmp_git_project(tmpdir):
     with tmpdir.as_cwd():
         cmd.run("git init")
@@ -80,7 +80,7 @@ def tmp_git_project(tmpdir):
         yield tmpdir
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def tmp_commitizen_project(tmp_git_project):
     tmp_commitizen_cfg_file = tmp_git_project.join("pyproject.toml")
     tmp_commitizen_cfg_file.write('[tool.commitizen]\nversion="0.1.0"\n')
@@ -88,7 +88,17 @@ def tmp_commitizen_project(tmp_git_project):
     yield tmp_git_project
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
+def tmp_project_root(tmp_commitizen_project) -> Path:
+    return Path(tmp_commitizen_project)
+
+
+@pytest.fixture
+def pyproject(tmp_project_root: Path) -> Path:
+    return tmp_project_root / "pyproject.toml"
+
+
+@pytest.fixture
 def tmp_commitizen_project_initial(tmp_git_project, util: UtilFixture):
     def _initial(
         config_extra: str | None = None,
@@ -124,7 +134,7 @@ def _get_gpg_keyid(signer_mail):
     return _m.group(1) if _m else None
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
     # create a temporary GPGHOME to store a temporary keyring.
     # Home path must be less than 104 characters
@@ -148,14 +158,14 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
     yield tmp_commitizen_project
 
 
-@pytest.fixture()
+@pytest.fixture
 def config():
     _config = BaseConfig()
     _config.settings.update({"name": defaults.DEFAULT_SETTINGS["name"]})
     return _config
 
 
-@pytest.fixture()
+@pytest.fixture
 def config_path() -> str:
     return os.path.join(os.getcwd(), "pyproject.toml")
 
@@ -241,7 +251,7 @@ class SemverCommitizen(BaseCommitizen):
         return ""
 
 
-@pytest.fixture()
+@pytest.fixture
 def use_cz_semver(mocker):
     new_cz = {**registry, "cz_semver": SemverCommitizen}
     mocker.patch.dict("commitizen.cz.registry", new_cz)
