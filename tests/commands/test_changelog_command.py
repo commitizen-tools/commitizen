@@ -1728,3 +1728,57 @@ def test_export_changelog_template_fails_when_template_has_no_filename(
 
     assert not target.exists()
     assert "Template filename is not set" in str(exc_info.value)
+
+
+def test_changelog_template_incremental_variable(
+    tmp_commitizen_project: Path,
+    any_changelog_format: ChangelogFormat,
+    util: UtilFixture,
+    file_regression: FileRegressionFixture,
+):
+    """
+    Test that the changelog template is not rendered when the incremental flag is not set.
+    Reference: https://github.com/commitizen-tools/commitizen/discussions/1620
+    """
+    project_root = Path(tmp_commitizen_project)
+    changelog_tpl = project_root / any_changelog_format.template
+    changelog_tpl.write_text(
+        dedent("""
+        {% if not incremental %}
+        # CHANGELOG
+        {% endif %}
+
+        {% for entry in tree %}
+
+        ## {{ entry.version }}{% if entry.date %} ({{ entry.date }}){% endif %}
+
+        {% for change_key, changes in entry.changes.items() %}
+
+        {% if change_key %}
+        ### {{ change_key }}
+        {% endif %}
+
+        {% for change in changes %}
+        {% if change.scope %}
+        - **{{ change.scope }}**: {{ change.message }}
+        {% elif change.message %}
+        - {{ change.message }}
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+        {% endfor %}
+        """)
+    )
+    target = "CHANGELOG.md"
+
+    util.create_file_and_commit("feat(foo): new file")
+    util.run_cli("changelog", "--file-name", target)
+    with open(target, encoding="utf-8") as f:
+        out = f.read()
+    file_regression.check(out, extension=".md")
+
+    util.create_file_and_commit("refactor(bar): another new file")
+    util.run_cli("changelog", "--file-name", target, "--incremental")
+    with open(target, encoding="utf-8") as f:
+        out = f.read()
+    file_regression.check(out, extension=".incremental.md")
