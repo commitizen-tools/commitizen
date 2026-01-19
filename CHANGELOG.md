@@ -1,3 +1,9 @@
+## v4.12.0 (2026-01-19)
+
+### Feat
+
+- **prek**: supporting prek as an alternative to pre-commit and switching to prek (#1799)
+
 ## v4.11.6 (2026-01-15)
 
 ### Fix
