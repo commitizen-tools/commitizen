@@ -7,7 +7,7 @@ import pytest
 
 from commitizen import commands, git
 from commitizen.cz import registry
-from commitizen.cz.base import BaseCommitizen, ValidationResult
+from commitizen.cz.base import BaseCommitizen
 from commitizen.exceptions import (
     CommitMessageLengthExceededError,
     InvalidCommandArgumentError,
@@ -16,7 +16,6 @@ from commitizen.exceptions import (
 )
 
 if TYPE_CHECKING:
-    import re
     from collections.abc import Mapping
 
     from pytest_mock import MockFixture, MockType
@@ -385,7 +384,7 @@ def test_check_command_cli_overrides_config_message_length_limit(
 ):
     message = "fix(scope): some commit message"
     config.settings["message_length_limit"] = len(message) - 1
-    for message_length_limit in [len(message) + 1, None]:
+    for message_length_limit in [len(message) + 1, 0]:
         success_mock.reset_mock()
         commands.Check(
             config=config,
@@ -418,60 +417,6 @@ class ValidationCz(BaseCommitizen):
 
     def info(self) -> str:
         return "Commit message must start with an issue number like ABC-123"
-
-    def validate_commit_message(
-        self,
-        *,
-        commit_msg: str,
-        pattern: re.Pattern[str],
-        allow_abort: bool,
-        allowed_prefixes: list[str],
-        max_msg_length: int | None,
-        commit_hash: str,
-    ) -> ValidationResult:
-        """Validate commit message against the pattern."""
-        if not commit_msg:
-            return ValidationResult(
-                allow_abort, [] if allow_abort else ["commit message is empty"]
-            )
-
-        if any(map(commit_msg.startswith, allowed_prefixes)):
-            return ValidationResult(True, [])
-
-        if max_msg_length:
-            msg_len = len(commit_msg.partition("\n")[0].strip())
-            if msg_len > max_msg_length:
-                # TODO: capitalize the first letter of the error message for consistency in v5
-                raise CommitMessageLengthExceededError(
-                    f"commit validation: failed!\n"
-                    f"commit message length exceeds the limit.\n"
-                    f'commit "{commit_hash}": "{commit_msg}"\n'
-                    f"message length limit: {max_msg_length} (actual: {msg_len})"
-                )
-
-        return ValidationResult(
-            bool(pattern.match(commit_msg)), [f"pattern: {pattern.pattern}"]
-        )
-
-    def format_exception_message(
-        self, invalid_commits: list[tuple[git.GitCommit, list]]
-    ) -> str:
-        """Format commit errors."""
-        displayed_msgs_content = "\n".join(
-            [
-                (
-                    f'commit "{commit.rev}": "{commit.message}"\nerrors:\n\n'.join(
-                        f"- {error}" for error in errors
-                    )
-                )
-                for (commit, errors) in invalid_commits
-            ]
-        )
-        return (
-            "commit validation: failed!\n"
-            "please enter a commit message in the commitizen format.\n"
-            f"{displayed_msgs_content}"
-        )
 
 
 @pytest.fixture

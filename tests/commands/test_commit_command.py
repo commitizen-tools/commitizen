@@ -363,5 +363,5 @@ def test_commit_command_with_config_message_length_limit(
     success_mock.assert_called_once()
 
     success_mock.reset_mock()
-    commands.Commit(config, {"message_length_limit": None})()
+    commands.Commit(config, {"message_length_limit": 0})()
     success_mock.assert_called_once()
