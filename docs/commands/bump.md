@@ -109,12 +109,12 @@ Commitizen supports the [PEP 440][pep440] version format, which includes several
 
 ![cz bump --help](../images/cli_help/cz_bump___help.svg)
 
-### `--files-only`
+### `--version-files-only`
 
 Bumps the version in the files defined in [`version_files`][version_files] without creating a commit and tag on the git repository.
 
 ```bash
-cz bump --files-only
+cz bump --version-files-only
 ```
 
 ### `--changelog`
