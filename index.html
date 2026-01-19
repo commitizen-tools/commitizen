@@ -507,10 +507,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pre-commit-integration" class="md-nav__link">
+  <a href="#prek-and-pre-commit-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-commit Integration
+        Prek and Pre-commit Integration
       
     </span>
   </a>
@@ -2457,10 +2457,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pre-commit-integration" class="md-nav__link">
+  <a href="#prek-and-pre-commit-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-commit Integration
+        Prek and Pre-commit Integration
       
     </span>
   </a>
@@ -2666,7 +2666,7 @@
 <a href="https://anaconda.org/conda-forge/commitizen"><img alt="Conda Version" src="https://img.shields.io/conda/vn/conda-forge/commitizen?style=flat-square" /></a>
 <a href="https://formulae.brew.sh/formula/commitizen"><img alt="homebrew" src="https://img.shields.io/homebrew/v/commitizen?color=teal&amp;style=flat-square" /></a>
 <a href="https://codecov.io/gh/commitizen-tools/commitizen"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/commitizen-tools/commitizen.svg?style=flat-square" /></a>
-<a href="https://github.com/pre-commit/pre-commit"><img alt="pre-commit" src="https://img.shields.io/badge/pre--commit-enabled-brightgreen?style=flat-square&amp;logo=pre-commit&amp;logoColor=white" /></a></p>
+<a href="https://github.com/j178/prek"><img alt="prek" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/j178/prek/master/docs/assets/badge-v0.json&amp;style=flat-square&amp;color=brightgreen" /></a></p>
 <p><img alt="Using Commitizen cli" src="images/demo.gif" /></p>
 <hr />
 <p><a href="https://commitizen-tools.github.io/commitizen/"><strong>Commitizen Documentation Site</strong></a></p>
@@ -2789,7 +2789,7 @@ cz<span class="w"> </span>changelog<span class="w"> </span>--dry-run<span class=
 </code></pre></div>
 <p>This command is particularly useful for automation scripts and CI/CD pipelines.</p>
 <p>For example, you can use the output of the command <code>cz changelog --dry-run "$(cz version -p)"</code> to notify your team about a new release in Slack.</p>
-<h4 id="pre-commit-integration">Pre-commit Integration<a class="headerlink" href="#pre-commit-integration" title="Permanent link">&para;</a></h4>
+<h4 id="prek-and-pre-commit-integration">Prek and Pre-commit Integration<a class="headerlink" href="#prek-and-pre-commit-integration" title="Permanent link">&para;</a></h4>
 <p>Commitizen can automatically validate your commit messages using pre-commit hooks.</p>
 <ol>
 <li>
@@ -2806,7 +2806,7 @@ cz<span class="w"> </span>changelog<span class="w"> </span>--dry-run<span class=
 </li>
 <li>
 <p>Install the hooks:
-<div class="highlight"><pre><span></span><code>pre-commit<span class="w"> </span>install<span class="w"> </span>--hook-type<span class="w"> </span>commit-msg<span class="w"> </span>--hook-type<span class="w"> </span>pre-push
+<div class="highlight"><pre><span></span><code>prek<span class="w"> </span>install<span class="w"> </span>--hook-type<span class="w"> </span>commit-msg<span class="w"> </span>--hook-type<span class="w"> </span>pre-push
 </code></pre></div></p>
 </li>
 </ol>
@@ -2830,7 +2830,7 @@ cz<span class="w"> </span>changelog<span class="w"> </span>--dry-run<span class=
 </table>
 <blockquote>
 <p><strong>Note</strong>: Replace <code>master</code> with the <a href="https://github.com/commitizen-tools/commitizen/tags">latest tag</a> to avoid warnings. You can automatically update this with:
-<div class="highlight"><pre><span></span><code>pre-commit<span class="w"> </span>autoupdate
+<div class="highlight"><pre><span></span><code>prek<span class="w"> </span>autoupdate
 </code></pre></div></p>
 </blockquote>
 <p>For more details about commit validation, see the <a href="https://commitizen-tools.github.io/commitizen/commands/check/">check command documentation</a>.</p>

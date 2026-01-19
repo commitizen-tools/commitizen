@@ -1205,22 +1205,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#method-1-using-pre-commit-recommended" class="md-nav__link">
+  <a href="#method-1-using-pre-commit-hook-frameworks-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Method 1: Using pre-commit (Recommended)
+        Method 1: Using pre-commit hook frameworks (Recommended)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Method 1: Using pre-commit (Recommended)">
+    <nav class="md-nav" aria-label="Method 1: Using pre-commit hook frameworks (Recommended)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-install-pre-commit" class="md-nav__link">
+  <a href="#step-1-install-prek" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Install pre-commit
+        Step 1: Install prek
       
     </span>
   </a>
@@ -1344,10 +1344,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pre-commit-hook-not-working" class="md-nav__link">
+  <a href="#prek-hook-not-working" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-commit hook not working
+        Prek hook not working
       
     </span>
   </a>
@@ -2138,22 +2138,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#method-1-using-pre-commit-recommended" class="md-nav__link">
+  <a href="#method-1-using-pre-commit-hook-frameworks-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Method 1: Using pre-commit (Recommended)
+        Method 1: Using pre-commit hook frameworks (Recommended)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Method 1: Using pre-commit (Recommended)">
+    <nav class="md-nav" aria-label="Method 1: Using pre-commit hook frameworks (Recommended)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-install-pre-commit" class="md-nav__link">
+  <a href="#step-1-install-prek" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Install pre-commit
+        Step 1: Install prek
       
     </span>
   </a>
@@ -2277,10 +2277,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pre-commit-hook-not-working" class="md-nav__link">
+  <a href="#prek-hook-not-working" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pre-commit hook not working
+        Prek hook not working
       
     </span>
   </a>
@@ -2333,14 +2333,24 @@
 
 <h1 id="automatically-check-message-before-commit">Automatically check message before commit<a class="headerlink" href="#automatically-check-message-before-commit" title="Permanent link">&para;</a></h1>
 <h2 id="about">About<a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
-<p>To automatically check a commit message prior to committing, you can use a <a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks">Git hook</a>. This ensures that all commit messages follow your project's commitizen format before they are accepted into the repository.</p>
-<p>When a commit message fails validation, Git will reject the commit and display an error message explaining what went wrong. You'll need to amend your commit message to follow the required format before the commit can proceed.</p>
+<p>To automatically check a commit message before committing, use a <a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks">Git hook</a>. This ensures all commit messages match your project's commitizen format before they are accepted into the repository.</p>
+<p>When a commit message fails validation, Git rejects the commit and displays an error explaining what went wrong. Update the message to the required format before trying again.</p>
 <h2 id="how-to">How to<a class="headerlink" href="#how-to" title="Permanent link">&para;</a></h2>
 <p>There are two common methods for installing the hooks:</p>
-<h3 id="method-1-using-pre-commit-recommended">Method 1: Using <a href="https://pre-commit.com/">pre-commit</a> (Recommended)<a class="headerlink" href="#method-1-using-pre-commit-recommended" title="Permanent link">&para;</a></h3>
-<p><a href="https://pre-commit.com/">pre-commit</a> is a framework for managing and maintaining multi-language pre-commit hooks. It's the recommended approach as it handles hook installation, updates, and execution automatically.</p>
-<h4 id="step-1-install-pre-commit">Step 1: Install pre-commit<a class="headerlink" href="#step-1-install-pre-commit" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>pre-commit
+<h3 id="method-1-using-pre-commit-hook-frameworks-recommended">Method 1: Using pre-commit hook frameworks (Recommended)<a class="headerlink" href="#method-1-using-pre-commit-hook-frameworks-recommended" title="Permanent link">&para;</a></h3>
+<p>Using pre-commit hook frameworks is the recommended approach because hook installation, updates, and execution are handled automatically.
+Two common frameworks are:</p>
+<ol>
+<li><a href="https://prek.j178.dev">prek</a> (faster)</li>
+<li><a href="https://pre-commit.com/">pre-commit</a></li>
+</ol>
+<p>In the steps below, we'll use <code>prek</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Using pre-commit framework</p>
+<p>If you use pre-commit instead of prek, you can run the same commands. Simply replace prek with pre-commit in the steps below.</p>
+</div>
+<h4 id="step-1-install-prek">Step 1: Install prek<a class="headerlink" href="#step-1-install-prek" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>prek
 </code></pre></div>
 <h4 id="step-2-create-pre-commit-configyaml">Step 2: Create <code>.pre-commit-config.yaml</code><a class="headerlink" href="#step-2-create-pre-commit-configyaml" title="Permanent link">&para;</a></h4>
 <p>Create a <code>.pre-commit-config.yaml</code> file in your project root directory with the following content:</p>
@@ -2358,11 +2368,11 @@
 </div>
 <h4 id="step-3-install-the-hook">Step 3: Install the hook<a class="headerlink" href="#step-3-install-the-hook" title="Permanent link">&para;</a></h4>
 <p>Install the configuration into Git's hook system:</p>
-<div class="highlight"><pre><span></span><code>pre-commit<span class="w"> </span>install<span class="w"> </span>--hook-type<span class="w"> </span>commit-msg
+<div class="highlight"><pre><span></span><code>prek<span class="w"> </span>install<span class="w"> </span>--hook-type<span class="w"> </span>commit-msg
 </code></pre></div>
 <p>The hook is now active! Every time you create a commit, commitizen will automatically validate your commit message.</p>
 <h3 id="method-2-manual-git-hook-installation">Method 2: Manual Git hook installation<a class="headerlink" href="#method-2-manual-git-hook-installation" title="Permanent link">&para;</a></h3>
-<p>If you prefer not to use pre-commit, you can manually create a Git hook. This gives you full control over the hook script but requires manual maintenance.</p>
+<p>If you prefer not to use a pre-commit framework, you can manually create a Git hook. This gives you full control over the hook script but requires manual maintenance.</p>
 <h4 id="step-1-create-the-commit-msg-hook">Step 1: Create the commit-msg hook<a class="headerlink" href="#step-1-create-the-commit-msg-hook" title="Permanent link">&para;</a></h4>
 <p>Navigate to your project's <code>.git/hooks</code> directory and create the <code>commit-msg</code> hook file:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>.git/hooks
@@ -2389,7 +2399,7 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <span class="c1"># This should succeed with a valid message</span>
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add new feature&quot;</span>
 </code></pre></div>
-<p>If the hook is working correctly, invalid commit messages will be rejected with an error message explaining what's wrong.</p>
+<p>If the hook is working correctly, invalid commit messages are rejected with an error explaining what's wrong.</p>
 <h2 id="what-happens-when-validation-fails">What happens when validation fails?<a class="headerlink" href="#what-happens-when-validation-fails" title="Permanent link">&para;</a></h2>
 <p>When a commit message fails validation:</p>
 <ol>
@@ -2416,12 +2426,12 @@ pattern: ^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))
 <li><strong>Verify commitizen is installed</strong>: Run <code>cz --version</code> to confirm commitizen is available in your PATH</li>
 <li><strong>Check Git version</strong>: Ensure you're using a recent version of Git that supports hooks</li>
 </ul>
-<h3 id="pre-commit-hook-not-working">Pre-commit hook not working<a class="headerlink" href="#pre-commit-hook-not-working" title="Permanent link">&para;</a></h3>
+<h3 id="prek-hook-not-working">Prek hook not working<a class="headerlink" href="#prek-hook-not-working" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Verify installation</strong>: Run <code>pre-commit --version</code> to confirm pre-commit is installed</li>
-<li><strong>Reinstall the hook</strong>: Try running <code>pre-commit install --hook-type commit-msg</code> again</li>
+<li><strong>Verify installation</strong>: Run <code>prek --version</code> to confirm pre-commit is installed</li>
+<li><strong>Reinstall the hook</strong>: Try running <code>prek install --hook-type commit-msg</code> again</li>
 <li><strong>Check configuration</strong>: Verify your <code>.pre-commit-config.yaml</code> file is valid YAML and in the project root</li>
-<li><strong>Update hooks</strong>: Run <code>pre-commit autoupdate</code> to update to the latest versions</li>
+<li><strong>Update hooks</strong>: Run <code>prek autoupdate</code> to update to the latest versions</li>
 </ul>
 <h3 id="bypassing-the-hook-when-needed">Bypassing the hook (when needed)<a class="headerlink" href="#bypassing-the-hook-when-needed" title="Permanent link">&para;</a></h3>
 <p>If you need to bypass the hook temporarily (e.g., for merge commits or special cases), you can use:</p>
@@ -2435,6 +2445,7 @@ pattern: ^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))
 <ul>
 <li>Learn more about <a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks">Git hooks</a></li>
 <li>See the <a href="../../commands/check/">check command documentation</a> for more validation options</li>
+<li>Check out <a href="https://prek.j178.dev/">prek documentation</a> for advanced hook management</li>
 <li>Check out <a href="https://pre-commit.com/">pre-commit documentation</a> for advanced hook management</li>
 </ul>
 
