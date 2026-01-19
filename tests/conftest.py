@@ -59,7 +59,7 @@ def set_default_gitconfig() -> dict[str, str]:
     return {
         "user.name": "SIGNER",
         "user.email": SIGNER_MAIL,
-        "safe.cirectory": "*",
+        "safe.directory": "*",
         "init.defaultBranch": "master",
     }
 
