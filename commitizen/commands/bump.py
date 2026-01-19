@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import warnings
 from logging import getLogger
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 import questionary
 
 from commitizen import bump, factory, git, hooks, out
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.commands.changelog import Changelog
+from commitizen.config.settings import ChainSettings
 from commitizen.defaults import Settings
 from commitizen.exceptions import (
     BumpCommitFailedError,
@@ -70,37 +71,11 @@ class Bump:
 
         self.config: BaseConfig = config
         self.arguments = arguments
-        self.bump_settings = cast(
-            "BumpArgs",
-            {
-                **config.settings,
-                **{
-                    k: v
-                    for k in (
-                        "annotated_tag_message",
-                        "annotated_tag",
-                        "bump_message",
-                        "file_name",
-                        "gpg_sign",
-                        "increment_mode",
-                        "increment",
-                        "major_version_zero",
-                        "prerelease_offset",
-                        "prerelease",
-                        "tag_format",
-                        "template",
-                    )
-                    if (v := arguments.get(k)) is not None
-                },
-            },
-        )
+        self.settings = ChainSettings(config.settings, arguments).load_settings()
         self.cz = factory.committer_factory(self.config)
         self.changelog_flag = arguments["changelog"]
         self.changelog_to_stdout = arguments["changelog_to_stdout"]
         self.git_output_to_stderr = arguments["git_output_to_stderr"]
-        self.no_verify = arguments["no_verify"]
-        self.check_consistency = arguments["check_consistency"]
-        self.retry = arguments["retry"]
         self.pre_bump_hooks = self.config.settings["pre_bump_hooks"]
         self.post_bump_hooks = self.config.settings["post_bump_hooks"]
         deprecated_version_type = arguments.get("version_type")
@@ -148,7 +123,7 @@ class Bump:
         # self.cz.bump_map = defaults.bump_map_major_version_zero
         bump_map = (
             self.cz.bump_map_major_version_zero
-            if self.bump_settings["major_version_zero"]
+            if self.settings["major_version_zero"]
             else self.cz.bump_map
         )
         bump_pattern = self.cz.bump_pattern
@@ -230,7 +205,7 @@ class Bump:
         return increment, current_version.bump(
             increment,
             prerelease=self.arguments["prerelease"],
-            prerelease_offset=self.bump_settings["prerelease_offset"],
+            prerelease_offset=self.settings["prerelease_offset"],
             devrelease=self.arguments["devrelease"],
             is_local_version=self.arguments["local_version"],
             build_metadata=self.arguments["build_metadata"],
@@ -262,7 +237,7 @@ class Bump:
             )
         )
 
-        rules = TagRules.from_settings(cast("Settings", self.bump_settings))
+        rules = TagRules.from_settings(self.settings)
         current_tag = rules.find_tag_for(git.get_tags(), current_version)
         current_tag_version = (
             current_tag.name if current_tag else rules.normalize_tag(current_version)
@@ -285,7 +260,7 @@ class Bump:
             raise DryRunExit()
 
         message = bump.create_commit_message(
-            current_version, new_version, self.bump_settings["bump_message"]
+            current_version, new_version, self.settings["bump_message"]
         )
         # Report found information
         information = f"{message}\ntag to create: {new_tag_version}\n"
@@ -342,8 +317,8 @@ class Bump:
             bump.update_version_in_files(
                 str(current_version),
                 str(new_version),
-                self.bump_settings["version_files"],
-                check_consistency=self.check_consistency,
+                self.settings["version_files"],
+                check_consistency=self.arguments["check_consistency"],
                 encoding=self.config.settings["encoding"],
             )
         )
@@ -372,7 +347,7 @@ class Bump:
         # FIXME: check if any changes have been staged
         git.add(*updated_files)
         c = git.commit(message, args=self._get_commit_args())
-        if self.retry and c.return_code != 0 and self.changelog_flag:
+        if self.arguments["retry"] and c.return_code != 0 and self.changelog_flag:
             # Maybe pre-commit reformatted some files? Retry once
             logger.debug("1st git.commit error: %s", c.err)
             logger.info("1st commit attempt failed; retrying once")
@@ -391,18 +366,18 @@ class Bump:
             new_tag_version,
             signed=any(
                 (
-                    self.bump_settings.get("gpg_sign"),
-                    self.config.settings.get("gpg_sign"),
+                    self.settings.get("gpg_sign"),
+                    self.config.settings.get("gpg_sign"),  # TODO: remove this
                 )
             ),
             annotated=any(
                 (
-                    self.bump_settings.get("annotated_tag"),
-                    self.config.settings.get("annotated_tag"),
-                    self.bump_settings.get("annotated_tag_message"),
+                    self.settings.get("annotated_tag"),
+                    self.config.settings.get("annotated_tag"),  # TODO: remove this
+                    self.settings.get("annotated_tag_message"),
                 )
             ),
-            msg=self.bump_settings.get("annotated_tag_message", None),
+            msg=self.settings.get("annotated_tag_message", None),  # type: ignore[arg-type]
             # TODO: also get from self.config.settings?
         )
         if c.return_code != 0:
@@ -432,6 +407,6 @@ class Bump:
 
     def _get_commit_args(self) -> str:
         commit_args = ["-a"]
-        if self.no_verify:
+        if self.arguments["no_verify"]:
             commit_args.append("--no-verify")
         return " ".join(commit_args)

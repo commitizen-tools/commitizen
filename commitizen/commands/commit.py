@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, TypedDict
 import questionary
 
 from commitizen import factory, git, out
+from commitizen.config.settings import ChainSettings
 from commitizen.cz.exceptions import CzException
 from commitizen.cz.utils import get_backup_file_path
 from commitizen.exceptions import (
@@ -36,7 +37,7 @@ class CommitArgs(TypedDict, total=False):
     dry_run: bool
     edit: bool
     extra_cli_args: str
-    message_length_limit: int | None
+    message_length_limit: int
     no_retry: bool
     signoff: bool
     write_message_to_file: Path | None
@@ -53,6 +54,7 @@ class Commit:
         self.config: BaseConfig = config
         self.cz = factory.committer_factory(self.config)
         self.arguments = arguments
+        self.settings = ChainSettings(config.settings, arguments).load_settings()
         self.backup_file_path = get_backup_file_path()
 
     def _read_backup_message(self) -> str | None:
@@ -61,16 +63,14 @@ class Commit:
             return None
 
         # Read commit message from backup
-        with open(
-            self.backup_file_path, encoding=self.config.settings["encoding"]
-        ) as f:
+        with open(self.backup_file_path, encoding=self.settings["encoding"]) as f:
             return f.read().strip()
 
     def _get_message_by_prompt_commit_questions(self) -> str:
         # Prompt user for the commit message
         questions = self.cz.questions()
         for question in (q for q in questions if q["type"] == "list"):
-            question["use_shortcuts"] = self.config.settings["use_shortcuts"]
+            question["use_shortcuts"] = self.settings["use_shortcuts"]
         try:
             answers = questionary.prompt(questions, style=self.cz.style)
         except ValueError as err:
@@ -83,20 +83,15 @@ class Commit:
             raise NoAnswersError()
 
         message = self.cz.message(answers)
-        if limit := self.arguments.get(
-            "message_length_limit", self.config.settings.get("message_length_limit", 0)
-        ):
-            self._validate_subject_length(message=message, length_limit=limit)
+        if (length_limit := self.settings["message_length_limit"]) > 0:
+            # By the contract, message_length_limit is set to 0 for no limit
+            subject = message.partition("\n")[0].strip()
+            if len(subject) > length_limit:
+                raise CommitMessageLengthExceededError(
+                    f"Length of commit message exceeds limit ({len(subject)}/{length_limit}), subject: '{subject}'"
+                )
 
         return message
-
-    def _validate_subject_length(self, *, message: str, length_limit: int) -> None:
-        # By the contract, message_length_limit is set to 0 for no limit
-        subject = message.partition("\n")[0].strip()
-        if len(subject) > length_limit:
-            raise CommitMessageLengthExceededError(
-                f"Length of commit message exceeds limit ({len(subject)}/{length_limit}), subject: '{subject}'"
-            )
 
     def manual_edit(self, message: str) -> str:
         editor = git.get_core_editor()
@@ -123,7 +118,7 @@ class Commit:
             return commit_message
 
         if (
-            self.config.settings.get("retry_after_failure")
+            self.settings.get("retry_after_failure")
             and not self.arguments.get("no_retry")
             and (backup_message := self._read_backup_message())
         ):
@@ -158,14 +153,14 @@ class Commit:
 
         if write_message_to_file:
             with smart_open(
-                write_message_to_file, "w", encoding=self.config.settings["encoding"]
+                write_message_to_file, "w", encoding=self.settings["encoding"]
             ) as file:
                 file.write(commit_message)
 
         if dry_run:
             raise DryRunExit()
 
-        if self.config.settings["always_signoff"] or signoff:
+        if self.settings["always_signoff"] or signoff:
             extra_args = f"{extra_args} -s".strip()
 
         c = git.commit(commit_message, args=extra_args)
@@ -174,7 +169,7 @@ class Commit:
 
             # Create commit backup
             with smart_open(
-                self.backup_file_path, "w", encoding=self.config.settings["encoding"]
+                self.backup_file_path, "w", encoding=self.settings["encoding"]
             ) as f:
                 f.write(commit_message)
 

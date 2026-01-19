@@ -385,7 +385,7 @@ def test_check_command_cli_overrides_config_message_length_limit(
 ):
     message = "fix(scope): some commit message"
     config.settings["message_length_limit"] = len(message) - 1
-    for message_length_limit in [len(message) + 1, None]:
+    for message_length_limit in [len(message) + 1, 0]:
         success_mock.reset_mock()
         commands.Check(
             config=config,
