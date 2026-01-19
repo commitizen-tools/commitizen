@@ -30,6 +30,25 @@ if TYPE_CHECKING:
     from tests.utils import UtilFixture
 
 
+@pytest.fixture
+def changelog_jinja_file(tmp_project_root: Path) -> Path:
+    return tmp_project_root / "changelog.jinja"
+
+
+@pytest.fixture
+def changelog_tpl(
+    tmp_project_root: Path, any_changelog_format: ChangelogFormat
+) -> Path:
+    return tmp_project_root / any_changelog_format.template
+
+
+@pytest.fixture
+def changelog_file(
+    tmp_project_root: Path, any_changelog_format: ChangelogFormat
+) -> Path:
+    return tmp_project_root / any_changelog_format.default_changelog_file
+
+
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_from_version_zero_point_two(
     capsys: pytest.CaptureFixture,
@@ -391,21 +410,14 @@ def test_changelog_multiple_incremental_do_not_add_new_lines(
     util: UtilFixture,
 ):
     """Test for bug https://github.com/commitizen-tools/commitizen/issues/192"""
-    util.create_file_and_commit("feat: add new output")
-
-    util.run_cli("changelog", "--incremental")
-
-    util.create_file_and_commit("fix: output glitch")
-
-    util.run_cli("changelog", "--incremental")
-
-    util.create_file_and_commit("fix: no more explosions")
-
-    util.run_cli("changelog", "--incremental")
-
-    util.create_file_and_commit("feat: add more stuff")
-
-    util.run_cli("changelog", "--incremental")
+    for commit_message in [
+        "feat: add new output",
+        "fix: output glitch",
+        "fix: no more explosions",
+        "feat: add more stuff",
+    ]:
+        util.create_file_and_commit(commit_message)
+        util.run_cli("changelog", "--incremental")
 
     with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
@@ -415,28 +427,24 @@ def test_changelog_multiple_incremental_do_not_add_new_lines(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_incremental_newline_separates_new_content_from_old(
-    changelog_path: str, util: UtilFixture
+    changelog_path: str,
+    util: UtilFixture,
+    file_regression: FileRegressionFixture,
 ):
     """Test for https://github.com/commitizen-tools/commitizen/issues/509"""
     with open(changelog_path, "w", encoding="utf-8") as f:
         f.write("Pre-existing content that should be kept\n")
 
     util.create_file_and_commit("feat: add more cat videos")
-
     util.run_cli("changelog", "--incremental")
-
     with open(changelog_path, encoding="utf-8") as f:
         out = f.read()
 
-    assert (
-        out
-        == "Pre-existing content that should be kept\n\n## Unreleased\n\n### Feat\n\n- add more cat videos\n"
-    )
+    file_regression.check(out, extension=".md")
 
 
 def test_changelog_without_revision(tmp_commitizen_project, util: UtilFixture):
-    changelog_file = tmp_commitizen_project.join("CHANGELOG.md")
-    changelog_file.write(
+    tmp_commitizen_project.join("CHANGELOG.md").write(
         """
         # Unreleased
 
@@ -444,6 +452,14 @@ def test_changelog_without_revision(tmp_commitizen_project, util: UtilFixture):
         """
     )
 
+    # No revision
+    with pytest.raises(NoRevisionError):
+        util.run_cli("changelog", "--incremental")
+
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("2.0.0")
+
+    # With different tag name and changelog content
     with pytest.raises(NoRevisionError):
         util.run_cli("changelog", "--incremental")
 
@@ -455,64 +471,34 @@ def test_changelog_incremental_with_revision(util: UtilFixture):
         util.run_cli("changelog", "--incremental", "0.2.0")
 
 
-def test_changelog_with_different_tag_name_and_changelog_content(
-    tmp_commitizen_project, util: UtilFixture
-):
-    changelog_file = tmp_commitizen_project.join("CHANGELOG.md")
-    changelog_file.write(
-        """
-        # Unreleased
-
-        ## v1.0.0
-        """
-    )
-    util.create_file_and_commit("feat: new file")
-    util.create_tag("2.0.0")
-
-    with pytest.raises(NoRevisionError):
-        util.run_cli("changelog", "--incremental")
-
-
 @pytest.mark.usefixtures("chdir")
 def test_changelog_in_non_git_project(util: UtilFixture):
     with pytest.raises(NotAGitProjectError):
         util.run_cli("changelog", "--incremental")
 
 
+@pytest.mark.parametrize(
+    "commit_message",
+    [
+        "feat(users): email pattern corrected\n\n"
+        "BREAKING CHANGE: migrate by renaming user to users\n\n"
+        "footer content",
+        "feat(users): email pattern corrected\n\n"
+        "body content\n\n"
+        "BREAKING CHANGE: migrate by renaming user to users",
+    ],
+)
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_breaking_change_content_v1_beta(
     capsys: pytest.CaptureFixture,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
+    commit_message: str,
 ):
-    commit_message = (
-        "feat(users): email pattern corrected\n\n"
-        "BREAKING CHANGE: migrate by renaming user to users\n\n"
-        "footer content"
-    )
     util.create_file_and_commit(commit_message)
     with pytest.raises(DryRunExit):
         util.run_cli("changelog", "--dry-run")
     out, _ = capsys.readouterr()
-    file_regression.check(out, extension=".md")
-
-
-@pytest.mark.usefixtures("tmp_commitizen_project")
-def test_breaking_change_content_v1(
-    capsys: pytest.CaptureFixture,
-    file_regression: FileRegressionFixture,
-    util: UtilFixture,
-):
-    commit_message = (
-        "feat(users): email pattern corrected\n\n"
-        "body content\n\n"
-        "BREAKING CHANGE: migrate by renaming user to users"
-    )
-    util.create_file_and_commit(commit_message)
-    with pytest.raises(DryRunExit):
-        util.run_cli("changelog", "--dry-run")
-    out, _ = capsys.readouterr()
-
     file_regression.check(out, extension=".md")
 
 
@@ -803,9 +789,7 @@ def test_changelog_incremental_with_merge_prerelease(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_with_filename_as_empty_string(
-    changelog_path: str, config_path: str, util: UtilFixture
-):
+def test_changelog_with_filename_as_empty_string(config_path: str, util: UtilFixture):
     with open(config_path, "a", encoding="utf-8") as f:
         f.write("changelog_file = true\n")
 
@@ -928,7 +912,7 @@ def test_changelog_multiple_matching_tags(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_from_rev_range_default_tag_format(
-    config_path: str, changelog_path: str, util: UtilFixture
+    changelog_path: str, util: UtilFixture
 ):
     """Checks that rev_range is calculated with the default (None) tag format"""
     # create commit and tag
@@ -1013,7 +997,6 @@ def test_changelog_from_rev_version_range_with_legacy_tags(
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
-    changelog = Path(changelog_path)
     Path(config_path).write_text(
         "\n".join(
             [
@@ -1036,7 +1019,7 @@ def test_changelog_from_rev_version_range_with_legacy_tags(
     util.create_tag("legacy-0.4.0")
 
     util.run_cli("changelog", "0.2.0..0.4.0")
-    file_regression.check(changelog.read_text(), extension=".md")
+    file_regression.check(Path(changelog_path).read_text(), extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -1081,7 +1064,6 @@ def test_changelog_from_rev_version_with_big_range_from_arg(
 def test_changelog_from_rev_latest_version_dry_run(
     capsys: pytest.CaptureFixture,
     config_path: str,
-    changelog_path: str,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
@@ -1107,7 +1089,11 @@ def test_changelog_from_rev_latest_version_dry_run(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_invalid_subject_is_skipped(capsys: pytest.CaptureFixture, util: UtilFixture):
+def test_invalid_subject_is_skipped(
+    capsys: pytest.CaptureFixture,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
+):
     """Fix #510"""
     non_conformant_commit_title = (
         "Merge pull request #487 from manang/master\n\n"
@@ -1119,7 +1105,7 @@ def test_invalid_subject_is_skipped(capsys: pytest.CaptureFixture, util: UtilFix
         util.run_cli("changelog", "--dry-run")
     out, _ = capsys.readouterr()
 
-    assert out == ("## Unreleased\n\n### Feat\n\n- a new world\n\n")
+    file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -1170,10 +1156,8 @@ def test_empty_commit_list(mocker: MockFixture, util: UtilFixture):
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
 def test_changelog_prerelease_rev_with_use_scheme_semver(
-    mocker: MockFixture,
     capsys: pytest.CaptureFixture,
     config_path: str,
-    changelog_path: str,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
@@ -1190,27 +1174,23 @@ def test_changelog_prerelease_rev_with_use_scheme_semver(
     util.run_cli("bump", "--yes", "--prerelease", "alpha")
     capsys.readouterr()
 
-    tag_exists = git.tag_exist("0.3.0-a0")
-    assert tag_exists is True
+    assert git.tag_exist("0.3.0-a0")
 
     with pytest.raises(DryRunExit):
         util.run_cli("changelog", "0.3.0-a0", "--dry-run")
 
     out, _ = capsys.readouterr()
-
     file_regression.check(out, extension=".md")
 
     util.run_cli("bump", "--yes", "--prerelease", "alpha")
     capsys.readouterr()
 
-    tag_exists = git.tag_exist("0.3.0-a1")
-    assert tag_exists is True
+    assert git.tag_exist("0.3.0-a1")
 
     with pytest.raises(DryRunExit):
         util.run_cli("changelog", "0.3.0-a1", "--dry-run")
 
     out, _ = capsys.readouterr()
-
     file_regression.check(out, extension=".second-prerelease.md")
 
 
@@ -1269,26 +1249,24 @@ def test_changelog_from_current_version_tag_with_nonversion_tag(
 
     write_patch = mocker.patch("commitizen.commands.changelog.out.write")
 
-    changelog = Changelog(
-        config,
-        {
-            "dry_run": True,
-            "incremental": False,
-            "unreleased_version": None,
-            "rev_range": "2.0.0",
-        },
-    )
-
     with pytest.raises(DryRunExit):
-        changelog()
+        Changelog(
+            config,
+            {
+                "dry_run": True,
+                "incremental": False,
+                "unreleased_version": None,
+                "rev_range": "2.0.0",
+            },
+        )()
 
-    full_changelog = "\
+    write_patch.assert_called_with(
+        "\
 ## 2.0.0 (2022-02-13)\n\n\
 ### Feat\n\n\
 - commit 2\n\
 - commit 1\n"
-
-    write_patch.assert_called_with(full_changelog)
+    )
 
 
 @pytest.mark.parametrize(
@@ -1302,23 +1280,21 @@ def test_changelog_from_current_version_tag_with_nonversion_tag(
     ),
 )
 def test_changelog_template_option_precedence(
-    mocker: MockFixture,
     tmp_commitizen_project: Path,
-    any_changelog_format: ChangelogFormat,
     arg: str,
     cfg: str,
     expected: str,
     util: UtilFixture,
+    changelog_file: Path,
+    changelog_tpl: Path,
 ):
     project_root = Path(tmp_commitizen_project)
     cfg_template = project_root / "changelog.cfg"
     cmd_template = project_root / "changelog.cmd"
-    default_template = project_root / any_changelog_format.template
-    changelog = project_root / any_changelog_format.default_changelog_file
 
     cfg_template.write_text("from config")
     cmd_template.write_text("from cmd")
-    default_template.write_text("default")
+    changelog_tpl.write_text("default")
 
     util.create_file_and_commit("feat: new file")
 
@@ -1339,26 +1315,22 @@ def test_changelog_template_option_precedence(
         testargs.append(arg)
     util.run_cli(*testargs)
 
-    out = changelog.read_text()
-    assert out == expected
+    assert changelog_file.read_text() == expected
 
 
 def test_changelog_template_extras_precedence(
-    mocker: MockFixture,
-    tmp_commitizen_project: Path,
+    changelog_tpl: Path,
     mock_plugin: BaseCommitizen,
-    any_changelog_format: ChangelogFormat,
+    pyproject: Path,
+    changelog_file: Path,
     util: UtilFixture,
 ):
-    project_root = Path(tmp_commitizen_project)
-    changelog_tpl = project_root / any_changelog_format.template
     changelog_tpl.write_text("{{first}} - {{second}} - {{third}}")
 
     mock_plugin.template_extras = dict(
         first="from-plugin", second="from-plugin", third="from-plugin"
     )
 
-    pyproject = project_root / "pyproject.toml"
     pyproject.write_text(
         dedent(
             """\
@@ -1372,17 +1344,14 @@ def test_changelog_template_extras_precedence(
     )
 
     util.create_file_and_commit("feat: new file")
-
     util.run_cli("changelog", "--extra", "first=from-command")
 
-    changelog = project_root / any_changelog_format.default_changelog_file
-    assert changelog.read_text() == "from-command - from-config - from-plugin"
+    assert changelog_file.read_text() == "from-command - from-config - from-plugin"
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2021-06-11")
 def test_changelog_only_tag_matching_tag_format_included_prefix(
-    mocker: MockFixture,
     changelog_path: Path,
     config_path: Path,
     util: UtilFixture,
@@ -1406,7 +1375,6 @@ def test_changelog_only_tag_matching_tag_format_included_prefix(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_only_tag_matching_tag_format_included_prefix_sep(
-    mocker: MockFixture,
     changelog_path: Path,
     config_path: Path,
     util: UtilFixture,
@@ -1484,7 +1452,6 @@ def test_changelog_only_tag_matching_tag_format_included_suffix_sep(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_legacy_tags(
-    mocker: MockFixture,
     changelog_path: Path,
     config_path: Path,
     util: UtilFixture,
@@ -1519,7 +1486,6 @@ def test_changelog_legacy_tags(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2024-11-18")
 def test_changelog_incremental_change_tag_format(
-    mocker: MockFixture,
     changelog_path: Path,
     config_path: Path,
     file_regression: FileRegressionFixture,
@@ -1563,7 +1529,6 @@ def test_changelog_incremental_change_tag_format(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_ignored_tags(
-    mocker: MockFixture,
     changelog_path: Path,
     config_path: Path,
     capsys: pytest.CaptureFixture,
@@ -1588,29 +1553,27 @@ def test_changelog_ignored_tags(
     util.create_file_and_commit("feat: another new file")
     util.create_tag("not-ignored")
     util.run_cli("bump", "--changelog", "--yes")
-    out = open(changelog_path).read()
-    _, err = capsys.readouterr()
+    with open(changelog_path) as f:
+        out = f.read()
     assert "## ignore-0.1.0" not in out
-    assert "Invalid version tag: 'ignore-0.1.0'" not in err
     assert "## ignored" not in out
-    assert "Invalid version tag: 'ignored'" not in err
     assert "## not-ignored" not in out
-    assert "Invalid version tag: 'not-ignored'" in err
     assert "## v0.3.0" in out
+
+    _, err = capsys.readouterr()
+    assert "Invalid version tag: 'ignore-0.1.0'" not in err
+    assert "Invalid version tag: 'ignored'" not in err
+    assert "Invalid version tag: 'not-ignored'" in err
     assert "Invalid version tag: 'v0.3.0'" not in err
 
 
 def test_changelog_template_extra_quotes(
-    tmp_commitizen_project: Path,
-    any_changelog_format: ChangelogFormat,
+    changelog_tpl: Path,
+    changelog_file: Path,
     util: UtilFixture,
 ):
-    project_root = Path(tmp_commitizen_project)
-    changelog_tpl = project_root / any_changelog_format.template
     changelog_tpl.write_text("{{first}} - {{second}} - {{third}}")
-
     util.create_file_and_commit("feat: new file")
-
     util.run_cli(
         "changelog",
         "-e",
@@ -1621,99 +1584,80 @@ def test_changelog_template_extra_quotes(
         'third="double quotes"',
     )
 
-    changelog = project_root / any_changelog_format.default_changelog_file
-    assert changelog.read_text() == "no-quote - single quotes - double quotes"
+    assert changelog_file.read_text() == "no-quote - single quotes - double quotes"
 
 
 @pytest.mark.parametrize(
     "extra, expected",
     (
         pytest.param("key=value=", "value=", id="2-equals"),
-        pytest.param("key==value", "=value", id="2-consecutives-equals"),
+        pytest.param("key==value", "=value", id="2-consecutive-equals"),
         pytest.param("key==value==", "=value==", id="multiple-equals"),
     ),
 )
 def test_changelog_template_extra_weird_but_valid(
-    tmp_commitizen_project: Path,
-    any_changelog_format: ChangelogFormat,
+    changelog_tpl: Path,
+    changelog_file: Path,
     extra: str,
     expected: str,
     util: UtilFixture,
 ):
-    project_root = Path(tmp_commitizen_project)
-    changelog_tpl = project_root / any_changelog_format.template
     changelog_tpl.write_text("{{key}}")
-
     util.create_file_and_commit("feat: new file")
-
     util.run_cli("changelog", "-e", extra)
 
-    changelog = project_root / any_changelog_format.default_changelog_file
-    assert changelog.read_text() == expected
+    assert changelog_file.read_text() == expected
 
 
 @pytest.mark.parametrize("extra", ("no-equal", "", "=no-key"))
 def test_changelog_template_extra_bad_format(
-    tmp_commitizen_project: Path,
-    any_changelog_format: ChangelogFormat,
+    changelog_tpl: Path,
     extra: str,
     util: UtilFixture,
 ):
-    project_root = Path(tmp_commitizen_project)
-    changelog_tpl = project_root / any_changelog_format.template
     changelog_tpl.write_text("")
-
     util.create_file_and_commit("feat: new file")
-
     with pytest.raises(InvalidCommandArgumentError):
         util.run_cli("changelog", "-e", extra)
 
 
 def test_export_changelog_template_from_default(
-    tmp_commitizen_project: Path,
     any_changelog_format: ChangelogFormat,
     util: UtilFixture,
+    changelog_jinja_file: Path,
     repo_root: Path,
 ):
-    project_root = Path(tmp_commitizen_project)
-    target = project_root / "changelog.jinja"
     src = repo_root / "commitizen" / "templates" / any_changelog_format.template
 
-    util.run_cli("changelog", "--export-template", str(target))
+    util.run_cli("changelog", "--export-template", str(changelog_jinja_file))
 
-    assert target.exists()
-    assert target.read_text() == src.read_text()
+    assert changelog_jinja_file.exists()
+    assert changelog_jinja_file.read_text() == src.read_text()
 
 
 def test_export_changelog_template_from_plugin(
-    mocker: MockFixture,
-    tmp_commitizen_project: Path,
+    changelog_jinja_file: Path,
     mock_plugin: BaseCommitizen,
     changelog_format: ChangelogFormat,
     tmp_path: Path,
     util: UtilFixture,
 ):
-    project_root = Path(tmp_commitizen_project)
-    target = project_root / "changelog.jinja"
     src = tmp_path / changelog_format.template
     tpl = "I am a custom template"
     src.write_text(tpl)
     mock_plugin.template_loader = FileSystemLoader(tmp_path)
 
-    util.run_cli("changelog", "--export-template", str(target))
+    util.run_cli("changelog", "--export-template", str(changelog_jinja_file))
 
-    assert target.exists()
-    assert target.read_text() == tpl
+    assert changelog_jinja_file.exists()
+    assert changelog_jinja_file.read_text() == tpl
 
 
 def test_export_changelog_template_fails_when_template_has_no_filename(
     mocker: MockFixture,
-    tmp_commitizen_project: Path,
+    changelog_jinja_file: Path,
     util: UtilFixture,
 ):
-    project_root = Path(tmp_commitizen_project)
-    target = project_root / "changelog.jinja"
-
     # Mock a template object with no filename
     class FakeTemplate:
         filename = None
@@ -1724,7 +1668,7 @@ def test_export_changelog_template_fails_when_template_has_no_filename(
     )
 
     with pytest.raises(NotAllowed) as exc_info:
-        util.run_cli("changelog", "--export-template", str(target))
+        util.run_cli("changelog", "--export-template", str(changelog_jinja_file))
 
-    assert not target.exists()
+    assert not changelog_jinja_file.exists()
     assert "Template filename is not set" in str(exc_info.value)

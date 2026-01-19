@@ -587,27 +587,25 @@ def changelog_content(data_dir: Path) -> str:
 def test_get_commit_tag_is_a_version(gitcommits, tags):
     commit = gitcommits[0]
     tag = git.GitTag(*TAGS[0])
-    current_key = changelog.get_commit_tag(commit, tags)
-    assert current_key == tag
+    assert changelog.get_commit_tag(commit, tags) == tag
 
 
 def test_get_commit_tag_is_None(gitcommits, tags):
     commit = gitcommits[1]
-    current_key = changelog.get_commit_tag(commit, tags)
-    assert current_key is None
+    assert changelog.get_commit_tag(commit, tags) is None
 
 
 @pytest.mark.parametrize("test_input", TAGS)
 def test_valid_tag_included_in_changelog(test_input):
     tag = git.GitTag(*test_input)
     rules = changelog.TagRules()
-    assert rules.include_in_changelog(tag)
+    assert rules.include_in_changelog(tag) is True
 
 
 def test_invalid_tag_included_in_changelog():
     tag = git.GitTag("not_a_version", "rev", "date")
     rules = changelog.TagRules()
-    assert not rules.include_in_changelog(tag)
+    assert rules.include_in_changelog(tag) is False
 
 
 COMMITS_TREE = (
@@ -1188,12 +1186,9 @@ def test_generate_tree_from_commits(gitcommits, tags, merge_prereleases):
 
 
 def test_generate_tree_from_commits_with_no_commits(tags):
-    gitcommits = []
     parser = ConventionalCommitsCz.commit_parser
     changelog_pattern = ConventionalCommitsCz.bump_pattern
-    tree = changelog.generate_tree_from_commits(
-        gitcommits, tags, parser, changelog_pattern
-    )
+    tree = changelog.generate_tree_from_commits([], tags, parser, changelog_pattern)
 
     assert tuple(tree) == ({"changes": {}, "date": "", "version": "Unreleased"},)
 
