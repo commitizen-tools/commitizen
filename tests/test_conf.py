@@ -8,7 +8,7 @@ from typing import Any
 import pytest
 import yaml
 
-from commitizen import config, defaults, git
+from commitizen import cmd, config, defaults, git
 from commitizen.config.json_config import JsonConfig
 from commitizen.config.toml_config import TomlConfig
 from commitizen.config.yaml_config import YAMLConfig
@@ -172,9 +172,7 @@ def test_find_git_project_root(tmpdir):
         assert git.find_git_project_root() is None
 
 
-@pytest.mark.parametrize(
-    "config_files_manager", defaults.CONFIG_FILES.copy(), indirect=True
-)
+@pytest.mark.parametrize("config_files_manager", defaults.CONFIG_FILES, indirect=True)
 def test_set_key(config_files_manager):
     _conf = config.read_cfg()
     _conf.set_key("version", "2.0.0")
@@ -184,7 +182,7 @@ def test_set_key(config_files_manager):
 
 class TestReadCfg:
     @pytest.mark.parametrize(
-        "config_files_manager", defaults.CONFIG_FILES.copy(), indirect=True
+        "config_files_manager", defaults.CONFIG_FILES, indirect=True
     )
     def test_load_conf(_, config_files_manager):
         cfg = config.read_cfg()
@@ -239,71 +237,85 @@ class TestReadCfg:
             with pytest.raises(ConfigFileIsEmpty):
                 config.read_cfg(filepath="./not_in_root/pyproject.toml")
 
-    def test_warn_multiple_config_files(_, tmpdir, capsys):
-        """Test that a warning is issued when multiple config files exist."""
+
+class TestWarnMultipleConfigFiles:
+    @pytest.mark.parametrize(
+        "files,expected_path,should_warn",
+        [
+            # Same directory, different file types
+            ([(".cz.toml", PYPROJECT), (".cz.json", JSON_STR)], ".cz.toml", True),
+            ([(".cz.json", JSON_STR), (".cz.yaml", YAML_STR)], ".cz.json", True),
+            ([(".cz.toml", PYPROJECT), (".cz.yaml", YAML_STR)], ".cz.toml", True),
+            # With pyproject.toml (excluded from warning)
+            (
+                [("pyproject.toml", PYPROJECT), (".cz.json", JSON_STR)],
+                ".cz.json",
+                False,
+            ),
+            (
+                [("pyproject.toml", PYPROJECT), (".cz.toml", PYPROJECT)],
+                ".cz.toml",
+                False,
+            ),
+        ],
+    )
+    def test_warn_multiple_config_files_same_dir(
+        _, tmpdir, capsys, files, expected_path, should_warn
+    ):
+        """Test warning when multiple config files exist in same directory."""
         with tmpdir.as_cwd():
-            # Create multiple config files
-            tmpdir.join(".cz.toml").write(PYPROJECT)
-            tmpdir.join(".cz.json").write(JSON_STR)
+            for filename, content in files:
+                tmpdir.join(filename).write(content)
 
-            # Read config
             cfg = config.read_cfg()
-
-            # Check that the warning was issued
             captured = capsys.readouterr()
-            assert "Multiple config files detected" in captured.err
-            assert ".cz.toml" in captured.err
-            assert ".cz.json" in captured.err
-            assert "Using" in captured.err
 
-            # Verify the correct config is loaded (first in priority order)
-            assert cfg.settings == _settings
+            if should_warn:
+                assert "Multiple config files detected" in captured.err
+                assert "Using" in captured.err
+                for filename, _ in files:
+                    if filename != "pyproject.toml":
+                        assert filename in captured.err
+            else:
+                assert "Multiple config files detected" not in captured.err
 
-    def test_warn_multiple_config_files_with_pyproject(_, tmpdir, capsys):
-        """Test warning excludes pyproject.toml from the warning message."""
-        with tmpdir.as_cwd():
-            # Create multiple config files including pyproject.toml
-            tmpdir.join("pyproject.toml").write(PYPROJECT)
-            tmpdir.join(".cz.json").write(JSON_STR)
-
-            # Read config - should use pyproject.toml (first in priority)
-            cfg = config.read_cfg()
-
-            # No warning should be issued as only one non-pyproject config exists
-            captured = capsys.readouterr()
-            assert "Multiple config files detected" not in captured.err
-
-            # Verify the correct config is loaded
-            assert cfg.settings == _settings
-
-    def test_warn_multiple_config_files_uses_correct_one(_, tmpdir, capsys):
-        """Test that the correct config file is used when multiple exist."""
-        with tmpdir.as_cwd():
-            # Create .cz.json with different settings
-            json_different = """
-            {
-                "commitizen": {
-                    "name": "cz_conventional_commits",
-                    "version": "2.0.0"
-                }
-            }
-            """
-            tmpdir.join(".cz.json").write(json_different)
-            tmpdir.join(".cz.toml").write(PYPROJECT)
-
-            # Read config - should use pyproject.toml (first in defaults.CONFIG_FILES)
-            # But since pyproject.toml doesn't exist, .cz.toml is second in priority
-            cfg = config.read_cfg()
-
-            # Check that warning mentions both files
-            captured = capsys.readouterr()
-            assert "Multiple config files detected" in captured.err
-            assert ".cz.toml" in captured.err
-            assert ".cz.json" in captured.err
-
-            # Verify .cz.toml was used (second in priority after pyproject.toml)
-            assert cfg.settings["name"] == "cz_jira"  # from PYPROJECT
+            assert cfg.path == Path(expected_path)
+            # Verify config loaded correctly (name and version match expected)
+            assert cfg.settings["name"] == "cz_jira"
             assert cfg.settings["version"] == "1.0.0"
+
+    @pytest.mark.parametrize(
+        "config_file,content",
+        [
+            (".cz.json", JSON_STR),
+            (".cz.toml", PYPROJECT),
+            (".cz.yaml", YAML_STR),
+            ("cz.toml", PYPROJECT),
+            ("cz.json", JSON_STR),
+            ("cz.yaml", YAML_STR),
+        ],
+    )
+    def test_warn_same_filename_different_directories_with_git(
+        _, tmpdir, capsys, config_file, content
+    ):
+        """Test warning when same config filename exists in the current directory and in the git root."""
+        with tmpdir.as_cwd():
+            cmd.run("git init")
+
+            # Create config in git root
+            tmpdir.join(config_file).write(content)
+
+            # Create same filename in subdirectory
+            subdir = tmpdir.mkdir("subdir")
+            subdir.join(config_file).write(content)
+
+            with subdir.as_cwd():
+                cfg = config.read_cfg()
+                captured = capsys.readouterr()
+
+                assert "Multiple config files detected" in captured.err
+                assert f"Using config file: '{config_file}'" in captured.err
+                assert cfg.path == Path(config_file)
 
     def test_no_warn_with_explicit_config_path(_, tmpdir, capsys):
         """Test that no warning is issued when user explicitly specifies config."""
@@ -323,18 +335,50 @@ class TestReadCfg:
             json_cfg_expected = JsonConfig(data=JSON_STR, path=Path(".cz.json"))
             assert cfg.settings == json_cfg_expected.settings
 
+    @pytest.mark.parametrize(
+        "config_file, content, with_git",
+        [
+            (file, content, with_git)
+            for file, content in [
+                (".cz.toml", PYPROJECT),
+                (".cz.json", JSON_STR),
+                (".cz.yaml", YAML_STR),
+                ("pyproject.toml", PYPROJECT),
+                ("cz.toml", PYPROJECT),
+                ("cz.json", JSON_STR),
+                ("cz.yaml", YAML_STR),
+            ]
+            for with_git in [True, False]
+        ],
+    )
+    def test_no_warn_with_single_config_file(
+        _, tmpdir, capsys, config_file, content, with_git
+    ):
+        """Test that no warning is issued when user explicitly specifies config."""
+        with tmpdir.as_cwd():
+            if with_git:
+                cmd.run("git init")
+
+            tmpdir.join(config_file).write(content)
+
+            cfg = config.read_cfg()
+            captured = capsys.readouterr()
+
+            # No warning should be issued
+            assert "Multiple config files detected" not in captured.err
+            assert cfg.path == Path(config_file)
+
 
 @pytest.mark.parametrize(
-    "config_file, exception_string",
+    "config_file",
     [
-        (".cz.toml", r"\.cz\.toml"),
-        ("cz.toml", r"cz\.toml"),
-        ("pyproject.toml", r"pyproject\.toml"),
+        ".cz.toml",
+        "cz.toml",
+        "pyproject.toml",
     ],
-    ids=[".cz.toml", "cz.toml", "pyproject.toml"],
 )
 class TestTomlConfig:
-    def test_init_empty_config_content(self, tmpdir, config_file, exception_string):
+    def test_init_empty_config_content(self, tmpdir, config_file):
         path = tmpdir.mkdir("commitizen").join(config_file)
         toml_config = TomlConfig(data="", path=path)
         toml_config.init_empty_config_content()
@@ -342,9 +386,7 @@ class TestTomlConfig:
         with open(path, encoding="utf-8") as toml_file:
             assert toml_file.read() == "[tool.commitizen]\n"
 
-    def test_init_empty_config_content_with_existing_content(
-        self, tmpdir, config_file, exception_string
-    ):
+    def test_init_empty_config_content_with_existing_content(self, tmpdir, config_file):
         existing_content = "[tool.black]\nline-length = 88\n"
 
         path = tmpdir.mkdir("commitizen").join(config_file)
@@ -355,26 +397,24 @@ class TestTomlConfig:
         with open(path, encoding="utf-8") as toml_file:
             assert toml_file.read() == existing_content + "\n[tool.commitizen]\n"
 
-    def test_init_with_invalid_config_content(
-        self, tmpdir, config_file, exception_string
-    ):
+    def test_init_with_invalid_config_content(self, tmpdir, config_file):
         existing_content = "invalid toml content"
         path = tmpdir.mkdir("commitizen").join(config_file)
 
-        with pytest.raises(InvalidConfigurationError, match=exception_string):
+        with pytest.raises(InvalidConfigurationError) as excinfo:
             TomlConfig(data=existing_content, path=path)
+        assert config_file in str(excinfo.value)
 
 
 @pytest.mark.parametrize(
-    "config_file, exception_string",
+    "config_file",
     [
-        (".cz.json", r"\.cz\.json"),
-        ("cz.json", r"cz\.json"),
+        ".cz.json",
+        "cz.json",
     ],
-    ids=[".cz.json", "cz.json"],
 )
 class TestJsonConfig:
-    def test_init_empty_config_content(self, tmpdir, config_file, exception_string):
+    def test_init_empty_config_content(self, tmpdir, config_file):
         path = tmpdir.mkdir("commitizen").join(config_file)
         json_config = JsonConfig(data="{}", path=path)
         json_config.init_empty_config_content()
@@ -382,26 +422,24 @@ class TestJsonConfig:
         with open(path, encoding="utf-8") as json_file:
             assert json.load(json_file) == {"commitizen": {}}
 
-    def test_init_with_invalid_config_content(
-        self, tmpdir, config_file, exception_string
-    ):
+    def test_init_with_invalid_config_content(self, tmpdir, config_file):
         existing_content = "invalid json content"
         path = tmpdir.mkdir("commitizen").join(config_file)
 
-        with pytest.raises(InvalidConfigurationError, match=exception_string):
+        with pytest.raises(InvalidConfigurationError) as excinfo:
             JsonConfig(data=existing_content, path=path)
+        assert config_file in str(excinfo.value)
 
 
 @pytest.mark.parametrize(
-    "config_file, exception_string",
+    "config_file",
     [
-        (".cz.yaml", r"\.cz\.yaml"),
-        ("cz.yaml", r"cz\.yaml"),
+        ".cz.yaml",
+        "cz.yaml",
     ],
-    ids=[".cz.yaml", "cz.yaml"],
 )
 class TestYamlConfig:
-    def test_init_empty_config_content(self, tmpdir, config_file, exception_string):
+    def test_init_empty_config_content(self, tmpdir, config_file):
         path = tmpdir.mkdir("commitizen").join(config_file)
         yaml_config = YAMLConfig(data="{}", path=path)
         yaml_config.init_empty_config_content()
@@ -409,9 +447,10 @@ class TestYamlConfig:
         with open(path) as yaml_file:
             assert yaml.safe_load(yaml_file) == {"commitizen": {}}
 
-    def test_init_with_invalid_content(self, tmpdir, config_file, exception_string):
+    def test_init_with_invalid_content(self, tmpdir, config_file):
         existing_content = "invalid: .cz.yaml: content: maybe?"
         path = tmpdir.mkdir("commitizen").join(config_file)
 
-        with pytest.raises(InvalidConfigurationError, match=exception_string):
+        with pytest.raises(InvalidConfigurationError) as excinfo:
             YAMLConfig(data=existing_content, path=path)
+        assert config_file in str(excinfo.value)

@@ -1,0 +1,4 @@
+usage: cz [-h] [--config CONFIG] [--debug] [-n NAME] [-nr NO_RAISE]
+          {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version}
+          ...
+cz: error: argument {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version}: invalid choice: 'invalidCommand' (choose from 'init', 'commit', 'c', 'ls', 'example', 'info', 'schema', 'bump', 'changelog', 'ch', 'check', 'version')

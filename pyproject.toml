@@ -1,6 +1,6 @@
 [project]
 name = "commitizen"
-version = "4.11.3"
+version = "4.12.0"
 description = "Python commitizen client tool"
 authors = [{ name = "Santiago Fraire", email = "santiwilly@gmail.com" }]
 maintainers = [
@@ -107,17 +107,18 @@ test = [
     "pytest-freezer>=0.4.6",
     "pytest-xdist>=3.1.0",
     "pytest-gitconfig>=0.9.0",
+    "pre-commit>=4.5.1",
 ]
 
 linters = [
     "ruff>=0.11.5",
-    "pre-commit>=3.2.0",
     "mypy>=1.16.0",
     "types-deprecated>=1.2.9.2",
     "types-python-dateutil>=2.8.19.13",
     "types-PyYAML>=5.4.3",
     "types-termcolor>=0.1.1",
     "types-colorama>=0.4.15.20240311",
+    "prek>=0.2.28",
 ]
 
 documentation = ["mkdocs>=1.4.2", "mkdocs-material>=9.1.6"]
@@ -300,11 +301,11 @@ all.sequence = ["format", "lint", "check-commit", "cover"]
 "doc:build".cmd = "mkdocs build"
 
 doc.help = "Live documentation server"
-doc.cmd = "mkdocs serve"
+doc.cmd = "mkdocs serve --livereload"  # mkdocs hot reload failure workaround. Ref: https://github.com/mkdocs/mkdocs/issues/4032#issuecomment-3591002290
 
 ci.help = "Run all tasks in CI"
-ci.sequence = ["check-commit", { cmd = "pre-commit run --all-files" }, "cover"]
+ci.sequence = ["check-commit", { cmd = "prek run --all-files" }, "cover"]
 ci.env = { SKIP = "no-commit-to-branch" }
 
 setup-pre-commit.help = "Install pre-commit hooks"
-setup-pre-commit.cmd = "pre-commit install"
+setup-pre-commit.cmd = "prek install"

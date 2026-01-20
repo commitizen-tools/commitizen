@@ -118,8 +118,8 @@ class GitCommit(GitObject):
             >>> commit.parents
             ['def456', 'ghi789']
         """
-        rev, parents, title, author, author_email, *body_list = rev_and_commit.split(
-            "\n"
+        rev, parents, title, author, author_email, *body_list = (
+            rev_and_commit.splitlines()
         )
         return cls(
             rev=rev.strip(),

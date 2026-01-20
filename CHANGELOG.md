@@ -1,3 +1,27 @@
+## v4.12.0 (2026-01-19)
+
+### Feat
+
+- **prek**: supporting prek as an alternative to pre-commit and switching to prek (#1799)
+
+## v4.11.6 (2026-01-15)
+
+### Fix
+
+- **git**: commit bodies with carriage returns are correctly split by … (#1780)
+
+## v4.11.5 (2026-01-15)
+
+### Fix
+
+- **config**: ensure the actually used config file is correct, better test coverage (#1784)
+
+## v4.11.4 (2026-01-15)
+
+### Fix
+
+- **cli**: move sys.excepthook override to correct line, rename 'type' parameter, fix no argv test (#1791)
+
 ## v4.11.3 (2026-01-13)
 
 ### Fix

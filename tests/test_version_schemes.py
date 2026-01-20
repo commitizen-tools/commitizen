@@ -61,5 +61,8 @@ def test_warn_if_version_protocol_not_implemented(
     ep.load.return_value = NotVersionProtocol
     mocker.patch.object(metadata, "entry_points", return_value=(ep,))
 
-    with pytest.warns(match="VersionProtocol"):
+    with pytest.warns() as warnings:
         get_version_scheme(config.settings, "any")
+    assert "Version scheme any does not implement the VersionProtocol" in str(
+        warnings[0].message
+    )
