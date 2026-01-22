@@ -9,7 +9,19 @@ Please fill in the following content to let us know better about this change.
 
 ## Checklist
 
-- [ ] I have read the [contributing guidelines](https://commitizen-tools.github.io/commitizen/contributing/)
+- [ ] I have read the [contributing guidelines](https://commitizen-tools.github.io/commitizen/contributing/contributing)
+
+### Was generative AI tooling used to co-author this PR?
+
+<!--
+If generative AI tooling has been used in the process of authoring this PR, please change below checkbox to `[X]` followed by the name of the tool, uncomment the "Generated-by".
+-->
+
+- [ ] Yes (please specify the tool below)
+
+<!--
+Generated-by: [Tool Name] following [the guidelines](http://commitizen-tools.github.io/commitizen/contributing/pull_request/#ai-assisted-contributions)
+-->
 
 ### Code Changes
 
@@ -23,25 +35,31 @@ Please fill in the following content to let us know better about this change.
 - [ ] Update the documentation for the changes
 
 ### Documentation Changes
+<!-- You can skip this section if you are not making any documentation changes -->
+
 
 - [ ] Run `uv run poe doc` locally to ensure the documentation pages renders correctly
-- [ ] Check and fix any broken links (internal or external) in the documentation
+- [ ] Check and fix any broken links (internal or external)
 
-> When running `uv run poe doc`, any broken internal documentation links will be reported in the console output like this:
->
-> ```text
-> INFO    -  Doc file 'config.md' contains a link 'commands/bump.md#-post_bump_hooks', but the doc 'commands/bump.md' does not contain an anchor '#-post_bump_hooks'.
-> ```
+<!--
+When running `uv run poe doc`, any broken internal documentation links will be reported in the console output like this:
+
+```text
+INFO    -  Doc file 'config.md' contains a link 'commands/bump.md#-post_bump_hooks', but the doc 'commands/bump.md' does not contain an anchor '#-post_bump_hooks'.
+```
+-->
 
 ## Expected Behavior
 <!-- A clear and concise description of what you expected to happen -->
 
 
 ## Steps to Test This Pull Request
-<!-- Steps to reproduce the behavior:
+<!--
+Steps to reproduce the behavior:
 1. ...
 2. ...
-3. ... -->
+3. ...
+-->
 
 
 ## Additional Context
