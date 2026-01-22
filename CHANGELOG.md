@@ -1,3 +1,9 @@
+## v4.12.1 (2026-01-22)
+
+### Fix
+
+- **pre-commit-hooks**: remove magic constants on pre-push hook (#1815)
+
 ## v4.12.0 (2026-01-19)
 
 ### Feat
