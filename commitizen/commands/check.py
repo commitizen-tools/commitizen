@@ -5,6 +5,7 @@ import sys
 from typing import TYPE_CHECKING, TypedDict
 
 from commitizen import factory, git, out
+from commitizen.config.settings import ChainSettings
 from commitizen.exceptions import (
     InvalidCommandArgumentError,
     InvalidCommitMessageError,
@@ -20,7 +21,7 @@ class CheckArgs(TypedDict, total=False):
     commit_msg: str
     rev_range: str
     allow_abort: bool
-    message_length_limit: int | None
+    message_length_limit: int
     allowed_prefixes: list[str]
     message: str
     use_default_range: bool
@@ -37,25 +38,12 @@ class Check:
             arguments: All the flags provided by the user
             cwd: Current work directory
         """
+        self.settings = ChainSettings(config.settings, arguments).load_settings()
         self.commit_msg_file = arguments.get("commit_msg_file")
         self.commit_msg = arguments.get("message")
         self.rev_range = arguments.get("rev_range")
-        self.allow_abort = bool(
-            arguments.get("allow_abort", config.settings["allow_abort"])
-        )
 
         self.use_default_range = bool(arguments.get("use_default_range"))
-        self.max_msg_length = arguments.get(
-            "message_length_limit", config.settings.get("message_length_limit", None)
-        )
-
-        # we need to distinguish between None and [], which is a valid value
-        allowed_prefixes = arguments.get("allowed_prefixes")
-        self.allowed_prefixes: list[str] = (
-            allowed_prefixes
-            if allowed_prefixes is not None
-            else config.settings["allowed_prefixes"]
-        )
 
         num_exclusive_args_provided = sum(
             arg is not None
@@ -97,9 +85,9 @@ class Check:
                 check := self.cz.validate_commit_message(
                     commit_msg=commit.message,
                     pattern=pattern,
-                    allow_abort=self.allow_abort,
-                    allowed_prefixes=self.allowed_prefixes,
-                    max_msg_length=self.max_msg_length,
+                    allow_abort=self.settings["allow_abort"],
+                    allowed_prefixes=self.settings["allowed_prefixes"],
+                    max_msg_length=self.settings["message_length_limit"] or 0,
                     commit_hash=commit.rev,
                 )
             ).is_valid
