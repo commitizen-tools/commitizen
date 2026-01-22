@@ -121,7 +121,11 @@ linters = [
     "prek>=0.2.28",
 ]
 
-documentation = ["mkdocs>=1.4.2", "mkdocs-material>=9.1.6"]
+documentation = [
+    "mkdocs>=1.4.2",
+    "mkdocs-git-revision-date-localized-plugin>=1.5.0",
+    "mkdocs-material>=9.1.6",
+]
 
 script = [
     # for scripts/gen_cli_help_screenshots.py
