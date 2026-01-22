@@ -755,6 +755,8 @@ def test_bump_invalid_manual_version_raises_exception(
         "0.1.1",
         "0.2.0",
         "1.0.0",
+        "1.2",
+        "1",
     ],
 )
 def test_bump_manual_version(util: UtilFixture, manual_version):
@@ -773,6 +775,33 @@ def test_bump_manual_version_disallows_major_version_zero(util: UtilFixture):
     assert "--major-version-zero cannot be combined with MANUAL_VERSION" in str(
         excinfo.value
     )
+
+
+@pytest.mark.parametrize(
+    "initial_version, expected_version_after_bump",
+    [
+        ("1", "1.1.0"),
+        ("1.2", "1.3.0"),
+    ],
+)
+def test_bump_version_with_less_components_in_config(
+    tmp_commitizen_project_initial,
+    initial_version,
+    expected_version_after_bump,
+    util: UtilFixture,
+):
+    tmp_commitizen_project = tmp_commitizen_project_initial(version=initial_version)
+    util.run_cli("bump", "--yes")
+
+    tag_exists = git.tag_exist(expected_version_after_bump)
+    assert tag_exists is True
+
+    for version_file in [
+        tmp_commitizen_project.join("__version__.py"),
+        tmp_commitizen_project.join("pyproject.toml"),
+    ]:
+        with open(version_file) as f:
+            assert expected_version_after_bump in f.read()
 
 
 @pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
