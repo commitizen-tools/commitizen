@@ -6,6 +6,7 @@ from textwrap import dedent
 from typing import TYPE_CHECKING
 
 import pytest
+from tomlkit.exceptions import NonExistentKey
 
 from commitizen.providers import get_provider
 from commitizen.providers.cargo_provider import CargoProvider
@@ -451,3 +452,145 @@ checksum = "123abc"
     assert file.read_text() == dedent(expected_workspace_toml)
     # The lock file should remain unchanged since the member doesn't inherit workspace version
     assert lock_file.read_text() == dedent(expected_lock_content)
+
+
+def test_cargo_provider_get_raises_when_version_is_not_string(
+    config: BaseConfig,
+    chdir: Path,
+) -> None:
+    """CargoProvider.get should raise when root version is not a string."""
+    (chdir / CargoProvider.filename).write_text(
+        dedent(
+            """\
+            [package]
+            name = "whatever"
+            version = 1
+            """
+        )
+    )
+    config.settings["version_provider"] = "cargo"
+
+    provider = get_provider(config)
+    assert isinstance(provider, CargoProvider)
+
+    with pytest.raises(TypeError, match=r"expected root version to be a string"):
+        provider.get_version()
+
+
+def test_cargo_provider_get_raises_when_no_package_tables(
+    config: BaseConfig,
+    chdir: Path,
+) -> None:
+    """_root_version_table should raise when neither [workspace.package] nor [package] exists."""
+    (chdir / CargoProvider.filename).write_text(
+        dedent(
+            """\
+            [workspace]
+            members = []
+            """
+        )
+    )
+    config.settings["version_provider"] = "cargo"
+
+    provider = get_provider(config)
+    assert isinstance(provider, CargoProvider)
+
+    with pytest.raises(
+        NonExistentKey, match=r"expected either \[workspace\.package\] or \[package\]"
+    ):
+        provider.get_version()
+
+
+def test_workspace_member_dir_without_cargo_toml_is_ignored(
+    config: BaseConfig,
+    chdir: Path,
+) -> None:
+    """Cover: if not cargo_file.exists(): continue"""
+    workspace_toml = """\
+    [workspace]
+    members = ["missing_manifest"]
+
+    [workspace.package]
+    version = "0.1.0"
+    """
+    lock_content = """\
+    [[package]]
+    name = "missing_manifest"
+    version = "0.1.0"
+    source = "registry+https://github.com/rust-lang/crates.io-index"
+    checksum = "123abc"
+    """
+    expected_workspace_toml = """\
+    [workspace]
+    members = ["missing_manifest"]
+
+    [workspace.package]
+    version = "42.1"
+    """
+
+    (chdir / CargoProvider.filename).write_text(dedent(workspace_toml))
+    os.mkdir(chdir / "missing_manifest")  # directory exists, but Cargo.toml does NOT
+
+    (chdir / CargoProvider.lock_filename).write_text(dedent(lock_content))
+
+    config.settings["version_provider"] = "cargo"
+    provider = get_provider(config)
+    assert isinstance(provider, CargoProvider)
+
+    provider.set_version("42.1")
+    assert (chdir / CargoProvider.filename).read_text() == dedent(
+        expected_workspace_toml
+    )
+    # lock should remain unchanged since member cannot be inspected => not inheriting
+    assert (chdir / CargoProvider.lock_filename).read_text() == dedent(lock_content)
+
+
+def test_workspace_member_with_non_table_package_is_ignored(
+    config: BaseConfig,
+    chdir: Path,
+) -> None:
+    """Cover: if not hasattr(pkg, "get"): continue"""
+    workspace_toml = """\
+    [workspace]
+    members = ["bad_package"]
+
+    [workspace.package]
+    version = "0.1.0"
+    """
+    member_toml = """\
+    package = "oops"
+    """
+    lock_content = """\
+    [[package]]
+    name = "bad_package"
+    version = "0.1.0"
+    source = "registry+https://github.com/rust-lang/crates.io-index"
+    checksum = "123abc"
+    """
+    expected_workspace_toml = """\
+    [workspace]
+    members = ["bad_package"]
+
+    [workspace.package]
+    version = "42.1"
+    """
+
+    (chdir / CargoProvider.filename).write_text(dedent(workspace_toml))
+
+    os.mkdir(chdir / "bad_package")
+    (chdir / "bad_package" / "Cargo.toml").write_text(
+        dedent(member_toml)
+    )  # package is str, not table
+
+    (chdir / CargoProvider.lock_filename).write_text(dedent(lock_content))
+
+    config.settings["version_provider"] = "cargo"
+    provider = get_provider(config)
+    assert isinstance(provider, CargoProvider)
+
+    provider.set_version("42.1")
+    assert (chdir / CargoProvider.filename).read_text() == dedent(
+        expected_workspace_toml
+    )
+    # lock should remain unchanged since package is not a table => not inheriting
+    assert (chdir / CargoProvider.lock_filename).read_text() == dedent(lock_content)
