@@ -27,6 +27,7 @@ class VersionSchemeTestArgs(NamedTuple):
     prerelease: Prerelease | None
     prerelease_offset: int
     devrelease: int | None
+    postrelease: bool
 
 
 @dataclass
