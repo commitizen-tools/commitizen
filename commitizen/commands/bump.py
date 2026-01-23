@@ -46,6 +46,7 @@ class BumpArgs(Settings, total=False):
     changelog: bool
     check_consistency: bool
     devrelease: int | None
+    postrelease: bool
     dry_run: bool
     file_name: str
     files_only: bool | None
@@ -167,6 +168,7 @@ class Bump:
                 (self.arguments["increment"], "--increment"),
                 (self.arguments["prerelease"], "--prerelease"),
                 (self.arguments["devrelease"] is not None, "--devrelease"),
+                (self.arguments["postrelease"], "--postrelease"),
                 (self.arguments["local_version"], "--local-version"),
                 (self.arguments["build_metadata"], "--build-metadata"),
                 (self.arguments["major_version_zero"], "--major-version-zero"),
@@ -228,11 +230,15 @@ class Bump:
         if increment is None and self.arguments["allow_no_commit"]:
             increment = "PATCH"
 
+        if self.arguments["postrelease"]:
+            increment = None
+
         return increment, current_version.bump(
             increment,
             prerelease=self.arguments["prerelease"],
             prerelease_offset=self.bump_settings["prerelease_offset"],
             devrelease=self.arguments["devrelease"],
+            postrelease=self.arguments["postrelease"],
             is_local_version=self.arguments["local_version"],
             build_metadata=self.arguments["build_metadata"],
             exact_increment=self.arguments["increment_mode"] == "exact",

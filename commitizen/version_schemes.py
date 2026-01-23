@@ -76,6 +76,16 @@ class VersionProtocol(Protocol):
         raise NotImplementedError("must be implemented")
 
     @property
+    def is_postrelease(self) -> bool:
+        """Whether this version is a post-release."""
+        raise NotImplementedError("must be implemented")
+
+    @property
+    def postrelease(self) -> str | None:
+        """The postrelease potion of the version is this is a postrelease."""
+        raise NotImplementedError("must be implemented")
+
+    @property
     def public(self) -> str:
         """The public portion of the version."""
         raise NotImplementedError("must be implemented")
@@ -124,6 +134,7 @@ class VersionProtocol(Protocol):
         prerelease: Prerelease | None = None,
         prerelease_offset: int = 0,
         devrelease: int | None = None,
+        postrelease: bool = False,
         is_local_version: bool = False,
         build_metadata: str | None = None,
         exact_increment: bool = False,
@@ -164,6 +175,13 @@ class BaseVersion(_BaseVersion):
             return f"{self.pre[0]}{self.pre[1]}"
         return None
 
+    @property
+    def postrelease(self) -> str | None:
+        # version.post is needed for mypy check
+        if self.is_postrelease and self.post is not None:
+            return f"post{self.post}"
+        return None
+
     def generate_prerelease(
         self, prerelease: str | None = None, offset: int = 0
     ) -> str:
@@ -201,6 +219,19 @@ class BaseVersion(_BaseVersion):
 
         return f"dev{devrelease}"
 
+    def generate_postrelease(self, postrelease: bool = False) -> str:
+        """Generate postrelease"""
+        if not postrelease:
+            return ""
+
+        # version.post is needed for mypy check
+        if self.is_postrelease and self.post is not None:
+            new_postrelease_number = self.post + 1
+        else:
+            new_postrelease_number = 0
+
+        return f"post{new_postrelease_number}"
+
     def generate_build_metadata(self, build_metadata: str | None) -> str:
         """Generate build-metadata
 
@@ -235,6 +266,7 @@ class BaseVersion(_BaseVersion):
         prerelease: Prerelease | None = None,
         prerelease_offset: int = 0,
         devrelease: int | None = None,
+        postrelease: bool = False,
         is_local_version: bool = False,
         build_metadata: str | None = None,
         exact_increment: bool = False,
@@ -267,9 +299,10 @@ class BaseVersion(_BaseVersion):
             self if base == current_base else cast("BaseVersion", self.scheme(base))
         ).generate_prerelease(prerelease, offset=prerelease_offset)
 
-        # TODO: post version
+        post_version = self.generate_postrelease(postrelease)
+
         return self.scheme(
-            f"{base}{pre_version}{dev_version}{self.generate_build_metadata(build_metadata)}"
+            f"{base}{pre_version}{post_version}{dev_version}{self.generate_build_metadata(build_metadata)}"
         )  # type: ignore[return-value]
 
     def _get_increment_base(

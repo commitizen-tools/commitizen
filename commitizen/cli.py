@@ -264,6 +264,12 @@ data = {
                         "type": int,
                     },
                     {
+                        "name": ["--postrelease"],
+                        "action": "store_true",
+                        "default": False,
+                        "help": "Mark as a post release",
+                    },
+                    {
                         "name": ["--increment"],
                         "help": "Specify the desired increment.",
                         "choices": ["MAJOR", "MINOR", "PATCH"],
