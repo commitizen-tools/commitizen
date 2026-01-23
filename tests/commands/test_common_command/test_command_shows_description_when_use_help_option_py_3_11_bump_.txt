@@ -1,7 +1,8 @@
 usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
                [--no-verify] [--yes] [--tag-format TAG_FORMAT]
                [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}]
-               [--devrelease DEVRELEASE] [--increment {MAJOR,MINOR,PATCH}]
+               [--devrelease DEVRELEASE] [--postrelease]
+               [--increment {MAJOR,MINOR,PATCH}]
                [--increment-mode {linear,exact}] [--check-consistency]
                [--annotated-tag]
                [--annotated-tag-message ANNOTATED_TAG_MESSAGE] [--gpg-sign]
@@ -38,6 +39,7 @@ options:
                         choose type of prerelease
   --devrelease DEVRELEASE, -d DEVRELEASE
                         specify non-negative integer for dev. release
+  --postrelease         mark as a post release
   --increment {MAJOR,MINOR,PATCH}
                         manually specify the desired increment
   --increment-mode {linear,exact}
