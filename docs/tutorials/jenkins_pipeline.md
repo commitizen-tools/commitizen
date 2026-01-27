@@ -34,7 +34,7 @@ pipeline {
   }
 }
 
-def useCz(String authorName = 'Jenkins CI Server', String authorEmail = 'your-jenkins@email.com', String image =  'registry.hub.docker.com/commitizen/commitizen:latest', Closure body) {
+def useCz(String authorName = 'Jenkins CI Server', String authorEmail = 'your-jenkins@email.com', String image =  'ghcr.io/commitizen-tools/commitizen:latest', Closure body) {
     docker
     .image(image)
     .inside("-u 0 -v $WORKSPACE:/workspace -w /workspace -e GIT_AUTHOR_NAME='${authorName}' -e GIT_AUTHOR_EMAIL='${authorEmail}' -entrypoint='/bin/sh'") {

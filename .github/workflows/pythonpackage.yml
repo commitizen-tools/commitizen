@@ -68,3 +68,40 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           report_type: test_results
+
+  docker-build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check for Dockerfile changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            docker:
+              - 'Dockerfile'
+              - '.dockerignore'
+              - '.github/workflows/dockerpublish.yml'
+
+      - name: Extract version from pyproject.toml
+        if: steps.filter.outputs.docker == 'true'
+        id: version
+        run: |
+          VERSION=$(grep '^version = ' pyproject.toml | cut -d'"' -f2)
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Testing with version: ${VERSION}"
+
+      - name: Set up Docker Buildx
+        if: steps.filter.outputs.docker == 'true'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Test Docker build
+        if: steps.filter.outputs.docker == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          build-args: |
+            CZ_VERSION=${{ steps.version.outputs.version }}
+          cache-from: type=gha

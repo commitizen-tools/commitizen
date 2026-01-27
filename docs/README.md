@@ -88,6 +88,20 @@ uv tool upgrade commitizen
 brew install commitizen
 ```
 
+#### Docker Installation
+
+If you prefer using Docker or don't have Python installed:
+
+```bash
+# Pull the latest image
+docker pull ghcr.io/commitizen-tools/commitizen:latest
+
+# Use as a command
+docker run -v $(pwd):/workspace ghcr.io/commitizen-tools/commitizen:latest --help
+```
+
+For detailed Docker usage, see the [Docker tutorial](https://commitizen-tools.github.io/commitizen/tutorials/docker/).
+
 #### Project-Specific Installation
 
 You can add Commitizen to your Python project using any of these package managers:
@@ -240,6 +254,7 @@ Commitizen provides a comprehensive CLI with various commands. Here's the comple
 - [Exit Codes Reference](https://commitizen-tools.github.io/commitizen/exit_codes/)
 - [Configuration Guide](https://commitizen-tools.github.io/commitizen/config/configuration_file/)
 - [Command Documentation](https://commitizen-tools.github.io/commitizen/commands/init/)
+- [Docker Usage Guide](https://commitizen-tools.github.io/commitizen/tutorials/docker/)
 
 ### Getting Help
 

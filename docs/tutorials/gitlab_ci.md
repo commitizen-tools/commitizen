@@ -4,6 +4,17 @@ For this example, we have a `python/django` application and `Docker` as a contai
 
 _Goal_: Bump a new version every time that a change occurs on the `master` branch. The bump should be executed automatically by the `CI` process.
 
+!!! tip "Using Docker"
+    Instead of installing Commitizen with pip, you can use the official Docker image:
+    ```yaml
+    auto-bump:
+      stage: auto-bump
+      image: ghcr.io/commitizen-tools/commitizen:latest
+      script:
+        - cz bump --yes
+    ```
+    See the [Docker tutorial](docker.md) for more details.
+
 ### Development Workflow
 
 1. A developer creates a new commit on any branch (except `master`)
