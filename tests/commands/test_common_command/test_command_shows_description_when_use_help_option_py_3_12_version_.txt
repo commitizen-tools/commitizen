@@ -1,4 +1,4 @@
-usage: cz version [-h] [-r | -p | -c | -v] [--major | --minor]
+usage: cz version [-h] [-r | -p | -c | -v] [--major | --minor | --tag]
 
 get the version of the installed commitizen or the current project (default:
 installed commitizen)
@@ -14,3 +14,5 @@ options:
                     or --verbose.
   --minor           get just the minor version. Need to be used with --project
                     or --verbose.
+  --tag             get the version with tag prefix. Need to be used with
+                    --project or --verbose.
