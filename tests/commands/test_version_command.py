@@ -161,3 +161,42 @@ def test_version_just_major_error_no_project(config, capsys, argument: str):
         "Major or minor version can only be used with --project or --verbose."
         in captured.err
     )
+
+
+@pytest.mark.parametrize(
+    "version, tag_format, expected_output",
+    [
+        ("1.2.3", "v$version", "v1.2.3\n"),
+        ("1.2.3", "$version", "1.2.3\n"),
+        ("2.0.0", "release-$version", "release-2.0.0\n"),
+        ("0.1.0", "ver$version", "ver0.1.0\n"),
+    ],
+)
+def test_version_with_tag_format(
+    config, capsys, version: str, tag_format: str, expected_output: str
+):
+    """Test --tag option applies tag_format to version"""
+    config.settings["version"] = version
+    config.settings["tag_format"] = tag_format
+    commands.Version(
+        config,
+        {
+            "project": True,
+            "tag": True,
+        },
+    )()
+    captured = capsys.readouterr()
+    assert captured.out == expected_output
+
+
+def test_version_tag_without_project_error(config, capsys):
+    """Test --tag requires --project or --verbose"""
+    commands.Version(
+        config,
+        {
+            "tag": True,
+        },
+    )()
+    captured = capsys.readouterr()
+    assert not captured.out
+    assert "Tag can only be used with --project or --verbose." in captured.err
