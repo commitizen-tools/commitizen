@@ -133,7 +133,7 @@ def pre_commit_installed(mocker: MockFixture):
     )
 
 
-@pytest.fixture(scope="function", params=["pyproject.toml", ".cz.json", ".cz.yaml"])
+@pytest.fixture(params=["pyproject.toml", ".cz.json", ".cz.yaml"])
 def default_choice(request, mocker: MockFixture):
     mocker.patch(
         "questionary.select",
@@ -150,7 +150,7 @@ def default_choice(request, mocker: MockFixture):
         "questionary.checkbox",
         return_value=FakeQuestion(["commit-msg", "pre-push"]),
     )
-    yield request.param
+    return request.param
 
 
 def check_cz_config(config_filepath: str):
@@ -179,7 +179,7 @@ def check_pre_commit_config(expected: list[dict[str, Any]]):
 @pytest.mark.usefixtures("pre_commit_installed")
 class TestPreCommitCases:
     def test_no_existing_pre_commit_config(
-        _, default_choice: str, tmpdir, config: BaseConfig
+        self, default_choice: str, tmpdir, config: BaseConfig
     ):
         with tmpdir.as_cwd():
             commands.Init(config)()
@@ -187,7 +187,7 @@ class TestPreCommitCases:
             check_pre_commit_config([cz_hook_config])
 
     def test_empty_pre_commit_config(
-        _, default_choice: str, tmpdir, config: BaseConfig
+        self, default_choice: str, tmpdir, config: BaseConfig
     ):
         with tmpdir.as_cwd():
             p = tmpdir.join(pre_commit_config_filename)
@@ -198,7 +198,7 @@ class TestPreCommitCases:
             check_pre_commit_config([cz_hook_config])
 
     def test_pre_commit_config_without_cz_hook(
-        _, default_choice: str, tmpdir, config: BaseConfig
+        self, default_choice: str, tmpdir, config: BaseConfig
     ):
         existing_hook_config = {
             "repo": "https://github.com/pre-commit/pre-commit-hooks",
@@ -215,7 +215,7 @@ class TestPreCommitCases:
             check_pre_commit_config([existing_hook_config, cz_hook_config])
 
     def test_cz_hook_exists_in_pre_commit_config(
-        _, default_choice: str, tmpdir, config: BaseConfig
+        self, default_choice: str, tmpdir, config: BaseConfig
     ):
         with tmpdir.as_cwd():
             p = tmpdir.join(pre_commit_config_filename)
@@ -228,8 +228,9 @@ class TestPreCommitCases:
 
 
 class TestNoPreCommitInstalled:
+    @pytest.mark.usefixtures("default_choice")
     def test_pre_commit_not_installed(
-        _, mocker: MockFixture, config: BaseConfig, default_choice: str, tmpdir
+        self, mocker: MockFixture, config: BaseConfig, tmpdir
     ):
         # Assume `pre-commit` is not installed
         mocker.patch(

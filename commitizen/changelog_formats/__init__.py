@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import warnings
 from importlib import metadata
 from typing import TYPE_CHECKING, ClassVar, Protocol
 
@@ -99,5 +100,11 @@ def _guess_changelog_format(filename: str | None) -> type[ChangelogFormat] | Non
 
 def __getattr__(name: str) -> Callable[[str], type[ChangelogFormat] | None]:
     if name == "guess_changelog_format":
+        warnings.warn(
+            "guess_changelog_format is deprecated and will be removed in v5. "
+            "Use _guess_changelog_format instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return _guess_changelog_format
     raise AttributeError(f"module {__name__} has no attribute {name}")
