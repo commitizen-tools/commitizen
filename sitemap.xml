@@ -5,14 +5,6 @@
          <lastmod>2026-01-31</lastmod>
     </url>
     <url>
-         <loc>https://commitizen-tools.github.io/commitizen/contributing/</loc>
-         <lastmod>2026-01-31</lastmod>
-    </url>
-    <url>
-         <loc>https://commitizen-tools.github.io/commitizen/contributing_tldr/</loc>
-         <lastmod>2026-01-31</lastmod>
-    </url>
-    <url>
          <loc>https://commitizen-tools.github.io/commitizen/exit_codes/</loc>
          <lastmod>2026-01-31</lastmod>
     </url>
@@ -98,6 +90,18 @@
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/config/version_provider/</loc>
+         <lastmod>2026-01-31</lastmod>
+    </url>
+    <url>
+         <loc>https://commitizen-tools.github.io/commitizen/contributing/contributing/</loc>
+         <lastmod>2026-01-31</lastmod>
+    </url>
+    <url>
+         <loc>https://commitizen-tools.github.io/commitizen/contributing/contributing_tldr/</loc>
+         <lastmod>2026-01-31</lastmod>
+    </url>
+    <url>
+         <loc>https://commitizen-tools.github.io/commitizen/contributing/pull_request/</loc>
          <lastmod>2026-01-31</lastmod>
     </url>
     <url>
