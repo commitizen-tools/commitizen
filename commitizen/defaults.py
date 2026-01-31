@@ -48,7 +48,7 @@ class Settings(TypedDict, total=False):
     ignored_tag_formats: Sequence[str]
     legacy_tag_formats: Sequence[str]
     major_version_zero: bool
-    message_length_limit: int | None
+    message_length_limit: int
     name: str
     post_bump_hooks: list[str] | None
     pre_bump_hooks: list[str] | None
@@ -114,7 +114,7 @@ DEFAULT_SETTINGS: Settings = {
     "template": None,  # default provided by plugin
     "extras": {},
     "breaking_change_exclamation_in_title": False,
-    "message_length_limit": None,  # None for no limit
+    "message_length_limit": 0,  # 0 for no limit
 }
 
 MAJOR = "MAJOR"

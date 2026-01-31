@@ -118,7 +118,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         pattern: re.Pattern[str],
         allow_abort: bool,
         allowed_prefixes: list[str],
-        max_msg_length: int | None,
+        max_msg_length: int,
         commit_hash: str,
     ) -> ValidationResult:
         """Validate commit message against the pattern."""
@@ -130,7 +130,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         if any(map(commit_msg.startswith, allowed_prefixes)):
             return ValidationResult(True, [])
 
-        if max_msg_length is not None:
+        if max_msg_length > 0:
             msg_len = len(commit_msg.partition("\n")[0].strip())
             if msg_len > max_msg_length:
                 # TODO: capitalize the first letter of the error message for consistency in v5
