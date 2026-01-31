@@ -13,7 +13,6 @@ from commitizen.cz import registry
 from commitizen.defaults import CONFIG_FILES, DEFAULT_SETTINGS
 from commitizen.exceptions import (
     InitFailedError,
-    MissingCzCustomizeConfigError,
     NoAnswersError,
 )
 from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
@@ -169,21 +168,23 @@ class Init:
         return Path(filename)
 
     def _ask_name(self) -> str:
-
         def construct_choice_with_description(cz_name: str) -> questionary.Choice:
             try:
                 cz_class = registry.get(cz_name)(self.config)
                 if cz_class:
                     first_example = cz_class.schema().partition("\n")[0]
-                    return questionary.Choice(title=cz_name, value=cz_name, description=f"{first_example}")
-            except MissingCzCustomizeConfigError:
+                    return questionary.Choice(
+                        title=cz_name, value=cz_name, description=f"{first_example}"
+                    )
+            except Exception:  # pylint: disable=broad-except
                 pass
             return questionary.Choice(title=cz_name, value=cz_name)
 
         name: str = questionary.select(
             "Please choose a cz (commit rule): (default: cz_conventional_commits)",
             choices=[
-                construct_choice_with_description(cz_name) for cz_name in registry.keys()
+                construct_choice_with_description(cz_name)
+                for cz_name in registry.keys()
             ],
             default="cz_conventional_commits",
             style=self.cz.style,
