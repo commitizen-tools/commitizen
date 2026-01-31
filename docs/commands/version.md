@@ -3,3 +3,5 @@ Get the version of the installed Commitizen or the current project (default: ins
 ## Usage
 
 ![cz version --help](../images/cli_help/cz_version___help.svg)
+
+<!-- TODO: add documentation after this feature is stabilized -->
