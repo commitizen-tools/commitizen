@@ -11,7 +11,11 @@ from commitizen.__version__ import __version__
 from commitizen.config.factory import create_config
 from commitizen.cz import registry
 from commitizen.defaults import CONFIG_FILES, DEFAULT_SETTINGS
-from commitizen.exceptions import InitFailedError, NoAnswersError
+from commitizen.exceptions import (
+    InitFailedError,
+    MissingCzCustomizeConfigError,
+    NoAnswersError,
+)
 from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
 from commitizen.version_schemes import KNOWN_SCHEMES, Version, get_version_scheme
 
@@ -166,18 +170,20 @@ class Init:
 
     def _ask_name(self) -> str:
 
-        def construct_choice_with_example(cz_name: str) -> questionary.Choice:
-            cz_class = registry.get(cz_name)
-            if cz_class:
-                first_example = cz_class.example().splitlines()[0]
-                title = f"{cz_name}: {first_example}"
-                return questionary.Choice(title=title, value=cz_name)
+        def construct_choice_with_description(cz_name: str) -> questionary.Choice:
+            try:
+                cz_class = registry.get(cz_name)(self.config)
+                if cz_class:
+                    first_example = cz_class.schema().partition("\n")[0]
+                    return questionary.Choice(title=cz_name, value=cz_name, description=f"{first_example}")
+            except MissingCzCustomizeConfigError:
+                pass
             return questionary.Choice(title=cz_name, value=cz_name)
 
         name: str = questionary.select(
             "Please choose a cz (commit rule): (default: cz_conventional_commits)",
             choices=[
-                construct_choice_with_example(cz_name) for cz_name in registry.keys()
+                construct_choice_with_description(cz_name) for cz_name in registry.keys()
             ],
             default="cz_conventional_commits",
             style=self.cz.style,
