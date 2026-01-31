@@ -546,6 +546,12 @@ data = {
                         "action": "store_true",
                         "exclusive_group": "group2",
                     },
+                    {
+                        "name": ["--tag"],
+                        "help": "get the version with tag prefix. Need to be used with --project or --verbose.",
+                        "action": "store_true",
+                        "exclusive_group": "group2",
+                    },
                 ],
             },
         ],
