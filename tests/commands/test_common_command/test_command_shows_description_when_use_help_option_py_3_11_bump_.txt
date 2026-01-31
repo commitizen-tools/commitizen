@@ -1,7 +1,8 @@
-usage: cz bump [-h] [--dry-run] [--files-only] [--local-version] [--changelog]
-               [--no-verify] [--yes] [--tag-format TAG_FORMAT]
-               [--bump-message BUMP_MESSAGE] [--prerelease {alpha,beta,rc}]
-               [--devrelease DEVRELEASE] [--increment {MAJOR,MINOR,PATCH}]
+usage: cz bump [-h] [--dry-run] [--files-only] [--version-files-only]
+               [--local-version] [--changelog] [--no-verify] [--yes]
+               [--tag-format TAG_FORMAT] [--bump-message BUMP_MESSAGE]
+               [--prerelease {alpha,beta,rc}] [--devrelease DEVRELEASE]
+               [--increment {MAJOR,MINOR,PATCH}]
                [--increment-mode {linear,exact}] [--check-consistency]
                [--annotated-tag]
                [--annotated-tag-message ANNOTATED_TAG_MESSAGE] [--gpg-sign]
@@ -24,7 +25,9 @@ options:
   --dry-run             Perform a dry run, without committing or modifying
                         files.
   --files-only          Bump version in the `version_files` specified in the
-                        configuration file only.
+                        configuration file only(deprecated; use --version-
+                        files-only instead).
+  --version-files-only  bump version in the files from the config
   --local-version       Bump version only the local version portion (ignoring
                         the public version).
   --changelog, -ch      Generate the changelog for the latest version.
