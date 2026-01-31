@@ -243,7 +243,6 @@ ignore = [
     "PT007", # TODO(bearomorphism): enable this rule
     "PT011", # TODO(bearomorphism): enable this rule
     "PT022", # TODO(bearomorphism): enable this rule
-    "PT030", # TODO(bearomorphism): enable this rule
 ]
 extend-safe-fixes = [
     "TC", # Move imports inside/outside TYPE_CHECKING blocks
