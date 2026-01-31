@@ -11,7 +11,11 @@ from commitizen.__version__ import __version__
 from commitizen.config.factory import create_config
 from commitizen.cz import registry
 from commitizen.defaults import CONFIG_FILES, DEFAULT_SETTINGS
-from commitizen.exceptions import InitFailedError, NoAnswersError
+from commitizen.exceptions import (
+    InitFailedError,
+    MissingCzCustomizeConfigError,
+    NoAnswersError,
+)
 from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
 from commitizen.version_schemes import KNOWN_SCHEMES, Version, get_version_scheme
 
@@ -167,11 +171,27 @@ class Init:
     def _ask_name(self) -> str:
         name: str = questionary.select(
             "Please choose a cz (commit rule): (default: cz_conventional_commits)",
-            choices=list(registry.keys()),
+            choices=self._construct_name_choice_with_description(),
             default="cz_conventional_commits",
             style=self.cz.style,
         ).unsafe_ask()
         return name
+
+    def _construct_name_choice_with_description(self) -> list[questionary.Choice]:
+        choices = []
+        for cz_name, cz_class in registry.items():
+            try:
+                cz_obj = cz_class(self.config)
+            except MissingCzCustomizeConfigError:
+                choices.append(questionary.Choice(title=cz_name, value=cz_name))
+                continue
+            first_example = cz_obj.schema().partition("\n")[0]
+            choices.append(
+                questionary.Choice(
+                    title=cz_name, value=cz_name, description=first_example
+                )
+            )
+        return choices
 
     def _ask_tag(self) -> str:
         latest_tag = get_latest_tag_name()
