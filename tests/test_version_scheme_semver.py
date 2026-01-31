@@ -273,16 +273,6 @@ from tests.utils import VersionSchemeTestArgs
         ),
         (
             VersionSchemeTestArgs(
-                current_version="0.1.1",
-                increment="MINOR",
-                prerelease=None,
-                prerelease_offset=0,
-                devrelease=None,
-            ),
-            "0.2.0",
-        ),
-        (
-            VersionSchemeTestArgs(
                 current_version="0.2.0",
                 increment="MINOR",
                 prerelease=None,

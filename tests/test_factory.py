@@ -52,14 +52,13 @@ def test_discover_plugins(tmp_path):
     )
 
     sys.path.append(tmp_path.as_posix())
-    with pytest.warns(UserWarning) as record:
+    with pytest.warns(
+        UserWarning,
+        match="Legacy plugin 'cz_legacy' has been ignored: please expose it the 'commitizen.plugin' entrypoint",
+    ):
         discovered_plugins = discover_plugins([tmp_path.as_posix()])
     sys.path.pop()
 
-    assert (
-        record[0].message.args[0]
-        == "Legacy plugin 'cz_legacy' has been ignored: please expose it the 'commitizen.plugin' entrypoint"
-    )
     assert "cz_legacy" not in discovered_plugins
 
 

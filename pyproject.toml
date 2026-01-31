@@ -223,6 +223,8 @@ select = [
     "RUF022",
     # unused-noqa
     "RUF100",
+    # flake8-pytest-style
+    "PT",
     # Checks for uses of the assert keyword.
     "S101",
     # flake8-type-checking (TC)
@@ -233,7 +235,16 @@ select = [
     "TC005",
     "TC006",
 ]
-ignore = ["E501", "D1", "D415"]
+ignore = [
+    "E501",
+    "D1",
+    "D415",
+    "PT006", # TODO(bearomorphism): enable this rule
+    "PT007", # TODO(bearomorphism): enable this rule
+    "PT011", # TODO(bearomorphism): enable this rule
+    "PT022", # TODO(bearomorphism): enable this rule
+    "PT030", # TODO(bearomorphism): enable this rule
+]
 extend-safe-fixes = [
     "TC", # Move imports inside/outside TYPE_CHECKING blocks
     "UP", # Update syntaxes for current Python version recommendations
