@@ -165,9 +165,20 @@ class Init:
         return Path(filename)
 
     def _ask_name(self) -> str:
+
+        def construct_choice_with_example(cz_name: str) -> questionary.Choice:
+            cz_class = registry.get(cz_name)
+            if cz_class:
+                first_example = cz_class.example().splitlines()[0]
+                title = f"{cz_name}: {first_example}"
+                return questionary.Choice(title=title, value=cz_name)
+            return questionary.Choice(title=cz_name, value=cz_name)
+
         name: str = questionary.select(
             "Please choose a cz (commit rule): (default: cz_conventional_commits)",
-            choices=list(registry.keys()),
+            choices=[
+                construct_choice_with_example(cz_name) for cz_name in registry.keys()
+            ],
             default="cz_conventional_commits",
             style=self.cz.style,
         ).unsafe_ask()
