@@ -171,24 +171,30 @@ class Init:
     def _ask_name(self) -> str:
         name: str = questionary.select(
             f"Please choose a cz (commit rule): (default: {DEFAULT_SETTINGS['name']})",
-            choices=self._construct_name_choice_with_description(),
-            default=DEFAULT_SETTINGS["name"],
+            choices=self._construct_name_choices_from_registry(),
             style=self.cz.style,
         ).unsafe_ask()
         return name
 
-    def _construct_name_choice_with_description(self) -> list[questionary.Choice]:
+    def _construct_name_choices_from_registry(self) -> list[questionary.Choice]:
+        """
+        Construct questionary choices of cz names from registry.
+        """
         choices = []
         for cz_name, cz_class in registry.items():
             try:
                 cz_obj = cz_class(self.config)
             except MissingCzCustomizeConfigError:
+                # Fallback if description is not available
                 choices.append(questionary.Choice(title=cz_name, value=cz_name))
                 continue
-            first_example = cz_obj.schema().partition("\n")[0]
+
+            # Get the first line of the schema as the description
+            # TODO(bearomorphism): schema is a workaround. Add a description method to the cz class.
+            description = cz_obj.schema().partition("\n")[0]
             choices.append(
                 questionary.Choice(
-                    title=cz_name, value=cz_name, description=first_example
+                    title=cz_name, value=cz_name, description=description
                 )
             )
         return choices
