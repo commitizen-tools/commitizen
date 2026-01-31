@@ -306,6 +306,7 @@ class Bump:
             )
 
         updated_files: list[str] = []
+        changelog_file_name = None
         dry_run = self.arguments["dry_run"]
         if self.changelog_flag:
             changelog_args = {
@@ -318,12 +319,11 @@ class Bump:
                 "during_version_bump": self.arguments["prerelease"] is None,
             }
             if self.changelog_to_stdout:
-                changelog_cmd = Changelog(
-                    self.config,
-                    {**changelog_args, "dry_run": True},  # type: ignore[typeddict-item]
-                )
                 try:
-                    changelog_cmd()
+                    Changelog(
+                        self.config,
+                        {**changelog_args, "dry_run": True},  # type: ignore[typeddict-item]
+                    )()
                 except DryRunExit:
                     pass
 
@@ -332,7 +332,8 @@ class Bump:
                 {**changelog_args, "file_name": self.file_name},  # type: ignore[typeddict-item]
             )
             changelog_cmd()
-            updated_files.append(changelog_cmd.file_name)
+            changelog_file_name = changelog_cmd.file_name
+            updated_files.append(changelog_file_name)
 
         # Do not perform operations over files or git.
         if dry_run:
@@ -361,9 +362,7 @@ class Bump:
                 new_tag_version=new_tag_version,
                 message=message,
                 increment=increment,
-                changelog_file_name=changelog_cmd.file_name
-                if self.changelog_flag
-                else None,
+                changelog_file_name=changelog_file_name,
             )
 
         if self.arguments["files_only"]:
@@ -419,9 +418,7 @@ class Bump:
                 current_tag_version=new_tag_version,
                 message=message,
                 increment=increment,
-                changelog_file_name=changelog_cmd.file_name
-                if self.changelog_flag
-                else None,
+                changelog_file_name=changelog_file_name,
             )
 
         # TODO: For v3 output this only as diagnostic and remove this if

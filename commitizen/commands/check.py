@@ -20,7 +20,7 @@ class CheckArgs(TypedDict, total=False):
     commit_msg: str
     rev_range: str
     allow_abort: bool
-    message_length_limit: int | None
+    message_length_limit: int
     allowed_prefixes: list[str]
     message: str
     use_default_range: bool
@@ -46,7 +46,7 @@ class Check:
 
         self.use_default_range = bool(arguments.get("use_default_range"))
         self.max_msg_length = arguments.get(
-            "message_length_limit", config.settings.get("message_length_limit", None)
+            "message_length_limit", config.settings.get("message_length_limit", 0)
         )
 
         # we need to distinguish between None and [], which is a valid value

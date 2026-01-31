@@ -251,16 +251,6 @@ from tests.utils import VersionSchemeTestArgs
         ),
         (
             VersionSchemeTestArgs(
-                current_version="0.1.1",
-                increment="MINOR",
-                prerelease=None,
-                prerelease_offset=0,
-                devrelease=None,
-            ),
-            "0.2.0",
-        ),
-        (
-            VersionSchemeTestArgs(
                 current_version="0.2.0",
                 increment="MINOR",
                 prerelease=None,
@@ -735,26 +725,6 @@ from tests.utils import VersionSchemeTestArgs
         ),
         (
             VersionSchemeTestArgs(
-                current_version="1.1.0a0",
-                increment="PATCH",
-                prerelease="alpha",
-                prerelease_offset=0,
-                devrelease=None,
-            ),
-            "1.1.0a1",
-        ),
-        (
-            VersionSchemeTestArgs(
-                current_version="1.1.0a1",
-                increment="MINOR",
-                prerelease="alpha",
-                prerelease_offset=0,
-                devrelease=None,
-            ),
-            "1.1.0a2",
-        ),
-        (
-            VersionSchemeTestArgs(
                 current_version="1.1.0a2",
                 increment="PATCH",
                 prerelease="alpha",
@@ -1019,17 +989,6 @@ from tests.utils import VersionSchemeTestArgs
                 devrelease=None,
             ),
             "3.1.4rc0",
-        ),
-        #
-        (
-            VersionSchemeTestArgs(
-                current_version="3.1.4",
-                increment=None,
-                prerelease="alpha",
-                prerelease_offset=0,
-                devrelease=None,
-            ),
-            "3.1.4a0",
         ),
         (
             VersionSchemeTestArgs(

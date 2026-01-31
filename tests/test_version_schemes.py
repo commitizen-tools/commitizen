@@ -38,7 +38,7 @@ def test_raise_for_unknown_version_scheme(config: BaseConfig):
 
 def test_version_scheme_from_deprecated_config(config: BaseConfig):
     config.settings["version_type"] = "semver"
-    with pytest.warns(DeprecationWarning):
+    with pytest.warns(DeprecationWarning, match="Please use `version_scheme` instead"):
         scheme = get_version_scheme(config.settings)
     assert scheme is SemVer
 
@@ -46,7 +46,7 @@ def test_version_scheme_from_deprecated_config(config: BaseConfig):
 def test_version_scheme_from_config_priority(config: BaseConfig):
     config.settings["version_scheme"] = "pep440"
     config.settings["version_type"] = "semver"
-    with pytest.warns(DeprecationWarning):
+    with pytest.warns(DeprecationWarning, match="Please use `version_scheme` instead"):
         scheme = get_version_scheme(config.settings)
     assert scheme is Pep440
 

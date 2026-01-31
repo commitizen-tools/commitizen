@@ -36,7 +36,7 @@ class CommitArgs(TypedDict, total=False):
     dry_run: bool
     edit: bool
     extra_cli_args: str
-    message_length_limit: int | None
+    message_length_limit: int
     no_retry: bool
     signoff: bool
     write_message_to_file: Path | None
@@ -83,19 +83,23 @@ class Commit:
             raise NoAnswersError()
 
         message = self.cz.message(answers)
-        if limit := self.arguments.get(
-            "message_length_limit", self.config.settings.get("message_length_limit", 0)
-        ):
-            self._validate_subject_length(message=message, length_limit=limit)
-
+        self._validate_subject_length(message)
         return message
 
-    def _validate_subject_length(self, *, message: str, length_limit: int) -> None:
+    def _validate_subject_length(self, message: str) -> None:
+        message_length_limit = self.arguments.get(
+            "message_length_limit", self.config.settings.get("message_length_limit", 0)
+        )
         # By the contract, message_length_limit is set to 0 for no limit
+        if (
+            message_length_limit is None or message_length_limit <= 0
+        ):  # do nothing for no limit
+            return
+
         subject = message.partition("\n")[0].strip()
-        if len(subject) > length_limit:
+        if len(subject) > message_length_limit:
             raise CommitMessageLengthExceededError(
-                f"Length of commit message exceeds limit ({len(subject)}/{length_limit}), subject: '{subject}'"
+                f"Length of commit message exceeds limit ({len(subject)}/{message_length_limit}), subject: '{subject}'"
             )
 
     def manual_edit(self, message: str) -> str:

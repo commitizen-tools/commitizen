@@ -222,16 +222,6 @@ from tests.utils import VersionSchemeTestArgs
         ),
         (
             VersionSchemeTestArgs(
-                current_version="1.0.0-alpha.1",
-                increment=None,
-                prerelease="alpha",
-                prerelease_offset=0,
-                devrelease=None,
-            ),
-            "1.0.0-alpha.2",
-        ),
-        (
-            VersionSchemeTestArgs(
                 current_version="1",
                 increment=None,
                 prerelease="rc",
@@ -270,16 +260,6 @@ from tests.utils import VersionSchemeTestArgs
                 devrelease=1,
             ),
             "0.1.1-dev.1",
-        ),
-        (
-            VersionSchemeTestArgs(
-                current_version="0.1.1",
-                increment="MINOR",
-                prerelease=None,
-                prerelease_offset=0,
-                devrelease=None,
-            ),
-            "0.2.0",
         ),
         (
             VersionSchemeTestArgs(
@@ -397,16 +377,6 @@ from tests.utils import VersionSchemeTestArgs
                 increment=None,
                 prerelease="alpha",
                 prerelease_offset=0,
-                devrelease=None,
-            ),
-            "1.0.0-alpha.2",
-        ),
-        (
-            VersionSchemeTestArgs(
-                current_version="1.0.0-alpha.1",
-                increment=None,
-                prerelease="alpha",
-                prerelease_offset=0,
                 devrelease=1,
             ),
             "1.0.0-alpha.2.dev.1",
@@ -450,16 +420,6 @@ from tests.utils import VersionSchemeTestArgs
                 devrelease=None,
             ),
             "1.0.0-beta.1",
-        ),
-        (
-            VersionSchemeTestArgs(
-                current_version="1.0.0-beta.1",
-                increment=None,
-                prerelease="rc",
-                prerelease_offset=0,
-                devrelease=None,
-            ),
-            "1.0.0-rc.0",
         ),
         (
             VersionSchemeTestArgs(
