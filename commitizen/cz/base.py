@@ -130,7 +130,7 @@ class BaseCommitizen(metaclass=ABCMeta):
         if any(map(commit_msg.startswith, allowed_prefixes)):
             return ValidationResult(True, [])
 
-        if max_msg_length is not None:
+        if max_msg_length is not None and max_msg_length > 0:
             msg_len = len(commit_msg.partition("\n")[0].strip())
             if msg_len > max_msg_length:
                 # TODO: capitalize the first letter of the error message for consistency in v5
