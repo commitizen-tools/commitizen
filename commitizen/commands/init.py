@@ -169,25 +169,25 @@ class Init:
         return Path(filename)
 
     def _ask_name(self) -> str:
-        def construct_choice_with_description(cz_name: str) -> questionary.Choice:
-            cz_class = registry.get(cz_name)
-            if cz_class:
+        def construct_choice_with_description() -> list[questionary.Choice]:
+            choices = []
+            for cz_name, cz_class in registry.items():
                 try:
                     cz_obj = cz_class(self.config)
                 except MissingCzCustomizeConfigError:
-                    return questionary.Choice(title=cz_name, value=cz_name)
+                    choices.append(questionary.Choice(title=cz_name, value=cz_name))
+                    continue
                 first_example = cz_obj.schema().partition("\n")[0]
-                return questionary.Choice(
-                    title=cz_name, value=cz_name, description=first_example
+                choices.append(
+                    questionary.Choice(
+                        title=cz_name, value=cz_name, description=first_example
+                    )
                 )
-            return questionary.Choice(title=cz_name, value=cz_name)
+            return choices
 
         name: str = questionary.select(
             "Please choose a cz (commit rule): (default: cz_conventional_commits)",
-            choices=[
-                construct_choice_with_description(cz_name)
-                for cz_name in registry.keys()
-            ],
+            choices=construct_choice_with_description(),
             default="cz_conventional_commits",
             style=self.cz.style,
         ).unsafe_ask()
