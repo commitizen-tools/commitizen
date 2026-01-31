@@ -101,7 +101,7 @@ class Init:
             version_provider = self._ask_version_provider()  # select
             tag = self._ask_tag()  # confirm & select
             version_scheme = self._ask_version_scheme()  # select
-            version = get_version_scheme(self.config.settings, version_scheme)(tag)
+            version = get_version_scheme(DEFAULT_SETTINGS, version_scheme)(tag)
             tag_format = self._ask_tag_format(tag)  # confirm & text
             update_changelog_on_bump = self._ask_update_changelog_on_bump()  # confirm
             major_version_zero = self._ask_major_version_zero(version)  # confirm
@@ -120,7 +120,7 @@ class Init:
             with smart_open(
                 self._PRE_COMMIT_CONFIG_PATH,
                 "w",
-                encoding=self.config.settings["encoding"],
+                encoding=DEFAULT_SETTINGS["encoding"],
             ) as config_file:
                 yaml.safe_dump(config_data, stream=config_file)
 
@@ -292,7 +292,7 @@ class Init:
             return {"repos": [CZ_HOOK_CONFIG]}
 
         with open(
-            self._PRE_COMMIT_CONFIG_PATH, encoding=self.config.settings["encoding"]
+            self._PRE_COMMIT_CONFIG_PATH, encoding=DEFAULT_SETTINGS["encoding"]
         ) as config_file:
             config_data: dict[str, Any] = yaml.safe_load(config_file) or {}
 
