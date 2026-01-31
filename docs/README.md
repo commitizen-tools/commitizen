@@ -303,6 +303,11 @@ After installation, you can verify the completion is working by:
 
 For more detailed information about argcomplete configuration and troubleshooting, visit the [argcomplete documentation](https://kislyuk.github.io/argcomplete/).
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=commitizen-tools/commitizen)](https://star-history.com/#commitizen-tools/commitizen)
+
+
 ## Sponsors
 
 These are our cool sponsors!
