@@ -170,9 +170,9 @@ class Init:
 
     def _ask_name(self) -> str:
         name: str = questionary.select(
-            "Please choose a cz (commit rule): (default: cz_conventional_commits)",
+            f"Please choose a cz (commit rule): (default: {DEFAULT_SETTINGS['name']})",
             choices=self._construct_name_choice_with_description(),
-            default="cz_conventional_commits",
+            default=DEFAULT_SETTINGS["name"],
             style=self.cz.style,
         ).unsafe_ask()
         return name
