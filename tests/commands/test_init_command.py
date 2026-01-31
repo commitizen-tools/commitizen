@@ -10,6 +10,7 @@ import yaml
 
 from commitizen import cmd, commands
 from commitizen.__version__ import __version__
+from commitizen.cz import registry
 from commitizen.exceptions import InitFailedError, NoAnswersError
 
 if TYPE_CHECKING:
@@ -462,3 +463,22 @@ def test_init_configuration_with_version_provider(
         assert (
             "version = " not in config_data
         )  # Version should not be set when using version_provider
+
+
+def test_construct_name_choice_with_description(
+    config: BaseConfig, mocker: MockFixture
+):
+    """Test the construction of cz name choices with descriptions."""
+    init = commands.Init(config)
+    # mock the registry to have only one cz for testing
+    mocker.patch.dict(
+        "commitizen.cz.registry",
+        {"cz_conventional_commits": registry["cz_conventional_commits"]},
+        clear=True,
+    )
+    choices = init._construct_name_choice_with_description()
+    assert len(choices) == 1
+    choice = choices[0]
+    assert choice.title == "cz_conventional_commits"
+    assert choice.value == "cz_conventional_commits"
+    assert choice.description == "<type>(<scope>): <subject>"
