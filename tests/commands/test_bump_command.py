@@ -1027,7 +1027,7 @@ def test_bump_with_major_version_zero_with_plugin(
 def test_bump_command_version_type_deprecation(util: UtilFixture):
     util.create_file_and_commit("feat: check deprecation on --version-type")
 
-    with pytest.warns(DeprecationWarning):
+    with pytest.warns(DeprecationWarning, match=r".*--version-type.*deprecated"):
         util.run_cli(
             "bump",
             "--prerelease",
@@ -1044,7 +1044,7 @@ def test_bump_command_version_type_deprecation(util: UtilFixture):
 def test_bump_command_version_scheme_priority_over_version_type(util: UtilFixture):
     util.create_file_and_commit("feat: check deprecation on --version-type")
 
-    with pytest.warns(DeprecationWarning):
+    with pytest.warns(DeprecationWarning, match=r".*--version-type.*deprecated"):
         util.run_cli(
             "bump",
             "--prerelease",
