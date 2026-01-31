@@ -170,9 +170,10 @@ class Init:
     def _ask_name(self) -> str:
         def construct_choice_with_description(cz_name: str) -> questionary.Choice:
             try:
-                cz_class = registry.get(cz_name)(self.config)
+                cz_class = registry.get(cz_name)
                 if cz_class:
-                    first_example = cz_class.schema().partition("\n")[0]
+                    cz_obj = cz_class(self.config)
+                    first_example = cz_obj.schema().partition("\n")[0]
                     return questionary.Choice(
                         title=cz_name, value=cz_name, description=f"{first_example}"
                     )
