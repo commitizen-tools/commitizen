@@ -65,6 +65,19 @@ You can also set this in the configuration file with `version_scheme = "semver"`
     | Devrelease     | `0.1.1.dev1`   | `0.1.1-dev1`    |
     | Dev and pre    | `1.0.0a3.dev1` | `1.0.0-a3-dev1` |
 
+
+!!! note "Incomplete Version Handling"
+    Commitizen treats a three-part version (major.minor.patch) as complete.
+    If your configured version is incomplete (for example, `1` or `1.2`), Commitizen pads missing parts with zeros when it needs `major/minor/patch` for tag formatting.
+    The tag output depends on your `tag_format`: formats using `${version}` keep `1`/`1.2`, while formats using `${major}.${minor}.${patch}` will render `1.0.0`/`1.2.0`.
+
+    When bumping from an incomplete version, Commitizen looks for the latest existing tag that matches the provided release prefix.
+    For example, if the current version is `1.2` and the latest `1.2.x` tag is `1.2.3`, then a patch bump yields `1.2.4` and a minor bump yields `1.3.0`.
+
+!!! tip
+    To control the behaviour of bumping and version parsing, you may implement your own `version_scheme` by inheriting from `commitizen.version_schemes.BaseVersion` or use an existing plugin package.
+
+
 ### PEP440 Version Examples
 
 Commitizen supports the [PEP 440][pep440] version format, which includes several version types. Here are examples of each:
