@@ -57,7 +57,6 @@ def docker_compose_file(sample_file: SampleFileFixture) -> Path:
 
 
 @pytest.fixture(
-    scope="function",
     params=(
         "multiple_versions_to_update_pyproject.toml",
         "multiple_versions_to_update_pyproject_wo_eol.toml",

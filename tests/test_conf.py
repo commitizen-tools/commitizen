@@ -184,16 +184,16 @@ class TestReadCfg:
     @pytest.mark.parametrize(
         "config_files_manager", defaults.CONFIG_FILES, indirect=True
     )
-    def test_load_conf(_, config_files_manager):
+    def test_load_conf(self, config_files_manager):
         cfg = config.read_cfg()
         assert cfg.settings == _settings
 
-    def test_conf_returns_default_when_no_files(_, tmpdir):
+    def test_conf_returns_default_when_no_files(self, tmpdir):
         with tmpdir.as_cwd():
             cfg = config.read_cfg()
             assert cfg.settings == defaults.DEFAULT_SETTINGS
 
-    def test_load_empty_pyproject_toml_and_cz_toml_with_config(_, tmpdir):
+    def test_load_empty_pyproject_toml_and_cz_toml_with_config(self, tmpdir):
         with tmpdir.as_cwd():
             p = tmpdir.join("pyproject.toml")
             p.write("")
@@ -203,7 +203,7 @@ class TestReadCfg:
             cfg = config.read_cfg()
             assert cfg.settings == _settings
 
-    def test_load_pyproject_toml_from_config_argument(_, tmpdir):
+    def test_load_pyproject_toml_from_config_argument(self, tmpdir):
         with tmpdir.as_cwd():
             _not_root_path = tmpdir.mkdir("not_in_root").join("pyproject.toml")
             _not_root_path.write(PYPROJECT)
@@ -211,7 +211,7 @@ class TestReadCfg:
             cfg = config.read_cfg(filepath="./not_in_root/pyproject.toml")
             assert cfg.settings == _settings
 
-    def test_load_cz_json_not_from_config_argument(_, tmpdir):
+    def test_load_cz_json_not_from_config_argument(self, tmpdir):
         with tmpdir.as_cwd():
             _not_root_path = tmpdir.mkdir("not_in_root").join(".cz.json")
             _not_root_path.write(JSON_STR)
@@ -220,7 +220,7 @@ class TestReadCfg:
             json_cfg_by_class = JsonConfig(data=JSON_STR, path=_not_root_path)
             assert cfg.settings == json_cfg_by_class.settings
 
-    def test_load_cz_yaml_not_from_config_argument(_, tmpdir):
+    def test_load_cz_yaml_not_from_config_argument(self, tmpdir):
         with tmpdir.as_cwd():
             _not_root_path = tmpdir.mkdir("not_in_root").join(".cz.yaml")
             _not_root_path.write(YAML_STR)
@@ -229,7 +229,7 @@ class TestReadCfg:
             yaml_cfg_by_class = YAMLConfig(data=YAML_STR, path=_not_root_path)
             assert cfg.settings == yaml_cfg_by_class._settings
 
-    def test_load_empty_pyproject_toml_from_config_argument(_, tmpdir):
+    def test_load_empty_pyproject_toml_from_config_argument(self, tmpdir):
         with tmpdir.as_cwd():
             _not_root_path = tmpdir.mkdir("not_in_root").join("pyproject.toml")
             _not_root_path.write("")
@@ -260,7 +260,7 @@ class TestWarnMultipleConfigFiles:
         ],
     )
     def test_warn_multiple_config_files_same_dir(
-        _, tmpdir, capsys, files, expected_path, should_warn
+        self, tmpdir, capsys, files, expected_path, should_warn
     ):
         """Test warning when multiple config files exist in same directory."""
         with tmpdir.as_cwd():
@@ -296,7 +296,7 @@ class TestWarnMultipleConfigFiles:
         ],
     )
     def test_warn_same_filename_different_directories_with_git(
-        _, tmpdir, capsys, config_file, content
+        self, tmpdir, capsys, config_file, content
     ):
         """Test warning when same config filename exists in the current directory and in the git root."""
         with tmpdir.as_cwd():
@@ -317,7 +317,7 @@ class TestWarnMultipleConfigFiles:
                 assert f"Using config file: '{config_file}'" in captured.err
                 assert cfg.path == Path(config_file)
 
-    def test_no_warn_with_explicit_config_path(_, tmpdir, capsys):
+    def test_no_warn_with_explicit_config_path(self, tmpdir, capsys):
         """Test that no warning is issued when user explicitly specifies config."""
         with tmpdir.as_cwd():
             # Create multiple config files
@@ -352,7 +352,7 @@ class TestWarnMultipleConfigFiles:
         ],
     )
     def test_no_warn_with_single_config_file(
-        _, tmpdir, capsys, config_file, content, with_git
+        self, tmpdir, capsys, config_file, content, with_git
     ):
         """Test that no warning is issued when user explicitly specifies config."""
         with tmpdir.as_cwd():

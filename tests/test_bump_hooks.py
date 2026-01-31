@@ -38,5 +38,5 @@ def test_run_error(mocker: MockFixture):
 
 def test_format_env():
     result = hooks._format_env("TEST_", {"foo": "bar", "bar": "baz"})
-    assert "TEST_FOO" in result and result["TEST_FOO"] == "bar"
-    assert "TEST_BAR" in result and result["TEST_BAR"] == "baz"
+    assert result["TEST_FOO"] == "bar"
+    assert result["TEST_BAR"] == "baz"
