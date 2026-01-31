@@ -13,6 +13,7 @@ import argcomplete
 from decli import cli
 
 from commitizen import commands, config, out, version_schemes
+from commitizen.defaults import DEFAULT_SETTINGS
 from commitizen.exceptions import (
     CommitizenException,
     ExitCode,
@@ -672,7 +673,7 @@ def main() -> None:
     if args.name:
         conf.update({"name": args.name})
     elif not conf.path:
-        conf.update({"name": "cz_conventional_commits"})
+        conf.update({"name": DEFAULT_SETTINGS["name"]})
 
     if args.debug:
         logging.getLogger("commitizen").setLevel(logging.DEBUG)
