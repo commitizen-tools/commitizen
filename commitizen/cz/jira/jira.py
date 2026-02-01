@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import os
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from commitizen.cz.base import BaseCommitizen
@@ -73,7 +73,6 @@ class JiraSmartCz(BaseCommitizen):
         return r".*[A-Z]{2,}\-[0-9]+( #| .* #).+( #.+)*"
 
     def info(self) -> str:
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        filepath = os.path.join(dir_path, "jira_info.txt")
-        with open(filepath, encoding=self.config.settings["encoding"]) as f:
+        filepath = Path(__file__).parent / "jira_info.txt"
+        with filepath.open(encoding=self.config.settings["encoding"]) as f:
             return f.read()

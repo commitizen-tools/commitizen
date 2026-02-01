@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import os
-import os.path
 from difflib import SequenceMatcher
 from operator import itemgetter
 from pathlib import Path
@@ -66,7 +64,7 @@ class Changelog:
                 f"or the setting `changelog_file` in {self.config.path}"
             )
         self.file_name = (
-            os.path.join(str(self.config.path.parent), changelog_file_name)
+            Path(self.config.path.parent, changelog_file_name).as_posix()
             if self.config.path is not None
             else changelog_file_name
         )
@@ -282,9 +280,10 @@ class Changelog:
             raise DryRunExit()
 
         lines = []
-        if self.incremental and os.path.isfile(self.file_name):
-            with open(
-                self.file_name, encoding=self.config.settings["encoding"]
+        changelog_path = Path(self.file_name)
+        if self.incremental and changelog_path.is_file():
+            with changelog_path.open(
+                encoding=self.config.settings["encoding"]
             ) as changelog_file:
                 lines = changelog_file.readlines()
 

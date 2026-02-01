@@ -61,9 +61,7 @@ class Commit:
             return None
 
         # Read commit message from backup
-        with open(
-            self.backup_file_path, encoding=self.config.settings["encoding"]
-        ) as f:
+        with self.backup_file_path.open(encoding=self.config.settings["encoding"]) as f:
             return f.read().strip()
 
     def _get_message_by_prompt_commit_questions(self) -> str:

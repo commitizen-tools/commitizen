@@ -39,7 +39,7 @@ class CargoProvider(TomlProvider):
 
     def set_version(self, version: str) -> None:
         super().set_version(version)
-        if self.lock_file.exists():
+        if self.lock_file.is_file():
             self.set_lock_version(version)
 
     def set_lock_version(self, version: str) -> None:

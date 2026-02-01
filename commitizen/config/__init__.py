@@ -34,16 +34,14 @@ def _resolve_config_candidates() -> list[BaseConfig]:
 
 
 def _create_config_from_path(path: Path) -> BaseConfig:
-    with open(path, "rb") as f:
-        data: bytes = f.read()
-
-    return create_config(data=data, path=path)
+    with path.open("rb") as f:
+        return create_config(data=f.read(), path=path)
 
 
 def read_cfg(filepath: str | None = None) -> BaseConfig:
     if filepath is not None:
         conf_path = Path(filepath)
-        if not conf_path.exists():
+        if not conf_path.is_file():
             raise ConfigFileNotFound()
         conf = _create_config_from_path(conf_path)
         if conf.is_empty_config:

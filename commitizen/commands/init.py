@@ -288,11 +288,12 @@ class Init:
             ],
         }
 
-        if not Path(".pre-commit-config.yaml").is_file():
+        pre_commit_config_path = Path(self._PRE_COMMIT_CONFIG_PATH)
+        if not pre_commit_config_path.is_file():
             return {"repos": [CZ_HOOK_CONFIG]}
 
-        with open(
-            self._PRE_COMMIT_CONFIG_PATH, encoding=self.config.settings["encoding"]
+        with pre_commit_config_path.open(
+            encoding=self.config.settings["encoding"]
         ) as config_file:
             config_data: dict[str, Any] = yaml.safe_load(config_file) or {}
 

@@ -32,7 +32,7 @@ class JsonConfig(BaseConfig):
             json.dump({"commitizen": {}}, json_file)
 
     def set_key(self, key: str, value: object) -> Self:
-        with open(self.path, "rb") as f:
+        with self.path.open("rb") as f:
             config_doc = json.load(f)
 
         config_doc["commitizen"][key] = value
