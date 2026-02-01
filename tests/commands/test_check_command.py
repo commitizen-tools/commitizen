@@ -123,12 +123,12 @@ def test_check_conventional_commit_succeeds(
         ),
     ),
 )
-def test_check_no_conventional_commit(commit_msg, config, tmpdir):
+def test_check_no_conventional_commit(commit_msg, default_config, tmpdir):
     tempfile = tmpdir.join("temp_commit_file")
     tempfile.write(commit_msg)
 
     with pytest.raises(InvalidCommitMessageError):
-        commands.Check(config=config, arguments={"commit_msg_file": tempfile})()
+        commands.Check(config=default_config, arguments={"commit_msg_file": tempfile})()
 
 
 @pytest.mark.parametrize(
@@ -140,44 +140,50 @@ def test_check_no_conventional_commit(commit_msg, config, tmpdir):
         "bump: 0.0.1 -> 1.0.0",
     ),
 )
-def test_check_conventional_commit(commit_msg, config, success_mock: MockType, tmpdir):
+def test_check_conventional_commit(
+    commit_msg, default_config, success_mock: MockType, tmpdir
+):
     tempfile = tmpdir.join("temp_commit_file")
     tempfile.write(commit_msg)
-    commands.Check(config=config, arguments={"commit_msg_file": tempfile})()
+    commands.Check(config=default_config, arguments={"commit_msg_file": tempfile})()
     success_mock.assert_called_once()
 
 
-def test_check_command_when_commit_file_not_found(config):
+def test_check_command_when_commit_file_not_found(default_config):
     with pytest.raises(FileNotFoundError):
-        commands.Check(config=config, arguments={"commit_msg_file": "no_such_file"})()
+        commands.Check(
+            config=default_config, arguments={"commit_msg_file": "no_such_file"}
+        )()
 
 
 def test_check_a_range_of_git_commits(
-    config, success_mock: MockType, mocker: MockFixture
+    default_config, success_mock: MockType, mocker: MockFixture
 ):
     mocker.patch(
         "commitizen.git.get_commits", return_value=_build_fake_git_commits(COMMIT_LOG)
     )
 
-    commands.Check(config=config, arguments={"rev_range": "HEAD~10..master"})()
+    commands.Check(config=default_config, arguments={"rev_range": "HEAD~10..master"})()
     success_mock.assert_called_once()
 
 
-def test_check_a_range_of_git_commits_and_failed(config, mocker: MockFixture):
+def test_check_a_range_of_git_commits_and_failed(default_config, mocker: MockFixture):
     mocker.patch(
         "commitizen.git.get_commits",
         return_value=_build_fake_git_commits(["This commit does not follow rule"]),
     )
 
     with pytest.raises(InvalidCommitMessageError) as excinfo:
-        commands.Check(config=config, arguments={"rev_range": "HEAD~10..master"})()
+        commands.Check(
+            config=default_config, arguments={"rev_range": "HEAD~10..master"}
+        )()
     assert "This commit does not follow rule" in str(excinfo.value)
 
 
-def test_check_command_with_invalid_argument(config):
+def test_check_command_with_invalid_argument(default_config):
     with pytest.raises(InvalidCommandArgumentError) as excinfo:
         commands.Check(
-            config=config,
+            config=default_config,
             arguments={"commit_msg_file": "some_file", "rev_range": "HEAD~10..master"},
         )
     assert (
@@ -187,15 +193,17 @@ def test_check_command_with_invalid_argument(config):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_check_command_with_empty_range(config: BaseConfig, util: UtilFixture):
+def test_check_command_with_empty_range(default_config: BaseConfig, util: UtilFixture):
     # must initialize git with a commit
     util.create_file_and_commit("feat: initial")
     with pytest.raises(NoCommitsFoundError) as excinfo:
-        commands.Check(config=config, arguments={"rev_range": "master..master"})()
+        commands.Check(
+            config=default_config, arguments={"rev_range": "master..master"}
+        )()
     assert "No commit found with range: 'master..master'" in str(excinfo)
 
 
-def test_check_a_range_of_failed_git_commits(config, mocker: MockFixture):
+def test_check_a_range_of_failed_git_commits(default_config, mocker: MockFixture):
     ill_formatted_commits_msgs = [
         "First commit does not follow rule",
         "Second commit does not follow rule",
@@ -207,59 +215,66 @@ def test_check_a_range_of_failed_git_commits(config, mocker: MockFixture):
     )
 
     with pytest.raises(InvalidCommitMessageError) as excinfo:
-        commands.Check(config=config, arguments={"rev_range": "HEAD~10..master"})()
+        commands.Check(
+            config=default_config, arguments={"rev_range": "HEAD~10..master"}
+        )()
     assert all([msg in str(excinfo.value) for msg in ill_formatted_commits_msgs])
 
 
-def test_check_command_with_valid_message(config, success_mock: MockType):
+def test_check_command_with_valid_message(default_config, success_mock: MockType):
     commands.Check(
-        config=config, arguments={"message": "fix(scope): some commit message"}
+        config=default_config,
+        arguments={"message": "fix(scope): some commit message"},
     )()
     success_mock.assert_called_once()
 
 
 @pytest.mark.parametrize("message", ["bad commit", ""])
-def test_check_command_with_invalid_message(config, message):
+def test_check_command_with_invalid_message(default_config, message):
     with pytest.raises(InvalidCommitMessageError):
-        commands.Check(config=config, arguments={"message": message})()
+        commands.Check(config=default_config, arguments={"message": message})()
 
 
-def test_check_command_with_allow_abort_arg(config, success_mock):
-    commands.Check(config=config, arguments={"message": "", "allow_abort": True})()
-    success_mock.assert_called_once()
-
-
-def test_check_command_with_allow_abort_config(config, success_mock):
-    config.settings["allow_abort"] = True
-    commands.Check(config=config, arguments={"message": ""})()
-    success_mock.assert_called_once()
-
-
-def test_check_command_override_allow_abort_config(config):
-    config.settings["allow_abort"] = True
-    with pytest.raises(InvalidCommitMessageError):
-        commands.Check(config=config, arguments={"message": "", "allow_abort": False})()
-
-
-def test_check_command_with_allowed_prefixes_arg(config, success_mock):
+def test_check_command_with_allow_abort_arg(default_config, success_mock):
     commands.Check(
-        config=config,
+        config=default_config, arguments={"message": "", "allow_abort": True}
+    )()
+    success_mock.assert_called_once()
+
+
+def test_check_command_with_allow_abort_config(default_config, success_mock):
+    default_config.settings["allow_abort"] = True
+    commands.Check(config=default_config, arguments={"message": ""})()
+    success_mock.assert_called_once()
+
+
+def test_check_command_override_allow_abort_config(default_config):
+    default_config.settings["allow_abort"] = True
+    with pytest.raises(InvalidCommitMessageError):
+        commands.Check(
+            config=default_config, arguments={"message": "", "allow_abort": False}
+        )()
+
+
+def test_check_command_with_allowed_prefixes_arg(default_config, success_mock):
+    commands.Check(
+        config=default_config,
         arguments={"message": "custom! test", "allowed_prefixes": ["custom!"]},
     )()
     success_mock.assert_called_once()
 
 
-def test_check_command_with_allowed_prefixes_config(config, success_mock):
-    config.settings["allowed_prefixes"] = ["custom!"]
-    commands.Check(config=config, arguments={"message": "custom! test"})()
+def test_check_command_with_allowed_prefixes_config(default_config, success_mock):
+    default_config.settings["allowed_prefixes"] = ["custom!"]
+    commands.Check(config=default_config, arguments={"message": "custom! test"})()
     success_mock.assert_called_once()
 
 
-def test_check_command_override_allowed_prefixes_config(config):
-    config.settings["allow_abort"] = ["fixup!"]
+def test_check_command_override_allowed_prefixes_config(default_config):
+    default_config.settings["allow_abort"] = ["fixup!"]
     with pytest.raises(InvalidCommitMessageError):
         commands.Check(
-            config=config,
+            config=default_config,
             arguments={"message": "fixup! test", "allowed_prefixes": ["custom!"]},
         )()
 
@@ -336,58 +351,58 @@ def test_check_conventional_commit_succeed_with_git_diff(
     assert "Commit validation: successful!" in out
 
 
-def test_check_command_with_message_length_limit(config, success_mock):
+def test_check_command_with_message_length_limit(default_config, success_mock):
     message = "fix(scope): some commit message"
     commands.Check(
-        config=config,
+        config=default_config,
         arguments={"message": message, "message_length_limit": len(message) + 1},
     )()
     success_mock.assert_called_once()
 
 
-def test_check_command_with_message_length_limit_exceeded(config):
+def test_check_command_with_message_length_limit_exceeded(default_config):
     message = "fix(scope): some commit message"
     with pytest.raises(CommitMessageLengthExceededError):
         commands.Check(
-            config=config,
+            config=default_config,
             arguments={"message": message, "message_length_limit": len(message) - 1},
         )()
 
 
-def test_check_command_with_amend_prefix_default(config, success_mock):
-    commands.Check(config=config, arguments={"message": "amend! test"})()
+def test_check_command_with_amend_prefix_default(default_config, success_mock):
+    commands.Check(config=default_config, arguments={"message": "amend! test"})()
     success_mock.assert_called_once()
 
 
-def test_check_command_with_config_message_length_limit(config, success_mock):
+def test_check_command_with_config_message_length_limit(default_config, success_mock):
     message = "fix(scope): some commit message"
-    config.settings["message_length_limit"] = len(message) + 1
+    default_config.settings["message_length_limit"] = len(message) + 1
     commands.Check(
-        config=config,
+        config=default_config,
         arguments={"message": message},
     )()
     success_mock.assert_called_once()
 
 
-def test_check_command_with_config_message_length_limit_exceeded(config):
+def test_check_command_with_config_message_length_limit_exceeded(default_config):
     message = "fix(scope): some commit message"
-    config.settings["message_length_limit"] = len(message) - 1
+    default_config.settings["message_length_limit"] = len(message) - 1
     with pytest.raises(CommitMessageLengthExceededError):
         commands.Check(
-            config=config,
+            config=default_config,
             arguments={"message": message},
         )()
 
 
 def test_check_command_cli_overrides_config_message_length_limit(
-    config, success_mock: MockType
+    default_config, success_mock: MockType
 ):
     message = "fix(scope): some commit message"
-    config.settings["message_length_limit"] = len(message) - 1
+    default_config.settings["message_length_limit"] = len(message) - 1
     for message_length_limit in [len(message) + 1, 0]:
         success_mock.reset_mock()
         commands.Check(
-            config=config,
+            config=default_config,
             arguments={
                 "message": message,
                 "message_length_limit": message_length_limit,

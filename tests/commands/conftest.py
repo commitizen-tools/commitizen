@@ -4,16 +4,7 @@ from pathlib import Path
 import pytest
 from pytest_mock import MockerFixture, MockType
 
-from commitizen import defaults
-from commitizen.config import BaseConfig
 from commitizen.config.json_config import JsonConfig
-
-
-@pytest.fixture
-def config() -> BaseConfig:
-    _config = BaseConfig()
-    _config.settings.update({"name": defaults.DEFAULT_SETTINGS["name"]})
-    return _config
 
 
 @pytest.fixture
@@ -48,11 +39,6 @@ def config_customize() -> JsonConfig:
 @pytest.fixture
 def changelog_path() -> str:
     return os.path.join(os.getcwd(), "CHANGELOG.md")
-
-
-@pytest.fixture
-def config_path() -> str:
-    return os.path.join(os.getcwd(), "pyproject.toml")
 
 
 @pytest.fixture

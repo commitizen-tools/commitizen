@@ -73,7 +73,7 @@ NPM_LOCKFILE_EXPECTED = """\
     ((NPM_LOCKFILE_JSON, NPM_LOCKFILE_EXPECTED), (None, None)),
 )
 def test_npm_provider(
-    config: BaseConfig,
+    default_config: BaseConfig,
     chdir: Path,
     pkg_lock_content: str,
     pkg_lock_expected: str,
@@ -88,9 +88,9 @@ def test_npm_provider(
     if pkg_shrinkwrap_content:
         pkg_shrinkwrap = chdir / NpmProvider.shrinkwrap_filename
         pkg_shrinkwrap.write_text(dedent(pkg_shrinkwrap_content))
-    config.settings["version_provider"] = "npm"
+    default_config.settings["version_provider"] = "npm"
 
-    provider = get_provider(config)
+    provider = get_provider(default_config)
     assert isinstance(provider, NpmProvider)
     assert provider.get_version() == "0.1.0"
 

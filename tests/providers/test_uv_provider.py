@@ -86,7 +86,7 @@ dependencies = [
     ],
 )
 def test_uv_provider(
-    config: BaseConfig,
+    default_config: BaseConfig,
     tmpdir,
     file_regression: FileRegressionFixture,
     pyproject_content: str,
@@ -98,9 +98,9 @@ def test_uv_provider(
         uv_lock_file = tmpdir / UvProvider.lock_filename
         uv_lock_file.write_text(UV_LOCK_SIMPLIFIED, encoding="utf-8")
 
-        config.settings["version_provider"] = "uv"
+        default_config.settings["version_provider"] = "uv"
 
-        provider = get_provider(config)
+        provider = get_provider(default_config)
         assert isinstance(provider, UvProvider)
         assert provider.get_version() == "4.2.1"
 

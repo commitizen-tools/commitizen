@@ -9,20 +9,20 @@ from commitizen.__version__ import __version__
 from commitizen.config.base_config import BaseConfig
 
 
-def test_version_for_showing_project_version_error(config, capsys):
-    # No version specified in config
+def test_version_for_showing_project_version_error(default_config: BaseConfig, capsys):
+    # No version specified in default_config
     commands.Version(
-        config,
+        default_config,
         {"project": True},
     )()
     captured = capsys.readouterr()
     assert "No project information in this project." in captured.err
 
 
-def test_version_for_showing_project_version(config, capsys):
-    config.settings["version"] = "v0.0.1"
+def test_version_for_showing_project_version(default_config: BaseConfig, capsys):
+    default_config.settings["version"] = "v0.0.1"
     commands.Version(
-        config,
+        default_config,
         {"project": True},
     )()
     captured = capsys.readouterr()
@@ -30,18 +30,22 @@ def test_version_for_showing_project_version(config, capsys):
 
 
 @pytest.mark.parametrize("project", (True, False))
-def test_version_for_showing_commitizen_version(config, capsys, project: bool):
+def test_version_for_showing_commitizen_version(
+    default_config: BaseConfig, capsys, project: bool
+):
     commands.Version(
-        config,
+        default_config,
         {"project": project, "commitizen": True},
     )()
     captured = capsys.readouterr()
     assert f"{__version__}" in captured.out
 
 
-def test_version_for_showing_both_versions_no_project(config, capsys):
+def test_version_for_showing_both_versions_no_project(
+    default_config: BaseConfig, capsys
+):
     commands.Version(
-        config,
+        default_config,
         {"verbose": True},
     )()
     captured = capsys.readouterr()
@@ -49,10 +53,10 @@ def test_version_for_showing_both_versions_no_project(config, capsys):
     assert "No project information in this project." in captured.err
 
 
-def test_version_for_showing_both_versions(config, capsys):
-    config.settings["version"] = "v0.0.1"
+def test_version_for_showing_both_versions(default_config: BaseConfig, capsys):
+    default_config.settings["version"] = "v0.0.1"
     commands.Version(
-        config,
+        default_config,
         {"verbose": True},
     )()
     captured = capsys.readouterr()
@@ -62,9 +66,9 @@ def test_version_for_showing_both_versions(config, capsys):
     assert expected_out in captured.out
 
 
-def test_version_for_showing_commitizen_system_info(config, capsys):
+def test_version_for_showing_commitizen_system_info(default_config: BaseConfig, capsys):
     commands.Version(
-        config,
+        default_config,
         {"report": True},
     )()
     captured = capsys.readouterr()
@@ -77,7 +81,7 @@ def test_version_for_showing_commitizen_system_info(config, capsys):
 @pytest.mark.usefixtures("tmp_git_project")
 def test_version_use_version_provider(
     mocker: MockerFixture,
-    config: BaseConfig,
+    default_config: BaseConfig,
     capsys: pytest.CaptureFixture,
     project: bool,
 ):
@@ -89,7 +93,7 @@ def test_version_use_version_provider(
     )
 
     commands.Version(
-        config,
+        default_config,
         {
             "project": project,
             "verbose": not project,
@@ -112,10 +116,12 @@ def test_version_use_version_provider(
         ("0.1.0", "0\n"),
     ],
 )
-def test_version_just_major(config, capsys, version: str, expected_version: str):
-    config.settings["version"] = version
+def test_version_just_major(
+    default_config: BaseConfig, capsys, version: str, expected_version: str
+):
+    default_config.settings["version"] = version
     commands.Version(
-        config,
+        default_config,
         {
             "project": True,
             "major": True,
@@ -134,10 +140,12 @@ def test_version_just_major(config, capsys, version: str, expected_version: str)
         ("0.1.0", "1\n"),
     ],
 )
-def test_version_just_minor(config, capsys, version: str, expected_version: str):
-    config.settings["version"] = version
+def test_version_just_minor(
+    default_config: BaseConfig, capsys, version: str, expected_version: str
+):
+    default_config.settings["version"] = version
     commands.Version(
-        config,
+        default_config,
         {
             "project": True,
             "minor": True,
@@ -148,9 +156,11 @@ def test_version_just_minor(config, capsys, version: str, expected_version: str)
 
 
 @pytest.mark.parametrize("argument", ("major", "minor"))
-def test_version_just_major_error_no_project(config, capsys, argument: str):
+def test_version_just_major_error_no_project(
+    default_config: BaseConfig, capsys, argument: str
+):
     commands.Version(
-        config,
+        default_config,
         {
             argument: True,  # type: ignore[misc]
         },
@@ -173,13 +183,13 @@ def test_version_just_major_error_no_project(config, capsys, argument: str):
     ],
 )
 def test_version_with_tag_format(
-    config, capsys, version: str, tag_format: str, expected_output: str
+    default_config, capsys, version: str, tag_format: str, expected_output: str
 ):
     """Test --tag option applies tag_format to version"""
-    config.settings["version"] = version
-    config.settings["tag_format"] = tag_format
+    default_config.settings["version"] = version
+    default_config.settings["tag_format"] = tag_format
     commands.Version(
-        config,
+        default_config,
         {
             "project": True,
             "tag": True,
@@ -189,10 +199,10 @@ def test_version_with_tag_format(
     assert captured.out == expected_output
 
 
-def test_version_tag_without_project_error(config, capsys):
+def test_version_tag_without_project_error(default_config: BaseConfig, capsys):
     """Test --tag requires --project or --verbose"""
     commands.Version(
-        config,
+        default_config,
         {
             "tag": True,
         },

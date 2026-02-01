@@ -36,28 +36,32 @@ def test_guess_format_unknown(filename: str):
         for name, format in KNOWN_CHANGELOG_FORMATS.items()
     ],
 )
-def test_get_format(config: BaseConfig, name: str, expected: type[ChangelogFormat]):
-    config.settings["changelog_format"] = name
-    assert isinstance(get_changelog_format(config), expected)
+def test_get_format(
+    default_config: BaseConfig, name: str, expected: type[ChangelogFormat]
+):
+    default_config.settings["changelog_format"] = name
+    assert isinstance(get_changelog_format(default_config), expected)
 
 
 @pytest.mark.parametrize("filename", (None, ""))
-def test_get_format_empty_filename(config: BaseConfig, filename: str | None):
-    config.settings["changelog_format"] = defaults.CHANGELOG_FORMAT
+def test_get_format_empty_filename(default_config: BaseConfig, filename: str | None):
+    default_config.settings["changelog_format"] = defaults.CHANGELOG_FORMAT
     assert isinstance(
-        get_changelog_format(config, filename),
+        get_changelog_format(default_config, filename),
         KNOWN_CHANGELOG_FORMATS[defaults.CHANGELOG_FORMAT],
     )
 
 
 @pytest.mark.parametrize("filename", (None, ""))
-def test_get_format_empty_filename_no_setting(config: BaseConfig, filename: str | None):
-    config.settings["changelog_format"] = None
+def test_get_format_empty_filename_no_setting(
+    default_config: BaseConfig, filename: str | None
+):
+    default_config.settings["changelog_format"] = None
     with pytest.raises(ChangelogFormatUnknown):
-        get_changelog_format(config, filename)
+        get_changelog_format(default_config, filename)
 
 
 @pytest.mark.parametrize("filename", ("extensionless", "file.unknown"))
-def test_get_format_unknown(config: BaseConfig, filename: str | None):
+def test_get_format_unknown(default_config: BaseConfig, filename: str | None):
     with pytest.raises(ChangelogFormatUnknown):
-        get_changelog_format(config, filename)
+        get_changelog_format(default_config, filename)

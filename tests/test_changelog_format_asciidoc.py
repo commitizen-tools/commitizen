@@ -103,15 +103,15 @@ EXPECTED_E = Metadata(
 
 
 @pytest.fixture
-def format(config: BaseConfig) -> AsciiDoc:
-    return AsciiDoc(config)
+def format(default_config: BaseConfig) -> AsciiDoc:
+    return AsciiDoc(default_config)
 
 
 @pytest.fixture
-def format_with_tags(config: BaseConfig, request) -> AsciiDoc:
-    config.settings["tag_format"] = request.param
-    config.settings["legacy_tag_formats"] = ["legacy-${version}"]
-    return AsciiDoc(config)
+def format_with_tags(default_config: BaseConfig, request) -> AsciiDoc:
+    default_config.settings["tag_format"] = request.param
+    default_config.settings["legacy_tag_formats"] = ["legacy-${version}"]
+    return AsciiDoc(default_config)
 
 
 VERSIONS_EXAMPLES = [

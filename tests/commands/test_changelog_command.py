@@ -256,7 +256,7 @@ def test_changelog_incremental_keep_a_changelog_sample(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.parametrize("dry_run", [True, False])
 def test_changelog_hook(
-    mocker: MockFixture, config: BaseConfig, dry_run: bool, util: UtilFixture
+    mocker: MockFixture, default_config: BaseConfig, dry_run: bool, util: UtilFixture
 ):
     changelog_hook_mock = mocker.Mock()
     changelog_hook_mock.return_value = "cool changelog hook"
@@ -265,9 +265,10 @@ def test_changelog_hook(
     util.create_file_and_commit("refactor: is in changelog")
     util.create_file_and_commit("Merge into master")
 
-    config.settings["change_type_order"] = ["Refactor", "Feat"]  # type: ignore[typeddict-unknown-key]
+    default_config.settings["change_type_order"] = ["Refactor", "Feat"]  # type: ignore[typeddict-unknown-key]
     changelog = Changelog(
-        config, {"unreleased_version": None, "incremental": True, "dry_run": dry_run}
+        default_config,
+        {"unreleased_version": None, "incremental": True, "dry_run": dry_run},
     )
     mocker.patch.object(changelog.cz, "changelog_hook", changelog_hook_mock)
     if dry_run:
@@ -312,7 +313,7 @@ def test_changelog_hook_customize(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_release_hook(
-    mocker: MockFixture, config: BaseConfig, util: UtilFixture
+    mocker: MockFixture, default_config: BaseConfig, util: UtilFixture
 ):
     def changelog_release_hook(release: dict, tag: git.GitTag) -> dict:
         return release
@@ -325,7 +326,8 @@ def test_changelog_release_hook(
 
     # changelog = Changelog(config, {})
     changelog = Changelog(
-        config, {"unreleased_version": None, "incremental": True, "dry_run": False}
+        default_config,
+        {"unreleased_version": None, "incremental": True, "dry_run": False},
     )
     mocker.patch.object(changelog.cz, "changelog_release_hook", changelog_release_hook)
     spy = mocker.spy(changelog.cz, "changelog_release_hook")
@@ -1196,7 +1198,7 @@ def test_changelog_prerelease_rev_with_use_scheme_semver(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_uses_version_tags_for_header(
-    mocker: MockFixture, config: BaseConfig, util: UtilFixture
+    mocker: MockFixture, default_config: BaseConfig, util: UtilFixture
 ):
     """Tests that changelog headers always use version tags even if there are non-version tags
 
@@ -1211,7 +1213,8 @@ def test_changelog_uses_version_tags_for_header(
     write_patch = mocker.patch("commitizen.commands.changelog.out.write")
 
     changelog = Changelog(
-        config, {"dry_run": True, "incremental": True, "unreleased_version": None}
+        default_config,
+        {"dry_run": True, "incremental": True, "unreleased_version": None},
     )
 
     with pytest.raises(DryRunExit):
@@ -1227,7 +1230,7 @@ def test_changelog_uses_version_tags_for_header(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_current_version_tag_with_nonversion_tag(
-    mocker: MockFixture, config: BaseConfig, util: UtilFixture
+    mocker: MockFixture, default_config: BaseConfig, util: UtilFixture
 ):
     """Tests that changelog generation for a single version works even if
     there is a non-version tag in the list of tags
@@ -1251,7 +1254,7 @@ def test_changelog_from_current_version_tag_with_nonversion_tag(
 
     with pytest.raises(DryRunExit):
         Changelog(
-            config,
+            default_config,
             {
                 "dry_run": True,
                 "incremental": False,

@@ -159,7 +159,7 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
 
 
 @pytest.fixture
-def config():
+def default_config():
     _config = BaseConfig()
     _config.settings.update({"name": defaults.DEFAULT_SETTINGS["name"]})
     return _config
@@ -278,8 +278,8 @@ class MockPlugin(BaseCommitizen):
 
 
 @pytest.fixture
-def mock_plugin(mocker: MockerFixture, config: BaseConfig) -> BaseCommitizen:
-    mock = MockPlugin(config)
+def mock_plugin(mocker: MockerFixture, default_config: BaseConfig) -> BaseCommitizen:
+    mock = MockPlugin(default_config)
     mocker.patch("commitizen.factory.committer_factory", return_value=mock)
     return mock
 
@@ -289,23 +289,23 @@ SUPPORTED_FORMATS = ("markdown", "textile", "asciidoc", "restructuredtext")
 
 @pytest.fixture(params=SUPPORTED_FORMATS)
 def changelog_format(
-    config: BaseConfig, request: pytest.FixtureRequest
+    default_config: BaseConfig, request: pytest.FixtureRequest
 ) -> ChangelogFormat:
     """For tests relying on formats specifics"""
     format: str = request.param
-    config.settings["changelog_format"] = format
+    default_config.settings["changelog_format"] = format
     if "tmp_commitizen_project" in request.fixturenames:
         tmp_commitizen_project = request.getfixturevalue("tmp_commitizen_project")
         pyproject = tmp_commitizen_project / "pyproject.toml"
         pyproject.write(f'{pyproject.read()}\nchangelog_format = "{format}"\n')
-    return get_changelog_format(config)
+    return get_changelog_format(default_config)
 
 
 @pytest.fixture
-def any_changelog_format(config: BaseConfig) -> ChangelogFormat:
+def any_changelog_format(default_config: BaseConfig) -> ChangelogFormat:
     """For test not relying on formats specifics, use the default"""
-    config.settings["changelog_format"] = defaults.CHANGELOG_FORMAT
-    return get_changelog_format(config)
+    default_config.settings["changelog_format"] = defaults.CHANGELOG_FORMAT
+    return get_changelog_format(default_config)
 
 
 @pytest.fixture(params=[pytest.param(PYTHON_VERSION, id=f"py_{PYTHON_VERSION}")])

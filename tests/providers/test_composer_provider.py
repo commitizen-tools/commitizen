@@ -33,7 +33,7 @@ COMPOSER_EXPECTED = """\
     ((COMPOSER_JSON, COMPOSER_EXPECTED),),
 )
 def test_composer_provider(
-    config: BaseConfig,
+    default_config: BaseConfig,
     chdir: Path,
     content: str,
     expected: str,
@@ -41,9 +41,9 @@ def test_composer_provider(
     filename = ComposerProvider.filename
     file = chdir / filename
     file.write_text(dedent(content))
-    config.settings["version_provider"] = "composer"
+    default_config.settings["version_provider"] = "composer"
 
-    provider = get_provider(config)
+    provider = get_provider(default_config)
     assert isinstance(provider, ComposerProvider)
     assert provider.get_version() == "0.1.0"
 

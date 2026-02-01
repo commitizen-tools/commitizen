@@ -48,7 +48,7 @@ def test_command_shows_description_when_use_help_option(
         Schema,
     ],
 )
-def test_simple_command_call_once(config, mocker: MockFixture, command):
+def test_simple_command_call_once(default_config, mocker: MockFixture, command):
     write_mock = mocker.patch("commitizen.out.write")
-    command(config)()
+    command(default_config)()
     write_mock.assert_called_once()

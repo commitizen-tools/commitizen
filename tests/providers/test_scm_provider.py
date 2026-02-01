@@ -40,7 +40,7 @@ if TYPE_CHECKING:
 )
 @pytest.mark.usefixtures("tmp_git_project")
 def test_scm_provider(
-    config: BaseConfig,
+    default_config: BaseConfig,
     tag_format: str,
     tag: str,
     expected_version: str,
@@ -51,10 +51,10 @@ def test_scm_provider(
     util.create_file_and_commit("test: fake commit")
     util.create_tag("should-not-match")
 
-    config.settings["version_provider"] = "scm"
-    config.settings["tag_format"] = tag_format
+    default_config.settings["version_provider"] = "scm"
+    default_config.settings["tag_format"] = tag_format
 
-    provider = get_provider(config)
+    provider = get_provider(default_config)
     assert isinstance(provider, ScmProvider)
     actual_version = provider.get_version()
     assert actual_version == expected_version
@@ -64,21 +64,21 @@ def test_scm_provider(
 
 
 @pytest.mark.usefixtures("tmp_git_project")
-def test_scm_provider_default_without_commits_and_tags(config: BaseConfig):
-    config.settings["version_provider"] = "scm"
+def test_scm_provider_default_without_commits_and_tags(default_config: BaseConfig):
+    default_config.settings["version_provider"] = "scm"
 
-    provider = get_provider(config)
+    provider = get_provider(default_config)
     assert isinstance(provider, ScmProvider)
     assert provider.get_version() == "0.0.0"
 
 
 @pytest.mark.usefixtures("tmp_git_project")
 def test_scm_provider_default_with_commits_and_tags(
-    config: BaseConfig, util: UtilFixture
+    default_config: BaseConfig, util: UtilFixture
 ):
-    config.settings["version_provider"] = "scm"
+    default_config.settings["version_provider"] = "scm"
 
-    provider = get_provider(config)
+    provider = get_provider(default_config)
     assert isinstance(provider, ScmProvider)
     assert provider.get_version() == "0.0.0"
 
@@ -120,14 +120,14 @@ def test_scm_provider_default_with_commits_and_tags(
 
 
 @pytest.mark.usefixtures("tmp_git_project")
-def test_scm_provider_detect_legacy_tags(config: BaseConfig, util: UtilFixture):
-    config.settings["version_provider"] = "scm"
-    config.settings["tag_format"] = "v${version}"
-    config.settings["legacy_tag_formats"] = [
+def test_scm_provider_detect_legacy_tags(default_config: BaseConfig, util: UtilFixture):
+    default_config.settings["version_provider"] = "scm"
+    default_config.settings["tag_format"] = "v${version}"
+    default_config.settings["legacy_tag_formats"] = [
         "legacy-${version}",
         "old-${version}",
     ]
-    provider = get_provider(config)
+    provider = get_provider(default_config)
 
     util.create_file_and_commit("test: fake commit")
     util.create_tag("old-0.4.1")

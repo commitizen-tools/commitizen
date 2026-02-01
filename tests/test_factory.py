@@ -5,7 +5,6 @@ from textwrap import dedent
 import pytest
 
 from commitizen import BaseCommitizen, defaults, factory
-from commitizen.config import BaseConfig
 from commitizen.cz import discover_plugins
 from commitizen.cz.conventional_commits import ConventionalCommitsCz
 from commitizen.cz.customize import CustomizeCommitsCz
@@ -21,18 +20,16 @@ class OtherPlugin:
     pass
 
 
-def test_factory():
-    config = BaseConfig()
-    config.settings.update({"name": defaults.DEFAULT_SETTINGS["name"]})
-    r = factory.committer_factory(config)
+def test_factory(default_config):
+    default_config.settings.update({"name": defaults.DEFAULT_SETTINGS["name"]})
+    r = factory.committer_factory(default_config)
     assert isinstance(r, BaseCommitizen)
 
 
-def test_factory_fails():
-    config = BaseConfig()
-    config.settings.update({"name": "Nothing"})
+def test_factory_fails(default_config):
+    default_config.settings.update({"name": "Nothing"})
     with pytest.raises(NoCommitizenFoundException) as excinfo:
-        factory.committer_factory(config)
+        factory.committer_factory(default_config)
 
     assert "The committer has not been found in the system." in str(excinfo)
 

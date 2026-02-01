@@ -40,15 +40,15 @@ def test_subject_transformations(subject_transformation):
     assert transformed_subject == _parse_subject(invalid_subject)
 
 
-def test_questions(config):
-    conventional_commits = ConventionalCommitsCz(config)
+def test_questions(default_config):
+    conventional_commits = ConventionalCommitsCz(default_config)
     questions = conventional_commits.questions()
     assert isinstance(questions, list)
     assert isinstance(questions[0], dict)
 
 
-def test_choices_all_have_keyboard_shortcuts(config):
-    conventional_commits = ConventionalCommitsCz(config)
+def test_choices_all_have_keyboard_shortcuts(default_config):
+    conventional_commits = ConventionalCommitsCz(default_config)
     questions = conventional_commits.questions()
 
     list_questions = (q for q in questions if q["type"] == "list")
@@ -56,8 +56,8 @@ def test_choices_all_have_keyboard_shortcuts(config):
         assert all("key" in choice for choice in select["choices"])
 
 
-def test_small_answer(config):
-    conventional_commits = ConventionalCommitsCz(config)
+def test_small_answer(default_config):
+    conventional_commits = ConventionalCommitsCz(default_config)
     answers = {
         "prefix": "fix",
         "scope": "users",
@@ -70,8 +70,8 @@ def test_small_answer(config):
     assert message == "fix(users): email pattern corrected"
 
 
-def test_long_answer(config):
-    conventional_commits = ConventionalCommitsCz(config)
+def test_long_answer(default_config):
+    conventional_commits = ConventionalCommitsCz(default_config)
     answers = {
         "prefix": "fix",
         "scope": "users",
@@ -87,8 +87,8 @@ def test_long_answer(config):
     )
 
 
-def test_breaking_change_in_footer(config):
-    conventional_commits = ConventionalCommitsCz(config)
+def test_breaking_change_in_footer(default_config):
+    conventional_commits = ConventionalCommitsCz(default_config)
     answers = {
         "prefix": "fix",
         "scope": "users",
@@ -135,13 +135,13 @@ def test_breaking_change_in_footer(config):
     ],
 )
 def test_breaking_change_message_formats(
-    config, scope, breaking_change_exclamation_in_title, expected_message
+    default_config, scope, breaking_change_exclamation_in_title, expected_message
 ):
     # Set the breaking_change_exclamation_in_title setting
-    config.settings["breaking_change_exclamation_in_title"] = (
+    default_config.settings["breaking_change_exclamation_in_title"] = (
         breaking_change_exclamation_in_title
     )
-    conventional_commits = ConventionalCommitsCz(config)
+    conventional_commits = ConventionalCommitsCz(default_config)
     answers = {
         "prefix": "feat",
         "scope": scope,
@@ -154,22 +154,22 @@ def test_breaking_change_message_formats(
     assert message == expected_message
 
 
-def test_example(config):
+def test_example(default_config):
     """just testing a string is returned. not the content"""
-    conventional_commits = ConventionalCommitsCz(config)
+    conventional_commits = ConventionalCommitsCz(default_config)
     example = conventional_commits.example()
     assert isinstance(example, str)
 
 
-def test_schema(config):
+def test_schema(default_config):
     """just testing a string is returned. not the content"""
-    conventional_commits = ConventionalCommitsCz(config)
+    conventional_commits = ConventionalCommitsCz(default_config)
     schema = conventional_commits.schema()
     assert isinstance(schema, str)
 
 
-def test_info(config):
+def test_info(default_config):
     """just testing a string is returned. not the content"""
-    conventional_commits = ConventionalCommitsCz(config)
+    conventional_commits = ConventionalCommitsCz(default_config)
     info = conventional_commits.info()
     assert isinstance(info, str)

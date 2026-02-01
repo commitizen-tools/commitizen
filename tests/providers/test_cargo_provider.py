@@ -236,7 +236,7 @@ dependencies = [
     ),
 )
 def test_cargo_provider(
-    config: BaseConfig,
+    default_config: BaseConfig,
     chdir: Path,
     content: str,
     expected: str,
@@ -244,9 +244,9 @@ def test_cargo_provider(
     filename = CargoProvider.filename
     file = chdir / filename
     file.write_text(dedent(content))
-    config.settings["version_provider"] = "cargo"
+    default_config.settings["version_provider"] = "cargo"
 
-    provider = get_provider(config)
+    provider = get_provider(default_config)
     assert isinstance(provider, CargoProvider)
     assert provider.get_version() == "0.1.0"
 
@@ -272,7 +272,7 @@ def test_cargo_provider(
     ),
 )
 def test_cargo_provider_with_lock(
-    config: BaseConfig,
+    default_config: BaseConfig,
     chdir: Path,
     toml_content: str,
     lock_content: str,
@@ -295,9 +295,9 @@ def test_cargo_provider_with_lock(
     lock_filename = CargoProvider.lock_filename
     lock_file = chdir / lock_filename
     lock_file.write_text(dedent(lock_content))
-    config.settings["version_provider"] = "cargo"
+    default_config.settings["version_provider"] = "cargo"
 
-    provider = get_provider(config)
+    provider = get_provider(default_config)
     assert isinstance(provider, CargoProvider)
     assert provider.get_version() == "0.1.0"
 
@@ -307,7 +307,7 @@ def test_cargo_provider_with_lock(
 
 
 def test_cargo_provider_workspace_member_without_version_key(
-    config: BaseConfig,
+    default_config: BaseConfig,
     chdir: Path,
 ):
     """Test workspace member that has no version key at all (should not crash)."""
@@ -365,9 +365,9 @@ checksum = "123abc"
     lock_file = chdir / lock_filename
     lock_file.write_text(dedent(lock_content))
 
-    config.settings["version_provider"] = "cargo"
+    default_config.settings["version_provider"] = "cargo"
 
-    provider = get_provider(config)
+    provider = get_provider(default_config)
     assert isinstance(provider, CargoProvider)
     assert provider.get_version() == "0.1.0"
 
@@ -379,7 +379,7 @@ checksum = "123abc"
 
 
 def test_cargo_provider_workspace_member_without_workspace_key(
-    config: BaseConfig,
+    default_config: BaseConfig,
     chdir: Path,
 ):
     """Test workspace member that has version key but no workspace subkey."""
@@ -440,9 +440,9 @@ checksum = "123abc"
     lock_file = chdir / lock_filename
     lock_file.write_text(dedent(lock_content))
 
-    config.settings["version_provider"] = "cargo"
+    default_config.settings["version_provider"] = "cargo"
 
-    provider = get_provider(config)
+    provider = get_provider(default_config)
     assert isinstance(provider, CargoProvider)
     assert provider.get_version() == "0.1.0"
 

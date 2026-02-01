@@ -96,15 +96,15 @@ h3. Added
 
 
 @pytest.fixture
-def format(config: BaseConfig) -> Textile:
-    return Textile(config)
+def format(default_config: BaseConfig) -> Textile:
+    return Textile(default_config)
 
 
 @pytest.fixture
-def format_with_tags(config: BaseConfig, request) -> Textile:
-    config.settings["tag_format"] = request.param
-    config.settings["legacy_tag_formats"] = ["legacy-${version}"]
-    return Textile(config)
+def format_with_tags(default_config: BaseConfig, request) -> Textile:
+    default_config.settings["tag_format"] = request.param
+    default_config.settings["legacy_tag_formats"] = ["legacy-${version}"]
+    return Textile(default_config)
 
 
 VERSIONS_EXAMPLES = [

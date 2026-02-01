@@ -29,7 +29,7 @@ version = "42.1"
     ((PEP621_TOML, PEP621_EXPECTED),),
 )
 def test_cargo_provider(
-    config: BaseConfig,
+    default_config: BaseConfig,
     chdir: Path,
     content: str,
     expected: str,
@@ -37,9 +37,9 @@ def test_cargo_provider(
     filename = Pep621Provider.filename
     file = chdir / filename
     file.write_text(dedent(content))
-    config.settings["version_provider"] = "pep621"
+    default_config.settings["version_provider"] = "pep621"
 
-    provider = get_provider(config)
+    provider = get_provider(default_config)
     assert isinstance(provider, Pep621Provider)
     assert provider.get_version() == "0.1.0"
 
