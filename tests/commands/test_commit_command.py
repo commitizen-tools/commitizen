@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 from unittest.mock import ANY
 
 import pytest
@@ -76,7 +76,7 @@ def test_commit_backup_on_failure(
 
     prompt_mock_feat.assert_called_once()
     error_mock.assert_called_once()
-    assert os.path.isfile(temp_file)
+    assert Path(temp_file).exists()
 
 
 @pytest.mark.usefixtures("staging_is_clean", "commit_mock")
@@ -100,7 +100,7 @@ def test_commit_retry_works(
     commit_mock.assert_called_with("backup commit", args="")
     prompt_mock.assert_not_called()
     success_mock.assert_called_once()
-    assert not os.path.isfile(temp_file)
+    assert not Path(temp_file).exists()
 
 
 @pytest.mark.usefixtures("staging_is_clean")
@@ -129,7 +129,7 @@ def test_commit_retry_after_failure_works(
     commit_mock.assert_called_with("backup commit", args="")
     prompt_mock.assert_not_called()
     success_mock.assert_called_once()
-    assert not os.path.isfile(temp_file)
+    assert not Path(temp_file).exists()
 
 
 @pytest.mark.usefixtures("staging_is_clean", "backup_file")
@@ -144,7 +144,7 @@ def test_commit_retry_after_failure_with_no_retry_works(
     commit_mock.assert_called_with("feat: user created\n\ncloses #21", args="")
     prompt_mock_feat.assert_called_once()
     success_mock.assert_called_once()
-    assert not os.path.isfile(temp_file)
+    assert not Path(temp_file).exists()
 
 
 @pytest.mark.usefixtures("staging_is_clean", "prompt_mock_feat")

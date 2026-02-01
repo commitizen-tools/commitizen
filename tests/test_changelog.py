@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -1672,17 +1671,16 @@ def test_changelog_file_name_from_args_and_config():
 
     args = {
         "file_name": "CUSTOM.md",
-        "incremental": None,
-        "dry_run": False,
         "unreleased_version": "1.0.1",
     }
     changelog = Changelog(mock_config, args)
-    assert os.path.normpath(changelog.file_name) == os.path.normpath(
-        os.path.join("/my/project", "CUSTOM.md")
+    assert (
+        Path(changelog.file_name).resolve() == Path("/my/project/CUSTOM.md").resolve()
     )
 
-    args = {"incremental": None, "dry_run": False, "unreleased_version": "1.0.1"}
+    args = {"unreleased_version": "1.0.1"}
     changelog = Changelog(mock_config, args)
-    assert os.path.normpath(changelog.file_name) == os.path.normpath(
-        os.path.join("/my/project", "CHANGELOG.md")
+    assert (
+        Path(changelog.file_name).resolve()
+        == Path("/my/project/CHANGELOG.md").resolve()
     )
