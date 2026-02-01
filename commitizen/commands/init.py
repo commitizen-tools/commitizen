@@ -11,7 +11,11 @@ from commitizen.__version__ import __version__
 from commitizen.config.factory import create_config
 from commitizen.cz import registry
 from commitizen.defaults import CONFIG_FILES, DEFAULT_SETTINGS
-from commitizen.exceptions import InitFailedError, NoAnswersError
+from commitizen.exceptions import (
+    InitFailedError,
+    MissingCzCustomizeConfigError,
+    NoAnswersError,
+)
 from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
 from commitizen.version_schemes import KNOWN_SCHEMES, Version, get_version_scheme
 
@@ -97,7 +101,7 @@ class Init:
             version_provider = self._ask_version_provider()  # select
             tag = self._ask_tag()  # confirm & select
             version_scheme = self._ask_version_scheme()  # select
-            version = get_version_scheme(self.config.settings, version_scheme)(tag)
+            version = get_version_scheme(DEFAULT_SETTINGS, version_scheme)(tag)
             tag_format = self._ask_tag_format(tag)  # confirm & text
             update_changelog_on_bump = self._ask_update_changelog_on_bump()  # confirm
             major_version_zero = self._ask_major_version_zero(version)  # confirm
@@ -116,7 +120,7 @@ class Init:
             with smart_open(
                 self._PRE_COMMIT_CONFIG_PATH,
                 "w",
-                encoding=self.config.settings["encoding"],
+                encoding=DEFAULT_SETTINGS["encoding"],
             ) as config_file:
                 yaml.safe_dump(config_data, stream=config_file)
 
@@ -166,12 +170,28 @@ class Init:
 
     def _ask_name(self) -> str:
         name: str = questionary.select(
-            "Please choose a cz (commit rule): (default: cz_conventional_commits)",
-            choices=list(registry.keys()),
-            default="cz_conventional_commits",
+            f"Please choose a cz (commit rule): (default: {DEFAULT_SETTINGS['name']})",
+            choices=self._construct_name_choice_with_description(),
+            default=DEFAULT_SETTINGS["name"],
             style=self.cz.style,
         ).unsafe_ask()
         return name
+
+    def _construct_name_choice_with_description(self) -> list[questionary.Choice]:
+        choices = []
+        for cz_name, cz_class in registry.items():
+            try:
+                cz_obj = cz_class(self.config)
+            except MissingCzCustomizeConfigError:
+                choices.append(questionary.Choice(title=cz_name, value=cz_name))
+                continue
+            first_example = cz_obj.schema().partition("\n")[0]
+            choices.append(
+                questionary.Choice(
+                    title=cz_name, value=cz_name, description=first_example
+                )
+            )
+        return choices
 
     def _ask_tag(self) -> str:
         latest_tag = get_latest_tag_name()
@@ -272,7 +292,7 @@ class Init:
             return {"repos": [CZ_HOOK_CONFIG]}
 
         with open(
-            self._PRE_COMMIT_CONFIG_PATH, encoding=self.config.settings["encoding"]
+            self._PRE_COMMIT_CONFIG_PATH, encoding=DEFAULT_SETTINGS["encoding"]
         ) as config_file:
             config_data: dict[str, Any] = yaml.safe_load(config_file) or {}
 

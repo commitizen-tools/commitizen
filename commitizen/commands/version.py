@@ -7,6 +7,7 @@ from commitizen.__version__ import __version__
 from commitizen.config import BaseConfig
 from commitizen.exceptions import NoVersionSpecifiedError, VersionSchemeUnknown
 from commitizen.providers import get_provider
+from commitizen.tags import TagRules
 from commitizen.version_schemes import get_version_scheme
 
 
@@ -17,6 +18,7 @@ class VersionArgs(TypedDict, total=False):
     verbose: bool
     major: bool
     minor: bool
+    tag: bool
 
 
 class Version:
@@ -59,6 +61,9 @@ class Version:
                 version = f"{version_scheme.major}"
             elif self.arguments.get("minor"):
                 version = f"{version_scheme.minor}"
+            elif self.arguments.get("tag"):
+                tag_rules = TagRules.from_settings(self.config.settings)
+                version = tag_rules.normalize_tag(version_scheme)
 
             out.write(
                 f"Project Version: {version}"
@@ -71,6 +76,10 @@ class Version:
             out.error(
                 "Major or minor version can only be used with --project or --verbose."
             )
+            return
+
+        if self.arguments.get("tag"):
+            out.error("Tag can only be used with --project or --verbose.")
             return
 
         # If no arguments are provided, just show the installed commitizen version

@@ -9,7 +9,7 @@ from commitizen.exceptions import ConfigFileIsEmpty, ConfigFileNotFound
 from .base_config import BaseConfig
 
 
-def _resolve_config_paths() -> list[Path]:
+def _resolve_config_candidates() -> list[BaseConfig]:
     git_project_root = git.find_git_project_root()
     cfg_search_paths = [Path(".")]
 
@@ -18,12 +18,18 @@ def _resolve_config_paths() -> list[Path]:
 
     # The following algorithm is ugly, but we need to ensure that the order of the candidates are preserved before v5.
     # Also, the number of possible config files is limited, so the complexity is not a problem.
-    candidates: list[Path] = []
+    candidates: list[BaseConfig] = []
     for dir in cfg_search_paths:
         for filename in defaults.CONFIG_FILES:
             out_path = dir / Path(filename)
-            if out_path.exists() and all(not out_path.samefile(p) for p in candidates):
-                candidates.append(out_path)
+            if (
+                out_path.exists()
+                and not any(
+                    out_path.samefile(candidate.path) for candidate in candidates
+                )
+                and not (conf := _create_config_from_path(out_path)).is_empty_config
+            ):
+                candidates.append(conf)
     return candidates
 
 
@@ -44,21 +50,11 @@ def read_cfg(filepath: str | None = None) -> BaseConfig:
             raise ConfigFileIsEmpty()
         return conf
 
-    config_candidate_paths = _resolve_config_paths()
+    config_candidates = _resolve_config_candidates()
+    if len(config_candidates) > 1:
+        out.warn(
+            f"Multiple config files detected: {', '.join(str(conf.path) for conf in config_candidates)}. "
+            f"Using config file: '{config_candidates[0].path}'."
+        )
 
-    # Check for multiple config files and warn the user
-    config_candidates_exclude_pyproject = [
-        path for path in config_candidate_paths if path.name != "pyproject.toml"
-    ]
-
-    for config_candidate_path in config_candidate_paths:
-        conf = _create_config_from_path(config_candidate_path)
-        if not conf.is_empty_config:
-            if len(config_candidates_exclude_pyproject) > 1:
-                out.warn(
-                    f"Multiple config files detected: {', '.join(map(str, config_candidates_exclude_pyproject))}. "
-                    f"Using config file: '{config_candidate_path}'."
-                )
-            return conf
-
-    return BaseConfig()
+    return config_candidates[0] if config_candidates else BaseConfig()

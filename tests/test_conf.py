@@ -14,7 +14,7 @@ from commitizen.config.toml_config import TomlConfig
 from commitizen.config.yaml_config import YAMLConfig
 from commitizen.exceptions import ConfigFileIsEmpty, InvalidConfigurationError
 
-PYPROJECT = """
+TOML_STR = """
 [tool.commitizen]
 name = "cz_jira"
 version = "1.0.0"
@@ -30,11 +30,16 @@ pre_bump_hooks = [
     "scripts/generate_documentation.sh"
 ]
 post_bump_hooks = ["scripts/slack_notification.sh"]
+"""
+
+PYPROJECT = f"""
+{TOML_STR}
 
 [tool.black]
 line-length = 88
 target-version = ['py36', 'py37', 'py38']
 """
+
 
 DICT_CONFIG = {
     "commitizen": {
@@ -106,7 +111,7 @@ _settings: dict[str, Any] = {
     "template": None,
     "extras": {},
     "breaking_change_exclamation_in_title": False,
-    "message_length_limit": None,
+    "message_length_limit": 0,
 }
 
 _new_settings: dict[str, Any] = {
@@ -146,7 +151,7 @@ _new_settings: dict[str, Any] = {
     "template": None,
     "extras": {},
     "breaking_change_exclamation_in_title": False,
-    "message_length_limit": None,
+    "message_length_limit": 0,
 }
 
 
@@ -184,26 +189,26 @@ class TestReadCfg:
     @pytest.mark.parametrize(
         "config_files_manager", defaults.CONFIG_FILES, indirect=True
     )
-    def test_load_conf(_, config_files_manager):
+    def test_load_conf(self, config_files_manager):
         cfg = config.read_cfg()
         assert cfg.settings == _settings
 
-    def test_conf_returns_default_when_no_files(_, tmpdir):
+    def test_conf_returns_default_when_no_files(self, tmpdir):
         with tmpdir.as_cwd():
             cfg = config.read_cfg()
             assert cfg.settings == defaults.DEFAULT_SETTINGS
 
-    def test_load_empty_pyproject_toml_and_cz_toml_with_config(_, tmpdir):
+    def test_load_empty_pyproject_toml_and_cz_toml_with_config(self, tmpdir):
         with tmpdir.as_cwd():
             p = tmpdir.join("pyproject.toml")
             p.write("")
             p = tmpdir.join(".cz.toml")
-            p.write(PYPROJECT)
+            p.write(TOML_STR)
 
             cfg = config.read_cfg()
             assert cfg.settings == _settings
 
-    def test_load_pyproject_toml_from_config_argument(_, tmpdir):
+    def test_load_pyproject_toml_from_config_argument(self, tmpdir):
         with tmpdir.as_cwd():
             _not_root_path = tmpdir.mkdir("not_in_root").join("pyproject.toml")
             _not_root_path.write(PYPROJECT)
@@ -211,7 +216,7 @@ class TestReadCfg:
             cfg = config.read_cfg(filepath="./not_in_root/pyproject.toml")
             assert cfg.settings == _settings
 
-    def test_load_cz_json_not_from_config_argument(_, tmpdir):
+    def test_load_cz_json_not_from_config_argument(self, tmpdir):
         with tmpdir.as_cwd():
             _not_root_path = tmpdir.mkdir("not_in_root").join(".cz.json")
             _not_root_path.write(JSON_STR)
@@ -220,7 +225,7 @@ class TestReadCfg:
             json_cfg_by_class = JsonConfig(data=JSON_STR, path=_not_root_path)
             assert cfg.settings == json_cfg_by_class.settings
 
-    def test_load_cz_yaml_not_from_config_argument(_, tmpdir):
+    def test_load_cz_yaml_not_from_config_argument(self, tmpdir):
         with tmpdir.as_cwd():
             _not_root_path = tmpdir.mkdir("not_in_root").join(".cz.yaml")
             _not_root_path.write(YAML_STR)
@@ -229,7 +234,7 @@ class TestReadCfg:
             yaml_cfg_by_class = YAMLConfig(data=YAML_STR, path=_not_root_path)
             assert cfg.settings == yaml_cfg_by_class._settings
 
-    def test_load_empty_pyproject_toml_from_config_argument(_, tmpdir):
+    def test_load_empty_pyproject_toml_from_config_argument(self, tmpdir):
         with tmpdir.as_cwd():
             _not_root_path = tmpdir.mkdir("not_in_root").join("pyproject.toml")
             _not_root_path.write("")
@@ -240,27 +245,25 @@ class TestReadCfg:
 
 class TestWarnMultipleConfigFiles:
     @pytest.mark.parametrize(
-        "files,expected_path,should_warn",
+        "files,expected_path",
         [
             # Same directory, different file types
-            ([(".cz.toml", PYPROJECT), (".cz.json", JSON_STR)], ".cz.toml", True),
-            ([(".cz.json", JSON_STR), (".cz.yaml", YAML_STR)], ".cz.json", True),
-            ([(".cz.toml", PYPROJECT), (".cz.yaml", YAML_STR)], ".cz.toml", True),
-            # With pyproject.toml (excluded from warning)
+            ([(".cz.toml", TOML_STR), (".cz.json", JSON_STR)], ".cz.toml"),
+            ([(".cz.json", JSON_STR), (".cz.yaml", YAML_STR)], ".cz.json"),
+            ([(".cz.toml", TOML_STR), (".cz.yaml", YAML_STR)], ".cz.toml"),
+            # With pyproject.toml
             (
                 [("pyproject.toml", PYPROJECT), (".cz.json", JSON_STR)],
                 ".cz.json",
-                False,
             ),
             (
-                [("pyproject.toml", PYPROJECT), (".cz.toml", PYPROJECT)],
+                [("pyproject.toml", PYPROJECT), (".cz.toml", TOML_STR)],
                 ".cz.toml",
-                False,
             ),
         ],
     )
     def test_warn_multiple_config_files_same_dir(
-        _, tmpdir, capsys, files, expected_path, should_warn
+        self, tmpdir, capsys, files, expected_path
     ):
         """Test warning when multiple config files exist in same directory."""
         with tmpdir.as_cwd():
@@ -270,33 +273,26 @@ class TestWarnMultipleConfigFiles:
             cfg = config.read_cfg()
             captured = capsys.readouterr()
 
-            if should_warn:
-                assert "Multiple config files detected" in captured.err
-                assert "Using" in captured.err
-                for filename, _ in files:
-                    if filename != "pyproject.toml":
-                        assert filename in captured.err
-            else:
-                assert "Multiple config files detected" not in captured.err
+            assert "Multiple config files detected" in captured.err
+            for filename, _ in files:
+                assert filename in captured.err
+            assert f"Using config file: '{expected_path}'" in captured.err
 
             assert cfg.path == Path(expected_path)
-            # Verify config loaded correctly (name and version match expected)
-            assert cfg.settings["name"] == "cz_jira"
-            assert cfg.settings["version"] == "1.0.0"
 
     @pytest.mark.parametrize(
         "config_file,content",
         [
             (".cz.json", JSON_STR),
-            (".cz.toml", PYPROJECT),
+            (".cz.toml", TOML_STR),
             (".cz.yaml", YAML_STR),
-            ("cz.toml", PYPROJECT),
+            ("cz.toml", TOML_STR),
             ("cz.json", JSON_STR),
             ("cz.yaml", YAML_STR),
         ],
     )
     def test_warn_same_filename_different_directories_with_git(
-        _, tmpdir, capsys, config_file, content
+        self, tmpdir, capsys, config_file, content
     ):
         """Test warning when same config filename exists in the current directory and in the git root."""
         with tmpdir.as_cwd():
@@ -317,7 +313,7 @@ class TestWarnMultipleConfigFiles:
                 assert f"Using config file: '{config_file}'" in captured.err
                 assert cfg.path == Path(config_file)
 
-    def test_no_warn_with_explicit_config_path(_, tmpdir, capsys):
+    def test_no_warn_with_explicit_config_path(self, tmpdir, capsys):
         """Test that no warning is issued when user explicitly specifies config."""
         with tmpdir.as_cwd():
             # Create multiple config files
@@ -340,11 +336,11 @@ class TestWarnMultipleConfigFiles:
         [
             (file, content, with_git)
             for file, content in [
-                (".cz.toml", PYPROJECT),
+                (".cz.toml", TOML_STR),
                 (".cz.json", JSON_STR),
                 (".cz.yaml", YAML_STR),
                 ("pyproject.toml", PYPROJECT),
-                ("cz.toml", PYPROJECT),
+                ("cz.toml", TOML_STR),
                 ("cz.json", JSON_STR),
                 ("cz.yaml", YAML_STR),
             ]
@@ -352,7 +348,7 @@ class TestWarnMultipleConfigFiles:
         ],
     )
     def test_no_warn_with_single_config_file(
-        _, tmpdir, capsys, config_file, content, with_git
+        self, tmpdir, capsys, config_file, content, with_git
     ):
         """Test that no warning is issued when user explicitly specifies config."""
         with tmpdir.as_cwd():
@@ -367,6 +363,18 @@ class TestWarnMultipleConfigFiles:
             # No warning should be issued
             assert "Multiple config files detected" not in captured.err
             assert cfg.path == Path(config_file)
+
+    def test_no_warn_with_no_commitizen_section_in_pyproject_toml_and_cz_toml(
+        self, tmpdir, capsys
+    ):
+        with tmpdir.as_cwd():
+            tmpdir.join("pyproject.toml").write("[tool.foo]\nbar = 'baz'")
+            tmpdir.join(".cz.toml").write(TOML_STR)
+
+            cfg = config.read_cfg()
+            captured = capsys.readouterr()
+            assert "Multiple config files detected" not in captured.err
+            assert cfg.path == Path(".cz.toml")
 
 
 @pytest.mark.parametrize(

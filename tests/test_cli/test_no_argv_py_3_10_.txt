@@ -7,28 +7,28 @@ For more information, please visit https://commitizen-tools.github.io/commitizen
 
 options:
   -h, --help            show this help message and exit
-  --config CONFIG       the path of configuration file
-  --debug               use debug mode
-  -n NAME, --name NAME  use the given commitizen (default:
-                        cz_conventional_commits)
+  --config CONFIG       The path to the configuration file.
+  --debug               Use debug mode.
+  -n NAME, --name NAME  Use the given commitizen (default:
+                        cz_conventional_commits).
   -nr NO_RAISE, --no-raise NO_RAISE
-                        comma separated error codes that won't raise error,
-                        e.g: cz -nr 1,2,3 bump. See codes at
+                        Comma-separated error codes that won't raise error,
+                        e.g., cz -nr 1,2,3 bump. See codes at
                         https://commitizen-
                         tools.github.io/commitizen/exit_codes/
 
 commands:
   {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version}
-    init                init commitizen configuration
-    commit (c)          create new commit
-    ls                  show available commitizens
-    example             show commit example
-    info                show information about the cz
-    schema              show commit schema
-    bump                bump semantic version based on the git log
-    changelog (ch)      generate changelog (note that it will overwrite
-                        existing file)
-    check               validates that a commit message matches the commitizen
-                        schema
-    version             get the version of the installed commitizen or the
-                        current project (default: installed commitizen)
+    init                Initialize commitizen configuration.
+    commit (c)          Create new commit.
+    ls                  Show available Commitizens.
+    example             Show commit example.
+    info                Show information about the cz.
+    schema              Show commit schema.
+    bump                Bump semantic version based on the git log.
+    changelog (ch)      Generate changelog (note that it will overwrite
+                        existing files).
+    check               Validate that a commit message matches the commitizen
+                        schema.
+    version             Get the version of the installed commitizen or the
+                        current project (default: installed commitizen).
