@@ -418,7 +418,8 @@ def test_bump_files_only(tmp_commitizen_project, util: UtilFixture):
 
     util.create_file_and_commit("feat: another new feature")
     with pytest.raises(ExpectedExit):
-        util.run_cli("bump", "--yes", "--files-only")
+        util.run_cli("bump", "--yes", "--version-files-only")
+
     assert git.tag_exist("0.3.0") is False
 
     with open(tmp_version_file, encoding="utf-8") as f:
@@ -1204,7 +1205,7 @@ def test_bump_changelog_contains_increment_only(
     # it should only include v3 changes
     util.create_file_and_commit("feat(next)!: next version")
     with pytest.raises(ExpectedExit):
-        util.run_cli("bump", "--yes", "--files-only", "--changelog-to-stdout")
+        util.run_cli("bump", "--yes", "--version-files-only", "--changelog-to-stdout")
     out, _ = capsys.readouterr()
 
     assert "3.0.0" in out
@@ -1492,3 +1493,13 @@ def test_changelog_config_flag_merge_prerelease_only_prerelease_present(
         out = f.read()
 
     file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_deprecate_files_only(util: UtilFixture):
+    util.create_file_and_commit("feat: new file")
+    with (
+        pytest.warns(DeprecationWarning, match=r".*--files-only.*deprecated"),
+        pytest.raises(ExpectedExit),
+    ):
+        util.run_cli("bump", "--yes", "--files-only")
