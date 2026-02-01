@@ -1446,7 +1446,7 @@ def test_render_changelog_with_changelog_message_builder_hook_multiple_entries(
     def changelog_message_builder_hook(message: dict, commit: git.GitCommit):
         messages = [message.copy(), message.copy(), message.copy()]
         for idx, msg in enumerate(messages):
-            msg["message"] = "Message #{idx}"
+            msg["message"] = f"Message #{idx}"
         return messages
 
     parser = ConventionalCommitsCz.commit_parser
@@ -1463,7 +1463,7 @@ def test_render_changelog_with_changelog_message_builder_hook_multiple_entries(
     result = changelog.render_changelog(tree, loader, template)
 
     for idx in range(3):
-        assert "Message #{idx}" in result
+        assert f"Message #{idx}" in result
 
 
 def test_changelog_message_builder_hook_can_access_and_modify_change_type(
