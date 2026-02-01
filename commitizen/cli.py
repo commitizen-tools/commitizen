@@ -210,7 +210,12 @@ data = {
                     {
                         "name": "--files-only",  # TODO: rename to --version-files-only
                         "action": "store_true",
-                        "help": "Bump version in the `version_files` specified in the configuration file only.",
+                        "help": "Bump version in the `version_files` specified in the configuration file only(deprecated; use --version-files-only instead).",
+                    },
+                    {
+                        "name": "--version-files-only",
+                        "action": "store_true",
+                        "help": "Bump version in the files from the config",
                     },
                     {
                         "name": "--local-version",
