@@ -23,7 +23,11 @@ logger = getLogger("commitizen")
 
 
 def find_increment(
-    commits: list[GitCommit], regex: str, increments_map: dict | OrderedDict
+    commits: list[GitCommit],
+    regex: str,
+    increments_map: dict | OrderedDict,
+    ignore_bump_sha_list: list[str] | None = None,
+    ignore_bump_author_list: list[str] | None = None,
 ) -> Increment | None:
     if isinstance(increments_map, dict):
         increments_map = OrderedDict(increments_map)
@@ -34,6 +38,18 @@ def find_increment(
     increment: str | None = None
 
     for commit in commits:
+        if ignore_bump_sha_list and commit.rev in ignore_bump_sha_list:
+            logger.debug(
+                f"Skipping commit {commit.rev} as it's in ignore_bump_sha_list"
+            )
+            continue
+
+        if ignore_bump_author_list and commit.author in ignore_bump_author_list:
+            logger.debug(
+                f"Skipping commit {commit.rev} as its author '{commit.author}' is in ignore_bump_author_list"
+            )
+            continue
+
         for message in commit.message.split("\n"):
             result = select_pattern.search(message)
 

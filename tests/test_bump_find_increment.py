@@ -108,6 +108,42 @@ def test_find_increment(messages, expected_type):
     assert increment_type == expected_type
 
 
+def test_find_increment_with_ignored_sha():
+    messages = [
+        "docs(README): motivation",
+        "BREAKING CHANGE: your upstream dependency have some breaking changes",
+    ]
+    commits = [
+        GitCommit(rev="test1", title=messages[0]),
+        GitCommit(rev="test2", title=messages[1]),
+    ]
+    increment_type = bump.find_increment(
+        commits,
+        regex=ConventionalCommitsCz.bump_pattern,
+        increments_map=ConventionalCommitsCz.bump_map,
+        ignore_bump_sha_list=["test2"],
+    )
+    assert increment_type is None
+
+
+def test_find_increment_with_ignored_author():
+    messages = [
+        "BREAKING CHANGE: your upstream dependency have some breaking changes",
+        "docs(README): motivation",
+    ]
+    commits = [
+        GitCommit(rev="test1", title=messages[0], author="alice"),
+        GitCommit(rev="test2", title=messages[1], author="bob"),
+    ]
+    increment_type = bump.find_increment(
+        commits,
+        regex=ConventionalCommitsCz.bump_pattern,
+        increments_map=ConventionalCommitsCz.bump_map,
+        ignore_bump_author_list=["alice"],
+    )
+    assert increment_type is None
+
+
 @pytest.mark.parametrize(
     ("messages", "expected_type"),
     [

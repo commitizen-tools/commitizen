@@ -158,7 +158,11 @@ class Bump:
             raise NoPatternMapError(
                 f"'{self.config.settings['name']}' rule does not support bump"
             )
-        return bump.find_increment(commits, regex=bump_pattern, increments_map=bump_map)
+        return bump.find_increment(
+            commits,
+            regex=bump_pattern,
+            increments_map=bump_map,
+        )
 
     def _validate_arguments(self, current_version: VersionProtocol) -> None:
         errors: list[str] = []
@@ -363,6 +367,9 @@ class Bump:
                 new_tag_version=new_tag_version,
                 message=message,
                 increment=increment,
+                changelog_file_name=(
+                    changelog_cmd.file_name if self.changelog_flag else None
+                ),
                 changelog_file_name=changelog_file_name,
             )
 
@@ -426,7 +433,9 @@ class Bump:
                 current_tag_version=new_tag_version,
                 message=message,
                 increment=increment,
-                changelog_file_name=changelog_file_name,
+                changelog_file_name=(
+                    changelog_cmd.file_name if self.changelog_flag else None
+                ),
             )
 
         # TODO: For v3 output this only as diagnostic and remove this if
