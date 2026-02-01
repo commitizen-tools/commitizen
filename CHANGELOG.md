@@ -1,3 +1,24 @@
+## v4.13.0 (2026-02-01)
+
+### Feat
+
+- **bump**: add --version-files-only and deprecate --files-only (#1802)
+- **version**: add --tag tag to version command (#1819)
+- **cli**: add description when choosing a commit rule (#1825)
+- **tags**: enable version schemes with less than 3 components (#1705)
+
+### Fix
+
+- **config**: include pyproject.toml in multi config file warning (#1803)
+- add pytest ruff rule PT and fix missing deprecation warning (#1826)
+- **message_length_limit**: align the behavior of message_length_limit (#1813)
+- **cli**: capitalize the first characters of help texts and fix minor grammar errors
+
+### Refactor
+
+- replace hard-coded string "cz_conventional_commits" with DEFAULT_SETTINGS (#1830)
+- **bump**: fix unbounded variable type issue
+
 ## v4.12.1 (2026-01-22)
 
 ### Fix
