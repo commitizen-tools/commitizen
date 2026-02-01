@@ -104,6 +104,10 @@ class Bump:
         self.retry = arguments["retry"]
         self.pre_bump_hooks = self.config.settings["pre_bump_hooks"]
         self.post_bump_hooks = self.config.settings["post_bump_hooks"]
+        self.ignore_bump_sha_list = self.config.settings.get("ignore_bump_sha_list")
+        self.ignore_bump_author_list = self.config.settings.get(
+            "ignore_bump_author_list"
+        )
         deprecated_version_type = arguments.get("version_type")
         if deprecated_version_type:
             warnings.warn(
@@ -162,6 +166,8 @@ class Bump:
             commits,
             regex=bump_pattern,
             increments_map=bump_map,
+            ignore_bump_sha_list=self.ignore_bump_sha_list,
+            ignore_bump_author_list=self.ignore_bump_author_list,
         )
 
     def _validate_arguments(self, current_version: VersionProtocol) -> None:

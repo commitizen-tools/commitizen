@@ -65,6 +65,8 @@ class Settings(TypedDict, total=False):
     version_type: str | None
     version: str | None
     breaking_change_exclamation_in_title: bool
+    ignore_bump_sha_list: list[str] | None
+    ignore_bump_author_list: list[str] | None
 
 
 CONFIG_FILES: tuple[str, ...] = (
