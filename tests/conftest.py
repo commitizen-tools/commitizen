@@ -85,7 +85,7 @@ def tmp_commitizen_project(tmp_git_project):
     tmp_commitizen_cfg_file = tmp_git_project.join("pyproject.toml")
     tmp_commitizen_cfg_file.write('[tool.commitizen]\nversion="0.1.0"\n')
 
-    yield tmp_git_project
+    return tmp_git_project
 
 
 @pytest.fixture
@@ -122,7 +122,7 @@ def tmp_commitizen_project_initial(tmp_git_project, util: UtilFixture):
 
             return tmp_git_project
 
-    yield _initial
+    return _initial
 
 
 def _get_gpg_keyid(signer_mail):
@@ -139,23 +139,31 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
     # create a temporary GPGHOME to store a temporary keyring.
     # Home path must be less than 104 characters
     gpg_home = tempfile.TemporaryDirectory(suffix="_cz")
+    old_gnupghome = os.environ.get("GNUPGHOME")
     if os.name != "nt":
         os.environ["GNUPGHOME"] = gpg_home.name  # tempdir = temp keyring
 
-    # create a key (a keyring will be generated within GPUPGHOME)
-    c = cmd.run(
-        f"gpg --batch --yes --debug-quick-random --passphrase '' --quick-gen-key '{SIGNER} {SIGNER_MAIL}'"
-    )
-    if c.return_code != 0:
-        raise Exception(f"gpg keygen failed with err: '{c.err}'")
-    key_id = _get_gpg_keyid(SIGNER_MAIL)
-    assert key_id
+    try:
+        # create a key (a keyring will be generated within GPUPGHOME)
+        c = cmd.run(
+            f"gpg --batch --yes --debug-quick-random --passphrase '' --quick-gen-key '{SIGNER} {SIGNER_MAIL}'"
+        )
+        if c.return_code != 0:
+            raise Exception(f"gpg keygen failed with err: '{c.err}'")
+        key_id = _get_gpg_keyid(SIGNER_MAIL)
+        assert key_id
 
-    # configure git to use gpg signing
-    cmd.run("git config commit.gpgsign true")
-    cmd.run(f"git config user.signingkey {key_id}")
+        # configure git to use gpg signing
+        cmd.run("git config commit.gpgsign true")
+        cmd.run(f"git config user.signingkey {key_id}")
 
-    yield tmp_commitizen_project
+        yield tmp_commitizen_project
+    finally:
+        if old_gnupghome is not None:
+            os.environ["GNUPGHOME"] = old_gnupghome
+        elif "GNUPGHOME" in os.environ and os.name != "nt":
+            os.environ.pop("GNUPGHOME")
+        gpg_home.cleanup()
 
 
 @pytest.fixture
