@@ -13,8 +13,8 @@ if TYPE_CHECKING:
 
 
 @pytest.mark.parametrize(
-    "tag_format,tag,expected_version",
-    (
+    ("tag_format", "tag", "expected_version"),
+    [
         # If tag_format is $version (the default), version_scheme.parser is used.
         # Its DEFAULT_VERSION_PARSER allows a v prefix, but matches PEP440 otherwise.
         ("$version", "no-match-because-version-scheme-is-strict", "0.0.0"),
@@ -36,7 +36,7 @@ if TYPE_CHECKING:
         ("v$major.$minor.$patch$prerelease$devrelease", "v0.1.0", "0.1.0"),
         ("v$major.$minor.$patch$prerelease$devrelease", "v0.1.0rc1", "0.1.0rc1"),
         ("v$major.$minor.$patch$prerelease$devrelease", "v1.0.0.dev0", "1.0.0.dev0"),
-    ),
+    ],
 )
 @pytest.mark.usefixtures("tmp_git_project")
 def test_scm_provider(

@@ -316,7 +316,7 @@ def format_with_tags(config: BaseConfig, request) -> RestructuredText:
     return RestructuredText(config)
 
 
-@pytest.mark.parametrize("content, expected", CASES)
+@pytest.mark.parametrize(("content", "expected"), CASES)
 def test_get_metadata(
     tmp_path: Path, format: RestructuredText, content: str, expected: Metadata
 ):
@@ -327,7 +327,7 @@ def test_get_metadata(
 
 
 @pytest.mark.parametrize(
-    "text, expected",
+    ("text", "expected"),
     [(text, True) for text in UNDERLINED_TITLES]
     + [(text, False) for text in NOT_UNDERLINED_TITLES],
 )
@@ -337,7 +337,7 @@ def test_is_underlined_title(text: str, expected: bool):
 
 
 @pytest.mark.parametrize(
-    "text, expected",
+    ("text", "expected"),
     [(text, True) for text in OVERLINED_TITLES]
     + [(text, False) for text in NOT_OVERLINED_TITLES],
 )
@@ -348,8 +348,8 @@ def test_is_overlined_title(text: str, expected: bool):
 
 
 @pytest.mark.parametrize(
-    "format_with_tags, tag_string, expected, ",
-    (
+    ("format_with_tags", "tag_string", "expected"),
+    [
         pytest.param("${version}-example", "1.0.0-example", "1.0.0"),
         pytest.param("${version}", "1.0.0", "1.0.0"),
         pytest.param("${version}example", "1.0.0example", "1.0.0"),
@@ -368,7 +368,7 @@ def test_is_overlined_title(text: str, expected: bool):
             "1.0.0-a1.dev1",
         ),
         pytest.param("new-${version}", "legacy-1.0.0", "1.0.0"),
-    ),
+    ],
     indirect=["format_with_tags"],
 )
 def test_get_metadata_custom_tag_format(

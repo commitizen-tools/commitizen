@@ -125,7 +125,7 @@ VERSIONS_EXAMPLES = [
 ]
 
 
-@pytest.mark.parametrize("line_from_changelog,output_version", VERSIONS_EXAMPLES)
+@pytest.mark.parametrize(("line_from_changelog", "output_version"), VERSIONS_EXAMPLES)
 def test_changelog_detect_version(
     line_from_changelog: str, output_version: tuple[str, str] | None, format: Textile
 ):
@@ -140,7 +140,7 @@ TITLES_EXAMPLES = [
 ]
 
 
-@pytest.mark.parametrize("line_from_changelog,output_title", TITLES_EXAMPLES)
+@pytest.mark.parametrize(("line_from_changelog", "output_title"), TITLES_EXAMPLES)
 def test_parse_title_type_of_line(
     line_from_changelog: str, output_title: str, format: Textile
 ):
@@ -149,13 +149,13 @@ def test_parse_title_type_of_line(
 
 
 @pytest.mark.parametrize(
-    "content, expected",
-    (
+    ("content", "expected"),
+    [
         pytest.param(CHANGELOG_A, EXPECTED_A, id="A"),
         pytest.param(CHANGELOG_B, EXPECTED_B, id="B"),
         pytest.param(CHANGELOG_C, EXPECTED_C, id="C"),
         pytest.param(CHANGELOG_D, EXPECTED_D, id="D"),
-    ),
+    ],
 )
 def test_get_metadata(
     tmp_path: Path, format: Textile, content: str, expected: Metadata
@@ -167,8 +167,8 @@ def test_get_metadata(
 
 
 @pytest.mark.parametrize(
-    "format_with_tags, tag_string, expected, ",
-    (
+    ("format_with_tags", "tag_string", "expected"),
+    [
         pytest.param("${version}-example", "1.0.0-example", "1.0.0"),
         pytest.param("${version}example", "1.0.0example", "1.0.0"),
         pytest.param("example${version}", "example1.0.0", "1.0.0"),
@@ -186,7 +186,7 @@ def test_get_metadata(
             "1.0.0-a1.dev1",
         ),
         pytest.param("new-${version}", "legacy-1.0.0", "1.0.0"),
-    ),
+    ],
     indirect=["format_with_tags"],
 )
 def test_get_metadata_custom_tag_format(

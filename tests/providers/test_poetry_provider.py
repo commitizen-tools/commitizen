@@ -25,8 +25,8 @@ version = "42.1"
 
 
 @pytest.mark.parametrize(
-    "content, expected",
-    ((POETRY_TOML, POETRY_EXPECTED),),
+    ("content", "expected"),
+    [(POETRY_TOML, POETRY_EXPECTED)],
 )
 def test_cargo_provider(
     config: BaseConfig,

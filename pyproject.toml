@@ -239,8 +239,6 @@ ignore = [
     "E501",
     "D1",
     "D415",
-    "PT006", # TODO(bearomorphism): enable this rule
-    "PT007", # TODO(bearomorphism): enable this rule
     "PT011", # TODO(bearomorphism): enable this rule
     "PT022", # TODO(bearomorphism): enable this rule
 ]

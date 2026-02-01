@@ -352,7 +352,7 @@ def test_create_tag_with_message(util: UtilFixture):
 
 
 @pytest.mark.parametrize(
-    "file_path,expected_cmd",
+    ("file_path", "expected_cmd"),
     [
         (
             "/tmp/temp file",
@@ -446,7 +446,7 @@ def test_git_commit_from_rev_and_commit(linebreak):
 
 
 @pytest.mark.parametrize(
-    "os_name,committer_date,expected_cmd",
+    ("os_name", "committer_date", "expected_cmd"),
     [
         (
             "nt",

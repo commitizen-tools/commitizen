@@ -19,7 +19,7 @@ def _create_project_files(files: dict[str, str | None]) -> None:
 
 
 @pytest.mark.parametrize(
-    "which_return, expected",
+    ("which_return", "expected"),
     [
         ("/usr/local/bin/pre-commit", True),
         ("/usr/local/bin/prek", True),
@@ -33,7 +33,7 @@ def test_is_pre_commit_installed(mocker, which_return, expected):
 
 
 @pytest.mark.parametrize(
-    "files, expected",
+    ("files", "expected"),
     [
         (
             {"pyproject.toml": '[tool.poetry]\nname = "test"\nversion = "0.1.0"'},
@@ -66,7 +66,7 @@ def test_get_default_version_provider(chdir, files, expected):
 
 
 @pytest.mark.parametrize(
-    "files, expected",
+    ("files", "expected"),
     [
         ({"pyproject.toml": ""}, "pyproject.toml"),
         ({}, ".cz.toml"),
@@ -78,7 +78,7 @@ def test_get_default_config_filename(chdir, files, expected):
 
 
 @pytest.mark.parametrize(
-    "files, expected",
+    ("files", "expected"),
     [
         ({"pyproject.toml": ""}, "pep440"),
         ({"setup.py": ""}, "pep440"),

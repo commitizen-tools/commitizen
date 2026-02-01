@@ -85,8 +85,8 @@ semantic_version_map = {"MAJOR": "MAJOR", "MINOR": "MINOR", "PATCH": "PATCH"}
 
 
 @pytest.mark.parametrize(
-    "messages, expected_type",
-    (
+    ("messages", "expected_type"),
+    [
         (PATCH_INCREMENTS_CC, "PATCH"),
         (MINOR_INCREMENTS_CC, "MINOR"),
         (MAJOR_INCREMENTS_BREAKING_CHANGE_CC, "MAJOR"),
@@ -96,7 +96,7 @@ semantic_version_map = {"MAJOR": "MAJOR", "MINOR": "MINOR", "PATCH": "PATCH"}
         (MAJOR_INCREMENTS_EXCLAMATION_CC, "MAJOR"),
         (MAJOR_INCREMENTS_EXCLAMATION_CC_SAMPLE_2, "MAJOR"),
         (NONE_INCREMENT_CC, None),
-    ),
+    ],
 )
 def test_find_increment(messages, expected_type):
     commits = [GitCommit(rev="test", title=message) for message in messages]
@@ -109,12 +109,12 @@ def test_find_increment(messages, expected_type):
 
 
 @pytest.mark.parametrize(
-    "messages, expected_type",
-    (
+    ("messages", "expected_type"),
+    [
         (PATCH_INCREMENTS_SVE, "PATCH"),
         (MINOR_INCREMENTS_SVE, "MINOR"),
         (MAJOR_INCREMENTS_SVE, "MAJOR"),
-    ),
+    ],
 )
 def test_find_increment_sve(messages, expected_type):
     commits = [GitCommit(rev="test", title=message) for message in messages]

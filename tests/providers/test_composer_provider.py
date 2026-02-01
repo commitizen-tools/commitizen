@@ -29,8 +29,8 @@ COMPOSER_EXPECTED = """\
 
 
 @pytest.mark.parametrize(
-    "content, expected",
-    ((COMPOSER_JSON, COMPOSER_EXPECTED),),
+    ("content", "expected"),
+    [(COMPOSER_JSON, COMPOSER_EXPECTED)],
 )
 def test_composer_provider(
     config: BaseConfig,
