@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -85,12 +84,12 @@ def test_init_without_setup_pre_commit_hook(
             config_data = toml_file.read()
         assert config_data == expected_config
 
-        assert not os.path.isfile(pre_commit_config_filename)
+        assert not Path(pre_commit_config_filename).exists()
 
 
 def test_init_when_config_already_exists(config: BaseConfig, capsys):
     # Set config path
-    path = Path(os.sep.join(["tests", "pyproject.toml"]))
+    path = Path("tests") / "pyproject.toml"
     config.path = path
 
     commands.Init(config)()
