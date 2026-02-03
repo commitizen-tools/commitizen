@@ -1,3 +1,9 @@
+## v4.13.1 (2026-02-03)
+
+### Refactor
+
+- **config**: replace is_empty_config with contains_commitizen_section, improve multi config resolution algorithm (#1842)
+
 ## v4.13.0 (2026-02-01)
 
 ### Feat
