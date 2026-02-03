@@ -1,3 +1,10 @@
+## v4.13.2 (2026-02-03)
+
+### Refactor
+
+- simplify code with pathlib Path object (#1840)
+- **tags**: extract version resolution method (#1839)
+
 ## v4.13.1 (2026-02-03)
 
 ### Refactor
