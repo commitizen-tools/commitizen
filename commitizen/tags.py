@@ -154,24 +154,13 @@ class TagRules:
         candidates = (
             m for regex in self.version_regexes if (m := regex.fullmatch(tag.name))
         )
-        if not (m := next(candidates, None)):
+        if not (match := next(candidates, None)):
             raise InvalidVersion(self._version_tag_error(tag.name))
-        if "version" in m.groupdict():
-            return self.scheme(m.group("version"))
 
-        parts = m.groupdict()
-        version = parts["major"]
+        if version := match.groupdict().get("version"):
+            return self.scheme(version)
 
-        if minor := parts.get("minor"):
-            version = f"{version}.{minor}"
-        if patch := parts.get("patch"):
-            version = f"{version}.{patch}"
-
-        if parts.get("prerelease"):
-            version = f"{version}-{parts['prerelease']}"
-        if parts.get("devrelease"):
-            version = f"{version}{parts['devrelease']}"
-        return self.scheme(version)
+        return self.scheme(self._extract_version(match))
 
     def include_in_changelog(self, tag: GitTag) -> bool:
         """Check if a tag should be included in the changelog"""
@@ -195,19 +184,14 @@ class TagRules:
 
         match = matches[-1 if last else 0]
 
-        if "version" in match.groupdict():
-            return VersionTag(match.group("version"), match.group(0))
+        groups = match.groupdict()
+        if version := groups.get("version"):
+            return VersionTag(version, match.group(0))
 
-        parts = match.groupdict()
-        try:
-            version = f"{parts['major']}.{parts['minor']}.{parts['patch']}"
-        except KeyError:
+        if not all(value in groups for value in ["major", "minor", "patch"]):
             return None
 
-        if parts.get("prerelease"):
-            version = f"{version}-{parts['prerelease']}"
-        if parts.get("devrelease"):
-            version = f"{version}{parts['devrelease']}"
+        version = self._extract_version(match)
         return VersionTag(version, match.group(0))
 
     def normalize_tag(
@@ -284,3 +268,16 @@ class TagRules:
             ignored_tag_formats=settings["ignored_tag_formats"],
             merge_prereleases=settings["changelog_merge_prerelease"],
         )
+
+    def _extract_version(self, match: re.Match[str]) -> str:
+        groups = match.groupdict()
+        parts: list[str] = [groups["major"]]
+        if minor := groups.get("minor"):
+            parts.append(f".{minor}")
+        if patch := groups.get("patch"):
+            parts.append(f".{patch}")
+        if prerelease := groups.get("prerelease"):
+            parts.append(f"-{prerelease}")
+        if devrelease := groups.get("devrelease"):
+            parts.append(devrelease)
+        return "".join(parts)
