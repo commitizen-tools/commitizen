@@ -56,7 +56,7 @@ class YAMLConfig(BaseConfig):
             pass
 
     def set_key(self, key: str, value: object) -> Self:
-        with open(self.path, "rb") as yaml_file:
+        with self.path.open("rb") as yaml_file:
             config_doc = yaml.load(yaml_file, Loader=yaml.FullLoader)
 
         config_doc["commitizen"][key] = value

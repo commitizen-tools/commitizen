@@ -217,7 +217,7 @@ class MyProvider(VersionProvider):
     def get_version(self) -> str:
         """Read version from VERSION file."""
         version_file = Path("VERSION")
-        if not version_file.exists():
+        if not version_file.is_file():
             return "0.0.0"
         return version_file.read_text().strip()
 

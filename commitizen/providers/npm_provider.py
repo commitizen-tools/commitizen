@@ -46,14 +46,14 @@ class NpmProvider(VersionProvider):
         self.package_file.write_text(
             json.dumps(package_document, indent=self.indent) + "\n"
         )
-        if self.lock_file.exists():
+        if self.lock_file.is_file():
             lock_document = self.set_lock_version(
                 json.loads(self.lock_file.read_text()), version
             )
             self.lock_file.write_text(
                 json.dumps(lock_document, indent=self.indent) + "\n"
             )
-        if self.shrinkwrap_file.exists():
+        if self.shrinkwrap_file.is_file():
             shrinkwrap_document = self.set_shrinkwrap_version(
                 json.loads(self.shrinkwrap_file.read_text()), version
             )

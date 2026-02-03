@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from typing import TYPE_CHECKING
 
 from tomlkit import TOMLDocument, exceptions, parse, table
@@ -33,25 +32,25 @@ class TomlConfig(BaseConfig):
 
     def init_empty_config_content(self) -> None:
         config_doc = TOMLDocument()
-        if os.path.isfile(self.path):
-            with open(self.path, "rb") as input_toml_file:
+        if self.path.is_file():
+            with self.path.open("rb") as input_toml_file:
                 config_doc = parse(input_toml_file.read())
 
         if config_doc.get("tool") is None:
             config_doc["tool"] = table()
         config_doc["tool"]["commitizen"] = table()  # type: ignore[index]
 
-        with open(self.path, "wb") as output_toml_file:
+        with self.path.open("wb") as output_toml_file:
             output_toml_file.write(
                 config_doc.as_string().encode(self._settings["encoding"])
             )
 
     def set_key(self, key: str, value: object) -> Self:
-        with open(self.path, "rb") as f:
+        with self.path.open("rb") as f:
             config_doc = parse(f.read())
 
         config_doc["tool"]["commitizen"][key] = value  # type: ignore[index]
-        with open(self.path, "wb") as f:
+        with self.path.open("wb") as f:
             f.write(config_doc.as_string().encode(self._settings["encoding"]))
 
         return self
