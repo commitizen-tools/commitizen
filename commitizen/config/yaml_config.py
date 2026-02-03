@@ -32,6 +32,11 @@ class YAMLConfig(BaseConfig):
         ) as json_file:
             yaml.dump({"commitizen": {}}, json_file, explicit_start=True)
 
+    def contains_commitizen_section(self) -> bool:
+        with self.path.open("rb") as yaml_file:
+            config_doc = yaml.load(yaml_file, Loader=yaml.FullLoader)
+        return config_doc.get("commitizen") is not None
+
     def _parse_setting(self, data: bytes | str) -> None:
         """We expect to have a section in cz.yaml looking like
 
@@ -40,8 +45,6 @@ class YAMLConfig(BaseConfig):
           name: cz_conventional_commits
         ```
         """
-        import yaml.scanner
-
         try:
             doc = yaml.safe_load(data)
         except yaml.YAMLError as e:
@@ -50,7 +53,7 @@ class YAMLConfig(BaseConfig):
         try:
             self.settings.update(doc["commitizen"])
         except (KeyError, TypeError):
-            self.is_empty_config = True
+            pass
 
     def set_key(self, key: str, value: object) -> Self:
         with open(self.path, "rb") as yaml_file:

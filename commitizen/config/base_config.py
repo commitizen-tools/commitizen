@@ -17,9 +17,15 @@ if TYPE_CHECKING:
 
 class BaseConfig:
     def __init__(self) -> None:
-        self.is_empty_config = False
         self._settings: Settings = DEFAULT_SETTINGS.copy()
         self._path: Path | None = None
+
+    def contains_commitizen_section(self) -> bool:
+        """Check if the config file contains a commitizen section.
+
+        The implementation is different for each config file type.
+        """
+        raise NotImplementedError()
 
     @property
     def settings(self) -> Settings:

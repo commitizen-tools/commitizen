@@ -25,6 +25,11 @@ class JsonConfig(BaseConfig):
         self.path = path
         self._parse_setting(data)
 
+    def contains_commitizen_section(self) -> bool:
+        with self.path.open("rb") as json_file:
+            config_doc = json.load(json_file)
+        return config_doc.get("commitizen") is not None
+
     def init_empty_config_content(self) -> None:
         with smart_open(
             self.path, "a", encoding=self._settings["encoding"]
@@ -32,7 +37,7 @@ class JsonConfig(BaseConfig):
             json.dump({"commitizen": {}}, json_file)
 
     def set_key(self, key: str, value: object) -> Self:
-        with open(self.path, "rb") as f:
+        with self.path.open("rb") as f:
             config_doc = json.load(f)
 
         config_doc["commitizen"][key] = value
@@ -59,4 +64,4 @@ class JsonConfig(BaseConfig):
         try:
             self.settings.update(doc["commitizen"])
         except KeyError:
-            self.is_empty_config = True
+            pass

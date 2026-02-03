@@ -26,6 +26,11 @@ class TomlConfig(BaseConfig):
         self.path = path
         self._parse_setting(data)
 
+    def contains_commitizen_section(self) -> bool:
+        with self.path.open("rb") as f:
+            config_doc = parse(f.read())
+        return config_doc.get("tool", {}).get("commitizen") is not None
+
     def init_empty_config_content(self) -> None:
         config_doc = TOMLDocument()
         if os.path.isfile(self.path):
@@ -67,4 +72,4 @@ class TomlConfig(BaseConfig):
         try:
             self.settings.update(doc["tool"]["commitizen"])  # type: ignore[index,typeddict-item] # TODO: fix this
         except exceptions.NonExistentKey:
-            self.is_empty_config = True
+            pass
