@@ -165,11 +165,6 @@ def config():
     return _config
 
 
-@pytest.fixture
-def config_path() -> str:
-    return os.path.join(os.getcwd(), "pyproject.toml")
-
-
 class SemverCommitizen(BaseCommitizen):
     """A minimal cz rules used to test changelog and bump.
 

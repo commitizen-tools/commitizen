@@ -125,7 +125,7 @@ def test_partial_update_of_file(version_repeated_file, file_regression):
     bump.update_version_in_files(
         old_version, new_version, [location], check_consistency=False, encoding="utf-8"
     )
-    with open(version_repeated_file, encoding="utf-8") as f:
+    with version_repeated_file.open(encoding="utf-8") as f:
         file_regression.check(f.read(), extension=".json")
 
 
@@ -137,7 +137,7 @@ def test_random_location(random_location_version_file, file_regression):
     bump.update_version_in_files(
         old_version, new_version, [location], check_consistency=False, encoding="utf-8"
     )
-    with open(random_location_version_file, encoding="utf-8") as f:
+    with random_location_version_file.open(encoding="utf-8") as f:
         file_regression.check(f.read(), extension=".lock")
 
 
@@ -151,7 +151,7 @@ def test_duplicates_are_change_with_no_regex(
     bump.update_version_in_files(
         old_version, new_version, [location], check_consistency=False, encoding="utf-8"
     )
-    with open(random_location_version_file, encoding="utf-8") as f:
+    with random_location_version_file.open(encoding="utf-8") as f:
         file_regression.check(f.read(), extension=".lock")
 
 
@@ -220,7 +220,7 @@ def test_multiple_versions_to_bump(
     bump.update_version_in_files(
         old_version, new_version, [location], check_consistency=False, encoding="utf-8"
     )
-    with open(multiple_versions_to_update_poetry_lock, encoding="utf-8") as f:
+    with multiple_versions_to_update_poetry_lock.open(encoding="utf-8") as f:
         file_regression.check(f.read(), extension=".toml")
 
 
