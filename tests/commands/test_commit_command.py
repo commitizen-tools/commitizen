@@ -365,3 +365,230 @@ def test_commit_command_with_config_message_length_limit(
     success_mock.reset_mock()
     commands.Commit(config, {"message_length_limit": 0})()
     success_mock.assert_called_once()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_with_body_length_limit_wrapping(
+    config, success_mock: MockType, mocker: MockFixture
+):
+    """Test that long body lines are automatically wrapped to the specified limit."""
+    mocker.patch(
+        "questionary.prompt",
+        return_value={
+            "prefix": "feat",
+            "subject": "add feature",
+            "scope": "",
+            "is_breaking_change": False,
+            "body": "This is a very long line that exceeds 72 characters and should be automatically wrapped by the system to fit within the limit",
+            "footer": "",
+        },
+    )
+
+    commit_mock = mocker.patch(
+        "commitizen.git.commit", return_value=cmd.Command("success", "", b"", b"", 0)
+    )
+
+    # Execute with body_length_limit
+    commands.Commit(config, {"body_length_limit": 72})()
+    success_mock.assert_called_once()
+
+    # Verify wrapping occurred
+    committed_message = commit_mock.call_args[0][0]
+    lines = committed_message.split("\n")
+    assert lines[0] == "feat: add feature"
+    assert lines[1] == ""
+    body_lines = lines[2:]
+    for line in body_lines:
+        if line.strip():
+            assert len(line) <= 72, (
+                f"Line exceeds 72 chars: '{line}' ({len(line)} chars)"
+            )
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_with_body_length_limit_preserves_line_breaks(
+    config, success_mock: MockType, mocker: MockFixture
+):
+    """Test that intentional line breaks (from | character) are preserved."""
+    # Simulate what happens after multiple_line_breaker processes "line1 | line2 | line3"
+    mocker.patch(
+        "questionary.prompt",
+        return_value={
+            "prefix": "feat",
+            "subject": "add feature",
+            "scope": "",
+            "is_breaking_change": False,
+            "body": "Line1 that is very long and exceeds the limit\nLine2 that is very long and exceeds the limit\nLine3 that is very long and exceeds the limit",
+            "footer": "",
+        },
+    )
+
+    commit_mock = mocker.patch(
+        "commitizen.git.commit", return_value=cmd.Command("success", "", b"", b"", 0)
+    )
+
+    commands.Commit(config, {"body_length_limit": 45})()
+    success_mock.assert_called_once()
+
+    committed_message = commit_mock.call_args[0][0]
+    lines = committed_message.split("\n")
+
+    # Should have a subject, a blank line
+    assert lines[0] == "feat: add feature"
+    assert lines[1] == ""
+    # Each original line should be wrapped separately, preserving the line breaks
+    body_lines = lines[2:]
+    # All lines should be <= 45 chars
+    for line in body_lines:
+        if line.strip():
+            assert len(line) == 45, (
+                f"Line's length is not 45 chars: '{line}' ({len(line)} chars)"
+            )
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_with_body_length_limit_disabled(
+    config, success_mock: MockType, mocker: MockFixture
+):
+    """Test that body_length_limit = 0 disables wrapping."""
+    long_body = "This is a very long line that exceeds 72 characters and should NOT be wrapped when body_length_limit is set to 0"
+
+    mocker.patch(
+        "questionary.prompt",
+        return_value={
+            "prefix": "feat",
+            "subject": "add feature",
+            "scope": "",
+            "is_breaking_change": False,
+            "body": long_body,
+            "footer": "",
+        },
+    )
+
+    commit_mock = mocker.patch(
+        "commitizen.git.commit", return_value=cmd.Command("success", "", b"", b"", 0)
+    )
+
+    # Execute with body_length_limit = 0 (disabled)
+    commands.Commit(config, {"body_length_limit": 0})()
+
+    success_mock.assert_called_once()
+
+    # Get the actual commit message
+    committed_message = commit_mock.call_args[0][0]
+
+    # Verify the body was NOT wrapped (should contain the original long line)
+    assert long_body in committed_message, "Body should not be wrapped when limit is 0"
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_with_body_length_limit_from_config(
+    config, success_mock: MockType, mocker: MockFixture
+):
+    """Test that body_length_limit can be set via config."""
+    mocker.patch(
+        "questionary.prompt",
+        return_value={
+            "prefix": "feat",
+            "subject": "add feature",
+            "scope": "",
+            "is_breaking_change": False,
+            "body": "This is a very long line that exceeds 50 characters and should be wrapped",
+            "footer": "",
+        },
+    )
+
+    commit_mock = mocker.patch(
+        "commitizen.git.commit", return_value=cmd.Command("success", "", b"", b"", 0)
+    )
+
+    # Set body_length_limit in config
+    config.settings["body_length_limit"] = 50
+
+    commands.Commit(config, {})()
+
+    success_mock.assert_called_once()
+
+    # Get the actual commit message
+    committed_message = commit_mock.call_args[0][0]
+
+    # Verify all body lines are within the limit
+    lines = committed_message.split("\n")
+    body_lines = lines[2:]
+    for line in body_lines:
+        if line.strip():
+            assert len(line) <= 50, (
+                f"Line exceeds 50 chars: '{line}' ({len(line)} chars)"
+            )
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_body_length_limit_cli_overrides_config(
+    config, success_mock: MockType, mocker: MockFixture
+):
+    """Test that CLI argument overrides config setting."""
+    mocker.patch(
+        "questionary.prompt",
+        return_value={
+            "prefix": "feat",
+            "subject": "add feature",
+            "scope": "",
+            "is_breaking_change": False,
+            "body": "This is a line that is longer than 40 characters but shorter than 80 characters",
+            "footer": "",
+        },
+    )
+
+    commit_mock = mocker.patch(
+        "commitizen.git.commit", return_value=cmd.Command("success", "", b"", b"", 0)
+    )
+
+    # Set config to 40 (would wrap)
+    config.settings["body_length_limit"] = 40
+
+    # Override with CLI argument to 0 (should NOT wrap)
+    commands.Commit(config, {"body_length_limit": 0})()
+
+    success_mock.assert_called_once()
+
+    # Get the actual commit message
+    committed_message = commit_mock.call_args[0][0]
+
+    # The line should NOT be wrapped (CLI override to 0 disables wrapping)
+    assert (
+        "This is a line that is longer than 40 characters but shorter than 80 characters"
+        in committed_message
+    )
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_with_body_length_limit_no_body(
+    config, success_mock: MockType, mocker: MockFixture
+):
+    """Test that commits without body work correctly with body_length_limit set."""
+    mocker.patch(
+        "questionary.prompt",
+        return_value={
+            "prefix": "feat",
+            "subject": "add feature",
+            "scope": "",
+            "is_breaking_change": False,
+            "body": "",  # No body
+            "footer": "",
+        },
+    )
+
+    commit_mock = mocker.patch(
+        "commitizen.git.commit", return_value=cmd.Command("success", "", b"", b"", 0)
+    )
+
+    # Execute commit with body_length_limit (should not crash)
+    commands.Commit(config, {"body_length_limit": 72})()
+
+    success_mock.assert_called_once()
+
+    # Get the actual commit message
+    committed_message = commit_mock.call_args[0][0]
+
+    # Should just be the subject line
+    assert committed_message.strip() == "feat: add feature"

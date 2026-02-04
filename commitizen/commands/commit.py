@@ -123,9 +123,11 @@ class Commit:
         subject = message_parts[0]
         blank_line = message_parts[1]
         body = message_parts[2].strip()
-        wrapped_body = textwrap.fill(
-            body, width=body_length_limit, replace_whitespace=False
-        )
+        body_lines = body.split("\n")
+        wrapped_body_lines = []
+        for line in body_lines:
+            wrapped_body_lines.append(textwrap.fill(line, width=body_length_limit))
+        wrapped_body = "\n".join(wrapped_body_lines)
         return f"{subject}\n{blank_line}\n{wrapped_body}"
 
     def manual_edit(self, message: str) -> str:
