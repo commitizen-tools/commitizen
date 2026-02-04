@@ -1,3 +1,9 @@
+## v4.13.4 (2026-02-04)
+
+### Fix
+
+- **pre-commit-hooks**: correct rev-range syntax in commitizen-branch (#1841)
+
 ## v4.13.3 (2026-02-04)
 
 ### Refactor
