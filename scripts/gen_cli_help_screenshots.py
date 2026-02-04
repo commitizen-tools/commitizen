@@ -1,42 +1,44 @@
 import os
 import subprocess
+from itertools import chain
 from pathlib import Path
 
 from rich.console import Console
 
 from commitizen.cli import data
 
-project_root = Path(__file__).parent.parent.absolute()
-images_root = project_root / Path("docs") / Path("images") / Path("cli_help")
-
 
 def gen_cli_help_screenshots() -> None:
     """Generate the screenshot for help message on each cli command and save them as svg files."""
-    if not os.path.exists(images_root):
-        os.makedirs(images_root)
-        print(f"Created {images_root}")
+    images_root = Path(__file__).parent.parent / "docs" / "images" / "cli_help"
+    images_root.mkdir(parents=True, exist_ok=True)
 
-    help_cmds = _list_help_cmds()
-    for cmd in help_cmds:
+    cz_commands = (
+        command["name"] if isinstance(command["name"], str) else command["name"][0]
+        for command in data["subcommands"]["commands"]
+    )
+    for cmd in chain(
+        ["cz --help"], (f"cz {cz_command} --help" for cz_command in cz_commands)
+    ):
         file_name = f"{cmd.replace(' ', '_').replace('-', '_')}.svg"
-        _export_cmd_as_svg(cmd, f"{images_root}/{file_name}")
+        _export_cmd_as_svg(cmd, images_root / file_name)
 
 
-def _list_help_cmds() -> list[str]:
-    cmds = [f"{data['prog']} --help"] + [
-        f"{data['prog']} {sub_c['name'] if isinstance(sub_c['name'], str) else sub_c['name'][0]} --help"
-        for sub_c in data["subcommands"]["commands"]
-    ]
+def _export_cmd_as_svg(cmd: str, file_path: Path) -> None:
+    console = Console(record=True, width=80, file=open(os.devnull, "w"))
 
-    return cmds
+    print("Processing command:", cmd)
 
-
-def _export_cmd_as_svg(cmd: str, file_name: str) -> None:
+    console.print(f"$ {cmd}")
     stdout = subprocess.run(cmd, shell=True, capture_output=True).stdout.decode("utf-8")
-    console = Console(record=True, width=80)
-    console.print(f"$ {cmd}\n{stdout}")
-    console.save_svg(file_name, title="")
+    console.print(stdout)
+    console.save_svg(file_path.as_posix(), title="")
 
+    print("Saved to:", file_path.as_posix())
+
+
+# TODO: generate the screenshot of cz init interactive mode
+# TODO: generate the screenshot of cz commit interactive mode
 
 if __name__ == "__main__":
     gen_cli_help_screenshots()
