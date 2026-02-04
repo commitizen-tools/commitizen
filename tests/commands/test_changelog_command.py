@@ -145,7 +145,7 @@ def test_changelog_replacing_unreleased_using_incremental(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-08-14")
 def test_changelog_is_persisted_using_incremental(
-    changelog_path: str,
+    changelog_path: Path,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
@@ -157,7 +157,7 @@ def test_changelog_is_persisted_using_incremental(
 
     util.run_cli("changelog")
 
-    with open(changelog_path, "a", encoding="utf-8") as f:
+    with changelog_path.open("a", encoding="utf-8") as f:
         f.write("\nnote: this should be persisted using increment\n")
 
     util.create_file_and_commit("fix: mama gotta work")
@@ -166,7 +166,7 @@ def test_changelog_is_persisted_using_incremental(
 
     util.run_cli("changelog", "--incremental")
 
-    with open(changelog_path, encoding="utf-8") as f:
+    with changelog_path.open(encoding="utf-8") as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -174,11 +174,11 @@ def test_changelog_is_persisted_using_incremental(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_incremental_angular_sample(
-    changelog_path: str,
+    changelog_path: Path,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
-    with open(changelog_path, "w", encoding="utf-8") as f:
+    with changelog_path.open("w", encoding="utf-8") as f:
         f.write(
             "# [10.0.0-rc.3](https://github.com/angular/angular/compare/10.0.0-rc.2...10.0.0-rc.3) (2020-04-22)\n"
             "\n"
@@ -197,7 +197,7 @@ def test_changelog_incremental_angular_sample(
 
     util.run_cli("changelog", "--incremental")
 
-    with open(changelog_path, encoding="utf-8") as f:
+    with changelog_path.open(encoding="utf-8") as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -230,11 +230,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_incremental_keep_a_changelog_sample(
-    changelog_path: str,
+    changelog_path: Path,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
-    with open(changelog_path, "w", encoding="utf-8") as f:
+    with changelog_path.open("w", encoding="utf-8") as f:
         f.write(KEEP_A_CHANGELOG)
     util.create_file_and_commit("irrelevant commit")
     util.create_tag("1.0.0")
@@ -247,7 +247,7 @@ def test_changelog_incremental_keep_a_changelog_sample(
 
     util.run_cli("changelog", "--incremental")
 
-    with open(changelog_path, encoding="utf-8") as f:
+    with changelog_path.open(encoding="utf-8") as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -405,7 +405,7 @@ def test_changelog_with_non_linear_merges_commit_order(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_multiple_incremental_do_not_add_new_lines(
-    changelog_path: str,
+    changelog_path: Path,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
@@ -419,7 +419,7 @@ def test_changelog_multiple_incremental_do_not_add_new_lines(
         util.create_file_and_commit(commit_message)
         util.run_cli("changelog", "--incremental")
 
-    with open(changelog_path, encoding="utf-8") as f:
+    with changelog_path.open(encoding="utf-8") as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -427,17 +427,17 @@ def test_changelog_multiple_incremental_do_not_add_new_lines(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_incremental_newline_separates_new_content_from_old(
-    changelog_path: str,
+    changelog_path: Path,
     util: UtilFixture,
     file_regression: FileRegressionFixture,
 ):
     """Test for https://github.com/commitizen-tools/commitizen/issues/509"""
-    with open(changelog_path, "w", encoding="utf-8") as f:
+    with changelog_path.open("w", encoding="utf-8") as f:
         f.write("Pre-existing content that should be kept\n")
 
     util.create_file_and_commit("feat: add more cat videos")
     util.run_cli("changelog", "--incremental")
-    with open(changelog_path, encoding="utf-8") as f:
+    with changelog_path.open(encoding="utf-8") as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -554,21 +554,21 @@ def test_breaking_change_content_v1_with_exclamation_mark_feat(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_config_flag_increment(
-    changelog_path: str,
-    config_path: str,
+    changelog_path: Path,
+    config_path: Path,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
-    with open(config_path, "a", encoding="utf-8") as f:
+    with config_path.open("a", encoding="utf-8") as f:
         f.write("changelog_incremental = true\n")
-    with open(changelog_path, "a", encoding="utf-8") as f:
+    with changelog_path.open("a", encoding="utf-8") as f:
         f.write("\nnote: this should be persisted using increment\n")
 
     util.create_file_and_commit("feat: add new output")
 
     util.run_cli("changelog")
 
-    with open(changelog_path, encoding="utf-8") as f:
+    with changelog_path.open(encoding="utf-8") as f:
         out = f.read()
 
     assert "this should be persisted using increment" in out
@@ -579,13 +579,13 @@ def test_changelog_config_flag_increment(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2025-12-29")
 def test_changelog_config_flag_merge_prerelease(
-    changelog_path: str,
-    config_path: str,
+    changelog_path: Path,
+    config_path: Path,
     file_regression: FileRegressionFixture,
     test_input: str,
     util: UtilFixture,
 ):
-    with open(config_path, "a") as f:
+    with config_path.open("a") as f:
         f.write("changelog_merge_prerelease = true\n")
 
     util.create_file_and_commit("irrelevant commit")
@@ -602,7 +602,7 @@ def test_changelog_config_flag_merge_prerelease(
 
     util.run_cli("changelog")
 
-    with open(changelog_path) as f:
+    with changelog_path.open() as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -611,7 +611,7 @@ def test_changelog_config_flag_merge_prerelease(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_config_start_rev_option(
     capsys: pytest.CaptureFixture,
-    config_path: str,
+    config_path: Path,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
@@ -623,7 +623,7 @@ def test_changelog_config_start_rev_option(
     util.create_file_and_commit("feat: after 0.2.0")
     util.create_file_and_commit("feat: after 0.2")
 
-    with open(config_path, "a", encoding="utf-8") as f:
+    with config_path.open("a", encoding="utf-8") as f:
         f.write('changelog_start_rev = "0.2.0"\n')
 
     with pytest.raises(DryRunExit):
@@ -635,12 +635,12 @@ def test_changelog_config_start_rev_option(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_incremental_keep_a_changelog_sample_with_annotated_tag(
-    changelog_path: str,
+    changelog_path: Path,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
     """Fix #378"""
-    with open(changelog_path, "w", encoding="utf-8") as f:
+    with changelog_path.open("w", encoding="utf-8") as f:
         f.write(KEEP_A_CHANGELOG)
     util.create_file_and_commit("irrelevant commit")
     util.create_tag("1.0.0", annotated=True)
@@ -653,7 +653,7 @@ def test_changelog_incremental_keep_a_changelog_sample_with_annotated_tag(
 
     util.run_cli("changelog", "--incremental")
 
-    with open(changelog_path, encoding="utf-8") as f:
+    with changelog_path.open(encoding="utf-8") as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -663,13 +663,13 @@ def test_changelog_incremental_keep_a_changelog_sample_with_annotated_tag(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2021-06-11")
 def test_changelog_incremental_with_release_candidate_version(
-    changelog_path: str,
+    changelog_path: Path,
     file_regression: FileRegressionFixture,
     test_input: str,
     util: UtilFixture,
 ):
     """Fix #357"""
-    with open(changelog_path, "w", encoding="utf-8") as f:
+    with changelog_path.open("w", encoding="utf-8") as f:
         f.write(KEEP_A_CHANGELOG)
     util.create_file_and_commit("irrelevant commit")
     util.create_tag("1.0.0", annotated=True)
@@ -685,7 +685,7 @@ def test_changelog_incremental_with_release_candidate_version(
 
     util.run_cli("changelog", "--incremental")
 
-    with open(changelog_path, encoding="utf-8") as f:
+    with changelog_path.open(encoding="utf-8") as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -697,13 +697,13 @@ def test_changelog_incremental_with_release_candidate_version(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2021-06-11")
 def test_changelog_incremental_with_prerelease_version_to_prerelease_version(
-    changelog_path: str,
+    changelog_path: Path,
     file_regression: FileRegressionFixture,
     from_pre: str,
     to_pre: str,
     util: UtilFixture,
 ):
-    with open(changelog_path, "w") as f:
+    with changelog_path.open("w") as f:
         f.write(KEEP_A_CHANGELOG)
     util.create_file_and_commit("irrelevant commit")
     util.create_tag("1.0.0", annotated=True)
@@ -715,7 +715,7 @@ def test_changelog_incremental_with_prerelease_version_to_prerelease_version(
 
     util.run_cli("bump", "--changelog", "--prerelease", to_pre, "--yes")
 
-    with open(changelog_path) as f:
+    with changelog_path.open() as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -725,13 +725,13 @@ def test_changelog_incremental_with_prerelease_version_to_prerelease_version(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2025-12-29")
 def test_changelog_release_candidate_version_with_merge_prerelease(
-    changelog_path: str,
+    changelog_path: Path,
     file_regression: FileRegressionFixture,
     test_input: str,
     util: UtilFixture,
 ):
     """Fix #357"""
-    with open(changelog_path, "w") as f:
+    with changelog_path.open("w") as f:
         f.write(KEEP_A_CHANGELOG)
     util.create_file_and_commit("irrelevant commit")
     util.create_tag("1.0.0")
@@ -747,7 +747,7 @@ def test_changelog_release_candidate_version_with_merge_prerelease(
 
     util.run_cli("changelog", "--merge-prerelease")
 
-    with open(changelog_path) as f:
+    with changelog_path.open() as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -757,13 +757,13 @@ def test_changelog_release_candidate_version_with_merge_prerelease(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2023-04-16")
 def test_changelog_incremental_with_merge_prerelease(
-    changelog_path: str,
+    changelog_path: Path,
     file_regression: FileRegressionFixture,
     test_input: str,
     util: UtilFixture,
 ):
     """Fix #357"""
-    with open(changelog_path, "w") as f:
+    with changelog_path.open("w") as f:
         f.write(KEEP_A_CHANGELOG)
     util.create_file_and_commit("irrelevant commit")
     util.create_tag("1.0.0")
@@ -782,15 +782,15 @@ def test_changelog_incremental_with_merge_prerelease(
 
     util.run_cli("changelog", "--merge-prerelease", "--incremental")
 
-    with open(changelog_path) as f:
+    with changelog_path.open() as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_changelog_with_filename_as_empty_string(config_path: str, util: UtilFixture):
-    with open(config_path, "a", encoding="utf-8") as f:
+def test_changelog_with_filename_as_empty_string(config_path: Path, util: UtilFixture):
+    with config_path.open("a", encoding="utf-8") as f:
         f.write("changelog_file = true\n")
 
     util.create_file_and_commit("feat: add new output")
@@ -802,12 +802,12 @@ def test_changelog_with_filename_as_empty_string(config_path: str, util: UtilFix
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_first_version_from_arg(
-    config_path: str,
-    changelog_path: str,
+    config_path: Path,
+    changelog_path: Path,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
-    with open(config_path, "a", encoding="utf-8") as f:
+    with config_path.open("a", encoding="utf-8") as f:
         f.write('tag_format = "$version"\n')
 
     # create commit and tag
@@ -820,7 +820,7 @@ def test_changelog_from_rev_first_version_from_arg(
     util.run_cli("bump", "--yes")
 
     util.run_cli("changelog", "0.2.0")
-    with open(changelog_path, encoding="utf-8") as f:
+    with changelog_path.open(encoding="utf-8") as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -829,12 +829,12 @@ def test_changelog_from_rev_first_version_from_arg(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_latest_version_from_arg(
-    config_path: str,
-    changelog_path: str,
+    config_path: Path,
+    changelog_path: Path,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
-    with open(config_path, "a", encoding="utf-8") as f:
+    with config_path.open("a", encoding="utf-8") as f:
         f.write('tag_format = "$version"\n')
 
     # create commit and tag
@@ -848,7 +848,7 @@ def test_changelog_from_rev_latest_version_from_arg(
 
     util.run_cli("changelog", "0.3.0")
 
-    with open(changelog_path) as f:
+    with changelog_path.open() as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -865,10 +865,10 @@ def test_changelog_from_rev_latest_version_from_arg(
     ),
 )
 def test_changelog_from_rev_range_not_found(
-    config_path: str, rev_range: str, tag: str, util: UtilFixture
+    config_path: Path, rev_range: str, tag: str, util: UtilFixture
 ):
     """Provides an invalid revision ID to changelog command"""
-    with open(config_path, "a", encoding="utf-8") as f:
+    with config_path.open("a", encoding="utf-8") as f:
         f.write('tag_format = "$version"\n')
 
     # create commit and tag
@@ -885,9 +885,9 @@ def test_changelog_from_rev_range_not_found(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_multiple_matching_tags(
-    config_path: str, changelog_path: str, util: UtilFixture
+    config_path: Path, changelog_path: Path, util: UtilFixture
 ):
-    with open(config_path, "a", encoding="utf-8") as f:
+    with config_path.open("a", encoding="utf-8") as f:
         f.write('tag_format = "new-$version"\nlegacy_tag_formats = ["legacy-$version"]')
 
     util.create_file_and_commit("feat: new file")
@@ -903,7 +903,7 @@ def test_changelog_multiple_matching_tags(
     warning = warnings[0]
     assert "Multiple tags found for version 2.0.0" in str(warning.message)
 
-    with open(changelog_path) as f:
+    with changelog_path.open() as f:
         out = f.read()
 
     # Ensure only one tag is rendered
@@ -912,7 +912,7 @@ def test_changelog_multiple_matching_tags(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_from_rev_range_default_tag_format(
-    changelog_path: str, util: UtilFixture
+    changelog_path: Path, util: UtilFixture
 ):
     """Checks that rev_range is calculated with the default (None) tag format"""
     # create commit and tag
@@ -926,7 +926,7 @@ def test_changelog_from_rev_range_default_tag_format(
 
     util.run_cli("changelog", "0.3.0")
 
-    with open(changelog_path) as f:
+    with changelog_path.open() as f:
         out = f.read()
 
     assert "new file" not in out
@@ -935,12 +935,12 @@ def test_changelog_from_rev_range_default_tag_format(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_version_range_including_first_tag(
-    config_path: str,
-    changelog_path: str,
+    config_path: Path,
+    changelog_path: Path,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
-    with open(config_path, "a", encoding="utf-8") as f:
+    with config_path.open("a", encoding="utf-8") as f:
         f.write('tag_format = "$version"\n')
 
     # create commit and tag
@@ -953,7 +953,7 @@ def test_changelog_from_rev_version_range_including_first_tag(
     util.run_cli("bump", "--yes")
 
     util.run_cli("changelog", "0.2.0..0.3.0")
-    with open(changelog_path, encoding="utf-8") as f:
+    with changelog_path.open(encoding="utf-8") as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -962,12 +962,12 @@ def test_changelog_from_rev_version_range_including_first_tag(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_version_range_from_arg(
-    config_path: str,
-    changelog_path: str,
+    config_path: Path,
+    changelog_path: Path,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
-    with open(config_path, "a", encoding="utf-8") as f:
+    with config_path.open("a", encoding="utf-8") as f:
         f.write('tag_format = "$version"\n')
 
     # create commit and tag
@@ -983,7 +983,7 @@ def test_changelog_from_rev_version_range_from_arg(
     util.run_cli("bump", "--yes")
 
     util.run_cli("changelog", "0.3.0..0.4.0")
-    with open(changelog_path) as f:
+    with changelog_path.open() as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -992,8 +992,8 @@ def test_changelog_from_rev_version_range_from_arg(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_version_range_with_legacy_tags(
-    config_path: str,
-    changelog_path: str,
+    config_path: Path,
+    changelog_path: Path,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
@@ -1027,7 +1027,7 @@ def test_changelog_from_rev_version_range_with_legacy_tags(
 def test_changelog_from_rev_version_with_big_range_from_arg(
     config_path, changelog_path, file_regression, util: UtilFixture
 ):
-    with open(config_path, "a", encoding="utf-8") as f:
+    with config_path.open("a", encoding="utf-8") as f:
         f.write('tag_format = "$version"\n')
 
     # create commit and tag
@@ -1053,7 +1053,7 @@ def test_changelog_from_rev_version_with_big_range_from_arg(
     util.run_cli("bump", "--yes")  # 0.6.0
 
     util.run_cli("changelog", "0.3.0..0.5.0")
-    with open(changelog_path) as f:
+    with changelog_path.open() as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -1063,11 +1063,11 @@ def test_changelog_from_rev_version_with_big_range_from_arg(
 @pytest.mark.freeze_time("2022-02-13")
 def test_changelog_from_rev_latest_version_dry_run(
     capsys: pytest.CaptureFixture,
-    config_path: str,
+    config_path: Path,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
-    with open(config_path, "a") as f:
+    with config_path.open("a") as f:
         f.write('tag_format = "$version"\n')
 
     # create commit and tag
@@ -1111,12 +1111,12 @@ def test_invalid_subject_is_skipped(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-02-13")
 def test_changelog_with_customized_change_type_order(
-    config_path: str,
-    changelog_path: str,
+    config_path: Path,
+    changelog_path: Path,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
-    with open(config_path, "a") as f:
+    with config_path.open("a") as f:
         f.write('tag_format = "$version"\n')
         f.write(
             'change_type_order = ["BREAKING CHANGE", "Perf", "Fix", "Feat", "Refactor"]\n'
@@ -1137,7 +1137,7 @@ def test_changelog_with_customized_change_type_order(
     util.run_cli("bump", "--yes")
 
     util.run_cli("changelog", "0.3.0..0.4.0")
-    with open(changelog_path) as f:
+    with changelog_path.open() as f:
         out = f.read()
 
     file_regression.check(out, extension=".md")
@@ -1157,11 +1157,11 @@ def test_empty_commit_list(mocker: MockFixture, util: UtilFixture):
 @pytest.mark.freeze_time("2022-02-13")
 def test_changelog_prerelease_rev_with_use_scheme_semver(
     capsys: pytest.CaptureFixture,
-    config_path: str,
+    config_path: Path,
     file_regression: FileRegressionFixture,
     util: UtilFixture,
 ):
-    with open(config_path, "a") as f:
+    with config_path.open("a") as f:
         f.write('tag_format = "$version"\nversion_scheme = "semver"')
 
     # create commit and tag
@@ -1356,7 +1356,7 @@ def test_changelog_only_tag_matching_tag_format_included_prefix(
     config_path: Path,
     util: UtilFixture,
 ):
-    with open(config_path, "a", encoding="utf-8") as f:
+    with config_path.open("a", encoding="utf-8") as f:
         f.write('\ntag_format = "custom${version}"\n')
     util.create_file_and_commit("feat: new file")
     util.create_tag("v0.2.0")
@@ -1366,7 +1366,7 @@ def test_changelog_only_tag_matching_tag_format_included_prefix(
     util.run_cli("bump", "--changelog", "--yes")
     util.create_file_and_commit("feat: another new file")
     util.run_cli("bump", "--changelog", "--yes")
-    with open(changelog_path) as f:
+    with changelog_path.open() as f:
         out = f.read()
     assert out.startswith("## custom0.3.0 (2021-06-11)")
     assert "## v0.2.0 (2021-06-11)" not in out
@@ -1379,7 +1379,7 @@ def test_changelog_only_tag_matching_tag_format_included_prefix_sep(
     config_path: Path,
     util: UtilFixture,
 ):
-    with open(config_path, "a", encoding="utf-8") as f:
+    with config_path.open("a", encoding="utf-8") as f:
         f.write('\ntag_format = "custom-${version}"\n')
     util.create_file_and_commit("feat: new file")
     util.create_tag("v0.2.0")
@@ -1387,12 +1387,12 @@ def test_changelog_only_tag_matching_tag_format_included_prefix_sep(
     util.create_tag("0.2.0")
     util.create_tag("random0.2.0")
     util.run_cli("bump", "--changelog", "--yes")
-    with open(changelog_path) as f:
+    with changelog_path.open() as f:
         out = f.read()
     util.create_file_and_commit("feat: new version another new file")
     util.create_file_and_commit("feat: new version some new file")
     util.run_cli("bump", "--changelog")
-    with open(changelog_path) as f:
+    with changelog_path.open() as f:
         out = f.read()
     assert out.startswith("## custom-0.3.0")
     assert "## v0.2.0" not in out
@@ -1406,7 +1406,7 @@ def test_changelog_only_tag_matching_tag_format_included_suffix(
     config_path: Path,
     util: UtilFixture,
 ):
-    with open(config_path, "a", encoding="utf-8") as f:
+    with config_path.open("a", encoding="utf-8") as f:
         f.write('\ntag_format = "${version}custom"\n')
     util.create_file_and_commit("feat: new file")
     util.create_tag("v0.2.0")
@@ -1419,7 +1419,7 @@ def test_changelog_only_tag_matching_tag_format_included_suffix(
     util.create_file_and_commit("feat: another new file")
     # bump to 0.3.0custom
     util.run_cli("bump", "--changelog", "--yes")
-    with open(changelog_path) as f:
+    with changelog_path.open() as f:
         out = f.read()
     assert out.startswith("## 0.3.0custom (2021-06-11)")
     assert "## v0.2.0 (2021-06-11)" not in out
@@ -1433,7 +1433,7 @@ def test_changelog_only_tag_matching_tag_format_included_suffix_sep(
     config_path: Path,
     util: UtilFixture,
 ):
-    with open(config_path, "a", encoding="utf-8") as f:
+    with config_path.open("a", encoding="utf-8") as f:
         f.write('\ntag_format = "${version}-custom"\n')
     util.create_file_and_commit("feat: new file")
     util.create_tag("v0.2.0")
@@ -1443,7 +1443,7 @@ def test_changelog_only_tag_matching_tag_format_included_suffix_sep(
     util.run_cli("bump", "--changelog", "--yes")
     util.create_file_and_commit("feat: another new file")
     util.run_cli("bump", "--changelog", "--yes")
-    with open(changelog_path) as f:
+    with changelog_path.open() as f:
         out = f.read()
     assert out.startswith("## 0.3.0-custom (2021-06-11)")
     assert "## v0.2.0 (2021-06-11)" not in out
@@ -1456,7 +1456,7 @@ def test_changelog_legacy_tags(
     config_path: Path,
     util: UtilFixture,
 ):
-    with open(config_path, "a", encoding="utf-8") as f:
+    with config_path.open("a", encoding="utf-8") as f:
         f.writelines(
             [
                 'tag_format = "v${version}"\n',
@@ -1475,7 +1475,7 @@ def test_changelog_legacy_tags(
     util.create_file_and_commit("feat: another new file")
     util.create_tag("not-0.3.1")
     util.run_cli("bump", "--changelog", "--yes")
-    out = open(changelog_path).read()
+    out = changelog_path.open().read()
     assert "## v0.3.0" in out
     assert "## older-0.2.0" in out
     assert "## oldest-0.1.0" in out
@@ -1520,7 +1520,7 @@ def test_changelog_incremental_change_tag_format(
     util.create_file_and_commit("feat: another new file")
     util.create_tag("v0.3.0")
     util.run_cli("changelog", "--incremental")
-    out = open(changelog_path).read()
+    out = changelog_path.open().read()
     assert "## v0.3.0" in out
     assert "## older-0.2.0" in out
     assert "## older-0.1.0" in out
@@ -1534,7 +1534,7 @@ def test_changelog_ignored_tags(
     capsys: pytest.CaptureFixture,
     util: UtilFixture,
 ):
-    with open(config_path, "a", encoding="utf-8") as f:
+    with config_path.open("a", encoding="utf-8") as f:
         f.writelines(
             [
                 'tag_format = "v${version}"\n',
@@ -1553,7 +1553,7 @@ def test_changelog_ignored_tags(
     util.create_file_and_commit("feat: another new file")
     util.create_tag("not-ignored")
     util.run_cli("bump", "--changelog", "--yes")
-    with open(changelog_path) as f:
+    with changelog_path.open() as f:
         out = f.read()
     assert "## ignore-0.1.0" not in out
     assert "## ignored" not in out

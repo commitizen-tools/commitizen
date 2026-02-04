@@ -50,7 +50,7 @@ def staging_is_clean(mocker: MockFixture, tmp_git_project):
 
 @pytest.fixture
 def backup_file(tmp_git_project):
-    with open(get_backup_file_path(), "w") as backup_file:
+    with get_backup_file_path().open("w") as backup_file:
         backup_file.write("backup commit")
 
 
