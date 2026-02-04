@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import re
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -145,11 +146,19 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
 
     try:
         # create a key (a keyring will be generated within GPUPGHOME)
-        c = cmd.run(
-            f"gpg --batch --yes --debug-quick-random --passphrase '' --quick-gen-key '{SIGNER} {SIGNER_MAIL}'"
+        subprocess.run(
+            [
+                "gpg",
+                "--batch",
+                "--yes",
+                "--debug-quick-random",
+                "--passphrase",
+                "",
+                "--quick-gen-key",
+                f"{SIGNER} {SIGNER_MAIL}",
+            ],
+            check=True,
         )
-        if c.return_code != 0:
-            raise Exception(f"gpg keygen failed with err: '{c.err}'")
         key_id = _get_gpg_keyid(SIGNER_MAIL)
         assert key_id
 
