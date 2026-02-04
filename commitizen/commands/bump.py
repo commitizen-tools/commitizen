@@ -310,13 +310,16 @@ class Bump:
         changelog_file_name = None
         dry_run = self.arguments["dry_run"]
         if self.changelog_flag:
+            # "changelog_incremental" defaults to None in settings, so we can't
+            # rely on .get(key, True); default to True for bump only when unset.
+            incremental_setting = self.config.settings.get("changelog_incremental")
             changelog_args = {
                 "unreleased_version": new_tag_version,
                 "template": self.template,
                 "extras": self.extras,
-                "incremental": self.config.mutated_settings.get(
-                            "changelog_incremental", True
-                        ),
+                "incremental": incremental_setting
+                if incremental_setting is not None
+                else True,
                 "dry_run": dry_run,
                 # governs logic for merge_prerelease
                 "during_version_bump": self.arguments["prerelease"] is None,

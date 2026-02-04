@@ -19,7 +19,6 @@ class BaseConfig:
     def __init__(self) -> None:
         self._settings: Settings = DEFAULT_SETTINGS.copy()
         self._path: Path | None = None
-        self._settings_from_configs: Settings = {}
 
     def contains_commitizen_section(self) -> bool:
         """Check if the config file contains a commitizen section.
@@ -31,15 +30,6 @@ class BaseConfig:
     @property
     def settings(self) -> Settings:
         return self._settings
-
-    @property
-    def mutated_settings(self) -> Settings:
-        """It is used to record the changes from the config file defined by users,
-         which helps distinguish the ambiguous default behavior of
-        `changelog_incremental`.
-        Please refer to https://github.com/commitizen-tools/commitizen/pull/996
-        """
-        return self._settings_from_configs
 
     @property
     def path(self) -> Path:
