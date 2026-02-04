@@ -25,3 +25,4 @@
   language: python
   language_version: python3
   minimum_pre_commit_version: "3.2.0"
+  stages: [pre-push]
