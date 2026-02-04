@@ -1,3 +1,9 @@
+## v4.13.3 (2026-02-04)
+
+### Refactor
+
+- **version_schemes**: shorten generate_prerelease (#1838)
+
 ## v4.13.2 (2026-02-03)
 
 ### Refactor
