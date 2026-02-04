@@ -1229,10 +1229,10 @@ def test_generate_ordered_changelog_tree(change_type_order, expected_reordering)
 
 def test_generate_ordered_changelog_tree_raises():
     change_type_order = ["BREAKING CHANGE", "feat", "refactor", "feat"]
-    with pytest.raises(InvalidConfigurationError) as excinfo:
+    with pytest.raises(
+        InvalidConfigurationError, match="Change types contain duplicated types"
+    ):
         list(changelog.generate_ordered_changelog_tree(COMMITS_TREE, change_type_order))
-
-    assert "Change types contain duplicated types" in str(excinfo)
 
 
 def test_render_changelog(
@@ -1544,9 +1544,10 @@ def test_get_next_tag_name_after_version(tags):
     assert last_tag_name is None
 
     # Test error when version not found
-    with pytest.raises(changelog.NoCommitsFoundError) as exc_info:
+    with pytest.raises(
+        changelog.NoCommitsFoundError, match="Could not find a valid revision range"
+    ):
         changelog.get_next_tag_name_after_version(tags, "nonexistent")
-    assert "Could not find a valid revision range" in str(exc_info.value)
 
 
 @dataclass

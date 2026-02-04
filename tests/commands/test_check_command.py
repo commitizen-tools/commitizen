@@ -73,9 +73,8 @@ def test_check_jira_fails(mocker: MockFixture, util: UtilFixture):
         "commitizen.commands.check.open",
         mocker.mock_open(read_data="random message for J-2 #fake_command blah"),
     )
-    with pytest.raises(InvalidCommitMessageError) as excinfo:
+    with pytest.raises(InvalidCommitMessageError, match="commit validation: failed!"):
         util.run_cli("-n", "cz_jira", "check", "--commit-msg-file", "some_file")
-    assert "commit validation: failed!" in str(excinfo.value)
 
 
 @pytest.mark.parametrize(
@@ -169,30 +168,31 @@ def test_check_a_range_of_git_commits_and_failed(config, mocker: MockFixture):
         return_value=_build_fake_git_commits(["This commit does not follow rule"]),
     )
 
-    with pytest.raises(InvalidCommitMessageError) as excinfo:
+    with pytest.raises(
+        InvalidCommitMessageError, match="This commit does not follow rule"
+    ):
         commands.Check(config=config, arguments={"rev_range": "HEAD~10..master"})()
-    assert "This commit does not follow rule" in str(excinfo.value)
 
 
 def test_check_command_with_invalid_argument(config):
-    with pytest.raises(InvalidCommandArgumentError) as excinfo:
+    with pytest.raises(
+        InvalidCommandArgumentError,
+        match="Only one of --rev-range, --message, and --commit-msg-file is permitted by check command!",
+    ):
         commands.Check(
             config=config,
             arguments={"commit_msg_file": "some_file", "rev_range": "HEAD~10..master"},
         )
-    assert (
-        "Only one of --rev-range, --message, and --commit-msg-file is permitted by check command!"
-        in str(excinfo.value)
-    )
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_check_command_with_empty_range(config: BaseConfig, util: UtilFixture):
     # must initialize git with a commit
     util.create_file_and_commit("feat: initial")
-    with pytest.raises(NoCommitsFoundError) as excinfo:
+    with pytest.raises(
+        NoCommitsFoundError, match="No commit found with range: 'master..master'"
+    ):
         commands.Check(config=config, arguments={"rev_range": "master..master"})()
-    assert "No commit found with range: 'master..master'" in str(excinfo)
 
 
 def test_check_a_range_of_failed_git_commits(config, mocker: MockFixture):
@@ -206,9 +206,11 @@ def test_check_a_range_of_failed_git_commits(config, mocker: MockFixture):
         return_value=_build_fake_git_commits(ill_formatted_commits_msgs),
     )
 
-    with pytest.raises(InvalidCommitMessageError) as excinfo:
+    with pytest.raises(
+        InvalidCommitMessageError,
+        match=r"[\s\S]*".join(ill_formatted_commits_msgs),
+    ):
         commands.Check(config=config, arguments={"rev_range": "HEAD~10..master"})()
-    assert all([msg in str(excinfo.value) for msg in ill_formatted_commits_msgs])
 
 
 def test_check_command_with_valid_message(config, success_mock: MockType):
@@ -279,9 +281,8 @@ def test_check_command_with_pipe_message_and_failed(
 ):
     mocker.patch("sys.stdin", StringIO("bad commit message"))
 
-    with pytest.raises(InvalidCommitMessageError) as excinfo:
+    with pytest.raises(InvalidCommitMessageError, match="commit validation: failed!"):
         util.run_cli("check")
-    assert "commit validation: failed!" in str(excinfo.value)
 
 
 def test_check_command_with_comment_in_message_file(
@@ -450,11 +451,10 @@ def test_check_command_with_custom_validator_failed(
             read_data="123-ABC issue id has wrong format and misses colon"
         ),
     )
-    with pytest.raises(InvalidCommitMessageError) as excinfo:
+    with pytest.raises(
+        InvalidCommitMessageError,
+        match=r"commit validation: failed![\s\S]*pattern: ",
+    ):
         util.run_cli(
             "--name", "cz_custom_validator", "check", "--commit-msg-file", "some_file"
         )
-    assert "commit validation: failed!" in str(excinfo.value), (
-        "Pattern validation unexpectedly passed"
-    )
-    assert "pattern: " in str(excinfo.value), "Pattern not found in error message"

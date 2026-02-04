@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from pathlib import Path
 from typing import Any
 
@@ -409,9 +410,8 @@ class TestTomlConfig:
         existing_content = "invalid toml content"
         path = tmpdir.mkdir("commitizen").join(config_file)
 
-        with pytest.raises(InvalidConfigurationError) as excinfo:
+        with pytest.raises(InvalidConfigurationError, match=re.escape(config_file)):
             TomlConfig(data=existing_content, path=path)
-        assert config_file in str(excinfo.value)
 
 
 @pytest.mark.parametrize(
@@ -434,9 +434,8 @@ class TestJsonConfig:
         existing_content = "invalid json content"
         path = tmpdir.mkdir("commitizen").join(config_file)
 
-        with pytest.raises(InvalidConfigurationError) as excinfo:
+        with pytest.raises(InvalidConfigurationError, match=re.escape(config_file)):
             JsonConfig(data=existing_content, path=path)
-        assert config_file in str(excinfo.value)
 
 
 @pytest.mark.parametrize(
@@ -459,6 +458,5 @@ class TestYamlConfig:
         existing_content = "invalid: .cz.yaml: content: maybe?"
         path = tmpdir.mkdir("commitizen").join(config_file)
 
-        with pytest.raises(InvalidConfigurationError) as excinfo:
+        with pytest.raises(InvalidConfigurationError, match=re.escape(config_file)):
             YAMLConfig(data=existing_content, path=path)
-        assert config_file in str(excinfo.value)

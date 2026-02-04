@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 from unittest.mock import ANY
 
@@ -81,10 +82,10 @@ def test_commit_backup_on_failure(
 
 @pytest.mark.usefixtures("staging_is_clean", "commit_mock")
 def test_commit_retry_fails_no_backup(config):
-    with pytest.raises(NoCommitBackupError) as excinfo:
+    with pytest.raises(
+        NoCommitBackupError, match=re.escape(NoCommitBackupError.message)
+    ):
         commands.Commit(config, {"retry": True})()
-
-    assert NoCommitBackupError.message in str(excinfo.value)
 
 
 @pytest.mark.usefixtures("staging_is_clean", "backup_file")
@@ -206,10 +207,8 @@ def test_commit_command_with_gpgsign_and_always_signoff_enabled(
 def test_commit_when_nothing_to_commit(config, mocker: MockFixture):
     mocker.patch("commitizen.git.is_staging_clean", return_value=True)
 
-    with pytest.raises(NothingToCommitError) as excinfo:
+    with pytest.raises(NothingToCommitError, match="No files added to staging!"):
         commands.Commit(config, {})()
-
-    assert "No files added to staging!" in str(excinfo.value)
 
 
 @pytest.mark.usefixtures("staging_is_clean", "prompt_mock_feat")
@@ -239,11 +238,8 @@ def test_commit_when_customized_expected_raised(config, mocker: MockFixture):
     _err = ValueError()
     _err.__context__ = CzException("This is the root custom err")
     mocker.patch("questionary.prompt", side_effect=_err)
-    with pytest.raises(CustomError) as excinfo:
+    with pytest.raises(CustomError, match="This is the root custom err"):
         commands.Commit(config, {})()
-
-    # Assert only the content in the formatted text
-    assert "This is the root custom err" in str(excinfo.value)
 
 
 @pytest.mark.usefixtures("staging_is_clean")

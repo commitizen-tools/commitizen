@@ -31,10 +31,11 @@ def test_factory():
 def test_factory_fails():
     config = BaseConfig()
     config.settings.update({"name": "Nothing"})
-    with pytest.raises(NoCommitizenFoundException) as excinfo:
+    with pytest.raises(
+        NoCommitizenFoundException,
+        match="The committer has not been found in the system.",
+    ):
         factory.committer_factory(config)
-
-    assert "The committer has not been found in the system." in str(excinfo)
 
 
 def test_discover_plugins(tmp_path):
