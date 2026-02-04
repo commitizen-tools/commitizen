@@ -28,13 +28,6 @@ class BaseConfig:
         """
         raise NotImplementedError()
 
-    def contains_commitizen_section(self) -> bool:
-        """Check if the config file contains a commitizen section.
-
-        The implementation is different for each config file type.
-        """
-        raise NotImplementedError()
-
     @property
     def settings(self) -> Settings:
         return self._settings
@@ -46,10 +39,6 @@ class BaseConfig:
         `changelog_incremental`.
         Please refer to https://github.com/commitizen-tools/commitizen/pull/996
         """
-        return self._settings_from_configs
-
-    @property
-    def mutated_settings(self) -> Settings:
         return self._settings_from_configs
 
     @property

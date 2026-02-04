@@ -70,6 +70,6 @@ class TomlConfig(BaseConfig):
 
         try:
             self.settings.update(doc["tool"]["commitizen"])  # type: ignore[index,typeddict-item] # TODO: fix this
-            self.mutated_settings.update(doc["tool"]["commitizen"])  # type: ignore
+            self.mutated_settings.update(doc["tool"]["commitizen"])  # type: ignore[index,typeddict-item]
         except exceptions.NonExistentKey:
             pass
