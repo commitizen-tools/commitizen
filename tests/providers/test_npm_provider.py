@@ -65,12 +65,12 @@ NPM_LOCKFILE_EXPECTED = """\
 
 
 @pytest.mark.parametrize(
-    "pkg_shrinkwrap_content, pkg_shrinkwrap_expected",
-    ((NPM_LOCKFILE_JSON, NPM_LOCKFILE_EXPECTED), (None, None)),
+    ("pkg_shrinkwrap_content", "pkg_shrinkwrap_expected"),
+    [(NPM_LOCKFILE_JSON, NPM_LOCKFILE_EXPECTED), (None, None)],
 )
 @pytest.mark.parametrize(
-    "pkg_lock_content, pkg_lock_expected",
-    ((NPM_LOCKFILE_JSON, NPM_LOCKFILE_EXPECTED), (None, None)),
+    ("pkg_lock_content", "pkg_lock_expected"),
+    [(NPM_LOCKFILE_JSON, NPM_LOCKFILE_EXPECTED), (None, None)],
 )
 def test_npm_provider(
     config: BaseConfig,

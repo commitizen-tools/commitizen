@@ -245,7 +245,7 @@ class TestReadCfg:
 
 class TestWarnMultipleConfigFiles:
     @pytest.mark.parametrize(
-        "files,expected_path",
+        ("files", "expected_path"),
         [
             # Same directory, different file types
             ([(".cz.toml", TOML_STR), (".cz.json", JSON_STR)], ".cz.toml"),
@@ -281,7 +281,7 @@ class TestWarnMultipleConfigFiles:
             assert cfg.path == Path(expected_path)
 
     @pytest.mark.parametrize(
-        "config_file,content",
+        ("config_file", "content"),
         [
             (".cz.json", JSON_STR),
             (".cz.toml", TOML_STR),
@@ -332,7 +332,7 @@ class TestWarnMultipleConfigFiles:
             assert cfg.settings == json_cfg_expected.settings
 
     @pytest.mark.parametrize(
-        "config_file, content, with_git",
+        ("config_file", "content", "with_git"),
         [
             (file, content, with_git)
             for file, content in [

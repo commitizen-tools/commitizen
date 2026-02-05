@@ -17,17 +17,17 @@ conversion = [
 ]
 
 
-@pytest.mark.parametrize("test_input,expected", conversion)
+@pytest.mark.parametrize(("test_input", "expected"), conversion)
 def test_create_tag(test_input, expected):
     current_version, new_version, message_template = test_input
     new_tag = bump.create_commit_message(current_version, new_version, message_template)
     assert new_tag == expected
 
 
-@pytest.mark.parametrize("hook_runner", ("pre-commit", "prek"))
+@pytest.mark.parametrize("hook_runner", ["pre-commit", "prek"])
 @pytest.mark.parametrize(
     "retry",
-    (
+    [
         pytest.param(
             True,
             marks=pytest.mark.skipif(
@@ -36,7 +36,7 @@ def test_create_tag(test_input, expected):
             ),
         ),
         False,
-    ),
+    ],
 )
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_pre_commit_changelog(util: UtilFixture, retry, hook_runner):
@@ -84,8 +84,8 @@ def test_bump_pre_commit_changelog(util: UtilFixture, retry, hook_runner):
     )
 
 
-@pytest.mark.parametrize("hook_runner", ("pre-commit", "prek"))
-@pytest.mark.parametrize("retry", (True, False))
+@pytest.mark.parametrize("hook_runner", ["pre-commit", "prek"])
+@pytest.mark.parametrize("retry", [True, False])
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_pre_commit_changelog_fails_always(util: UtilFixture, retry, hook_runner):
     util.freezer.move_to("2022-04-01")

@@ -248,8 +248,8 @@ def test_commit_when_customized_expected_raised(config, mocker: MockFixture):
 
 @pytest.mark.usefixtures("staging_is_clean")
 def test_commit_when_non_customized_expected_raised(config, mocker: MockFixture):
-    mocker.patch("questionary.prompt", side_effect=ValueError())
-    with pytest.raises(ValueError):
+    mocker.patch("questionary.prompt", side_effect=ValueError("error message"))
+    with pytest.raises(ValueError, match="error message"):
         commands.Commit(config, {})()
 
 

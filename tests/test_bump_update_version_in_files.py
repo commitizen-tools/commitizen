@@ -295,7 +295,7 @@ def test_update_version_in_files_with_check_consistency_true_failure(
 
 
 @pytest.mark.parametrize(
-    "encoding,filename",
+    ("encoding", "filename"),
     [
         ("latin-1", "test_latin1.txt"),
         ("utf-16", "test_utf16.txt"),
