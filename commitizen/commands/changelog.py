@@ -228,7 +228,11 @@ class Changelog:
                 self.file_name
             )
             if latest_full_release_info.index:
-                changelog_meta.unreleased_start = 0
+                # Use the existing unreleased_start if available (from get_metadata()).
+                # Otherwise, use the position of the first version entry (prerelease)
+                # to preserve the changelog header.
+                if changelog_meta.unreleased_start is None:
+                    changelog_meta.unreleased_start = changelog_meta.latest_version_position
                 changelog_meta.latest_version_position = latest_full_release_info.index
                 changelog_meta.unreleased_end = latest_full_release_info.index - 1
 
