@@ -1495,6 +1495,46 @@ def test_changelog_config_flag_merge_prerelease_only_prerelease_present(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2025-01-01")
+def test_changelog_merge_prerelease_preserves_header(
+    mocker: MockFixture,
+    util: UtilFixture,
+    changelog_path: Path,
+    config_path: Path,
+    file_regression: FileRegressionFixture,
+):
+    """Test that merge_prerelease preserves existing changelog header."""
+    with config_path.open("a") as f:
+        f.write("changelog_merge_prerelease = true\n")
+        f.write("update_changelog_on_bump = true\n")
+        f.write("annotated_tag = true\n")
+
+    # Create initial version with changelog that has a header
+    util.create_file_and_commit("irrelevant commit")
+    mocker.patch("commitizen.git.GitTag.date", "1970-01-01")
+    git.tag("0.1.0")
+
+    # Create a changelog with a header manually
+    changelog_path.write_text(
+        "# Changelog\n\nAll notable changes to this project will be documented here.\n\n## 0.1.0 (1970-01-01)\n"
+    )
+
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
+    util.run_cli("bump", "--prerelease", "alpha", "--yes")
+
+    util.run_cli("bump", "--changelog")
+
+    with changelog_path.open() as f:
+        out = f.read()
+
+    # The header should be preserved
+    assert out.startswith("# Changelog\n")
+    assert "All notable changes to this project will be documented here." in out
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_deprecate_files_only(util: UtilFixture):
     util.create_file_and_commit("feat: new file")
     with (
