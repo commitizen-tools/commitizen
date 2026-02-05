@@ -1,3 +1,9 @@
+## v4.13.5 (2026-02-05)
+
+### Fix
+
+- **changelog**: add incremental parameter to changelog generation (#1808)
+
 ## v4.13.4 (2026-02-04)
 
 ### Fix
