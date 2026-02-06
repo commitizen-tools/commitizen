@@ -1,6 +1,6 @@
 [project]
 name = "commitizen"
-version = "4.13.4"
+version = "4.13.5"
 description = "Python commitizen client tool"
 authors = [{ name = "Santiago Fraire", email = "santiwilly@gmail.com" }]
 maintainers = [
@@ -235,15 +235,7 @@ select = [
     "TC005",
     "TC006",
 ]
-ignore = [
-    "E501",
-    "D1",
-    "D415",
-    "PT006", # TODO(bearomorphism): enable this rule
-    "PT007", # TODO(bearomorphism): enable this rule
-    "PT011", # TODO(bearomorphism): enable this rule
-    "PT022", # TODO(bearomorphism): enable this rule
-]
+ignore = ["E501", "D1", "D415"]
 extend-safe-fixes = [
     "TC", # Move imports inside/outside TYPE_CHECKING blocks
     "UP", # Update syntaxes for current Python version recommendations

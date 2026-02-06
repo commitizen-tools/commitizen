@@ -229,11 +229,11 @@ dependencies = [
 
 
 @pytest.mark.parametrize(
-    "content, expected",
-    (
+    ("content", "expected"),
+    [
         (CARGO_TOML, CARGO_TOML_EXPECTED),
         (CARGO_WORKSPACE_TOML, CARGO_WORKSPACE_TOML_EXPECTED),
-    ),
+    ],
 )
 def test_cargo_provider(
     config: BaseConfig,
@@ -255,8 +255,8 @@ def test_cargo_provider(
 
 
 @pytest.mark.parametrize(
-    "toml_content, lock_content, toml_expected, lock_expected",
-    (
+    ("toml_content", "lock_content", "toml_expected", "lock_expected"),
+    [
         (
             CARGO_TOML,
             CARGO_LOCK,
@@ -269,7 +269,7 @@ def test_cargo_provider(
             CARGO_WORKSPACE_TOML_EXPECTED,
             CARGO_WORKSPACE_LOCK_EXPECTED,
         ),
-    ),
+    ],
 )
 def test_cargo_provider_with_lock(
     config: BaseConfig,

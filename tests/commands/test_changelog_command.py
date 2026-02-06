@@ -692,7 +692,7 @@ def test_changelog_incremental_with_release_candidate_version(
 
 
 @pytest.mark.parametrize(
-    "from_pre,to_pre", itertools.product(["alpha", "beta", "rc"], repeat=2)
+    ("from_pre", "to_pre"), itertools.product(["alpha", "beta", "rc"], repeat=2)
 )
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2021-06-11")
@@ -856,13 +856,13 @@ def test_changelog_from_rev_latest_version_from_arg(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.parametrize(
-    "rev_range,tag",
-    (
+    ("rev_range", "tag"),
+    [
         pytest.param("0.8.0", "0.2.0", id="single-not-found"),
         pytest.param("0.1.0..0.3.0", "0.3.0", id="lower-bound-not-found"),
         pytest.param("0.1.0..0.3.0", "0.1.0", id="upper-bound-not-found"),
         pytest.param("0.3.0..0.4.0", "0.2.0", id="none-found"),
-    ),
+    ],
 )
 def test_changelog_from_rev_range_not_found(
     config_path: Path, rev_range: str, tag: str, util: UtilFixture
@@ -1270,14 +1270,14 @@ def test_changelog_from_current_version_tag_with_nonversion_tag(
 
 
 @pytest.mark.parametrize(
-    "arg,cfg,expected",
-    (
+    ("arg", "cfg", "expected"),
+    [
         pytest.param("", "", "default", id="default"),
         pytest.param("", "changelog.cfg", "from config", id="from-config"),
         pytest.param(
             "--template=changelog.cmd", "changelog.cfg", "from cmd", id="from-command"
         ),
-    ),
+    ],
 )
 def test_changelog_template_option_precedence(
     tmp_commitizen_project: Path,
@@ -1588,12 +1588,12 @@ def test_changelog_template_extra_quotes(
 
 
 @pytest.mark.parametrize(
-    "extra, expected",
-    (
+    ("extra", "expected"),
+    [
         pytest.param("key=value=", "value=", id="2-equals"),
         pytest.param("key==value", "=value", id="2-consecutive-equals"),
         pytest.param("key==value==", "=value==", id="multiple-equals"),
-    ),
+    ],
 )
 def test_changelog_template_extra_weird_but_valid(
     changelog_tpl: Path,
@@ -1609,7 +1609,7 @@ def test_changelog_template_extra_weird_but_valid(
     assert changelog_file.read_text() == expected
 
 
-@pytest.mark.parametrize("extra", ("no-equal", "", "=no-key"))
+@pytest.mark.parametrize("extra", ["no-equal", "", "=no-key"])
 def test_changelog_template_extra_bad_format(
     changelog_tpl: Path,
     extra: str,
@@ -1672,3 +1672,57 @@ def test_export_changelog_template_fails_when_template_has_no_filename(
 
     assert not changelog_jinja_file.exists()
     assert "Template filename is not set" in str(exc_info.value)
+
+
+def test_changelog_template_incremental_variable(
+    tmp_commitizen_project: Path,
+    any_changelog_format: ChangelogFormat,
+    util: UtilFixture,
+    file_regression: FileRegressionFixture,
+):
+    """
+    Test that the changelog template is not rendered when the incremental flag is not set.
+    Reference: https://github.com/commitizen-tools/commitizen/discussions/1620
+    """
+    project_root = Path(tmp_commitizen_project)
+    changelog_tpl = project_root / any_changelog_format.template
+    changelog_tpl.write_text(
+        dedent("""
+        {% if not incremental %}
+        # CHANGELOG
+        {% endif %}
+
+        {% for entry in tree %}
+
+        ## {{ entry.version }}{% if entry.date %} ({{ entry.date }}){% endif %}
+
+        {% for change_key, changes in entry.changes.items() %}
+
+        {% if change_key %}
+        ### {{ change_key }}
+        {% endif %}
+
+        {% for change in changes %}
+        {% if change.scope %}
+        - **{{ change.scope }}**: {{ change.message }}
+        {% elif change.message %}
+        - {{ change.message }}
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+        {% endfor %}
+        """)
+    )
+    target = "CHANGELOG.md"
+
+    util.create_file_and_commit("feat(foo): new file")
+    util.run_cli("changelog", "--file-name", target)
+    with open(target, encoding="utf-8") as f:
+        out = f.read()
+    file_regression.check(out, extension=".md")
+
+    util.create_file_and_commit("refactor(bar): another new file")
+    util.run_cli("changelog", "--file-name", target, "--incremental")
+    with open(target, encoding="utf-8") as f:
+        out = f.read()
+    file_regression.check(out, extension=".incremental.md")

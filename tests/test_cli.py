@@ -138,7 +138,7 @@ def test_commitizen_excepthook_no_raises(capsys):
 
 
 @pytest.mark.parametrize(
-    "input_str, expected_result",
+    ("input_str", "expected_result"),
     [
         pytest.param("1", [1], id="single_code"),
         pytest.param("1,2,3", [1, 2, 3], id="multiple_number_codes"),

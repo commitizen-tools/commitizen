@@ -113,7 +113,7 @@ def test_check_conventional_commit_succeeds(
 
 @pytest.mark.parametrize(
     "commit_msg",
-    (
+    [
         "feat!(lang): removed polish language",
         "no conventional commit",
         (
@@ -121,7 +121,7 @@ def test_check_conventional_commit_succeeds(
             "testing with more complex commit mes\n\n"
             "age with error"
         ),
-    ),
+    ],
 )
 def test_check_no_conventional_commit(commit_msg, config, tmpdir):
     tempfile = tmpdir.join("temp_commit_file")
@@ -133,12 +133,12 @@ def test_check_no_conventional_commit(commit_msg, config, tmpdir):
 
 @pytest.mark.parametrize(
     "commit_msg",
-    (
+    [
         "feat(lang)!: removed polish language",
         "feat(lang): added polish language",
         "feat: add polish language",
         "bump: 0.0.1 -> 1.0.0",
-    ),
+    ],
 )
 def test_check_conventional_commit(commit_msg, config, success_mock: MockType, tmpdir):
     tempfile = tmpdir.join("temp_commit_file")

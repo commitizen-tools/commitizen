@@ -106,7 +106,7 @@ def test_breaking_change_in_footer(config):
 
 
 @pytest.mark.parametrize(
-    "scope,breaking_change_exclamation_in_title,expected_message",
+    ("scope", "breaking_change_exclamation_in_title", "expected_message"),
     [
         # Test with scope and breaking_change_exclamation_in_title enabled
         (

@@ -15,7 +15,7 @@ conversion = [
 ]
 
 
-@pytest.mark.parametrize("test_input,expected", conversion)
+@pytest.mark.parametrize(("test_input", "expected"), conversion)
 def test_create_tag(test_input, expected):
     version, format = test_input
     rules = TagRules()

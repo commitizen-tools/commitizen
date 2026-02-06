@@ -40,14 +40,14 @@ if TYPE_CHECKING:
 
 @pytest.mark.parametrize(
     "commit_msg",
-    (
+    [
         "fix: username exception",
         "fix(user): username exception",
         "refactor: remove ini configuration support",
         "refactor(config): remove ini configuration support",
         "perf: update to use multiprocess",
         "perf(worker): update to use multiprocess",
-    ),
+    ],
 )
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_patch_increment(commit_msg: str, util: UtilFixture):
@@ -56,7 +56,7 @@ def test_bump_patch_increment(commit_msg: str, util: UtilFixture):
     assert git.tag_exist("0.1.1") is True
 
 
-@pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
+@pytest.mark.parametrize("commit_msg", ["feat: new file", "feat(user): new file"])
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_minor_increment(commit_msg: str, util: UtilFixture):
     util.create_file_and_commit(commit_msg)
@@ -68,7 +68,7 @@ def test_bump_minor_increment(commit_msg: str, util: UtilFixture):
     )
 
 
-@pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
+@pytest.mark.parametrize("commit_msg", ["feat: new file", "feat(user): new file"])
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_minor_increment_annotated(commit_msg: str, util: UtilFixture):
     util.create_file_and_commit(commit_msg)
@@ -82,7 +82,7 @@ def test_bump_minor_increment_annotated(commit_msg: str, util: UtilFixture):
     assert git.is_signed_tag("0.2.0") is False
 
 
-@pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
+@pytest.mark.parametrize("commit_msg", ["feat: new file", "feat(user): new file"])
 @pytest.mark.usefixtures("tmp_commitizen_project_with_gpg")
 def test_bump_minor_increment_signed(commit_msg: str, util: UtilFixture):
     util.create_file_and_commit(commit_msg)
@@ -96,7 +96,7 @@ def test_bump_minor_increment_signed(commit_msg: str, util: UtilFixture):
     assert git.is_signed_tag("0.2.0") is True
 
 
-@pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
+@pytest.mark.parametrize("commit_msg", ["feat: new file", "feat(user): new file"])
 def test_bump_minor_increment_annotated_config_file(
     commit_msg: str, util: UtilFixture, pyproject: Path
 ):
@@ -112,7 +112,7 @@ def test_bump_minor_increment_annotated_config_file(
     assert git.is_signed_tag("0.2.0") is False
 
 
-@pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
+@pytest.mark.parametrize("commit_msg", ["feat: new file", "feat(user): new file"])
 def test_bump_minor_increment_signed_config_file(
     commit_msg: str, util: UtilFixture, tmp_commitizen_project_with_gpg
 ):
@@ -132,7 +132,7 @@ def test_bump_minor_increment_signed_config_file(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.parametrize(
     "commit_msg",
-    (
+    [
         "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported",
         "feat!: new user interface\n\nBREAKING CHANGE: age is no longer supported",
         "feat!: new user interface",
@@ -141,7 +141,7 @@ def test_bump_minor_increment_signed_config_file(
         "feat(user)!: new user interface",
         "BREAKING CHANGE: age is no longer supported",
         "BREAKING-CHANGE: age is no longer supported",
-    ),
+    ],
 )
 def test_bump_major_increment(commit_msg: str, util: UtilFixture):
     util.create_file_and_commit(commit_msg)
@@ -152,7 +152,7 @@ def test_bump_major_increment(commit_msg: str, util: UtilFixture):
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.parametrize(
     "commit_msg",
-    (
+    [
         "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported",
         "feat!: new user interface\n\nBREAKING CHANGE: age is no longer supported",
         "feat!: new user interface",
@@ -161,7 +161,7 @@ def test_bump_major_increment(commit_msg: str, util: UtilFixture):
         "feat(user)!: new user interface",
         "BREAKING CHANGE: age is no longer supported",
         "BREAKING-CHANGE: age is no longer supported",
-    ),
+    ],
 )
 def test_bump_major_increment_major_version_zero(commit_msg: str, util: UtilFixture):
     util.create_file_and_commit(commit_msg)
@@ -171,7 +171,7 @@ def test_bump_major_increment_major_version_zero(commit_msg: str, util: UtilFixt
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.parametrize(
-    "commit_msg,increment,expected_tag",
+    ("commit_msg", "increment", "expected_tag"),
     [
         ("feat: new file", "PATCH", "0.1.1"),
         ("fix: username exception", "major", "1.0.0"),
@@ -607,7 +607,7 @@ def test_bump_with_git_to_stdout_arg(util: UtilFixture, capsys: pytest.CaptureFi
 
 
 @pytest.mark.parametrize(
-    "version_filepath, version_regex, version_file_content",
+    ("version_filepath", "version_regex", "version_file_content"),
     [
         pytest.param(
             "pyproject.toml",
@@ -779,7 +779,7 @@ def test_bump_manual_version_disallows_major_version_zero(util: UtilFixture):
 
 
 @pytest.mark.parametrize(
-    "initial_version, expected_version_after_bump",
+    ("initial_version", "expected_version_after_bump"),
     [
         ("1", "1.1.0"),
         ("1.2", "1.3.0"),
@@ -804,7 +804,7 @@ def test_bump_version_with_less_components_in_config(
             assert expected_version_after_bump in f.read()
 
 
-@pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
+@pytest.mark.parametrize("commit_msg", ["feat: new file", "feat(user): new file"])
 def test_bump_with_pre_bump_hooks(
     commit_msg, mocker: MockFixture, tmp_commitizen_project, util: UtilFixture
 ):
@@ -992,7 +992,7 @@ def test_bump_command_prerelease_scheme_check_old_tags(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.usefixtures("use_cz_semver")
 @pytest.mark.parametrize(
-    "message, expected_tag",
+    ("message", "expected_tag"),
     [
         ("minor: add users", "0.2.0"),
         ("patch: bug affecting users", "0.1.1"),
@@ -1008,7 +1008,7 @@ def test_bump_with_plugin(util: UtilFixture, message: str, expected_tag: str):
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.usefixtures("use_cz_semver")
 @pytest.mark.parametrize(
-    "message, expected_tag",
+    ("message", "expected_tag"),
     [
         ("minor: add users", "0.2.0"),
         ("patch: bug affecting users", "0.1.1"),
@@ -1060,14 +1060,14 @@ def test_bump_command_version_scheme_priority_over_version_type(util: UtilFixtur
 
 
 @pytest.mark.parametrize(
-    "arg, cfg, expected",
-    (
+    ("arg", "cfg", "expected"),
+    [
         pytest.param("", "", "default", id="default"),
         pytest.param("", "changelog.cfg", "from config", id="from-config"),
         pytest.param(
             "--template=changelog.cmd", "changelog.cfg", "from cmd", id="from-command"
         ),
-    ),
+    ],
 )
 def test_bump_template_option_precedence(
     tmp_commitizen_project: Path,
