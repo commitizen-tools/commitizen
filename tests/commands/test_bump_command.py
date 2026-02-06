@@ -1528,9 +1528,6 @@ def test_changelog_merge_prerelease_preserves_header(
     with changelog_path.open() as f:
         out = f.read()
 
-    # The header should be preserved
-    assert out.startswith("# Changelog\n")
-    assert "All notable changes to this project will be documented here." in out
     file_regression.check(out, extension=".md")
 
 
@@ -1572,9 +1569,6 @@ def test_changelog_merge_prerelease_no_prereleases_to_merge(
     with changelog_path.open() as f:
         out = f.read()
 
-    # The header and existing content should be preserved
-    assert out.startswith("# Changelog\n")
-    assert "All notable changes." in out
     assert "## 0.1.0 (1970-01-01)" in out
     file_regression.check(out, extension=".md")
 
