@@ -1569,7 +1569,6 @@ def test_changelog_merge_prerelease_no_prereleases_to_merge(
     with changelog_path.open() as f:
         out = f.read()
 
-    assert "## 0.1.0 (1970-01-01)" in out
     file_regression.check(out, extension=".md")
 
 
