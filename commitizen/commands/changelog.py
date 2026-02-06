@@ -230,16 +230,14 @@ class Changelog:
             # Determine if there are prereleases to merge:
             # - Only prereleases in changelog (no full release found), OR
             # - First version in changelog is before first full release (prereleases exist)
-            has_prereleases_to_merge = latest_full_release_info.index is not None and (
+            if latest_full_release_info.index is not None and (
                 latest_full_release_info.name is None
                 or (
                     changelog_meta.latest_version_position is not None
                     and changelog_meta.latest_version_position
                     < latest_full_release_info.index
                 )
-            )
-
-            if has_prereleases_to_merge and latest_full_release_info.index is not None:
+            ):
                 # Use the existing unreleased_start if available (from get_metadata()).
                 # Otherwise, use the position of the first version entry (prerelease)
                 # to preserve the changelog header.
