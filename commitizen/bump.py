@@ -26,7 +26,7 @@ def find_increment(
     commits: list[GitCommit],
     regex: str,
     increments_map: dict | OrderedDict,
-    ignore_bump_sha_list: list[str] | None = None,
+    ignore_bump_rev_list: list[str] | None = None,
     ignore_bump_author_list: list[str] | None = None,
 ) -> Increment | None:
     if isinstance(increments_map, dict):
@@ -38,9 +38,9 @@ def find_increment(
     increment: str | None = None
 
     for commit in commits:
-        if ignore_bump_sha_list and commit.rev in ignore_bump_sha_list:
+        if ignore_bump_rev_list and commit.rev in ignore_bump_rev_list:
             logger.debug(
-                f"Skipping commit {commit.rev} as it's in ignore_bump_sha_list"
+                f"Skipping commit {commit.rev} as it's in ignore_bump_rev_list"
             )
             continue
 

@@ -104,7 +104,7 @@ class Bump:
         self.retry = arguments["retry"]
         self.pre_bump_hooks = self.config.settings["pre_bump_hooks"]
         self.post_bump_hooks = self.config.settings["post_bump_hooks"]
-        self.ignore_bump_sha_list = self.config.settings.get("ignore_bump_sha_list")
+        self.ignore_bump_rev_list = self.config.settings.get("ignore_bump_rev_list")
         self.ignore_bump_author_list = self.config.settings.get(
             "ignore_bump_author_list"
         )
@@ -166,7 +166,7 @@ class Bump:
             commits,
             regex=bump_pattern,
             increments_map=bump_map,
-            ignore_bump_sha_list=self.ignore_bump_sha_list,
+            ignore_bump_rev_list=self.ignore_bump_rev_list,
             ignore_bump_author_list=self.ignore_bump_author_list,
         )
 

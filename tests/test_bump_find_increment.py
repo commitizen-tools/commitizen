@@ -108,10 +108,10 @@ def test_find_increment(messages, expected_type):
     assert increment_type == expected_type
 
 
-def test_find_increment_with_ignored_sha():
+def test_find_increment_with_ignored_rev():
     messages = [
         "docs(README): motivation",
-        "BREAKING CHANGE: your upstream dependency have some breaking changes",
+        "feat: this should not be bumped because of the ignore_bump_rev_list",
     ]
     commits = [
         GitCommit(rev="test1", title=messages[0]),
@@ -121,14 +121,14 @@ def test_find_increment_with_ignored_sha():
         commits,
         regex=ConventionalCommitsCz.bump_pattern,
         increments_map=ConventionalCommitsCz.bump_map,
-        ignore_bump_sha_list=["test2"],
+        ignore_bump_rev_list=["test2"],
     )
     assert increment_type is None
 
 
 def test_find_increment_with_ignored_author():
     messages = [
-        "BREAKING CHANGE: your upstream dependency have some breaking changes",
+        "feat: this should not be bumped because of the ignore_bump_author_list",
         "docs(README): motivation",
     ]
     commits = [
