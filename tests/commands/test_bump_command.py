@@ -1494,6 +1494,16 @@ def test_changelog_config_flag_merge_prerelease_only_prerelease_present(
     file_regression.check(out, extension=".md")
 
 
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_deprecate_files_only(util: UtilFixture):
+    util.create_file_and_commit("feat: new file")
+    with (
+        pytest.warns(DeprecationWarning, match=r".*--files-only.*deprecated"),
+        pytest.raises(ExpectedExit),
+    ):
+        util.run_cli("bump", "--yes", "--files-only")
+
+
 @pytest.mark.parametrize(
     ("prerelease", "merge"),
     [
