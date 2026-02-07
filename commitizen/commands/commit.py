@@ -111,7 +111,7 @@ class Commit:
             "body_length_limit", self.config.settings.get("body_length_limit", 0)
         )
         # By the contract, body_length_limit is set to 0 for no limit
-        if body_length_limit <= 0:
+        if not body_length_limit or body_length_limit <= 0:
             return message
 
         lines = message.split("\n")
