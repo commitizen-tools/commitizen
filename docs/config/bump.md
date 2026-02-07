@@ -215,3 +215,57 @@ version_files = [
 ## `version_scheme`
 
 See [`--version-scheme`](../commands/bump.md#-version-scheme).
+
+Here’s a clearer, more consistent rewrite with tightened wording, corrected descriptions, and parallel structure between the two options.
+
+## `ignore_bump_rev_list`
+
+- Type: `list`
+- Default: `[]`
+
+A list of git commit revisions (SHAs) that should be excluded from version bump calculation.
+
+For example, given the following commit:
+
+```text
+commit e302cb4f2c626099b4a9c8cf881b0bb5906b7356
+Author: example_user <example@gmail.com>
+Date:   Sat Feb 1 21:00:00 2026 +0800
+
+    feat: add a new test file, this should not be bumped
+```
+
+Configure `pyproject.toml` as follows:
+
+```toml title="pyproject.toml"
+[tool.commitizen]
+ignore_bump_rev_list = ["e302cb4f2c626099b4a9c8cf881b0bb5906b7356"]
+```
+
+As a result, this commit will be ignored when determining whether a version bump is required.
+
+## `ignore_bump_author_list`
+
+- Type: `list`
+- Default: `[]`
+
+A list of commit authors whose commits should be excluded from version bump calculation.
+
+For example, given the following commit:
+
+```text
+commit e302cb4f2c626099b4a9c8cf881b0bb5906b7356
+Author: example_user <example@gmail.com>
+Date:   Sat Feb 1 21:00:00 2026 +0800
+
+    feat: add a new test file, this should not be bumped
+```
+
+Configure `pyproject.toml` as follows:
+
+```toml title="pyproject.toml"
+[tool.commitizen]
+ignore_bump_author_list = ["example_user"]
+```
+
+As a result, any commit authored by `example_user` will be ignored when determining whether a version bump is required.
