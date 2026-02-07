@@ -369,7 +369,7 @@ def test_commit_command_with_config_message_length_limit(
 
 @pytest.mark.usefixtures("staging_is_clean")
 @pytest.mark.parametrize(
-    "test_id,body,body_length_limit",
+    ("test_id", "body", "body_length_limit"),
     [
         # Basic wrapping - long line gets wrapped
         (
