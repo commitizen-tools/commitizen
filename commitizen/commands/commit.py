@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import tempfile
 import textwrap
+from itertools import chain
 from typing import TYPE_CHECKING, TypedDict
 
 import questionary
@@ -86,7 +87,7 @@ class Commit:
 
         message = self.cz.message(answers)
         self._validate_subject_length(message)
-        message = self._rewrap_body(message)
+        message = self._wrap_body(message)
         return message
 
     def _validate_subject_length(self, message: str) -> None:
@@ -105,30 +106,23 @@ class Commit:
                 f"Length of commit message exceeds limit ({len(subject)}/{message_length_limit}), subject: '{subject}'"
             )
 
-    def _rewrap_body(self, message: str) -> str:
+    def _wrap_body(self, message: str) -> str:
         body_length_limit = self.arguments.get(
             "body_length_limit", self.config.settings.get("body_length_limit", 0)
         )
         # By the contract, body_length_limit is set to 0 for no limit
-        if (
-            body_length_limit is None or body_length_limit <= 0
-        ):  # do nothing for no limit
+        if body_length_limit <= 0:
             return message
 
-        message_parts = message.split("\n", 2)
-        if len(message_parts) < 3:
+        lines = message.split("\n")
+        if len(lines) < 3:
             return message
 
         # First line is subject, second is blank line, rest is body
-        subject = message_parts[0]
-        blank_line = message_parts[1]
-        body = message_parts[2].strip()
-        body_lines = body.split("\n")
-        wrapped_body_lines = []
-        for line in body_lines:
-            wrapped_body_lines.append(textwrap.fill(line, width=body_length_limit))
-        wrapped_body = "\n".join(wrapped_body_lines)
-        return f"{subject}\n{blank_line}\n{wrapped_body}"
+        wrapped_body_lines = [
+            textwrap.wrap(line, width=body_length_limit) for line in lines[2:]
+        ]
+        return "\n".join(chain(lines[:2], chain.from_iterable(wrapped_body_lines)))
 
     def manual_edit(self, message: str) -> str:
         editor = git.get_core_editor()
