@@ -227,16 +227,32 @@ class Changelog:
             latest_full_release_info = self.changelog_format.get_latest_full_release(
                 self.file_name
             )
-            if latest_full_release_info.index:
-                changelog_meta.unreleased_start = 0
+            # Determine if there are prereleases to merge:
+            # - Only prereleases in changelog (no full release found), OR
+            # - First version in changelog is before first full release (prereleases exist)
+            if latest_full_release_info.index is not None and (
+                latest_full_release_info.name is None
+                or (
+                    changelog_meta.latest_version_position is not None
+                    and changelog_meta.latest_version_position
+                    < latest_full_release_info.index
+                )
+            ):
+                # Use the existing unreleased_start if available (from get_metadata()).
+                # Otherwise, use the position of the first version entry (prerelease)
+                # to preserve the changelog header.
+                if changelog_meta.unreleased_start is None:
+                    changelog_meta.unreleased_start = (
+                        changelog_meta.latest_version_position
+                    )
                 changelog_meta.latest_version_position = latest_full_release_info.index
                 changelog_meta.unreleased_end = latest_full_release_info.index - 1
 
-            start_rev = latest_full_release_info.name or ""
-            if not start_rev and latest_full_release_info.index:
-                # Only pre-releases in changelog
-                changelog_meta.latest_version_position = None
-                changelog_meta.unreleased_end = latest_full_release_info.index + 1
+                start_rev = latest_full_release_info.name or ""
+                if not start_rev:
+                    # Only pre-releases in changelog
+                    changelog_meta.latest_version_position = None
+                    changelog_meta.unreleased_end = latest_full_release_info.index + 1
 
         commits = git.get_commits(start=start_rev, end=end_rev, args="--topo-order")
         if not commits and (
