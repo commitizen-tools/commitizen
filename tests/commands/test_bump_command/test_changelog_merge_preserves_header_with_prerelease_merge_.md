@@ -1,11 +1,12 @@
 # Changelog
 
-All notable changes.
+All notable changes to this project will be documented here.
 
 ## 0.2.0 (2025-01-01)
 
 ### Feat
 
+- new feature right before the bump
 - add new output
 
 ### Fix
@@ -13,7 +14,3 @@ All notable changes.
 - output glitch
 
 ## 0.1.0 (1970-01-01)
-
-### Feat
-
-- initial feature
