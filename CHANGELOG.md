@@ -1,3 +1,9 @@
+## v4.13.6 (2026-02-07)
+
+### Fix
+
+- **bump**: preserve existing changelog header when `changelog_merge_prerelease` is used with `cz bump --changelog` (#1850)
+
 ## v4.13.5 (2026-02-05)
 
 ### Fix
