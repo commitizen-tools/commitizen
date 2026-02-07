@@ -376,7 +376,6 @@ class Bump:
                 changelog_file_name=(
                     changelog_cmd.file_name if self.changelog_flag else None
                 ),
-                changelog_file_name=changelog_file_name,
             )
 
         if self.arguments.get("files_only"):
