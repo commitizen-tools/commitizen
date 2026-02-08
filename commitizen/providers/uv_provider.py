@@ -26,9 +26,7 @@ class UvProvider(TomlProvider):
         self.set_lock_version(version)
 
     def set_lock_version(self, version: str) -> None:
-        pyproject_toml_content = tomlkit.parse(
-            self.file.read_text(encoding="utf-8")
-        )
+        pyproject_toml_content = tomlkit.parse(self.file.read_text(encoding="utf-8"))
         project_name = pyproject_toml_content["project"]["name"]  # type: ignore[index]
         normalized_project_name = canonicalize_name(str(project_name))
 

@@ -36,9 +36,7 @@ class NpmProvider(VersionProvider):
         """
         Get the current version from package.json
         """
-        package_document = json.loads(
-            self.package_file.read_text(encoding="utf-8")
-        )
+        package_document = json.loads(self.package_file.read_text(encoding="utf-8"))
         return self.get_package_version(package_document)
 
     def set_version(self, version: str) -> None:
@@ -59,9 +57,7 @@ class NpmProvider(VersionProvider):
             )
         if self.shrinkwrap_file.is_file():
             shrinkwrap_document = self.set_shrinkwrap_version(
-                json.loads(
-                    self.shrinkwrap_file.read_text(encoding="utf-8")
-                ),
+                json.loads(self.shrinkwrap_file.read_text(encoding="utf-8")),
                 version,
             )
             self.shrinkwrap_file.write_text(

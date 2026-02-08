@@ -75,9 +75,9 @@ class CargoProvider(TomlProvider):
                         continue
 
                     cargo_file = Path(path) / "Cargo.toml"
-                    package_content = parse(
-                        cargo_file.read_text(encoding="utf-8")
-                    ).get("package", {})
+                    package_content = parse(cargo_file.read_text(encoding="utf-8")).get(
+                        "package", {}
+                    )
                     if TYPE_CHECKING:
                         assert isinstance(package_content, dict)
                     try:
