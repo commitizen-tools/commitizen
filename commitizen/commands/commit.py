@@ -107,8 +107,12 @@ class Commit:
             )
 
     def _wrap_body(self, message: str) -> str:
+        """
+        Wrap the body of the commit message to the specified length.
+        """
+
         body_length_limit = self.arguments.get(
-            "body_length_limit", self.config.settings.get("body_length_limit", 0)
+            "body_length_limit", self.config.settings["body_length_limit"]
         )
         # By the contract, body_length_limit is set to 0 for no limit
         if not body_length_limit or body_length_limit <= 0:

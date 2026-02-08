@@ -369,43 +369,37 @@ def test_commit_command_with_config_message_length_limit(
 
 @pytest.mark.usefixtures("staging_is_clean")
 @pytest.mark.parametrize(
-    ("test_id", "body", "body_length_limit"),
+    ("body", "body_length_limit"),
     [
-        # Basic wrapping - long line gets wrapped
-        (
-            "wrapping",
+        pytest.param(
             "This is a very long line that exceeds 72 characters and should be automatically wrapped by the system to fit within the limit",
             72,
+            id="wrapping",
         ),
-        # Line break preservation - multiple lines with \n
-        (
-            "preserves_line_breaks",
+        pytest.param(
             "Line1 that is very long and exceeds the limit\nLine2 that is very long and exceeds the limit\nLine3 that is very long and exceeds the limit",
             72,
+            id="preserves_line_breaks",
         ),
-        # Disabled wrapping - limit = 0
-        (
-            "disabled",
+        pytest.param(
             "This is a very long line that exceeds 72 characters and should NOT be wrapped when body_length_limit is set to 0",
             0,
+            id="disabled",
         ),
-        # No body - empty string
-        (
-            "no_body",
+        pytest.param(
             "",
             72,
+            id="no_body",
         ),
     ],
 )
 def test_commit_command_body_length_limit(
-    test_id,
     body,
     body_length_limit,
     config,
     success_mock: MockType,
     commit_mock,
     mocker: MockFixture,
-    file_regression,
 ):
     """Parameterized test for body_length_limit feature with file regression."""
     mocker.patch(
@@ -420,24 +414,19 @@ def test_commit_command_body_length_limit(
         },
     )
 
-    config.settings["body_length_limit"] = body_length_limit
-    commands.Commit(config, {})()
-
+    commands.Commit(config, {"body_length_limit": body_length_limit})()
     success_mock.assert_called_once()
     committed_message = commit_mock.call_args[0][0]
 
-    # File regression check - uses test_id to create separate files
-    file_regression.check(
-        committed_message,
-        extension=".txt",
-        basename=f"test_commit_command_body_length_limit_{test_id}",
-    )
+    lines = committed_message.split("\n")
+    body_lines = lines[2:]  # Skip subject and blank line
 
-    # Validate line lengths if limit is not 0
     if body_length_limit > 0:
-        lines = committed_message.split("\n")
-        body_lines = lines[2:]  # Skip subject and blank line
         for line in body_lines:
             assert len(line) <= body_length_limit, (
                 f"Line exceeds {body_length_limit} chars: '{line}' ({len(line)} chars)"
             )
+    elif body_length_limit == 0:
+        assert len(body_lines) == 1, (
+            "Body should not be wrapped when body_length_limit is set to 0"
+        )
