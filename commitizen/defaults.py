@@ -100,6 +100,10 @@ DEFAULT_SETTINGS: Settings = {
     ],
     "changelog_file": "CHANGELOG.md",
     "changelog_format": None,  # default guessed from changelog_file
+    # None serves as a sentinel for "not configured by user" (distinct from False = explicitly disabled).
+    # During `cz bump`, when unset (None), defaults to True (incremental changelog).
+    # TODO: consider introducing sentinel value for "not configured by user" instead of overloading None,
+    # to avoid confusion with False.
     "changelog_incremental": None,
     "changelog_start_rev": None,
     "changelog_merge_prerelease": False,

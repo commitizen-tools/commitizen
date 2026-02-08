@@ -310,8 +310,9 @@ class Bump:
         changelog_file_name = None
         dry_run = self.arguments["dry_run"]
         if self.changelog_flag:
-            # "changelog_incremental" defaults to None in settings, so we can't
-            # rely on .get(key, True); default to True for bump only when unset.
+            # DEFAULT_SETTINGS provides changelog_incremental=None, so .get("changelog_incremental", True)
+            # would never fall through to the True default. None means "not configured" vs False meaning
+            # "explicitly disabled". During bump, we default to True (incremental) when not configured.
             incremental_setting = self.config.settings.get("changelog_incremental")
             changelog_args = {
                 "unreleased_version": new_tag_version,

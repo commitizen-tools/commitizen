@@ -1502,3 +1502,89 @@ def test_bump_deprecate_files_only(util: UtilFixture):
         pytest.raises(ExpectedExit),
     ):
         util.run_cli("bump", "--yes", "--files-only")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_changelog_incremental_default_not_set(
+    util: UtilFixture, changelog_path: Path, config_path: Path
+):
+    with config_path.open("a", encoding="utf-8") as fp:
+        fp.write("update_changelog_on_bump = true\n")
+
+    util.create_file_and_commit("feat(user): new user")
+    util.run_cli("bump", "--yes")
+    assert git.tag_exist("0.2.0") is True
+
+    with changelog_path.open(encoding="utf-8") as f:
+        content = f.read()
+    with changelog_path.open("w", encoding="utf-8") as f:
+        f.write(content.replace("- **user**: new user", "- **user**: new user\n\nMANUAL NOTE"))
+    util.create_file_and_commit("docs: add manual note to changelog")
+
+    util.create_file_and_commit("feat(admin): new admin")
+    util.run_cli("bump", "--yes")
+    assert git.tag_exist("0.3.0") is True
+
+    with changelog_path.open(encoding="utf-8") as f:
+        out = f.read()
+    assert "0.3.0" in out
+    assert "0.2.0" in out
+    assert "MANUAL NOTE" in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_changelog_incremental_set_true(
+    util: UtilFixture, changelog_path: Path, config_path: Path
+):
+    with config_path.open("a", encoding="utf-8") as fp:
+        fp.write("update_changelog_on_bump = true\n")
+        fp.write("changelog_incremental = true\n")
+
+    util.create_file_and_commit("feat(user): new user")
+    util.run_cli("bump", "--yes")
+    assert git.tag_exist("0.2.0") is True
+
+    with changelog_path.open(encoding="utf-8") as f:
+        content = f.read()
+    with changelog_path.open("w", encoding="utf-8") as f:
+        f.write(content.replace("- **user**: new user", "- **user**: new user\n\nMANUAL NOTE"))
+    util.create_file_and_commit("docs: add manual note to changelog")
+
+    util.create_file_and_commit("feat(admin): new admin")
+    util.run_cli("bump", "--yes")
+    assert git.tag_exist("0.3.0") is True
+
+    with changelog_path.open(encoding="utf-8") as f:
+        out = f.read()
+    assert "0.3.0" in out
+    assert "0.2.0" in out
+    assert "MANUAL NOTE" in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_changelog_incremental_set_false(
+    util: UtilFixture, changelog_path: Path, config_path: Path
+):
+    with config_path.open("a", encoding="utf-8") as fp:
+        fp.write("update_changelog_on_bump = true\n")
+        fp.write("changelog_incremental = false\n")
+
+    util.create_file_and_commit("feat(user): new user")
+    util.run_cli("bump", "--yes")
+    assert git.tag_exist("0.2.0") is True
+
+    with changelog_path.open(encoding="utf-8") as f:
+        content = f.read()
+    with changelog_path.open("w", encoding="utf-8") as f:
+        f.write(content.replace("- **user**: new user", "- **user**: new user\n\nMANUAL NOTE"))
+    util.create_file_and_commit("docs: add manual note to changelog")
+
+    util.create_file_and_commit("feat(admin): new admin")
+    util.run_cli("bump", "--yes")
+    assert git.tag_exist("0.3.0") is True
+
+    with changelog_path.open(encoding="utf-8") as f:
+        out = f.read()
+    assert "0.3.0" in out
+    assert "0.2.0" in out
+    assert "MANUAL NOTE" not in out
