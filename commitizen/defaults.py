@@ -38,7 +38,7 @@ class Settings(TypedDict, total=False):
     change_type_map: dict[str, str]
     changelog_file: str
     changelog_format: str | None
-    changelog_incremental: bool
+    changelog_incremental: bool | None
     changelog_merge_prerelease: bool
     changelog_start_rev: str | None
     customize: CzSettings
@@ -100,7 +100,7 @@ DEFAULT_SETTINGS: Settings = {
     ],
     "changelog_file": "CHANGELOG.md",
     "changelog_format": None,  # default guessed from changelog_file
-    "changelog_incremental": False,
+    "changelog_incremental": None,
     "changelog_start_rev": None,
     "changelog_merge_prerelease": False,
     "update_changelog_on_bump": False,
