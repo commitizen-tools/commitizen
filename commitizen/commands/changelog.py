@@ -183,8 +183,8 @@ class Changelog:
         if filename is None:
             raise NotAllowed("Template filename is not set")
 
-        text = Path(filename).read_text()
-        Path(dist).write_text(text)
+        text = Path(filename).read_text(encoding="utf-8")
+        Path(dist).write_text(text, encoding="utf-8")
 
     def __call__(self) -> None:
         commit_parser = self.cz.commit_parser

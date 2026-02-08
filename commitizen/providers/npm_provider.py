@@ -36,29 +36,37 @@ class NpmProvider(VersionProvider):
         """
         Get the current version from package.json
         """
-        package_document = json.loads(self.package_file.read_text())
+        package_document = json.loads(
+            self.package_file.read_text(encoding="utf-8")
+        )
         return self.get_package_version(package_document)
 
     def set_version(self, version: str) -> None:
         package_document = self.set_package_version(
-            json.loads(self.package_file.read_text()), version
+            json.loads(self.package_file.read_text(encoding="utf-8")), version
         )
         self.package_file.write_text(
-            json.dumps(package_document, indent=self.indent) + "\n"
+            json.dumps(package_document, indent=self.indent) + "\n",
+            encoding="utf-8",
         )
         if self.lock_file.is_file():
             lock_document = self.set_lock_version(
-                json.loads(self.lock_file.read_text()), version
+                json.loads(self.lock_file.read_text(encoding="utf-8")), version
             )
             self.lock_file.write_text(
-                json.dumps(lock_document, indent=self.indent) + "\n"
+                json.dumps(lock_document, indent=self.indent) + "\n",
+                encoding="utf-8",
             )
         if self.shrinkwrap_file.is_file():
             shrinkwrap_document = self.set_shrinkwrap_version(
-                json.loads(self.shrinkwrap_file.read_text()), version
+                json.loads(
+                    self.shrinkwrap_file.read_text(encoding="utf-8")
+                ),
+                version,
             )
             self.shrinkwrap_file.write_text(
-                json.dumps(shrinkwrap_document, indent=self.indent) + "\n"
+                json.dumps(shrinkwrap_document, indent=self.indent) + "\n",
+                encoding="utf-8",
             )
 
     def get_package_version(self, document: Mapping[str, str]) -> str:
