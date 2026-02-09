@@ -579,8 +579,7 @@ def tags() -> list[git.GitTag]:
 @pytest.fixture
 def changelog_content(data_dir: Path) -> str:
     changelog = data_dir / "CHANGELOG_FOR_TEST.md"
-    with changelog.open(encoding="utf-8") as f:
-        return f.read()
+    return changelog.read_text(encoding="utf-8")
 
 
 def test_get_commit_tag_is_a_version(gitcommits, tags):

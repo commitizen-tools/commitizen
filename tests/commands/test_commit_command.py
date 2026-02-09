@@ -49,9 +49,12 @@ def staging_is_clean(mocker: MockFixture, tmp_git_project):
 
 
 @pytest.fixture
-def backup_file(tmp_git_project):
-    with get_backup_file_path().open("w") as backup_file:
-        backup_file.write("backup commit")
+def backup_file(tmp_git_project, monkeypatch):
+    """Write backup message so Commit finds it when run from tmp_git_project."""
+    with tmp_git_project.as_cwd():
+        path = get_backup_file_path()
+        path.write_text("backup commit", encoding="utf-8")
+    monkeypatch.chdir(tmp_git_project)
 
 
 @pytest.mark.usefixtures("staging_is_clean", "commit_mock", "prompt_mock_feat")

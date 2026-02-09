@@ -5,6 +5,7 @@ import os
 import shutil
 import subprocess
 import tempfile
+from pathlib import Path
 from typing import TYPE_CHECKING, TypedDict
 
 import questionary
@@ -26,8 +27,6 @@ from commitizen.exceptions import (
 from commitizen.git import smart_open
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from commitizen.config import BaseConfig
 
 
@@ -61,8 +60,9 @@ class Commit:
             return None
 
         # Read commit message from backup
-        with self.backup_file_path.open(encoding=self.config.settings["encoding"]) as f:
-            return f.read().strip()
+        return self.backup_file_path.read_text(
+            encoding=self.config.settings["encoding"]
+        ).strip()
 
     def _get_message_by_prompt_commit_questions(self) -> str:
         # Prompt user for the commit message
@@ -112,8 +112,7 @@ class Commit:
         file_path = file.name
         argv = [exec_path, file_path]
         subprocess.call(argv)
-        with open(file_path) as temp_file:
-            message = temp_file.read().strip()
+        message = Path(file_path).read_text().strip()
         os.unlink(file.name)
         return message
 

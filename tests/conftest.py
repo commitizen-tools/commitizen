@@ -113,10 +113,8 @@ def tmp_commitizen_project_initial(tmp_git_project, util: UtilFixture):
             tmp_version_file.write(version)
             tmp_commitizen_cfg_file = tmp_git_project.join("pyproject.toml")
             tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
-            tmp_commitizen_cfg_file.write(
-                f"{tmp_commitizen_cfg_file.read()}\n"
-                f'version_files = ["{tmp_version_file_string}"]\n'
-            )
+            with open(tmp_commitizen_cfg_file, "a", encoding="utf-8") as f:
+                f.write(f'\nversion_files = ["{tmp_version_file_string}"]\n')
             if config_extra:
                 tmp_commitizen_cfg_file.write(config_extra, mode="a")
             util.create_file_and_commit(initial_commit)
@@ -309,7 +307,8 @@ def changelog_format(
     if "tmp_commitizen_project" in request.fixturenames:
         tmp_commitizen_project = request.getfixturevalue("tmp_commitizen_project")
         pyproject = tmp_commitizen_project / "pyproject.toml"
-        pyproject.write(f'{pyproject.read()}\nchangelog_format = "{format}"\n')
+        with pyproject.open("a", encoding="utf-8") as f:
+            f.write(f'\nchangelog_format = "{format}"\n')
     return get_changelog_format(config)
 
 
