@@ -43,8 +43,10 @@ class CargoProvider(TomlProvider):
             self.set_lock_version(version)
 
     def set_lock_version(self, version: str) -> None:
-        cargo_toml_content = parse(self.file.read_text())
-        cargo_lock_content = parse(self.lock_file.read_text())
+        cargo_toml_content = parse(self.file.read_text(encoding=self._get_encoding()))
+        cargo_lock_content = parse(
+            self.lock_file.read_text(encoding=self._get_encoding())
+        )
         packages = cargo_lock_content["package"]
 
         if TYPE_CHECKING:
@@ -75,7 +77,9 @@ class CargoProvider(TomlProvider):
                         continue
 
                     cargo_file = Path(path) / "Cargo.toml"
-                    package_content = parse(cargo_file.read_text()).get("package", {})
+                    package_content = parse(
+                        cargo_file.read_text(encoding=self._get_encoding())
+                    ).get("package", {})
                     if TYPE_CHECKING:
                         assert isinstance(package_content, dict)
                     try:
@@ -92,7 +96,9 @@ class CargoProvider(TomlProvider):
                 if package["name"] in members_inheriting:
                     cargo_lock_content["package"][i]["version"] = version  # type: ignore[index]
 
-        self.lock_file.write_text(dumps(cargo_lock_content))
+        self.lock_file.write_text(
+            dumps(cargo_lock_content), encoding=self._get_encoding()
+        )
 
 
 def _try_get_workspace(document: TOMLDocument) -> dict:

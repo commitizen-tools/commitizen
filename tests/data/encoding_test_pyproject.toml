@@ -1,0 +1,36 @@
+[project]
+name = "pythonproject-test"
+version = "0.4.1"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+
+[tool.commitizen]
+name = "cz_customize"
+tag_format = "v$version"
+version_scheme = "pep440"
+version_provider = "uv"
+update_changelog_on_bump = true
+changelog_start_rev = "v1.1.0"
+
+[tool.commitizen.customize]
+message_template = "{{ change_type }}{% if scope != 'none' %}({{ scope }}){% endif %}: {{ message }}"
+commit_parser = '^(?P<change_type>feat|fix|refactor|test|perf|misc):\s(?P<message>.*)'
+schema_pattern = '(feat|fix|refactor|test|perf|misc)(\((api|core)\))?:\s(.{3,})'
+bump_pattern = "^(feat|fix|refactor|test|perf|misc)"
+change_type_map = { "feat" = "Новое", "fix" = "Исправление" }
+
+[[tool.commitizen.customize.questions]]
+name = "change_type"
+type = "list"
+message = "Выберите тип изменений"
+choices = [
+    { value = "feat", name = "feat: Новая функциональность" },
+    { value = "fix", name = "fix: Исправление" },
+    { value = "refactor", name = "refactor: Рефакторинг" },
+    { value = "test", name = "test: Изменение авто-тестов" },
+    { value = "perf", name = "perf: Оптимизации" },
+    { value = "misc", name = "misc: Другое" },
+]
