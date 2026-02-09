@@ -67,7 +67,10 @@ class JsonProvider(FileProvider):
     def set_version(self, version: str) -> None:
         document = json.loads(self.file.read_text(encoding=self._get_encoding()))
         self.set(document, version)
-        self.file.write_text(json.dumps(document, indent=self.indent) + "\n")
+        self.file.write_text(
+            json.dumps(document, indent=self.indent, ensure_ascii=False) + "\n",
+            encoding=self._get_encoding(),
+        )
 
     def get(self, document: Mapping[str, str]) -> str:
         return document["version"]
@@ -88,7 +91,7 @@ class TomlProvider(FileProvider):
     def set_version(self, version: str) -> None:
         document = tomlkit.parse(self.file.read_text(encoding=self._get_encoding()))
         self.set(document, version)
-        self.file.write_text(tomlkit.dumps(document))
+        self.file.write_text(tomlkit.dumps(document), encoding=self._get_encoding())
 
     def get(self, document: tomlkit.TOMLDocument) -> str:
         return document["project"]["version"]  # type: ignore[index,return-value]
