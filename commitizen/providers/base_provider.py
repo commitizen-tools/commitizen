@@ -49,6 +49,9 @@ class FileProvider(VersionProvider):
     def file(self) -> Path:
         return Path() / self.filename
 
+    def _get_encoding(self) -> str:
+        return self.config.settings["encoding"]
+
 
 class JsonProvider(FileProvider):
     """
@@ -58,11 +61,11 @@ class JsonProvider(FileProvider):
     indent: ClassVar[int] = 2
 
     def get_version(self) -> str:
-        document = json.loads(self.file.read_text())
+        document = json.loads(self.file.read_text(encoding=self._get_encoding()))
         return self.get(document)
 
     def set_version(self, version: str) -> None:
-        document = json.loads(self.file.read_text())
+        document = json.loads(self.file.read_text(encoding=self._get_encoding()))
         self.set(document, version)
         self.file.write_text(json.dumps(document, indent=self.indent) + "\n")
 
@@ -79,11 +82,11 @@ class TomlProvider(FileProvider):
     """
 
     def get_version(self) -> str:
-        document = tomlkit.parse(self.file.read_text())
+        document = tomlkit.parse(self.file.read_text(encoding=self._get_encoding()))
         return self.get(document)
 
     def set_version(self, version: str) -> None:
-        document = tomlkit.parse(self.file.read_text())
+        document = tomlkit.parse(self.file.read_text(encoding=self._get_encoding()))
         self.set(document, version)
         self.file.write_text(tomlkit.dumps(document))
 
