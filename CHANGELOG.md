@@ -1,3 +1,9 @@
+## v4.13.7 (2026-02-09)
+
+### Fix
+
+- **provider**: use encoding settings in config (#1857)
+
 ## v4.13.6 (2026-02-07)
 
 ### Fix
