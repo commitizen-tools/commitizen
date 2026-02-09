@@ -1,3 +1,46 @@
+## v4.13.7 (2026-02-09)
+
+### Fix
+
+- **provider**: use encoding settings in config (#1857)
+
+## v4.13.6 (2026-02-07)
+
+### Fix
+
+- **bump**: preserve existing changelog header when `changelog_merge_prerelease` is used with `cz bump --changelog` (#1850)
+
+## v4.13.5 (2026-02-05)
+
+### Fix
+
+- **changelog**: add incremental parameter to changelog generation (#1808)
+
+## v4.13.4 (2026-02-04)
+
+### Fix
+
+- **pre-commit-hooks**: correct rev-range syntax in commitizen-branch (#1841)
+
+## v4.13.3 (2026-02-04)
+
+### Refactor
+
+- **version_schemes**: shorten generate_prerelease (#1838)
+
+## v4.13.2 (2026-02-03)
+
+### Refactor
+
+- simplify code with pathlib Path object (#1840)
+- **tags**: extract version resolution method (#1839)
+
+## v4.13.1 (2026-02-03)
+
+### Refactor
+
+- **config**: replace is_empty_config with contains_commitizen_section, improve multi config resolution algorithm (#1842)
+
 ## v4.13.0 (2026-02-01)
 
 ### Feat

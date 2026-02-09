@@ -171,24 +171,31 @@ class Init:
     def _ask_name(self) -> str:
         name: str = questionary.select(
             f"Please choose a cz (commit rule): (default: {DEFAULT_SETTINGS['name']})",
-            choices=self._construct_name_choice_with_description(),
+            choices=self._construct_name_choices_from_registry(),
             default=DEFAULT_SETTINGS["name"],
             style=self.cz.style,
         ).unsafe_ask()
         return name
 
-    def _construct_name_choice_with_description(self) -> list[questionary.Choice]:
+    def _construct_name_choices_from_registry(self) -> list[questionary.Choice]:
+        """
+        Construct questionary choices of cz names from registry.
+        """
         choices = []
         for cz_name, cz_class in registry.items():
             try:
                 cz_obj = cz_class(self.config)
             except MissingCzCustomizeConfigError:
+                # Fallback if description is not available
                 choices.append(questionary.Choice(title=cz_name, value=cz_name))
                 continue
-            first_example = cz_obj.schema().partition("\n")[0]
+
+            # Get the first line of the schema as the description
+            # TODO(bearomorphism): schema is a workaround. Add a description method to the cz class.
+            description = cz_obj.schema().partition("\n")[0]
             choices.append(
                 questionary.Choice(
-                    title=cz_name, value=cz_name, description=first_example
+                    title=cz_name, value=cz_name, description=description
                 )
             )
         return choices
@@ -288,11 +295,12 @@ class Init:
             ],
         }
 
-        if not Path(".pre-commit-config.yaml").is_file():
+        pre_commit_config_path = Path(self._PRE_COMMIT_CONFIG_PATH)
+        if not pre_commit_config_path.is_file():
             return {"repos": [CZ_HOOK_CONFIG]}
 
-        with open(
-            self._PRE_COMMIT_CONFIG_PATH, encoding=self.config.settings["encoding"]
+        with pre_commit_config_path.open(
+            encoding=self.config.settings["encoding"]
         ) as config_file:
             config_data: dict[str, Any] = yaml.safe_load(config_file) or {}
 

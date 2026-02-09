@@ -111,8 +111,7 @@ def test_update_version_in_files(version_files, file_regression):
 
     file_contents = ""
     for filepath in version_files:
-        with open(filepath, encoding="utf-8") as f:
-            file_contents += f.read()
+        file_contents += Path(filepath).read_text(encoding="utf-8")
     file_regression.check(file_contents, extension=".txt")
 
 
@@ -125,8 +124,9 @@ def test_partial_update_of_file(version_repeated_file, file_regression):
     bump.update_version_in_files(
         old_version, new_version, [location], check_consistency=False, encoding="utf-8"
     )
-    with open(version_repeated_file, encoding="utf-8") as f:
-        file_regression.check(f.read(), extension=".json")
+    file_regression.check(
+        version_repeated_file.read_text(encoding="utf-8"), extension=".json"
+    )
 
 
 def test_random_location(random_location_version_file, file_regression):
@@ -137,8 +137,9 @@ def test_random_location(random_location_version_file, file_regression):
     bump.update_version_in_files(
         old_version, new_version, [location], check_consistency=False, encoding="utf-8"
     )
-    with open(random_location_version_file, encoding="utf-8") as f:
-        file_regression.check(f.read(), extension=".lock")
+    file_regression.check(
+        random_location_version_file.read_text(encoding="utf-8"), extension=".lock"
+    )
 
 
 def test_duplicates_are_change_with_no_regex(
@@ -151,8 +152,9 @@ def test_duplicates_are_change_with_no_regex(
     bump.update_version_in_files(
         old_version, new_version, [location], check_consistency=False, encoding="utf-8"
     )
-    with open(random_location_version_file, encoding="utf-8") as f:
-        file_regression.check(f.read(), extension=".lock")
+    file_regression.check(
+        random_location_version_file.read_text(encoding="utf-8"), extension=".lock"
+    )
 
 
 def test_version_bump_increase_string_length(
@@ -165,8 +167,10 @@ def test_version_bump_increase_string_length(
     bump.update_version_in_files(
         old_version, new_version, [location], check_consistency=False, encoding="utf-8"
     )
-    with open(multiple_versions_increase_string, encoding="utf-8") as f:
-        file_regression.check(f.read(), extension=".txt")
+    file_regression.check(
+        Path(multiple_versions_increase_string).read_text(encoding="utf-8"),
+        extension=".txt",
+    )
 
 
 def test_version_bump_reduce_string_length(
@@ -179,8 +183,10 @@ def test_version_bump_reduce_string_length(
     bump.update_version_in_files(
         old_version, new_version, [location], check_consistency=False, encoding="utf-8"
     )
-    with open(multiple_versions_reduce_string, encoding="utf-8") as f:
-        file_regression.check(f.read(), extension=".txt")
+    file_regression.check(
+        Path(multiple_versions_reduce_string).read_text(encoding="utf-8"),
+        extension=".txt",
+    )
 
 
 def test_file_version_inconsistent_error(
@@ -220,8 +226,10 @@ def test_multiple_versions_to_bump(
     bump.update_version_in_files(
         old_version, new_version, [location], check_consistency=False, encoding="utf-8"
     )
-    with open(multiple_versions_to_update_poetry_lock, encoding="utf-8") as f:
-        file_regression.check(f.read(), extension=".toml")
+    file_regression.check(
+        multiple_versions_to_update_poetry_lock.read_text(encoding="utf-8"),
+        extension=".toml",
+    )
 
 
 def test_update_version_in_globbed_files(commitizen_config_file, file_regression):
@@ -295,7 +303,7 @@ def test_update_version_in_files_with_check_consistency_true_failure(
 
 
 @pytest.mark.parametrize(
-    "encoding,filename",
+    ("encoding", "filename"),
     [
         ("latin-1", "test_latin1.txt"),
         ("utf-16", "test_utf16.txt"),

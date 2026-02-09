@@ -69,9 +69,9 @@ def _build_fake_git_commits(commit_msgs: list[str]) -> list[git.GitCommit]:
 
 
 def test_check_jira_fails(mocker: MockFixture, util: UtilFixture):
-    mocker.patch(
-        "commitizen.commands.check.open",
-        mocker.mock_open(read_data="random message for J-2 #fake_command blah"),
+    mock_path = mocker.patch("commitizen.commands.check.Path")
+    mock_path.return_value.read_text.return_value = (
+        "random message for J-2 #fake_command blah"
     )
     with pytest.raises(InvalidCommitMessageError) as excinfo:
         util.run_cli("-n", "cz_jira", "check", "--commit-msg-file", "some_file")
@@ -90,10 +90,8 @@ def test_check_jira_fails(mocker: MockFixture, util: UtilFixture):
 def test_check_jira_command_after_issue(
     mocker: MockFixture, capsys, util: UtilFixture, commit_msg: str
 ):
-    mocker.patch(
-        "commitizen.commands.check.open",
-        mocker.mock_open(read_data=commit_msg),
-    )
+    mock_path = mocker.patch("commitizen.commands.check.Path")
+    mock_path.return_value.read_text.return_value = commit_msg
     util.run_cli("-n", "cz_jira", "check", "--commit-msg-file", "some_file")
     out, _ = capsys.readouterr()
     assert "Commit validation: successful!" in out
@@ -102,10 +100,8 @@ def test_check_jira_command_after_issue(
 def test_check_conventional_commit_succeeds(
     mocker: MockFixture, capsys, util: UtilFixture
 ):
-    mocker.patch(
-        "commitizen.commands.check.open",
-        mocker.mock_open(read_data="fix(scope): some commit message"),
-    )
+    mock_path = mocker.patch("commitizen.commands.check.Path")
+    mock_path.return_value.read_text.return_value = "fix(scope): some commit message"
     util.run_cli("check", "--commit-msg-file", "some_file")
     out, _ = capsys.readouterr()
     assert "Commit validation: successful!" in out
@@ -113,7 +109,7 @@ def test_check_conventional_commit_succeeds(
 
 @pytest.mark.parametrize(
     "commit_msg",
-    (
+    [
         "feat!(lang): removed polish language",
         "no conventional commit",
         (
@@ -121,7 +117,7 @@ def test_check_conventional_commit_succeeds(
             "testing with more complex commit mes\n\n"
             "age with error"
         ),
-    ),
+    ],
 )
 def test_check_no_conventional_commit(commit_msg, config, tmpdir):
     tempfile = tmpdir.join("temp_commit_file")
@@ -133,12 +129,12 @@ def test_check_no_conventional_commit(commit_msg, config, tmpdir):
 
 @pytest.mark.parametrize(
     "commit_msg",
-    (
+    [
         "feat(lang)!: removed polish language",
         "feat(lang): added polish language",
         "feat: add polish language",
         "bump: 0.0.1 -> 1.0.0",
-    ),
+    ],
 )
 def test_check_conventional_commit(commit_msg, config, success_mock: MockType, tmpdir):
     tempfile = tmpdir.join("temp_commit_file")
@@ -287,17 +283,15 @@ def test_check_command_with_pipe_message_and_failed(
 def test_check_command_with_comment_in_message_file(
     mocker: MockFixture, capsys, util: UtilFixture
 ):
-    mocker.patch(
-        "commitizen.commands.check.open",
-        mocker.mock_open(
-            read_data="# <type>: (If applied, this commit will...) <subject>\n"
-            "# |<---- Try to Limit to a Max of 50 char ---->|\n"
-            "ci: add commitizen pre-commit hook\n"
-            "\n"
-            "# Explain why this change is being made\n"
-            "# |<---- Try To Limit Each Line to a Max Of 72 Char ---->|\n"
-            "This pre-commit hook will check our commits automatically."
-        ),
+    mock_path = mocker.patch("commitizen.commands.check.Path")
+    mock_path.return_value.read_text.return_value = (
+        "# <type>: (If applied, this commit will...) <subject>\n"
+        "# |<---- Try to Limit to a Max of 50 char ---->|\n"
+        "ci: add commitizen pre-commit hook\n"
+        "\n"
+        "# Explain why this change is being made\n"
+        "# |<---- Try To Limit Each Line to a Max Of 72 Char ---->|\n"
+        "This pre-commit hook will check our commits automatically."
     )
     util.run_cli("check", "--commit-msg-file", "some_file")
     out, _ = capsys.readouterr()
@@ -307,29 +301,25 @@ def test_check_command_with_comment_in_message_file(
 def test_check_conventional_commit_succeed_with_git_diff(
     mocker, capsys, util: UtilFixture
 ):
-    mocker.patch(
-        "commitizen.commands.check.open",
-        mocker.mock_open(
-            read_data=(
-                "feat: This is a test commit\n"
-                "# Please enter the commit message for your changes. Lines starting\n"
-                "# with '#' will be ignored, and an empty message aborts the commit.\n"
-                "#\n"
-                "# On branch ...\n"
-                "# Changes to be committed:\n"
-                "#	modified:  ...\n"
-                "#\n"
-                "# ------------------------ >8 ------------------------\n"
-                "# Do not modify or remove the line above.\n"
-                "# Everything below it will be ignored.\n"
-                "diff --git a/... b/...\n"
-                "index f1234c..1c5678 1234\n"
-                "--- a/...\n"
-                "+++ b/...\n"
-                "@@ -92,3 +92,4 @@ class Command(BaseCommand):\n"
-                '+            "this is a test"\n'
-            )
-        ),
+    mock_path = mocker.patch("commitizen.commands.check.Path")
+    mock_path.return_value.read_text.return_value = (
+        "feat: This is a test commit\n"
+        "# Please enter the commit message for your changes. Lines starting\n"
+        "# with '#' will be ignored, and an empty message aborts the commit.\n"
+        "#\n"
+        "# On branch ...\n"
+        "# Changes to be committed:\n"
+        "#	modified:  ...\n"
+        "#\n"
+        "# ------------------------ >8 ------------------------\n"
+        "# Do not modify or remove the line above.\n"
+        "# Everything below it will be ignored.\n"
+        "diff --git a/... b/...\n"
+        "index f1234c..1c5678 1234\n"
+        "--- a/...\n"
+        "+++ b/...\n"
+        "@@ -92,3 +92,4 @@ class Command(BaseCommand):\n"
+        '+            "this is a test"\n'
     )
     util.run_cli("check", "--commit-msg-file", "some_file")
     out, _ = capsys.readouterr()
@@ -429,9 +419,9 @@ def use_cz_custom_validator(mocker):
 def test_check_command_with_custom_validator_succeed(
     mocker: MockFixture, capsys, util: UtilFixture
 ):
-    mocker.patch(
-        "commitizen.commands.check.open",
-        mocker.mock_open(read_data="ABC-123: add commitizen pre-commit hook"),
+    mock_path = mocker.patch("commitizen.commands.check.Path")
+    mock_path.return_value.read_text.return_value = (
+        "ABC-123: add commitizen pre-commit hook"
     )
     util.run_cli(
         "--name", "cz_custom_validator", "check", "--commit-msg-file", "some_file"
@@ -444,11 +434,9 @@ def test_check_command_with_custom_validator_succeed(
 def test_check_command_with_custom_validator_failed(
     mocker: MockFixture, util: UtilFixture
 ):
-    mocker.patch(
-        "commitizen.commands.check.open",
-        mocker.mock_open(
-            read_data="123-ABC issue id has wrong format and misses colon"
-        ),
+    mock_path = mocker.patch("commitizen.commands.check.Path")
+    mock_path.return_value.read_text.return_value = (
+        "123-ABC issue id has wrong format and misses colon"
     )
     with pytest.raises(InvalidCommitMessageError) as excinfo:
         util.run_cli(

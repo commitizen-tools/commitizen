@@ -40,14 +40,14 @@ if TYPE_CHECKING:
 
 @pytest.mark.parametrize(
     "commit_msg",
-    (
+    [
         "fix: username exception",
         "fix(user): username exception",
         "refactor: remove ini configuration support",
         "refactor(config): remove ini configuration support",
         "perf: update to use multiprocess",
         "perf(worker): update to use multiprocess",
-    ),
+    ],
 )
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_patch_increment(commit_msg: str, util: UtilFixture):
@@ -56,7 +56,7 @@ def test_bump_patch_increment(commit_msg: str, util: UtilFixture):
     assert git.tag_exist("0.1.1") is True
 
 
-@pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
+@pytest.mark.parametrize("commit_msg", ["feat: new file", "feat(user): new file"])
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_minor_increment(commit_msg: str, util: UtilFixture):
     util.create_file_and_commit(commit_msg)
@@ -68,7 +68,7 @@ def test_bump_minor_increment(commit_msg: str, util: UtilFixture):
     )
 
 
-@pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
+@pytest.mark.parametrize("commit_msg", ["feat: new file", "feat(user): new file"])
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_minor_increment_annotated(commit_msg: str, util: UtilFixture):
     util.create_file_and_commit(commit_msg)
@@ -82,7 +82,7 @@ def test_bump_minor_increment_annotated(commit_msg: str, util: UtilFixture):
     assert git.is_signed_tag("0.2.0") is False
 
 
-@pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
+@pytest.mark.parametrize("commit_msg", ["feat: new file", "feat(user): new file"])
 @pytest.mark.usefixtures("tmp_commitizen_project_with_gpg")
 def test_bump_minor_increment_signed(commit_msg: str, util: UtilFixture):
     util.create_file_and_commit(commit_msg)
@@ -96,11 +96,12 @@ def test_bump_minor_increment_signed(commit_msg: str, util: UtilFixture):
     assert git.is_signed_tag("0.2.0") is True
 
 
-@pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
+@pytest.mark.parametrize("commit_msg", ["feat: new file", "feat(user): new file"])
 def test_bump_minor_increment_annotated_config_file(
     commit_msg: str, util: UtilFixture, pyproject: Path
 ):
-    pyproject.write_text(pyproject.read_text() + "\nannotated_tag = 1")
+    with pyproject.open("a", encoding="utf-8") as f:
+        f.write("\nannotated_tag = 1")
     util.create_file_and_commit(commit_msg)
     util.run_cli("bump", "--yes")
     assert git.tag_exist("0.2.0") is True
@@ -112,12 +113,13 @@ def test_bump_minor_increment_annotated_config_file(
     assert git.is_signed_tag("0.2.0") is False
 
 
-@pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
+@pytest.mark.parametrize("commit_msg", ["feat: new file", "feat(user): new file"])
 def test_bump_minor_increment_signed_config_file(
     commit_msg: str, util: UtilFixture, tmp_commitizen_project_with_gpg
 ):
     tmp_commitizen_cfg_file = tmp_commitizen_project_with_gpg.join("pyproject.toml")
-    tmp_commitizen_cfg_file.write(f"{tmp_commitizen_cfg_file.read()}\ngpg_sign = 1")
+    with Path(tmp_commitizen_cfg_file).open("a", encoding="utf-8") as f:
+        f.write("\ngpg_sign = 1")
     util.create_file_and_commit(commit_msg)
     util.run_cli("bump", "--yes")
     assert git.tag_exist("0.2.0") is True
@@ -132,7 +134,7 @@ def test_bump_minor_increment_signed_config_file(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.parametrize(
     "commit_msg",
-    (
+    [
         "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported",
         "feat!: new user interface\n\nBREAKING CHANGE: age is no longer supported",
         "feat!: new user interface",
@@ -141,7 +143,7 @@ def test_bump_minor_increment_signed_config_file(
         "feat(user)!: new user interface",
         "BREAKING CHANGE: age is no longer supported",
         "BREAKING-CHANGE: age is no longer supported",
-    ),
+    ],
 )
 def test_bump_major_increment(commit_msg: str, util: UtilFixture):
     util.create_file_and_commit(commit_msg)
@@ -152,7 +154,7 @@ def test_bump_major_increment(commit_msg: str, util: UtilFixture):
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.parametrize(
     "commit_msg",
-    (
+    [
         "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported",
         "feat!: new user interface\n\nBREAKING CHANGE: age is no longer supported",
         "feat!: new user interface",
@@ -161,7 +163,7 @@ def test_bump_major_increment(commit_msg: str, util: UtilFixture):
         "feat(user)!: new user interface",
         "BREAKING CHANGE: age is no longer supported",
         "BREAKING-CHANGE: age is no longer supported",
-    ),
+    ],
 )
 def test_bump_major_increment_major_version_zero(commit_msg: str, util: UtilFixture):
     util.create_file_and_commit(commit_msg)
@@ -171,7 +173,7 @@ def test_bump_major_increment_major_version_zero(commit_msg: str, util: UtilFixt
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.parametrize(
-    "commit_msg,increment,expected_tag",
+    ("commit_msg", "increment", "expected_tag"),
     [
         ("feat: new file", "PATCH", "0.1.1"),
         ("fix: username exception", "major", "1.0.0"),
@@ -362,10 +364,8 @@ def test_bump_when_version_inconsistent_in_version_files(
     tmp_version_file.write("100.999.10000")
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
     tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
-    tmp_commitizen_cfg_file.write(
-        f"{tmp_commitizen_cfg_file.read()}\n"
-        f'version_files = ["{tmp_version_file_string}"]'
-    )
+    with Path(tmp_commitizen_cfg_file).open("a", encoding="utf-8") as f:
+        f.write(f'\nversion_files = ["{tmp_version_file_string}"]')
 
     util.create_file_and_commit("feat: new file")
 
@@ -407,10 +407,8 @@ def test_bump_files_only(tmp_commitizen_project, util: UtilFixture):
     tmp_version_file.write("0.1.0")
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
     tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
-    tmp_commitizen_cfg_file.write(
-        f"{tmp_commitizen_cfg_file.read()}\n"
-        f'version_files = ["{tmp_version_file_string}"]'
-    )
+    with Path(tmp_commitizen_cfg_file).open("a", encoding="utf-8") as f:
+        f.write(f'\nversion_files = ["{tmp_version_file_string}"]')
 
     util.create_file_and_commit("feat: new user interface")
     util.run_cli("bump", "--yes")
@@ -422,11 +420,9 @@ def test_bump_files_only(tmp_commitizen_project, util: UtilFixture):
 
     assert git.tag_exist("0.3.0") is False
 
-    with open(tmp_version_file, encoding="utf-8") as f:
-        assert "0.3.0" in f.read()
+    assert "0.3.0" in Path(tmp_version_file).read_text(encoding="utf-8")
 
-    with open(tmp_commitizen_cfg_file, encoding="utf-8") as f:
-        assert "0.3.0" in f.read()
+    assert "0.3.0" in Path(tmp_commitizen_cfg_file).read_text(encoding="utf-8")
 
 
 def test_bump_local_version(tmp_commitizen_project, util: UtilFixture):
@@ -444,8 +440,7 @@ def test_bump_local_version(tmp_commitizen_project, util: UtilFixture):
     util.run_cli("bump", "--yes", "--local-version")
     assert git.tag_exist("4.5.1+0.2.0") is True
 
-    with open(tmp_version_file, encoding="utf-8") as f:
-        assert "4.5.1+0.2.0" in f.read()
+    assert "4.5.1+0.2.0" in Path(tmp_version_file).read_text(encoding="utf-8")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -504,8 +499,7 @@ def test_bump_with_changelog_arg(util: UtilFixture, changelog_path):
     util.run_cli("bump", "--yes", "--changelog")
     assert git.tag_exist("0.2.0") is True
 
-    with open(changelog_path, encoding="utf-8") as f:
-        out = f.read()
+    out = changelog_path.read_text(encoding="utf-8")
     assert out.startswith("#")
     assert "0.2.0" in out
 
@@ -513,14 +507,13 @@ def test_bump_with_changelog_arg(util: UtilFixture, changelog_path):
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_with_changelog_config(util: UtilFixture, changelog_path, config_path):
     util.create_file_and_commit("feat(user): new file")
-    with open(config_path, "a", encoding="utf-8") as fp:
+    with config_path.open("a", encoding="utf-8") as fp:
         fp.write("update_changelog_on_bump = true\n")
 
     util.run_cli("bump", "--yes")
     assert git.tag_exist("0.2.0") is True
 
-    with open(changelog_path, encoding="utf-8") as f:
-        out = f.read()
+    out = changelog_path.read_text(encoding="utf-8")
     assert out.startswith("#")
     assert "0.2.0" in out
 
@@ -557,8 +550,7 @@ def test_bump_with_changelog_to_stdout_arg(
     assert "this should appear in stdout" in out
     assert git.tag_exist("0.2.0") is True
 
-    with open(changelog_path, encoding="utf-8") as f:
-        out = f.read()
+    out = changelog_path.read_text(encoding="utf-8")
     assert out.startswith("#")
     assert "0.2.0" in out
 
@@ -607,7 +599,7 @@ def test_bump_with_git_to_stdout_arg(util: UtilFixture, capsys: pytest.CaptureFi
 
 
 @pytest.mark.parametrize(
-    "version_filepath, version_regex, version_file_content",
+    ("version_filepath", "version_regex", "version_file_content"),
     [
         pytest.param(
             "pyproject.toml",
@@ -779,7 +771,7 @@ def test_bump_manual_version_disallows_major_version_zero(util: UtilFixture):
 
 
 @pytest.mark.parametrize(
-    "initial_version, expected_version_after_bump",
+    ("initial_version", "expected_version_after_bump"),
     [
         ("1", "1.1.0"),
         ("1.2", "1.3.0"),
@@ -794,18 +786,18 @@ def test_bump_version_with_less_components_in_config(
     tmp_commitizen_project = tmp_commitizen_project_initial(version=initial_version)
     util.run_cli("bump", "--yes")
 
-    tag_exists = git.tag_exist(expected_version_after_bump)
-    assert tag_exists is True
+    assert git.tag_exist(expected_version_after_bump) is True
 
     for version_file in [
         tmp_commitizen_project.join("__version__.py"),
         tmp_commitizen_project.join("pyproject.toml"),
     ]:
-        with open(version_file) as f:
-            assert expected_version_after_bump in f.read()
+        assert expected_version_after_bump in Path(version_file).read_text(
+            encoding="utf-8"
+        )
 
 
-@pytest.mark.parametrize("commit_msg", ("feat: new file", "feat(user): new file"))
+@pytest.mark.parametrize("commit_msg", ["feat: new file", "feat(user): new file"])
 def test_bump_with_pre_bump_hooks(
     commit_msg, mocker: MockFixture, tmp_commitizen_project, util: UtilFixture
 ):
@@ -813,11 +805,11 @@ def test_bump_with_pre_bump_hooks(
     post_bump_hook = "scripts/post_bump_hook.sh"
 
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
-    tmp_commitizen_cfg_file.write(
-        f"{tmp_commitizen_cfg_file.read()}\n"
-        f'pre_bump_hooks = ["{pre_bump_hook}"]\n'
-        f'post_bump_hooks = ["{post_bump_hook}"]\n'
-    )
+    with Path(tmp_commitizen_cfg_file).open("a", encoding="utf-8") as f:
+        f.write(
+            f'\npre_bump_hooks = ["{pre_bump_hook}"]\n'
+            f'post_bump_hooks = ["{post_bump_hook}"]\n'
+        )
 
     run_mock = mocker.Mock()
     mocker.patch.object(hooks, "run", run_mock)
@@ -864,11 +856,11 @@ def test_bump_with_hooks_and_increment(
     post_bump_hook = "scripts/post_bump_hook.sh"
 
     tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
-    tmp_commitizen_cfg_file.write(
-        f"{tmp_commitizen_cfg_file.read()}\n"
-        f'pre_bump_hooks = ["{pre_bump_hook}"]\n'
-        f'post_bump_hooks = ["{post_bump_hook}"]\n'
-    )
+    with Path(tmp_commitizen_cfg_file).open("a", encoding="utf-8") as f:
+        f.write(
+            f'\npre_bump_hooks = ["{pre_bump_hook}"]\n'
+            f'post_bump_hooks = ["{post_bump_hook}"]\n'
+        )
 
     run_mock = mocker.Mock()
     mocker.patch.object(hooks, "run", run_mock)
@@ -914,16 +906,14 @@ def test_bump_command_prerelease_scheme_via_cli(
     assert git.tag_exist("0.2.0-a0") is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        with open(version_file) as f:
-            assert "0.2.0-a0" in f.read()
+        assert "0.2.0-a0" in Path(version_file).read_text(encoding="utf-8")
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
     util.run_cli("bump", "--yes")
     assert git.tag_exist("0.2.0") is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        with open(version_file) as f:
-            assert "0.2.0" in f.read()
+        assert "0.2.0" in Path(version_file).read_text(encoding="utf-8")
 
 
 def test_bump_command_prerelease_scheme_via_config(
@@ -939,23 +929,20 @@ def test_bump_command_prerelease_scheme_via_config(
     assert git.tag_exist("0.2.0-a0") is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        with open(version_file) as f:
-            assert "0.2.0-a0" in f.read()
+        assert "0.2.0-a0" in Path(version_file).read_text(encoding="utf-8")
 
     util.run_cli("bump", "--prerelease", "alpha", "--yes")
     assert git.tag_exist("0.2.0-a1") is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        with open(version_file) as f:
-            assert "0.2.0-a1" in f.read()
+        assert "0.2.0-a1" in Path(version_file).read_text(encoding="utf-8")
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
     util.run_cli("bump", "--yes")
     assert git.tag_exist("0.2.0") is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        with open(version_file) as f:
-            assert "0.2.0" in f.read()
+        assert "0.2.0" in Path(version_file).read_text(encoding="utf-8")
 
 
 def test_bump_command_prerelease_scheme_check_old_tags(
@@ -971,29 +958,26 @@ def test_bump_command_prerelease_scheme_check_old_tags(
     assert git.tag_exist("v0.2.0-a0") is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        with open(version_file) as f:
-            assert "0.2.0-a0" in f.read()
+        assert "0.2.0-a0" in Path(version_file).read_text(encoding="utf-8")
 
     util.run_cli("bump", "--prerelease", "alpha")
     assert git.tag_exist("v0.2.0-a1") is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        with open(version_file) as f:
-            assert "0.2.0-a1" in f.read()
+        assert "0.2.0-a1" in Path(version_file).read_text(encoding="utf-8")
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
     util.run_cli("bump")
     assert git.tag_exist("v0.2.0") is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        with open(version_file) as f:
-            assert "0.2.0" in f.read()
+        assert "0.2.0" in Path(version_file).read_text(encoding="utf-8")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.usefixtures("use_cz_semver")
 @pytest.mark.parametrize(
-    "message, expected_tag",
+    ("message", "expected_tag"),
     [
         ("minor: add users", "0.2.0"),
         ("patch: bug affecting users", "0.1.1"),
@@ -1009,7 +993,7 @@ def test_bump_with_plugin(util: UtilFixture, message: str, expected_tag: str):
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.usefixtures("use_cz_semver")
 @pytest.mark.parametrize(
-    "message, expected_tag",
+    ("message", "expected_tag"),
     [
         ("minor: add users", "0.2.0"),
         ("patch: bug affecting users", "0.1.1"),
@@ -1061,14 +1045,14 @@ def test_bump_command_version_scheme_priority_over_version_type(util: UtilFixtur
 
 
 @pytest.mark.parametrize(
-    "arg, cfg, expected",
-    (
+    ("arg", "cfg", "expected"),
+    [
         pytest.param("", "", "default", id="default"),
         pytest.param("", "changelog.cfg", "from config", id="from-config"),
         pytest.param(
             "--template=changelog.cmd", "changelog.cfg", "from cmd", id="from-command"
         ),
-    ),
+    ],
 )
 def test_bump_template_option_precedence(
     tmp_commitizen_project: Path,
@@ -1229,7 +1213,7 @@ def test_bump_get_next_update_changelog_on_bump(
     util: UtilFixture, capsys: pytest.CaptureFixture, config_path: Path
 ):
     util.create_file_and_commit("feat: new file")
-    with open(config_path, "a", encoding="utf-8") as fp:
+    with config_path.open("a", encoding="utf-8") as fp:
         fp.write("update_changelog_on_bump = true\n")
 
     with pytest.raises(DryRunExit):
@@ -1439,12 +1423,12 @@ def test_is_initial_tag(mocker: MockFixture, tmp_commitizen_project, util: UtilF
 def test_changelog_config_flag_merge_prerelease(
     mocker: MockFixture,
     util: UtilFixture,
-    changelog_path: str,
-    config_path: str,
+    changelog_path: Path,
+    config_path: Path,
     file_regression: FileRegressionFixture,
     test_input: str,
 ):
-    with open(config_path, "a") as f:
+    with config_path.open("a") as f:
         f.write("changelog_merge_prerelease = true\n")
         f.write("update_changelog_on_bump = true\n")
         f.write("annotated_tag = true\n")
@@ -1459,8 +1443,7 @@ def test_changelog_config_flag_merge_prerelease(
 
     util.run_cli("bump", "--changelog")
 
-    with open(changelog_path) as f:
-        out = f.read()
+    out = changelog_path.read_text()
 
     file_regression.check(out, extension=".md")
 
@@ -1470,12 +1453,12 @@ def test_changelog_config_flag_merge_prerelease(
 @pytest.mark.freeze_time("2025-01-01")
 def test_changelog_config_flag_merge_prerelease_only_prerelease_present(
     util: UtilFixture,
-    changelog_path: str,
-    config_path: str,
+    changelog_path: Path,
+    config_path: Path,
     file_regression: FileRegressionFixture,
     test_input: str,
 ):
-    with open(config_path, "a") as f:
+    with config_path.open("a") as f:
         f.write("changelog_merge_prerelease = true\n")
         f.write("update_changelog_on_bump = true\n")
         f.write("annotated_tag = true\n")
@@ -1489,8 +1472,7 @@ def test_changelog_config_flag_merge_prerelease_only_prerelease_present(
 
     util.run_cli("bump", "--changelog")
 
-    with open(changelog_path) as f:
-        out = f.read()
+    out = changelog_path.read_text()
 
     file_regression.check(out, extension=".md")
 
@@ -1503,3 +1485,58 @@ def test_bump_deprecate_files_only(util: UtilFixture):
         pytest.raises(ExpectedExit),
     ):
         util.run_cli("bump", "--yes", "--files-only")
+
+
+@pytest.mark.parametrize(
+    ("prerelease", "merge"),
+    [
+        pytest.param(True, "true", id="with_prerelease_merge"),
+        pytest.param(True, "false", id="with_prerelease_no_merge"),
+        pytest.param(False, "true", id="without_prerelease"),
+    ],
+)
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2025-01-01")
+def test_changelog_merge_preserves_header(
+    mocker: MockFixture,
+    util: UtilFixture,
+    changelog_path: Path,
+    config_path: Path,
+    file_regression: FileRegressionFixture,
+    prerelease: bool,
+    merge: str,
+):
+    """Test that merge_prerelease preserves existing changelog header."""
+    with config_path.open("a") as f:
+        f.write(f"changelog_merge_prerelease = {merge}\n")
+        f.write("update_changelog_on_bump = true\n")
+        f.write("annotated_tag = true\n")
+
+    # Create initial version with changelog that has a header
+    util.create_file_and_commit("irrelevant commit")
+    mocker.patch("commitizen.git.GitTag.date", "1970-01-01")
+    git.tag("0.1.0")
+
+    # Create a changelog with a header manually
+    changelog_path.write_text(
+        dedent("""\
+            # Changelog
+
+            All notable changes to this project will be documented here.
+
+            ## 0.1.0 (1970-01-01)
+            """)
+    )
+
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
+
+    if prerelease:
+        util.run_cli("bump", "--prerelease", "alpha", "--yes")
+
+    util.create_file_and_commit("feat: new feature right before the bump")
+    util.run_cli("bump", "--changelog")
+
+    out = changelog_path.read_text()
+
+    file_regression.check(out, extension=".md")

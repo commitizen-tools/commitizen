@@ -29,7 +29,7 @@ def test_version_for_showing_project_version(config, capsys):
     assert "v0.0.1" in captured.out
 
 
-@pytest.mark.parametrize("project", (True, False))
+@pytest.mark.parametrize("project", [True, False])
 def test_version_for_showing_commitizen_version(config, capsys, project: bool):
     commands.Version(
         config,
@@ -73,7 +73,7 @@ def test_version_for_showing_commitizen_system_info(config, capsys):
     assert f"Operating System: {platform.system()}" in captured.out
 
 
-@pytest.mark.parametrize("project", (True, False))
+@pytest.mark.parametrize("project", [True, False])
 @pytest.mark.usefixtures("tmp_git_project")
 def test_version_use_version_provider(
     mocker: MockerFixture,
@@ -104,7 +104,7 @@ def test_version_use_version_provider(
 
 
 @pytest.mark.parametrize(
-    "version, expected_version",
+    ("version", "expected_version"),
     [
         ("1.0.0", "1\n"),
         ("2.1.3", "2\n"),
@@ -126,7 +126,7 @@ def test_version_just_major(config, capsys, version: str, expected_version: str)
 
 
 @pytest.mark.parametrize(
-    "version, expected_version",
+    ("version", "expected_version"),
     [
         ("1.0.0", "0\n"),
         ("2.1.3", "1\n"),
@@ -147,7 +147,7 @@ def test_version_just_minor(config, capsys, version: str, expected_version: str)
     assert expected_version == captured.out
 
 
-@pytest.mark.parametrize("argument", ("major", "minor"))
+@pytest.mark.parametrize("argument", ["major", "minor"])
 def test_version_just_major_error_no_project(config, capsys, argument: str):
     commands.Version(
         config,
@@ -164,7 +164,7 @@ def test_version_just_major_error_no_project(config, capsys, argument: str):
 
 
 @pytest.mark.parametrize(
-    "version, tag_format, expected_output",
+    ("version", "tag_format", "expected_output"),
     [
         ("1.2.3", "v$version", "v1.2.3\n"),
         ("1.2.3", "$version", "1.2.3\n"),

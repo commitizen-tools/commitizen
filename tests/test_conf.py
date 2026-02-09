@@ -247,7 +247,7 @@ class TestReadCfg:
 
 class TestWarnMultipleConfigFiles:
     @pytest.mark.parametrize(
-        "files,expected_path",
+        ("files", "expected_path"),
         [
             # Same directory, different file types
             ([(".cz.toml", TOML_STR), (".cz.json", JSON_STR)], ".cz.toml"),
@@ -283,7 +283,7 @@ class TestWarnMultipleConfigFiles:
             assert cfg.path == Path(expected_path)
 
     @pytest.mark.parametrize(
-        "config_file,content",
+        ("config_file", "content"),
         [
             (".cz.json", JSON_STR),
             (".cz.toml", TOML_STR),
@@ -334,7 +334,7 @@ class TestWarnMultipleConfigFiles:
             assert cfg.settings == json_cfg_expected.settings
 
     @pytest.mark.parametrize(
-        "config_file, content, with_git",
+        ("config_file", "content", "with_git"),
         [
             (file, content, with_git)
             for file, content in [
@@ -393,8 +393,7 @@ class TestTomlConfig:
         toml_config = TomlConfig(data="", path=path)
         toml_config.init_empty_config_content()
 
-        with open(path, encoding="utf-8") as toml_file:
-            assert toml_file.read() == "[tool.commitizen]\n"
+        assert Path(path).read_text(encoding="utf-8") == "[tool.commitizen]\n"
 
     def test_init_empty_config_content_with_existing_content(self, tmpdir, config_file):
         existing_content = "[tool.black]\nline-length = 88\n"
@@ -404,8 +403,10 @@ class TestTomlConfig:
         toml_config = TomlConfig(data="", path=path)
         toml_config.init_empty_config_content()
 
-        with open(path, encoding="utf-8") as toml_file:
-            assert toml_file.read() == existing_content + "\n[tool.commitizen]\n"
+        assert (
+            Path(path).read_text(encoding="utf-8")
+            == existing_content + "\n[tool.commitizen]\n"
+        )
 
     def test_init_with_invalid_config_content(self, tmpdir, config_file):
         existing_content = "invalid toml content"
@@ -429,7 +430,7 @@ class TestJsonConfig:
         json_config = JsonConfig(data="{}", path=path)
         json_config.init_empty_config_content()
 
-        with open(path, encoding="utf-8") as json_file:
+        with path.open(encoding="utf-8") as json_file:
             assert json.load(json_file) == {"commitizen": {}}
 
     def test_init_with_invalid_config_content(self, tmpdir, config_file):
@@ -454,7 +455,7 @@ class TestYamlConfig:
         yaml_config = YAMLConfig(data="{}", path=path)
         yaml_config.init_empty_config_content()
 
-        with open(path) as yaml_file:
+        with path.open() as yaml_file:
             assert yaml.safe_load(yaml_file) == {"commitizen": {}}
 
     def test_init_with_invalid_content(self, tmpdir, config_file):

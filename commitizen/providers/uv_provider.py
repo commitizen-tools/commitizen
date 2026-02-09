@@ -26,15 +26,21 @@ class UvProvider(TomlProvider):
         self.set_lock_version(version)
 
     def set_lock_version(self, version: str) -> None:
-        pyproject_toml_content = tomlkit.parse(self.file.read_text())
+        pyproject_toml_content = tomlkit.parse(
+            self.file.read_text(encoding=self._get_encoding())
+        )
         project_name = pyproject_toml_content["project"]["name"]  # type: ignore[index]
         normalized_project_name = canonicalize_name(str(project_name))
 
-        document = tomlkit.parse(self.lock_file.read_text())
+        document = tomlkit.parse(
+            self.lock_file.read_text(encoding=self._get_encoding())
+        )
 
         packages: tomlkit.items.AoT = document["package"]  # type: ignore[assignment]
         for i, package in enumerate(packages):
             if package["name"] == normalized_project_name:
                 document["package"][i]["version"] = version  # type: ignore[index]
                 break
-        self.lock_file.write_text(tomlkit.dumps(document))
+        self.lock_file.write_text(
+            tomlkit.dumps(document), encoding=self._get_encoding()
+        )

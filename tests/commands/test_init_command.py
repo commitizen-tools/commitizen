@@ -9,7 +9,6 @@ import yaml
 
 from commitizen import cmd, commands
 from commitizen.__version__ import __version__
-from commitizen.cz import registry
 from commitizen.exceptions import InitFailedError, NoAnswersError
 
 if TYPE_CHECKING:
@@ -80,8 +79,7 @@ def test_init_without_setup_pre_commit_hook(
     with tmpdir.as_cwd():
         commands.Init(config)()
 
-        with open("pyproject.toml", encoding="utf-8") as toml_file:
-            config_data = toml_file.read()
+        config_data = Path("pyproject.toml").read_text(encoding="utf-8")
         assert config_data == expected_config
 
         assert not Path(pre_commit_config_filename).exists()
@@ -157,22 +155,22 @@ def check_cz_config(config_filepath: str):
     """
     Check the content of commitizen config is as expected
     """
-    with open(config_filepath) as file:
-        if "json" in config_filepath:
-            assert json.load(file) == EXPECTED_DICT_CONFIG
-        elif "yaml" in config_filepath:
-            assert yaml.load(file, Loader=yaml.FullLoader) == EXPECTED_DICT_CONFIG
-        else:
-            config_data = file.read()
-            assert config_data == expected_config
+    content = Path(config_filepath).read_text(encoding="utf-8")
+    if "json" in config_filepath:
+        assert json.loads(content) == EXPECTED_DICT_CONFIG
+    elif "yaml" in config_filepath:
+        assert yaml.load(content, Loader=yaml.FullLoader) == EXPECTED_DICT_CONFIG
+    else:
+        assert content == expected_config
 
 
 def check_pre_commit_config(expected: list[dict[str, Any]]):
     """
     Check the content of pre-commit config is as expected
     """
-    with open(pre_commit_config_filename) as pre_commit_file:
-        pre_commit_config_data = yaml.safe_load(pre_commit_file.read())
+    pre_commit_config_data = yaml.safe_load(
+        Path(pre_commit_config_filename).read_text(encoding="utf-8")
+    )
     assert pre_commit_config_data == {"repos": expected}
 
 
@@ -296,8 +294,9 @@ def test_init_with_confirmed_tag_format(
 
     with tmpdir.as_cwd():
         commands.Init(config)()
-        with open("pyproject.toml", encoding="utf-8") as toml_file:
-            assert 'tag_format = "v$version"' in toml_file.read()
+        assert 'tag_format = "v$version"' in Path("pyproject.toml").read_text(
+            encoding="utf-8"
+        )
 
 
 def test_init_with_no_existing_tags(config: BaseConfig, mocker: MockFixture, tmpdir):
@@ -318,8 +317,7 @@ def test_init_with_no_existing_tags(config: BaseConfig, mocker: MockFixture, tmp
 
     with tmpdir.as_cwd():
         commands.Init(config)()
-        with open("pyproject.toml", encoding="utf-8") as toml_file:
-            assert 'version = "0.0.1"' in toml_file.read()
+        assert 'version = "0.0.1"' in Path("pyproject.toml").read_text(encoding="utf-8")
 
 
 def test_init_with_no_existing_latest_tag(
@@ -341,8 +339,7 @@ def test_init_with_no_existing_latest_tag(
 
     with tmpdir.as_cwd():
         commands.Init(config)()
-        with open("pyproject.toml", encoding="utf-8") as toml_file:
-            assert 'version = "0.0.1"' in toml_file.read()
+        assert 'version = "0.0.1"' in Path("pyproject.toml").read_text(encoding="utf-8")
 
 
 def test_init_with_existing_tags(config: BaseConfig, mocker: MockFixture, tmpdir):
@@ -365,8 +362,7 @@ def test_init_with_existing_tags(config: BaseConfig, mocker: MockFixture, tmpdir
 
     with tmpdir.as_cwd():
         commands.Init(config)()
-        with open("pyproject.toml", encoding="utf-8") as toml_file:
-            assert 'version = "1.0.0"' in toml_file.read()
+        assert 'version = "1.0.0"' in Path("pyproject.toml").read_text(encoding="utf-8")
 
 
 def test_init_with_valid_tag_selection(config: BaseConfig, mocker: MockFixture, tmpdir):
@@ -394,10 +390,9 @@ def test_init_with_valid_tag_selection(config: BaseConfig, mocker: MockFixture, 
 
     with tmpdir.as_cwd():
         commands.Init(config)()
-        with open("pyproject.toml", encoding="utf-8") as toml_file:
-            content = toml_file.read()
-            assert 'version = "0.9.0"' in content
-            assert 'version_scheme = "semver"' in content
+        content = Path("pyproject.toml").read_text(encoding="utf-8")
+        assert 'version = "0.9.0"' in content
+        assert 'version_scheme = "semver"' in content
 
 
 def test_init_configuration_settings(tmpdir, mocker: MockFixture, config: BaseConfig):
@@ -418,8 +413,7 @@ def test_init_configuration_settings(tmpdir, mocker: MockFixture, config: BaseCo
     with tmpdir.as_cwd():
         commands.Init(config)()
 
-        with open("pyproject.toml", encoding="utf-8") as toml_file:
-            config_data = toml_file.read()
+        config_data = Path("pyproject.toml").read_text(encoding="utf-8")
 
         # Verify all expected settings are present
         assert 'name = "cz_conventional_commits"' in config_data
@@ -450,8 +444,7 @@ def test_init_configuration_with_version_provider(
     with tmpdir.as_cwd():
         commands.Init(config)()
 
-        with open("pyproject.toml", encoding="utf-8") as toml_file:
-            config_data = toml_file.read()
+        config_data = Path("pyproject.toml").read_text(encoding="utf-8")
 
         # Verify version provider is set instead of version
         assert 'name = "cz_conventional_commits"' in config_data
@@ -465,20 +458,18 @@ def test_init_configuration_with_version_provider(
         )  # Version should not be set when using version_provider
 
 
-def test_construct_name_choice_with_description(
-    config: BaseConfig, mocker: MockFixture
-):
+def test_construct_name_choice_from_registry(config: BaseConfig):
     """Test the construction of cz name choices with descriptions."""
-    init = commands.Init(config)
-    # mock the registry to have only one cz for testing
-    mocker.patch.dict(
-        "commitizen.cz.registry",
-        {"cz_conventional_commits": registry["cz_conventional_commits"]},
-        clear=True,
+    choices = commands.Init(config)._construct_name_choices_from_registry()
+    assert choices[0].title == "cz_conventional_commits"
+    assert choices[0].value == "cz_conventional_commits"
+    assert choices[0].description == "<type>(<scope>): <subject>"
+    assert choices[1].title == "cz_customize"
+    assert choices[1].value == "cz_customize"
+    assert choices[1].description is None
+    assert choices[2].title == "cz_jira"
+    assert choices[2].value == "cz_jira"
+    assert (
+        choices[2].description
+        == "<ignored text> <ISSUE_KEY> <ignored text> #<COMMAND> <optional COMMAND_ARGUMENTS>"
     )
-    choices = init._construct_name_choice_with_description()
-    assert len(choices) == 1
-    choice = choices[0]
-    assert choice.title == "cz_conventional_commits"
-    assert choice.value == "cz_conventional_commits"
-    assert choice.description == "<type>(<scope>): <subject>"

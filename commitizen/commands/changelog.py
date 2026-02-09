@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import os
-import os.path
 from difflib import SequenceMatcher
 from operator import itemgetter
 from pathlib import Path
@@ -66,7 +64,7 @@ class Changelog:
                 f"or the setting `changelog_file` in {self.config.path}"
             )
         self.file_name = (
-            os.path.join(str(self.config.path.parent), changelog_file_name)
+            Path(self.config.path.parent, changelog_file_name).as_posix()
             if self.config.path is not None
             else changelog_file_name
         )
@@ -229,16 +227,32 @@ class Changelog:
             latest_full_release_info = self.changelog_format.get_latest_full_release(
                 self.file_name
             )
-            if latest_full_release_info.index:
-                changelog_meta.unreleased_start = 0
+            # Determine if there are prereleases to merge:
+            # - Only prereleases in changelog (no full release found), OR
+            # - First version in changelog is before first full release (prereleases exist)
+            if latest_full_release_info.index is not None and (
+                latest_full_release_info.name is None
+                or (
+                    changelog_meta.latest_version_position is not None
+                    and changelog_meta.latest_version_position
+                    < latest_full_release_info.index
+                )
+            ):
+                # Use the existing unreleased_start if available (from get_metadata()).
+                # Otherwise, use the position of the first version entry (prerelease)
+                # to preserve the changelog header.
+                if changelog_meta.unreleased_start is None:
+                    changelog_meta.unreleased_start = (
+                        changelog_meta.latest_version_position
+                    )
                 changelog_meta.latest_version_position = latest_full_release_info.index
                 changelog_meta.unreleased_end = latest_full_release_info.index - 1
 
-            start_rev = latest_full_release_info.name or ""
-            if not start_rev and latest_full_release_info.index:
-                # Only pre-releases in changelog
-                changelog_meta.latest_version_position = None
-                changelog_meta.unreleased_end = latest_full_release_info.index + 1
+                start_rev = latest_full_release_info.name or ""
+                if not start_rev:
+                    # Only pre-releases in changelog
+                    changelog_meta.latest_version_position = None
+                    changelog_meta.unreleased_end = latest_full_release_info.index + 1
 
         commits = git.get_commits(start=start_rev, end=end_rev, args="--topo-order")
         if not commits and (
@@ -268,6 +282,7 @@ class Changelog:
             self.cz.template_loader,
             self.template,
             **{
+                "incremental": self.incremental,  # extra variable for the template
                 **self.cz.template_extras,
                 **self.config.settings["extras"],
                 **self.extras,
@@ -282,9 +297,10 @@ class Changelog:
             raise DryRunExit()
 
         lines = []
-        if self.incremental and os.path.isfile(self.file_name):
-            with open(
-                self.file_name, encoding=self.config.settings["encoding"]
+        changelog_path = Path(self.file_name)
+        if self.incremental and changelog_path.is_file():
+            with changelog_path.open(
+                encoding=self.config.settings["encoding"]
             ) as changelog_file:
                 lines = changelog_file.readlines()
 

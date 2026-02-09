@@ -5,15 +5,18 @@ from commitizen.exceptions import CharacterSetDecodeError
 
 
 # https://docs.python.org/3/howto/unicode.html
-def test_valid_utf8_encoded_strings():
-    valid_strings = (
+@pytest.mark.parametrize(
+    "s",
+    [
         "",
         "ascii",
         "🤦🏻‍♂️",
         "﷽",
         "\u0000",
-    )
-    assert all(s == cmd._try_decode(s.encode("utf-8")) for s in valid_strings)
+    ],
+)
+def test_valid_utf8_encoded_strings(s: str):
+    assert s == cmd._try_decode(s.encode("utf-8"))
 
 
 # A word of caution: just because an encoding can be guessed for a given
@@ -22,24 +25,25 @@ def test_valid_utf8_encoded_strings():
 # https://docs.python.org/3/library/codecs.html#standard-encodings
 
 
-# Pick a random, non-utf8 encoding to test.
-def test_valid_cp1250_encoded_strings():
-    valid_strings = (
+@pytest.mark.parametrize(
+    "s",
+    [
         "",
         "ascii",
         "äöüß",
         "ça va",
         "jak se máte",
-    )
-    for s in valid_strings:
-        assert cmd._try_decode(s.encode("cp1250")) or True
+    ],
+)
+def test_valid_cp1250_encoded_strings(s: str):
+    """Pick a random, non-utf8 encoding to test."""
+    # We just want to make sure it doesn't raise an exception
+    cmd._try_decode(s.encode("cp1250"))
 
 
 def test_invalid_bytes():
-    invalid_bytes = (b"\x73\xe2\x9d\xff\x00",)
-    for s in invalid_bytes:
-        with pytest.raises(CharacterSetDecodeError):
-            cmd._try_decode(s)
+    with pytest.raises(CharacterSetDecodeError):
+        cmd._try_decode(b"\x73\xe2\x9d\xff\x00")
 
 
 def test_always_fail_decode():

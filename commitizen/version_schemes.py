@@ -185,15 +185,10 @@ class BaseVersion(_BaseVersion):
         # https://semver.org/#spec-item-11
         if self.is_prerelease and self.pre:
             prerelease = max(prerelease, self.pre[0])
+            if prerelease.startswith(self.pre[0]):
+                offset = self.pre[1] + 1
 
-        # version.pre is needed for mypy check
-        if self.is_prerelease and self.pre and prerelease.startswith(self.pre[0]):
-            prev_prerelease: int = self.pre[1]
-            new_prerelease_number = prev_prerelease + 1
-        else:
-            new_prerelease_number = offset
-        pre_version = f"{prerelease}{new_prerelease_number}"
-        return pre_version
+        return f"{prerelease}{offset}"
 
     def generate_devrelease(self, devrelease: int | None) -> str:
         """Generate devrelease

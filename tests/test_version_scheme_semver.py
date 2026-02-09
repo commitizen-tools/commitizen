@@ -7,7 +7,7 @@ from tests.utils import VersionSchemeTestArgs
 
 
 @pytest.mark.parametrize(
-    "version_args, expected_version",
+    ("version_args", "expected_version"),
     [
         (
             VersionSchemeTestArgs(
@@ -601,7 +601,7 @@ def test_bump_semver_version(
 
 
 @pytest.mark.parametrize(
-    "version_args, expected_version",
+    ("version_args", "expected_version"),
     [
         (
             VersionSchemeTestArgs(
@@ -819,7 +819,7 @@ def test_bump_semver_version_force(
 
 
 @pytest.mark.parametrize(
-    "version_args, expected_version",
+    ("version_args", "expected_version"),
     [
         (
             VersionSchemeTestArgs(

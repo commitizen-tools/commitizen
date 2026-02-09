@@ -4,13 +4,13 @@ import json
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, ClassVar
 
-from commitizen.providers.base_provider import VersionProvider
+from commitizen.providers.base_provider import JsonProvider
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
 
-class NpmProvider(VersionProvider):
+class NpmProvider(JsonProvider):
     """
     npm package.json and package-lock.json version management
     """
@@ -36,29 +36,39 @@ class NpmProvider(VersionProvider):
         """
         Get the current version from package.json
         """
-        package_document = json.loads(self.package_file.read_text())
+        package_document = json.loads(
+            self.package_file.read_text(encoding=self._get_encoding())
+        )
         return self.get_package_version(package_document)
 
     def set_version(self, version: str) -> None:
         package_document = self.set_package_version(
-            json.loads(self.package_file.read_text()), version
+            json.loads(self.package_file.read_text(encoding=self._get_encoding())),
+            version,
         )
         self.package_file.write_text(
-            json.dumps(package_document, indent=self.indent) + "\n"
+            json.dumps(package_document, indent=self.indent) + "\n",
+            encoding=self._get_encoding(),
         )
-        if self.lock_file.exists():
+        if self.lock_file.is_file():
             lock_document = self.set_lock_version(
-                json.loads(self.lock_file.read_text()), version
+                json.loads(self.lock_file.read_text(encoding=self._get_encoding())),
+                version,
             )
             self.lock_file.write_text(
-                json.dumps(lock_document, indent=self.indent) + "\n"
+                json.dumps(lock_document, indent=self.indent) + "\n",
+                encoding=self._get_encoding(),
             )
-        if self.shrinkwrap_file.exists():
+        if self.shrinkwrap_file.is_file():
             shrinkwrap_document = self.set_shrinkwrap_version(
-                json.loads(self.shrinkwrap_file.read_text()), version
+                json.loads(
+                    self.shrinkwrap_file.read_text(encoding=self._get_encoding())
+                ),
+                version,
             )
             self.shrinkwrap_file.write_text(
-                json.dumps(shrinkwrap_document, indent=self.indent) + "\n"
+                json.dumps(shrinkwrap_document, indent=self.indent) + "\n",
+                encoding=self._get_encoding(),
             )
 
     def get_package_version(self, document: Mapping[str, str]) -> str:

@@ -579,8 +579,7 @@ def tags() -> list[git.GitTag]:
 @pytest.fixture
 def changelog_content(data_dir: Path) -> str:
     changelog = data_dir / "CHANGELOG_FOR_TEST.md"
-    with changelog.open(encoding="utf-8") as f:
-        return f.read()
+    return changelog.read_text(encoding="utf-8")
 
 
 def test_get_commit_tag_is_a_version(gitcommits, tags):
@@ -1153,7 +1152,7 @@ COMMITS_TREE_AFTER_MERGED_PRERELEASES = (
 )
 
 
-@pytest.mark.parametrize("merge_prereleases", (True, False))
+@pytest.mark.parametrize("merge_prereleases", [True, False])
 def test_generate_tree_from_commits(gitcommits, tags, merge_prereleases):
     parser = ConventionalCommitsCz.commit_parser
     changelog_pattern = ConventionalCommitsCz.bump_pattern
@@ -1193,8 +1192,8 @@ def test_generate_tree_from_commits_with_no_commits(tags):
 
 
 @pytest.mark.parametrize(
-    "change_type_order, expected_reordering",
-    (
+    ("change_type_order", "expected_reordering"),
+    [
         ([], {}),
         (
             ["BREAKING CHANGE", "refactor"],
@@ -1209,7 +1208,7 @@ def test_generate_tree_from_commits_with_no_commits(tags):
                 },
             },
         ),
-    ),
+    ],
 )
 def test_generate_ordered_changelog_tree(change_type_order, expected_reordering):
     tree = changelog.generate_ordered_changelog_tree(COMMITS_TREE, change_type_order)

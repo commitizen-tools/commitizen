@@ -30,7 +30,7 @@ def test_from_str_with_invalid_values():
     """Test from_str with invalid values."""
     with pytest.raises(KeyError):
         ExitCode.from_str("invalid_name")
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="is not a valid ExitCode"):
         ExitCode.from_str("999")  # Out of range decimal
     with pytest.raises(KeyError):
         ExitCode.from_str("")

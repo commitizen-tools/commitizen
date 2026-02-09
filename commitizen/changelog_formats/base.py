@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import os
 from abc import ABCMeta
+from pathlib import Path
 from typing import IO, TYPE_CHECKING, Any, ClassVar
 
 from commitizen.changelog import IncrementalMergeInfo, Metadata
@@ -36,12 +36,11 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
         )
 
     def get_metadata(self, filepath: str) -> Metadata:
-        if not os.path.isfile(filepath):
+        file = Path(filepath)
+        if not file.is_file():
             return Metadata()
 
-        with open(
-            filepath, encoding=self.config.settings["encoding"]
-        ) as changelog_file:
+        with file.open(encoding=self.config.settings["encoding"]) as changelog_file:
             return self.get_metadata_from_file(changelog_file)
 
     def get_metadata_from_file(self, file: IO[Any]) -> Metadata:
@@ -74,12 +73,11 @@ class BaseFormat(ChangelogFormat, metaclass=ABCMeta):
         return meta
 
     def get_latest_full_release(self, filepath: str) -> IncrementalMergeInfo:
-        if not os.path.isfile(filepath):
+        file = Path(filepath)
+        if not file.is_file():
             return IncrementalMergeInfo()
 
-        with open(
-            filepath, encoding=self.config.settings["encoding"]
-        ) as changelog_file:
+        with file.open(encoding=self.config.settings["encoding"]) as changelog_file:
             return self.get_latest_full_release_from_file(changelog_file)
 
     def get_latest_full_release_from_file(self, file: IO[Any]) -> IncrementalMergeInfo:
