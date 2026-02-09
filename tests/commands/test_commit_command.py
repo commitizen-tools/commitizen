@@ -377,8 +377,8 @@ def test_commit_command_with_config_message_length_limit(
             id="wrapping",
         ),
         pytest.param(
-            "Line1 that is very long and exceeds the limit\nLine2 that is very long and exceeds the limit\nLine3 that is very long and exceeds the limit",
-            72,
+            "Line1 is shorter than the limit but has newline\nLine2 is shorter than the limit but has newline\nLine3 is shorter than the limit but has newline",
+            100,
             id="preserves_line_breaks",
         ),
         pytest.param(
@@ -400,6 +400,7 @@ def test_commit_command_body_length_limit(
     success_mock: MockType,
     commit_mock,
     mocker: MockFixture,
+    file_regression,
 ):
     """Parameterized test for body_length_limit feature with file regression."""
     mocker.patch(
@@ -417,6 +418,7 @@ def test_commit_command_body_length_limit(
     commands.Commit(config, {"body_length_limit": body_length_limit})()
     success_mock.assert_called_once()
     committed_message = commit_mock.call_args[0][0]
+    file_regression.check(committed_message, extension=".txt")
 
     lines = committed_message.split("\n")
     body_lines = lines[2:]  # Skip subject and blank line
