@@ -90,10 +90,10 @@ def test_json_provider_set_version_uses_encoding_with_encoding_fixture(
     assert isinstance(provider, ComposerProvider)
     # Update version using set_version
     provider.set_version("1.0.0")
-    
+
     # Verify the file can be read back with the same encoding
     assert provider.get_version() == "1.0.0"
-    
+
     # Verify the non-ASCII content is preserved
     content = target.read_text(encoding="utf-8")
     assert "Тест описания для проверки кодировки" in content
@@ -142,10 +142,10 @@ def test_toml_provider_set_version_uses_encoding_with_encoding_fixture(
     assert isinstance(provider, Pep621Provider)
     # Update version using set_version
     provider.set_version("1.0.0")
-    
+
     # Verify the file can be read back with the same encoding
     assert provider.get_version() == "1.0.0"
-    
+
     # Verify the non-ASCII content is preserved
     content = target.read_text(encoding="utf-8")
     assert "Новое" in content
