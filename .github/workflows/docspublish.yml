@@ -20,6 +20,8 @@ jobs:
         run: |
           uv --version
           uv sync --frozen --group base --group script
+      - name: Install VHS
+        uses: charmbracelet/vhs-action@v2
       - name: Update CLI screenshots
         run: |
           uv run --no-sync poe doc:screenshots
@@ -27,7 +29,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/images/cli_help
+          git add docs/images/cli_help docs/images/*.gif
 
           if [[ -n "$(git status --porcelain)" ]]; then
             git commit -m "docs(cli/screenshots): update CLI screenshots" -m "[skip ci]"
