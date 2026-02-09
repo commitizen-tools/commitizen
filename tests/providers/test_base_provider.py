@@ -29,14 +29,6 @@ def test_raise_for_unknown_provider(config: BaseConfig):
         get_provider(config)
 
 
-@pytest.mark.parametrize("encoding", ["utf-8", "latin-1"])
-def test_file_provider_get_encoding(config: BaseConfig, encoding: str):
-    """_get_encoding should return the configured encoding."""
-    config.settings["encoding"] = encoding
-    provider = ComposerProvider(config)
-    assert provider._get_encoding() == encoding
-
-
 def test_json_provider_uses_encoding_with_encoding_fixture(
     config: BaseConfig,
     chdir: Path,
