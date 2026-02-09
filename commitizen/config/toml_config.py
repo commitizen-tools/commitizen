@@ -26,15 +26,13 @@ class TomlConfig(BaseConfig):
         self._parse_setting(data)
 
     def contains_commitizen_section(self) -> bool:
-        with self.path.open("rb") as f:
-            config_doc = parse(f.read())
+        config_doc = parse(self.path.read_bytes())
         return config_doc.get("tool", {}).get("commitizen") is not None
 
     def init_empty_config_content(self) -> None:
         config_doc = TOMLDocument()
         if self.path.is_file():
-            with self.path.open("rb") as input_toml_file:
-                config_doc = parse(input_toml_file.read())
+            config_doc = parse(self.path.read_bytes())
 
         if config_doc.get("tool") is None:
             config_doc["tool"] = table()
@@ -46,12 +44,10 @@ class TomlConfig(BaseConfig):
             )
 
     def set_key(self, key: str, value: object) -> Self:
-        with self.path.open("rb") as f:
-            config_doc = parse(f.read())
+        config_doc = parse(self.path.read_bytes())
 
         config_doc["tool"]["commitizen"][key] = value  # type: ignore[index]
-        with self.path.open("wb") as f:
-            f.write(config_doc.as_string().encode(self._settings["encoding"]))
+        self.path.write_bytes(config_doc.as_string().encode(self._settings["encoding"]))
 
         return self
 

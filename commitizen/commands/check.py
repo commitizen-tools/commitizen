@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 import sys
+from pathlib import Path
 from typing import TYPE_CHECKING, TypedDict
 
 from commitizen import factory, git, out
@@ -116,11 +117,10 @@ class Check:
             # Get commit message from command line (--message)
             return self.commit_msg
 
-        with open(
-            self.commit_msg_file, encoding=self.config.settings["encoding"]
-        ) as commit_file:
-            # Get commit message from file (--commit-msg-file)
-            return commit_file.read()
+        # Get commit message from file (--commit-msg-file)
+        return Path(self.commit_msg_file).read_text(
+            encoding=self.config.settings["encoding"]
+        )
 
     def _get_commits(self) -> list[git.GitCommit]:
         if (msg := self._get_commit_message()) is not None:
