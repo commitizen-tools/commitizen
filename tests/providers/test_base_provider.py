@@ -88,7 +88,6 @@ def test_json_provider_set_version_uses_encoding_with_encoding_fixture(
 
     provider = get_provider(config)
     assert isinstance(provider, ComposerProvider)
-    
     # Update version using set_version
     provider.set_version("1.0.0")
     
@@ -141,7 +140,6 @@ def test_toml_provider_set_version_uses_encoding_with_encoding_fixture(
 
     provider = get_provider(config)
     assert isinstance(provider, Pep621Provider)
-    
     # Update version using set_version
     provider.set_version("1.0.0")
     
