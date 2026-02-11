@@ -252,7 +252,7 @@ known-first-party = ["commitizen", "tests"]
 convention = "google"
 
 [tool.mypy]
-files = ["commitizen", "tests"]
+files = ["commitizen", "tests", "scripts"]
 disallow_untyped_decorators = true
 disallow_subclassing_any = true
 warn_return_any = true

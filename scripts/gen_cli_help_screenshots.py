@@ -15,7 +15,7 @@ def gen_cli_help_screenshots() -> None:
 
     cz_commands = (
         command["name"] if isinstance(command["name"], str) else command["name"][0]
-        for command in data["subcommands"]["commands"]
+        for command in data["subcommands"]["commands"]  # type: ignore[index]
     )
     for cmd in chain(
         ["cz --help"], (f"cz {cz_command} --help" for cz_command in cz_commands)
