@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -68,6 +69,5 @@ class CustomizeCommitsCz(BaseCommitizen):
 
     def info(self) -> str:
         if info_path := self.custom_settings.get("info_path"):
-            with open(info_path, encoding=self.config.settings["encoding"]) as f:
-                return f.read()
+            return Path(info_path).read_text(encoding=self.config.settings["encoding"])
         return self.custom_settings.get("info") or ""

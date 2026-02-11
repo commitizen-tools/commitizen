@@ -101,8 +101,7 @@ def test_changelog_from_start(
 
     util.run_cli("changelog", "--file-name", changelog_file, "--template", template)
 
-    with open(changelog_file, encoding="utf-8") as f:
-        out = f.read()
+    out = Path(changelog_file).read_text(encoding="utf-8")
     file_regression.check(out, extension=changelog_format.ext)
 
 
@@ -136,8 +135,7 @@ def test_changelog_replacing_unreleased_using_incremental(
         template,
     )
 
-    with open(changelog_file, encoding="utf-8") as f:
-        out = f.read()
+    out = Path(changelog_file).read_text(encoding="utf-8")
 
     file_regression.check(out, extension=changelog_format.ext)
 
@@ -166,8 +164,7 @@ def test_changelog_is_persisted_using_incremental(
 
     util.run_cli("changelog", "--incremental")
 
-    with changelog_path.open(encoding="utf-8") as f:
-        out = f.read()
+    out = changelog_path.read_text(encoding="utf-8")
 
     file_regression.check(out, extension=".md")
 
@@ -197,8 +194,7 @@ def test_changelog_incremental_angular_sample(
 
     util.run_cli("changelog", "--incremental")
 
-    with changelog_path.open(encoding="utf-8") as f:
-        out = f.read()
+    out = changelog_path.read_text(encoding="utf-8")
 
     file_regression.check(out, extension=".md")
 
@@ -247,8 +243,7 @@ def test_changelog_incremental_keep_a_changelog_sample(
 
     util.run_cli("changelog", "--incremental")
 
-    with changelog_path.open(encoding="utf-8") as f:
-        out = f.read()
+    out = changelog_path.read_text(encoding="utf-8")
 
     file_regression.check(out, extension=".md")
 
@@ -419,8 +414,7 @@ def test_changelog_multiple_incremental_do_not_add_new_lines(
         util.create_file_and_commit(commit_message)
         util.run_cli("changelog", "--incremental")
 
-    with changelog_path.open(encoding="utf-8") as f:
-        out = f.read()
+    out = changelog_path.read_text(encoding="utf-8")
 
     file_regression.check(out, extension=".md")
 
@@ -437,8 +431,7 @@ def test_changelog_incremental_newline_separates_new_content_from_old(
 
     util.create_file_and_commit("feat: add more cat videos")
     util.run_cli("changelog", "--incremental")
-    with changelog_path.open(encoding="utf-8") as f:
-        out = f.read()
+    out = changelog_path.read_text(encoding="utf-8")
 
     file_regression.check(out, extension=".md")
 
@@ -568,8 +561,7 @@ def test_changelog_config_flag_increment(
 
     util.run_cli("changelog")
 
-    with changelog_path.open(encoding="utf-8") as f:
-        out = f.read()
+    out = changelog_path.read_text(encoding="utf-8")
 
     assert "this should be persisted using increment" in out
     file_regression.check(out, extension=".md")
@@ -602,8 +594,7 @@ def test_changelog_config_flag_merge_prerelease(
 
     util.run_cli("changelog")
 
-    with changelog_path.open() as f:
-        out = f.read()
+    out = changelog_path.read_text()
 
     file_regression.check(out, extension=".md")
 
@@ -653,8 +644,7 @@ def test_changelog_incremental_keep_a_changelog_sample_with_annotated_tag(
 
     util.run_cli("changelog", "--incremental")
 
-    with changelog_path.open(encoding="utf-8") as f:
-        out = f.read()
+    out = changelog_path.read_text(encoding="utf-8")
 
     file_regression.check(out, extension=".md")
 
@@ -685,8 +675,7 @@ def test_changelog_incremental_with_release_candidate_version(
 
     util.run_cli("changelog", "--incremental")
 
-    with changelog_path.open(encoding="utf-8") as f:
-        out = f.read()
+    out = changelog_path.read_text(encoding="utf-8")
 
     file_regression.check(out, extension=".md")
 
@@ -715,8 +704,7 @@ def test_changelog_incremental_with_prerelease_version_to_prerelease_version(
 
     util.run_cli("bump", "--changelog", "--prerelease", to_pre, "--yes")
 
-    with changelog_path.open() as f:
-        out = f.read()
+    out = changelog_path.read_text()
 
     file_regression.check(out, extension=".md")
 
@@ -747,8 +735,7 @@ def test_changelog_release_candidate_version_with_merge_prerelease(
 
     util.run_cli("changelog", "--merge-prerelease")
 
-    with changelog_path.open() as f:
-        out = f.read()
+    out = changelog_path.read_text()
 
     file_regression.check(out, extension=".md")
 
@@ -782,8 +769,7 @@ def test_changelog_incremental_with_merge_prerelease(
 
     util.run_cli("changelog", "--merge-prerelease", "--incremental")
 
-    with changelog_path.open() as f:
-        out = f.read()
+    out = changelog_path.read_text()
 
     file_regression.check(out, extension=".md")
 
@@ -820,8 +806,7 @@ def test_changelog_from_rev_first_version_from_arg(
     util.run_cli("bump", "--yes")
 
     util.run_cli("changelog", "0.2.0")
-    with changelog_path.open(encoding="utf-8") as f:
-        out = f.read()
+    out = changelog_path.read_text(encoding="utf-8")
 
     file_regression.check(out, extension=".md")
 
@@ -848,8 +833,7 @@ def test_changelog_from_rev_latest_version_from_arg(
 
     util.run_cli("changelog", "0.3.0")
 
-    with changelog_path.open() as f:
-        out = f.read()
+    out = changelog_path.read_text()
 
     file_regression.check(out, extension=".md")
 
@@ -903,8 +887,7 @@ def test_changelog_multiple_matching_tags(
     warning = warnings[0]
     assert "Multiple tags found for version 2.0.0" in str(warning.message)
 
-    with changelog_path.open() as f:
-        out = f.read()
+    out = changelog_path.read_text()
 
     # Ensure only one tag is rendered
     assert out.count("2.0.0") == 1
@@ -926,8 +909,7 @@ def test_changelog_from_rev_range_default_tag_format(
 
     util.run_cli("changelog", "0.3.0")
 
-    with changelog_path.open() as f:
-        out = f.read()
+    out = changelog_path.read_text()
 
     assert "new file" not in out
 
@@ -953,8 +935,7 @@ def test_changelog_from_rev_version_range_including_first_tag(
     util.run_cli("bump", "--yes")
 
     util.run_cli("changelog", "0.2.0..0.3.0")
-    with changelog_path.open(encoding="utf-8") as f:
-        out = f.read()
+    out = changelog_path.read_text(encoding="utf-8")
 
     file_regression.check(out, extension=".md")
 
@@ -983,8 +964,7 @@ def test_changelog_from_rev_version_range_from_arg(
     util.run_cli("bump", "--yes")
 
     util.run_cli("changelog", "0.3.0..0.4.0")
-    with changelog_path.open() as f:
-        out = f.read()
+    out = changelog_path.read_text()
 
     file_regression.check(out, extension=".md")
 
@@ -1053,8 +1033,7 @@ def test_changelog_from_rev_version_with_big_range_from_arg(
     util.run_cli("bump", "--yes")  # 0.6.0
 
     util.run_cli("changelog", "0.3.0..0.5.0")
-    with changelog_path.open() as f:
-        out = f.read()
+    out = changelog_path.read_text()
 
     file_regression.check(out, extension=".md")
 
@@ -1137,8 +1116,7 @@ def test_changelog_with_customized_change_type_order(
     util.run_cli("bump", "--yes")
 
     util.run_cli("changelog", "0.3.0..0.4.0")
-    with changelog_path.open() as f:
-        out = f.read()
+    out = changelog_path.read_text()
 
     file_regression.check(out, extension=".md")
 
@@ -1366,8 +1344,7 @@ def test_changelog_only_tag_matching_tag_format_included_prefix(
     util.run_cli("bump", "--changelog", "--yes")
     util.create_file_and_commit("feat: another new file")
     util.run_cli("bump", "--changelog", "--yes")
-    with changelog_path.open() as f:
-        out = f.read()
+    out = changelog_path.read_text()
     assert out.startswith("## custom0.3.0 (2021-06-11)")
     assert "## v0.2.0 (2021-06-11)" not in out
     assert "## 0.2.0  (2021-06-11)" not in out
@@ -1387,13 +1364,10 @@ def test_changelog_only_tag_matching_tag_format_included_prefix_sep(
     util.create_tag("0.2.0")
     util.create_tag("random0.2.0")
     util.run_cli("bump", "--changelog", "--yes")
-    with changelog_path.open() as f:
-        out = f.read()
     util.create_file_and_commit("feat: new version another new file")
     util.create_file_and_commit("feat: new version some new file")
     util.run_cli("bump", "--changelog")
-    with changelog_path.open() as f:
-        out = f.read()
+    out = changelog_path.read_text()
     assert out.startswith("## custom-0.3.0")
     assert "## v0.2.0" not in out
     assert "## 0.2.0" not in out
@@ -1419,8 +1393,7 @@ def test_changelog_only_tag_matching_tag_format_included_suffix(
     util.create_file_and_commit("feat: another new file")
     # bump to 0.3.0custom
     util.run_cli("bump", "--changelog", "--yes")
-    with changelog_path.open() as f:
-        out = f.read()
+    out = changelog_path.read_text()
     assert out.startswith("## 0.3.0custom (2021-06-11)")
     assert "## v0.2.0 (2021-06-11)" not in out
     assert "## 0.2.0  (2021-06-11)" not in out
@@ -1443,8 +1416,7 @@ def test_changelog_only_tag_matching_tag_format_included_suffix_sep(
     util.run_cli("bump", "--changelog", "--yes")
     util.create_file_and_commit("feat: another new file")
     util.run_cli("bump", "--changelog", "--yes")
-    with changelog_path.open() as f:
-        out = f.read()
+    out = changelog_path.read_text()
     assert out.startswith("## 0.3.0-custom (2021-06-11)")
     assert "## v0.2.0 (2021-06-11)" not in out
     assert "## 0.2.0  (2021-06-11)" not in out
@@ -1475,7 +1447,7 @@ def test_changelog_legacy_tags(
     util.create_file_and_commit("feat: another new file")
     util.create_tag("not-0.3.1")
     util.run_cli("bump", "--changelog", "--yes")
-    out = changelog_path.open().read()
+    out = changelog_path.read_text()
     assert "## v0.3.0" in out
     assert "## older-0.2.0" in out
     assert "## oldest-0.1.0" in out
@@ -1520,7 +1492,7 @@ def test_changelog_incremental_change_tag_format(
     util.create_file_and_commit("feat: another new file")
     util.create_tag("v0.3.0")
     util.run_cli("changelog", "--incremental")
-    out = changelog_path.open().read()
+    out = changelog_path.read_text()
     assert "## v0.3.0" in out
     assert "## older-0.2.0" in out
     assert "## older-0.1.0" in out
@@ -1553,8 +1525,7 @@ def test_changelog_ignored_tags(
     util.create_file_and_commit("feat: another new file")
     util.create_tag("not-ignored")
     util.run_cli("bump", "--changelog", "--yes")
-    with changelog_path.open() as f:
-        out = f.read()
+    out = changelog_path.read_text()
     assert "## ignore-0.1.0" not in out
     assert "## ignored" not in out
     assert "## not-ignored" not in out
@@ -1717,12 +1688,10 @@ def test_changelog_template_incremental_variable(
 
     util.create_file_and_commit("feat(foo): new file")
     util.run_cli("changelog", "--file-name", target)
-    with open(target, encoding="utf-8") as f:
-        out = f.read()
+    out = Path(target).read_text(encoding="utf-8")
     file_regression.check(out, extension=".md")
 
     util.create_file_and_commit("refactor(bar): another new file")
     util.run_cli("changelog", "--file-name", target, "--incremental")
-    with open(target, encoding="utf-8") as f:
-        out = f.read()
+    out = Path(target).read_text(encoding="utf-8")
     file_regression.check(out, extension=".incremental.md")

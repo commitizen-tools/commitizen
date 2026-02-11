@@ -74,5 +74,4 @@ class JiraSmartCz(BaseCommitizen):
 
     def info(self) -> str:
         filepath = Path(__file__).parent / "jira_info.txt"
-        with filepath.open(encoding=self.config.settings["encoding"]) as f:
-            return f.read()
+        return filepath.read_text(encoding=self.config.settings["encoding"])

@@ -28,8 +28,7 @@ def _resolve_config_candidates() -> list[BaseConfig]:
 
 
 def _create_config_from_path(path: Path) -> BaseConfig:
-    with path.open("rb") as f:
-        return create_config(data=f.read(), path=path)
+    return create_config(data=path.read_bytes(), path=path)
 
 
 def read_cfg(filepath: str | None = None) -> BaseConfig:
