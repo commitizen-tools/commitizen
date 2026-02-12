@@ -330,7 +330,11 @@ class Bump:
 
             changelog_cmd = Changelog(
                 self.config,
-                {**changelog_args, "file_name": self.file_name},  # type: ignore[typeddict-item]
+                {
+                    **changelog_args,  # type: ignore[typeddict-item]
+                    "file_name": self.file_name,
+                    "allow_no_commit": self.arguments["allow_no_commit"],
+                },
             )
             changelog_cmd()
             changelog_file_name = changelog_cmd.file_name
