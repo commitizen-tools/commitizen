@@ -14,7 +14,7 @@ cz init
 
 When you run `cz init`, Commitizen will guide you through an interactive setup process:
 
-![init](../images/init.gif)
+![init](../images/cli_interactive/init.gif)
 
 ## Configuration File
 

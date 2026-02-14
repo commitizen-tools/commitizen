@@ -4,7 +4,7 @@
 
 ## Overview
 
-![Using Commitizen cli](../images/demo.gif)
+![Using Commitizen cli](../images/cli_interactive/commit.gif)
 
 The `commit` command provides an interactive way to create structured commits. Use either:
 
