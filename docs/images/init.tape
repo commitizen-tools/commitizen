@@ -1,20 +1,3 @@
-# VHS documentation https://github.com/charmbracelet/vhs
-#
-# Output:
-#   Output <path>.gif               Create a GIF output at the given <path>
-
-#
-# Settings:
-#   Set FontSize <number>           Set the font size of the terminal
-#   Set FontFamily <string>         Set the font family of the terminal
-#   Set Height <number>             Set the height of the terminal
-#   Set Width <number>              Set the width of the terminal
-#   Set LetterSpacing <float>       Set the letter spacing of the terminal
-#   Set LineHeight <float>          Set the line height of the terminal
-#   Set Theme <json|string>         Set the theme of the terminal
-#   Set Padding <number>            Set the padding of the terminal
-#   Set TypingSpeed <time>          Set the typing speed of the terminal
-
 Output init.gif
 
 Require cz
