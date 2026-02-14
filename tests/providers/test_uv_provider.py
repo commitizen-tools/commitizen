@@ -87,34 +87,35 @@ dependencies = [
 )
 def test_uv_provider(
     config: BaseConfig,
-    tmpdir,
+    tmp_path,
+    monkeypatch,
     file_regression: FileRegressionFixture,
     pyproject_content: str,
 ):
-    with tmpdir.as_cwd():
-        pyproject_toml_file = tmpdir / UvProvider.filename
-        pyproject_toml_file.write_text(pyproject_content, encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    pyproject_toml_file = tmp_path / UvProvider.filename
+    pyproject_toml_file.write_text(pyproject_content, encoding="utf-8")
 
-        uv_lock_file = tmpdir / UvProvider.lock_filename
-        uv_lock_file.write_text(UV_LOCK_SIMPLIFIED, encoding="utf-8")
+    uv_lock_file = tmp_path / UvProvider.lock_filename
+    uv_lock_file.write_text(UV_LOCK_SIMPLIFIED, encoding="utf-8")
 
-        config.settings["version_provider"] = "uv"
+    config.settings["version_provider"] = "uv"
 
-        provider = get_provider(config)
-        assert isinstance(provider, UvProvider)
-        assert provider.get_version() == "4.2.1"
+    provider = get_provider(config)
+    assert isinstance(provider, UvProvider)
+    assert provider.get_version() == "4.2.1"
 
-        provider.set_version("100.100.100")
-        assert provider.get_version() == "100.100.100"
+    provider.set_version("100.100.100")
+    assert provider.get_version() == "100.100.100"
 
-        updated_pyproject_toml_content = pyproject_toml_file.read_text(encoding="utf-8")
-        updated_uv_lock_content = uv_lock_file.read_text(encoding="utf-8")
+    updated_pyproject_toml_content = pyproject_toml_file.read_text(encoding="utf-8")
+    updated_uv_lock_content = uv_lock_file.read_text(encoding="utf-8")
 
-        for content in (updated_pyproject_toml_content, updated_uv_lock_content):
-            # updated project version
-            assert "100.100.100" in content
-            # commitizen version which was the same as project version and should not be affected
-            assert "4.2.1" in content
+    for content in (updated_pyproject_toml_content, updated_uv_lock_content):
+        # updated project version
+        assert "100.100.100" in content
+        # commitizen version which was the same as project version and should not be affected
+        assert "4.2.1" in content
 
-        file_regression.check(updated_pyproject_toml_content, extension=".toml")
-        file_regression.check(updated_uv_lock_content, extension=".lock")
+    file_regression.check(updated_pyproject_toml_content, extension=".toml")
+    file_regression.check(updated_uv_lock_content, extension=".lock")
