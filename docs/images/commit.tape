@@ -1,4 +1,4 @@
-Output commit.gif
+Output cli_interactive/commit.gif
 
 Require cz
 

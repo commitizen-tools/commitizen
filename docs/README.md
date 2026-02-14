@@ -9,7 +9,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/commitizen-tools/commitizen.svg?style=flat-square)](https://codecov.io/gh/commitizen-tools/commitizen)
 [![prek](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/j178/prek/master/docs/assets/badge-v0.json&style=flat-square&color=brightgreen)](https://github.com/j178/prek)
 
-![Using Commitizen cli](images/demo.gif)
+![Using Commitizen cli](images/cli_interactive/commit.gif)
 
 ---
 

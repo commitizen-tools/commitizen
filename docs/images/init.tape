@@ -1,4 +1,4 @@
-Output init.gif
+Output cli_interactive/init.gif
 
 Require cz
 
