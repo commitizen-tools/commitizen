@@ -302,7 +302,10 @@ all.help = "Run all tasks"
 all.sequence = ["format", "lint", "check-commit", "cover"]
 
 "doc:screenshots".help = "Render documentation screenshots"
-"doc:screenshots".script = "scripts.gen_cli_help_screenshots:gen_cli_help_screenshots"
+"doc:screenshots".parallel = [
+    { script = "scripts.gen_cli_help_screenshots:gen_cli_help_screenshots" },
+    { script = "scripts.gen_cli_interactive_gifs:gen_cli_interactive_gifs" },
+]
 
 "doc:build".help = "Build the documentation"
 "doc:build".cmd = "mkdocs build"

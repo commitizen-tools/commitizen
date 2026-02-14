@@ -37,8 +37,5 @@ def _export_cmd_as_svg(cmd: str, file_path: Path) -> None:
     print("Saved to:", file_path.as_posix())
 
 
-# TODO: generate the screenshot of cz init interactive mode
-# TODO: generate the screenshot of cz commit interactive mode
-
 if __name__ == "__main__":
     gen_cli_help_screenshots()
