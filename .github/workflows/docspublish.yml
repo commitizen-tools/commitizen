@@ -16,12 +16,19 @@ jobs:
           fetch-depth: 0
       - name: Set up Python
         uses: astral-sh/setup-uv@v7
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.25.1'
+      - name: Set up VHS
+        run: |
+          sudo apt update
+          sudo apt install -y ffmpeg ttyd
+          go install github.com/charmbracelet/vhs@latest
       - name: Install dependencies
         run: |
           uv --version
           uv sync --frozen --group base --group script
-      - name: Install VHS
-        uses: charmbracelet/vhs-action@v2
       - name: Update CLI screenshots
         run: |
           uv run --no-sync poe doc:screenshots
