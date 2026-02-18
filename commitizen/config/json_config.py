@@ -27,7 +27,10 @@ class JsonConfig(BaseConfig):
 
     def contains_commitizen_section(self) -> bool:
         with self.path.open("rb") as json_file:
-            config_doc = json.load(json_file)
+            try:
+                config_doc = json.load(json_file)
+            except json.JSONDecodeError:
+                return False
         return config_doc.get("commitizen") is not None
 
     def init_empty_config_content(self) -> None:
