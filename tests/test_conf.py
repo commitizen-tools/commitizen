@@ -242,6 +242,22 @@ class TestReadCfg:
             with pytest.raises(ConfigFileIsEmpty):
                 config.read_cfg(filepath="./not_in_root/pyproject.toml")
 
+    def test_load_empty_json_from_config_argument(self, tmpdir):
+        with tmpdir.as_cwd():
+            _not_root_path = tmpdir.mkdir("not_in_root").join(".cz.json")
+            _not_root_path.write("")
+
+            with pytest.raises(ConfigFileIsEmpty):
+                config.read_cfg(filepath="./not_in_root/.cz.json")
+
+    def test_load_empty_yaml_from_config_argument(self, tmpdir):
+        with tmpdir.as_cwd():
+            _not_root_path = tmpdir.mkdir("not_in_root").join(".cz.yaml")
+            _not_root_path.write("")
+
+            with pytest.raises(ConfigFileIsEmpty):
+                config.read_cfg(filepath="./not_in_root/.cz.yaml")
+
 
 class TestWarnMultipleConfigFiles:
     @pytest.mark.parametrize(

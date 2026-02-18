@@ -35,7 +35,7 @@ class YAMLConfig(BaseConfig):
     def contains_commitizen_section(self) -> bool:
         with self.path.open("rb") as yaml_file:
             config_doc = yaml.load(yaml_file, Loader=yaml.FullLoader)
-        return config_doc.get("commitizen") is not None
+        return config_doc is not None and config_doc.get("commitizen") is not None
 
     def _parse_setting(self, data: bytes | str) -> None:
         """We expect to have a section in cz.yaml looking like
