@@ -1,3 +1,9 @@
+## v4.13.8 (2026-02-18)
+
+### Fix
+
+- **config**: fix contains_commitizen_section failing for completely empty files
+
 ## v4.13.7 (2026-02-09)
 
 ### Fix
