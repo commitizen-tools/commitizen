@@ -20,24 +20,24 @@ The Conventional Commits specification follows this structure:
 
 ### Commit Types
 
-Commit types categorize the nature of your changes. The most important types for semantic versioning are:
+Commit types categorize the nature of your changes. By default, Commitizen uses the [Angular Convention](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines) commit types. The following types affect semantic versioning:
 
 - **`feat`**: Introduces a new feature (correlates with **MINOR** version increment)
 - **`fix`**: Patches a bug (correlates with **PATCH** version increment)
+- **`refactor`**: A code change that neither fixes a bug nor adds a feature (correlates with **PATCH** version increment)
+- **`perf`**: A code change that improves performance (correlates with **PATCH** version increment)
 
-Other commonly used types include:
+The following types do **not** trigger a version bump by default:
 
-- **`docs`**: Documentation only changes
-- **`style`**: Code style changes (formatting, missing semicolons, etc.)
-- **`refactor`**: Code refactoring without changing functionality
-- **`perf`**: Performance improvements
-- **`test`**: Adding or updating tests
-- **`build`**: Changes to build system or dependencies
-- **`ci`**: Changes to CI configuration files
-- **`chore`**: Other changes that don't modify source or test files
+- **`docs`**: Documentation only changes (no version bump)
+- **`style`**: Code style changes such as formatting, missing semicolons, etc. (no version bump)
+- **`test`**: Adding or updating tests (no version bump)
+- **`build`**: Changes to build system or dependencies (no version bump)
+- **`ci`**: Changes to CI configuration files (no version bump)
+- **`chore`**: Other changes that don't modify source or test files (no version bump)
 
 !!! note
-    While `feat` and `fix` directly affect semantic versioning, other types (like `build`, `chore`, `docs`) typically don't trigger version bumps unless they include a `BREAKING CHANGE`.
+    Only `feat`, `fix`, `refactor`, and `perf` trigger version bumps by default. All other types (like `docs`, `style`, `test`, `build`, `ci`, `chore`) do not trigger version bumps unless they include a `BREAKING CHANGE`. You can customize this behavior through the [bump_map configuration](../customization/config_file.md).
 
 ### Breaking Changes
 

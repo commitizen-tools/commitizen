@@ -62,7 +62,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                     },
                     {
                         "value": "docs",
-                        "name": "docs: Documentation only changes",
+                        "name": "docs: Documentation only changes. No version bump",
                         "key": "d",
                     },
                     {
@@ -70,7 +70,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                         "name": (
                             "style: Changes that do not affect the "
                             "meaning of the code (white-space, formatting,"
-                            " missing semi-colons, etc)"
+                            " missing semi-colons, etc). No version bump"
                         ),
                         "key": "s",
                     },
@@ -78,25 +78,26 @@ class ConventionalCommitsCz(BaseCommitizen):
                         "value": "refactor",
                         "name": (
                             "refactor: A code change that neither fixes "
-                            "a bug nor adds a feature"
+                            "a bug nor adds a feature. Correlates with PATCH in SemVer"
                         ),
                         "key": "r",
                     },
                     {
                         "value": "perf",
-                        "name": "perf: A code change that improves performance",
+                        "name": "perf: A code change that improves performance. Correlates with PATCH in SemVer",
                         "key": "p",
                     },
                     {
                         "value": "test",
-                        "name": ("test: Adding missing or correcting existing tests"),
+                        "name": ("test: Adding missing or correcting existing tests. No version bump"),
                         "key": "t",
                     },
                     {
                         "value": "build",
                         "name": (
                             "build: Changes that affect the build system or "
-                            "external dependencies (example scopes: pip, docker, npm)"
+                            "external dependencies (example scopes: pip, docker, npm). "
+                            "No version bump"
                         ),
                         "key": "b",
                     },
@@ -104,7 +105,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                         "value": "ci",
                         "name": (
                             "ci: Changes to CI configuration files and "
-                            "scripts (example scopes: GitLabCI)"
+                            "scripts (example scopes: GitLabCI). No version bump"
                         ),
                         "key": "c",
                     },
