@@ -193,7 +193,7 @@ def process_commit_message(
     messages = [processed_msg] if isinstance(processed_msg, dict) else processed_msg
     for msg in messages:
         change_type = msg.pop("change_type", None)
-        if change_type_map:
+        if change_type_map and change_type:
             change_type = change_type_map.get(change_type, change_type)
         ref_changes[change_type].append(msg)
 
