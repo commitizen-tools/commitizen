@@ -1,4 +1,4 @@
-![Bump version](../images/bump.gif)
+![Bump version](../images/cli_interactive/bump.gif)
 
 ## About
 
