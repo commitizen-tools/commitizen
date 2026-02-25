@@ -116,7 +116,29 @@ Commitizen supports the [PEP 440][pep440] version format, which includes several
 1.0.0b2.dev1  # Development release 1 of beta 2
 ```
 
-> **Note**: `post` releases (e.g., `1.0.0.post1`) are not currently supported.
+#### Post-releases
+```text
+1.0.0.post0  # Post-release 0
+1.0.0.post1  # Post-release 1
+```
+
+#### Combined Pre-release and Post-release
+```text
+1.0.0a1.post0      # Alpha release 1 with a post-release
+1.0.0rc1.post1     # Release candidate 1 with a post-release
+```
+
+#### Combined Post-release and Development
+```text
+1.0.0.post0.dev0   # Post-release 0 with development release 0
+1.0.0.post1.dev1   # Post-release 1 with development release 1
+```
+
+#### Combined Post-release, Pre-release and Development
+```text
+1.0.0a1.post0.dev0    # Alpha release 1 Post-release 0 with development release 0
+1.0.0rc1.post1.dev1   # Release candidate 1 Post-release 1 with development release 1
+```
 
 ## Command line options
 
@@ -161,6 +183,21 @@ by their precedence and showcase how a release might flow through a development 
 - `1.1.0b0` after bumping a beta release
 - `1.1.0rc0` after bumping the release candidate
 - `1.1.0` next feature release
+
+### `--devrelease`
+
+The bump is a development-release bump. A development release appends a `.devN` segment to the
+current version where `N` is a non-negative integer. Use `--devrelease <N>` to explicitly set the
+development release number. When combined with prereleases or post-releases the `.devN` segment is
+placed after those segments (for example `1.0.0a1.dev0` or `1.0.0.post0.dev0`).
+
+### `--postrelease`
+
+A post-release preserves the current base version and appends a `.postN` segment. Use the
+`--postrelease` boolean flag to create or increment a post-release. Post-releases start at
+`.post0` and increment the post number on subsequent `--postrelease` bumps (new commits required
+for subsequent increments). To promote a post-release to the next final version, run a normal bump
+without `--postrelease`.
 
 ### `--increment-mode`
 

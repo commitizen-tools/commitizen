@@ -229,6 +229,32 @@ def test_bump_command_prerelease(util: UtilFixture):
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_command_postrelease(util: UtilFixture):
+    util.create_file_and_commit("feat: location")
+
+    # Create a post-release.
+    # It maintains the current version (0.1.0) and adds post0
+    util.run_cli("bump", "--postrelease", "--yes")
+    assert git.tag_exist("0.1.0.post0") is True
+
+    # With a current post-release, bumping again must bump postrelease number.
+    # However, without new commits, bump command raises NoCommitsFoundError.
+    # We add a commit to allow bumping.
+    util.create_file_and_commit("fix: new fix")
+    util.run_cli("bump", "--postrelease", "--yes")
+    # 0.1.0 -> fix -> 0.1.0. post0 -> post1. Result: 0.1.0.post1
+    assert git.tag_exist("0.1.0.post1") is True
+
+    # Create a final release from the current post-release.
+    util.create_file_and_commit("fix: small fix")
+    util.run_cli("bump", "--yes")
+    # 0.1.0.post1 base is 0.1.0.
+    # increment is PATCH (from fix).
+    # 0.1.0 + PATCH -> 0.1.1
+    assert git.tag_exist("0.1.1") is True
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_command_prerelease_increment(util: UtilFixture):
     # FINAL RELEASE
     util.create_file_and_commit("fix: location")
