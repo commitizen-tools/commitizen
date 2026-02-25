@@ -1,3 +1,9 @@
+## v4.13.9 (2026-02-25)
+
+### Fix
+
+- avoid raising an exception when a change_type is not defined (#1879)
+
 ## v4.13.8 (2026-02-18)
 
 ### Fix
