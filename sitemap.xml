@@ -2,194 +2,194 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/exit_codes/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/external_links/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/faq/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/features_wont_add/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/history/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/commands/bump/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/commands/changelog/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/commands/check/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/commands/commit/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/commands/example/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/commands/info/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/commands/init/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/commands/ls/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/commands/schema/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/commands/version/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/config/bump/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/config/changelog/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/config/check/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/config/commit/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/config/configuration_file/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/config/option/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/config/version_provider/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/contributing/contributing/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/contributing/contributing_tldr/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/contributing/pull_request/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/customization/changelog_template/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/customization/config_file/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/customization/python_class/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/third-party-plugins/about/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/third-party-plugins/commitizen-deno-provider/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/third-party-plugins/commitizen-emoji/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/third-party-plugins/conventional-jira/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-ai/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-conventional-gitmoji/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-emoji/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-legacy/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-path/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/third-party-plugins/github-jira-conventional/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/tutorials/auto_check/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/tutorials/auto_prepare_commit_message/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/tutorials/dev_releases/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/tutorials/github_actions/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/tutorials/gitlab_ci/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/tutorials/jenkins_pipeline/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/tutorials/monorepo_guidance/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/tutorials/tag_format/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
     <url>
          <loc>https://commitizen-tools.github.io/commitizen/tutorials/writing_commits/</loc>
-         <lastmod>2026-02-24</lastmod>
+         <lastmod>2026-02-25</lastmod>
     </url>
 </urlset>
