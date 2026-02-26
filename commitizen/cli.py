@@ -165,6 +165,11 @@ data = {
                         "help": "Set the length limit of the commit message; 0 for no limit.",
                     },
                     {
+                        "name": ["--body-length-limit"],
+                        "type": int,
+                        "help": "Set the length limit of the commit body. Commit message in body will be rewrapped to this length; 0 for no limit.",
+                    },
+                    {
                         "name": ["--"],
                         "action": "store_true",
                         "dest": "double_dash",
