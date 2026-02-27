@@ -292,14 +292,14 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
-base = [{ name = "poethepoet", specifier = ">=0.34.0" }]
+base = [{ name = "poethepoet", specifier = ">=0.41.0" }]
 dev = [
     { name = "ipython", specifier = ">=8.0" },
     { name = "mkdocs", specifier = ">=1.4.2" },
     { name = "mkdocs-git-revision-date-localized-plugin", specifier = ">=1.5.0" },
     { name = "mkdocs-material", specifier = ">=9.1.6" },
     { name = "mypy", specifier = ">=1.16.0" },
-    { name = "poethepoet", specifier = ">=0.34.0" },
+    { name = "poethepoet", specifier = ">=0.41.0" },
     { name = "pre-commit", specifier = ">=4.5.1" },
     { name = "prek", specifier = ">=0.2.28" },
     { name = "pytest", specifier = ">=9" },
@@ -1123,16 +1123,16 @@ wheels = [
 
 [[package]]
 name = "poethepoet"
-version = "0.38.0"
+version = "0.41.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pastel" },
     { name = "pyyaml" },
     { name = "tomli", marker = "python_full_version < '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4d/14/d1f795f314c4bf3ad6d64216e370bdfda73093ed76e979485778b655a7ac/poethepoet-0.38.0.tar.gz", hash = "sha256:aeeb2f0a2cf0d3afa833976eff3ac7b8f5e472ae64171824900d79d3c68163c7", size = 77339, upload-time = "2025-11-23T13:51:28.246Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a8/b9/fa92286560f70eaa40d473ea48376d20c6c21f63627d33c6bb1c5e385175/poethepoet-0.41.0.tar.gz", hash = "sha256:dcaad621dc061f6a90b17d091bebb9ca043d67bfe9bd6aa4185aea3ebf7ff3e6", size = 87780, upload-time = "2026-02-08T20:45:36.061Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/38/89/2bf7d43ef4b0d60f446933ae9d3649f95c2c45c47b6736d121b602c28361/poethepoet-0.38.0-py3-none-any.whl", hash = "sha256:214bd9fcb348ff3dfd1466579d67e0c02242451a7044aced1a79641adef9cad0", size = 101938, upload-time = "2025-11-23T13:51:26.518Z" },
+    { url = "https://files.pythonhosted.org/packages/5d/5e/0b83e0222ce5921b3f9081eeca8c6fb3e1cfd5ca0d06338adf93b28ce061/poethepoet-0.41.0-py3-none-any.whl", hash = "sha256:4bab9fd8271664c5d21407e8f12827daeb6aa484dc6cc7620f0c3b4e62b42ee4", size = 113590, upload-time = "2026-02-08T20:45:34.697Z" },
 ]
 
 [[package]]
