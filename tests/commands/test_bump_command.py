@@ -1540,3 +1540,42 @@ def test_changelog_merge_preserves_header(
     out = changelog_path.read_text()
 
     file_regression.check(out, extension=".md")
+
+
+@pytest.mark.freeze_time("2025-01-01")
+def test_bump_allow_no_commit_issue(
+    tmp_commitizen_project_initial,
+    util: UtilFixture,
+) -> None:
+    """Issue #1866: bump command called changelog command with allow_no_commit=True, but changelog command raised NoCommitsFoundError"""
+    tmp_commitizen_project = tmp_commitizen_project_initial(version="1.0.0")
+    with (tmp_commitizen_project / "pyproject.toml").open("w") as f:
+        f.write(
+            dedent(
+                r"""
+            [project]
+            name = "abc"
+            version = "4.14.0"
+
+            [tool.commitizen]
+            name = "cz_customize"
+            tag_format = "$version"
+            version_scheme = "semver2"
+            version_provider = "pep621"
+            update_changelog_on_bump = true
+
+            [tool.commitizen.customize]
+            bump_pattern = '^(feat|fix|ci|build|perf|refactor|chore|remove|style|test)'
+            bump_map = {feat = "MINOR", fix = "PATCH", ci = "PATCH", build = "PATCH", perf = "PATCH", refactor = "PATCH", chore = "PATCH", remove = "PATCH", style = "PATCH", test = "PATCH" }
+            schema_pattern = "(build|bump|chore|ci|dev|docs|feat|fix|perf|refactor|remove|style|test):(\\s.*)"
+            commit_parser = "^(?P<change_type>build|bump|chore|ci|dev|docs|feat|fix|perf|refactor|remove|style|test):\\s(?P<message>.*)?"
+            change_type_map = {"feat" = "New Features", "fix" = "Bug Fixes", "perf" = "Performance Improvements", "refactor" = "Refactoring", "chore" = "General Improvements", "remove" = "Removed", "style" = "Stylistic Changes", "test" = "Testing", "build" = "Build"}
+            change_type_order = ["BREAKING CHANGE", "New Features", "Bug Fixes", "Performance Improvements", "Refactoring", "General Improvements", "Removed", "Stylistic Changes", "Testing", "Build"]
+            changelog_pattern = "^(build|chore|feat|fix|perf|refactor|remove|style|test)"
+"""
+            )
+        )
+    util.run_cli("bump", "--yes", "--allow-no-commit", "--prerelease", "beta")
+    util.run_cli(
+        "bump", "--allow-no-commit", "--prerelease", "rc"
+    )  # Failed because the bump command called changelog command
