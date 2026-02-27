@@ -74,52 +74,50 @@ def chdir(tmp_path: Path) -> Iterator[Path]:
 
 
 @pytest.fixture
-def tmp_git_project(tmpdir):
-    with tmpdir.as_cwd():
-        cmd.run("git init")
+def tmp_git_project(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.chdir(tmp_path)
+    cmd.run("git init")
 
-        yield tmpdir
+    return tmp_path
 
 
 @pytest.fixture
-def tmp_commitizen_project(tmp_git_project):
-    tmp_commitizen_cfg_file = tmp_git_project.join("pyproject.toml")
-    tmp_commitizen_cfg_file.write('[tool.commitizen]\nversion="0.1.0"\n')
+def tmp_commitizen_project(tmp_git_project: Path):
+    (tmp_git_project / "pyproject.toml").write_text(
+        '[tool.commitizen]\nversion="0.1.0"\n'
+    )
 
     return tmp_git_project
 
 
 @pytest.fixture
-def tmp_project_root(tmp_commitizen_project) -> Path:
-    return Path(tmp_commitizen_project)
+def pyproject(tmp_commitizen_project: Path) -> Path:
+    return tmp_commitizen_project / "pyproject.toml"
 
 
 @pytest.fixture
-def pyproject(tmp_project_root: Path) -> Path:
-    return tmp_project_root / "pyproject.toml"
-
-
-@pytest.fixture
-def tmp_commitizen_project_initial(tmp_git_project, util: UtilFixture):
+def tmp_commitizen_project_initial(
+    tmp_git_project: Path, util: UtilFixture, monkeypatch: pytest.MonkeyPatch
+):
     def _initial(
         config_extra: str | None = None,
         version="0.1.0",
         initial_commit="feat: new user interface",
     ):
-        with tmp_git_project.as_cwd():
-            tmp_commitizen_cfg_file = tmp_git_project.join("pyproject.toml")
-            tmp_commitizen_cfg_file.write(f'[tool.commitizen]\nversion="{version}"\n')
-            tmp_version_file = tmp_git_project.join("__version__.py")
-            tmp_version_file.write(version)
-            tmp_commitizen_cfg_file = tmp_git_project.join("pyproject.toml")
-            tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
-            with open(tmp_commitizen_cfg_file, "a", encoding="utf-8") as f:
-                f.write(f'\nversion_files = ["{tmp_version_file_string}"]\n')
-            if config_extra:
-                tmp_commitizen_cfg_file.write(config_extra, mode="a")
-            util.create_file_and_commit(initial_commit)
+        monkeypatch.chdir(tmp_git_project)
+        tmp_commitizen_cfg_file = tmp_git_project / "pyproject.toml"
+        tmp_commitizen_cfg_file.write_text(f'[tool.commitizen]\nversion="{version}"\n')
+        tmp_version_file = tmp_git_project / "__version__.py"
+        tmp_version_file.write_text(version)
+        tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
+        with tmp_commitizen_cfg_file.open("a", encoding="utf-8") as f:
+            f.write(f'\nversion_files = ["{tmp_version_file_string}"]\n')
+        if config_extra:
+            with tmp_commitizen_cfg_file.open("a", encoding="utf-8") as f:
+                f.write(config_extra)
+        util.create_file_and_commit(initial_commit)
 
-            return tmp_git_project
+        return tmp_git_project
 
     return _initial
 
