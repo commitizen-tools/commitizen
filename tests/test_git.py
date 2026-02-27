@@ -387,12 +387,38 @@ def test_commit_with_spaces_in_path(
     mock_unlink.assert_called_once_with(file_path)
 
 
+def test_get_filenames_in_commit(util: UtilFixture):
+    """Test getting filenames from the last commit (default, no git_reference)."""
+    util.mock_cmd(out="file1.py\nfile2.py\n")
+    result = git.get_filenames_in_commit()
+    assert result == ["file1.py", "file2.py"]
+
+
+def test_get_filenames_in_commit_with_git_reference(util: UtilFixture):
+    """Test getting filenames with an explicit git reference."""
+    mock = util.mock_cmd(out="src/main.py\nREADME.md\n")
+    result = git.get_filenames_in_commit("HEAD~1")
+    assert result == ["src/main.py", "README.md"]
+    mock.assert_called_once_with("git show --name-only --pretty=format: HEAD~1")
+
+
 def test_get_filenames_in_commit_error(util: UtilFixture):
     """Test that GitCommandError is raised when git command fails."""
     util.mock_cmd(err="fatal: bad object HEAD", return_code=1)
     with pytest.raises(GitCommandError) as excinfo:
         git.get_filenames_in_commit()
     assert str(excinfo.value) == "fatal: bad object HEAD"
+
+
+def test_get_filenames_in_commit_error_with_git_reference(util: UtilFixture):
+    """Test that GitCommandError is raised with an explicit git reference."""
+    mock = util.mock_cmd(
+        err="fatal: bad object abc123", return_code=128
+    )
+    with pytest.raises(GitCommandError) as excinfo:
+        git.get_filenames_in_commit("abc123")
+    assert str(excinfo.value) == "fatal: bad object abc123"
+    mock.assert_called_once_with("git show --name-only --pretty=format: abc123")
 
 
 @pytest.mark.parametrize(
