@@ -38,20 +38,11 @@ def _try_decode(bytes_: bytes) -> str:
 def run(cmd: str, env: Mapping[str, str] | None = None) -> Command:
     if env is not None:
         env = {**os.environ, **env}
-    process = subprocess.Popen(
-        cmd,
-        shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        stdin=subprocess.PIPE,
-        env=env,
-    )
-    stdout, stderr = process.communicate()
-    return_code = process.returncode
+    c = subprocess.run([cmd], shell=True, capture_output=True, env=env)
     return Command(
-        _try_decode(stdout),
-        _try_decode(stderr),
-        stdout,
-        stderr,
-        return_code,
+        _try_decode(c.stdout),
+        _try_decode(c.stderr),
+        c.stdout,
+        c.stderr,
+        c.returncode,
     )
