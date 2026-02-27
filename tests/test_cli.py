@@ -44,15 +44,13 @@ def test_invalid_command(util: UtilFixture, capsys, file_regression, arg):
 
 
 def test_cz_config_file_without_correct_file_path(util: UtilFixture, capsys):
-    with pytest.raises(ConfigFileNotFound) as excinfo:
+    with pytest.raises(ConfigFileNotFound, match="Cannot found the config file"):
         util.run_cli("--config", "./config/pyproject.toml", "example")
-    assert "Cannot found the config file" in str(excinfo.value)
 
 
 def test_cz_with_arg_but_without_command(util: UtilFixture):
-    with pytest.raises(NoCommandFoundError) as excinfo:
+    with pytest.raises(NoCommandFoundError, match="Command is required"):
         util.run_cli("--name", "cz_jira")
-    assert "Command is required" in str(excinfo.value)
 
 
 def test_name(util: UtilFixture, capsys):
@@ -70,7 +68,7 @@ def test_name_default_value(util: UtilFixture, capsys):
 
 def test_ls(util: UtilFixture, capsys):
     util.run_cli("-n", "cz_jira", "ls")
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
 
     assert "cz_conventional_commits" in out
     assert isinstance(out, str)
@@ -85,7 +83,7 @@ def test_arg_debug(util: UtilFixture):
     assert excepthook.keywords.get("debug") is True
 
 
-def test_commitizen_excepthook(capsys):
+def test_commitizen_excepthook():
     with pytest.raises(SystemExit) as excinfo:
         cli.commitizen_excepthook(NotAGitProjectError, NotAGitProjectError(), "")
 
@@ -93,7 +91,7 @@ def test_commitizen_excepthook(capsys):
     assert excinfo.value.code == NotAGitProjectError.exit_code
 
 
-def test_commitizen_debug_excepthook(capsys):
+def test_commitizen_debug_excepthook():
     with pytest.raises(SystemExit) as excinfo:
         cli.commitizen_excepthook(
             NotAGitProjectError,
@@ -102,7 +100,6 @@ def test_commitizen_debug_excepthook(capsys):
             debug=True,
         )
 
-    assert excinfo.type is SystemExit
     assert excinfo.value.code == NotAGitProjectError.exit_code
     assert "NotAGitProjectError" in str(excinfo.traceback[0])
 
@@ -119,12 +116,10 @@ def test_argcomplete_activation():
     Equivalent to run:
     $ eval "$(register-python-argcomplete pytest)"
     """
-    output = subprocess.run(["register-python-argcomplete", "cz"])
-
-    assert output.returncode == 0
+    subprocess.run(["register-python-argcomplete", "cz"], check=True)
 
 
-def test_commitizen_excepthook_no_raises(capsys):
+def test_commitizen_excepthook_no_raises():
     with pytest.raises(SystemExit) as excinfo:
         cli.commitizen_excepthook(
             NotAGitProjectError,
@@ -165,17 +160,18 @@ def test_parse_no_raise(input_str, expected_result):
 
 
 def test_unknown_args_raises(util: UtilFixture):
-    with pytest.raises(InvalidCommandArgumentError) as excinfo:
+    with pytest.raises(
+        InvalidCommandArgumentError, match="Invalid commitizen arguments were found"
+    ):
         util.run_cli("c", "-this_arg_is_not_supported")
-    assert "Invalid commitizen arguments were found" in str(excinfo.value)
 
 
 def test_unknown_args_before_double_dash_raises(util: UtilFixture):
-    with pytest.raises(InvalidCommandArgumentError) as excinfo:
+    with pytest.raises(
+        InvalidCommandArgumentError,
+        match="Invalid commitizen arguments were found before -- separator",
+    ):
         util.run_cli("c", "-this_arg_is_not_supported", "--")
-    assert "Invalid commitizen arguments were found before -- separator" in str(
-        excinfo.value
-    )
 
 
 def test_commitizen_excepthook_non_commitizen_exception(mocker: MockFixture):

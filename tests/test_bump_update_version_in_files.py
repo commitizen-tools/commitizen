@@ -1,3 +1,4 @@
+import re
 from collections.abc import Callable
 from pathlib import Path
 from shutil import copyfile
@@ -199,7 +200,12 @@ def test_file_version_inconsistent_error(
     ]
     old_version = "1.2.3"
     new_version = "2.0.0"
-    with pytest.raises(CurrentVersionNotFoundError) as excinfo:
+    with pytest.raises(
+        CurrentVersionNotFoundError,
+        match=re.escape(
+            f"Current version {old_version} is not found in {inconsistent_python_version_file}."
+        ),
+    ):
         bump.update_version_in_files(
             old_version,
             new_version,
@@ -207,13 +213,6 @@ def test_file_version_inconsistent_error(
             check_consistency=True,
             encoding="utf-8",
         )
-
-    expected_msg = (
-        f"Current version 1.2.3 is not found in {inconsistent_python_version_file}.\n"
-        "The version defined in commitizen configuration and the ones in "
-        "version_files are possibly inconsistent."
-    )
-    assert expected_msg in str(excinfo.value)
 
 
 def test_multiple_versions_to_bump(
@@ -285,7 +284,12 @@ def test_update_version_in_files_with_check_consistency_true_failure(
     version_files = [commitizen_config_file, inconsistent_python_version_file]
 
     # This should fail because inconsistent_python_version_file doesn't contain the current version
-    with pytest.raises(CurrentVersionNotFoundError) as excinfo:
+    with pytest.raises(
+        CurrentVersionNotFoundError,
+        match=re.escape(
+            f"Current version {old_version} is not found in {inconsistent_python_version_file}"
+        ),
+    ):
         bump.update_version_in_files(
             old_version,
             new_version,
@@ -293,13 +297,6 @@ def test_update_version_in_files_with_check_consistency_true_failure(
             check_consistency=True,
             encoding="utf-8",
         )
-
-    expected_msg = (
-        f"Current version {old_version} is not found in {inconsistent_python_version_file}.\n"
-        "The version defined in commitizen configuration and the ones in "
-        "version_files are possibly inconsistent."
-    )
-    assert expected_msg in str(excinfo.value)
 
 
 @pytest.mark.parametrize(
