@@ -6,6 +6,7 @@ The basic steps are:
 2. Declare `name = "cz_customize"` in your configuration file, or add `-n cz_customize` when running Commitizen.
 !!! warning
     `cz_customize` is likely to be removed or renamed in the next major release.
+    This change is still under discussion; you can continue using `cz_customize` for now and follow [#1385](https://github.com/commitizen-tools/commitizen/issues/1385) for the rationale, options, and current status.
 
 Example:
 
