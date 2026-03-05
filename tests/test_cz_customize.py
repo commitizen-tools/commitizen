@@ -564,13 +564,13 @@ def test_info_unicode(config_with_unicode):
     assert "This is a customized cz with emojis 🎉!" in cz.info()
 
 
-def test_info_with_info_path(tmpdir, config_info):
-    with tmpdir.as_cwd():
-        tmpfile = tmpdir.join("info.txt")
-        tmpfile.write("Test info")
+def test_info_with_info_path(tmp_path, monkeypatch, config_info):
+    monkeypatch.chdir(tmp_path)
+    tmpfile = tmp_path / "info.txt"
+    tmpfile.write_text("Test info")
 
-        cz = CustomizeCommitsCz(config_info)
-        assert "Test info" in cz.info()
+    cz = CustomizeCommitsCz(config_info)
+    assert "Test info" in cz.info()
 
 
 def test_info_without_info(config_without_info):

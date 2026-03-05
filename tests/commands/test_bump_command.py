@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import inspect
 import re
-from pathlib import Path
 from textwrap import dedent
 from typing import TYPE_CHECKING
 from unittest.mock import call
@@ -29,7 +28,8 @@ from commitizen.exceptions import (
 )
 
 if TYPE_CHECKING:
-    import py
+    from pathlib import Path
+
     from pytest_mock import MockFixture
     from pytest_regressions.file_regression import FileRegressionFixture
 
@@ -117,8 +117,8 @@ def test_bump_minor_increment_annotated_config_file(
 def test_bump_minor_increment_signed_config_file(
     commit_msg: str, util: UtilFixture, tmp_commitizen_project_with_gpg
 ):
-    tmp_commitizen_cfg_file = tmp_commitizen_project_with_gpg.join("pyproject.toml")
-    with Path(tmp_commitizen_cfg_file).open("a", encoding="utf-8") as f:
+    tmp_commitizen_cfg_file = tmp_commitizen_project_with_gpg / "pyproject.toml"
+    with tmp_commitizen_cfg_file.open("a", encoding="utf-8") as f:
         f.write("\ngpg_sign = 1")
     util.create_file_and_commit(commit_msg)
     util.run_cli("bump", "--yes")
@@ -360,11 +360,11 @@ def test_bump_when_no_new_commit(util: UtilFixture):
 def test_bump_when_version_inconsistent_in_version_files(
     tmp_commitizen_project, util: UtilFixture
 ):
-    tmp_version_file = tmp_commitizen_project.join("__version__.py")
-    tmp_version_file.write("100.999.10000")
-    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_version_file = tmp_commitizen_project / "__version__.py"
+    tmp_version_file.write_text("100.999.10000")
+    tmp_commitizen_cfg_file = tmp_commitizen_project / "pyproject.toml"
     tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
-    with Path(tmp_commitizen_cfg_file).open("a", encoding="utf-8") as f:
+    with tmp_commitizen_cfg_file.open("a", encoding="utf-8") as f:
         f.write(f'\nversion_files = ["{tmp_version_file_string}"]')
 
     util.create_file_and_commit("feat: new file")
@@ -378,17 +378,17 @@ def test_bump_when_version_inconsistent_in_version_files(
 def test_bump_major_version_zero_when_major_is_not_zero(
     tmp_commitizen_project, util: UtilFixture
 ):
-    tmp_version_file = tmp_commitizen_project.join("__version__.py")
-    tmp_version_file.write("1.0.0")
+    tmp_version_file = tmp_commitizen_project / "__version__.py"
+    tmp_version_file.write_text("1.0.0")
     tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
-    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
-    tmp_commitizen_cfg_file.write(
+    tmp_commitizen_cfg_file = tmp_commitizen_project / "pyproject.toml"
+    tmp_commitizen_cfg_file.write_text(
         f"[tool.commitizen]\n"
         'version="1.0.0"\n'
         f'version_files = ["{str(tmp_version_file_string)}"]'
     )
-    tmp_changelog_file = tmp_commitizen_project.join("CHANGELOG.md")
-    tmp_changelog_file.write("## v1.0.0")
+    tmp_changelog_file = tmp_commitizen_project / "CHANGELOG.md"
+    tmp_changelog_file.write_text("## v1.0.0")
 
     util.create_file_and_commit("feat(user): new file")
     util.create_tag("v1.0.0")
@@ -403,11 +403,11 @@ def test_bump_major_version_zero_when_major_is_not_zero(
 
 
 def test_bump_files_only(tmp_commitizen_project, util: UtilFixture):
-    tmp_version_file = tmp_commitizen_project.join("__version__.py")
-    tmp_version_file.write("0.1.0")
-    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_version_file = tmp_commitizen_project / "__version__.py"
+    tmp_version_file.write_text("0.1.0")
+    tmp_commitizen_cfg_file = tmp_commitizen_project / "pyproject.toml"
     tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
-    with Path(tmp_commitizen_cfg_file).open("a", encoding="utf-8") as f:
+    with tmp_commitizen_cfg_file.open("a", encoding="utf-8") as f:
         f.write(f'\nversion_files = ["{tmp_version_file_string}"]')
 
     util.create_file_and_commit("feat: new user interface")
@@ -420,17 +420,17 @@ def test_bump_files_only(tmp_commitizen_project, util: UtilFixture):
 
     assert git.tag_exist("0.3.0") is False
 
-    assert "0.3.0" in Path(tmp_version_file).read_text(encoding="utf-8")
+    assert "0.3.0" in tmp_version_file.read_text(encoding="utf-8")
 
-    assert "0.3.0" in Path(tmp_commitizen_cfg_file).read_text(encoding="utf-8")
+    assert "0.3.0" in tmp_commitizen_cfg_file.read_text(encoding="utf-8")
 
 
 def test_bump_local_version(tmp_commitizen_project, util: UtilFixture):
-    tmp_version_file = tmp_commitizen_project.join("__version__.py")
-    tmp_version_file.write("4.5.1+0.1.0")
-    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_version_file = tmp_commitizen_project / "__version__.py"
+    tmp_version_file.write_text("4.5.1+0.1.0")
+    tmp_commitizen_cfg_file = tmp_commitizen_project / "pyproject.toml"
     tmp_version_file_string = str(tmp_version_file).replace("\\", "/")
-    tmp_commitizen_cfg_file.write(
+    tmp_commitizen_cfg_file.write_text(
         f"[tool.commitizen]\n"
         'version="4.5.1+0.1.0"\n'
         f'version_files = ["{tmp_version_file_string}"]'
@@ -440,7 +440,7 @@ def test_bump_local_version(tmp_commitizen_project, util: UtilFixture):
     util.run_cli("bump", "--yes", "--local-version")
     assert git.tag_exist("4.5.1+0.2.0") is True
 
-    assert "4.5.1+0.2.0" in Path(tmp_version_file).read_text(encoding="utf-8")
+    assert "4.5.1+0.2.0" in tmp_version_file.read_text(encoding="utf-8")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -455,11 +455,11 @@ def test_bump_dry_run(util: UtilFixture, capsys: pytest.CaptureFixture):
     assert git.tag_exist("0.2.0") is False
 
 
-def test_bump_in_non_git_project(tmpdir, util: UtilFixture):
-    with tmpdir.as_cwd():
-        with pytest.raises(NotAGitProjectError):
-            with pytest.raises(ExpectedExit):
-                util.run_cli("bump", "--yes")
+def test_bump_in_non_git_project(tmp_path, monkeypatch, util: UtilFixture):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(NotAGitProjectError):
+        with pytest.raises(ExpectedExit):
+            util.run_cli("bump", "--yes")
 
 
 def test_none_increment_exit_should_be_a_class():
@@ -676,13 +676,13 @@ def test_bump_changelog_command_commits_untracked_changelog_and_version_files(
      - Call commitizen main cli and assert that the `CHANGELOG.md` and the version file were committed.
     """
 
-    with tmp_commitizen_project.join("pyproject.toml").open(
+    with (tmp_commitizen_project / "pyproject.toml").open(
         mode="a",
         encoding="utf-8",
     ) as commitizen_config:
         commitizen_config.write(f"version_files = [\n'{version_regex}'\n]")
 
-    with tmp_commitizen_project.join(version_filepath).open(
+    with (tmp_commitizen_project / version_filepath).open(
         mode="a+", encoding="utf-8"
     ) as version_file:
         version_file.write(version_file_content)
@@ -789,12 +789,10 @@ def test_bump_version_with_less_components_in_config(
     assert git.tag_exist(expected_version_after_bump) is True
 
     for version_file in [
-        tmp_commitizen_project.join("__version__.py"),
-        tmp_commitizen_project.join("pyproject.toml"),
+        tmp_commitizen_project / "__version__.py",
+        tmp_commitizen_project / "pyproject.toml",
     ]:
-        assert expected_version_after_bump in Path(version_file).read_text(
-            encoding="utf-8"
-        )
+        assert expected_version_after_bump in version_file.read_text(encoding="utf-8")
 
 
 @pytest.mark.parametrize("commit_msg", ["feat: new file", "feat(user): new file"])
@@ -804,8 +802,8 @@ def test_bump_with_pre_bump_hooks(
     pre_bump_hook = "scripts/pre_bump_hook.sh"
     post_bump_hook = "scripts/post_bump_hook.sh"
 
-    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
-    with Path(tmp_commitizen_cfg_file).open("a", encoding="utf-8") as f:
+    tmp_commitizen_cfg_file = tmp_commitizen_project / "pyproject.toml"
+    with tmp_commitizen_cfg_file.open("a", encoding="utf-8") as f:
         f.write(
             f'\npre_bump_hooks = ["{pre_bump_hook}"]\n'
             f'post_bump_hooks = ["{post_bump_hook}"]\n'
@@ -855,8 +853,8 @@ def test_bump_with_hooks_and_increment(
     pre_bump_hook = "scripts/pre_bump_hook.sh"
     post_bump_hook = "scripts/post_bump_hook.sh"
 
-    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
-    with Path(tmp_commitizen_cfg_file).open("a", encoding="utf-8") as f:
+    tmp_commitizen_cfg_file = tmp_commitizen_project / "pyproject.toml"
+    with tmp_commitizen_cfg_file.open("a", encoding="utf-8") as f:
         f.write(
             f'\npre_bump_hooks = ["{pre_bump_hook}"]\n'
             f'post_bump_hooks = ["{post_bump_hook}"]\n'
@@ -892,8 +890,8 @@ def test_bump_command_prerelease_scheme_via_cli(
     tmp_commitizen_project_initial, util: UtilFixture
 ):
     tmp_commitizen_project = tmp_commitizen_project_initial()
-    tmp_version_file = tmp_commitizen_project.join("__version__.py")
-    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_version_file = tmp_commitizen_project / "__version__.py"
+    tmp_commitizen_cfg_file = tmp_commitizen_project / "pyproject.toml"
 
     util.run_cli(
         "bump",
@@ -906,14 +904,14 @@ def test_bump_command_prerelease_scheme_via_cli(
     assert git.tag_exist("0.2.0-a0") is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        assert "0.2.0-a0" in Path(version_file).read_text(encoding="utf-8")
+        assert "0.2.0-a0" in version_file.read_text(encoding="utf-8")
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
     util.run_cli("bump", "--yes")
     assert git.tag_exist("0.2.0") is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        assert "0.2.0" in Path(version_file).read_text(encoding="utf-8")
+        assert "0.2.0" in version_file.read_text(encoding="utf-8")
 
 
 def test_bump_command_prerelease_scheme_via_config(
@@ -922,27 +920,27 @@ def test_bump_command_prerelease_scheme_via_config(
     tmp_commitizen_project = tmp_commitizen_project_initial(
         config_extra='version_scheme = "semver"\n',
     )
-    tmp_version_file = tmp_commitizen_project.join("__version__.py")
-    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_version_file = tmp_commitizen_project / "__version__.py"
+    tmp_commitizen_cfg_file = tmp_commitizen_project / "pyproject.toml"
 
     util.run_cli("bump", "--prerelease", "alpha", "--yes")
     assert git.tag_exist("0.2.0-a0") is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        assert "0.2.0-a0" in Path(version_file).read_text(encoding="utf-8")
+        assert "0.2.0-a0" in version_file.read_text(encoding="utf-8")
 
     util.run_cli("bump", "--prerelease", "alpha", "--yes")
     assert git.tag_exist("0.2.0-a1") is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        assert "0.2.0-a1" in Path(version_file).read_text(encoding="utf-8")
+        assert "0.2.0-a1" in version_file.read_text(encoding="utf-8")
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
     util.run_cli("bump", "--yes")
     assert git.tag_exist("0.2.0") is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        assert "0.2.0" in Path(version_file).read_text(encoding="utf-8")
+        assert "0.2.0" in version_file.read_text(encoding="utf-8")
 
 
 def test_bump_command_prerelease_scheme_check_old_tags(
@@ -951,27 +949,27 @@ def test_bump_command_prerelease_scheme_check_old_tags(
     tmp_commitizen_project = tmp_commitizen_project_initial(
         config_extra=('tag_format = "v$version"\nversion_scheme = "semver"\n'),
     )
-    tmp_version_file = tmp_commitizen_project.join("__version__.py")
-    tmp_commitizen_cfg_file = tmp_commitizen_project.join("pyproject.toml")
+    tmp_version_file = tmp_commitizen_project / "__version__.py"
+    tmp_commitizen_cfg_file = tmp_commitizen_project / "pyproject.toml"
 
     util.run_cli("bump", "--prerelease", "alpha", "--yes")
     assert git.tag_exist("v0.2.0-a0") is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        assert "0.2.0-a0" in Path(version_file).read_text(encoding="utf-8")
+        assert "0.2.0-a0" in version_file.read_text(encoding="utf-8")
 
     util.run_cli("bump", "--prerelease", "alpha")
     assert git.tag_exist("v0.2.0-a1") is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        assert "0.2.0-a1" in Path(version_file).read_text(encoding="utf-8")
+        assert "0.2.0-a1" in version_file.read_text(encoding="utf-8")
 
     # PRERELEASE BUMP CREATES VERSION WITHOUT PRERELEASE
     util.run_cli("bump")
     assert git.tag_exist("v0.2.0") is True
 
     for version_file in [tmp_version_file, tmp_commitizen_cfg_file]:
-        assert "0.2.0" in Path(version_file).read_text(encoding="utf-8")
+        assert "0.2.0" in version_file.read_text(encoding="utf-8")
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -1062,7 +1060,7 @@ def test_bump_template_option_precedence(
     cfg: str,
     expected: str,
 ):
-    project_root = Path(tmp_commitizen_project)
+    project_root = tmp_commitizen_project
     cfg_template = project_root / "changelog.cfg"
     cmd_template = project_root / "changelog.cmd"
     default_template = project_root / any_changelog_format.template
@@ -1101,7 +1099,7 @@ def test_bump_template_extras_precedence(
     any_changelog_format: ChangelogFormat,
     mock_plugin: BaseCommitizen,
 ):
-    project_root = Path(tmp_commitizen_project)
+    project_root = tmp_commitizen_project
     changelog_tpl = project_root / any_changelog_format.template
     changelog_tpl.write_text("{{first}} - {{second}} - {{third}}")
 
@@ -1142,7 +1140,7 @@ def test_bump_template_extra_quotes(
     util: UtilFixture,
     any_changelog_format: ChangelogFormat,
 ):
-    project_root = Path(tmp_commitizen_project)
+    project_root = tmp_commitizen_project
     changelog_tpl = project_root / any_changelog_format.template
     changelog_tpl.write_text("{{first}} - {{second}} - {{third}}")
 
@@ -1170,7 +1168,7 @@ def test_bump_changelog_contains_increment_only(
 ):
     """Issue 1024"""
     # Initialize commitizen up to v1.0.0
-    project_root = Path(tmp_commitizen_project)
+    project_root = tmp_commitizen_project
     tmp_commitizen_cfg_file = project_root / "pyproject.toml"
     tmp_commitizen_cfg_file.write_text(
         '[tool.commitizen]\nversion="1.0.0"\nupdate_changelog_on_bump = true\n'
@@ -1233,90 +1231,90 @@ def test_bump_get_next__no_eligible_commits_raises(util: UtilFixture):
 
 
 def test_bump_allow_no_commit_with_no_commit(
-    tmp_commitizen_project, util: UtilFixture, capsys
+    tmp_commitizen_project, monkeypatch, util: UtilFixture, capsys
 ):
-    with tmp_commitizen_project.as_cwd():
-        # Create the first commit and bump to 1.0.0
-        util.create_file_and_commit("feat(user)!: new file")
-        util.run_cli("bump", "--yes")
+    monkeypatch.chdir(tmp_commitizen_project)
+    # Create the first commit and bump to 1.0.0
+    util.create_file_and_commit("feat(user)!: new file")
+    util.run_cli("bump", "--yes")
 
-        # Verify NoCommitsFoundError should be raised
-        # when there's no new commit and "--allow-no-commit" is not set
-        with pytest.raises(NoCommitsFoundError):
-            util.run_cli("bump")
+    # Verify NoCommitsFoundError should be raised
+    # when there's no new commit and "--allow-no-commit" is not set
+    with pytest.raises(NoCommitsFoundError):
+        util.run_cli("bump")
 
-        # bump to 1.0.1 with new commit when "--allow-no-commit" is set
-        util.run_cli("bump", "--allow-no-commit")
-        out, _ = capsys.readouterr()
-        assert "bump: version 1.0.0 → 1.0.1" in out
+    # bump to 1.0.1 with new commit when "--allow-no-commit" is set
+    util.run_cli("bump", "--allow-no-commit")
+    out, _ = capsys.readouterr()
+    assert "bump: version 1.0.0 → 1.0.1" in out
 
 
 def test_bump_allow_no_commit_with_no_eligible_commit(
-    tmp_commitizen_project, util: UtilFixture, capsys
+    tmp_commitizen_project, monkeypatch, util: UtilFixture, capsys
 ):
-    with tmp_commitizen_project.as_cwd():
-        # Create the first commit and bump to 1.0.0
-        util.create_file_and_commit("feat(user)!: new file")
+    monkeypatch.chdir(tmp_commitizen_project)
+    # Create the first commit and bump to 1.0.0
+    util.create_file_and_commit("feat(user)!: new file")
+    util.run_cli("bump", "--yes")
+
+    # Create a commit that is ineligible to bump
+    util.create_file_and_commit("docs(bump): add description for allow no commit")
+
+    # Verify NoneIncrementExit should be raised
+    # when there's no eligible bumping commit and "--allow-no-commit" is not set
+    with pytest.raises(NoneIncrementExit):
         util.run_cli("bump", "--yes")
 
-        # Create a commit that is ineligible to bump
-        util.create_file_and_commit("docs(bump): add description for allow no commit")
-
-        # Verify NoneIncrementExit should be raised
-        # when there's no eligible bumping commit and "--allow-no-commit" is not set
-        with pytest.raises(NoneIncrementExit):
-            util.run_cli("bump", "--yes")
-
-        # bump to 1.0.1 with ineligible commit when "--allow-no-commit" is set
-        util.run_cli("bump", "--allow-no-commit")
-        out, _ = capsys.readouterr()
-        assert "bump: version 1.0.0 → 1.0.1" in out
+    # bump to 1.0.1 with ineligible commit when "--allow-no-commit" is set
+    util.run_cli("bump", "--allow-no-commit")
+    out, _ = capsys.readouterr()
+    assert "bump: version 1.0.0 → 1.0.1" in out
 
 
 def test_bump_allow_no_commit_with_increment(
-    tmp_commitizen_project, util: UtilFixture, capsys
+    tmp_commitizen_project, monkeypatch, util: UtilFixture, capsys
 ):
-    with tmp_commitizen_project.as_cwd():
-        # # Create the first commit and bump to 1.0.0
-        util.create_file_and_commit("feat(user)!: new file")
+    monkeypatch.chdir(tmp_commitizen_project)
+    # # Create the first commit and bump to 1.0.0
+    util.create_file_and_commit("feat(user)!: new file")
+    util.run_cli("bump", "--yes")
+
+    # Verify NoCommitsFoundError should be raised
+    # when there's no new commit and "--allow-no-commit" is not set
+    with pytest.raises(NoCommitsFoundError):
         util.run_cli("bump", "--yes")
 
-        # Verify NoCommitsFoundError should be raised
-        # when there's no new commit and "--allow-no-commit" is not set
-        with pytest.raises(NoCommitsFoundError):
-            util.run_cli("bump", "--yes")
-
-        # bump to 1.1.0 with no new commit when "--allow-no-commit" is set
-        # and increment is specified
-        util.run_cli("bump", "--yes", "--allow-no-commit", "--increment", "MINOR")
-        out, _ = capsys.readouterr()
-        assert "bump: version 1.0.0 → 1.1.0" in out
+    # bump to 1.1.0 with no new commit when "--allow-no-commit" is set
+    # and increment is specified
+    util.run_cli("bump", "--yes", "--allow-no-commit", "--increment", "MINOR")
+    out, _ = capsys.readouterr()
+    assert "bump: version 1.0.0 → 1.1.0" in out
 
 
 def test_bump_allow_no_commit_with_manual_version(
-    tmp_commitizen_project, util: UtilFixture, capsys
+    tmp_commitizen_project, monkeypatch, util: UtilFixture, capsys
 ):
-    with tmp_commitizen_project.as_cwd():
-        # # Create the first commit and bump to 1.0.0
-        util.create_file_and_commit("feat(user)!: new file")
+    monkeypatch.chdir(tmp_commitizen_project)
+    # # Create the first commit and bump to 1.0.0
+    util.create_file_and_commit("feat(user)!: new file")
+    util.run_cli("bump", "--yes")
+
+    # Verify NoCommitsFoundError should be raised
+    # when there's no new commit and "--allow-no-commit" is not set
+    with pytest.raises(NoCommitsFoundError):
         util.run_cli("bump", "--yes")
 
-        # Verify NoCommitsFoundError should be raised
-        # when there's no new commit and "--allow-no-commit" is not set
-        with pytest.raises(NoCommitsFoundError):
-            util.run_cli("bump", "--yes")
-
-        # bump to 1.1.0 with no new commit when "--allow-no-commit" is set
-        # and increment is specified
-        util.run_cli("bump", "--yes", "--allow-no-commit", "2.0.0")
-        out, _ = capsys.readouterr()
-        assert "bump: version 1.0.0 → 2.0.0" in out
+    # bump to 1.1.0 with no new commit when "--allow-no-commit" is set
+    # and increment is specified
+    util.run_cli("bump", "--yes", "--allow-no-commit", "2.0.0")
+    out, _ = capsys.readouterr()
+    assert "bump: version 1.0.0 → 2.0.0" in out
 
 
 def test_bump_detect_legacy_tags_from_scm(
-    tmp_commitizen_project: py.path.local, util: UtilFixture
+    tmp_commitizen_project: Path, util: UtilFixture
 ):
-    project_root = Path(tmp_commitizen_project)
+    project_root = tmp_commitizen_project
     tmp_commitizen_cfg_file = project_root / "pyproject.toml"
     tmp_commitizen_cfg_file.write_text(
         "\n".join(
@@ -1340,11 +1338,11 @@ def test_bump_detect_legacy_tags_from_scm(
 
 
 def test_bump_warn_but_dont_fail_on_invalid_tags(
-    tmp_commitizen_project: py.path.local,
+    tmp_commitizen_project: Path,
     util: UtilFixture,
     capsys: pytest.CaptureFixture,
 ):
-    project_root = Path(tmp_commitizen_project)
+    project_root = tmp_commitizen_project
     tmp_commitizen_cfg_file = project_root / "pyproject.toml"
     tmp_commitizen_cfg_file.write_text(
         "\n".join(
