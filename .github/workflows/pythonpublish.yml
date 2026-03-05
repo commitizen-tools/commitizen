@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    if: github.repository == 'commitizen-tools/commitizen'
+    if: ${{ github.repository == 'commitizen-tools/commitizen' }}
     runs-on: ubuntu-latest
     permissions:
       id-token: write

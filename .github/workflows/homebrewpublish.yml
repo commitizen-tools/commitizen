@@ -9,7 +9,7 @@ on:
 jobs:
   deploy:
     runs-on: macos-latest
-    if: github.repository == 'commitizen-tools/commitizen' && github.event.workflow_run.conclusion == 'success'
+    if: ${{ github.repository == 'commitizen-tools/commitizen' && github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
