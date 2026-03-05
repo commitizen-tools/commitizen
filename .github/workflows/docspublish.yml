@@ -8,6 +8,7 @@ on:
 
 jobs:
   update-cli-screenshots:
+    if: github.repository == 'commitizen-tools/commitizen'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -46,6 +47,7 @@ jobs:
           fi
 
   publish-documentation:
+    if: github.repository == 'commitizen-tools/commitizen'
     runs-on: ubuntu-latest
     needs: update-cli-screenshots
     steps:
