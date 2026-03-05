@@ -5,6 +5,8 @@ import os
 import shutil
 import subprocess
 import tempfile
+import textwrap
+from itertools import chain
 from pathlib import Path
 from typing import TYPE_CHECKING, TypedDict
 
@@ -36,6 +38,7 @@ class CommitArgs(TypedDict, total=False):
     edit: bool
     extra_cli_args: str
     message_length_limit: int
+    body_length_limit: int
     no_retry: bool
     signoff: bool
     write_message_to_file: Path | None
@@ -82,6 +85,7 @@ class Commit:
 
         message = self.cz.message(answers)
         self._validate_subject_length(message)
+        message = self._wrap_body(message)
         return message
 
     def _validate_subject_length(self, message: str) -> None:
@@ -99,6 +103,28 @@ class Commit:
             raise CommitMessageLengthExceededError(
                 f"Length of commit message exceeds limit ({len(subject)}/{message_length_limit}), subject: '{subject}'"
             )
+
+    def _wrap_body(self, message: str) -> str:
+        """
+        Wrap the body of the commit message to the --body-length-limit length.
+        """
+
+        body_length_limit = self.arguments.get(
+            "body_length_limit", self.config.settings["body_length_limit"]
+        )
+        # By the contract, body_length_limit is set to 0 for no limit
+        if not body_length_limit or body_length_limit <= 0:
+            return message
+
+        lines = message.split("\n")
+        if len(lines) < 3:
+            return message
+
+        # First line is subject, second is blank line, rest are body lines
+        wrapped_body_lines = chain.from_iterable(
+            textwrap.wrap(line, width=body_length_limit) for line in lines[2:]
+        )
+        return "\n".join(chain(lines[:2], wrapped_body_lines))
 
     def manual_edit(self, message: str) -> str:
         editor = git.get_core_editor()
