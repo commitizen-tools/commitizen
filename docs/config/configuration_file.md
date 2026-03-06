@@ -244,4 +244,4 @@ Key configuration categories include:
 For advanced customization, including creating custom commit rules, see the [Customization](../customization/config_file.md) documentation.
 
 !!! note
-    The `customize` option is only supported when using TOML configuration files.
+    The `customize` option is supported in TOML, JSON, and YAML configuration files. For Python projects, adding it to `pyproject.toml` keeps all project configuration in one place.

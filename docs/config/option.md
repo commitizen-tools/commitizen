@@ -26,7 +26,7 @@ Style for the prompts (It will merge this value with default style.) See [Stylin
 - Type: `dict`
 - Default: `None`
 
-**This is only supported when config through `toml` configuration file.**
+**Supported in TOML, JSON, and YAML configuration files.**
 
 Custom rules for committing and bumping. See [customization](../customization/config_file.md) for more details.
 
