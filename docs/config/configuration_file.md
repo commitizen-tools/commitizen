@@ -48,182 +48,182 @@ All formats support the same configuration options. Choose the format that best 
 
 ## Configuration Structure
 
-### TOML Format
+=== "TOML Format"
 
-For TOML files, Commitizen settings are placed under the `[tool.commitizen]` section. If you're using a standalone `.cz.toml` or `cz.toml` file, you can use `[tool.commitizen]` or just `[commitizen]`.
+    For TOML files, Commitizen settings are placed under the `[tool.commitizen]` section. If you're using a standalone `.cz.toml` or `cz.toml` file, you can use `[tool.commitizen]` or just `[commitizen]`.
 
-**Example: `pyproject.toml`, `.cz.toml` or `cz.toml`**
+    **Example: `pyproject.toml`, `.cz.toml` or `cz.toml`**
 
-```toml title="pyproject.toml"
-[tool.commitizen]
-name = "cz_conventional_commits"
-version = "0.1.0"
-version_provider = "commitizen"
-version_scheme = "pep440"
-version_files = [
-    "src/__version__.py",
-    "pyproject.toml:version"
-]
-tag_format = "$version"
-update_changelog_on_bump = true
-changelog_file = "CHANGELOG.md"
-changelog_incremental = false
-bump_message = "bump: version $current_version → $new_version"
-gpg_sign = false
-annotated_tag = false
-major_version_zero = false
-prerelease_offset = 0
-retry_after_failure = false
-allow_abort = false
-message_length_limit = 0
-allowed_prefixes = [
-    "Merge",
-    "Revert",
-    "Pull request",
-    "fixup!",
-    "squash!",
-    "amend!"
-]
-breaking_change_exclamation_in_title = false
-use_shortcuts = false
-pre_bump_hooks = []
-post_bump_hooks = []
-encoding = "utf-8"
-
-# Optional: Custom styling for prompts
-style = [
-    ["qmark", "fg:#ff9d00 bold"],
-    ["question", "bold"],
-    ["answer", "fg:#ff9d00 bold"],
-    ["pointer", "fg:#ff9d00 bold"],
-    ["highlighted", "fg:#ff9d00 bold"],
-    ["selected", "fg:#cc5454"],
-    ["separator", "fg:#cc5454"],
-    ["instruction", ""],
-    ["text", ""],
-    ["disabled", "fg:#858585 italic"]
-]
-```
-
-### JSON Format
-
-For JSON files, Commitizen settings are placed under the `commitizen` key.
-
-**Example: `.cz.json` or `cz.json`**
-
-```json title=".cz.json"
-{
-  "commitizen": {
-    "name": "cz_conventional_commits",
-    "version": "0.1.0",
-    "version_provider": "commitizen",
-    "version_scheme": "pep440",
-    "version_files": [
-      "src/__version__.py",
-      "pyproject.toml:version"
-    ],
-    "tag_format": "$version",
-    "update_changelog_on_bump": true,
-    "changelog_file": "CHANGELOG.md",
-    "changelog_incremental": false,
-    "bump_message": "bump: version $current_version → $new_version",
-    "gpg_sign": false,
-    "annotated_tag": false,
-    "major_version_zero": false,
-    "prerelease_offset": 0,
-    "retry_after_failure": false,
-    "allow_abort": false,
-    "message_length_limit": 0,
-    "allowed_prefixes": [
-      "Merge",
-      "Revert",
-      "Pull request",
-      "fixup!",
-      "squash!",
-      "amend!"
-    ],
-    "breaking_change_exclamation_in_title": false,
-    "use_shortcuts": false,
-    "pre_bump_hooks": [],
-    "post_bump_hooks": [],
-    "encoding": "utf-8",
-    "style": [
-      ["qmark", "fg:#ff9d00 bold"],
-      ["question", "bold"],
-      ["answer", "fg:#ff9d00 bold"],
-      ["pointer", "fg:#ff9d00 bold"],
-      ["highlighted", "fg:#ff9d00 bold"],
-      ["selected", "fg:#cc5454"],
-      ["separator", "fg:#cc5454"],
-      ["instruction", ""],
-      ["text", ""],
-      ["disabled", "fg:#858585 italic"]
+    ```toml title="pyproject.toml"
+    [tool.commitizen]
+    name = "cz_conventional_commits"
+    version = "0.1.0"
+    version_provider = "commitizen"
+    version_scheme = "pep440"
+    version_files = [
+        "src/__version__.py",
+        "pyproject.toml:version"
     ]
-  }
-}
-```
+    tag_format = "$version"
+    update_changelog_on_bump = true
+    changelog_file = "CHANGELOG.md"
+    changelog_incremental = false
+    bump_message = "bump: version $current_version → $new_version"
+    gpg_sign = false
+    annotated_tag = false
+    major_version_zero = false
+    prerelease_offset = 0
+    retry_after_failure = false
+    allow_abort = false
+    message_length_limit = 0
+    allowed_prefixes = [
+        "Merge",
+        "Revert",
+        "Pull request",
+        "fixup!",
+        "squash!",
+        "amend!"
+    ]
+    breaking_change_exclamation_in_title = false
+    use_shortcuts = false
+    pre_bump_hooks = []
+    post_bump_hooks = []
+    encoding = "utf-8"
 
-### YAML Format
+    # Optional: Custom styling for prompts
+    style = [
+        ["qmark", "fg:#ff9d00 bold"],
+        ["question", "bold"],
+        ["answer", "fg:#ff9d00 bold"],
+        ["pointer", "fg:#ff9d00 bold"],
+        ["highlighted", "fg:#ff9d00 bold"],
+        ["selected", "fg:#cc5454"],
+        ["separator", "fg:#cc5454"],
+        ["instruction", ""],
+        ["text", ""],
+        ["disabled", "fg:#858585 italic"]
+    ]
+    ```
 
-For YAML files, Commitizen settings are placed under the `commitizen` key.
+=== "JSON Format"
 
-**Example: `.cz.yaml` or `cz.yaml`**
+    For JSON files, Commitizen settings are placed under the `commitizen` key.
 
-```yaml title=".cz.yaml"
-commitizen:
-  name: cz_conventional_commits
-  version: "0.1.0"
-  version_provider: commitizen
-  version_scheme: pep440
-  version_files:
-    - src/__version__.py
-    - pyproject.toml:version
-  tag_format: "$version"
-  update_changelog_on_bump: true
-  changelog_file: CHANGELOG.md
-  changelog_incremental: false
-  bump_message: "bump: version $current_version → $new_version"
-  gpg_sign: false
-  annotated_tag: false
-  major_version_zero: false
-  prerelease_offset: 0
-  retry_after_failure: false
-  allow_abort: false
-  message_length_limit: 0
-  allowed_prefixes:
-    - Merge
-    - Revert
-    - Pull request
-    - fixup!
-    - squash!
-    - amend!
-  breaking_change_exclamation_in_title: false
-  use_shortcuts: false
-  pre_bump_hooks: []
-  post_bump_hooks: []
-  encoding: utf-8
-  style:
-    - - qmark
-      - fg:#ff9d00 bold
-    - - question
-      - bold
-    - - answer
-      - fg:#ff9d00 bold
-    - - pointer
-      - fg:#ff9d00 bold
-    - - highlighted
-      - fg:#ff9d00 bold
-    - - selected
-      - fg:#cc5454
-    - - separator
-      - fg:#cc5454
-    - - instruction
-      - ""
-    - - text
-      - ""
-    - - disabled
-      - fg:#858585 italic
-```
+    **Example: `.cz.json` or `cz.json`**
+
+    ```json title=".cz.json"
+    {
+      "commitizen": {
+        "name": "cz_conventional_commits",
+        "version": "0.1.0",
+        "version_provider": "commitizen",
+        "version_scheme": "pep440",
+        "version_files": [
+          "src/__version__.py",
+          "pyproject.toml:version"
+        ],
+        "tag_format": "$version",
+        "update_changelog_on_bump": true,
+        "changelog_file": "CHANGELOG.md",
+        "changelog_incremental": false,
+        "bump_message": "bump: version $current_version → $new_version",
+        "gpg_sign": false,
+        "annotated_tag": false,
+        "major_version_zero": false,
+        "prerelease_offset": 0,
+        "retry_after_failure": false,
+        "allow_abort": false,
+        "message_length_limit": 0,
+        "allowed_prefixes": [
+          "Merge",
+          "Revert",
+          "Pull request",
+          "fixup!",
+          "squash!",
+          "amend!"
+        ],
+        "breaking_change_exclamation_in_title": false,
+        "use_shortcuts": false,
+        "pre_bump_hooks": [],
+        "post_bump_hooks": [],
+        "encoding": "utf-8",
+        "style": [
+          ["qmark", "fg:#ff9d00 bold"],
+          ["question", "bold"],
+          ["answer", "fg:#ff9d00 bold"],
+          ["pointer", "fg:#ff9d00 bold"],
+          ["highlighted", "fg:#ff9d00 bold"],
+          ["selected", "fg:#cc5454"],
+          ["separator", "fg:#cc5454"],
+          ["instruction", ""],
+          ["text", ""],
+          ["disabled", "fg:#858585 italic"]
+        ]
+      }
+    }
+    ```
+
+=== "YAML Format"
+
+    For YAML files, Commitizen settings are placed under the `commitizen` key.
+
+    **Example: `.cz.yaml` or `cz.yaml`**
+
+    ```yaml title=".cz.yaml"
+    commitizen:
+      name: cz_conventional_commits
+      version: "0.1.0"
+      version_provider: commitizen
+      version_scheme: pep440
+      version_files:
+        - src/__version__.py
+        - pyproject.toml:version
+      tag_format: "$version"
+      update_changelog_on_bump: true
+      changelog_file: CHANGELOG.md
+      changelog_incremental: false
+      bump_message: "bump: version $current_version → $new_version"
+      gpg_sign: false
+      annotated_tag: false
+      major_version_zero: false
+      prerelease_offset: 0
+      retry_after_failure: false
+      allow_abort: false
+      message_length_limit: 0
+      allowed_prefixes:
+        - Merge
+        - Revert
+        - Pull request
+        - fixup!
+        - squash!
+        - amend!
+      breaking_change_exclamation_in_title: false
+      use_shortcuts: false
+      pre_bump_hooks: []
+      post_bump_hooks: []
+      encoding: utf-8
+      style:
+        - - qmark
+          - fg:#ff9d00 bold
+        - - question
+          - bold
+        - - answer
+          - fg:#ff9d00 bold
+        - - pointer
+          - fg:#ff9d00 bold
+        - - highlighted
+          - fg:#ff9d00 bold
+        - - selected
+          - fg:#cc5454
+        - - separator
+          - fg:#cc5454
+        - - instruction
+          - ""
+        - - text
+          - ""
+        - - disabled
+          - fg:#858585 italic
+    ```
 
 ## Configuration Options
 
