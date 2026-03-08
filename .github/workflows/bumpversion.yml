@@ -7,7 +7,7 @@ on:
 
 jobs:
   bump-version:
-    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    if: ${{ github.repository == 'commitizen-tools/commitizen' && !startsWith(github.event.head_commit.message, 'bump:') }}
     runs-on: ubuntu-latest
     name: "Bump version and create changelog with commitizen"
     steps:
