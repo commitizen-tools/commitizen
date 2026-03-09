@@ -188,7 +188,47 @@ Example:
 
 ### Shortcut keys
 
-When the `use_shortcuts` config option is enabled, Commitizen can show and use keyboard shortcuts to select items from lists directly.
-For example, when using the `cz_conventional_commits` Commitizen template, shortcut keys are shown when selecting the commit type.
-Unless otherwise defined, keyboard shortcuts will be numbered automatically.
-To specify keyboard shortcuts for your custom choices, provide the shortcut using the `key` parameter in dictionary form for each choice you would like to customize.
+For a basic overview of `use_shortcuts` and how the default menu looks, see the [`use_shortcuts` option](../config/option.md#use_shortcuts).
+
+#### `use_shortcuts` with `cz_customize`
+
+When using `cz_customize`, enabling `use_shortcuts` lets you set an optional `key` for each list/select choice so that choice shows your chosen shortcut. Rules below.
+
+Example:
+
+```toml title="pyproject.toml"
+[tool.commitizen]
+name = "cz_customize"
+use_shortcuts = true
+
+[tool.commitizen.customize]
+message_template = "{{prefix}}: {{message}}"
+schema = "<type>: <body>"
+schema_pattern = "(feat|fix|docs|test):(\\s.*)"
+
+[[tool.commitizen.customize.questions]]
+type = "list"
+name = "prefix"
+message = "Select the type of change you are committing"
+choices = [
+  { value = "feat", name = "feat: A new feature.", key = "f" },
+  { value = "fix", name = "fix: A bug fix.", key = "x" },
+  { value = "docs", name = "docs: Documentation only changes", key = "d" },
+  { value = "test", name = "test: Adding or correcting tests", key = "t" }
+]
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "message"
+message = "Commit body: "
+```
+
+![Menu with custom shortcut keys settings](../images/cli_interactive/shortcut_custom.gif)
+
+**Rules for `key`**
+
+| Rule | Description |
+|------|-------------|
+| Allowed | Lowercase `a`–`z` or digits `0`–`9` only |
+| Uniqueness | Each `key` must be unique among all choices |
+| Optional | Omit `key` to use default numeric order (1, 2, 3, …) |
