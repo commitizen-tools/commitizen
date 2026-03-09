@@ -6,6 +6,8 @@ theme:
   name: material
   logo: images/cz_logo.png
   favicon: images/cz_logo.png
+  features:
+    - content.code.copy
   palette:
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
