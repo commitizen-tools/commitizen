@@ -390,11 +390,13 @@ def test_commit_with_spaces_in_path(
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_get_filenames_in_commit(util: UtilFixture):
     """Test get_filenames_in_commit returns filenames from the last commit."""
+    util.create_file_and_commit("feat: old feature", filename="old_file.txt")
+
     filename = "test_feature_file.txt"
     util.create_file_and_commit("feat: add new feature", filename=filename)
 
     filenames = git.get_filenames_in_commit()
-    assert filename in filenames
+    assert [filename] == filenames
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
