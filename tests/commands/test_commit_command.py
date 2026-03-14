@@ -51,10 +51,9 @@ def staging_is_clean(mocker: MockFixture, tmp_git_project):
 @pytest.fixture
 def backup_file(tmp_git_project, monkeypatch):
     """Write backup message so Commit finds it when run from tmp_git_project."""
-    with tmp_git_project.as_cwd():
-        path = get_backup_file_path()
-        path.write_text("backup commit", encoding="utf-8")
     monkeypatch.chdir(tmp_git_project)
+    path = get_backup_file_path()
+    path.write_text("backup commit", encoding="utf-8")
 
 
 @pytest.mark.usefixtures("staging_is_clean", "commit_mock", "prompt_mock_feat")
@@ -263,10 +262,10 @@ def test_commit_when_no_user_answer(config, mocker: MockFixture):
         commands.Commit(config, {})()
 
 
-def test_commit_in_non_git_project(tmpdir, config):
-    with tmpdir.as_cwd():
-        with pytest.raises(NotAGitProjectError):
-            commands.Commit(config, {})
+def test_commit_in_non_git_project(tmp_path, monkeypatch, config):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(NotAGitProjectError):
+        commands.Commit(config, {})
 
 
 @pytest.mark.usefixtures("staging_is_clean", "commit_mock", "prompt_mock_feat")

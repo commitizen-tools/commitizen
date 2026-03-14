@@ -61,7 +61,7 @@ EXPECTED_DICT_CONFIG = {
 
 
 def test_init_without_setup_pre_commit_hook(
-    tmpdir, mocker: MockFixture, config: BaseConfig
+    tmp_path, monkeypatch, mocker: MockFixture, config: BaseConfig
 ):
     mocker.patch(
         "questionary.select",
@@ -76,13 +76,13 @@ def test_init_without_setup_pre_commit_hook(
     mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
     # Return None to skip hook installation
     mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
-    with tmpdir.as_cwd():
-        commands.Init(config)()
+    monkeypatch.chdir(tmp_path)
+    commands.Init(config)()
 
-        config_data = Path("pyproject.toml").read_text(encoding="utf-8")
-        assert config_data == expected_config
+    config_data = Path("pyproject.toml").read_text(encoding="utf-8")
+    assert config_data == expected_config
 
-        assert not Path(pre_commit_config_filename).exists()
+    assert not Path(pre_commit_config_filename).exists()
 
 
 def test_init_when_config_already_exists(config: BaseConfig, capsys):
@@ -95,7 +95,9 @@ def test_init_when_config_already_exists(config: BaseConfig, capsys):
     assert captured.out == f"Config file {path} already exists\n"
 
 
-def test_init_without_choosing_tag(config: BaseConfig, mocker: MockFixture, tmpdir):
+def test_init_without_choosing_tag(
+    config: BaseConfig, mocker: MockFixture, tmp_path, monkeypatch
+):
     mocker.patch(
         "commitizen.commands.init.get_tag_names", return_value=["0.0.2", "0.0.1"]
     )
@@ -112,9 +114,9 @@ def test_init_without_choosing_tag(config: BaseConfig, mocker: MockFixture, tmpd
     mocker.patch("questionary.confirm", return_value=FakeQuestion(False))
     mocker.patch("questionary.text", return_value=FakeQuestion("y"))
 
-    with tmpdir.as_cwd():
-        with pytest.raises(NoAnswersError):
-            commands.Init(config)()
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(NoAnswersError):
+        commands.Init(config)()
 
 
 @pytest.fixture
@@ -177,26 +179,26 @@ def check_pre_commit_config(expected: list[dict[str, Any]]):
 @pytest.mark.usefixtures("pre_commit_installed")
 class TestPreCommitCases:
     def test_no_existing_pre_commit_config(
-        self, default_choice: str, tmpdir, config: BaseConfig
+        self, default_choice: str, tmp_path, monkeypatch, config: BaseConfig
     ):
-        with tmpdir.as_cwd():
-            commands.Init(config)()
-            check_cz_config(default_choice)
-            check_pre_commit_config([cz_hook_config])
+        monkeypatch.chdir(tmp_path)
+        commands.Init(config)()
+        check_cz_config(default_choice)
+        check_pre_commit_config([cz_hook_config])
 
     def test_empty_pre_commit_config(
-        self, default_choice: str, tmpdir, config: BaseConfig
+        self, default_choice: str, tmp_path, monkeypatch, config: BaseConfig
     ):
-        with tmpdir.as_cwd():
-            p = tmpdir.join(pre_commit_config_filename)
-            p.write("")
+        monkeypatch.chdir(tmp_path)
+        p = tmp_path / pre_commit_config_filename
+        p.write_text("")
 
-            commands.Init(config)()
-            check_cz_config(default_choice)
-            check_pre_commit_config([cz_hook_config])
+        commands.Init(config)()
+        check_cz_config(default_choice)
+        check_pre_commit_config([cz_hook_config])
 
     def test_pre_commit_config_without_cz_hook(
-        self, default_choice: str, tmpdir, config: BaseConfig
+        self, default_choice: str, tmp_path, monkeypatch, config: BaseConfig
     ):
         existing_hook_config = {
             "repo": "https://github.com/pre-commit/pre-commit-hooks",
@@ -204,40 +206,40 @@ class TestPreCommitCases:
             "hooks": [{"id", "trailing-whitespace"}],
         }
 
-        with tmpdir.as_cwd():
-            p = tmpdir.join(pre_commit_config_filename)
-            p.write(yaml.safe_dump({"repos": [existing_hook_config]}))
+        monkeypatch.chdir(tmp_path)
+        p = tmp_path / pre_commit_config_filename
+        p.write_text(yaml.safe_dump({"repos": [existing_hook_config]}))
 
-            commands.Init(config)()
-            check_cz_config(default_choice)
-            check_pre_commit_config([existing_hook_config, cz_hook_config])
+        commands.Init(config)()
+        check_cz_config(default_choice)
+        check_pre_commit_config([existing_hook_config, cz_hook_config])
 
     def test_cz_hook_exists_in_pre_commit_config(
-        self, default_choice: str, tmpdir, config: BaseConfig
+        self, default_choice: str, tmp_path, monkeypatch, config: BaseConfig
     ):
-        with tmpdir.as_cwd():
-            p = tmpdir.join(pre_commit_config_filename)
-            p.write(yaml.safe_dump({"repos": [cz_hook_config]}))
+        monkeypatch.chdir(tmp_path)
+        p = tmp_path / pre_commit_config_filename
+        p.write_text(yaml.safe_dump({"repos": [cz_hook_config]}))
 
-            commands.Init(config)()
-            check_cz_config(default_choice)
-            # check that config is not duplicated
-            check_pre_commit_config([cz_hook_config])
+        commands.Init(config)()
+        check_cz_config(default_choice)
+        # check that config is not duplicated
+        check_pre_commit_config([cz_hook_config])
 
 
 class TestNoPreCommitInstalled:
     @pytest.mark.usefixtures("default_choice")
     def test_pre_commit_not_installed(
-        self, mocker: MockFixture, config: BaseConfig, tmpdir
+        self, mocker: MockFixture, config: BaseConfig, tmp_path, monkeypatch
     ):
         # Assume `pre-commit` is not installed
         mocker.patch(
             "commitizen.project_info.is_pre_commit_installed",
             return_value=False,
         )
-        with tmpdir.as_cwd():
-            with pytest.raises(InitFailedError):
-                commands.Init(config)()
+        monkeypatch.chdir(tmp_path)
+        with pytest.raises(InitFailedError):
+            commands.Init(config)()
 
 
 class TestAskTagFormat:
@@ -273,7 +275,7 @@ class TestAskTagFormat:
 
 
 def test_init_with_confirmed_tag_format(
-    config: BaseConfig, mocker: MockFixture, tmpdir
+    config: BaseConfig, mocker: MockFixture, tmp_path, monkeypatch
 ):
     mocker.patch(
         "commitizen.commands.init.get_tag_names", return_value=["v0.0.2", "v0.0.1"]
@@ -292,14 +294,16 @@ def test_init_with_confirmed_tag_format(
     mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
     mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
 
-    with tmpdir.as_cwd():
-        commands.Init(config)()
-        assert 'tag_format = "v$version"' in Path("pyproject.toml").read_text(
-            encoding="utf-8"
-        )
+    monkeypatch.chdir(tmp_path)
+    commands.Init(config)()
+    assert 'tag_format = "v$version"' in Path("pyproject.toml").read_text(
+        encoding="utf-8"
+    )
 
 
-def test_init_with_no_existing_tags(config: BaseConfig, mocker: MockFixture, tmpdir):
+def test_init_with_no_existing_tags(
+    config: BaseConfig, mocker: MockFixture, tmp_path, monkeypatch
+):
     mocker.patch("commitizen.commands.init.get_tag_names", return_value=[])
     mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value="v1.0.0")
     mocker.patch(
@@ -315,13 +319,13 @@ def test_init_with_no_existing_tags(config: BaseConfig, mocker: MockFixture, tmp
     mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
     mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
 
-    with tmpdir.as_cwd():
-        commands.Init(config)()
-        assert 'version = "0.0.1"' in Path("pyproject.toml").read_text(encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    commands.Init(config)()
+    assert 'version = "0.0.1"' in Path("pyproject.toml").read_text(encoding="utf-8")
 
 
 def test_init_with_no_existing_latest_tag(
-    config: BaseConfig, mocker: MockFixture, tmpdir
+    config: BaseConfig, mocker: MockFixture, tmp_path, monkeypatch
 ):
     mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value=None)
     mocker.patch(
@@ -337,12 +341,14 @@ def test_init_with_no_existing_latest_tag(
     mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
     mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
 
-    with tmpdir.as_cwd():
-        commands.Init(config)()
-        assert 'version = "0.0.1"' in Path("pyproject.toml").read_text(encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    commands.Init(config)()
+    assert 'version = "0.0.1"' in Path("pyproject.toml").read_text(encoding="utf-8")
 
 
-def test_init_with_existing_tags(config: BaseConfig, mocker: MockFixture, tmpdir):
+def test_init_with_existing_tags(
+    config: BaseConfig, mocker: MockFixture, tmp_path, monkeypatch
+):
     expected_tags = ["v1.0.0", "v0.9.0", "v0.8.0"]
     mocker.patch("commitizen.commands.init.get_tag_names", return_value=expected_tags)
     mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value="v1.0.0")
@@ -360,12 +366,14 @@ def test_init_with_existing_tags(config: BaseConfig, mocker: MockFixture, tmpdir
     mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
     mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
 
-    with tmpdir.as_cwd():
-        commands.Init(config)()
-        assert 'version = "1.0.0"' in Path("pyproject.toml").read_text(encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    commands.Init(config)()
+    assert 'version = "1.0.0"' in Path("pyproject.toml").read_text(encoding="utf-8")
 
 
-def test_init_with_valid_tag_selection(config: BaseConfig, mocker: MockFixture, tmpdir):
+def test_init_with_valid_tag_selection(
+    config: BaseConfig, mocker: MockFixture, tmp_path, monkeypatch
+):
     expected_tags = ["v1.0.0", "v0.9.0", "v0.8.0"]
     mocker.patch("commitizen.commands.init.get_tag_names", return_value=expected_tags)
     mocker.patch("commitizen.commands.init.get_latest_tag_name", return_value="v1.0.0")
@@ -388,14 +396,16 @@ def test_init_with_valid_tag_selection(config: BaseConfig, mocker: MockFixture, 
     mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
     mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
 
-    with tmpdir.as_cwd():
-        commands.Init(config)()
-        content = Path("pyproject.toml").read_text(encoding="utf-8")
-        assert 'version = "0.9.0"' in content
-        assert 'version_scheme = "semver"' in content
+    monkeypatch.chdir(tmp_path)
+    commands.Init(config)()
+    content = Path("pyproject.toml").read_text(encoding="utf-8")
+    assert 'version = "0.9.0"' in content
+    assert 'version_scheme = "semver"' in content
 
 
-def test_init_configuration_settings(tmpdir, mocker: MockFixture, config: BaseConfig):
+def test_init_configuration_settings(
+    tmp_path, monkeypatch, mocker: MockFixture, config: BaseConfig
+):
     """Test that all configuration settings are properly initialized."""
     mocker.patch(
         "questionary.select",
@@ -410,22 +420,22 @@ def test_init_configuration_settings(tmpdir, mocker: MockFixture, config: BaseCo
     mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
     mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
 
-    with tmpdir.as_cwd():
-        commands.Init(config)()
+    monkeypatch.chdir(tmp_path)
+    commands.Init(config)()
 
-        config_data = Path("pyproject.toml").read_text(encoding="utf-8")
+    config_data = Path("pyproject.toml").read_text(encoding="utf-8")
 
-        # Verify all expected settings are present
-        assert 'name = "cz_conventional_commits"' in config_data
-        assert 'tag_format = "$version"' in config_data
-        assert 'version_scheme = "semver"' in config_data
-        assert 'version = "0.0.1"' in config_data
-        assert "update_changelog_on_bump = true" in config_data
-        assert "major_version_zero = true" in config_data
+    # Verify all expected settings are present
+    assert 'name = "cz_conventional_commits"' in config_data
+    assert 'tag_format = "$version"' in config_data
+    assert 'version_scheme = "semver"' in config_data
+    assert 'version = "0.0.1"' in config_data
+    assert "update_changelog_on_bump = true" in config_data
+    assert "major_version_zero = true" in config_data
 
 
 def test_init_configuration_with_version_provider(
-    tmpdir, mocker: MockFixture, config: BaseConfig
+    tmp_path, monkeypatch, mocker: MockFixture, config: BaseConfig
 ):
     """Test configuration initialization with a different version provider."""
     mocker.patch(
@@ -441,21 +451,21 @@ def test_init_configuration_with_version_provider(
     mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
     mocker.patch("questionary.checkbox", return_value=FakeQuestion(None))
 
-    with tmpdir.as_cwd():
-        commands.Init(config)()
+    monkeypatch.chdir(tmp_path)
+    commands.Init(config)()
 
-        config_data = Path("pyproject.toml").read_text(encoding="utf-8")
+    config_data = Path("pyproject.toml").read_text(encoding="utf-8")
 
-        # Verify version provider is set instead of version
-        assert 'name = "cz_conventional_commits"' in config_data
-        assert 'tag_format = "$version"' in config_data
-        assert 'version_scheme = "semver"' in config_data
-        assert 'version_provider = "pep621"' in config_data
-        assert "update_changelog_on_bump = true" in config_data
-        assert "major_version_zero = true" in config_data
-        assert (
-            "version = " not in config_data
-        )  # Version should not be set when using version_provider
+    # Verify version provider is set instead of version
+    assert 'name = "cz_conventional_commits"' in config_data
+    assert 'tag_format = "$version"' in config_data
+    assert 'version_scheme = "semver"' in config_data
+    assert 'version_provider = "pep621"' in config_data
+    assert "update_changelog_on_bump = true" in config_data
+    assert "major_version_zero = true" in config_data
+    assert (
+        "version = " not in config_data
+    )  # Version should not be set when using version_provider
 
 
 def test_construct_name_choice_from_registry(config: BaseConfig):

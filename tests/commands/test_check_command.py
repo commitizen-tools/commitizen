@@ -119,9 +119,9 @@ def test_check_conventional_commit_succeeds(
         ),
     ],
 )
-def test_check_no_conventional_commit(commit_msg, config, tmpdir):
-    tempfile = tmpdir.join("temp_commit_file")
-    tempfile.write(commit_msg)
+def test_check_no_conventional_commit(commit_msg, config, tmp_path):
+    tempfile = tmp_path / "temp_commit_file"
+    tempfile.write_text(commit_msg)
 
     with pytest.raises(InvalidCommitMessageError):
         commands.Check(config=config, arguments={"commit_msg_file": tempfile})()
@@ -136,9 +136,11 @@ def test_check_no_conventional_commit(commit_msg, config, tmpdir):
         "bump: 0.0.1 -> 1.0.0",
     ],
 )
-def test_check_conventional_commit(commit_msg, config, success_mock: MockType, tmpdir):
-    tempfile = tmpdir.join("temp_commit_file")
-    tempfile.write(commit_msg)
+def test_check_conventional_commit(
+    commit_msg, config, success_mock: MockType, tmp_path
+):
+    tempfile = tmp_path / "temp_commit_file"
+    tempfile.write_text(commit_msg)
     commands.Check(config=config, arguments={"commit_msg_file": tempfile})()
     success_mock.assert_called_once()
 

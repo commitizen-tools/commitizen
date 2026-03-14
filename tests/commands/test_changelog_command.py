@@ -31,22 +31,22 @@ if TYPE_CHECKING:
 
 
 @pytest.fixture
-def changelog_jinja_file(tmp_project_root: Path) -> Path:
-    return tmp_project_root / "changelog.jinja"
+def changelog_jinja_file(tmp_commitizen_project: Path) -> Path:
+    return tmp_commitizen_project / "changelog.jinja"
 
 
 @pytest.fixture
 def changelog_tpl(
-    tmp_project_root: Path, any_changelog_format: ChangelogFormat
+    tmp_commitizen_project: Path, any_changelog_format: ChangelogFormat
 ) -> Path:
-    return tmp_project_root / any_changelog_format.template
+    return tmp_commitizen_project / any_changelog_format.template
 
 
 @pytest.fixture
 def changelog_file(
-    tmp_project_root: Path, any_changelog_format: ChangelogFormat
+    tmp_commitizen_project: Path, any_changelog_format: ChangelogFormat
 ) -> Path:
-    return tmp_project_root / any_changelog_format.default_changelog_file
+    return tmp_commitizen_project / any_changelog_format.default_changelog_file
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -437,7 +437,7 @@ def test_changelog_incremental_newline_separates_new_content_from_old(
 
 
 def test_changelog_without_revision(tmp_commitizen_project, util: UtilFixture):
-    tmp_commitizen_project.join("CHANGELOG.md").write(
+    (tmp_commitizen_project / "CHANGELOG.md").write_text(
         """
         # Unreleased
 
@@ -1266,7 +1266,7 @@ def test_changelog_template_option_precedence(
     changelog_file: Path,
     changelog_tpl: Path,
 ):
-    project_root = Path(tmp_commitizen_project)
+    project_root = tmp_commitizen_project
     cfg_template = project_root / "changelog.cfg"
     cmd_template = project_root / "changelog.cmd"
 
@@ -1655,7 +1655,7 @@ def test_changelog_template_incremental_variable(
     Test that the changelog template is not rendered when the incremental flag is not set.
     Reference: https://github.com/commitizen-tools/commitizen/discussions/1620
     """
-    project_root = Path(tmp_commitizen_project)
+    project_root = tmp_commitizen_project
     changelog_tpl = project_root / any_changelog_format.template
     changelog_tpl.write_text(
         dedent("""
