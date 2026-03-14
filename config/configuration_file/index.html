@@ -779,45 +779,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configuration Structure">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#toml-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TOML Format
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#json-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        JSON Format
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#yaml-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        YAML Format
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1087,7 +1048,7 @@
   <span class="md-ellipsis">
     
   
-    Configuration File
+    Customize via config file
   
 
     
@@ -2145,45 +2106,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configuration Structure">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#toml-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TOML Format
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#json-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        JSON Format
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#yaml-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        YAML Format
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -2267,7 +2189,9 @@ When <code>--config</code> is provided, Commitizen will only load configuration 
 </ul>
 <p>All formats support the same configuration options. Choose the format that best fits your project's ecosystem.</p>
 <h2 id="configuration-structure">Configuration Structure<a class="headerlink" href="#configuration-structure" title="Permanent link">&para;</a></h2>
-<h3 id="toml-format">TOML Format<a class="headerlink" href="#toml-format" title="Permanent link">&para;</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">TOML Format</label><label for="__tabbed_1_2">JSON Format</label><label for="__tabbed_1_3">YAML Format</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <p>For TOML files, Commitizen settings are placed under the <code>[tool.commitizen]</code> section. If you're using a standalone <code>.cz.toml</code> or <code>cz.toml</code> file, you can use <code>[tool.commitizen]</code> or just <code>[commitizen]</code>.</p>
 <p><strong>Example: <code>pyproject.toml</code>, <code>.cz.toml</code> or <code>cz.toml</code></strong></p>
 <div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
@@ -2319,7 +2243,8 @@ When <code>--config</code> is provided, Commitizen will only load configuration 
 <span class="w">    </span><span class="p">[</span><span class="s2">&quot;disabled&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fg:#858585 italic&quot;</span><span class="p">]</span>
 <span class="p">]</span>
 </code></pre></div>
-<h3 id="json-format">JSON Format<a class="headerlink" href="#json-format" title="Permanent link">&para;</a></h3>
+</div>
+<div class="tabbed-block">
 <p>For JSON files, Commitizen settings are placed under the <code>commitizen</code> key.</p>
 <p><strong>Example: <code>.cz.json</code> or <code>cz.json</code></strong></p>
 <div class="highlight"><span class="filename">.cz.json</span><pre><span></span><code><span class="p">{</span>
@@ -2372,7 +2297,8 @@ When <code>--config</code> is provided, Commitizen will only load configuration 
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="yaml-format">YAML Format<a class="headerlink" href="#yaml-format" title="Permanent link">&para;</a></h3>
+</div>
+<div class="tabbed-block">
 <p>For YAML files, Commitizen settings are placed under the <code>commitizen</code> key.</p>
 <p><strong>Example: <code>.cz.yaml</code> or <code>cz.yaml</code></strong></p>
 <div class="highlight"><span class="filename">.cz.yaml</span><pre><span></span><code><span class="nt">commitizen</span><span class="p">:</span>
@@ -2429,6 +2355,9 @@ When <code>--config</code> is provided, Commitizen will only load configuration 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disabled</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fg:#858585 italic</span>
 </code></pre></div>
+</div>
+</div>
+</div>
 <h2 id="configuration-options">Configuration Options<a class="headerlink" href="#configuration-options" title="Permanent link">&para;</a></h2>
 <p>For a complete list of all available configuration options and their descriptions, see the <a href="../option/">Configuration Settings</a> documentation.</p>
 <p>Key configuration categories include:</p>
@@ -2445,7 +2374,7 @@ When <code>--config</code> is provided, Commitizen will only load configuration 
 <p>For advanced customization, including creating custom commit rules, see the <a href="../../customization/config_file/">Customization</a> documentation.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The <code>customize</code> option is only supported when using TOML configuration files.</p>
+<p>The <code>customize</code> option is supported in TOML, JSON, and YAML configuration files. For Python projects, adding it to <code>pyproject.toml</code> keeps all project configuration in one place.</p>
 </div>
 
 
@@ -2467,7 +2396,7 @@ When <code>--config</code> is provided, Commitizen will only load configuration 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="January 15, 2026 12:48:44 UTC">January 15, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 14, 2026 07:37:49 UTC">March 14, 2026</span>
   </span>
 
     
@@ -2517,7 +2446,7 @@ When <code>--config</code> is provided, Commitizen will only load configuration 
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>

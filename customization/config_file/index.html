@@ -27,7 +27,7 @@
     
     
       
-        <title>Configuration File - Commitizen</title>
+        <title>Customize via config file - Commitizen</title>
       
     
     
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Configuration File
+              Customize via config file
             
           </span>
         </div>
@@ -944,7 +944,7 @@
   <span class="md-ellipsis">
     
   
-    Configuration File
+    Customize via config file
   
 
     
@@ -962,7 +962,7 @@
   <span class="md-ellipsis">
     
   
-    Configuration File
+    Customize via config file
   
 
     
@@ -1018,6 +1018,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Shortcut keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use_shortcuts-with-cz_customize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        use_shortcuts with cz_customize
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -2069,6 +2086,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Shortcut keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use_shortcuts-with-cz_customize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        use_shortcuts with cz_customize
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -2104,7 +2138,11 @@
 <p><code>cz_customize</code> is likely to be removed or renamed in the next major release.
 This change is still under discussion; you can continue using <code>cz_customize</code> for now and follow <a href="https://github.com/commitizen-tools/commitizen/issues/1385">#1385</a> for the rationale, options, and current status.</p>
 </div>
+<p>The following shows the <strong>same configuration</strong> in TOML, JSON, and YAML; use the format your project uses.</p>
 <p>Example:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">TOML</label><label for="__tabbed_1_2">JSON</label><label for="__tabbed_1_3">YAML</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
 <span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cz_customize&quot;</span>
 
@@ -2141,7 +2179,8 @@ This change is still under discussion; you can continue using <code>cz_customize
 <span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;show_message&quot;</span>
 <span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Do you want to add body message in commit?&quot;</span>
 </code></pre></div>
-<p>The equivalent example for a json config file:</p>
+</div>
+<div class="tabbed-block">
 <div class="highlight"><span class="filename">.cz.json</span><pre><span></span><code><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;commitizen&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cz_customize&quot;</span><span class="p">,</span>
@@ -2194,7 +2233,8 @@ This change is still under discussion; you can continue using <code>cz_customize
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>And the correspondent example for a yaml file:</p>
+</div>
+<div class="tabbed-block">
 <div class="highlight"><span class="filename">.cz.yaml</span><pre><span></span><code><span class="nt">commitizen</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cz_customize</span>
 <span class="w">  </span><span class="nt">customize</span><span class="p">:</span>
@@ -2232,6 +2272,9 @@ This change is still under discussion; you can continue using <code>cz_customize
 <span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">show_message</span>
 <span class="w">      </span><span class="nt">message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Do</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">want</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">add</span><span class="nv"> </span><span class="s">body</span><span class="nv"> </span><span class="s">message</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">commit?&#39;</span>
 </code></pre></div>
+</div>
+</div>
+</div>
 <h2 id="configuration-file-options">Configuration File Options<a class="headerlink" href="#configuration-file-options" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2391,10 +2434,59 @@ This change is still under discussion; you can continue using <code>cz_customize
 </tbody>
 </table>
 <h3 id="shortcut-keys">Shortcut keys<a class="headerlink" href="#shortcut-keys" title="Permanent link">&para;</a></h3>
-<p>When the <code>use_shortcuts</code> config option is enabled, Commitizen can show and use keyboard shortcuts to select items from lists directly.
-For example, when using the <code>cz_conventional_commits</code> Commitizen template, shortcut keys are shown when selecting the commit type.
-Unless otherwise defined, keyboard shortcuts will be numbered automatically.
-To specify keyboard shortcuts for your custom choices, provide the shortcut using the <code>key</code> parameter in dictionary form for each choice you would like to customize.</p>
+<p>For a basic overview of <code>use_shortcuts</code> and how the default menu looks, see the <a href="../../config/option/#use_shortcuts"><code>use_shortcuts</code> option</a>.</p>
+<h4 id="use_shortcuts-with-cz_customize"><code>use_shortcuts</code> with <code>cz_customize</code><a class="headerlink" href="#use_shortcuts-with-cz_customize" title="Permanent link">&para;</a></h4>
+<p>When using <code>cz_customize</code>, enabling <code>use_shortcuts</code> lets you set an optional <code>key</code> for each list/select choice so that choice shows your chosen shortcut. Rules below.</p>
+<p>Example:</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cz_customize&quot;</span>
+<span class="n">use_shortcuts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+
+<span class="k">[tool.commitizen.customize]</span>
+<span class="n">message_template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;{{prefix}}: {{message}}&quot;</span>
+<span class="n">schema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;type&gt;: &lt;body&gt;&quot;</span>
+<span class="n">schema_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;(feat|fix|docs|test):(</span><span class="se">\\</span><span class="s2">s.*)&quot;</span>
+
+<span class="k">[[tool.commitizen.customize.questions]]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;list&quot;</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prefix&quot;</span>
+<span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Select the type of change you are committing&quot;</span>
+<span class="n">choices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;feat&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;feat: A new feature.&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;f&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;fix&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;fix: A bug fix.&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;x&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;docs&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;docs: Documentation only changes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;d&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;test&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;test: Adding or correcting tests&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;t&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">]</span>
+
+<span class="k">[[tool.commitizen.customize.questions]]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;input&quot;</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;message&quot;</span>
+<span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Commit body: &quot;</span>
+</code></pre></div>
+<p><img alt="Menu with custom shortcut keys settings" src="../../images/cli_interactive/shortcut_custom.gif" /></p>
+<p><strong>Rules for <code>key</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Allowed</td>
+<td>Lowercase <code>a</code>–<code>z</code> or digits <code>0</code>–<code>9</code> only</td>
+</tr>
+<tr>
+<td>Uniqueness</td>
+<td>Each <code>key</code> must be unique among all choices</td>
+</tr>
+<tr>
+<td>Optional</td>
+<td>Omit <code>key</code> to use default numeric order (1, 2, 3, …)</td>
+</tr>
+</tbody>
+</table>
 
 
 
@@ -2415,7 +2507,7 @@ To specify keyboard shortcuts for your custom choices, provide the shortcut usin
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 4, 2026 13:44:05 UTC">March 4, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="March 14, 2026 07:37:49 UTC">March 14, 2026</span>
   </span>
 
     
@@ -2465,7 +2557,7 @@ To specify keyboard shortcuts for your custom choices, provide the shortcut usin
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
