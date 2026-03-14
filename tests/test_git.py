@@ -387,6 +387,34 @@ def test_commit_with_spaces_in_path(
     mock_unlink.assert_called_once_with(file_path)
 
 
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_get_filenames_in_commit(util: UtilFixture):
+    """Test get_filenames_in_commit returns filenames from the last commit."""
+    util.create_file_and_commit("feat: old feature", filename="old_file.txt")
+
+    filename = "test_feature_file.txt"
+    util.create_file_and_commit("feat: add new feature", filename=filename)
+
+    filenames = git.get_filenames_in_commit()
+    assert [filename] == filenames
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_get_filenames_in_commit_with_git_reference(util: UtilFixture):
+    """Test get_filenames_in_commit with a specific git reference (commit SHA)."""
+    first_filename = "first_feature.txt"
+    util.create_file_and_commit("feat: first feature", filename=first_filename)
+    first_commit_rev = cmd.run("git rev-parse HEAD").out.strip()
+
+    second_filename = "second_feature.txt"
+    util.create_file_and_commit("feat: second feature", filename=second_filename)
+
+    # Query the first commit by its SHA
+    filenames = git.get_filenames_in_commit(git_reference=first_commit_rev)
+    assert first_filename in filenames
+    assert second_filename not in filenames
+
+
 def test_get_filenames_in_commit_error(util: UtilFixture):
     """Test that GitCommandError is raised when git command fails."""
     util.mock_cmd(err="fatal: bad object HEAD", return_code=1)
