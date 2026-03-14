@@ -8,142 +8,146 @@ The basic steps are:
     `cz_customize` is likely to be removed or renamed in the next major release.
     This change is still under discussion; you can continue using `cz_customize` for now and follow [#1385](https://github.com/commitizen-tools/commitizen/issues/1385) for the rationale, options, and current status.
 
+The following shows the **same configuration** in TOML, JSON, and YAML; use the format your project uses.
+
 Example:
 
-```toml title="pyproject.toml"
-[tool.commitizen]
-name = "cz_customize"
+=== "TOML"
 
-[tool.commitizen.customize]
-message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
-example = "feature: this feature enable customize through config file"
-schema = "<type>: <body>"
-schema_pattern = "(feature|bug fix):(\\s.*)"
-bump_pattern = "^(break|new|fix|hotfix)"
-bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
-change_type_order = ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]
-info_path = "cz_customize_info.txt"
-info = """
-This is customized info
-"""
-commit_parser = "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?"
-changelog_pattern = "^(feature|bug fix)?(!)?"
-change_type_map = {"feature" = "Feat", "bug fix" = "Fix"}
+    ```toml title="pyproject.toml"
+    [tool.commitizen]
+    name = "cz_customize"
 
-[[tool.commitizen.customize.questions]]
-type = "list"
-name = "change_type"
-choices = [{value = "feature", name = "feature: A new feature."}, {value = "bug fix", name = "bug fix: A bug fix."}]
-# choices = ["feature", "fix"]  # short version
-message = "Select the type of change you are committing"
+    [tool.commitizen.customize]
+    message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
+    example = "feature: this feature enable customize through config file"
+    schema = "<type>: <body>"
+    schema_pattern = "(feature|bug fix):(\\s.*)"
+    bump_pattern = "^(break|new|fix|hotfix)"
+    bump_map = {"break" = "MAJOR", "new" = "MINOR", "fix" = "PATCH", "hotfix" = "PATCH"}
+    change_type_order = ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"]
+    info_path = "cz_customize_info.txt"
+    info = """
+    This is customized info
+    """
+    commit_parser = "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?"
+    changelog_pattern = "^(feature|bug fix)?(!)?"
+    change_type_map = {"feature" = "Feat", "bug fix" = "Fix"}
 
-[[tool.commitizen.customize.questions]]
-type = "input"
-name = "message"
-message = "Body."
+    [[tool.commitizen.customize.questions]]
+    type = "list"
+    name = "change_type"
+    choices = [{value = "feature", name = "feature: A new feature."}, {value = "bug fix", name = "bug fix: A bug fix."}]
+    # choices = ["feature", "fix"]  # short version
+    message = "Select the type of change you are committing"
 
-[[tool.commitizen.customize.questions]]
-type = "confirm"
-name = "show_message"
-message = "Do you want to add body message in commit?"
-```
+    [[tool.commitizen.customize.questions]]
+    type = "input"
+    name = "message"
+    message = "Body."
 
-The equivalent example for a json config file:
+    [[tool.commitizen.customize.questions]]
+    type = "confirm"
+    name = "show_message"
+    message = "Do you want to add body message in commit?"
+    ```
 
-```json title=".cz.json"
-{
-    "commitizen": {
-        "name": "cz_customize",
-        "customize": {
-            "message_template": "{{change_type}}:{% if show_message %} {{message}}{% endif %}",
-            "example": "feature: this feature enable customize through config file",
-            "schema": "<type>: <body>",
-            "schema_pattern": "(feature|bug fix):(\\s.*)",
-            "bump_pattern": "^(break|new|fix|hotfix)",
-            "bump_map": {
-                "break": "MAJOR",
-                "new": "MINOR",
-                "fix": "PATCH",
-                "hotfix": "PATCH"
-            },
-            "change_type_order": ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"],
-            "info_path": "cz_customize_info.txt",
-            "info": "This is customized info",
-            "commit_parser": "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?",
-            "changelog_pattern": "^(feature|bug fix)?(!)?",
-            "change_type_map": {"feature": "Feat", "bug fix": "Fix"},
-            "questions": [
-                {
-                    "type": "list",
-                    "name": "change_type",
-                    "choices": [
-                        {
-                            "value": "feature",
-                            "name": "feature: A new feature."
-                        },
-                        {
-                            "value": "bug fix",
-                            "name": "bug fix: A bug fix."
-                        }
-                    ],
-                    "message": "Select the type of change you are committing"
+=== "JSON"
+
+    ```json title=".cz.json"
+    {
+        "commitizen": {
+            "name": "cz_customize",
+            "customize": {
+                "message_template": "{{change_type}}:{% if show_message %} {{message}}{% endif %}",
+                "example": "feature: this feature enable customize through config file",
+                "schema": "<type>: <body>",
+                "schema_pattern": "(feature|bug fix):(\\s.*)",
+                "bump_pattern": "^(break|new|fix|hotfix)",
+                "bump_map": {
+                    "break": "MAJOR",
+                    "new": "MINOR",
+                    "fix": "PATCH",
+                    "hotfix": "PATCH"
                 },
-                {
-                    "type": "input",
-                    "name": "message",
-                    "message": "Body."
-                },
-                {
-                    "type": "confirm",
-                    "name": "show_message",
-                    "message": "Do you want to add body message in commit?"
-                }
-            ]
+                "change_type_order": ["BREAKING CHANGE", "feat", "fix", "refactor", "perf"],
+                "info_path": "cz_customize_info.txt",
+                "info": "This is customized info",
+                "commit_parser": "^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?",
+                "changelog_pattern": "^(feature|bug fix)?(!)?",
+                "change_type_map": {"feature": "Feat", "bug fix": "Fix"},
+                "questions": [
+                    {
+                        "type": "list",
+                        "name": "change_type",
+                        "choices": [
+                            {
+                                "value": "feature",
+                                "name": "feature: A new feature."
+                            },
+                            {
+                                "value": "bug fix",
+                                "name": "bug fix: A bug fix."
+                            }
+                        ],
+                        "message": "Select the type of change you are committing"
+                    },
+                    {
+                        "type": "input",
+                        "name": "message",
+                        "message": "Body."
+                    },
+                    {
+                        "type": "confirm",
+                        "name": "show_message",
+                        "message": "Do you want to add body message in commit?"
+                    }
+                ]
+            }
         }
     }
-}
-```
+    ```
 
-And the correspondent example for a yaml file:
+=== "YAML"
 
-```yaml title=".cz.yaml"
-commitizen:
-  name: cz_customize
-  customize:
-    message_template: '{{change_type}}:{% if show_message %} {{message}}{% endif %}'
-    example: 'feature: this feature enable customize through config file'
-    schema: '<type>: <body>'
-    schema_pattern: '(feature|bug fix):(\\s.*)'
-    bump_pattern: '^(break|new|fix|hotfix)'
-    commit_parser: '^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?'
-    changelog_pattern: '^(feature|bug fix)?(!)?'
-    change_type_map:
-      feature: Feat
-      bug fix: Fix
-    bump_map:
-      break: MAJOR
-      new: MINOR
-      fix: PATCH
-      hotfix: PATCH
-    change_type_order: ['BREAKING CHANGE', 'feat', 'fix', 'refactor', 'perf']
-    info_path: cz_customize_info.txt
-    info: This is customized info
-    questions:
-    - type: list
-      name: change_type
-      choices:
-      - value: feature
-        name: 'feature: A new feature.'
-      - value: bug fix
-        name: 'bug fix: A bug fix.'
-      message: Select the type of change you are committing
-    - type: input
-      name: message
-      message: 'Body.'
-    - type: confirm
-      name: show_message
-      message: 'Do you want to add body message in commit?'
-```
+    ```yaml title=".cz.yaml"
+    commitizen:
+      name: cz_customize
+      customize:
+        message_template: '{{change_type}}:{% if show_message %} {{message}}{% endif %}'
+        example: 'feature: this feature enable customize through config file'
+        schema: '<type>: <body>'
+        schema_pattern: '(feature|bug fix):(\\s.*)'
+        bump_pattern: '^(break|new|fix|hotfix)'
+        commit_parser: '^(?P<change_type>feature|bug fix):\\s(?P<message>.*)?'
+        changelog_pattern: '^(feature|bug fix)?(!)?'
+        change_type_map:
+          feature: Feat
+          bug fix: Fix
+        bump_map:
+          break: MAJOR
+          new: MINOR
+          fix: PATCH
+          hotfix: PATCH
+        change_type_order: ['BREAKING CHANGE', 'feat', 'fix', 'refactor', 'perf']
+        info_path: cz_customize_info.txt
+        info: This is customized info
+        questions:
+        - type: list
+          name: change_type
+          choices:
+          - value: feature
+            name: 'feature: A new feature.'
+          - value: bug fix
+            name: 'bug fix: A bug fix.'
+          message: Select the type of change you are committing
+        - type: input
+          name: message
+          message: 'Body.'
+        - type: confirm
+          name: show_message
+          message: 'Do you want to add body message in commit?'
+    ```
 
 ## Configuration File Options
 
@@ -184,7 +188,47 @@ commitizen:
 
 ### Shortcut keys
 
-When the `use_shortcuts` config option is enabled, Commitizen can show and use keyboard shortcuts to select items from lists directly.
-For example, when using the `cz_conventional_commits` Commitizen template, shortcut keys are shown when selecting the commit type.
-Unless otherwise defined, keyboard shortcuts will be numbered automatically.
-To specify keyboard shortcuts for your custom choices, provide the shortcut using the `key` parameter in dictionary form for each choice you would like to customize.
+For a basic overview of `use_shortcuts` and how the default menu looks, see the [`use_shortcuts` option](../config/option.md#use_shortcuts).
+
+#### `use_shortcuts` with `cz_customize`
+
+When using `cz_customize`, enabling `use_shortcuts` lets you set an optional `key` for each list/select choice so that choice shows your chosen shortcut. Rules below.
+
+Example:
+
+```toml title="pyproject.toml"
+[tool.commitizen]
+name = "cz_customize"
+use_shortcuts = true
+
+[tool.commitizen.customize]
+message_template = "{{prefix}}: {{message}}"
+schema = "<type>: <body>"
+schema_pattern = "(feat|fix|docs|test):(\\s.*)"
+
+[[tool.commitizen.customize.questions]]
+type = "list"
+name = "prefix"
+message = "Select the type of change you are committing"
+choices = [
+  { value = "feat", name = "feat: A new feature.", key = "f" },
+  { value = "fix", name = "fix: A bug fix.", key = "x" },
+  { value = "docs", name = "docs: Documentation only changes", key = "d" },
+  { value = "test", name = "test: Adding or correcting tests", key = "t" }
+]
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "message"
+message = "Commit body: "
+```
+
+![Menu with custom shortcut keys settings](../images/cli_interactive/shortcut_custom.gif)
+
+**Rules for `key`**
+
+| Rule | Description |
+|------|-------------|
+| Allowed | Lowercase `a`–`z` or digits `0`–`9` only |
+| Uniqueness | Each `key` must be unique among all choices |
+| Optional | Omit `key` to use default numeric order (1, 2, 3, …) |

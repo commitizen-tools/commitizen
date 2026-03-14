@@ -26,7 +26,7 @@ Style for the prompts (It will merge this value with default style.) See [Stylin
 - Type: `dict`
 - Default: `None`
 
-**This is only supported when config through `toml` configuration file.**
+**Supported in TOML, JSON, and YAML configuration files.**
 
 Custom rules for committing and bumping. See [customization](../customization/config_file.md) for more details.
 
@@ -35,4 +35,18 @@ Custom rules for committing and bumping. See [customization](../customization/co
 - Type: `bool`
 - Default: `False`
 
-Show keyboard shortcuts when selecting from a list. Define a `key` for each of your choices to set the key. See [shortcut keys](../customization/config_file.md#shortcut-keys) for more details.
+Show keyboard shortcuts when selecting from a list. When enabled, each choice shows a shortcut key; press that key or use the arrow keys to select.
+
+Example:
+
+```toml title="pyproject.toml"
+[tool.commitizen]
+name = "cz_conventional_commits"
+use_shortcuts = true
+```
+
+Run `cz commit` to see shortcut keys on each choice.
+
+![Menu with shortcut keys](../images/cli_interactive/shortcut_default.gif)
+
+To customize which key is used for each choice (via the `key` field when using `cz_customize`), see [shortcut keys customization](../customization/config_file.md#shortcut-keys).

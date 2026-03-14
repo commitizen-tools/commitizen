@@ -1,0 +1,138 @@
+Output cli_interactive/shortcut_default.gif
+
+Require cz
+
+# Use bash for cross-platform compatibility (macOS, Linux, Windows)
+Set Shell bash
+
+Set FontSize 16
+Set Width 878
+Set Height 568
+Set Padding 20
+Set TypingSpeed 50ms
+
+Set Theme {
+  "name": "Commitizen",
+  "black": "#232628",
+  "red": "#fc4384",
+  "green": "#b3e33b",
+  "yellow": "#ffa727",
+  "blue": "#75dff2",
+  "magenta": "#ae89fe",
+  "cyan": "#708387",
+  "white": "#d5d5d0",
+  "brightBlack": "#626566",
+  "brightRed": "#ff7fac",
+  "brightGreen": "#c8ed71",
+  "brightYellow": "#ebdf86",
+  "brightBlue": "#75dff2",
+  "brightMagenta": "#ae89fe",
+  "brightCyan": "#b1c6ca",
+  "brightWhite": "#f9f9f4",
+  "background": "#1e1e2e",
+  "foreground": "#afafaf",
+  "cursor": "#c7c7c7"
+}
+
+# Hide initial shell prompt
+Hide
+
+# Wait for terminal to be ready
+Sleep 1s
+
+# Set a clean, simple prompt (while hidden)
+Type "PS1='$ '"
+Enter
+Sleep 300ms
+
+# Create a clean temporary directory for recording
+Type "rm -rf /tmp/commitizen-example && mkdir -p /tmp/commitizen-example && cd /tmp/commitizen-example"
+Enter
+Sleep 500ms
+
+# Initialize git repository
+Type "git init"
+Enter
+Type "git config user.email 'you@example.com'"
+Enter
+Type "git config user.name 'Your Name'"
+Enter
+Sleep 500ms
+
+Type "git checkout -b awesome-docs"
+Enter
+Sleep 500ms
+
+# Initialize commitizen config with shortcuts enabled
+Type `cat > pyproject.toml << 'EOF'`
+Enter
+Sleep 100ms
+Type `[tool.commitizen]`
+Enter
+Sleep 100ms
+Type `name = "cz_conventional_commits"`
+Enter
+Sleep 100ms
+Type `use_shortcuts = true`
+Enter
+Sleep 100ms
+Type "EOF"
+Enter
+Sleep 300ms
+
+# Create a dummy file to commit
+Type "echo 'test content' > README.md"
+Enter
+Sleep 300ms
+
+Type "git add README.md"
+Enter
+Sleep 300ms
+
+# Clear the screen to start fresh
+Type "clear"
+Enter
+Sleep 500ms
+
+# Show commands from here
+Show
+
+# Now run cz commit
+Type "cz commit"
+Sleep 500ms
+Enter
+
+# Wait for first prompt to appear
+Sleep 2s
+
+# Question 1: Select the type of change (press d to "docs")
+Sleep 1s
+Type "d"
+Sleep 2s
+Enter
+Sleep 1s
+
+# Question 2: Scope (optional, skip)
+Enter
+Sleep 1s
+
+# Question 3: Subject
+Type "demo with custom keys"
+Sleep 500ms
+Enter
+Sleep 500ms
+
+# Question 4: Is this a BREAKING CHANGE? (No)
+Enter
+Sleep 500ms
+
+# Question 5: Body (optional, skip)
+Enter
+Sleep 500ms
+
+# Question 6: Footer (optional, skip)
+Enter
+Sleep 500ms
+
+# Wait for commit success message
+Sleep 1s

@@ -6,6 +6,8 @@ theme:
   name: material
   logo: images/cz_logo.png
   favicon: images/cz_logo.png
+  features:
+    - content.code.copy
   palette:
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
@@ -55,7 +57,7 @@ nav:
     - changelog: "config/changelog.md"
     - Misc Options: "config/option.md"
   - Advanced Customization:
-    - Configuration File: "customization/config_file.md"
+    - Customize via config file: "customization/config_file.md"
     - Customized Python Class: "customization/python_class.md"
     - Changelog Template: "customization/changelog_template.md"
   - Tutorials:
@@ -105,6 +107,8 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
 
 plugins:
   - search
