@@ -1,6 +1,6 @@
 usage: cz commit [-h] [--retry] [--no-retry] [--dry-run]
                  [--write-message-to-file FILE_PATH] [-s] [-a] [-e]
-                 [-l MESSAGE_LENGTH_LIMIT] [--]
+                 [-l MESSAGE_LENGTH_LIMIT] [--preview] [--]
 
 Create new commit
 
@@ -22,4 +22,5 @@ options:
   -l, --message-length-limit MESSAGE_LENGTH_LIMIT
                         Set the length limit of the commit message; 0 for no
                         limit.
+  --preview             Show live first-line (subject) preview while typing.
   --                    Positional arguments separator (recommended).
