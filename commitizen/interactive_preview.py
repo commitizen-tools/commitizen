@@ -42,7 +42,7 @@ def make_toolbar_content(
     current_field: str,
     current_text: str,
     *,
-    max_length: int | None,
+    max_length: int,
 ) -> str:
     """Build bottom toolbar content with live preview and length counter.
 
@@ -53,10 +53,11 @@ def make_toolbar_content(
     preview = subject_builder(current_field, current_text)
     current_length = len(preview)
 
-    if max_length is not None and max_length > 0:
-        counter = f"{current_length}/{max_length} chars"
-    else:
-        counter = f"{current_length} chars"
+    counter = (
+        f"{current_length}/{max_length} chars"
+        if max_length > 0
+        else f"{current_length} chars"
+    )
 
     try:
         width = get_terminal_size().columns
@@ -76,19 +77,19 @@ def make_length_validator(
     subject_builder: SubjectBuilder,
     field: str,
     *,
-    max_length: int | None,
+    max_length: int,
 ) -> Callable[[str], bool | str]:
     """Create a questionary-style validator for subject length.
 
     The validator:
     - Uses the subject_builder to get the full preview string for the current
       answers_state and field value.
-    - Applies max_length on the character count (len). A value of 0 or None
-      disables the limit.
+    - Applies max_length on the character count (len). A value of 0 disables
+      the limit.
     """
 
     def _validate(text: str) -> bool | str:
-        if not max_length or max_length <= 0:
+        if max_length <= 0:
             return True
 
         preview = subject_builder(field, text)

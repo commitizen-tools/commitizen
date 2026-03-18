@@ -42,7 +42,7 @@ def build_preview_questions(
         for q in questions
         if isinstance(q.get("name"), str)
     }
-    field_filters: dict[str, Any] = {
+    field_filters: dict[str, Callable[[str], str] | None] = {
         q["name"]: q.get("filter") for q in questions if isinstance(q.get("name"), str)
     }
     answers_state: dict[str, Any] = {}
@@ -100,7 +100,7 @@ def build_preview_questions(
             max_length=max_preview_length,
         )
 
-    enhanced_questions: list[dict[str, object]] = []
+    enhanced_questions: list[CzQuestion] = []
     for q in questions:
         q_dict = q.copy()
         q_type = q_dict.get("type")
