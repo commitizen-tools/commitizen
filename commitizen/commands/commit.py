@@ -6,10 +6,9 @@ import shutil
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, TypedDict
+from typing import TYPE_CHECKING, TypedDict
 
 import questionary
-from prompt_toolkit.application.current import get_app
 
 from commitizen import factory, git, out
 from commitizen.cz.exceptions import CzException
@@ -26,16 +25,9 @@ from commitizen.exceptions import (
     NothingToCommitError,
 )
 from commitizen.git import smart_open
-from commitizen.interactive_preview import (
-    make_length_validator as make_length_validator_preview,
-)
-from commitizen.interactive_preview import (
-    make_toolbar_content as make_toolbar_content_preview,
-)
+from commitizen.preview_questions import build_preview_questions
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
-
     from commitizen.config import BaseConfig
 
 
@@ -49,15 +41,11 @@ class CommitArgs(TypedDict, total=False):
     signoff: bool
     write_message_to_file: Path | None
     retry: bool
+    preview: bool
 
 
 class Commit:
     """Show prompt for the user to create a guided commit."""
-
-    # Questionary types for interactive preview hooks (length validator / toolbar),
-    # based on questionary 2.0.1
-    VALIDATABLE_TYPES = {"input", "text", "password", "path", "checkbox"}
-    BOTTOM_TOOLBAR_TYPES = {"input", "text", "password", "confirm"}
 
     def __init__(self, config: BaseConfig, arguments: CommitArgs) -> None:
         if not git.is_git_project():
@@ -85,100 +73,6 @@ class Commit:
             encoding=self.config.settings["encoding"]
         ).strip()
 
-    def _build_commit_questions(
-        self,
-        questions: list,
-        preview_enabled: bool,
-        max_preview_length: int,
-    ) -> list:
-        """Build the list of questions to ask; add toolbar/validate when preview enabled."""
-        if not preview_enabled:
-            return list(questions)
-
-        default_answers: dict[str, Any] = {
-            q["name"]: q.get("default", "")
-            for q in questions
-            if isinstance(q.get("name"), str)
-        }
-        field_filters: dict[str, Any] = {
-            q["name"]: q.get("filter")
-            for q in questions
-            if isinstance(q.get("name"), str)
-        }
-        answers_state: dict[str, Any] = {}
-
-        def _get_current_buffer_text() -> str:
-            try:
-                app = get_app()
-                buffer = app.layout.current_buffer
-                return buffer.text if buffer is not None else ""
-            except Exception:
-                return ""
-
-        def subject_builder(current_field: str, current_text: str) -> str:
-            preview_answers: dict[str, Any] = default_answers.copy()
-            preview_answers.update(answers_state)
-            if current_field:
-                field_filter = field_filters.get(current_field)
-                if field_filter:
-                    try:
-                        preview_answers[current_field] = field_filter(current_text)
-                    except Exception:
-                        preview_answers[current_field] = current_text
-                else:
-                    preview_answers[current_field] = current_text
-            try:
-                return self.cz.message(preview_answers).partition("\n")[0].strip()
-            except Exception:
-                return ""
-
-        def make_stateful_filter(
-            name: str, original_filter: Callable[[str], Any] | None
-        ) -> Callable[[str], Any]:
-            def _filter(raw: str) -> Any:
-                value = original_filter(raw) if original_filter else raw
-                answers_state[name] = value
-                return value
-
-            return _filter
-
-        def make_toolbar(name: str) -> Callable[[], str]:
-            def _toolbar() -> str:
-                return make_toolbar_content_preview(
-                    subject_builder,
-                    name,
-                    _get_current_buffer_text(),
-                    max_length=max_preview_length,
-                )
-
-            return _toolbar
-
-        def make_length_validator(name: str) -> Callable[[str], bool | str]:
-            return make_length_validator_preview(
-                subject_builder,
-                name,
-                max_length=max_preview_length,
-            )
-
-        enhanced_questions: list[dict[str, object]] = []
-        for q in questions:
-            q_dict = dict(q)
-            q_type = q_dict.get("type")
-            name = q_dict.get("name")
-
-            if isinstance(name, str):
-                original_filter = q_dict.get("filter")
-                q_dict["filter"] = make_stateful_filter(name, original_filter)
-
-                if q_type in self.BOTTOM_TOOLBAR_TYPES:
-                    q_dict["bottom_toolbar"] = make_toolbar(name)
-
-                if q_type in self.VALIDATABLE_TYPES:
-                    q_dict["validate"] = make_length_validator(name)
-
-            enhanced_questions.append(q_dict)
-        return enhanced_questions
-
     def _get_message_by_prompt_commit_questions(self) -> str:
         questions = self.cz.questions()
         for question in (q for q in questions if q["type"] == "list"):
@@ -188,13 +82,17 @@ class Commit:
             self.arguments.get("preview", False)
             or self.config.settings.get("preview", False)
         )
-        max_preview_length = self.arguments.get(
-            "message_length_limit",
-            self.config.settings.get("message_length_limit", 0),
+        max_preview_length = (
+            self.arguments.get("message_length_limit")
+            if self.arguments.get("message_length_limit") is not None
+            else self.config.settings.get("message_length_limit", 0)
         )
 
-        questions_to_ask = self._build_commit_questions(
-            questions, preview_enabled, max_preview_length
+        questions_to_ask = build_preview_questions(
+            self.cz,
+            questions,
+            enabled=preview_enabled,
+            max_length=max_preview_length,
         )
 
         try:
