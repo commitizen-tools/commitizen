@@ -63,6 +63,11 @@ class Commit:
             else config.settings["message_length_limit"]
         )
 
+        self.preview_enabled = bool(
+            self.arguments.get("preview", False)
+            or self.config.settings.get("preview", False)
+        )
+
     def _read_backup_message(self) -> str | None:
         # Check the commit backup file exists
         if not self.backup_file_path.is_file():
@@ -78,21 +83,11 @@ class Commit:
         for question in (q for q in questions if q["type"] == "list"):
             question["use_shortcuts"] = self.config.settings["use_shortcuts"]
 
-        preview_enabled = bool(
-            self.arguments.get("preview", False)
-            or self.config.settings.get("preview", False)
-        )
-        max_preview_length = (
-            self.arguments.get("message_length_limit")
-            if self.arguments.get("message_length_limit") is not None
-            else self.config.settings.get("message_length_limit", 0)
-        )
-
         questions_to_ask = build_preview_questions(
             self.cz,
             questions,
-            enabled=preview_enabled,
-            max_length=max_preview_length,
+            enabled=self.preview_enabled,
+            max_length=self.message_length_limit,
         )
 
         try:
