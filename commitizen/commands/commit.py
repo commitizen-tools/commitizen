@@ -35,7 +35,7 @@ class CommitArgs(TypedDict, total=False):
     dry_run: bool
     edit: bool
     extra_cli_args: str
-    message_length_limit: int
+    message_length_limit: int | None
     no_retry: bool
     signoff: bool
     write_message_to_file: Path | None
