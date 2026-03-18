@@ -351,7 +351,9 @@ def test_check_command_with_amend_prefix_default(config, success_mock):
     success_mock.assert_called_once()
 
 
-def test_check_command_with_config_message_length_limit_and_cli_none(config, success_mock: MockType):
+def test_check_command_with_config_message_length_limit_and_cli_none(
+    config, success_mock: MockType
+):
     message = "fix(scope): some commit message"
     config.settings["message_length_limit"] = len(message) + 1
     commands.Check(

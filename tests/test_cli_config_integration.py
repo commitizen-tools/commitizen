@@ -1,11 +1,15 @@
 from __future__ import annotations
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 
 from commitizen.exceptions import CommitMessageLengthExceededError, DryRunExit
-from tests.utils import UtilFixture
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from tests.utils import UtilFixture
 
 
 def _write_pyproject_with_message_length_limit(
@@ -84,4 +88,3 @@ def test_cli_commit_cli_overrides_message_length_limit_from_pyproject(
 
     with pytest.raises(DryRunExit):
         util.run_cli("commit", "--dry-run", "-l", "100")
-

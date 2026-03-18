@@ -377,7 +377,9 @@ def test_commit_message_length_uses_config_when_cli_unset(
 def test_commit_message_length_config_exceeded_when_cli_unset(
     config, prompt_mock_feat: MockType
 ):
-    config.settings["message_length_limit"] = _commit_first_line_len(prompt_mock_feat) - 1
+    config.settings["message_length_limit"] = (
+        _commit_first_line_len(prompt_mock_feat) - 1
+    )
     with pytest.raises(CommitMessageLengthExceededError):
         commands.Commit(config, {"message_length_limit": None})()
 
@@ -396,6 +398,8 @@ def test_commit_message_length_cli_overrides_stricter_config(
 def test_commit_message_length_cli_zero_disables_limit(
     config, success_mock: MockType, prompt_mock_feat: MockType
 ):
-    config.settings["message_length_limit"] = _commit_first_line_len(prompt_mock_feat) - 1
+    config.settings["message_length_limit"] = (
+        _commit_first_line_len(prompt_mock_feat) - 1
+    )
     commands.Commit(config, {"message_length_limit": 0})()
     success_mock.assert_called_once()
