@@ -403,3 +403,37 @@ def test_commit_message_length_cli_zero_disables_limit(
     )
     commands.Commit(config, {"message_length_limit": 0})()
     success_mock.assert_called_once()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_preview_enhances_questions_passed_to_questionary_prompt(
+    config, mocker: MockFixture
+):
+    prompt_return = {
+        "prefix": "feat",
+        "subject": "user created",
+        "scope": "",
+        "is_breaking_change": False,
+        "body": "closes #21",
+        "footer": "",
+    }
+
+    def prompt_side_effect(questions_to_ask, style=None):
+        input_questions = [q for q in questions_to_ask if q.get("type") == "input"]
+        assert input_questions, "Expected at least one input question"
+        q = input_questions[0]
+        assert callable(q.get("bottom_toolbar"))
+        assert callable(q.get("validate"))
+        assert callable(q.get("filter"))
+        return prompt_return
+
+    prompt_mock = mocker.patch("questionary.prompt", side_effect=prompt_side_effect)
+    mocker.patch(
+        "commitizen.git.commit", return_value=cmd.Command("success", "", b"", b"", 0)
+    )
+
+    commit_cmd = commands.Commit(config, {"preview": True, "message_length_limit": 0})
+    message = commit_cmd._get_message_by_prompt_commit_questions()
+
+    prompt_mock.assert_called_once()
+    assert "feat:" in message
