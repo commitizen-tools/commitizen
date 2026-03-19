@@ -405,7 +405,7 @@ def test_commit_message_length_cli_zero_disables_limit(
     success_mock.assert_called_once()
 
 
-@pytest.mark.usefixtures("staging_is_clean")
+@pytest.mark.usefixtures("staging_is_clean", "commit_mock")
 def test_commit_preview_enhances_questions_passed_to_questionary_prompt(
     config, mocker: MockFixture
 ):
@@ -428,9 +428,6 @@ def test_commit_preview_enhances_questions_passed_to_questionary_prompt(
         return prompt_return
 
     prompt_mock = mocker.patch("questionary.prompt", side_effect=prompt_side_effect)
-    mocker.patch(
-        "commitizen.git.commit", return_value=cmd.Command("success", "", b"", b"", 0)
-    )
 
     commit_cmd = commands.Commit(config, {"preview": True, "message_length_limit": 0})
     message = commit_cmd._get_message_by_prompt_commit_questions()

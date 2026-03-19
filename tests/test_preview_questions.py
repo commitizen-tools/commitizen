@@ -9,6 +9,7 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
 
     import pytest
+    from pytest_mock import MockerFixture
 
     from commitizen.question import CzQuestion
 
@@ -38,6 +39,13 @@ class PreviewCz(BaseCommitizen):
         return ""
 
 
+def _make_fake_prompt_app(mocker: MockerFixture, buffer_text: str):
+    """Object graph for get_app().layout.current_buffer.text (prompt_toolkit)."""
+    app = mocker.Mock()
+    app.layout.current_buffer.text = buffer_text
+    return app
+
+
 def test_build_preview_questions_disabled_returns_original_list(config):
     cz = PreviewCz(config)
     questions: list[CzQuestion] = [
@@ -50,21 +58,13 @@ def test_build_preview_questions_disabled_returns_original_list(config):
 
 def test_build_preview_questions_wraps_filter_and_updates_answers_state(
     monkeypatch: pytest.MonkeyPatch,
+    mocker: MockerFixture,
     config,
 ):
     cz = PreviewCz(config)
 
     def original_filter(raw: str) -> str:
         return raw.strip().upper()
-
-    class DummyBuffer:
-        text = "  hello "
-
-    class DummyLayout:
-        current_buffer = DummyBuffer()
-
-    class DummyApp:
-        layout = DummyLayout()
 
     questions: list[CzQuestion] = [
         {
@@ -78,13 +78,12 @@ def test_build_preview_questions_wraps_filter_and_updates_answers_state(
     enhanced = build_preview_questions(cz, questions, enabled=True, max_length=50)
     q = enhanced[0]
     assert q["filter"] is not original_filter
-
-    # First update state via filter wrapper
     assert q["filter"]("  hello ") == "HELLO"
 
-    # Then call toolbar which uses subject_builder -> cz.message() using answers_state
-    # and the current buffer text for the active field.
-    monkeypatch.setattr("commitizen.preview_questions.get_app", lambda: DummyApp())
+    monkeypatch.setattr(
+        "commitizen.preview_questions.get_app",
+        lambda: _make_fake_prompt_app(mocker, "  hello "),
+    )
     toolbar_text = q["bottom_toolbar"]()
     assert "HELLO" in toolbar_text
     assert cz.calls, "cz.message should be called by toolbar rendering"
@@ -121,20 +120,15 @@ def test_build_preview_questions_adds_validate_only_for_supported_types(config):
 
 def test_toolbar_uses_current_buffer_text_and_subject_builder(
     monkeypatch: pytest.MonkeyPatch,
+    mocker: MockerFixture,
     config,
 ):
     cz = PreviewCz(config)
 
-    class DummyBuffer:
-        text = "buffered"
-
-    class DummyLayout:
-        current_buffer = DummyBuffer()
-
-    class DummyApp:
-        layout = DummyLayout()
-
-    monkeypatch.setattr("commitizen.preview_questions.get_app", lambda: DummyApp())
+    monkeypatch.setattr(
+        "commitizen.preview_questions.get_app",
+        lambda: _make_fake_prompt_app(mocker, "buffered"),
+    )
 
     questions: list[CzQuestion] = [
         {"type": "input", "name": "subject", "message": "Subject"},
@@ -142,7 +136,6 @@ def test_toolbar_uses_current_buffer_text_and_subject_builder(
     enhanced = build_preview_questions(cz, questions, enabled=True, max_length=50)
     toolbar_text = enhanced[0]["bottom_toolbar"]()
 
-    # DummyCz.message uses subject from current buffer text via subject_builder
     assert "buffered" in toolbar_text
 
 
@@ -165,6 +158,7 @@ def test_get_current_buffer_text_on_get_app_exception_returns_empty(
 
 def test_subject_builder_applies_field_filter_and_handles_filter_exception(
     monkeypatch: pytest.MonkeyPatch,
+    mocker: MockerFixture,
     config,
 ):
     cz = PreviewCz(config)
@@ -174,15 +168,6 @@ def test_subject_builder_applies_field_filter_and_handles_filter_exception(
 
     def boom_filter(_raw: str) -> str:
         raise RuntimeError("boom")
-
-    class DummyBuffer:
-        text = " SCOPE "
-
-    class DummyLayout:
-        current_buffer = DummyBuffer()
-
-    class DummyApp:
-        layout = DummyLayout()
 
     questions: list[CzQuestion] = [
         {"type": "input", "name": "subject", "message": "Subject", "filter": ok_filter},
@@ -194,7 +179,10 @@ def test_subject_builder_applies_field_filter_and_handles_filter_exception(
     enhanced[0]["filter"]("  hi ")
     # When rendering toolbar for current field 'scope', subject_builder will apply the
     # field filter to the current buffer text; filter exceptions must fallback to raw.
-    monkeypatch.setattr("commitizen.preview_questions.get_app", lambda: DummyApp())
+    monkeypatch.setattr(
+        "commitizen.preview_questions.get_app",
+        lambda: _make_fake_prompt_app(mocker, " SCOPE "),
+    )
 
     # Render toolbar for scope and ensure it still includes subject, and scope raw is used
     toolbar_text = enhanced[1]["bottom_toolbar"]()
@@ -205,7 +193,7 @@ def test_subject_builder_applies_field_filter_and_handles_filter_exception(
 def test_subject_builder_handles_cz_message_exception_returns_empty(
     monkeypatch: pytest.MonkeyPatch,
     config,
-    mocker,
+    mocker: MockerFixture,
 ):
     class BoomCz(PreviewCz):
         def message(self, _answers: Mapping[str, Any]) -> str:
@@ -218,7 +206,6 @@ def test_subject_builder_handles_cz_message_exception_returns_empty(
     ]
     enhanced = build_preview_questions(cz, questions, enabled=True, max_length=50)
 
-    # Force deterministic terminal width to avoid wrap dependence
     monkeypatch.setattr(
         "commitizen.interactive_preview.get_terminal_size",
         lambda: mocker.Mock(columns=80),
