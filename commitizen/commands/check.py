@@ -53,6 +53,10 @@ class Check:
             if message_length_limit is not None
             else config.settings["message_length_limit"]
         )
+        if self.message_length_limit < 0:
+            raise InvalidCommandArgumentError(
+                "message_length_limit must be a non-negative integer"
+            )
 
         # we need to distinguish between None and [], which is a valid value
         allowed_prefixes = arguments.get("allowed_prefixes")
