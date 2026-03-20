@@ -12,7 +12,7 @@
 ## Articles
 
 - [Python Table Manners - Commitizen: 規格化 commit message](https://blog.wei-lee.me/posts/tech/2020/03/python-table-manners-commitizen/) (Written in Traditional Mandarin)
-- [Automating semantic release with commitizen](https://woile.dev/posts/automating-semver-releases-with-commitizen/) (English)
+- [Automating semantic release with commitizen](https://woile.dev/blog/automating-deployment-with-commitizen.html) (English)
 - [How to Write Better Git Commit Messages – A Step-By-Step Guide](https://www.freecodecamp.org/news/how-to-write-better-git-commit-messages/?utm_source=tldrnewsletter) (English)
 - [Continuous delivery made easy (in Python)](https://blog.devgenius.io/continuous-delivery-made-easy-in-python-c085e9c82e69)
 
