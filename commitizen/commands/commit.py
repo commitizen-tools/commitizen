@@ -18,6 +18,7 @@ from commitizen.exceptions import (
     CommitMessageLengthExceededError,
     CustomError,
     DryRunExit,
+    InvalidCommandArgumentError,
     NoAnswersError,
     NoCommitBackupError,
     NotAGitProjectError,
@@ -35,7 +36,7 @@ class CommitArgs(TypedDict, total=False):
     dry_run: bool
     edit: bool
     extra_cli_args: str
-    message_length_limit: int
+    message_length_limit: int | None
     no_retry: bool
     signoff: bool
     write_message_to_file: Path | None
@@ -53,6 +54,17 @@ class Commit:
         self.cz = factory.committer_factory(self.config)
         self.arguments = arguments
         self.backup_file_path = get_backup_file_path()
+
+        message_length_limit = arguments.get("message_length_limit")
+        self.message_length_limit: int = (
+            message_length_limit
+            if message_length_limit is not None
+            else config.settings["message_length_limit"]
+        )
+        if self.message_length_limit < 0:
+            raise InvalidCommandArgumentError(
+                "message_length_limit must be a non-negative integer"
+            )
 
     def _read_backup_message(self) -> str | None:
         # Check the commit backup file exists
@@ -85,19 +97,14 @@ class Commit:
         return message
 
     def _validate_subject_length(self, message: str) -> None:
-        message_length_limit = self.arguments.get(
-            "message_length_limit", self.config.settings.get("message_length_limit", 0)
-        )
         # By the contract, message_length_limit is set to 0 for no limit
-        if (
-            message_length_limit is None or message_length_limit <= 0
-        ):  # do nothing for no limit
+        if self.message_length_limit == 0:
             return
 
         subject = message.partition("\n")[0].strip()
-        if len(subject) > message_length_limit:
+        if len(subject) > self.message_length_limit:
             raise CommitMessageLengthExceededError(
-                f"Length of commit message exceeds limit ({len(subject)}/{message_length_limit}), subject: '{subject}'"
+                f"Length of commit message exceeds limit ({len(subject)}/{self.message_length_limit}), subject: '{subject}'"
             )
 
     def manual_edit(self, message: str) -> str:
