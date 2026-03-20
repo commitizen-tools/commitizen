@@ -18,6 +18,7 @@ from commitizen.exceptions import (
     CommitMessageLengthExceededError,
     CustomError,
     DryRunExit,
+    InvalidCommandArgumentError,
     NoAnswersError,
     NoCommitBackupError,
     NotAGitProjectError,
@@ -60,6 +61,10 @@ class Commit:
             if message_length_limit is not None
             else config.settings["message_length_limit"]
         )
+        if self.message_length_limit < 0:
+            raise InvalidCommandArgumentError(
+                "message_length_limit must be a non-negative integer"
+            )
 
     def _read_backup_message(self) -> str | None:
         # Check the commit backup file exists
@@ -93,7 +98,7 @@ class Commit:
 
     def _validate_subject_length(self, message: str) -> None:
         # By the contract, message_length_limit is set to 0 for no limit
-        if self.message_length_limit <= 0:
+        if self.message_length_limit == 0:
             return
 
         subject = message.partition("\n")[0].strip()
