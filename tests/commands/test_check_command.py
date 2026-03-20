@@ -392,6 +392,29 @@ def test_check_command_cli_overrides_config_message_length_limit(
         success_mock.assert_called_once()
 
 
+def test_check_command_with_negative_cli_message_length_limit_raises(config):
+    with pytest.raises(InvalidCommandArgumentError):
+        commands.Check(
+            config=config,
+            arguments={
+                "message": "fix(scope): some commit message",
+                "message_length_limit": -1,
+            },
+        )
+
+
+def test_check_command_with_negative_config_message_length_limit_raises(config):
+    config.settings["message_length_limit"] = -1
+    with pytest.raises(InvalidCommandArgumentError):
+        commands.Check(
+            config=config,
+            arguments={
+                "message": "fix(scope): some commit message",
+                "message_length_limit": None,
+            },
+        )
+
+
 class ValidationCz(BaseCommitizen):
     def questions(self) -> list[CzQuestion]:
         return [

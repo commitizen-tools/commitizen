@@ -12,6 +12,7 @@ from commitizen.exceptions import (
     CommitMessageLengthExceededError,
     CustomError,
     DryRunExit,
+    InvalidCommandArgumentError,
     NoAnswersError,
     NoCommitBackupError,
     NotAGitProjectError,
@@ -403,3 +404,14 @@ def test_commit_message_length_cli_zero_disables_limit(
     )
     commands.Commit(config, {"message_length_limit": 0})()
     success_mock.assert_called_once()
+
+
+def test_commit_message_length_cli_negative_raises(config):
+    with pytest.raises(InvalidCommandArgumentError):
+        commands.Commit(config, {"message_length_limit": -1})
+
+
+def test_commit_message_length_config_negative_raises_when_cli_unset(config):
+    config.settings["message_length_limit"] = -1
+    with pytest.raises(InvalidCommandArgumentError):
+        commands.Commit(config, {"message_length_limit": None})
