@@ -158,6 +158,7 @@ def get_tag_regexes(
         "patch": r"(?P<patch>\d+)",
         "prerelease": r"(?P<prerelease>\w+\d+)?",
         "devrelease": r"(?P<devrelease>\.dev\d+)?",
+        "postrelease": r"(?P<postrelease>\.post\d+)?",
     }
     return {
         **{f"${k}": v for k, v in regexes.items()},
