@@ -76,6 +76,7 @@ All formats support the same configuration options. Choose the format that best 
     retry_after_failure = false
     allow_abort = false
     message_length_limit = 0
+    preview = false
     allowed_prefixes = [
         "Merge",
         "Revert",
@@ -134,6 +135,7 @@ All formats support the same configuration options. Choose the format that best 
         "retry_after_failure": false,
         "allow_abort": false,
         "message_length_limit": 0,
+        "preview": false,
         "allowed_prefixes": [
           "Merge",
           "Revert",
@@ -190,6 +192,7 @@ All formats support the same configuration options. Choose the format that best 
       retry_after_failure: false
       allow_abort: false
       message_length_limit: 0
+      preview: false
       allowed_prefixes:
         - Merge
         - Revert
@@ -237,6 +240,7 @@ Key configuration categories include:
 - **Changelog**: `changelog_file`, `changelog_format`, `changelog_incremental`, `update_changelog_on_bump`
 - **Bumping**: `bump_message`, `major_version_zero`, `prerelease_offset`, `pre_bump_hooks`, `post_bump_hooks`
 - **Commit Validation**: `allowed_prefixes`, `message_length_limit`, `allow_abort`, `retry_after_failure`
+- **Interactive Preview**: `preview`
 - **Customization**: `customize`, `style`, `use_shortcuts`, `template`, `extras`
 
 ## Customization

@@ -60,6 +60,26 @@ cz commit -l 72  # Limits message length to 72 characters
 !!! note
     The length limit only applies to the first line of the commit message. For conventional commits, this means the limit applies from the type of change through the subject. The body and footer are not counted.
 
+### Live Subject Preview
+
+Enable a live preview of your commit *subject* while you are typing with `cz commit --preview`:
+
+```sh
+cz commit --preview
+```
+
+You can also turn it on via configuration by setting:
+
+```toml
+preview = true
+```
+
+![Live subject preview](../images/cli_interactive/commit_preview.gif)
+
+When `--preview` is enabled, the bottom toolbar always shows a live character counter while you type. With `-l/--message-length-limit`, the counter switches to `current/max chars`, and input is validated against the same first-line subject length rules.
+
+![Live subject preview with length limit](../images/cli_interactive/commit_preview_length_limit.gif)
+
 ## Technical Notes
 
 For platform compatibility, the `commit` command disables ANSI escaping in its output. This means pre-commit hooks coloring will be deactivated as discussed in [commitizen-tools/commitizen#417](https://github.com/commitizen-tools/commitizen/issues/417).
