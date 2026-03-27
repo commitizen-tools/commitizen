@@ -59,6 +59,7 @@ nav:
   - Advanced Customization:
     - Customize via config file: "customization/config_file.md"
     - Customized Python Class: "customization/python_class.md"
+    - Testing Plugins: "customization/testing_plugins.md"
     - Changelog Template: "customization/changelog_template.md"
   - Tutorials:
     - Commit Message Best Practices: "tutorials/writing_commits.md"

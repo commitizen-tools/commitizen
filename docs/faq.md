@@ -76,6 +76,50 @@ legacy_tag_formats = [
 ]
 ```
 
+## A dependency has the same version as my project — how do I prevent it from being bumped?
+
+When using [`version_files`](config/bump.md#version_files) to track your project version,
+Commitizen searches for the current version string and replaces it with the new one.
+If a dependency in the same file happens to share the exact same version number, it will
+also be updated, which is usually undesirable.
+
+There are two ways to avoid this:
+
+### Option 1 — Anchor the pattern with `^`
+
+Prefix the file entry with `^` to match only lines that *start* with `version`:
+
+```toml
+[tool.commitizen]
+version_files = ["pyproject.toml:^version"]
+```
+
+This ensures only lines like `version = "1.2.3"` are matched, not dependency
+specifications that happen to contain the same version string.
+
+### Option 2 (recommended) — Use a `version_provider`
+
+Instead of `version_files`, use the appropriate
+[`version_provider`](config/version_provider.md) for your project type. Commitizen
+will then update exactly the right field without any regex-based text replacement.
+
+For example, if you use `pyproject.toml` with a `[project]` table (PEP 621):
+
+```toml
+[tool.commitizen]
+version_provider = "pep621"
+```
+
+Or for Poetry users:
+
+```toml
+[tool.commitizen]
+version_provider = "poetry"
+```
+
+See the [version providers reference](config/version_provider.md) for all available
+options.
+
 ## How to avoid warnings for expected non-version tags?
 
 You can explicitly ignore them with [`ignored_tag_formats`](config/bump.md#ignored_tag_formats).
