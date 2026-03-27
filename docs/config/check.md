@@ -22,6 +22,7 @@ List of prefixes that commitizen ignores when verifying messages.
 - Default: `0` (no limit)
 
 Maximum length of the commit message. Setting it to `0` disables the length limit.
+This value must be a non-negative integer (`>= 0`).
 
 !!! note
     This option can be overridden by the `-l/--message-length-limit` command line argument.
