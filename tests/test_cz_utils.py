@@ -1,7 +1,36 @@
 import pytest
+from prompt_toolkit.keys import Keys
 from pytest_mock import MockFixture
 
 from commitizen.cz import exceptions, utils
+
+
+def test_multiline_key_bindings_enter_submits_on_empty(mocker: MockFixture):
+    kb = utils.get_multiline_key_bindings()
+    handler = next(b.handler for b in kb.bindings if Keys.Enter in b.keys)
+
+    buff = mocker.MagicMock()
+    buff.text = ""
+    event = mocker.MagicMock()
+    event.app.current_buffer = buff
+
+    handler(event)
+    buff.validate_and_handle.assert_called_once()
+    buff.insert_text.assert_not_called()
+
+
+def test_multiline_key_bindings_enter_inserts_newline(mocker: MockFixture):
+    kb = utils.get_multiline_key_bindings()
+    handler = next(b.handler for b in kb.bindings if Keys.Enter in b.keys)
+
+    buff = mocker.MagicMock()
+    buff.text = "some content"
+    event = mocker.MagicMock()
+    event.app.current_buffer = buff
+
+    handler(event)
+    buff.insert_text.assert_called_once_with("\n")
+    buff.validate_and_handle.assert_not_called()
 
 
 def test_required_validator():

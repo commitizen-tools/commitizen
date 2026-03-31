@@ -1,4 +1,5 @@
 import pytest
+from prompt_toolkit.key_binding import KeyBindings
 
 from commitizen.cz.conventional_commits.conventional_commits import (
     ConventionalCommitsCz,
@@ -173,3 +174,10 @@ def test_info(config):
     conventional_commits = ConventionalCommitsCz(config)
     info = conventional_commits.info()
     assert isinstance(info, str)
+
+
+def test_body_question_is_multiline(config):
+    cz = ConventionalCommitsCz(config)
+    body_question = next(q for q in cz.questions() if q["name"] == "body")
+    assert body_question["multiline"] is True
+    assert isinstance(body_question["key_bindings"], KeyBindings)

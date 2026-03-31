@@ -1,6 +1,8 @@
 from collections.abc import Callable
 from typing import Literal, TypedDict
 
+from prompt_toolkit.key_binding import KeyBindings
+
 
 class Choice(TypedDict, total=False):
     value: str
@@ -21,6 +23,8 @@ class InputQuestion(TypedDict, total=False):
     name: str
     message: str
     filter: Callable[[str], str]
+    multiline: bool
+    key_bindings: KeyBindings
 
 
 class ConfirmQuestion(TypedDict):

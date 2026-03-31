@@ -1,12 +1,31 @@
 import os
 import re
 import tempfile
+from functools import lru_cache
 from pathlib import Path
+
+from prompt_toolkit.key_binding import KeyBindings, KeyPressEvent
+from prompt_toolkit.keys import Keys
 
 from commitizen import git
 from commitizen.cz import exceptions
 
 _RE_LOCAL_VERSION = re.compile(r"\+.+")
+
+
+@lru_cache(maxsize=1)
+def get_multiline_key_bindings() -> KeyBindings:
+    kb = KeyBindings()
+
+    @kb.add(Keys.Enter)
+    def handle_enter(event: KeyPressEvent) -> None:
+        buff = event.app.current_buffer
+        if buff.text == "":
+            buff.validate_and_handle()
+        else:
+            buff.insert_text("\n")
+
+    return kb
 
 
 def required_validator(answer: str, msg: object = None) -> str:
