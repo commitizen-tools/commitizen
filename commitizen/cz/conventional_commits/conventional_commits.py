@@ -5,7 +5,11 @@ from typing import TYPE_CHECKING, TypedDict
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
-from commitizen.cz.utils import multiple_line_breaker, required_validator
+from commitizen.cz.utils import (
+    get_multiline_key_bindings,
+    multiple_line_breaker,
+    required_validator,
+)
 
 if TYPE_CHECKING:
     from commitizen.question import CzQuestion
@@ -133,6 +137,8 @@ class ConventionalCommitsCz(BaseCommitizen):
                     "Provide additional contextual information about the code changes: (press [enter] to skip)\n"
                 ),
                 "filter": multiple_line_breaker,
+                "multiline": True,
+                "key_bindings": get_multiline_key_bindings(),
             },
             {
                 "type": "confirm",
