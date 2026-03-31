@@ -165,6 +165,11 @@ data = {
                         "help": "Set the length limit of the commit message; 0 for no limit.",
                     },
                     {
+                        "name": ["--preview"],
+                        "action": "store_true",
+                        "help": "Show live first-line (subject) preview while typing.",
+                    },
+                    {
                         "name": ["--"],
                         "action": "store_true",
                         "dest": "double_dash",

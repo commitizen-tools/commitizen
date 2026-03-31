@@ -111,6 +111,7 @@ _settings: dict[str, Any] = {
     "template": None,
     "extras": {},
     "breaking_change_exclamation_in_title": False,
+    "preview": False,
     "message_length_limit": 0,
 }
 
@@ -151,6 +152,7 @@ _new_settings: dict[str, Any] = {
     "template": None,
     "extras": {},
     "breaking_change_exclamation_in_title": False,
+    "preview": False,
     "message_length_limit": 0,
 }
 
