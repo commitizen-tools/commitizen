@@ -12,6 +12,7 @@ from commitizen.exceptions import (
     CommitMessageLengthExceededError,
     CustomError,
     DryRunExit,
+    InvalidCommandArgumentError,
     NoAnswersError,
     NoCommitBackupError,
     NotAGitProjectError,
@@ -336,34 +337,81 @@ def test_commit_when_nothing_added_to_commit(config, mocker: MockFixture, out):
     error_mock.assert_called_once_with(out)
 
 
-@pytest.mark.usefixtures("staging_is_clean", "commit_mock")
-def test_commit_command_with_config_message_length_limit(
-    config, success_mock: MockType, prompt_mock_feat: MockType
-):
+def _commit_first_line_len(prompt_mock_feat: MockType) -> int:
     prefix = prompt_mock_feat.return_value["prefix"]
     subject = prompt_mock_feat.return_value["subject"]
-    message_length = len(f"{prefix}: {subject}")
+    scope = prompt_mock_feat.return_value["scope"]
 
-    commands.Commit(config, {"message_length_limit": message_length})()
+    formatted_scope = f"({scope})" if scope else ""
+    first_line = f"{prefix}{formatted_scope}: {subject}"
+    return len(first_line)
+
+
+@pytest.mark.usefixtures("staging_is_clean", "commit_mock", "prompt_mock_feat")
+def test_commit_message_length_cli_at_limit_succeeds(
+    config, success_mock: MockType, prompt_mock_feat: MockType
+):
+    message_len = _commit_first_line_len(prompt_mock_feat)
+    commands.Commit(config, {"message_length_limit": message_len})()
     success_mock.assert_called_once()
 
+
+@pytest.mark.usefixtures("staging_is_clean", "commit_mock", "prompt_mock_feat")
+def test_commit_message_length_cli_below_limit_raises(
+    config, prompt_mock_feat: MockType
+):
+    message_len = _commit_first_line_len(prompt_mock_feat)
     with pytest.raises(CommitMessageLengthExceededError):
-        commands.Commit(config, {"message_length_limit": message_length - 1})()
+        commands.Commit(config, {"message_length_limit": message_len - 1})()
 
-    config.settings["message_length_limit"] = message_length
-    success_mock.reset_mock()
-    commands.Commit(config, {})()
+
+@pytest.mark.usefixtures("staging_is_clean", "commit_mock", "prompt_mock_feat")
+def test_commit_message_length_uses_config_when_cli_unset(
+    config, success_mock: MockType, prompt_mock_feat: MockType
+):
+    config.settings["message_length_limit"] = _commit_first_line_len(prompt_mock_feat)
+    commands.Commit(config, {"message_length_limit": None})()
     success_mock.assert_called_once()
 
-    config.settings["message_length_limit"] = message_length - 1
+
+@pytest.mark.usefixtures("staging_is_clean", "commit_mock", "prompt_mock_feat")
+def test_commit_message_length_config_exceeded_when_cli_unset(
+    config, prompt_mock_feat: MockType
+):
+    config.settings["message_length_limit"] = (
+        _commit_first_line_len(prompt_mock_feat) - 1
+    )
     with pytest.raises(CommitMessageLengthExceededError):
-        commands.Commit(config, {})()
+        commands.Commit(config, {"message_length_limit": None})()
 
-    # Test config message length limit is overridden by CLI argument
-    success_mock.reset_mock()
-    commands.Commit(config, {"message_length_limit": message_length})()
+
+@pytest.mark.usefixtures("staging_is_clean", "commit_mock", "prompt_mock_feat")
+def test_commit_message_length_cli_overrides_stricter_config(
+    config, success_mock: MockType, prompt_mock_feat: MockType
+):
+    message_len = _commit_first_line_len(prompt_mock_feat)
+    config.settings["message_length_limit"] = message_len - 1
+    commands.Commit(config, {"message_length_limit": message_len})()
     success_mock.assert_called_once()
 
-    success_mock.reset_mock()
+
+@pytest.mark.usefixtures("staging_is_clean", "commit_mock", "prompt_mock_feat")
+def test_commit_message_length_cli_zero_disables_limit(
+    config, success_mock: MockType, prompt_mock_feat: MockType
+):
+    config.settings["message_length_limit"] = (
+        _commit_first_line_len(prompt_mock_feat) - 1
+    )
     commands.Commit(config, {"message_length_limit": 0})()
     success_mock.assert_called_once()
+
+
+def test_commit_message_length_cli_negative_raises(config):
+    with pytest.raises(InvalidCommandArgumentError):
+        commands.Commit(config, {"message_length_limit": -1})
+
+
+def test_commit_message_length_config_negative_raises_when_cli_unset(config):
+    config.settings["message_length_limit"] = -1
+    with pytest.raises(InvalidCommandArgumentError):
+        commands.Commit(config, {"message_length_limit": None})
