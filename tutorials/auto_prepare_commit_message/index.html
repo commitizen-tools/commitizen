@@ -2105,11 +2105,11 @@ Commitizen and use the generated commit message for the commit.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <p>Copy the hooks from <a href="https://github.com/commitizen-tools/commitizen/tree/master/hooks">here</a> into the <code>.git/hooks</code> folder and make them
   executable by running the following commands from the root of your Git repository:</p>
-<div class="highlight"><pre><span></span><code>wget<span class="w"> </span>-O<span class="w"> </span>.git/hooks/prepare-commit-msg<span class="w"> </span>https://raw.githubusercontent.com/commitizen-tools/commitizen/master/hooks/prepare-commit-msg.py
-chmod<span class="w"> </span>+x<span class="w"> </span>.git/hooks/prepare-commit-msg
-wget<span class="w"> </span>-O<span class="w"> </span>.git/hooks/post-commit<span class="w"> </span>https://raw.githubusercontent.com/commitizen-tools/commitizen/master/hooks/post-commit.py
-chmod<span class="w"> </span>+x<span class="w"> </span>.git/hooks/post-commit
-</code></pre></div>
+<p><code>bash
+wget -O .git/hooks/prepare-commit-msg https://raw.githubusercontent.com/commitizen-tools/commitizen/master/hooks/prepare-commit-msg.py
+chmod +x .git/hooks/prepare-commit-msg
+wget -O .git/hooks/post-commit https://raw.githubusercontent.com/commitizen-tools/commitizen/master/hooks/post-commit.py
+chmod +x .git/hooks/post-commit</code></p>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Commits can be created using both <code>cz commit</code> and the regular <code>git commit</code></li>

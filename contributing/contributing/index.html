@@ -2215,26 +2215,26 @@
 <ol>
 <li>Fork <a href="https://github.com/commitizen-tools/commitizen">Commitizen</a></li>
 <li>Clone your fork:
-    <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/YOUR_USERNAME/commitizen.git
-<span class="nb">cd</span><span class="w"> </span>commitizen
-</code></pre></div></li>
+    <code>bash
+    git clone https://github.com/YOUR_USERNAME/commitizen.git
+    cd commitizen</code></li>
 <li>Add the upstream repository:
-    <div class="highlight"><pre><span></span><code>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>upstream<span class="w"> </span>https://github.com/commitizen-tools/commitizen.git
-</code></pre></div></li>
+    <code>bash
+    git remote add upstream https://github.com/commitizen-tools/commitizen.git</code></li>
 <li>Set up the development environment:
-    <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>sync<span class="w"> </span>--dev<span class="w"> </span>--frozen
-</code></pre></div></li>
+    <code>bash
+    uv sync --dev --frozen</code></li>
 <li>Set up pre-commit hooks:
-    <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>poe<span class="w"> </span>setup-pre-commit
-</code></pre></div></li>
+    <code>bash
+    uv run poe setup-pre-commit</code></li>
 </ol>
 <h2 id="development-workflow">Development Workflow<a class="headerlink" href="#development-workflow" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Create a New Branch</strong>
-    <div class="highlight"><pre><span></span><code>git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>feature/your-feature-name
-<span class="c1"># or</span>
-git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>fix/your-bug-fix
-</code></pre></div></li>
+    <code>bash
+    git switch -c feature/your-feature-name
+    # or
+    git switch -c fix/your-bug-fix</code></li>
 <li><strong>Make Your Changes</strong><ul>
 <li>Write your code</li>
 <li>Add tests for new functionalities or fixes</li>

@@ -2489,16 +2489,16 @@
 <h3 id="common-use-cases">Common Use Cases<a class="headerlink" href="#common-use-cases" title="Permanent link">&para;</a></h3>
 <h4 id="ignoring-no-increment-errors">Ignoring No Increment Errors<a class="headerlink" href="#ignoring-no-increment-errors" title="Permanent link">&para;</a></h4>
 <p>The most common use case is to ignore <code>NoneIncrementExit</code> (exit code 21) when running <code>cz bump</code>. This allows the command to succeed even when no commits are eligible for a version bump:</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>-nr<span class="w"> </span><span class="m">21</span><span class="w"> </span>bump
-</code></pre></div>
+<p><code>sh
+cz -nr 21 bump</code></p>
 <p>Or using the exit code name:</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>-nr<span class="w"> </span>NO_INCREMENT<span class="w"> </span>bump
-</code></pre></div>
+<p><code>sh
+cz -nr NO_INCREMENT bump</code></p>
 <p>This is useful in CI pipelines where you want to run <code>cz bump</code> regularly, but don't want the pipeline to fail when there are no version-worthy commits.</p>
 <h4 id="ignoring-multiple-exit-codes">Ignoring Multiple Exit Codes<a class="headerlink" href="#ignoring-multiple-exit-codes" title="Permanent link">&para;</a></h4>
 <p>You can ignore multiple exit codes at once:</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>--no-raise<span class="w"> </span><span class="m">21</span>,3,4<span class="w"> </span>bump
-</code></pre></div>
+<p><code>sh
+cz --no-raise 21,3,4 bump</code></p>
 <p>This example ignores:</p>
 <ul>
 <li><code>21</code> (<code>NoneIncrementExit</code>) - No eligible commits for bump</li>
@@ -2509,12 +2509,12 @@
 <p>If you encounter an error and want to ignore it, you can find the exit code in two ways:</p>
 <h4 id="method-1-check-the-exit-code-after-running">Method 1: Check the Exit Code After Running<a class="headerlink" href="#method-1-check-the-exit-code-after-running" title="Permanent link">&para;</a></h4>
 <p>After running a Commitizen command that fails, check the exit code:</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>bump
-<span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span><span class="w">  </span><span class="c1"># Prints the exit code (e.g., 21)</span>
-</code></pre></div>
+<p><code>sh
+cz bump
+echo $?  # Prints the exit code (e.g., 21)</code></p>
 <p>Then use that exit code with <code>--no-raise</code>:</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>-nr<span class="w"> </span><span class="m">21</span><span class="w"> </span>bump
-</code></pre></div>
+<p><code>sh
+cz -nr 21 bump</code></p>
 <h4 id="method-2-look-up-the-exception">Method 2: Look Up the Exception<a class="headerlink" href="#method-2-look-up-the-exception" title="Permanent link">&para;</a></h4>
 <ol>
 <li>Check the error message to identify the exception type</li>
@@ -2522,8 +2522,8 @@
 <li>Use that exit code with <code>--no-raise</code></li>
 </ol>
 <p>For example, if you see <code>NoneIncrementExit</code> in the error, look it up in the table to find it's exit code 21, then use:</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>-nr<span class="w"> </span><span class="m">21</span><span class="w"> </span>bump
-</code></pre></div>
+<p><code>sh
+cz -nr 21 bump</code></p>
 <h3 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Document your usage</strong>: If you use <code>--no-raise</code> in scripts or CI/CD, document why specific exit codes are ignored</li>
@@ -2533,12 +2533,15 @@
 </ul>
 <h3 id="example-cicd-pipeline">Example: CI/CD Pipeline<a class="headerlink" href="#example-cicd-pipeline" title="Permanent link">&para;</a></h3>
 <p>Here's an example of using <code>--no-raise</code> in a CI/CD pipeline:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/release.yml</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bump version</span>
-<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">cz -nr NO_INCREMENT bump || true</span>
-<span class="w">    </span><span class="no"># Continue even if no version bump is needed</span>
-</code></pre></div>
+<p>```yaml</p>
+<h1 id="githubworkflowsreleaseyml">.github/workflows/release.yml<a class="headerlink" href="#githubworkflowsreleaseyml" title="Permanent link">&para;</a></h1>
+<ul>
+<li>name: Bump version
+  run: |
+    cz -nr NO_INCREMENT bump || true
+    # Continue even if no version bump is needed
+```</li>
+</ul>
 <p>This ensures the pipeline continues even when there are no commits eligible for a version bump.</p>
 
 

@@ -1974,45 +1974,45 @@
 <p>For this we are using the modern approach of <a href="https://www.jenkins.io/doc/book/pipeline/">declarative pipelines</a>.</p>
 <p>You must also ensure your jenkins instance supports docker.
 Most modern jenkins systems do have support for it, <a href="https://www.jenkins.io/doc/book/pipeline/docker/">they have embraced it</a>.</p>
-<div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
-<span class="w">  </span><span class="n">agent</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">any</span>
-<span class="w">  </span><span class="o">}</span>
-<span class="w">  </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">CI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;true&#39;</span>
-<span class="w">  </span><span class="o">}</span>
-<span class="w">  </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Bump version&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">      </span><span class="n">when</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">beforeAgent</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">        </span><span class="n">expression</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">BRANCH_IS_PRIMARY</span><span class="w"> </span><span class="o">}</span>
-<span class="w">        </span><span class="n">not</span><span class="w"> </span><span class="o">{</span>
-<span class="w">          </span><span class="n">changelog</span><span class="w"> </span><span class="s1">&#39;^bump:.+&#39;</span>
-<span class="w">        </span><span class="o">}</span>
-<span class="w">      </span><span class="o">}</span>
-<span class="w">      </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">script</span><span class="w"> </span><span class="o">{</span>
-<span class="w">          </span><span class="n">useCz</span><span class="w"> </span><span class="o">{</span>
-<span class="w">            </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;cz bump --changelog&quot;</span>
-<span class="w">          </span><span class="o">}</span>
-<span class="w">         </span><span class="c1">// Here push back to your repository the new commit and tag</span>
-<span class="w">        </span><span class="o">}</span>
-<span class="w">      </span><span class="o">}</span>
-<span class="w">    </span><span class="o">}</span>
-<span class="w">  </span><span class="o">}</span>
-<span class="o">}</span>
-
-<span class="kt">def</span><span class="w"> </span><span class="nf">useCz</span><span class="o">(</span><span class="n">String</span><span class="w"> </span><span class="n">authorName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Jenkins CI Server&#39;</span><span class="o">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">authorEmail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;your-jenkins@email.com&#39;</span><span class="o">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">image</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s1">&#39;registry.hub.docker.com/commitizen/commitizen:latest&#39;</span><span class="o">,</span><span class="w"> </span><span class="n">Closure</span><span class="w"> </span><span class="n">body</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">docker</span>
-<span class="w">    </span><span class="o">.</span><span class="na">image</span><span class="o">(</span><span class="n">image</span><span class="o">)</span>
-<span class="w">    </span><span class="o">.</span><span class="na">inside</span><span class="o">(</span><span class="s2">&quot;-u 0 -v $WORKSPACE:/workspace -w /workspace -e GIT_AUTHOR_NAME=&#39;${authorName}&#39; -e GIT_AUTHOR_EMAIL=&#39;${authorEmail}&#39; -entrypoint=&#39;/bin/sh&#39;&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;git config --global --add safe.directory &quot;*&quot;&#39;</span>
-<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;git config --global user.email &#39;${authorName}&#39;&quot;</span>
-<span class="w">        </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;git config --global user.name &#39;${authorEmail}&#39;&quot;</span>
-<span class="w">        </span><span class="n">body</span><span class="o">()</span>
-<span class="w">    </span><span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div>
+<p>```groovy
+pipeline {
+  agent {
+    any
+  }
+  environment {
+    CI = 'true'
+  }
+  stages {
+    stage('Bump version') {
+      when {
+        beforeAgent true
+        expression { env.BRANCH_IS_PRIMARY }
+        not {
+          changelog '^bump:.+'
+        }
+      }
+      steps {
+        script {
+          useCz {
+            sh "cz bump --changelog"
+          }
+         // Here push back to your repository the new commit and tag
+        }
+      }
+    }
+  }
+}</p>
+<p>def useCz(String authorName = 'Jenkins CI Server', String authorEmail = 'your-jenkins@email.com', String image =  'registry.hub.docker.com/commitizen/commitizen:latest', Closure body) {
+    docker
+    .image(image)
+    .inside("-u 0 -v $WORKSPACE:/workspace -w /workspace -e GIT_AUTHOR_NAME='${authorName}' -e GIT_AUTHOR_EMAIL='${authorEmail}' -entrypoint='/bin/sh'") {
+        sh 'git config --global --add safe.directory "*"'
+        sh "git config --global user.email '${authorName}'"
+        sh "git config --global user.name '${authorEmail}'"
+        body()
+    }
+}
+```</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Using jenkins pipeline with any git plugin may require many configurations,

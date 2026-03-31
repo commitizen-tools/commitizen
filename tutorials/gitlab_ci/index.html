@@ -2147,8 +2147,8 @@
 <h3 id="gitlab-configuration">GitLab Configuration<a class="headerlink" href="#gitlab-configuration" title="Permanent link">&para;</a></h3>
 <p>To be able to change files and push new changes with <code>GitLab CI</code> runners, we need to have a <code>ssh</code> key and configure a git user.</p>
 <p>First, let's create a <code>ssh key</code>. The only requirement is to create it without a passphrase:</p>
-<div class="highlight"><pre><span></span><code>ssh-keygen<span class="w"> </span>-f<span class="w"> </span>deploy_key<span class="w"> </span>-N<span class="w"> </span><span class="s2">&quot;&quot;</span>
-</code></pre></div>
+<p><code>bash
+ssh-keygen -f deploy_key -N ""</code></p>
 <p>The previous command will create a private and public key under the files <code>deploy_key</code> and <code>deploy_key.pub</code>. We will use them later.</p>
 <p>For the git user, we need an email and username. You can choose whatever you want; in this example, we choose <code>ci-runner@myproject.com</code> and <code>admin</code>, respectively.</p>
 <p>Now, we need to create three environment variables that will be visible for the runners. They should be created in the <code>variables</code> section under <code>settings/ci_cd</code>:</p>
@@ -2170,59 +2170,54 @@
 <li>Auto bump the version. This means changing the file/s that reflects the version, creating a new commit and git tag.</li>
 </ol>
 <h3 id="stages-and-jobs">Stages and Jobs<a class="headerlink" href="#stages-and-jobs" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:latest</span>
-
-<span class="nt">services</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:dind</span>
-
-<span class="nt">variables</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">API_IMAGE_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME</span>
-
-<span class="nt">before_script</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apk add --no-cache py-pip</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install docker-compose</span>
-
-<span class="nt">stages</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto-bump</span>
-
-<span class="nt">test</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
-<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker-compose run -e DJANGO_ENVIRONMENT=dev your_project python manage.py test</span><span class="w"> </span><span class="c1"># run tests</span>
-
-<span class="nt">auto-bump</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto-bump</span>
-<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python:3.10</span>
-<span class="w">  </span><span class="nt">before_script</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;which</span><span class="nv"> </span><span class="s">ssh-agent</span><span class="nv"> </span><span class="s">||</span><span class="nv"> </span><span class="s">(</span><span class="nv"> </span><span class="s">apt-get</span><span class="nv"> </span><span class="s">update</span><span class="nv"> </span><span class="s">-qy</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">apt-get</span><span class="nv"> </span><span class="s">install</span><span class="nv"> </span><span class="s">openssh-client</span><span class="nv"> </span><span class="s">-qqy</span><span class="nv"> </span><span class="s">)&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eval `ssh-agent -s`</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;${SSH_PRIVATE_KEY}&quot; | tr -d &#39;\r&#39; | ssh-add - &gt; /dev/null</span><span class="w"> </span><span class="c1"># add ssh key</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip3 install -U commitizen</span><span class="w"> </span><span class="c1"># install commitizen</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdir -p ~/.ssh</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chmod 700 ~/.ssh</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;$SSH_PUBLIC_KEY&quot; &gt;&gt; ~/.ssh/id_rsa.pub</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;[[</span><span class="nv"> </span><span class="s">-f</span><span class="nv"> </span><span class="s">/.dockerenv</span><span class="nv"> </span><span class="s">]]</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">echo</span><span class="nv"> </span><span class="s">-e</span><span class="nv"> </span><span class="s">&quot;Host</span><span class="nv"> </span><span class="s">*\n\tStrictHostKeyChecking</span><span class="nv"> </span><span class="s">no\n\n&quot;</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">~/.ssh/config&#39;</span>
-<span class="w">  </span><span class="nt">dependencies</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
-<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git remote set-url origin git@gitlab.com:discover/rentee-core.git</span><span class="w"> </span><span class="c1"># git configuration</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git config --global user.email &quot;${CI_EMAIL}&quot; &amp;&amp; git config --global user.name &quot;${CI_USERNAME}&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;exists=`git</span><span class="nv"> </span><span class="s">show-ref</span><span class="nv"> </span><span class="s">refs/heads/master`</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">[</span><span class="nv"> </span><span class="s">-n</span><span class="nv"> </span><span class="s">&quot;$exists&quot;</span><span class="nv"> </span><span class="s">];</span><span class="nv"> </span><span class="s">then</span><span class="nv"> </span><span class="s">git</span><span class="nv"> </span><span class="s">branch</span><span class="nv"> </span><span class="s">-D</span><span class="nv"> </span><span class="s">master;</span><span class="nv"> </span><span class="s">fi&#39;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git checkout -b master</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cz bump --yes</span><span class="w"> </span><span class="c1"># execute auto bump and push to master</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git push origin master:$CI_COMMIT_REF_NAME</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TAG=$(head -n 1 VERSION)</span><span class="w"> </span><span class="c1"># get the new software version and save into artifacts</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;#!/bin/sh&quot; &gt;&gt; variables</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;export TAG=&#39;$TAG&#39;&quot; &gt;&gt; variables</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git push origin $TAG</span>
-<span class="w">  </span><span class="nt">only</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">refs</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">master</span>
-<span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">variables</span>
-</code></pre></div>
+<p>```yaml
+image: docker:latest</p>
+<p>services:
+  - docker:dind</p>
+<p>variables:
+  API_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME</p>
+<p>before_script:
+  - apk add --no-cache py-pip
+  - pip install docker-compose</p>
+<p>stages:
+  - test
+  - auto-bump</p>
+<p>test:
+  stage: test
+  script:
+    - docker-compose run -e DJANGO_ENVIRONMENT=dev your_project python manage.py test # run tests</p>
+<p>auto-bump:
+  stage: auto-bump
+  image: python:3.10
+  before_script:
+    - "which ssh-agent || ( apt-get update -qy &amp;&amp; apt-get install openssh-client -qqy )"
+    - eval <code>ssh-agent -s</code>
+    - echo "${SSH_PRIVATE_KEY}" | tr -d '\r' | ssh-add - &gt; /dev/null # add ssh key
+    - pip3 install -U commitizen # install commitizen
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_PUBLIC_KEY" &gt;&gt; ~/.ssh/id_rsa.pub
+    - '[[ -f /.dockerenv ]] &amp;&amp; echo -e "Host *\n\tStrictHostKeyChecking no\n\n" &gt; ~/.ssh/config'
+  dependencies:
+    - test
+  script:
+    - git remote set-url origin git@gitlab.com:discover/rentee-core.git # git configuration
+    - git config --global user.email "${CI_EMAIL}" &amp;&amp; git config --global user.name "${CI_USERNAME}"
+    - 'exists=<code>git show-ref refs/heads/master</code> &amp;&amp; if [ -n "$exists" ]; then git branch -D master; fi'
+    - git checkout -b master
+    - cz bump --yes # execute auto bump and push to master
+    - git push origin master:$CI_COMMIT_REF_NAME
+    - TAG=$(head -n 1 VERSION) # get the new software version and save into artifacts
+    - echo "#!/bin/sh" &gt;&gt; variables
+    - echo "export TAG='$TAG'" &gt;&gt; variables
+    - git push origin $TAG
+  only:
+    refs:
+      - master
+  artifacts:
+    paths:
+      - variables
+```</p>
 <p>So, every time that a developer pushes to any branch, the <code>test</code> job is executed. If the branch is <code>master</code> and the test jobs succeed, the <code>auto-bump</code> takes place.
 To be able to push using the GitLab runner, we have to set the SSH key, configure git, and finally execute the auto bump.</p>
 <p>After merging the new changes into master, we have the final result:</p>

@@ -2203,8 +2203,8 @@
 </ol>
 <p>Check an <a href="https://github.com/commitizen-tools/commitizen/blob/master/commitizen/cz/conventional_commits/conventional_commits.py">example</a> on how to configure <code>BaseCommitizen</code>.</p>
 <p>You can also automate the steps above through <a href="https://cookiecutter.readthedocs.io/en/1.7.0/">cookiecutter</a>.</p>
-<div class="highlight"><pre><span></span><code>cookiecutter<span class="w"> </span>gh:commitizen-tools/commitizen_cz_template
-</code></pre></div>
+<p><code>sh
+cookiecutter gh:commitizen-tools/commitizen_cz_template</code></p>
 <p>See <a href="https://github.com/commitizen-tools/commitizen_cz_template">commitizen_cz_template</a> for details.</p>
 <p>See <a href="../../third-party-plugins/about/">Third-party plugins</a> for more details on how to create a third-party Commitizen plugin.</p>
 <h2 id="custom-commit-rules">Custom commit rules<a class="headerlink" href="#custom-commit-rules" title="Permanent link">&para;</a></h2>
@@ -2306,66 +2306,66 @@ doing <code>pip install .</code></p>
     <span class="n">bump_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;break&quot;</span><span class="p">:</span> <span class="s2">&quot;MAJOR&quot;</span><span class="p">,</span> <span class="s2">&quot;new&quot;</span><span class="p">:</span> <span class="s2">&quot;MINOR&quot;</span><span class="p">,</span> <span class="s2">&quot;fix&quot;</span><span class="p">:</span> <span class="s2">&quot;PATCH&quot;</span><span class="p">,</span> <span class="s2">&quot;hotfix&quot;</span><span class="p">:</span> <span class="s2">&quot;PATCH&quot;</span><span class="p">}</span>
 </code></pre></div>
 <p>That's it, your Commitizen now supports custom rules, and you can run.</p>
-<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>-n<span class="w"> </span>cz_strange<span class="w"> </span>bump
-</code></pre></div>
+<p><code>bash
+cz -n cz_strange bump</code></p>
 <h3 id="custom-commit-validation-and-error-message">Custom commit validation and error message<a class="headerlink" href="#custom-commit-validation-and-error-message" title="Permanent link">&para;</a></h3>
 <p>The commit message validation can be customized by overriding the <code>validate_commit_message</code> and <code>format_error_message</code>
 methods from <code>BaseCommitizen</code>. This allows for a more detailed feedback to the user where the error originates from.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommitizen</span><span class="p">,</span> <span class="n">ValidationResult</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">commitizen</span><span class="w"> </span><span class="kn">import</span> <span class="n">git</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">CustomValidationCz</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">validate_commit_message</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">commit_msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">allow_abort</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-        <span class="n">allowed_prefixes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-        <span class="n">max_msg_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ValidationResult</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate commit message against the pattern.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">commit_msg</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">allow_abort</span><span class="p">,</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">allow_abort</span> <span class="k">else</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;commit message is empty&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">pattern</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">commit_msg</span><span class="o">.</span><span class="n">startswith</span><span class="p">,</span> <span class="n">allowed_prefixes</span><span class="p">)):</span>
-            <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="n">max_msg_length</span><span class="p">:</span>
-            <span class="n">msg_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">commit_msg</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-            <span class="k">if</span> <span class="n">msg_len</span> <span class="o">&gt;</span> <span class="n">max_msg_length</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">[</span>
-                    <span class="sa">f</span><span class="s2">&quot;commit message is too long. Max length is </span><span class="si">{</span><span class="n">max_msg_length</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="p">]</span>
-        <span class="n">pattern_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">commit_msg</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">pattern_match</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">[]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Perform additional validation of the commit message format</span>
-            <span class="c1"># and add custom error messages as needed</span>
-            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;commit message does not match the pattern&quot;</span><span class="p">]</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">format_exception_message</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">ill_formatted_commits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">git</span><span class="o">.</span><span class="n">GitCommit</span><span class="p">,</span> <span class="nb">list</span><span class="p">]]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Format commit errors.&quot;&quot;&quot;</span>
-        <span class="n">displayed_msgs_content</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;commit &quot;</span><span class="si">{</span><span class="n">commit</span><span class="o">.</span><span class="n">rev</span><span class="si">}</span><span class="s1">&quot;: &quot;</span><span class="si">{</span><span class="n">commit</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
-                <span class="sa">f</span><span class="s2">&quot;errors:</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">))</span>
-            <span class="p">)</span>
-            <span class="k">for</span> <span class="n">commit</span><span class="p">,</span> <span class="n">errors</span> <span class="ow">in</span> <span class="n">ill_formatted_commits</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="s2">&quot;commit validation: failed!</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;please enter a commit message in the commitizen format.</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">displayed_msgs_content</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;pattern: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">schema_pattern</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
+<p>```python
+import re
+from commitizen.cz.base import BaseCommitizen, ValidationResult
+from commitizen import git</p>
+<p>class CustomValidationCz(BaseCommitizen):
+    def validate_commit_message(
+        self,
+        *,
+        commit_msg: str,
+        pattern: str | None,
+        allow_abort: bool,
+        allowed_prefixes: list[str],
+        max_msg_length: int,
+    ) -&gt; ValidationResult:
+        """Validate commit message against the pattern."""
+        if not commit_msg:
+            return allow_abort, [] if allow_abort else [f"commit message is empty"]
+        if pattern is None:
+            return True, []
+        if any(map(commit_msg.startswith, allowed_prefixes)):
+            return True, []
+        if max_msg_length:
+            msg_len = len(commit_msg.partition("\n")[0].strip())
+            if msg_len &gt; max_msg_length:
+                return False, [
+                    f"commit message is too long. Max length is {max_msg_length}"
+                ]
+        pattern_match = re.match(pattern, commit_msg)
+        if pattern_match:
+            return True, []
+        else:
+            # Perform additional validation of the commit message format
+            # and add custom error messages as needed
+            return False, ["commit message does not match the pattern"]</p>
+<div class="codehilite"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">format_exception_message</span><span class="p">(</span>
+<span class="w">    </span><span class="kr">self</span><span class="p">,</span><span class="w"> </span><span class="n">ill_formatted_commits</span><span class="o">:</span><span class="w"> </span><span class="n">list</span><span class="p">[</span><span class="n">tuple</span><span class="p">[</span><span class="n">git</span><span class="p">.</span><span class="n">GitCommit</span><span class="p">,</span><span class="w"> </span><span class="n">list</span><span class="p">]]</span>
+<span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">str</span><span class="o">:</span>
+<span class="w">    </span><span class="s">&quot;&quot;&quot;Format commit errors.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="n">displayed_msgs_content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;\n&quot;</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span>
+<span class="w">        </span><span class="p">(</span>
+<span class="w">            </span><span class="n">f</span><span class="s">&#39;commit &quot;</span><span class="p">{</span><span class="n">commit</span><span class="p">.</span><span class="n">rev</span><span class="p">}</span><span class="s">&quot;: &quot;</span><span class="p">{</span><span class="n">commit</span><span class="p">.</span><span class="n">message</span><span class="p">}</span><span class="s">&quot;&#39;</span>
+<span class="w">            </span><span class="n">f</span><span class="s">&quot;errors:\n&quot;</span>
+<span class="w">            </span><span class="s">&quot;\n&quot;</span><span class="p">.</span><span class="nf">join</span><span class="p">((</span><span class="n">f</span><span class="s">&quot;- {error}&quot;</span><span class="w"> </span><span class="n">for</span><span class="w"> </span><span class="nf">error</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="n">errors</span><span class="p">))</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">        </span><span class="n">for</span><span class="w"> </span><span class="n">commit</span><span class="p">,</span><span class="w"> </span><span class="n">errors</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="n">ill_formatted_commits</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="p">(</span>
+<span class="w">        </span><span class="s">&quot;commit validation: failed!\n&quot;</span>
+<span class="w">        </span><span class="s">&quot;please enter a commit message in the commitizen format.\n&quot;</span>
+<span class="w">        </span><span class="n">f</span><span class="s">&quot;{displayed_msgs_content}\n&quot;</span>
+<span class="w">        </span><span class="n">f</span><span class="s">&quot;pattern: {self.schema_pattern()}&quot;</span>
+<span class="w">    </span><span class="p">)</span>
 </code></pre></div>
+
+<p>```</p>
 <h2 id="custom-changelog-generator">Custom changelog generator<a class="headerlink" href="#custom-changelog-generator" title="Permanent link">&para;</a></h2>
 <p>The changelog generator should just work in a very basic manner without touching anything.
 You can customize it of course, and the following variables are the ones you need to add to your custom <code>BaseCommitizen</code>.</p>
@@ -2467,12 +2467,11 @@ You can customize it of course, and the following variables are the ones you nee
 </code></pre></div>
 <h2 id="raise-customize-exception">Raise Customize Exception<a class="headerlink" href="#raise-customize-exception" title="Permanent link">&para;</a></h2>
 <p>If you want <code>commitizen</code> to catch your exception and print the message, you'll have to inherit <code>CzException</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.exception</span><span class="w"> </span><span class="kn">import</span> <span class="n">CzException</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">NoSubjectProvidedException</span><span class="p">(</span><span class="n">CzException</span><span class="p">):</span>
-    <span class="o">...</span>
-</code></pre></div>
+<p>```python
+from commitizen.cz.exception import CzException</p>
+<p>class NoSubjectProvidedException(CzException):
+    ...
+```</p>
 <h2 id="migrating-from-legacy-plugin-format">Migrating from legacy plugin format<a class="headerlink" href="#migrating-from-legacy-plugin-format" title="Permanent link">&para;</a></h2>
 <p>Commitizen migrated to a new plugin format relying on <code>importlib.metadata.EntryPoint</code>.
 Migration should be straight-forward for legacy plugins:</p>
@@ -2483,33 +2482,29 @@ Migration should be straight-forward for legacy plugins:</p>
 <p>The name of the plugin is now determined by the name of the entrypoint.</p>
 <h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
 <p>If you were having a <code>CzPlugin</code> class in a <code>cz_plugin.py</code> module like this:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommitizen</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">PluginCz</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
-    <span class="o">...</span>
-
-
-<span class="n">discover_this</span> <span class="o">=</span> <span class="n">PluginCz</span>
-</code></pre></div>
+<p>```python
+from commitizen.cz.base import BaseCommitizen</p>
+<p>class PluginCz(BaseCommitizen):
+    ...</p>
+<p>discover_this = PluginCz
+```</p>
 <p>Then remove the <code>discover_this</code> line:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommitizen</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">PluginCz</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
-    <span class="o">...</span>
-</code></pre></div>
+<p>```python
+from commitizen.cz.base import BaseCommitizen</p>
+<p>class PluginCz(BaseCommitizen):
+    ...
+```</p>
 <p>and expose the class as entrypoint in your <code>setuptools</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">setuptools</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup</span>
-
-<span class="n">setup</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;MyPlugin&quot;</span><span class="p">,</span>
-    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
-    <span class="n">py_modules</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cz_plugin&quot;</span><span class="p">],</span>
-    <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;commitizen.plugin&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;plugin = cz_plugin:PluginCz&quot;</span><span class="p">]},</span>
-    <span class="o">...</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
+<p>```python
+from setuptools import setup</p>
+<p>setup(
+    name="MyPlugin",
+    version="0.1.0",
+    py_modules=["cz_plugin"],
+    entry_points={"commitizen.plugin": ["plugin = cz_plugin:PluginCz"]},
+    ...,
+)
+```</p>
 <p>Then your plugin will be available under the name <code>plugin</code>.</p>
 
 
