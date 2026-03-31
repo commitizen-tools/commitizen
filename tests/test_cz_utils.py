@@ -1,4 +1,5 @@
 import pytest
+from prompt_toolkit.keys import Keys
 from pytest_mock import MockFixture
 
 from commitizen.cz import exceptions, utils
@@ -6,7 +7,7 @@ from commitizen.cz import exceptions, utils
 
 def test_multiline_key_bindings_enter_submits_on_empty(mocker: MockFixture):
     kb = utils.get_multiline_key_bindings()
-    handler = kb.get_bindings_for_keys(("enter",))[0].handler
+    handler = next(b.handler for b in kb.bindings if Keys.Enter in b.keys)
 
     buff = mocker.MagicMock()
     buff.text = ""
@@ -20,7 +21,7 @@ def test_multiline_key_bindings_enter_submits_on_empty(mocker: MockFixture):
 
 def test_multiline_key_bindings_enter_inserts_newline(mocker: MockFixture):
     kb = utils.get_multiline_key_bindings()
-    handler = kb.get_bindings_for_keys(("enter",))[0].handler
+    handler = next(b.handler for b in kb.bindings if Keys.Enter in b.keys)
 
     buff = mocker.MagicMock()
     buff.text = "some content"
