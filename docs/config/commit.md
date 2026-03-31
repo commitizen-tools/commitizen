@@ -24,3 +24,14 @@ Sets the character encoding to be used when parsing commit messages.
 - Default: `False`
 
 Retries failed commit when running `cz commit`.
+
+## `message_length_limit`
+
+- Type: `int`
+- Default: `0` (no limit)
+
+Maximum length of the commit message. Setting it to `0` disables the length limit.
+This value must be a non-negative integer (`>= 0`).
+
+!!! note
+    This option can be overridden by the `-l/--message-length-limit` command line argument.
