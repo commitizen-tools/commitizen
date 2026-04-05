@@ -1,43 +1,57 @@
-# Misc Options
+# General Options
 
 ## `name`
 
+Name of the committing rules to use. What we generally call the **commit conventions**.
+
 - Type: `str`
 - Default: `"cz_conventional_commits"`
+- Options
+  - `cz_conventional_commits`: uses [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
+  - `cz_jira`: jira [smart commits](https://support.atlassian.com/bitbucket-cloud/docs/use-smart-commits/)
+  - `cz_customize`: (**not recommended**) customize the convention directly in the `TOML` file under `[tool.commitizen.customize]`, read [Customize in configuration file](../customization/config_file.md) for more. There's a plan to provide a different functionality.
 
-Name of the committing rules to use.
+You can write your own convention, and release it on PyPI, check [Customizing through a Python class](../customization/python_class.md).
 
 ## `version`
+
+Current version.
+
+Required if you use `version_provider = "commitizen"`.
 
 - Type: `str`
 - Default: `None`
 
-Current version. Example: `"0.1.2"`. Required if you use `version_provider = "commitizen"`.
+ Example: `"0.1.2"`.
 
 ## `style`
+
+Style for the prompts.
 
 - Type: `list`
 - Default: `[]`
 
-Style for the prompts (It will merge this value with default style.) See [Styling your prompts with your favorite colors](https://github.com/tmbo/questionary#additional-features) for more details.
+It will merge this value with default style. See [Styling your prompts with your favorite colors](https://github.com/tmbo/questionary#additional-features) for more details.
 
 ## `customize`
+
+Custom rules for committing and bumping.
 
 - Type: `dict`
 - Default: `None`
 
 **Supported in TOML, JSON, and YAML configuration files.**
 
-Custom rules for committing and bumping. See [customization](../customization/config_file.md) for more details.
+See [customization](../customization/config_file.md) for more details.
 
 ## `use_shortcuts`
+
+Show keyboard shortcuts when selecting from a list. When enabled, each choice shows a shortcut key; press that key or use the arrow keys to select.
 
 - Type: `bool`
 - Default: `False`
 
-Show keyboard shortcuts when selecting from a list. When enabled, each choice shows a shortcut key; press that key or use the arrow keys to select.
-
-Example:
+**Example**
 
 ```toml title="pyproject.toml"
 [tool.commitizen]

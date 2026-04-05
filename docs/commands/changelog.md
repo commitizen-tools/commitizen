@@ -77,27 +77,35 @@ cz changelog --extra key=value -e short="quoted value"
 
 ### `--file-name`
 
-This value can be updated in the configuration file with the key `changelog_file` under `tool.commitizen`.
-
 Specify the name of the output file. Note that changelog generation only works with Markdown files.
 
 ```bash
 cz changelog --file-name="CHANGES.md"
 ```
 
+This value can be updated in the configuration file with the key `changelog_file` under `tool.commitizen`.
+
+```toml
+[tool.commitizen]
+# ...
+changelog_file = "CHANGES.md"
+```
+
 ### `--incremental`
 
-This flag can be set in the configuration file with the key `changelog_incremental` under `tool.commitizen`
+Build from the latest version found in changelog.
 
 Benefits:
 
-- Build from the latest version found in changelog. This is useful if you have an existing changelog and want to use commitizen to extend it.
+- Useful if you have an existing changelog and want to use commitizen to extend it.
 - Update unreleased area
 - Allows users to manually edit the changelog without it being completely rewritten.
 
 ```bash
 cz changelog --incremental
 ```
+
+This flag can be set in the configuration file with the key `changelog_incremental` under `tool.commitizen`.
 
 ```toml
 [tool.commitizen]
@@ -107,13 +115,13 @@ changelog_incremental = true
 
 ### `--start-rev`
 
-This value can be set in the configuration file with the key `changelog_start_rev` under `tool.commitizen`
-
 Start from a given git rev to generate the changelog. Commits before that rev will not be considered. This is especially useful for long-running projects adopting conventional commits, where old commit messages might fail to be parsed for changelog generation.
 
 ```bash
 cz changelog --start-rev="v0.2.0"
 ```
+
+This value can be set in the configuration file with the key `changelog_start_rev` under `tool.commitizen`
 
 ```toml
 [tool.commitizen]
@@ -123,13 +131,13 @@ changelog_start_rev = "v0.2.0"
 
 ### `--merge-prerelease`
 
-This flag can be set in the configuration file with the key `changelog_merge_prerelease` under `tool.commitizen`
-
 Collects changes from prereleases into the next non-prerelease version. If you have a prerelease version followed by a normal release, the changelog will show the prerelease changes as part of the normal release. If not set, prereleases will be included as separate entries in the changelog.
 
 ```bash
 cz changelog --merge-prerelease
 ```
+
+This flag can be set in the configuration file with the key `changelog_merge_prerelease` under `tool.commitizen`
 
 ```toml
 [tool.commitizen]
