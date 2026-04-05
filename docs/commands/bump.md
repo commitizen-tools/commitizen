@@ -30,94 +30,6 @@ The version follows the `MAJOR.MINOR.PATCH` format, with increments determined b
 | `MINOR`   | New features                | `feat`                  |
 | `PATCH`   | Fixes and improvements      | `fix`, `perf`, `refactor`|
 
-### `--version-scheme`
-
-By default, Commitizen uses [PEP 440][pep440] for version formatting. You can switch to semantic versioning using either:
-
-1. Command line:
-```sh
-cz bump --version-scheme semver
-```
-
-2. Configuration file:
-```toml title="pyproject.toml"
-[tool.commitizen]
-version_scheme = "semver"
-```
-
-Available options are:
-
-- `pep440`: [PEP 440][pep440] (**default** and recommended for Python projects)
-- `semver`: [Semantic Versioning][semver] (recommended for non-Python projects)
-
-You can also set this in the configuration file with `version_scheme = "semver"`.
-
-!!! note
-    [pep440][pep440] and [semver][semver] are quite similar, although their difference lies in
-    how the prereleases look. For example, `0.3.1a0` in pep440 is equivalent to `0.3.1-a0` in semver.
-
-    The following table illustrates the difference between the two schemes:
-
-    | Version Type | pep440         | semver          |
-    |--------------|----------------|-----------------|
-    | Non-prerelease | `0.1.0`        | `0.1.0`         |
-    | Prerelease     | `0.3.1a0`      | `0.3.1-a0`      |
-    | Devrelease     | `0.1.1.dev1`   | `0.1.1-dev1`    |
-    | Dev and pre    | `1.0.0a3.dev1` | `1.0.0-a3-dev1` |
-
-
-!!! note "Incomplete Version Handling"
-    Commitizen treats a three-part version (major.minor.patch) as complete.
-    If your configured version is incomplete (for example, `1` or `1.2`), Commitizen pads missing parts with zeros when it needs `major/minor/patch` for tag formatting.
-    The tag output depends on your `tag_format`: formats using `${version}` keep `1`/`1.2`, while formats using `${major}.${minor}.${patch}` will render `1.0.0`/`1.2.0`.
-
-    When bumping from an incomplete version, Commitizen looks for the latest existing tag that matches the provided release prefix.
-    For example, if the current version is `1.2` and the latest `1.2.x` tag is `1.2.3`, then a patch bump yields `1.2.4` and a minor bump yields `1.3.0`.
-
-!!! tip
-    To control the behaviour of bumping and version parsing, you may implement your own `version_scheme` by inheriting from `commitizen.version_schemes.BaseVersion` or use an existing plugin package.
-
-
-### PEP440 Version Examples
-
-Commitizen supports the [PEP 440][pep440] version format, which includes several version types. Here are examples of each:
-
-#### Standard Releases
-```text
-0.9.0    # Initial development release
-0.9.1    # Patch release
-0.9.2    # Another patch release
-0.9.10   # Tenth patch release
-0.9.11   # Eleventh patch release
-1.0.0    # First stable release
-1.0.1    # Patch release after stable
-1.1.0    # Minor feature release
-2.0.0    # Major version release
-```
-
-#### Pre-releases
-```text
-1.0.0a0  # Alpha release 0
-1.0.0a1  # Alpha release 1
-1.0.0b0  # Beta release 0
-1.0.0rc0 # Release candidate 0
-1.0.0rc1 # Release candidate 1
-```
-
-#### Development Releases
-```text
-1.0.0.dev0  # Development release 0
-1.0.0.dev1  # Development release 1
-```
-
-#### Combined Pre-release and Development
-```text
-1.0.0a1.dev0  # Development release 0 of alpha 1
-1.0.0b2.dev1  # Development release 1 of beta 2
-```
-
-> **Note**: `post` releases (e.g., `1.0.0.post1`) are not currently supported.
-
 ## Command line options
 
 ![cz bump --help](../images/cli_help/cz_bump___help.svg)
@@ -176,7 +88,7 @@ For example, if the current version is `1.0.0b1` then bumping with `--prerelease
 Applies the exact changes that have been specified with `--increment` or determined from the commit log.
 For example, `--prerelease beta` will always result in a `b` tag, and `--increment PATCH` will always increase the patch component.
 
-#### Examples
+**Examples**
 
 The following table illustrates the difference in behavior between the two modes:
 
@@ -524,6 +436,100 @@ Automatically answers “yes” to all interactive prompts during the bump proce
 ```bash
 cz bump --yes
 ```
+
+### `--version-scheme`
+
+Format used for the version.
+
+**Available options**
+
+- `pep440`: [PEP 440][pep440]: recommended for Python projects, **default** (for legacy reasons)
+- `semver2`: [Semantic Versioning v2][semver]: recommended for non-Python projects
+- `semver`: [Semantic Versioning v1](https://semver.org/spec/v1.0.0.html): use if you are stuck with semver v1
+
+**Examples**
+
+1. Command line:
+```sh
+cz bump --version-scheme semver2
+```
+
+2. Configuration file:
+```toml title="pyproject.toml"
+[tool.commitizen]
+version_scheme = "semver2"
+```
+
+
+!!! note
+    [pep440][pep440] and [semver][semver] are quite similar, although their difference lies in
+    how the prereleases look. For example, `0.3.1a0` in pep440 is equivalent to `0.3.1-a0` in semver.
+
+    The following table illustrates the difference between the two schemes:
+
+    | Version Type | pep440         | semver          |
+    |--------------|----------------|-----------------|
+    | Non-prerelease | `0.1.0`        | `0.1.0`         |
+    | Prerelease     | `0.3.1a0`      | `0.3.1-a0`      |
+    | Devrelease     | `0.1.1.dev1`   | `0.1.1-dev1`    |
+    | Dev and pre    | `1.0.0a3.dev1` | `1.0.0-a3-dev1` |
+
+
+!!! note "Incomplete Version Handling"
+    Commitizen treats a three-part version (major.minor.patch) as complete.
+    If your configured version is incomplete (for example, `1` or `1.2`), Commitizen pads missing parts with zeros when it needs `major/minor/patch` for tag formatting.
+    The tag output depends on your `tag_format`: formats using `${version}` keep `1`/`1.2`, while formats using `${major}.${minor}.${patch}` will render `1.0.0`/`1.2.0`.
+
+    When bumping from an incomplete version, Commitizen looks for the latest existing tag that matches the provided release prefix.
+    For example, if the current version is `1.2` and the latest `1.2.x` tag is `1.2.3`, then a patch bump yields `1.2.4` and a minor bump yields `1.3.0`.
+
+!!! tip
+    To control the behaviour of bumping and version parsing, you may implement your own `version_scheme` by inheriting from `commitizen.version_schemes.BaseVersion` or use an existing plugin package.
+
+
+### PEP440 Version Examples
+
+Commitizen supports the [PEP 440][pep440] version format, which includes several version types. Here are examples of each:
+
+#### Standard Releases
+
+```text
+0.9.0    # Initial development release
+0.9.1    # Patch release
+0.9.2    # Another patch release
+0.9.10   # Tenth patch release
+0.9.11   # Eleventh patch release
+1.0.0    # First stable release
+1.0.1    # Patch release after stable
+1.1.0    # Minor feature release
+2.0.0    # Major version release
+```
+
+#### Pre-releases
+
+```text
+1.0.0a0  # Alpha release 0
+1.0.0a1  # Alpha release 1
+1.0.0b0  # Beta release 0
+1.0.0rc0 # Release candidate 0
+1.0.0rc1 # Release candidate 1
+```
+
+#### Development Releases
+
+```text
+1.0.0.dev0  # Development release 0
+1.0.0.dev1  # Development release 1
+```
+
+#### Combined Pre-release and Development
+
+```text
+1.0.0a1.dev0  # Development release 0 of alpha 1
+1.0.0b2.dev1  # Development release 1 of beta 2
+```
+
+> **Note**: `post` releases (e.g., `1.0.0.post1`) are not currently supported.
 
 [pep440]: https://www.python.org/dev/peps/pep-0440/
 [semver]: https://semver.org/

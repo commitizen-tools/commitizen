@@ -50,12 +50,12 @@ nav:
     - version: "commands/version.md"
   - Configuration:
     - Configuration File: "config/configuration_file.md"
-    - Version Provider: "config/version_provider.md"
+    - General: "config/option.md"
     - bump: "config/bump.md"
     - commit: "config/commit.md"
     - check: "config/check.md"
     - changelog: "config/changelog.md"
-    - Misc Options: "config/option.md"
+    - Version Provider: "config/version_provider.md"
   - Advanced Customization:
     - Customize via config file: "customization/config_file.md"
     - Customized Python Class: "customization/python_class.md"
