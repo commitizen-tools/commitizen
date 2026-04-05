@@ -25,6 +25,7 @@ The default version provider stores and retrieves the version from your Commitiz
 - You need maximum flexibility in version management
 
 **Configuration:**
+
 ```toml
 [tool.commitizen]
 version_provider = "commitizen"
@@ -42,6 +43,7 @@ Fetches the version from Git tags using `git describe`. This provider **only rea
 - You don't want Commitizen to modify any files for version management
 
 **Configuration:**
+
 ```toml
 [tool.commitizen]
 version_provider = "scm"
@@ -61,12 +63,14 @@ Manages version in `pyproject.toml` under the `project.version` field, following
 - You want version management integrated with your Python project metadata
 
 **Configuration:**
+
 ```toml
 [tool.commitizen]
 version_provider = "pep621"
 ```
 
 **Example `pyproject.toml`:**
+
 ```toml
 [project]
 name = "my-package"
@@ -84,12 +88,14 @@ Manages version in `pyproject.toml` under the `tool.poetry.version` field, which
 - You want Commitizen to manage the version that Poetry uses
 
 **Configuration:**
+
 ```toml
 [tool.commitizen]
 version_provider = "poetry"
 ```
 
 **Example `pyproject.toml`:**
+
 ```toml
 [tool.poetry]
 name = "my-package"
@@ -110,6 +116,7 @@ Manages version in both `pyproject.toml` (`project.version`) and `uv.lock` (`pac
 - You want version synchronization between `pyproject.toml` and `uv.lock`
 
 **Configuration:**
+
 ```toml
 [tool.commitizen]
 version_provider = "uv"
@@ -125,12 +132,14 @@ Manages version in both `Cargo.toml` (`package.version`) and `Cargo.lock` (`pack
 - You want Commitizen to manage Rust package versions
 
 **Configuration:**
+
 ```toml
 [tool.commitizen]
 version_provider = "cargo"
 ```
 
 **Example `Cargo.toml`:**
+
 ```toml
 [package]
 name = "my-crate"
@@ -147,12 +156,14 @@ Manages version in `package.json` and optionally synchronizes with `package-lock
 - You want Commitizen to manage npm package versions
 
 **Configuration:**
+
 ```toml
 [tool.commitizen]
 version_provider = "npm"
 ```
 
 **Example `package.json`:**
+
 ```json
 {
   "name": "my-package",
@@ -170,12 +181,14 @@ Manages version in `composer.json` under the `version` field, used by PHP's Comp
 - You want Commitizen to manage Composer package versions
 
 **Configuration:**
+
 ```toml
 [tool.commitizen]
 version_provider = "composer"
 ```
 
 **Example `composer.json`:**
+
 ```json
 {
   "name": "vendor/package",
@@ -278,6 +291,7 @@ setup(
         ```
 
 2. Configure Commitizen to use your provider:
+
    ```toml
    [tool.commitizen]
    version_provider = "my-provider"

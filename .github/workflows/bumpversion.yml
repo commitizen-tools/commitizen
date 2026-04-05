@@ -10,20 +10,38 @@ jobs:
     if: ${{ github.repository == 'commitizen-tools/commitizen' && !startsWith(github.event.head_commit.message, 'bump:') }}
     runs-on: ubuntu-latest
     name: "Bump version and create changelog with commitizen"
+    permissions:
+      contents: write
+      actions: write
     steps:
       - name: Check out
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
-      - name: Create bump and changelog
-        uses: commitizen-tools/commitizen-action@master
-        with:
-          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          changelog_increment_filename: body.md
+          fetch-tags: true
+      - uses: commitizen-tools/setup-cz@main
+      - id: bump-version
+        run: |
+          cz bump --yes
+          git push --follow-tags
+          new_version="$(cz version -p)"
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+          new_version_tag="$(cz version -p --tag)"
+          echo "new_version_tag=$new_version_tag" >> $GITHUB_OUTPUT
+      - name: Build changelog for Release
+        env:
+          NEW_VERSION: ${{ steps.bump-version.outputs.new_version }}
+        run: |
+          cz changelog --dry-run "${NEW_VERSION}" > .changelog.md
       - name: Release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: v${{ env.REVISION }}
-          bodyFile: "body.md"
-          skipIfReleaseExists: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NEW_VERSION_TAG: ${{ steps.bump-version.outputs.new_version_tag }}
+        run: |
+          gh release create "${NEW_VERSION_TAG}" --notes-file .changelog.md
+      - name: trigger other workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run pythonpublish.yml \
+            -f "version=${{ steps.bump-version.outputs.new_version_tag }}"

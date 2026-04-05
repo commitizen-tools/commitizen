@@ -82,8 +82,8 @@ def test_get_default_config_filename(chdir, files, expected):
     [
         ({"pyproject.toml": ""}, "pep440"),
         ({"setup.py": ""}, "pep440"),
-        ({"package.json": ""}, "semver"),
-        ({}, "semver"),
+        ({"package.json": ""}, "semver2"),
+        ({}, "semver2"),
     ],
 )
 def test_get_default_version_scheme(chdir, files, expected):

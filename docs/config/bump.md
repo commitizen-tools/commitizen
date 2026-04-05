@@ -212,6 +212,47 @@ version_files = [
 !!! note "Historical note"
     This option was renamed from `files` to `version_files`.
 
+## `version_provider`
+
+Mechanism by which Commitizen reads and writes version information in your project.
+
+For a detail explanation, check the [version provider](./version_provider.md) section.
+Which includes, how to create your own version provider.
+
+**Available options**
+
+- `commitizen`: default version provider and stores the version in the `.cz.toml` itself under the key `version`
+- `scm`: git tags provide the real version to commitizen (read only)
+- `pep621`: (python) manages version in `pyproject.toml` under the `project.version` field, following [PEP 621](https://peps.python.org/pep-0621/) standards
+- `poetry`: takes the version from poetry v1, use `pep621` with poetry v2 or later
+- `uv`: same as `pep621` except that it also updates the `uv.lock`
+- `cargo`: manages version in both `Cargo.toml` (`package.version`) and `Cargo.lock`
+- `npm`: manages version in `package.json` and the lock
+- `composer`: for PHP's Composer package manager
+
+**Example**
+
+```toml
+[tool.commitizen]
+version_provider = "pep621"
+```
+
 ## `version_scheme`
 
-See [`--version-scheme`](../commands/bump.md#-version-scheme).
+Format used for the version.
+
+For a detail explanation, check [`--version-scheme`](../commands/bump.md#-version-scheme).
+
+**Available options**
+
+- `pep440`: [PEP 440](https://www.python.org/dev/peps/pep-0440/): recommended for Python projects, **default** (for legacy reasons)
+- `semver2`: [Semantic Versioning](https://semver.org/): recommended for non-Python projects
+- `semver`: [Semantic Versioning](https://semver.org/spec/v1.0.0.html): use if you are stuck with semver v1
+
+**Example**
+
+
+```toml
+[tool.commitizen]
+version_scheme = "semver2"
+```
