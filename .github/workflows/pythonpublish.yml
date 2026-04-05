@@ -1,9 +1,20 @@
 name: Upload Python Package
 
+# With the current configuration this workflow will be
+# triggered via `workflow_dispatch` in `bumpversion.yml`.
+# We leave the `push.tags` trigger to allow for manual releases
+# in case we need to bump locally, and we actively push the tag.
+# The PERSONAL_ACCESS_TOKEN is no longer needed as we use the OIDC token instead.
+# We favor this approach because it requires less steps to set up and is more secure.
 on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to trigger"
+        required: true
 
 jobs:
   deploy:
@@ -15,8 +26,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
           fetch-depth: 0
+          ref: ${{ inputs.version || github.ref_name }}
       - name: Set up Python
         uses: astral-sh/setup-uv@v7
       - name: Build
