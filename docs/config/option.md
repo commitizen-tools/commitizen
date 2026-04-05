@@ -22,7 +22,7 @@ Required if you use `version_provider = "commitizen"`.
 - Type: `str`
 - Default: `None`
 
- Example: `"0.1.2"`.
+Example: `"0.1.2"`.
 
 ## `style`
 

@@ -2,6 +2,9 @@
 
 This guide shows you how to automatically bump versions, create changelogs, and publish releases using Commitizen in GitHub Actions.
 
+!!! tip
+    Check the new [setup-cz](https://github.com/marketplace/actions/setup-commitizen-cli) action, simple and with [examples](https://github.com/commitizen-tools/setup-cz/tree/main/examples)
+
 ### Prerequisites
 
 Before setting up the workflow, you'll need:

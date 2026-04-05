@@ -145,7 +145,7 @@ version_files = [
 ]
 version_provider = "uv"
 version_scheme = "pep440"
-
+annotated_tag = true
 
 [tool.uv.build-backend]
 module-name = "commitizen"
