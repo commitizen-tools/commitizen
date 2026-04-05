@@ -654,9 +654,9 @@ version = "0.1.0"
             "--yes",
         ),
     ],
-    ids=lambda cmd_tuple: " ".join(["cz", *cmd_tuple])
-    if isinstance(cmd_tuple, tuple)
-    else cmd_tuple,
+    ids=lambda cmd_tuple: (
+        " ".join(["cz", *cmd_tuple]) if isinstance(cmd_tuple, tuple) else cmd_tuple
+    ),
 )
 def test_bump_changelog_command_commits_untracked_changelog_and_version_files(
     tmp_commitizen_project,
