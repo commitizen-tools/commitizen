@@ -4,6 +4,11 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to trigger"
+        required: true
 
 jobs:
   deploy:
@@ -15,8 +20,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
           fetch-depth: 0
+          ref: ${{ inputs.version || github.ref_name }}
       - name: Set up Python
         uses: astral-sh/setup-uv@v7
       - name: Build
