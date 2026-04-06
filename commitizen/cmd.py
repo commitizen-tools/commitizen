@@ -103,3 +103,43 @@ def run_shell(cmd: str, env: Mapping[str, str] | None = None) -> Command:
     https://github.com/commitizen-tools/commitizen/issues/1918
     """
     return _popen(cmd, shell=True, env=env)
+
+
+def run_interactive(
+    cmd: str | Sequence[str], env: Mapping[str, str] | None = None
+) -> int:
+    """Run a command safely without shell interpretation and without redirecting stdin, stdout, or stderr
+
+    Args:
+        cmd: The command to run
+        env: Extra environment variables to define in the subprocess. Defaults to None.
+
+    Returns:
+        subprocess returncode
+    """
+    if env is not None:
+        env = {**os.environ, **env}
+    if isinstance(cmd, str):
+        warnings.warn(
+            "Passing a string to cmd.run_interactive() is deprecated and will be removed in v5. "
+            "Use a list of arguments instead, or use cmd.run_interactive_shell() explicitly.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return subprocess.run(cmd, shell=True, env=env).returncode
+    return subprocess.run(cmd, shell=False, env=env).returncode
+
+
+def run_interactive_shell(cmd: str, env: Mapping[str, str] | None = None) -> int:
+    """Run a command without redirecting stdin, stdout, or stderr
+
+    Args:
+        cmd: The command to run
+        env: Extra environment variables to define in the subprocess. Defaults to None.
+
+    Returns:
+        subprocess returncode
+    """
+    if env is not None:
+        env = {**os.environ, **env}
+    return subprocess.run(cmd, shell=True, env=env).returncode
