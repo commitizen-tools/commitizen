@@ -14,12 +14,22 @@ jobs:
       contents: write
       actions: write
     steps:
+      - uses: actions/create-github-app-token@v3
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
       - name: Check out
         uses: actions/checkout@v6
         with:
+          token: ${{ steps.app-token.outputs.token }}
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: false
       - uses: commitizen-tools/setup-cz@main
+        with:
+          git-user-name: "${{ steps.app-token.outputs.app-slug }}[bot]"
+          git-user-email: "${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
       - id: bump-version
         run: |
           cz bump --yes
@@ -39,9 +49,3 @@ jobs:
           NEW_VERSION_TAG: ${{ steps.bump-version.outputs.new_version_tag }}
         run: |
           gh release create "${NEW_VERSION_TAG}" --notes-file .changelog.md
-      - name: trigger other workflow
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh workflow run pythonpublish.yml \
-            -f "version=${{ steps.bump-version.outputs.new_version_tag }}"
