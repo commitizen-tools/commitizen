@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../images/cz_logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -704,14 +704,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/version_provider/" class="md-nav__link">
+      <a href="../../config/option/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Version Provider
+    General
   
 
     
@@ -844,14 +844,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/option/" class="md-nav__link">
+      <a href="../../config/version_provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Misc Options
+    Version Provider
   
 
     
@@ -1562,17 +1562,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#yaml" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ```yaml
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -2053,17 +2042,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#yaml" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ```yaml
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -2086,20 +2064,20 @@
 <!-- TODO: What features does the plugin provide? -->
 
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<p><code>sh
-pip install commitizen-deno-provider</code></p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>commitizen-deno-provider
+</code></pre></div>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <p>Add <code>deno-provider</code> to your configuration file.</p>
 <p>Example for <code>.cz.yaml</code>:</p>
-<h2 id="yaml">```yaml<a class="headerlink" href="#yaml" title="Permanent link">&para;</a></h2>
-<p>commitizen:
-  major_version_zero: true
-  name: cz_conventional_commits
-  tag_format: $version
-  update_changelog_on_bump: true
-  version_provider: deno-provider
-  version_scheme: semver
-```</p>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="nt">commitizen</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">major_version_zero</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cz_conventional_commits</span>
+<span class="w">  </span><span class="nt">tag_format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$version</span>
+<span class="w">  </span><span class="nt">update_changelog_on_bump</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">version_provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deno-provider</span>
+<span class="w">  </span><span class="nt">version_scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">semver</span>
+</code></pre></div>
 
 
 

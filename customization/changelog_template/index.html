@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../images/cz_logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -704,14 +704,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/version_provider/" class="md-nav__link">
+      <a href="../../config/option/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Version Provider
+    General
   
 
     
@@ -844,14 +844,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/option/" class="md-nav__link">
+      <a href="../../config/version_provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Misc Options
+    Version Provider
   
 
     
@@ -2124,14 +2124,15 @@
 </tbody>
 </table>
 <p>Let's see an example.</p>
-<p>```python
-from commitizen.cz.base import BaseCommitizen
-from jinja2 import PackageLoader</p>
-<p>class MyPlugin(BaseCommitizen):
-    template = "CHANGELOG.md.jinja"
-    template_loader = PackageLoader("my_plugin", "templates")
-    template_extras = {"key": "value"}
-```</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommitizen</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jinja2</span><span class="w"> </span><span class="kn">import</span> <span class="n">PackageLoader</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyPlugin</span><span class="p">(</span><span class="n">BaseCommitizen</span><span class="p">):</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;CHANGELOG.md.jinja&quot;</span>
+    <span class="n">template_loader</span> <span class="o">=</span> <span class="n">PackageLoader</span><span class="p">(</span><span class="s2">&quot;my_plugin&quot;</span><span class="p">,</span> <span class="s2">&quot;templates&quot;</span><span class="p">)</span>
+    <span class="n">template_extras</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">}</span>
+</code></pre></div>
 <p>This snippet will:</p>
 <ul>
 <li>use <code>CHANGELOG.md.jinja</code> as template name</li>

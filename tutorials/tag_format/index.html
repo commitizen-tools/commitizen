@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../images/cz_logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -704,14 +704,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/version_provider/" class="md-nav__link">
+      <a href="../../config/option/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Version Provider
+    General
   
 
     
@@ -844,14 +844,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/option/" class="md-nav__link">
+      <a href="../../config/version_provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Misc Options
+    Version Provider
   
 
     
@@ -2084,10 +2084,10 @@
 <h1 id="managing-tag-formats">Managing tag formats<a class="headerlink" href="#managing-tag-formats" title="Permanent link">&para;</a></h1>
 <h2 id="tag-format-and-version-scheme">Tag format and version scheme<a class="headerlink" href="#tag-format-and-version-scheme" title="Permanent link">&para;</a></h2>
 <p>For most projects, the tag format is simply the version number which is set like this:</p>
-<p><code>yaml
-[tool.commitizen]
-tag_format: $version
-version_scheme: pep440</code></p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">[</span><span class="nv">tool.commitizen</span><span class="p p-Indicator">]</span>
+<span class="nt">tag_format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$version</span>
+<span class="nt">version_scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pep440</span>
+</code></pre></div>
 <p>As this is the default value, you don't have to specify it.</p>
 <p>This setting means that:</p>
 <ul>
@@ -2112,10 +2112,10 @@ version_scheme: pep440</code></p>
 For most, it will only impact pre-releases and <a href="../dev_releases/">developmental releases</a> formats (i.e. <code>1.0.0-rc.1</code> vs. <code>1.0.0.rc1</code>)</p>
 <p>But you may need a different tagging convention, let's say using <code>semver</code> and prefixed with a <code>v</code>.
 In this case you will define your settings like this:</p>
-<p><code>yaml
-[tool.commitizen]
-tag_format: v${version}
-version_scheme: semver</code></p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">[</span><span class="nv">tool.commitizen</span><span class="p p-Indicator">]</span>
+<span class="nt">tag_format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v${version}</span>
+<span class="nt">version_scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">semver</span>
+</code></pre></div>
 <p>As a result, the tag generated on bump will have this format: <code>v1.0.0</code> and the version will be generated following <code>semver</code> scheme.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -2128,11 +2128,11 @@ You will obviously want to keep all those features working as expected.</p>
 <p>Commitizen can deal with it as long as you provide the legacy tag format in the configuration.</p>
 <p>Using the previous example, let's say you want to move from <code>v${version}</code> to <code>component-${version}</code>.
 Then <code>component-${version}</code> will be the new tag format and <code>v${version}</code> the legacy one.</p>
-<p><code>yaml
-[tool.commitizen]
-tag_format: component-${version}
-legacy_tag_formats:
- - v${version}</code></p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">[</span><span class="nv">tool.commitizen</span><span class="p p-Indicator">]</span>
+<span class="nt">tag_format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">component-${version}</span>
+<span class="nt">legacy_tag_formats</span><span class="p">:</span>
+<span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v${version}</span>
+</code></pre></div>
 <p>This way, you won't lose your version history, you'll still be able to generate your changelog properly,
 and on the next version bump, your last version in the form <code>v${version}</code> will be properly recognized if you use the <code>scm</code> version provider.
 Your new tag will be in the form <code>component-${version}</code>.</p>
@@ -2140,12 +2140,12 @@ Your new tag will be in the form <code>component-${version}</code>.</p>
 <p>Now let's say you have some known tags you want to ignore, either because they are not versions, or because they are not versions of the component you are dealing with.
 As a consequence, you don't want them to trigger a warning because Commitizen detected an unknown tag format.</p>
 <p>Then you can tell Commitizen about it using the <a href="../../config/bump/#ignored_tag_formats"><code>ignored_tag_formats</code></a> setting:</p>
-<p><code>yaml
-[tool.commitizen]
-ignored_tag_formats:
-  - prod
-  - other-component-${version}
-  - prefix-*</code></p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">[</span><span class="nv">tool.commitizen</span><span class="p p-Indicator">]</span>
+<span class="nt">ignored_tag_formats</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">other-component-${version}</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prefix-*</span>
+</code></pre></div>
 <p>This will ignore:</p>
 <ul>
 <li>The <code>prod</code> tag</li>
@@ -2160,8 +2160,9 @@ It will match any string from any length. This allows to exclude by prefix, whet
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>If you don't want to be warned when Commitizen detects an unknown tag, you can do so by setting:
-<code>[tool.commitizen]
-ignored_tag_formats = ["*"]</code>
+<div class="highlight"><pre><span></span><code>[tool.commitizen]
+ignored_tag_formats = [&quot;*&quot;]
+</code></pre></div>
 But be aware that you will not be warned if you have a typo in your tag formats.</p>
 </div>
 

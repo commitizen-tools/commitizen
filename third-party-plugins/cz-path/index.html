@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../images/cz_logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -704,14 +704,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/version_provider/" class="md-nav__link">
+      <a href="../../config/option/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Version Provider
+    General
   
 
     
@@ -844,14 +844,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/option/" class="md-nav__link">
+      <a href="../../config/version_provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Misc Options
+    Version Provider
   
 
     
@@ -2089,23 +2089,22 @@ the path prefix option will be <code>component/z</code> and commit message might
 is removed in the prefix.</p>
 <p>This plugins provides a commitizen convention for commit messages.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<p><code>sh
-pip install cz-path</code></p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>cz-path
+</code></pre></div>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <p>Add <code>cz-path</code> to your configuration file.</p>
 <p>Example for <code>.cz.json</code>:</p>
-<p><code>json
-{
-  "commitizen": {
-    "name": "cz_path",
-    "remove_path_prefixes": ["src", "module_name"]
-  }
-}</code></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;commitizen&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cz_path&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;remove_path_prefixes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;module_name&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>The default value for <code>remove_path_prefixes</code> is <code>["src"]</code>. Adding <code>/</code> to the
 prefixes is not required.</p>
 <h2 id="example-session">Example session<a class="headerlink" href="#example-session" title="Permanent link">&para;</a></h2>
-<p>```plain
- $ git add .vscode/
+<div class="highlight"><pre><span></span><code> $ git add .vscode/
  $ cz -n cz_path c
 ? Prefix: (Use arrow keys)
  » .vscode
@@ -2113,12 +2112,15 @@ prefixes is not required.</p>
    project
    (empty)
 ? Prefix: .vscode
-? Commit title: adjust settings</p>
-<p>.vscode: adjust settings</p>
-<p>[main 0000000] .vscode: adjust settings
- 2 files changed, 1 insertion(+), 11 deletions(-)</p>
-<p>Commit successful!
-```</p>
+? Commit title: adjust settings
+
+.vscode: adjust settings
+
+[main 0000000] .vscode: adjust settings
+ 2 files changed, 1 insertion(+), 11 deletions(-)
+
+Commit successful!
+</code></pre></div>
 
 
 

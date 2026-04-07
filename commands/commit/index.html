@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../images/cz_logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -511,23 +511,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Examples:
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Examples:">
-      <ul class="md-nav__list">
-        
           <li class="md-nav__item">
   <a href="#retry" class="md-nav__link">
     <span class="md-ellipsis">
@@ -550,7 +533,12 @@
   
 </li>
         
-          <li class="md-nav__item">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#technical-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -558,11 +546,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -888,14 +871,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/version_provider/" class="md-nav__link">
+      <a href="../../config/option/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Version Provider
+    General
   
 
     
@@ -1028,14 +1011,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/option/" class="md-nav__link">
+      <a href="../../config/version_provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Misc Options
+    Version Provider
   
 
     
@@ -2215,23 +2198,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Examples:
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Examples:">
-      <ul class="md-nav__list">
-        
           <li class="md-nav__item">
   <a href="#retry" class="md-nav__link">
     <span class="md-ellipsis">
@@ -2254,7 +2220,12 @@
   
 </li>
         
-          <li class="md-nav__item">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#technical-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2262,11 +2233,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2287,6 +2253,8 @@
 
 
 
+  <h1>commit</h1>
+
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <p><img alt="cz commit --help" src="../../images/cli_help/cz_commit___help.svg" /></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
@@ -2302,18 +2270,18 @@
 <p>Simply run <code>cz commit</code> in your terminal to start the interactive commit creation process. The command will guide you through creating a properly formatted commit message according to your configured rules.</p>
 <h3 id="writing-messages-to-file">Writing Messages to File<a class="headerlink" href="#writing-messages-to-file" title="Permanent link">&para;</a></h3>
 <p>You can save the generated commit message to a file using:
-<code>sh
-cz commit --write-message-to-file COMMIT_MSG_FILE</code></p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>commit<span class="w"> </span>--write-message-to-file<span class="w"> </span>COMMIT_MSG_FILE
+</code></pre></div></p>
 <p>This can be combined with <code>--dry-run</code> to only write the message without creating a commit. This is particularly useful for <a href="../../tutorials/auto_prepare_commit_message/">automatically preparing commit messages</a>.</p>
 <h2 id="advanced-features">Advanced Features<a class="headerlink" href="#advanced-features" title="Permanent link">&para;</a></h2>
 <h3 id="git-command-options">Git Command Options<a class="headerlink" href="#git-command-options" title="Permanent link">&para;</a></h3>
 <p>You can pass any git commit options using the <code>--</code> syntax:
-```sh
-cz commit <commitizen-args> -- <git-cli-args></p>
-<h1 id="examples">Examples:<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h1>
-<p>cz c --dry-run -- -a -S  # Stage all changes and sign the commit
-cz c -a -- -n            # Stage all changes and skip the pre-commit and commit-msg hooks
-```</p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>commit<span class="w"> </span>&lt;commitizen-args&gt;<span class="w"> </span>--<span class="w"> </span>&lt;git-cli-args&gt;
+
+<span class="c1"># Examples:</span>
+cz<span class="w"> </span>c<span class="w"> </span>--dry-run<span class="w"> </span>--<span class="w"> </span>-a<span class="w"> </span>-S<span class="w">  </span><span class="c1"># Stage all changes and sign the commit</span>
+cz<span class="w"> </span>c<span class="w"> </span>-a<span class="w"> </span>--<span class="w"> </span>-n<span class="w">            </span><span class="c1"># Stage all changes and skip the pre-commit and commit-msg hooks</span>
+</code></pre></div></p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>The <code>--signoff</code> option (or <code>-s</code>) is now recommended being used with the new syntax: <code>cz commit -- -s</code>. The old syntax <code>cz commit --signoff</code> is deprecated and will be removed in v5.</p>
@@ -2326,8 +2294,8 @@ cz c -a -- -n            # Stage all changes and skip the pre-commit and commit-
 </ul>
 <h3 id="message-length-control">Message Length Control<a class="headerlink" href="#message-length-control" title="Permanent link">&para;</a></h3>
 <p>Control the length of your commit messages using the <code>-l</code> or <code>--message-length-limit</code> option:
-<code>sh
-cz commit -l 72  # Limits message length to 72 characters</code></p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>commit<span class="w"> </span>-l<span class="w"> </span><span class="m">72</span><span class="w">  </span><span class="c1"># Limits message length to 72 characters</span>
+</code></pre></div></p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The length limit only applies to the first line of the commit message. For conventional commits, this means the limit applies from the type of change through the subject. The body and footer are not counted.</p>

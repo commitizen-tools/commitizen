@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../images/cz_logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -704,14 +704,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../config/version_provider/" class="md-nav__link">
+      <a href="../config/option/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Version Provider
+    General
   
 
     
@@ -844,14 +844,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../config/option/" class="md-nav__link">
+      <a href="../config/version_provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Misc Options
+    Version Provider
   
 
     
@@ -2149,33 +2149,33 @@
 <p>This page contains frequently asked how to questions.</p>
 <h2 id="support-for-pep621">Support for <a href="https://peps.python.org/pep-0621/"><code>PEP621</code></a><a class="headerlink" href="#support-for-pep621" title="Permanent link">&para;</a></h2>
 <p><code>PEP621</code> establishes a <code>[project]</code> definition inside <code>pyproject.toml</code></p>
-<p><code>toml
-[project]
-name = "spam"
-version = "2.5.1"</code></p>
+<div class="highlight"><pre><span></span><code><span class="k">[project]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;spam&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2.5.1&quot;</span>
+</code></pre></div>
 <p>Commitizen provides a <a href="../config/version_provider/"><code>PEP621</code> version provider</a> to get and set version from this field.</p>
 <p>You just need to set the proper <code>version_provider</code> setting:</p>
-<p>```toml
-[project]
-name = "spam"
-version = "2.5.1"</p>
-<p>[tool.commitizen]
-version_provider = "pep621"
-```</p>
+<div class="highlight"><pre><span></span><code><span class="k">[project]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;spam&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2.5.1&quot;</span>
+
+<span class="k">[tool.commitizen]</span>
+<span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;pep621&quot;</span>
+</code></pre></div>
 <h2 id="how-to-revert-a-bump">How to revert a bump?<a class="headerlink" href="#how-to-revert-a-bump" title="Permanent link">&para;</a></h2>
 <p>If for any reason, the created tag and changelog were to be undone, this is the snippet:</p>
-<p><code>sh
-git tag --delete &lt;created_tag&gt;
-git reset HEAD~
-git reset --hard HEAD</code></p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>tag<span class="w"> </span>--delete<span class="w"> </span>&lt;created_tag&gt;
+git<span class="w"> </span>reset<span class="w"> </span>HEAD~
+git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>HEAD
+</code></pre></div>
 <p>This will remove the last tag created, plus the commit containing the update to <code>.cz.toml</code> and the changelog generated for the version.</p>
 <p>In case the commit was pushed to the server, you can remove it by running:</p>
-<p><code>sh
-git push --delete origin &lt;created_tag&gt;</code></p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>push<span class="w"> </span>--delete<span class="w"> </span>origin<span class="w"> </span>&lt;created_tag&gt;
+</code></pre></div>
 <h2 id="how-to-handle-revert-commits">How to handle revert commits?<a class="headerlink" href="#how-to-handle-revert-commits" title="Permanent link">&para;</a></h2>
-<p><code>sh
-git revert --no-commit &lt;SHA&gt;
-git commit -m "revert: foo bar"</code></p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>revert<span class="w"> </span>--no-commit<span class="w"> </span>&lt;SHA&gt;
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;revert: foo bar&quot;</span>
+</code></pre></div>
 <h2 id="i-got-exception-winerror-995-the-io-operation-error">I got <code>Exception [WinError 995] The I/O operation ...</code> error<a class="headerlink" href="#i-got-exception-winerror-995-the-io-operation-error" title="Permanent link">&para;</a></h2>
 <p>This error was caused by a Python bug on Windows. It's been fixed by <a href="https://github.com/python/cpython/pull/22017">cpython #22017</a>, and according to Python's changelog, <a href="https://docs.python.org/3.8/whatsnew/changelog.html#python-3-8-6-release-candidate-1">3.8.6rc1</a> and <a href="https://docs.python.org/3.9/whatsnew/changelog.html#python-3-9-0-release-candidate-2">3.9.0rc2</a> should be the accurate versions first contain this fix. In conclusion, upgrade your Python version might solve this issue.</p>
 <p>More discussion can be found in issue <a href="https://github.com/commitizen-tools/commitizen/issues/318">#318</a>.</p>
@@ -2188,22 +2188,22 @@ New bumped tags will be in the new format but old ones will still work for:</p>
 </ul>
 <p>So given if you change from <code>myproject-$version</code> to <code>${version}</code> and then <code>v${version}</code>,
 your Commitizen configuration will look like this:</p>
-<p><code>toml
-tag_format = "v${version}"
-legacy_tag_formats = [
-    "${version}",
-    "myproject-$version",
-]</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;v${version}&quot;</span>
+<span class="n">legacy_tag_formats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;${version}&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;myproject-$version&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
 <h2 id="how-to-avoid-warnings-for-expected-non-version-tags">How to avoid warnings for expected non-version tags?<a class="headerlink" href="#how-to-avoid-warnings-for-expected-non-version-tags" title="Permanent link">&para;</a></h2>
 <p>You can explicitly ignore them with <a href="../config/bump/#ignored_tag_formats"><code>ignored_tag_formats</code></a>.</p>
-<p><code>toml
-tag_format = "v${version}"
-ignored_tag_formats = [
-    "stable",
-    "component-*",
-    "env/*",
-    "v${major}.${minor}",
-]</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;v${version}&quot;</span>
+<span class="n">ignored_tag_formats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;stable&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;component-*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;env/*&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;v${major}.${minor}&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
 
 
 

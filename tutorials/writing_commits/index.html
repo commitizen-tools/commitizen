@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../images/cz_logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -704,14 +704,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/version_provider/" class="md-nav__link">
+      <a href="../../config/option/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Version Provider
+    General
   
 
     
@@ -844,14 +844,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/option/" class="md-nav__link">
+      <a href="../../config/version_provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Misc Options
+    Version Provider
   
 
     
@@ -2387,11 +2387,12 @@
 <p>You can also create your own custom commit convention by following the <a href="../../customization/config_file/">customization documentation</a>.</p>
 <h2 id="conventional-commits-format">Conventional Commits Format<a class="headerlink" href="#conventional-commits-format" title="Permanent link">&para;</a></h2>
 <p>The Conventional Commits specification follows this structure:</p>
-<p>```
-<type>[optional scope]: <description></p>
-<p>[optional body]</p>
-<p>[optional footer]
-```</p>
+<div class="highlight"><pre><span></span><code>&lt;type&gt;[optional scope]: &lt;description&gt;
+
+[optional body]
+
+[optional footer]
+</code></pre></div>
 <h3 id="commit-types">Commit Types<a class="headerlink" href="#commit-types" title="Permanent link">&para;</a></h3>
 <p>Commit types categorize the nature of your changes. The most important types for semantic versioning are:</p>
 <ul>
@@ -2418,21 +2419,23 @@
 <ol>
 <li>
 <p><strong>In the commit body or footer</strong>:
-    ```
-    feat(api): change authentication method</p>
-<p>BREAKING CHANGE: The authentication API now requires OAuth2 instead of API keys.
-```</p>
+    <div class="highlight"><pre><span></span><code>feat(api): change authentication method
+
+BREAKING CHANGE: The authentication API now requires OAuth2 instead of API keys.
+</code></pre></div></p>
 </li>
 <li>
 <p><strong>In the commit title</strong> (when enabled):
-    <code>feat!: change authentication method</code></p>
+    <div class="highlight"><pre><span></span><code>feat!: change authentication method
+</code></pre></div></p>
 <p>To enable this syntax, set <code>breaking_change_exclamation_in_title = true</code> in your configuration. <a href="../../config/commit/#breaking_change_exclamation_in_title">Read more</a></p>
 </li>
 </ol>
 <h3 id="scope">Scope<a class="headerlink" href="#scope" title="Permanent link">&para;</a></h3>
 <p>An optional scope can be added to provide additional context about the area of the codebase affected:</p>
-<p><code>feat(parser): add support for JSON arrays
-fix(api): handle null response gracefully</code></p>
+<div class="highlight"><pre><span></span><code>feat(parser): add support for JSON arrays
+fix(api): handle null response gracefully
+</code></pre></div>
 <h2 id="writing-effective-commit-messages">Writing Effective Commit Messages<a class="headerlink" href="#writing-effective-commit-messages" title="Permanent link">&para;</a></h2>
 <p>Well-written commit messages are crucial for maintaining a clear project history. When writing commits, consider:</p>
 <ul>
@@ -2444,19 +2447,23 @@ fix(api): handle null response gracefully</code></p>
 <h4 id="1-keep-the-subject-line-concise">1. Keep the Subject Line Concise<a class="headerlink" href="#1-keep-the-subject-line-concise" title="Permanent link">&para;</a></h4>
 <p>The subject line should be clear and concise (aim for ~50 characters). It should summarize what the commit does in one line.</p>
 <p><strong>Good:</strong>
-<code>fix(commands): handle missing user input gracefully
-feat(api): add pagination support</code></p>
+<div class="highlight"><pre><span></span><code>fix(commands): handle missing user input gracefully
+feat(api): add pagination support
+</code></pre></div></p>
 <p><strong>Avoid:</strong>
-<code>fix: stuff
-feat: commit command introduced</code></p>
+<div class="highlight"><pre><span></span><code>fix: stuff
+feat: commit command introduced
+</code></pre></div></p>
 <h4 id="2-use-imperative-mood">2. Use Imperative Mood<a class="headerlink" href="#2-use-imperative-mood" title="Permanent link">&para;</a></h4>
 <p>Write commit messages in the imperative mood, as if completing the sentence: "If applied, this commit will..."</p>
 <p><strong>Good:</strong>
-<code>feat: add user authentication
-fix: resolve memory leak in parser</code></p>
+<div class="highlight"><pre><span></span><code>feat: add user authentication
+fix: resolve memory leak in parser
+</code></pre></div></p>
 <p><strong>Avoid:</strong>
-<code>feat: added user authentication
-fix: resolved memory leak in parser</code></p>
+<div class="highlight"><pre><span></span><code>feat: added user authentication
+fix: resolved memory leak in parser
+</code></pre></div></p>
 <h4 id="3-think-about-the-changelog">3. Think About the Changelog<a class="headerlink" href="#3-think-about-the-changelog" title="Permanent link">&para;</a></h4>
 <p>Your commits will likely appear in the automatically generated changelog. Write messages that make sense in that context. If you want to exclude a commit from the changelog, use types like <code>build</code>, <code>chore</code>, or <code>ci</code>.</p>
 <h4 id="4-one-feature-per-commit">4. One Feature Per Commit<a class="headerlink" href="#4-one-feature-per-commit" title="Permanent link">&para;</a></h4>
@@ -2468,12 +2475,12 @@ fix: resolved memory leak in parser</code></p>
 <li><strong>What</strong> was changed (if not obvious from the subject)</li>
 <li><strong>How</strong> it differs from previous behavior</li>
 </ul>
-<p>```
-feat(api): add rate limiting</p>
-<p>Implement rate limiting to prevent API abuse. The system now
+<div class="highlight"><pre><span></span><code>feat(api): add rate limiting
+
+Implement rate limiting to prevent API abuse. The system now
 enforces a maximum of 100 requests per minute per IP address.
 Exceeding this limit returns a 429 status code.
-```</p>
+</code></pre></div>
 <h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

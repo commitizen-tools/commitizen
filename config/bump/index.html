@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://commitizen-tools.github.io/commitizen/config/bump/">
       
       
-        <link rel="prev" href="../version_provider/">
+        <link rel="prev" href="../option/">
       
       
         <link rel="next" href="../commit/">
@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../images/cz_logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -706,14 +706,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../version_provider/" class="md-nav__link">
+      <a href="../option/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Version Provider
+    General
   
 
     
@@ -926,6 +926,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#version_provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        version_provider
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#version_scheme" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1036,14 +1047,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../option/" class="md-nav__link">
+      <a href="../version_provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Misc Options
+    Version Provider
   
 
     
@@ -2274,6 +2285,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#version_provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        version_provider
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#version_scheme" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2534,8 +2556,38 @@ regardless of whether the file is present or not in <code>version_files</code>.<
 <p class="admonition-title">Historical note</p>
 <p>This option was renamed from <code>files</code> to <code>version_files</code>.</p>
 </div>
+<h2 id="version_provider"><code>version_provider</code><a class="headerlink" href="#version_provider" title="Permanent link">&para;</a></h2>
+<p>Mechanism by which Commitizen reads and writes version information in your project.</p>
+<p>For a detailed explanation, check the <a href="../version_provider/">version provider</a> section.
+Which includes, how to create your own version provider.</p>
+<p><strong>Available options</strong></p>
+<ul>
+<li><code>commitizen</code>: default version provider and stores the version in the active commitizen config (<code>pyproject.toml</code> or <code>.cz.toml</code>) under the key <code>version</code></li>
+<li><code>scm</code>: git tags provide the real version to commitizen (read only)</li>
+<li><code>pep621</code>: (python) manages version in <code>pyproject.toml</code> under the <code>project.version</code> field, following <a href="https://peps.python.org/pep-0621/">PEP 621</a> standards</li>
+<li><code>poetry</code>: takes the version from poetry v1, use <code>pep621</code> with poetry v2 or later</li>
+<li><code>uv</code>: same as <code>pep621</code> except that it also updates the <code>uv.lock</code></li>
+<li><code>cargo</code>: manages version in both <code>Cargo.toml</code> (<code>package.version</code>) and <code>Cargo.lock</code></li>
+<li><code>npm</code>: manages version in <code>package.json</code> and the lock</li>
+<li><code>composer</code>: for PHP's Composer package manager</li>
+</ul>
+<p><strong>Example</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;pep621&quot;</span>
+</code></pre></div>
 <h2 id="version_scheme"><code>version_scheme</code><a class="headerlink" href="#version_scheme" title="Permanent link">&para;</a></h2>
-<p>See <a href="../../commands/bump/#-version-scheme"><code>--version-scheme</code></a>.</p>
+<p>Format used for the version.</p>
+<p>For a detail explanation, check <a href="../../commands/bump/#-version-scheme"><code>--version-scheme</code></a>.</p>
+<p><strong>Available options</strong></p>
+<ul>
+<li><code>pep440</code>: <a href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a>: recommended for Python projects, <strong>default</strong> (for legacy reasons)</li>
+<li><code>semver2</code>: <a href="https://semver.org/">Semantic Versioning</a>: recommended for non-Python projects</li>
+<li><code>semver</code>: <a href="https://semver.org/spec/v1.0.0.html">Semantic Versioning</a>: use if you are stuck with semver v1</li>
+</ul>
+<p><strong>Example</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version_scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;semver2&quot;</span>
+</code></pre></div>
 
 
 
@@ -2556,7 +2608,7 @@ regardless of whether the file is present or not in <code>version_files</code>.<
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="December 12, 2025 04:00:38 UTC">December 12, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="April 5, 2026 09:37:33 UTC">April 5, 2026</span>
   </span>
 
     

@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../images/cz_logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -704,14 +704,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/version_provider/" class="md-nav__link">
+      <a href="../../config/option/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Version Provider
+    General
   
 
     
@@ -844,14 +844,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/option/" class="md-nav__link">
+      <a href="../../config/version_provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Misc Options
+    Version Provider
   
 
     
@@ -1299,6 +1299,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monorepo support
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1315,6 +1333,53 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#changelog-per-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changelog per component
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Changelog per component">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-with-scope-in-conventional-commits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example with scope in conventional commits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1955,6 +2020,42 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#changelog-per-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changelog per component
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Changelog per component">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-with-scope-in-conventional-commits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example with scope in conventional commits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1978,45 +2079,43 @@ It also assumes that you are using conventional commits with scopes.</p>
 <li>
 <p><strong>Organize your monorepo</strong></p>
 <p>For example, you might have one of these layouts:</p>
-<p><code>shell-session
-.
-├── library-b
-│   └── .cz.toml
-└── library-z
-    └── .cz.toml</code></p>
-<p><code>shell-session
-src
-├── library-b
-│   └── .cz.toml
-└── library-z
-    └── .cz.toml</code></p>
+<div class="highlight"><pre><span></span><code><span class="go">.</span>
+<span class="go">├── library-b</span>
+<span class="go">│   └── .cz.toml</span>
+<span class="go">└── library-z</span>
+<span class="go">    └── .cz.toml</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="go">src</span>
+<span class="go">├── library-b</span>
+<span class="go">│   └── .cz.toml</span>
+<span class="go">└── library-z</span>
+<span class="go">    └── .cz.toml</span>
+</code></pre></div>
 </li>
 <li>
 <p><strong>Add a Commitizen configuration for each component</strong></p>
-<p>```toml</p>
-<h1 id="library-bcztoml">library-b/.cz.toml<a class="headerlink" href="#library-bcztoml" title="Permanent link">&para;</a></h1>
-<p>[tool.commitizen]
-name = "cz_customize"
-version = "0.0.0"
-tag_format = "${version}-library-b" # the component name can be a prefix or suffix with or without a separator
-ignored_tag_formats = ["${version}-library-*"] # Avoid noise from other tags
-update_changelog_on_bump = true
-```</p>
-<p>```toml</p>
-<h1 id="library-zcztoml">library-z/.cz.toml<a class="headerlink" href="#library-zcztoml" title="Permanent link">&para;</a></h1>
-<p>[tool.commitizen]
-name = "cz_customize"
-version = "0.0.0"
-tag_format = "${version}-library-z"
-ignored_tag_formats = ["${version}-library-*"] # Avoid noise from other tags
-update_changelog_on_bump = true
-```</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># library-b/.cz.toml</span>
+<span class="k">[tool.commitizen]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cz_customize&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0&quot;</span>
+<span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${version}-library-b&quot;</span><span class="w"> </span><span class="c1"># the component name can be a prefix or suffix with or without a separator</span>
+<span class="n">ignored_tag_formats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;${version}-library-*&quot;</span><span class="p">]</span><span class="w"> </span><span class="c1"># Avoid noise from other tags</span>
+<span class="n">update_changelog_on_bump</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># library-z/.cz.toml</span>
+<span class="k">[tool.commitizen]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cz_customize&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0&quot;</span>
+<span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${version}-library-z&quot;</span>
+<span class="n">ignored_tag_formats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;${version}-library-*&quot;</span><span class="p">]</span><span class="w"> </span><span class="c1"># Avoid noise from other tags</span>
+<span class="n">update_changelog_on_bump</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</code></pre></div>
 </li>
 <li>
 <p><strong>Bump each component independently</strong></p>
-<p><code>sh
-cz --config library-b/.cz.toml bump --yes
-cz --config library-z/.cz.toml bump --yes</code></p>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>--config<span class="w"> </span>library-b/.cz.toml<span class="w"> </span>bump<span class="w"> </span>--yes
+cz<span class="w"> </span>--config<span class="w"> </span>library-z/.cz.toml<span class="w"> </span>bump<span class="w"> </span>--yes
+</code></pre></div>
 </li>
 </ol>
 <h2 id="changelog-per-component">Changelog per component<a class="headerlink" href="#changelog-per-component" title="Permanent link">&para;</a></h2>
@@ -2035,12 +2134,12 @@ cz --config library-z/.cz.toml bump --yes</code></p>
 <p>In this example, we want <code>library-b</code>'s changelog to only include commits that use the <code>library-b</code> scope.
 To achieve this, we configure Commitizen to match only commit messages with that scope.</p>
 <p>Here is an example configuration for <code>library-b</code>:</p>
-<p><code>toml
-[tool.commitizen.customize]
-changelog_pattern = "^(feat|fix)\\(library-b\\)(!)?:" # the type pattern can be a wildcard or any types you wish to include</code></p>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.commitizen.customize]</span>
+<span class="n">changelog_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;^(feat|fix)</span><span class="se">\\</span><span class="s2">(library-b</span><span class="se">\\</span><span class="s2">)(!)?:&quot;</span><span class="w"> </span><span class="c1"># the type pattern can be a wildcard or any types you wish to include</span>
+</code></pre></div>
 <p>With this configuration, a commit message like the following would be included in <code>library-b</code>'s changelog:</p>
-<p><code>text
-fix(library-b): Some awesome message</code></p>
+<div class="highlight"><pre><span></span><code>fix(library-b): Some awesome message
+</code></pre></div>
 
 
 

@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../images/cz_logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -704,14 +704,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/version_provider/" class="md-nav__link">
+      <a href="../../config/option/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Version Provider
+    General
   
 
     
@@ -844,14 +844,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/option/" class="md-nav__link">
+      <a href="../../config/version_provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Misc Options
+    Version Provider
   
 
     
@@ -1880,6 +1880,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#documentation-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2071,6 +2082,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#documentation-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2103,24 +2125,26 @@
 <h2 id="useful-commands">Useful commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
 <p>Please check the <a href="https://github.com/commitizen-tools/commitizen/blob/master/pyproject.toml">pyproject.toml</a> for a comprehensive list of commands.</p>
 <h3 id="code-changes">Code Changes<a class="headerlink" href="#code-changes" title="Permanent link">&para;</a></h3>
-<p>```bash</p>
-<h1 id="ensure-you-have-the-correct-dependencies">Ensure you have the correct dependencies<a class="headerlink" href="#ensure-you-have-the-correct-dependencies" title="Permanent link">&para;</a></h1>
-<p>uv sync --dev --frozen</p>
-<h1 id="make-ruff-happy">Make ruff happy<a class="headerlink" href="#make-ruff-happy" title="Permanent link">&para;</a></h1>
-<p>uv run poe format</p>
-<h1 id="check-if-ruff-and-mypy-are-happy">Check if ruff and mypy are happy<a class="headerlink" href="#check-if-ruff-and-mypy-are-happy" title="Permanent link">&para;</a></h1>
-<p>uv run poe lint</p>
-<h1 id="check-if-mypy-is-happy-in-python-310">Check if mypy is happy in python 3.10<a class="headerlink" href="#check-if-mypy-is-happy-in-python-310" title="Permanent link">&para;</a></h1>
-<p>mypy --python-version 3.10</p>
-<h1 id="run-tests-in-parallel">Run tests in parallel.<a class="headerlink" href="#run-tests-in-parallel" title="Permanent link">&para;</a></h1>
-<p>pytest -n auto # This may take a while.
-pytest -n auto <test_suite>
-```</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ensure you have the correct dependencies</span>
+uv<span class="w"> </span>sync<span class="w"> </span>--dev<span class="w"> </span>--frozen
+
+<span class="c1"># Make ruff happy</span>
+uv<span class="w"> </span>run<span class="w"> </span>poe<span class="w"> </span>format
+
+<span class="c1"># Check if ruff and mypy are happy</span>
+uv<span class="w"> </span>run<span class="w"> </span>poe<span class="w"> </span>lint
+
+<span class="c1"># Check if mypy is happy in python 3.10</span>
+mypy<span class="w"> </span>--python-version<span class="w"> </span><span class="m">3</span>.10
+
+<span class="c1"># Run tests in parallel.</span>
+pytest<span class="w"> </span>-n<span class="w"> </span>auto<span class="w"> </span><span class="c1"># This may take a while.</span>
+pytest<span class="w"> </span>-n<span class="w"> </span>auto<span class="w"> </span>&lt;test_suite&gt;
+</code></pre></div>
 <h3 id="documentation-changes">Documentation Changes<a class="headerlink" href="#documentation-changes" title="Permanent link">&para;</a></h3>
-<p>```bash</p>
-<h1 id="build-the-documentation-locally-and-check-for-broken-links">Build the documentation locally and check for broken links<a class="headerlink" href="#build-the-documentation-locally-and-check-for-broken-links" title="Permanent link">&para;</a></h1>
-<p>uv run poe doc
-```</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Build the documentation locally and check for broken links</span>
+uv<span class="w"> </span>run<span class="w"> </span>poe<span class="w"> </span>doc
+</code></pre></div>
 
 
 

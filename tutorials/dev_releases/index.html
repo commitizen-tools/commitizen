@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../images/cz_logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -704,14 +704,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/version_provider/" class="md-nav__link">
+      <a href="../../config/option/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Version Provider
+    General
   
 
     
@@ -844,14 +844,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../config/option/" class="md-nav__link">
+      <a href="../../config/version_provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Misc Options
+    Version Provider
   
 
     
@@ -2144,8 +2144,8 @@
 <p>If multiple active branches attempt to create a tag relative to the main branch, there is a possibility that they will attempt to create the <em>same</em> tag, resulting in a collision.</p>
 <p>Developmental releases aim to avoid this by including a <code>.dev</code> segment which
 includes a non-negative integer unique to that workflow:</p>
-<p><code>txt
-X.Y.devN</code></p>
+<div class="highlight"><pre><span></span><code>X.Y.devN
+</code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>As noted in
@@ -2157,31 +2157,31 @@ while developmental releases help avoid the situation described above, they can 
 <p>For example, CircleCI <a href="https://circleci.com/docs/variables/">provides</a>
 <code>CIRCLE_BUILD_NUM</code>, a unique number for each job which will increment with each
 run:</p>
-<p><code>sh
---devrelease ${CIRCLE_BUILD_NUM}</code></p>
+<div class="highlight"><pre><span></span><code>--devrelease<span class="w"> </span><span class="si">${</span><span class="nv">CIRCLE_BUILD_NUM</span><span class="si">}</span>
+</code></pre></div>
 <p>This will result in a unique developmental release of, for example:</p>
-<p><code>sh
-1.3.2.dev2478</code></p>
+<div class="highlight"><pre><span></span><code><span class="m">1</span>.3.2.dev2478
+</code></pre></div>
 <h3 id="example-2-github">Example 2: GitHub<a class="headerlink" href="#example-2-github" title="Permanent link">&para;</a></h3>
 <p>GitHub also
 <a href="https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables">provides</a>
 <code>GITHUB_RUN_ID</code>, a <em>"unique number for each workflow run"</em> which will also
 provide a unique number for each workflow:</p>
-<p><code>sh
---devrelease ${GITHUB_RUN_ID}</code></p>
+<div class="highlight"><pre><span></span><code>--devrelease<span class="w"> </span><span class="si">${</span><span class="nv">GITHUB_RUN_ID</span><span class="si">}</span>
+</code></pre></div>
 <p>This will result in a unique developmental release of, for example:</p>
-<p><code>sh
-1.3.2.dev6048584598</code></p>
+<div class="highlight"><pre><span></span><code><span class="m">1</span>.3.2.dev6048584598
+</code></pre></div>
 <h3 id="example-3-unix-time">Example 3: Unix time<a class="headerlink" href="#example-3-unix-time" title="Permanent link">&para;</a></h3>
 <p>Equally, as the developmental release needs only a non-negative integer, it is
 possible to use the Unix time (i.e. the number of seconds since 1st January
 1970 UTC).</p>
 <p>This approach could potentially create a collision if two builds occur at precisely the same second, but it may be sufficient for many use cases:</p>
-<p><code>sh
---devrelease $(date +%s)</code></p>
+<div class="highlight"><pre><span></span><code>--devrelease<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span>
+</code></pre></div>
 <p>This will result in a unique developmental release of, for example:</p>
-<p><code>sh
-1.3.2.dev1696238452</code></p>
+<div class="highlight"><pre><span></span><code><span class="m">1</span>.3.2.dev1696238452
+</code></pre></div>
 
 
 
