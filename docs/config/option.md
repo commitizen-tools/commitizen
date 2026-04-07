@@ -7,9 +7,9 @@ Name of the committing rules to use. What we generally call the **commit convent
 - Type: `str`
 - Default: `"cz_conventional_commits"`
 - Options
-  - `cz_conventional_commits`: uses [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
-  - `cz_jira`: jira [smart commits](https://support.atlassian.com/bitbucket-cloud/docs/use-smart-commits/)
-  - `cz_customize`: (**not recommended**) customize the convention directly in the `TOML` file under `[tool.commitizen.customize]`, read [Customize in configuration file](../customization/config_file.md) for more. There's a plan to provide a different functionality.
+    - `cz_conventional_commits`: uses [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
+    - `cz_jira`: jira [smart commits](https://support.atlassian.com/bitbucket-cloud/docs/use-smart-commits/)
+    - `cz_customize`: (**not recommended**) customize the convention directly in the `TOML` file under `[tool.commitizen.customize]`, read [Customize in configuration file](../customization/config_file.md) for more. There's a plan to provide a different functionality.
 
 You can write your own convention, and release it on PyPI, check [Customizing through a Python class](../customization/python_class.md).
 
