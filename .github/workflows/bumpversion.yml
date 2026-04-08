@@ -19,6 +19,8 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
       - name: Check out
         uses: actions/checkout@v6
         with:
@@ -28,8 +30,11 @@ jobs:
           persist-credentials: false
       - uses: commitizen-tools/setup-cz@main
         with:
+          # Information extracted from the app token
+          # Under actions/create-github-app-token is documented how to generate username and email for the bot
+          # The hardcoded number is the user ID of the bot account, found in the bot API
           git-user-name: "${{ steps.app-token.outputs.app-slug }}[bot]"
-          git-user-email: "${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
+          git-user-email: "274190853+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
       - id: bump-version
         run: |
           cz bump --yes
