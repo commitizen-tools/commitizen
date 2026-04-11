@@ -25,6 +25,7 @@ from commitizen.exceptions import (
     NothingToCommitError,
 )
 from commitizen.git import smart_open
+from commitizen.preview_questions import build_preview_questions
 
 if TYPE_CHECKING:
     from commitizen.config import BaseConfig
@@ -35,11 +36,12 @@ class CommitArgs(TypedDict, total=False):
     dry_run: bool
     edit: bool
     extra_cli_args: str
-    message_length_limit: int
+    message_length_limit: int | None
     no_retry: bool
     signoff: bool
     write_message_to_file: Path | None
     retry: bool
+    preview: bool
 
 
 class Commit:
@@ -54,6 +56,18 @@ class Commit:
         self.arguments = arguments
         self.backup_file_path = get_backup_file_path()
 
+        message_length_limit = arguments.get("message_length_limit")
+        self.message_length_limit: int = (
+            message_length_limit
+            if message_length_limit is not None
+            else config.settings["message_length_limit"]
+        )
+
+        self.preview_enabled = bool(
+            self.arguments.get("preview", False)
+            or self.config.settings.get("preview", False)
+        )
+
     def _read_backup_message(self) -> str | None:
         # Check the commit backup file exists
         if not self.backup_file_path.is_file():
@@ -65,12 +79,19 @@ class Commit:
         ).strip()
 
     def _get_message_by_prompt_commit_questions(self) -> str:
-        # Prompt user for the commit message
         questions = self.cz.questions()
         for question in (q for q in questions if q["type"] == "list"):
             question["use_shortcuts"] = self.config.settings["use_shortcuts"]
+
+        questions_to_ask = build_preview_questions(
+            self.cz,
+            questions,
+            enabled=self.preview_enabled,
+            max_length=self.message_length_limit,
+        )
+
         try:
-            answers = questionary.prompt(questions, style=self.cz.style)
+            answers = questionary.prompt(questions_to_ask, style=self.cz.style)
         except ValueError as err:
             root_err = err.__context__
             if isinstance(root_err, CzException):
@@ -85,19 +106,14 @@ class Commit:
         return message
 
     def _validate_subject_length(self, message: str) -> None:
-        message_length_limit = self.arguments.get(
-            "message_length_limit", self.config.settings.get("message_length_limit", 0)
-        )
         # By the contract, message_length_limit is set to 0 for no limit
-        if (
-            message_length_limit is None or message_length_limit <= 0
-        ):  # do nothing for no limit
+        if self.message_length_limit <= 0:
             return
 
         subject = message.partition("\n")[0].strip()
-        if len(subject) > message_length_limit:
+        if len(subject) > self.message_length_limit:
             raise CommitMessageLengthExceededError(
-                f"Length of commit message exceeds limit ({len(subject)}/{message_length_limit}), subject: '{subject}'"
+                f"Length of commit message exceeds limit ({len(subject)}/{self.message_length_limit}), subject: '{subject}'"
             )
 
     def manual_edit(self, message: str) -> str:

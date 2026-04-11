@@ -14,6 +14,9 @@ class ListQuestion(TypedDict, total=False):
     message: str
     choices: list[Choice]
     use_shortcuts: bool
+    filter: Callable[[str], str]
+    bottom_toolbar: Callable[[], str]
+    validate: Callable[[str], bool | str]
 
 
 class InputQuestion(TypedDict, total=False):
@@ -21,13 +24,18 @@ class InputQuestion(TypedDict, total=False):
     name: str
     message: str
     filter: Callable[[str], str]
+    bottom_toolbar: Callable[[], str]
+    validate: Callable[[str], bool | str]
 
 
-class ConfirmQuestion(TypedDict):
+class ConfirmQuestion(TypedDict, total=False):
     type: Literal["confirm"]
     name: str
     message: str
     default: bool
+    filter: Callable[[str], str]
+    bottom_toolbar: Callable[[], str]
+    validate: Callable[[str], bool | str]
 
 
 CzQuestion = ListQuestion | InputQuestion | ConfirmQuestion
