@@ -15,6 +15,7 @@ from commitizen.version_schemes import (
     DEFAULT_SCHEME,
     InvalidVersion,
     VersionProtocol,
+    VersionScheme,
     get_version_scheme,
 )
 
@@ -80,7 +81,7 @@ class TagRules:
     ```
     """
 
-    scheme: type[VersionProtocol] = DEFAULT_SCHEME
+    scheme: VersionScheme = DEFAULT_SCHEME
     tag_format: str = DEFAULT_SETTINGS["tag_format"]
     legacy_tag_formats: Sequence[str] = field(default_factory=list)
     ignored_tag_formats: Sequence[str] = field(default_factory=list)
