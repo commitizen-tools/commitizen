@@ -10,6 +10,7 @@ from typing import (
     ClassVar,
     Literal,
     Protocol,
+    TypeAlias,
     cast,
     runtime_checkable,
 )
@@ -22,7 +23,6 @@ from commitizen.exceptions import VersionSchemeUnknown
 
 if TYPE_CHECKING:
     import sys
-    from typing import TypeAlias
 
     # Self is Python 3.11+ but backported in typing-extensions
     if sys.version_info < (3, 11):
@@ -56,7 +56,7 @@ class VersionProtocol(Protocol):
         raise NotImplementedError("must be implemented")
 
     @property
-    def scheme(self) -> type[VersionProtocol]:
+    def scheme(self) -> VersionScheme:
         """The version scheme this version follows."""
         raise NotImplementedError("must be implemented")
 
@@ -140,7 +140,9 @@ class VersionProtocol(Protocol):
         """
 
 
-# Note: version schemes are classes that initialize a VersionProtocol instance
+# With PEP 440 and SemVer semantics, a scheme is the class; a version is an instance.
+Version: TypeAlias = VersionProtocol
+VersionScheme: TypeAlias = type[VersionProtocol]
 
 
 class BaseVersion(_BaseVersion):
@@ -152,7 +154,7 @@ class BaseVersion(_BaseVersion):
     """Regex capturing this version scheme into a `version` group"""
 
     @property
-    def scheme(self) -> type[VersionProtocol]:
+    def scheme(self) -> VersionScheme:
         return self.__class__
 
     @property
@@ -383,7 +385,7 @@ class SemVer2(SemVer):
         return ".".join(prerelease_parts)
 
 
-DEFAULT_SCHEME: type[VersionProtocol] = Pep440
+DEFAULT_SCHEME: VersionScheme = Pep440
 
 SCHEMES_ENTRYPOINT = "commitizen.scheme"
 """Schemes entrypoints group"""
@@ -392,9 +394,7 @@ KNOWN_SCHEMES = [ep.name for ep in metadata.entry_points(group=SCHEMES_ENTRYPOIN
 """All known registered version schemes"""
 
 
-def get_version_scheme(
-    settings: Settings, name: str | None = None
-) -> type[VersionProtocol]:
+def get_version_scheme(settings: Settings, name: str | None = None) -> VersionScheme:
     """
     Get the version scheme as defined in the configuration
     or from an overridden `name`.
@@ -420,7 +420,7 @@ def get_version_scheme(
         (ep,) = metadata.entry_points(name=name, group=SCHEMES_ENTRYPOINT)
     except ValueError:
         raise VersionSchemeUnknown(f'Version scheme "{name}" unknown.')
-    scheme = cast("type[VersionProtocol]", ep.load())
+    scheme = cast("VersionScheme", ep.load())
 
     # `VersionProtocol` is a `@runtime_checkable` Protocol with properties, so
     # `issubclass(scheme, VersionProtocol)` is not supported. The historical
