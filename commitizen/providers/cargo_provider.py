@@ -53,12 +53,12 @@ class CargoProvider(TomlProvider):
             assert isinstance(packages, AoT)
 
         try:
-            cargo_package_name = cargo_toml_content["package"]["name"]  # type: ignore[index]
+            cargo_package_name = cargo_toml_content["package"]["name"]  # type: ignore  # noqa: PGH003
             if TYPE_CHECKING:
                 assert isinstance(cargo_package_name, str)
             for i, package in enumerate(packages):
                 if package["name"] == cargo_package_name:
-                    cargo_lock_content["package"][i]["version"] = version  # type: ignore[index]
+                    cargo_lock_content["package"][i]["version"] = version  # type: ignore  # noqa: PGH003
                     break
         except NonExistentKey:
             workspace = cargo_toml_content.get("workspace", {})
@@ -94,7 +94,7 @@ class CargoProvider(TomlProvider):
 
             for i, package in enumerate(packages):
                 if package["name"] in members_inheriting:
-                    cargo_lock_content["package"][i]["version"] = version  # type: ignore[index]
+                    cargo_lock_content["package"][i]["version"] = version  # type: ignore  # noqa: PGH003
 
         self.lock_file.write_text(
             dumps(cargo_lock_content), encoding=self._get_encoding()

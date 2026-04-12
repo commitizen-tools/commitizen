@@ -1396,7 +1396,7 @@ def test_is_initial_tag(mocker: MockFixture, tmp_commitizen_project, util: UtilF
         "extras": None,
     }
 
-    bump_cmd = bump.Bump(config, arguments)  # type: ignore[arg-type]
+    bump_cmd = bump.Bump(config, arguments)  # type: ignore  # noqa: PGH003
 
     # Test case 1: No current tag, not yes mode
     mocker.patch("questionary.confirm", return_value=mocker.Mock(ask=lambda: True))

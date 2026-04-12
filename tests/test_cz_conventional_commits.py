@@ -1,6 +1,9 @@
+from typing import cast
+
 import pytest
 
 from commitizen.cz.conventional_commits.conventional_commits import (
+    ConventionalCommitsAnswers,
     ConventionalCommitsCz,
     _parse_scope,
     _parse_subject,
@@ -66,7 +69,7 @@ def test_small_answer(config):
         "body": "",
         "footer": "",
     }
-    message = conventional_commits.message(answers)
+    message = conventional_commits.message(cast("ConventionalCommitsAnswers", answers))
     assert message == "fix(users): email pattern corrected"
 
 
@@ -80,7 +83,7 @@ def test_long_answer(config):
         "body": "complete content",
         "footer": "closes #24",
     }
-    message = conventional_commits.message(answers)
+    message = conventional_commits.message(cast("ConventionalCommitsAnswers", answers))
     assert (
         message
         == "fix(users): email pattern corrected\n\ncomplete content\n\ncloses #24"
@@ -97,7 +100,7 @@ def test_breaking_change_in_footer(config):
         "body": "complete content",
         "footer": "migrate by renaming user to users",
     }
-    message = conventional_commits.message(answers)
+    message = conventional_commits.message(cast("ConventionalCommitsAnswers", answers))
     print(message)
     assert (
         message
@@ -150,7 +153,7 @@ def test_breaking_change_message_formats(
         "body": "complete content",
         "footer": "migrate by renaming user to users",
     }
-    message = conventional_commits.message(answers)
+    message = conventional_commits.message(cast("ConventionalCommitsAnswers", answers))
     assert message == expected_message
 
 

@@ -50,12 +50,14 @@ class CustomizeCommitsCz(BaseCommitizen):
                 setattr(self, attr_name, value)
 
     def questions(self) -> list[CzQuestion]:
-        return self.custom_settings.get("questions", [{}])  # type: ignore[return-value]
+        return self.custom_settings.get("questions", [{}])  # type: ignore  # noqa: PGH003
 
     def message(self, answers: Mapping[str, Any]) -> str:
         message_template = Template(self.custom_settings.get("message_template", ""))
         if getattr(Template, "substitute", None):
-            return message_template.substitute(**answers)  # type: ignore[attr-defined,no-any-return] # pragma: no cover # TODO: check if we can fix this
+            return message_template.substitute(
+                **answers
+            )  # pragma: no cover # TODO: check if we can fix this
         return message_template.render(**answers)
 
     def example(self) -> str:

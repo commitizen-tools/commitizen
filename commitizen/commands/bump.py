@@ -8,7 +8,7 @@ import questionary
 
 from commitizen import bump, factory, git, hooks, out
 from commitizen.changelog_formats import get_changelog_format
-from commitizen.commands.changelog import Changelog
+from commitizen.commands.changelog import Changelog, ChangelogArgs
 from commitizen.defaults import Settings
 from commitizen.exceptions import (
     BumpCommitFailedError,
@@ -323,18 +323,21 @@ class Bump:
                 try:
                     Changelog(
                         self.config,
-                        {**changelog_args, "dry_run": True},  # type: ignore[typeddict-item]
+                        {**changelog_args, "dry_run": True},
                     )()
                 except DryRunExit:
                     pass
 
             changelog_cmd = Changelog(
                 self.config,
-                {
-                    **changelog_args,  # type: ignore[typeddict-item]
-                    "file_name": self.file_name,
-                    "allow_no_commit": bool(self.arguments["allow_no_commit"]),
-                },
+                cast(
+                    "ChangelogArgs",
+                    {
+                        **changelog_args,
+                        "file_name": self.file_name,
+                        "allow_no_commit": bool(self.arguments["allow_no_commit"]),
+                    },
+                ),
             )
             changelog_cmd()
             changelog_file_name = changelog_cmd.file_name

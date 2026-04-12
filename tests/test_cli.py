@@ -87,7 +87,7 @@ def test_arg_debug(util: UtilFixture):
 
 def test_commitizen_excepthook(capsys):
     with pytest.raises(SystemExit) as excinfo:
-        cli.commitizen_excepthook(NotAGitProjectError, NotAGitProjectError(), "")
+        cli.commitizen_excepthook(NotAGitProjectError, NotAGitProjectError(), None)
 
     assert excinfo.type is SystemExit
     assert excinfo.value.code == NotAGitProjectError.exit_code
@@ -98,7 +98,7 @@ def test_commitizen_debug_excepthook(capsys):
         cli.commitizen_excepthook(
             NotAGitProjectError,
             NotAGitProjectError(),
-            "",
+            None,
             debug=True,
         )
 
@@ -129,7 +129,7 @@ def test_commitizen_excepthook_no_raises(capsys):
         cli.commitizen_excepthook(
             NotAGitProjectError,
             NotAGitProjectError(),
-            "",
+            None,
             no_raise=[NotAGitProjectError.exit_code],
         )
 

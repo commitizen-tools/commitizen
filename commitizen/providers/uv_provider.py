@@ -29,17 +29,17 @@ class UvProvider(TomlProvider):
         pyproject_toml_content = tomlkit.parse(
             self.file.read_text(encoding=self._get_encoding())
         )
-        project_name = pyproject_toml_content["project"]["name"]  # type: ignore[index]
+        project_name = pyproject_toml_content["project"]["name"]  # type: ignore  # noqa: PGH003
         normalized_project_name = canonicalize_name(str(project_name))
 
         document = tomlkit.parse(
             self.lock_file.read_text(encoding=self._get_encoding())
         )
 
-        packages: tomlkit.items.AoT = document["package"]  # type: ignore[assignment]
+        packages: tomlkit.items.AoT = document["package"]  # type: ignore  # noqa: PGH003
         for i, package in enumerate(packages):
             if package["name"] == normalized_project_name:
-                document["package"][i]["version"] = version  # type: ignore[index]
+                document["package"][i]["version"] = version  # type: ignore  # noqa: PGH003
                 break
         self.lock_file.write_text(
             tomlkit.dumps(document), encoding=self._get_encoding()
