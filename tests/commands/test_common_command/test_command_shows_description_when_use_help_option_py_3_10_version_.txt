@@ -23,7 +23,7 @@ options:
                         MANUAL_VERSION, --project, or --verbose.
   --tag                 get the version with tag prefix. Need to be used with
                         --project or --verbose.
-  --patch               Output the patch version only. Need to be used with
-                        MANUAL_VERSION, --project or --verbose.
+  --patch               Output the patch version only. Must be used with
+                        MANUAL_VERSION, --project, or --verbose.
   --next [{USE_GIT_COMMITS,NONE,PATCH,MINOR,MAJOR}]
                         Output the next version.

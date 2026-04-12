@@ -1,13 +1,18 @@
+from __future__ import annotations
+
 from enum import IntEnum
 
 
 class VersionIncrement(IntEnum):
-    """An enumeration representing semantic versioning increments.
-    This class defines the four types of version increments according to semantic versioning:
-    - NONE: For commits that don't require a version bump (docs, style, etc.)
-    - PATCH: For backwards-compatible bug fixes
-    - MINOR: For backwards-compatible functionality additions
-    - MAJOR: For incompatible API changes
+    """Semantic versioning bump increments.
+
+    IntEnum keeps a total order compatible with NONE < PATCH < MINOR < MAJOR
+    for comparisons across the codebase.
+
+    - NONE: no bump (docs-only / style commits, etc.)
+    - PATCH: backwards-compatible bug fixes
+    - MINOR: backwards-compatible features
+    - MAJOR: incompatible API changes
     """
 
     NONE = 0
@@ -19,7 +24,7 @@ class VersionIncrement(IntEnum):
         return self.name
 
     @classmethod
-    def safe_cast(cls, value: object) -> "VersionIncrement":
+    def from_value(cls, value: object) -> VersionIncrement:
         if not isinstance(value, str):
             return VersionIncrement.NONE
         try:

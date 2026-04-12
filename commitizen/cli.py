@@ -567,7 +567,10 @@ data = {
                     },
                     {
                         "name": ["--patch"],
-                        "help": "Output the patch version only. Need to be used with MANUAL_VERSION, --project or --verbose.",
+                        "help": (
+                            "Output the patch version only. Must be used with MANUAL_VERSION, "
+                            "--project, or --verbose."
+                        ),
                         "action": "store_true",
                         "exclusive_group": "group2",
                     },

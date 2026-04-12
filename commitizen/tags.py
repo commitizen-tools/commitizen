@@ -72,7 +72,7 @@ class TagRules:
     assert not rules.is_version_tag("warn1.0.0", warn=True)  # Does warn
 
     assert rules.search_version("# My v1.0.0 version").version == "1.0.0"
-    assert rules.extract_version("v1.0.0") == VersionProtocol("1.0.0")
+    assert rules.extract_version("v1.0.0") == rules.scheme("1.0.0")
     try:
         assert rules.extract_version("not-a-v1.0.0")
     except InvalidVersion:
