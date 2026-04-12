@@ -150,7 +150,7 @@ class ConventionalCommitsCz(BaseCommitizen):
             },
         ]
 
-    def message(self, answers: ConventionalCommitsAnswers) -> str:  # type: ignore[override]
+    def message(self, answers: ConventionalCommitsAnswers) -> str:  # type: ignore  # noqa: PGH003
         prefix = answers["prefix"]
         scope = answers["scope"]
         subject = answers["subject"]

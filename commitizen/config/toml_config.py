@@ -36,7 +36,7 @@ class TomlConfig(BaseConfig):
 
         if config_doc.get("tool") is None:
             config_doc["tool"] = table()
-        config_doc["tool"]["commitizen"] = table()  # type: ignore[index]
+        config_doc["tool"]["commitizen"] = table()  # type: ignore  # noqa: PGH003
 
         with self.path.open("wb") as output_toml_file:
             output_toml_file.write(
@@ -46,7 +46,7 @@ class TomlConfig(BaseConfig):
     def set_key(self, key: str, value: object) -> Self:
         config_doc = parse(self.path.read_bytes())
 
-        config_doc["tool"]["commitizen"][key] = value  # type: ignore[index]
+        config_doc["tool"]["commitizen"][key] = value  # type: ignore  # noqa: PGH003
         self.path.write_bytes(config_doc.as_string().encode(self._settings["encoding"]))
 
         return self
@@ -65,6 +65,6 @@ class TomlConfig(BaseConfig):
             raise InvalidConfigurationError(f"Failed to parse {self.path}: {e}")
 
         try:
-            self.settings.update(doc["tool"]["commitizen"])  # type: ignore[index,typeddict-item] # TODO: fix this
+            self.settings.update(doc["tool"]["commitizen"])  # type: ignore  # noqa: PGH003  # TODO: fix this
         except exceptions.NonExistentKey:
             pass

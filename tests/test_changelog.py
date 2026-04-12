@@ -3,22 +3,24 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 from unittest.mock import Mock
 
 import pytest
 from jinja2 import FileSystemLoader
 
 from commitizen import changelog, git
-from commitizen.commands.changelog import Changelog
+from commitizen.commands.changelog import Changelog, ChangelogArgs
 from commitizen.config import BaseConfig
 from commitizen.cz.conventional_commits.conventional_commits import (
     ConventionalCommitsCz,
 )
 from commitizen.exceptions import InvalidConfigurationError
-from commitizen.version_schemes import Pep440
+from commitizen.version_schemes import Pep440, VersionScheme
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
+
     from commitizen.changelog_formats import ChangelogFormat
 
 COMMITS_DATA: list[dict[str, Any]] = [
@@ -1221,7 +1223,9 @@ def test_generate_ordered_changelog_tree(change_type_order, expected_reordering)
             # Verify that the reorder only impacted the returned dict and not the original
             expected = expected_reordering[version]
             assert [*entry["changes"].keys()] == expected["sorted"]
-            assert [*COMMITS_TREE[index]["changes"].keys()] == expected["original"]
+            assert [
+                *cast("Mapping[str, Any]", COMMITS_TREE[index]["changes"]).keys()
+            ] == expected["original"]
         else:
             assert [*entry["changes"].keys()] == [*entry["changes"].keys()]
 
@@ -1464,6 +1468,32 @@ def test_render_changelog_with_changelog_message_builder_hook_multiple_entries(
         assert f"Message #{idx}" in result
 
 
+def test_changelog_message_builder_hook_skips_non_dict_entries(
+    gitcommits, tags, any_changelog_format: ChangelogFormat
+):
+    """Non-dict elements in a list returned by the hook are skipped."""
+
+    def changelog_message_builder_hook(message: dict, commit: git.GitCommit):
+        second = message.copy()
+        second["message"] = "second entry"
+        return [message, "not-a-dict-commit", second]
+
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.changelog_pattern
+    loader = ConventionalCommitsCz.template_loader
+    template = any_changelog_format.template
+    tree = changelog.generate_tree_from_commits(
+        gitcommits,
+        tags,
+        parser,
+        changelog_pattern,
+        changelog_message_builder_hook=changelog_message_builder_hook,
+    )
+    result = changelog.render_changelog(tree, loader, template)
+
+    assert "second entry" in result
+
+
 def test_changelog_message_builder_hook_can_access_and_modify_change_type(
     gitcommits, tags, any_changelog_format: ChangelogFormat
 ):
@@ -1568,14 +1598,14 @@ TAGS_PARAMS = (
 
 @pytest.mark.parametrize("tag", TAGS_PARAMS)
 def test_tag_rules_tag_format_only(tag: TagDef):
-    rules = changelog.TagRules(Pep440, "$version")
+    rules = changelog.TagRules(cast("VersionScheme", Pep440), "$version")
     assert rules.is_version_tag(tag.name) is tag.is_version
 
 
 @pytest.mark.parametrize("tag", TAGS_PARAMS)
 def test_tag_rules_with_legacy_tags(tag: TagDef):
     rules = changelog.TagRules(
-        scheme=Pep440,
+        scheme=cast("VersionScheme", Pep440),
         tag_format="$version",
         legacy_tag_formats=["v-$version", "project-${version}"],
     )
@@ -1585,7 +1615,9 @@ def test_tag_rules_with_legacy_tags(tag: TagDef):
 @pytest.mark.parametrize("tag", TAGS_PARAMS)
 def test_tag_rules_with_ignored_tags(tag: TagDef):
     rules = changelog.TagRules(
-        scheme=Pep440, tag_format="$version", ignored_tag_formats=["ignored"]
+        scheme=cast("VersionScheme", Pep440),
+        tag_format="$version",
+        ignored_tag_formats=["ignored"],
     )
     assert rules.is_ignored_tag(tag.name) is tag.is_ignored
 
@@ -1625,7 +1657,7 @@ def test_tags_rules_get_version_tags(capsys: pytest.CaptureFixture):
     ]
 
     rules = changelog.TagRules(
-        scheme=Pep440,
+        scheme=cast("VersionScheme", Pep440),
         tag_format="v$version",
         legacy_tag_formats=["$version", "project-${version}"],
         ignored_tag_formats=[
@@ -1672,13 +1704,13 @@ def test_changelog_file_name_from_args_and_config():
         "file_name": "CUSTOM.md",
         "unreleased_version": "1.0.1",
     }
-    changelog = Changelog(mock_config, args)
+    changelog = Changelog(mock_config, cast("ChangelogArgs", args))
     assert (
         Path(changelog.file_name).resolve() == Path("/my/project/CUSTOM.md").resolve()
     )
 
     args = {"unreleased_version": "1.0.1"}
-    changelog = Changelog(mock_config, args)
+    changelog = Changelog(mock_config, cast("ChangelogArgs", args))
     assert (
         Path(changelog.file_name).resolve()
         == Path("/my/project/CHANGELOG.md").resolve()

@@ -94,7 +94,7 @@ class TomlProvider(FileProvider):
         self.file.write_text(tomlkit.dumps(document), encoding=self._get_encoding())
 
     def get(self, document: tomlkit.TOMLDocument) -> str:
-        return document["project"]["version"]  # type: ignore[index,return-value]
+        return document["project"]["version"]  # type: ignore  # noqa: PGH003
 
     def set(self, document: tomlkit.TOMLDocument, version: str) -> None:
-        document["project"]["version"] = version  # type: ignore[index]
+        document["project"]["version"] = version  # type: ignore  # noqa: PGH003

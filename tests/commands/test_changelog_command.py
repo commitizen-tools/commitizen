@@ -260,7 +260,7 @@ def test_changelog_hook(
     util.create_file_and_commit("refactor: is in changelog")
     util.create_file_and_commit("Merge into master")
 
-    config.settings["change_type_order"] = ["Refactor", "Feat"]  # type: ignore[typeddict-unknown-key]
+    config.settings["change_type_order"] = ["Refactor", "Feat"]  # type: ignore  # noqa: PGH003
     changelog = Changelog(
         config, {"unreleased_version": None, "incremental": True, "dry_run": dry_run}
     )

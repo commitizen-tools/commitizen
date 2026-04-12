@@ -70,14 +70,16 @@ def get_changelog_format(
     :raises FormatUnknown: if a non-empty name is provided but cannot be found in the known formats
     """
     name: str | None = config.settings.get("changelog_format")
-    format = (
-        name and KNOWN_CHANGELOG_FORMATS.get(name) or _guess_changelog_format(filename)
+    format_cls: type[ChangelogFormat] | None = (
+        KNOWN_CHANGELOG_FORMATS.get(name) if name else None
     )
+    if format_cls is None:
+        format_cls = _guess_changelog_format(filename)
 
-    if not format:
+    if not format_cls:
         raise ChangelogFormatUnknown(f"Unknown changelog format '{name}'")
 
-    return format(config)
+    return format_cls(config)
 
 
 def _guess_changelog_format(filename: str | None) -> type[ChangelogFormat] | None:
