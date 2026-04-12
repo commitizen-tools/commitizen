@@ -11,7 +11,7 @@ from commitizen.exceptions import NoVersionSpecifiedError, VersionSchemeUnknown
 from commitizen.providers import get_provider
 from commitizen.tags import TagRules
 from commitizen.version_increment import VersionIncrement
-from commitizen.version_schemes import get_version_scheme
+from commitizen.version_schemes import Increment, get_version_scheme
 
 
 class VersionArgs(TypedDict, total=False):
@@ -84,12 +84,20 @@ class Version:
 
             if next_increment_str := self.arguments.get("next"):
                 if next_increment_str == "USE_GIT_COMMITS":
-                    # TODO: implement this
-                    raise NotImplementedError("USE_GIT_COMMITS is not implemented")
+                    out.error("--next USE_GIT_COMMITS is not implemented yet.")
+                    return
 
-                next_increment = VersionIncrement.safe_cast(next_increment_str)
-                # TODO: modify the interface of bump to accept VersionIncrement
-                version = version.bump(increment=str(next_increment))  # type: ignore[arg-type]
+                next_increment = VersionIncrement.from_value(next_increment_str)
+                increment: Increment | None
+                if next_increment == VersionIncrement.NONE:
+                    increment = None
+                elif next_increment == VersionIncrement.PATCH:
+                    increment = "PATCH"
+                elif next_increment == VersionIncrement.MINOR:
+                    increment = "MINOR"
+                else:
+                    increment = "MAJOR"
+                version = version.bump(increment=increment)
 
             if self.arguments.get("major"):
                 out.write(version.major)

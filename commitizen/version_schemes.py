@@ -422,6 +422,10 @@ def get_version_scheme(
         raise VersionSchemeUnknown(f'Version scheme "{name}" unknown.')
     scheme = cast("type[VersionProtocol]", ep.load())
 
+    # `VersionProtocol` is a `@runtime_checkable` Protocol with properties, so
+    # `issubclass(scheme, VersionProtocol)` is not supported. The historical
+    # `isinstance(scheme, VersionProtocol)` check is only meaningful for instances;
+    # for loaded classes it is effectively a no-op for valid schemes.
     if not isinstance(scheme, VersionProtocol):
         warnings.warn(f"Version scheme {name} does not implement the VersionProtocol")
 
