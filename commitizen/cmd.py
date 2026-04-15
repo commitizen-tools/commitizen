@@ -36,6 +36,15 @@ def _try_decode(bytes_: bytes) -> str:
 
 
 def run(cmd: str, env: Mapping[str, str] | None = None) -> Command:
+    """Run a command in a subprocess and capture stdout and stderr
+
+    Args:
+        cmd: The command to run
+        env: Extra environment variables to define in the subprocess. Defaults to None.
+
+    Returns:
+        Command: _description_
+    """
     if env is not None:
         env = {**os.environ, **env}
     process = subprocess.Popen(
@@ -55,3 +64,18 @@ def run(cmd: str, env: Mapping[str, str] | None = None) -> Command:
         stderr,
         return_code,
     )
+
+
+def run_interactive(cmd: str, env: Mapping[str, str] | None = None) -> int:
+    """Run a command in a subprocess without redirecting stdin, stdout, or stderr
+
+    Args:
+        cmd: The command to run
+        env: Extra environment variables to define in the subprocess. Defaults to None.
+
+    Returns:
+        subprocess returncode
+    """
+    if env is not None:
+        env = {**os.environ, **env}
+    return subprocess.run(cmd, shell=True, env=env).returncode
