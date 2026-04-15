@@ -686,7 +686,7 @@ def main() -> None:
     if args.no_raise:
         sys.excepthook = partial(sys.excepthook, no_raise=parse_no_raise(args.no_raise))
 
-    args.func(conf, arguments)()  # type: ignore[arg-type]
+    args.func(conf, arguments)()  # type: ignore  # noqa: PGH003
 
 
 if __name__ == "__main__":

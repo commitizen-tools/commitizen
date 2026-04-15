@@ -152,7 +152,7 @@ def test_version_just_major_error_no_project(config, capsys, argument: str):
     commands.Version(
         config,
         {
-            argument: True,  # type: ignore[misc]
+            argument: True,
         },
     )()
     captured = capsys.readouterr()

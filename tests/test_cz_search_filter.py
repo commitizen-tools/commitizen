@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from commitizen.config.toml_config import TomlConfig
@@ -42,7 +44,7 @@ message = "Write a short and imperative summary of the code changes: (lower case
 
 @pytest.fixture
 def config():
-    return TomlConfig(data=TOML_WITH_SEARCH_FILTER, path="not_exist.toml")
+    return TomlConfig(data=TOML_WITH_SEARCH_FILTER, path=Path("not_exist.toml"))
 
 
 def test_questions_with_search_filter(config):
