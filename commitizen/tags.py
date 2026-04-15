@@ -14,7 +14,7 @@ from commitizen.git import GitTag
 from commitizen.version_schemes import (
     DEFAULT_SCHEME,
     InvalidVersion,
-    Version,
+    VersionProtocol,
     VersionScheme,
     get_version_scheme,
 )
@@ -22,8 +22,6 @@ from commitizen.version_schemes import (
 if TYPE_CHECKING:
     import sys
     from collections.abc import Iterable, Sequence
-
-    from commitizen.version_schemes import VersionScheme
 
     # Self is Python 3.11+ but backported in typing-extensions
     if sys.version_info < (3, 11):
@@ -75,7 +73,7 @@ class TagRules:
     assert not rules.is_version_tag("warn1.0.0", warn=True)  # Does warn
 
     assert rules.search_version("# My v1.0.0 version").version == "1.0.0"
-    assert rules.extract_version("v1.0.0") == Version("1.0.0")
+    assert rules.extract_version("v1.0.0") == rules.scheme("1.0.0")
     try:
         assert rules.extract_version("not-a-v1.0.0")
     except InvalidVersion:
@@ -145,7 +143,7 @@ class TagRules:
         """Filter in version tags and warn on unexpected tags"""
         return [tag for tag in tags if self.is_version_tag(tag, warn)]
 
-    def extract_version(self, tag: GitTag) -> Version:
+    def extract_version(self, tag: GitTag) -> VersionProtocol:
         """
         Extract a version from the tag as defined in tag formats.
 
@@ -195,7 +193,7 @@ class TagRules:
         return VersionTag(version, match.group(0))
 
     def normalize_tag(
-        self, version: Version | str, tag_format: str | None = None
+        self, version: VersionProtocol | str, tag_format: str | None = None
     ) -> str:
         """
         The tag and the software version might be different.
@@ -225,7 +223,7 @@ class TagRules:
         )
 
     def find_tag_for(
-        self, tags: Iterable[GitTag], version: Version | str
+        self, tags: Iterable[GitTag], version: VersionProtocol | str
     ) -> GitTag | None:
         """Find the first matching tag for a given version."""
         version = self.scheme(version) if isinstance(version, str) else version
@@ -234,7 +232,7 @@ class TagRules:
         # If the requested version is incomplete (e.g., "1.2"), try to find the latest
         # matching tag that shares the provided prefix.
         if len(release) < 3:
-            matching_versions: list[tuple[Version, GitTag]] = []
+            matching_versions: list[tuple[VersionProtocol, GitTag]] = []
             for tag in tags:
                 try:
                     tag_version = self.extract_version(tag)

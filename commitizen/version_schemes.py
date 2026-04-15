@@ -10,6 +10,7 @@ from typing import (
     ClassVar,
     Literal,
     Protocol,
+    TypeAlias,
     cast,
     runtime_checkable,
 )
@@ -22,7 +23,6 @@ from commitizen.exceptions import VersionSchemeUnknown
 
 if TYPE_CHECKING:
     import sys
-    from typing import TypeAlias
 
     # Self is Python 3.11+ but backported in typing-extensions
     if sys.version_info < (3, 11):
@@ -31,7 +31,7 @@ if TYPE_CHECKING:
         from typing import Self
 
 
-Increment: TypeAlias = Literal["MAJOR", "MINOR", "PATCH"]
+Increment: TypeAlias = Literal["MAJOR", "MINOR", "PATCH"]  # TODO: deprecate
 Prerelease: TypeAlias = Literal["alpha", "beta", "rc"]
 _DEFAULT_VERSION_PARSER = re.compile(
     r"v?(?P<version>([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z.]+)?(\w+)?)"
@@ -140,7 +140,7 @@ class VersionProtocol(Protocol):
         """
 
 
-# With PEP 440 and SemVer semantic, Scheme is the type, Version is an instance
+# With PEP 440 and SemVer semantics, a scheme is the class; a version is an instance.
 Version: TypeAlias = VersionProtocol
 VersionScheme: TypeAlias = type[VersionProtocol]
 
@@ -422,6 +422,10 @@ def get_version_scheme(settings: Settings, name: str | None = None) -> VersionSc
         raise VersionSchemeUnknown(f'Version scheme "{name}" unknown.')
     scheme = cast("VersionScheme", ep.load())
 
+    # `VersionProtocol` is a `@runtime_checkable` Protocol with properties, so
+    # `issubclass(scheme, VersionProtocol)` is not supported. The historical
+    # `isinstance(scheme, VersionProtocol)` check is only meaningful for instances;
+    # for loaded classes it is effectively a no-op for valid schemes.
     if not isinstance(scheme, VersionProtocol):
         warnings.warn(f"Version scheme {name} does not implement the VersionProtocol")
 
