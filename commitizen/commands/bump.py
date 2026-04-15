@@ -333,7 +333,7 @@ class Bump:
                 {
                     **changelog_args,  # type: ignore[typeddict-item]
                     "file_name": self.file_name,
-                    "allow_no_commit": self.arguments["allow_no_commit"],
+                    "allow_no_commit": bool(self.arguments["allow_no_commit"]),
                 },
             )
             changelog_cmd()

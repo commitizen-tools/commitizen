@@ -43,7 +43,7 @@ class ChangelogArgs(TypedDict, total=False):
     extras: dict[str, Any]
     export_template: str
     during_version_bump: bool | None
-    allow_no_commit: bool  # --allow-no-commit is still invalid in the changelog command
+    allow_no_commit: bool | None
 
 
 class Changelog:
@@ -125,7 +125,8 @@ class Changelog:
         self.export_template_to = arguments.get("export_template")
 
         self.during_version_bump: bool = arguments.get("during_version_bump") or False
-        self.allow_no_commit: bool = arguments.get("allow_no_commit") or False
+        # Internal flag used when changelog is invoked from `cz bump --allow-no-commit`.
+        self.allow_no_commit: bool = bool(arguments.get("allow_no_commit"))
 
     def _find_incremental_rev(self, latest_version: str, tags: Iterable[GitTag]) -> str:
         """Try to find the 'start_rev'.
