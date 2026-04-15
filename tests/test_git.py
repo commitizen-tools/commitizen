@@ -418,9 +418,8 @@ def test_get_filenames_in_commit_with_git_reference(util: UtilFixture):
 def test_get_filenames_in_commit_error(util: UtilFixture):
     """Test that GitCommandError is raised when git command fails."""
     util.mock_cmd(err="fatal: bad object HEAD", return_code=1)
-    with pytest.raises(GitCommandError) as excinfo:
+    with pytest.raises(GitCommandError, match="fatal: bad object HEAD"):
         git.get_filenames_in_commit()
-    assert str(excinfo.value) == "fatal: bad object HEAD"
 
 
 @pytest.mark.parametrize(
