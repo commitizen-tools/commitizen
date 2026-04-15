@@ -49,6 +49,7 @@ class Settings(TypedDict, total=False):
     legacy_tag_formats: Sequence[str]
     major_version_zero: bool
     message_length_limit: int
+    body_length_limit: int
     name: str
     post_bump_hooks: list[str] | None
     pre_bump_hooks: list[str] | None
@@ -115,6 +116,7 @@ DEFAULT_SETTINGS: Settings = {
     "extras": {},
     "breaking_change_exclamation_in_title": False,
     "message_length_limit": 0,  # 0 for no limit
+    "body_length_limit": 0,  # 0 for no limit
 }
 
 MAJOR = "MAJOR"
