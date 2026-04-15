@@ -1554,4 +1554,4 @@ def test_bump_allow_no_commit_issue(
     util.run_cli("bump", "--yes", "--allow-no-commit", "--prerelease", "beta")
     util.run_cli(
         "bump", "--allow-no-commit", "--prerelease", "rc"
-    )  # Failed because the bump command called changelog command
+    )  # Should not fail when changelog generation runs with no new commits
