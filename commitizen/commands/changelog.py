@@ -43,7 +43,7 @@ class ChangelogArgs(TypedDict, total=False):
     extras: dict[str, Any]
     export_template: str
     during_version_bump: bool | None
-    allow_no_commit: bool | None
+    allow_no_commit: bool | None  # Internal-only when invoked by bump.
 
 
 class Changelog:
