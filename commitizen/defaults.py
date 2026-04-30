@@ -65,6 +65,7 @@ class Settings(TypedDict, total=False):
     version_type: str | None
     version: str | None
     breaking_change_exclamation_in_title: bool
+    preview: bool
 
 
 CONFIG_FILES: tuple[str, ...] = (
@@ -115,6 +116,7 @@ DEFAULT_SETTINGS: Settings = {
     "extras": {},
     "breaking_change_exclamation_in_title": False,
     "message_length_limit": 0,  # 0 for no limit
+    "preview": False,
 }
 
 MAJOR = "MAJOR"

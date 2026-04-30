@@ -21,7 +21,7 @@ class CheckArgs(TypedDict, total=False):
     commit_msg: str
     rev_range: str
     allow_abort: bool
-    message_length_limit: int
+    message_length_limit: int | None
     allowed_prefixes: list[str]
     message: str
     use_default_range: bool
@@ -46,8 +46,12 @@ class Check:
         )
 
         self.use_default_range = bool(arguments.get("use_default_range"))
-        self.max_msg_length = arguments.get(
-            "message_length_limit", config.settings.get("message_length_limit", 0)
+
+        message_length_limit = arguments.get("message_length_limit")
+        self.message_length_limit: int = (
+            message_length_limit
+            if message_length_limit is not None
+            else config.settings["message_length_limit"]
         )
 
         # we need to distinguish between None and [], which is a valid value
@@ -100,7 +104,7 @@ class Check:
                     pattern=pattern,
                     allow_abort=self.allow_abort,
                     allowed_prefixes=self.allowed_prefixes,
-                    max_msg_length=self.max_msg_length,
+                    max_msg_length=self.message_length_limit,
                     commit_hash=commit.rev,
                 )
             ).is_valid
