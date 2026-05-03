@@ -17,7 +17,7 @@ def run(hooks: str | list[str], _env_prefix: str = "CZ_", **env: object) -> None
     for hook in hooks:
         out.info(f"Running hook '{hook}'")
 
-        c = cmd.run(hook, env=_format_env(_env_prefix, env))
+        c = cmd.run_shell(hook, env=_format_env(_env_prefix, env))
 
         if c.out:
             out.write(c.out)

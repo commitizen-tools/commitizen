@@ -76,7 +76,7 @@ def chdir(tmp_path: Path) -> Iterator[Path]:
 @pytest.fixture
 def tmp_git_project(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.chdir(tmp_path)
-    cmd.run("git init")
+    cmd.run(["git", "init"])
 
     return tmp_path
 
@@ -123,7 +123,7 @@ def tmp_commitizen_project_initial(
 
 
 def _get_gpg_keyid(signer_mail):
-    _new_key = cmd.run(f"gpg --list-secret-keys {signer_mail}")
+    _new_key = cmd.run(["gpg", "--list-secret-keys", signer_mail])
     _m = re.search(
         r"[a-zA-Z0-9 \[\]-_]*\n[ ]*([0-9A-Za-z]*)\n[\na-zA-Z0-9 \[\]-_<>@]*",
         _new_key.out,
@@ -159,8 +159,8 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
         assert key_id
 
         # configure git to use gpg signing
-        cmd.run("git config commit.gpgsign true")
-        cmd.run(f"git config user.signingkey {key_id}")
+        cmd.run(["git", "config", "commit.gpgsign", "true"])
+        cmd.run(["git", "config", "user.signingkey", key_id])
 
         yield tmp_commitizen_project
     finally:

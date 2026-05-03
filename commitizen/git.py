@@ -5,9 +5,13 @@ from enum import Enum
 from functools import lru_cache
 from pathlib import Path
 from tempfile import NamedTemporaryFile
+from typing import TYPE_CHECKING
 
 from commitizen import cmd, out
 from commitizen.exceptions import GitCommandError
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 class EOLType(Enum):
@@ -19,7 +23,7 @@ class EOLType(Enum):
 
     @classmethod
     def for_open(cls) -> str:
-        c = cmd.run("git config core.eol")
+        c = cmd.run(["git", "config", "core.eol"])
         eol = c.out.strip().upper()
         return cls._char_for_open()[cls._safe_cast(eol)]
 
@@ -164,49 +168,47 @@ def tag(
     tag: str, annotated: bool = False, signed: bool = False, msg: str | None = None
 ) -> cmd.Command:
     if not annotated and not signed:
-        return cmd.run(f"git tag {tag}")
+        return cmd.run(["git", "tag", tag])
 
     # according to https://git-scm.com/book/en/v2/Git-Basics-Tagging,
     # we're not able to create lightweight tag with message.
     # by adding message, we make it a annotated tags
     option = "-s" if signed else "-a"  # The else case is for annotated tags
-    return cmd.run(f'git tag {option} {tag} -m "{msg or tag}"')
+    return cmd.run(["git", "tag", option, tag, "-m", msg or tag])
 
 
 def add(*args: str) -> cmd.Command:
-    return cmd.run(f"git add {' '.join(args)}")
+    return cmd.run(["git", "add", *args])
 
 
 def commit(
     message: str,
-    args: str = "",
+    args: Sequence[str] = (),
     committer_date: str | None = None,
 ) -> cmd.Command:
     f = NamedTemporaryFile("wb", delete=False)
     f.write(message.encode("utf-8"))
     f.close()
 
-    command = _create_commit_cmd_string(args, committer_date, f.name)
-    c = cmd.run(command)
+    cmd_args = ["git", "commit"]
+    if args:
+        cmd_args.extend(args)
+    cmd_args.extend(["-F", f.name])
+
+    env: dict[str, str] | None = None
+    if committer_date:
+        env = {"GIT_COMMITTER_DATE": committer_date}
+
+    c = cmd.run(cmd_args, env=env)
     os.unlink(f.name)
     return c
-
-
-def _create_commit_cmd_string(args: str, committer_date: str | None, name: str) -> str:
-    command = f'git commit {args} -F "{name}"'
-    if not committer_date:
-        return command
-    if os.name != "nt":
-        return f"GIT_COMMITTER_DATE={committer_date} {command}"
-    # Using `cmd /v /c "{command}"` sets environment variables only for that command
-    return f'cmd /v /c "set GIT_COMMITTER_DATE={committer_date}&& {command}"'
 
 
 def get_commits(
     start: str | None = None,
     end: str | None = None,
     *,
-    args: str = "",
+    args: Sequence[str] = (),
 ) -> list[GitCommit]:
     """Get the commits between start and end."""
     if end is None:
@@ -226,7 +228,10 @@ def get_filenames_in_commit(git_reference: str = "") -> list[str]:
 
     :returns: file names committed in the last commit by default or inside the passed git reference
     """
-    c = cmd.run(f"git show --name-only --pretty=format: {git_reference}")
+    cmd_args = ["git", "show", "--name-only", "--pretty=format:"]
+    if git_reference:
+        cmd_args.append(git_reference)
+    c = cmd.run(cmd_args)
     if c.return_code == 0:
         return c.out.strip().split("\n")
     raise GitCommandError(c.err)
@@ -237,15 +242,17 @@ def get_tags(
 ) -> list[GitTag]:
     inner_delimiter = "---inner_delimiter---"
     formatter = (
-        f'"%(refname:strip=2){inner_delimiter}'
+        f"%(refname:strip=2){inner_delimiter}"
         f"%(objectname){inner_delimiter}"
         f"%(creatordate:format:{dateformat}){inner_delimiter}"
-        f'%(object)"'
+        f"%(object)"
     )
-    extra = "--merged" if reachable_only else ""
+    cmd_args = ["git", "tag", f"--format={formatter}", "--sort=-creatordate"]
+    if reachable_only:
+        cmd_args.append("--merged")
     # Force the default language for parsing
     env = {"LC_ALL": "C", "LANG": "C", "LANGUAGE": "C"}
-    c = cmd.run(f"git tag --format={formatter} --sort=-creatordate {extra}", env=env)
+    c = cmd.run(cmd_args, env=env)
     if c.return_code != 0:
         if reachable_only and c.err == "fatal: malformed object name HEAD\n":
             # this can happen if there are no commits in the repo yet
@@ -262,37 +269,37 @@ def get_tags(
 
 
 def tag_exist(tag: str) -> bool:
-    c = cmd.run(f"git tag --list {tag}")
+    c = cmd.run(["git", "tag", "--list", tag])
     return tag in c.out
 
 
 def is_signed_tag(tag: str) -> bool:
-    return cmd.run(f"git tag -v {tag}").return_code == 0
+    return cmd.run(["git", "tag", "-v", tag]).return_code == 0
 
 
 def get_latest_tag_name() -> str | None:
-    c = cmd.run("git describe --abbrev=0 --tags")
+    c = cmd.run(["git", "describe", "--abbrev=0", "--tags"])
     if c.err:
         return None
     return c.out.strip()
 
 
 def get_tag_message(tag: str) -> str | None:
-    c = cmd.run(f"git tag -l --format='%(contents:subject)' {tag}")
+    c = cmd.run(["git", "tag", "-l", "--format=%(contents:subject)", tag])
     if c.err:
         return None
     return c.out.strip()
 
 
 def get_tag_names() -> list[str]:
-    c = cmd.run("git tag --list")
+    c = cmd.run(["git", "tag", "--list"])
     if c.err:
         return []
     return [tag for raw in c.out.split("\n") if (tag := raw.strip())]
 
 
 def find_git_project_root() -> Path | None:
-    c = cmd.run("git rev-parse --show-toplevel")
+    c = cmd.run(["git", "rev-parse", "--show-toplevel"])
     if c.err:
         return None
     return Path(c.out.strip())
@@ -300,17 +307,17 @@ def find_git_project_root() -> Path | None:
 
 def is_staging_clean() -> bool:
     """Check if staging is clean."""
-    c = cmd.run("git diff --no-ext-diff --cached --name-only")
+    c = cmd.run(["git", "diff", "--no-ext-diff", "--cached", "--name-only"])
     return not bool(c.out)
 
 
 def is_git_project() -> bool:
-    c = cmd.run("git rev-parse --is-inside-work-tree")
+    c = cmd.run(["git", "rev-parse", "--is-inside-work-tree"])
     return c.out.strip() == "true"
 
 
 def get_core_editor() -> str | None:
-    c = cmd.run("git var GIT_EDITOR")
+    c = cmd.run(["git", "var", "GIT_EDITOR"])
     if c.out:
         return c.out.strip()
     return None
@@ -321,21 +328,31 @@ def smart_open(*args, **kwargs):  # type: ignore[no-untyped-def,unused-ignore] #
     return open(*args, newline=EOLType.for_open(), **kwargs)
 
 
-def _get_log_as_str_list(start: str | None, end: str, args: str) -> list[str]:
+def _get_log_as_str_list(start: str | None, end: str, args: Sequence[str]) -> list[str]:
     """Get string representation of each log entry"""
     delimiter = "----------commit-delimiter----------"
     log_format: str = "%H%n%P%n%s%n%an%n%ae%n%b"
     command_range = f"{start}..{end}" if start else end
-    command = f"git -c log.showSignature=False log --pretty={log_format}{delimiter} {args} {command_range}"
+    cmd_args = [
+        "git",
+        "-c",
+        "log.showSignature=False",
+        "log",
+        f"--pretty={log_format}{delimiter}",
+    ]
+    if args:
+        cmd_args.extend(args)
+    if command_range:
+        cmd_args.append(command_range)
 
-    c = cmd.run(command)
+    c = cmd.run(cmd_args)
     if c.return_code != 0:
         raise GitCommandError(c.err)
     return c.out.split(f"{delimiter}\n")
 
 
 def get_default_branch() -> str:
-    c = cmd.run("git symbolic-ref refs/remotes/origin/HEAD")
+    c = cmd.run(["git", "symbolic-ref", "refs/remotes/origin/HEAD"])
     if c.return_code != 0:
         raise GitCommandError(c.err)
     return c.out.strip()
