@@ -6,8 +6,10 @@ from pytest_mock import MockerFixture
 
 from commitizen import commands
 from commitizen.__version__ import __version__
-from commitizen.commands.version import VersionArgs
 from commitizen.config.base_config import BaseConfig
+
+if TYPE_CHECKING:
+    from commitizen.commands.version import VersionArgs
 
 
 def test_version_for_showing_project_version_error(config, capsys):

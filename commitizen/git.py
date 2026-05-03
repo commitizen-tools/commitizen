@@ -317,7 +317,7 @@ def get_core_editor() -> str | None:
     return None
 
 
-def smart_open(*args: Any, **kwargs: Any) -> IO[Any]:  # noqa: ANN401
+def smart_open(*args: Any, **kwargs: Any) -> IO[Any]:
     """Open a file with the EOL style determined from Git."""
     return open(*args, newline=EOLType.for_open(), **kwargs)
 
