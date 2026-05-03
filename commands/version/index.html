@@ -662,6 +662,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#project-version-and-scheme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project version and scheme
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#components-and-next-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Components and next version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2014,6 +2047,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#project-version-and-scheme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project version and scheme
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#components-and-next-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Components and next version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2033,9 +2099,27 @@
 
   <h1>version</h1>
 
-<p>Get the version of the installed Commitizen or the current project (default: installed commitizen)</p>
+<p>Get the version of the installed Commitizen or the current project (default: installed commitizen).</p>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <p><img alt="cz version --help" src="../../images/cli_help/cz_version___help.svg" /></p>
+<h2 id="project-version-and-scheme">Project version and scheme<a class="headerlink" href="#project-version-and-scheme" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>cz version --project</code></strong> prints the version from your configured <a href="../../config/version_provider/">version provider</a>.</li>
+<li><strong><code>cz version MANUAL_VERSION</code></strong> (optional positional) uses that string instead of the provider, so you can try how your configured scheme parses and formats it.</li>
+</ul>
+<h2 id="components-and-next-version">Components and next version<a class="headerlink" href="#components-and-next-version" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>--major</code></strong>, <strong><code>--minor</code></strong>, <strong><code>--patch</code></strong>: print only that component of the (possibly manual) project version. Requires <code>--project</code>, <code>--verbose</code>, or a manual version.</li>
+<li><strong><code>--next</code> <code>[MAJOR|MINOR|PATCH|NONE]</code></strong>: print the version after applying that bump to the current project or manual version. <code>NONE</code> leaves the version unchanged.</li>
+<li><strong><code>--tag</code></strong>: print the version formatted with your <code>tag_format</code> (requires <code>--project</code> or <code>--verbose</code>).</li>
+</ul>
+<p><code>--next USE_GIT_COMMITS</code> is reserved for a future feature (derive the bump from git history) and is not implemented yet.</p>
+<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>cz<span class="w"> </span>version<span class="w"> </span>--project
+cz<span class="w"> </span>version<span class="w"> </span><span class="m">2</span>.0.0<span class="w"> </span>--next<span class="w"> </span>MAJOR
+cz<span class="w"> </span>version<span class="w"> </span>--project<span class="w"> </span>--major
+cz<span class="w"> </span>version<span class="w"> </span>--verbose
+</code></pre></div>
 
 
 
@@ -2056,7 +2140,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 15, 2025 14:03:19 UTC">May 15, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 3, 2026 07:01:17 UTC">May 3, 2026</span>
   </span>
 
     
