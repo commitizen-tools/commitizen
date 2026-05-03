@@ -18,13 +18,13 @@ if TYPE_CHECKING:
     from freezegun.api import FrozenDateTimeFactory
     from pytest_mock import MockerFixture
 
-    from commitizen.version_schemes import Increment, Prerelease
+    from commitizen.version_schemes import Increment
 
 
 class VersionSchemeTestArgs(NamedTuple):
     current_version: str
     increment: Increment | None
-    prerelease: Prerelease | None
+    prerelease: str | None
     prerelease_offset: int
     devrelease: int | None
 
