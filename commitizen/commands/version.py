@@ -84,6 +84,9 @@ class Version:
 
             if next_increment_str := self.arguments.get("next"):
                 if next_increment_str == "USE_GIT_COMMITS":
+                    # TODO: implement USE_GIT_COMMITS by deriving the increment from
+                    # git history. This requires refactoring the bump logic out of
+                    # `commitizen/commands/bump.py` so it can be reused here. See #1678.
                     out.error("--next USE_GIT_COMMITS is not implemented yet.")
                     return
 
