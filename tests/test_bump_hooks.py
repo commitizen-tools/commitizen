@@ -12,8 +12,8 @@ def test_run(mocker: MockFixture):
     bump_hooks = ["pre_bump_hook", "pre_bump_hook_1"]
 
     cmd_run_mock = mocker.Mock()
-    cmd_run_mock.return_value.return_code = 0
-    mocker.patch.object(cmd, "run", cmd_run_mock)
+    cmd_run_mock.return_value = 0
+    mocker.patch.object(cmd, "run_interactive", cmd_run_mock)
 
     hooks.run(bump_hooks)
 
@@ -29,8 +29,8 @@ def test_run_error(mocker: MockFixture):
     bump_hooks = ["pre_bump_hook", "pre_bump_hook_1"]
 
     cmd_run_mock = mocker.Mock()
-    cmd_run_mock.return_value.return_code = 1
-    mocker.patch.object(cmd, "run", cmd_run_mock)
+    cmd_run_mock.return_value = 1
+    mocker.patch.object(cmd, "run_interactive", cmd_run_mock)
 
     with pytest.raises(RunHookError):
         hooks.run(bump_hooks)
