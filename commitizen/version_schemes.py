@@ -10,6 +10,7 @@ from typing import (
     ClassVar,
     Literal,
     Protocol,
+    TypeAlias,
     cast,
     runtime_checkable,
 )
@@ -22,7 +23,6 @@ from commitizen.exceptions import VersionSchemeUnknown
 
 if TYPE_CHECKING:
     import sys
-    from typing import TypeAlias
 
     # Self is Python 3.11+ but backported in typing-extensions
     if sys.version_info < (3, 11):
@@ -31,7 +31,7 @@ if TYPE_CHECKING:
         from typing import Self
 
 
-Increment: TypeAlias = Literal["MAJOR", "MINOR", "PATCH"]
+Increment: TypeAlias = Literal["MAJOR", "MINOR", "PATCH"]  # TODO: deprecate
 Prerelease: TypeAlias = Literal["alpha", "beta", "rc"]
 _DEFAULT_VERSION_PARSER = re.compile(
     r"v?(?P<version>([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z.]+)?(\w+)?)"
@@ -140,7 +140,7 @@ class VersionProtocol(Protocol):
         """
 
 
-# With PEP 440 and SemVer semantic, Scheme is the type, Version is an instance
+# With PEP 440 and SemVer semantics, a scheme is the class; a version is an instance.
 Version: TypeAlias = VersionProtocol
 VersionScheme: TypeAlias = type[VersionProtocol]
 
@@ -422,7 +422,16 @@ def get_version_scheme(settings: Settings, name: str | None = None) -> VersionSc
         raise VersionSchemeUnknown(f'Version scheme "{name}" unknown.')
     scheme = cast("VersionScheme", ep.load())
 
-    if not isinstance(scheme, VersionProtocol):
+    # `VersionProtocol` is a `@runtime_checkable` Protocol, but `issubclass()` is not
+    # supported for Protocols with non-method members. We check an instance instead by
+    # verifying the loaded object is a class with the expected interface.
+    if isinstance(scheme, type):
+        # Check for a key method/attribute that VersionProtocol requires
+        if not hasattr(scheme, "bump"):
+            warnings.warn(
+                f"Version scheme {name} does not implement the VersionProtocol"
+            )
+    else:
         warnings.warn(f"Version scheme {name} does not implement the VersionProtocol")
 
     return scheme

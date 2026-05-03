@@ -20,13 +20,13 @@ def test_version_for_showing_project_version_error(config, capsys):
 
 
 def test_version_for_showing_project_version(config, capsys):
-    config.settings["version"] = "v0.0.1"
+    config.settings["version"] = "0.0.1"
     commands.Version(
         config,
         {"project": True},
     )()
     captured = capsys.readouterr()
-    assert "v0.0.1" in captured.out
+    assert "0.0.1" in captured.out
 
 
 @pytest.mark.parametrize("project", [True, False])
@@ -50,14 +50,14 @@ def test_version_for_showing_both_versions_no_project(config, capsys):
 
 
 def test_version_for_showing_both_versions(config, capsys):
-    config.settings["version"] = "v0.0.1"
+    config.settings["version"] = "0.0.1"
     commands.Version(
         config,
         {"verbose": True},
     )()
     captured = capsys.readouterr()
     expected_out = (
-        f"Installed Commitizen Version: {__version__}\nProject Version: v0.0.1"
+        f"Installed Commitizen Version: {__version__}\nProject Version: 0.0.1"
     )
     assert expected_out in captured.out
 
@@ -147,20 +147,30 @@ def test_version_just_minor(config, capsys, version: str, expected_version: str)
     assert expected_version == captured.out
 
 
-@pytest.mark.parametrize("argument", ["major", "minor"])
-def test_version_just_major_error_no_project(config, capsys, argument: str):
-    commands.Version(
-        config,
-        {
-            argument: True,  # type: ignore[misc]
-        },
-    )()
+@pytest.mark.parametrize(
+    ("args", "expected_error"),
+    [
+        (
+            {"major": True},
+            "can only be used with MANUAL_VERSION, --project or --verbose.",
+        ),
+        (
+            {"minor": True},
+            "can only be used with MANUAL_VERSION, --project or --verbose.",
+        ),
+        (
+            {"patch": True},
+            "can only be used with MANUAL_VERSION, --project or --verbose.",
+        ),
+        ({"tag": True}, "Tag can only be used with --project or --verbose."),
+    ],
+)
+def test_version_invalid_combinations(config, capsys, args: dict, expected_error: str):
+    """Test that certain flag combinations produce errors."""
+    commands.Version(config, args)()  # type: ignore[arg-type]
     captured = capsys.readouterr()
     assert not captured.out
-    assert (
-        "Major or minor version can only be used with --project or --verbose."
-        in captured.err
-    )
+    assert expected_error in captured.err
 
 
 @pytest.mark.parametrize(
@@ -189,14 +199,100 @@ def test_version_with_tag_format(
     assert captured.out == expected_output
 
 
-def test_version_tag_without_project_error(config, capsys):
-    """Test --tag requires --project or --verbose"""
+@pytest.mark.parametrize(
+    ("next_increment", "current_version", "expected_version"),
+    [
+        ("MAJOR", "1.1.0", "2.0.0"),
+        ("MAJOR", "1.0.0", "2.0.0"),
+        ("MAJOR", "0.0.1", "1.0.0"),
+        ("MINOR", "1.1.0", "1.2.0"),
+        ("MINOR", "1.0.0", "1.1.0"),
+        ("MINOR", "0.0.1", "0.1.0"),
+        ("PATCH", "1.1.0", "1.1.1"),
+        ("PATCH", "1.0.0", "1.0.1"),
+        ("PATCH", "0.0.1", "0.0.2"),
+        ("NONE", "1.0.0", "1.0.0"),
+    ],
+)
+def test_next_version(
+    config, capsys, next_increment: str, current_version: str, expected_version: str
+):
+    config.settings["version"] = current_version
+    for project in (True, False):
+        commands.Version(
+            config,
+            {
+                "next": next_increment,
+                "project": project,
+            },
+        )()
+        captured = capsys.readouterr()
+        assert expected_version in captured.out
+
+    # Use the same settings to test the manual version
     commands.Version(
         config,
         {
-            "tag": True,
+            "manual_version": current_version,
+            "next": next_increment,
         },
     )()
     captured = capsys.readouterr()
-    assert not captured.out
-    assert "Tag can only be used with --project or --verbose." in captured.err
+    assert expected_version in captured.out
+
+
+def test_next_version_invalid_version(config, capsys):
+    commands.Version(
+        config,
+        {
+            "manual_version": "INVALID",
+        },
+    )()
+    captured = capsys.readouterr()
+    assert "Invalid version: 'INVALID'" in captured.err
+
+
+@pytest.mark.parametrize(
+    ("version", "expected_version"),
+    [
+        ("1.0.0", "0\n"),
+        ("2.1.3", "3\n"),
+        ("0.0.1", "1\n"),
+        ("0.1.0", "0\n"),
+    ],
+)
+def test_version_just_patch(config, capsys, version: str, expected_version: str):
+    config.settings["version"] = version
+    commands.Version(
+        config,
+        {
+            "project": True,
+            "patch": True,
+        },
+    )()
+    captured = capsys.readouterr()
+    assert expected_version == captured.out
+
+
+def test_version_unknown_scheme(config, capsys):
+    config.settings["version"] = "1.0.0"
+    config.settings["version_scheme"] = "not_a_registered_scheme_name_xyz"
+    commands.Version(config, {"project": True})()
+    captured = capsys.readouterr()
+    assert "Unknown version scheme." in captured.err
+
+
+def test_version_use_git_commits_not_implemented(config, capsys):
+    config.settings["version"] = "1.0.0"
+    commands.Version(
+        config,
+        {"project": True, "next": "USE_GIT_COMMITS"},
+    )()
+    captured = capsys.readouterr()
+    assert "USE_GIT_COMMITS is not implemented" in captured.err
+
+
+def test_version_no_arguments_shows_commitizen_version(config, capsys):
+    commands.Version(config, {})()
+    captured = capsys.readouterr()
+    assert captured.out.strip() == __version__
