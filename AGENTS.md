@@ -9,44 +9,69 @@ Follow these instructions in addition to any higher-level system or tool rules.
 
 - **Project**: `commitizen` - a tool to help enforce and automate conventional commits, version bumps, and changelog generation.
 - **Primary language**: Python (library + CLI).
+- **Cross-platform**: Tests run on Linux, macOS, and Windows. Avoid POSIX-only assumptions in code (paths, subprocesses, line endings).
 - **Key entrypoints**:
   - `commitizen/cli.py` - main CLI implementation.
   - `commitizen/commands/` - subcommands such as `bump`, `commit`, `changelog`, `check`, etc.
   - `commitizen/config/` - configuration discovery and loading.
   - `commitizen/providers/` - version providers (e.g., `pep621`, `poetry`, `npm`, `uv`).
+- **Config sources**: `pyproject.toml` (project config, poe tasks, ruff, mypy), `.pre-commit-config.yaml` (hooks), `.github/workflows/` (CI).
 
 ## General Expectations
 
-- **Preserve public behavior and CLI UX.**
-- **Avoid breaking changes** (APIs, CLI flags, exit codes) unless explicitly requested.
-- **Keep changes small and focused.**
+- **Preserve public behavior and CLI UX** — no breaking changes to APIs, CLI flags, or exit codes unless explicitly requested.
 - **Update or add tests/docs** when you change user-facing behavior.
+- **Commit messages** must follow [Conventional Commits](https://www.conventionalcommits.org/) (enforced by commitizen itself).
 
-## How to Explore and Validate Changes
+## Setup and Validation
 
-- **Code entrypoints**:
-  - CLI behavior: `commitizen/cli.py` and `commitizen/commands/`.
-  - Config resolution: `commitizen/config/factory.py` and config modules.
-  - Bump/changelog/versioning: `commitizen/bump.py`, `commitizen/changelog.py`, `commitizen/version_schemes.py`, `commitizen/providers/`.
-- **Docs to consult** (before larger changes):
-  - `docs/README.md`
-  - `docs/contributing.md`
-  - `docs/commands/` and `docs/config/`
-- **Tests**:
-  - Prefer targeted runs, e.g. `uv run pytest tests/test_cli.py` or a specific `tests/commands/` file.
+### Bootstrap
 
-## Coding Guidelines (for AI tools)
+```bash
+uv sync --frozen --group base --group test --group linters
+```
 
-- **Style**: Follow patterns in nearby code; keep functions focused.
+### Local commands
+
+- **Format**: `uv run poe format` (runs `ruff check --fix` then `ruff format`)
+- **Lint**: `uv run poe lint` (runs `ruff check` then `mypy`)
+- **Test**: `uv run poe test` (runs `pytest -n auto`)
+- **CI-equivalent**: `uv run poe ci` (commit check + pre-commit hooks via `prek` + test with coverage)
+- **Full local check**: `uv run poe all` (format + lint + check-commit + coverage)
+
+Always run at least `uv run ruff check --fix . && uv run ruff format .` before pushing. CI will fail if the formatter modifies any files.
+
+### CI pipeline
+
+- CI runs `poe ci` on a matrix of Python 3.10–3.14 × ubuntu/macos/windows.
+- Pre-commit hooks are defined in `.pre-commit-config.yaml` and run via `prek`.
+- The matrix is **fail-fast**: inspect the earliest failing job that completed; others are cancelled.
+
+### Common CI failure patterns
+
+- **"Format Python code...Failed"**: Run `uv run poe format` and commit the result.
+- **mypy `[arg-type]` on TypedDict**: Dynamically-constructed dicts (e.g., from `pytest.mark.parametrize`) passed to TypedDict-typed params need `# type: ignore[arg-type]`.
+- **"pathspec 'vX.Y.Z' did not match"**: `.pre-commit-config.yaml` pins a tag of this repo. Rebase onto master to pick up the tag.
+- **`VersionProtocol` + `issubclass`**: This Protocol has non-method members (properties), so `issubclass()` raises `TypeError`. Use `hasattr` checks for runtime validation.
+
+## What to Read Before Changing
+
+| Changing... | Read first |
+|---|---|
+| CLI flags/arguments | `commitizen/cli.py`, `docs/commands/<cmd>.md`, `tests/test_cli/` |
+| Bump logic | `commitizen/bump.py`, `commitizen/commands/bump.py`, `docs/commands/bump.md` |
+| Changelog generation | `commitizen/changelog.py`, `commitizen/changelog_formats/`, `docs/commands/changelog.md` |
+| Version schemes | `commitizen/version_schemes.py`, `tests/test_version_schemes.py` |
+| Version providers | `commitizen/providers/`, `tests/test_providers.py`, `docs/config/version_provider.md` |
+| Config resolution | `commitizen/config/`, `tests/test_conf.py`, `docs/config/` |
+| Tag handling | `commitizen/tags.py`, `tests/test_tags.py` |
+| Pre-commit / CI | `.pre-commit-config.yaml`, `.github/workflows/`, `pyproject.toml` (poe tasks) |
+
+## Coding Guidelines
+
 - **Types**: Preserve or improve existing type hints.
 - **Errors**: Prefer `commitizen/exceptions.py` error types; keep messages clear for CLI users.
 - **Output**: Use `commitizen/out.py`; do not add noisy logging.
-
-## Common Task Pointers
-
-- **CLI commands**: edit `commitizen/commands/<name>.py`, wire via `commitizen/cli.py`, and adjust `tests/commands/` + `docs/commands/`.
-- **Version bumps / changelog**: use `commitizen/bump.py`, `commitizen/changelog.py`, `commitizen/version_schemes.py`, and `commitizen/providers/` (+ matching tests).
-- **Config resolution**: use `commitizen/config/factory.py` and config modules; update `tests/test_conf.py` and related tests.
 
 ## When Unsure
 
