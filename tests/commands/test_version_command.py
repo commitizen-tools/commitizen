@@ -6,6 +6,7 @@ from pytest_mock import MockerFixture
 
 from commitizen import commands
 from commitizen.__version__ import __version__
+from commitizen.commands.version import VersionArgs
 from commitizen.config.base_config import BaseConfig
 
 

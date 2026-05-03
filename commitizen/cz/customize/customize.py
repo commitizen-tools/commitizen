@@ -55,7 +55,7 @@ class CustomizeCommitsCz(BaseCommitizen):
     def message(self, answers: Mapping[str, Any]) -> str:
         message_template = Template(self.custom_settings.get("message_template", ""))
         if getattr(Template, "substitute", None):
-            return message_template.substitute(
+            return message_template.substitute(  # type: ignore[attr-defined]
                 **answers
             )  # pragma: no cover # TODO: check if we can fix this
         return message_template.render(**answers)

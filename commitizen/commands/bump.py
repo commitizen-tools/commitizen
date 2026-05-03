@@ -323,7 +323,10 @@ class Bump:
                 try:
                     Changelog(
                         self.config,
-                        {**changelog_args, "dry_run": True},
+                        cast(
+                            "ChangelogArgs",
+                            {**changelog_args, "dry_run": True},
+                        ),
                     )()
                 except DryRunExit:
                     pass
