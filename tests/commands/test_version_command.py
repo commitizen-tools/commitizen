@@ -167,7 +167,7 @@ def test_version_just_minor(config, capsys, version: str, expected_version: str)
 )
 def test_version_invalid_combinations(config, capsys, args: dict, expected_error: str):
     """Test that certain flag combinations produce errors."""
-    commands.Version(config, args)()  # type: ignore[arg-type]
+    commands.Version(config, args)()  # type: ignore  # noqa: PGH003
     captured = capsys.readouterr()
     assert not captured.out
     assert expected_error in captured.err

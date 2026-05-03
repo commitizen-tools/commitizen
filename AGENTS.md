@@ -15,7 +15,7 @@ Follow these instructions in addition to any higher-level system or tool rules.
   - `commitizen/commands/` - subcommands such as `bump`, `commit`, `changelog`, `check`, etc.
   - `commitizen/config/` - configuration discovery and loading.
   - `commitizen/providers/` - version providers (e.g., `pep621`, `poetry`, `npm`, `uv`).
-- **Config sources**: `pyproject.toml` (project config, poe tasks, ruff, mypy), `.pre-commit-config.yaml` (hooks), `.github/workflows/` (CI).
+- **Config sources**: `pyproject.toml` (project config, poe tasks, ruff, ty), `.pre-commit-config.yaml` (hooks), `.github/workflows/` (CI).
 
 ## General Expectations
 
@@ -34,7 +34,7 @@ uv sync --frozen --group base --group test --group linters
 ### Local commands
 
 - **Format**: `uv run poe format` (runs `ruff check --fix` then `ruff format`)
-- **Lint**: `uv run poe lint` (runs `ruff check` then `mypy`)
+- **Lint**: `uv run poe lint` (runs `ruff check` then `ty check`)
 - **Test**: `uv run poe test` (runs `pytest -n auto`)
 - **CI-equivalent**: `uv run poe ci` (commit check + pre-commit hooks via `prek` + test with coverage)
 - **Full local check**: `uv run poe all` (format + lint + check-commit + coverage)
@@ -50,7 +50,7 @@ Always run at least `uv run ruff check --fix . && uv run ruff format .` before p
 ### Common CI failure patterns
 
 - **"Format Python code...Failed"**: Run `uv run poe format` and commit the result.
-- **mypy `[arg-type]` on TypedDict**: Dynamically-constructed dicts (e.g., from `pytest.mark.parametrize`) passed to TypedDict-typed params need `# type: ignore[arg-type]`.
+- **ty `invalid-argument-type` on TypedDict**: Dynamically-constructed dicts (e.g., from `pytest.mark.parametrize`) passed to TypedDict-typed params need `# type: ignore  # noqa: PGH003` or `cast()`.
 - **"pathspec 'vX.Y.Z' did not match"**: `.pre-commit-config.yaml` pins a tag of this repo. Rebase onto master to pick up the tag.
 - **`VersionProtocol` + `issubclass`**: This Protocol has non-method members (properties), so `issubclass()` raises `TypeError`. Use `hasattr` checks for runtime validation.
 

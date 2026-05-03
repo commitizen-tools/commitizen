@@ -159,7 +159,7 @@ class BaseVersion(_BaseVersion):
 
     @property
     def prerelease(self) -> str | None:
-        # version.pre is needed for mypy check
+        # version.pre is needed for static type checking
         if self.is_prerelease and self.pre:
             return f"{self.pre[0]}{self.pre[1]}"
         return None
@@ -253,7 +253,7 @@ class BaseVersion(_BaseVersion):
 
         if self.local and is_local_version:
             local_version = self.scheme(self.local).bump(increment)
-            return self.scheme(f"{self.public}+{local_version}")  # type: ignore[return-value]
+            return self.scheme(f"{self.public}+{local_version}")  # type: ignore  # noqa: PGH003
 
         base = self._get_increment_base(increment, exact_increment)
         dev_version = self.generate_devrelease(devrelease)
@@ -270,7 +270,7 @@ class BaseVersion(_BaseVersion):
         # TODO: post version
         return self.scheme(
             f"{base}{pre_version}{dev_version}{self.generate_build_metadata(build_metadata)}"
-        )  # type: ignore[return-value]
+        )  # type: ignore  # noqa: PGH003
 
     def _get_increment_base(
         self, increment: Increment | None, exact_increment: bool
@@ -385,7 +385,8 @@ class SemVer2(SemVer):
         return ".".join(prerelease_parts)
 
 
-DEFAULT_SCHEME: VersionScheme = Pep440
+# cast needed: ty cannot resolve type[Pep440] as type[VersionProtocol]
+DEFAULT_SCHEME: VersionScheme = cast("VersionScheme", Pep440)
 
 SCHEMES_ENTRYPOINT = "commitizen.scheme"
 """Schemes entrypoints group"""
@@ -420,7 +421,7 @@ def get_version_scheme(settings: Settings, name: str | None = None) -> VersionSc
         (ep,) = metadata.entry_points(name=name, group=SCHEMES_ENTRYPOINT)
     except ValueError:
         raise VersionSchemeUnknown(f'Version scheme "{name}" unknown.')
-    scheme = cast("VersionScheme", ep.load())
+    scheme: VersionScheme = ep.load()
 
     # `VersionProtocol` is a `@runtime_checkable` Protocol, but `issubclass()` is not
     # supported for Protocols with non-method members. We check an instance instead by

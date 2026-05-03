@@ -31,7 +31,7 @@ def _create_config_from_path(path: Path) -> BaseConfig:
     return create_config(data=path.read_bytes(), path=path)
 
 
-def read_cfg(filepath: str | None = None) -> BaseConfig:
+def read_cfg(filepath: str | Path | None = None) -> BaseConfig:
     if filepath is not None:
         conf_path = Path(filepath)
         if not conf_path.is_file():

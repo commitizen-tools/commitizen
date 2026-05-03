@@ -32,7 +32,7 @@ from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
 from datetime import date
 from itertools import chain
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from deprecated import deprecated
 from jinja2 import (
@@ -192,10 +192,14 @@ def process_commit_message(
 
     messages = [processed_msg] if isinstance(processed_msg, dict) else processed_msg
     for msg in messages:
-        change_type = msg.pop("change_type", None)
+        if not isinstance(msg, dict):
+            continue
+        # cast needed: ty cannot narrow dict type from Iterable union
+        msg_dict = cast("dict[str, Any]", msg)
+        change_type = msg_dict.pop("change_type", None)
         if change_type_map and change_type:
             change_type = change_type_map.get(change_type, change_type)
-        ref_changes[change_type].append(msg)
+        ref_changes[change_type].append(msg_dict)
 
 
 def generate_ordered_changelog_tree(
@@ -272,6 +276,7 @@ def incremental_build(
             skip = False
             if (
                 latest_version_position is None
+                or unreleased_end is None
                 or latest_version_position > unreleased_end
             ):
                 continue

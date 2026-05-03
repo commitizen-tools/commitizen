@@ -5,6 +5,7 @@ from enum import Enum
 from functools import lru_cache
 from pathlib import Path
 from tempfile import NamedTemporaryFile
+from typing import IO, Any
 
 from commitizen import cmd, out
 from commitizen.exceptions import GitCommandError
@@ -316,7 +317,7 @@ def get_core_editor() -> str | None:
     return None
 
 
-def smart_open(*args, **kwargs):  # type: ignore[no-untyped-def,unused-ignore] # noqa: ANN201
+def smart_open(*args: Any, **kwargs: Any) -> IO[Any]:
     """Open a file with the EOL style determined from Git."""
     return open(*args, newline=EOLType.for_open(), **kwargs)
 

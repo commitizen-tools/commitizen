@@ -112,13 +112,13 @@ test = [
 
 linters = [
     "ruff>=0.11.5",
-    "mypy>=1.16.0",
     "types-deprecated>=1.2.9.2",
     "types-python-dateutil>=2.8.19.13",
     "types-PyYAML>=5.4.3",
     "types-termcolor>=0.1.1",
     "types-colorama>=0.4.15.20240311",
     "prek>=0.2.28",
+    "ty>=0.0.33",
 ]
 
 documentation = [
@@ -251,18 +251,16 @@ known-first-party = ["commitizen", "tests"]
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
-[tool.mypy]
-files = ["commitizen", "tests", "scripts"]
-disallow_untyped_decorators = true
-disallow_subclassing_any = true
-warn_return_any = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_unused_configs = true
+[tool.ty.src]
+include = ["commitizen", "tests", "scripts"]
 
-[[tool.mypy.overrides]]
-module = "py.*"               # Legacy pytest dependencies
-ignore_missing_imports = true
+[tool.ty.environment]
+# Match CI / minimum supported Python (see also: contributing_tldr ty check example)
+python-version = "3.10"
+
+[tool.ty.analysis]
+# Legacy pytest dependencies (`py` namespace)
+allowed-unresolved-imports = ["py.**"]
 
 [tool.codespell]
 # Ref: https://github.com/codespell-project/codespell#using-a-config-file
@@ -278,7 +276,7 @@ format.help = "Format the code"
 format.sequence = [{ cmd = "ruff check --fix" }, { cmd = "ruff format" }]
 
 lint.help = "Lint the code"
-lint.sequence = [{ cmd = "ruff check" }, { cmd = "mypy" }]
+lint.sequence = [{ cmd = "ruff check" }, { cmd = "ty check" }]
 
 check-commit.help = "Check the commit messages"
 check-commit.cmd = "cz --no-raise 3 check --rev-range origin/master.."

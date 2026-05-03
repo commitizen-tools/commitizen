@@ -33,7 +33,7 @@ class BaseConfig:
 
     @property
     def path(self) -> Path:
-        return self._path  # type: ignore[return-value]
+        return self._path  # type: ignore  # noqa: PGH003
 
     @path.setter
     def path(self, path: Path) -> None:

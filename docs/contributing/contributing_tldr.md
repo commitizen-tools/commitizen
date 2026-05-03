@@ -20,11 +20,11 @@ uv sync --dev --frozen
 # Make ruff happy
 uv run poe format
 
-# Check if ruff and mypy are happy
+# Check if ruff and ty are happy
 uv run poe lint
 
-# Check if mypy is happy in python 3.10
-mypy --python-version 3.10
+# Check ty against Python 3.10 types (matches [tool.ty.environment] python-version)
+uv run ty check --python-version 3.10
 
 # Run tests in parallel.
 pytest -n auto # This may take a while.
