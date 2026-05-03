@@ -346,7 +346,7 @@ class TestWarnMultipleConfigFiles:
         (tmp_path / ".cz.json").write_text(JSON_STR)
 
         # Read config with explicit path
-        cfg = config.read_cfg(str(Path(".cz.json")))
+        cfg = config.read_cfg(Path(".cz.json"))
 
         # No warning should be issued
         captured = capsys.readouterr()

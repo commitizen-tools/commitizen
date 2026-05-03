@@ -385,6 +385,7 @@ class SemVer2(SemVer):
         return ".".join(prerelease_parts)
 
 
+# cast needed: ty cannot resolve type[Pep440] as type[VersionProtocol]
 DEFAULT_SCHEME: VersionScheme = cast("VersionScheme", Pep440)
 
 SCHEMES_ENTRYPOINT = "commitizen.scheme"

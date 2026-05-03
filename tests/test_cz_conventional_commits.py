@@ -1,5 +1,3 @@
-from typing import cast
-
 import pytest
 
 from commitizen.cz.conventional_commits.conventional_commits import (
@@ -61,7 +59,7 @@ def test_choices_all_have_keyboard_shortcuts(config):
 
 def test_small_answer(config):
     conventional_commits = ConventionalCommitsCz(config)
-    answers = {
+    answers: ConventionalCommitsAnswers = {
         "prefix": "fix",
         "scope": "users",
         "subject": "email pattern corrected",
@@ -69,13 +67,13 @@ def test_small_answer(config):
         "body": "",
         "footer": "",
     }
-    message = conventional_commits.message(cast("ConventionalCommitsAnswers", answers))
+    message = conventional_commits.message(answers)
     assert message == "fix(users): email pattern corrected"
 
 
 def test_long_answer(config):
     conventional_commits = ConventionalCommitsCz(config)
-    answers = {
+    answers: ConventionalCommitsAnswers = {
         "prefix": "fix",
         "scope": "users",
         "subject": "email pattern corrected",
@@ -83,7 +81,7 @@ def test_long_answer(config):
         "body": "complete content",
         "footer": "closes #24",
     }
-    message = conventional_commits.message(cast("ConventionalCommitsAnswers", answers))
+    message = conventional_commits.message(answers)
     assert (
         message
         == "fix(users): email pattern corrected\n\ncomplete content\n\ncloses #24"
@@ -92,7 +90,7 @@ def test_long_answer(config):
 
 def test_breaking_change_in_footer(config):
     conventional_commits = ConventionalCommitsCz(config)
-    answers = {
+    answers: ConventionalCommitsAnswers = {
         "prefix": "fix",
         "scope": "users",
         "subject": "email pattern corrected",
@@ -100,7 +98,7 @@ def test_breaking_change_in_footer(config):
         "body": "complete content",
         "footer": "migrate by renaming user to users",
     }
-    message = conventional_commits.message(cast("ConventionalCommitsAnswers", answers))
+    message = conventional_commits.message(answers)
     print(message)
     assert (
         message
@@ -145,7 +143,7 @@ def test_breaking_change_message_formats(
         breaking_change_exclamation_in_title
     )
     conventional_commits = ConventionalCommitsCz(config)
-    answers = {
+    answers: ConventionalCommitsAnswers = {
         "prefix": "feat",
         "scope": scope,
         "subject": "email pattern corrected",
@@ -153,7 +151,7 @@ def test_breaking_change_message_formats(
         "body": "complete content",
         "footer": "migrate by renaming user to users",
     }
-    message = conventional_commits.message(cast("ConventionalCommitsAnswers", answers))
+    message = conventional_commits.message(answers)
     assert message == expected_message
 
 

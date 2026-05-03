@@ -194,6 +194,7 @@ def process_commit_message(
     for msg in messages:
         if not isinstance(msg, dict):
             continue
+        # cast needed: ty cannot narrow dict type from Iterable union
         msg_dict = cast("dict[str, Any]", msg)
         change_type = msg_dict.pop("change_type", None)
         if change_type_map and change_type:
