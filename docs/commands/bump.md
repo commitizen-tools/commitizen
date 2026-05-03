@@ -385,6 +385,11 @@ cz bump --allow-no-commit 2.0.0
     cz bump --allow-no-commit 2.0.0
     ```
 
+!!! note "Behavior with changelog updates"
+    When `update_changelog_on_bump = true` (or `--changelog` is used), `cz bump --allow-no-commit` also generates a changelog entry even if there are no commits in the selected range.
+
+    This makes the new release visible in the changelog while still showing that no commit-based changes were included.
+
 ### `--tag-format`
 
 `tag_format` and [version_scheme][version_scheme] are combined to make Git tag names from versions.

@@ -1537,3 +1537,18 @@ def test_changelog_merge_preserves_header(
     out = changelog_path.read_text()
 
     file_regression.check(out, extension=".md")
+
+
+@pytest.mark.freeze_time("2025-01-01")
+def test_bump_allow_no_commit_issue(
+    tmp_commitizen_project_initial,
+    util: UtilFixture,
+) -> None:
+    """Issue #1866: bump command called changelog command with allow_no_commit=True, but changelog command raised NoCommitsFoundError"""
+    tmp_commitizen_project_initial(
+        version="1.0.0", config_extra="update_changelog_on_bump = true\n"
+    )
+    util.run_cli("bump", "--yes", "--allow-no-commit", "--prerelease", "beta")
+    util.run_cli(
+        "bump", "--allow-no-commit", "--prerelease", "rc"
+    )  # Should not fail when changelog generation runs with no new commits

@@ -2,6 +2,8 @@
 
 Generates a changelog following the committing rules established.
 
+When changelog generation is triggered by `cz bump --allow-no-commit` (with `--changelog` or `update_changelog_on_bump = true`), Commitizen still creates a release entry even when no commits are found in the selected revision range.
+
 !!! tip
     To create the changelog automatically on bump, add the setting [update_changelog_on_bump](../config/bump.md#update_changelog_on_bump)
 
