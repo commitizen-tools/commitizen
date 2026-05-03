@@ -3,7 +3,7 @@ from __future__ import annotations
 from difflib import SequenceMatcher
 from operator import itemgetter
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, TypedDict, cast
+from typing import TYPE_CHECKING, Any, TypedDict
 
 from commitizen import changelog, defaults, factory, git, out
 from commitizen.changelog_formats import get_changelog_format
@@ -99,11 +99,10 @@ class Changelog:
         self.change_type_map = (
             self.config.settings.get("change_type_map") or self.cz.change_type_map
         )
-        self.change_type_order = cast(
-            "list[str]",
+        self.change_type_order: list[str] = (
             self.config.settings.get("change_type_order")
             or self.cz.change_type_order
-            or defaults.CHANGE_TYPE_ORDER,
+            or defaults.CHANGE_TYPE_ORDER
         )
         self.rev_range = arguments.get("rev_range")
         self.tag_rules = TagRules(

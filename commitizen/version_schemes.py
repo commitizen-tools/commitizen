@@ -421,7 +421,7 @@ def get_version_scheme(settings: Settings, name: str | None = None) -> VersionSc
         (ep,) = metadata.entry_points(name=name, group=SCHEMES_ENTRYPOINT)
     except ValueError:
         raise VersionSchemeUnknown(f'Version scheme "{name}" unknown.')
-    scheme = cast("VersionScheme", ep.load())
+    scheme: VersionScheme = ep.load()
 
     # `VersionProtocol` is a `@runtime_checkable` Protocol, but `issubclass()` is not
     # supported for Protocols with non-method members. We check an instance instead by

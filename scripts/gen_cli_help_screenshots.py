@@ -2,7 +2,7 @@ import os
 import subprocess
 from itertools import chain
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 from rich.console import Console
 
@@ -14,8 +14,8 @@ def gen_cli_help_screenshots() -> None:
     images_root = Path(__file__).parent.parent / "docs" / "images" / "cli_help"
     images_root.mkdir(parents=True, exist_ok=True)
 
-    cli_data = cast("dict[str, Any]", data)
-    commands_cfg = cast("list[dict[str, Any]]", cli_data["subcommands"]["commands"])
+    cli_data: dict[str, Any] = data
+    commands_cfg: list[dict[str, Any]] = cli_data["subcommands"]["commands"]
     cz_commands = (
         command["name"] if isinstance(command["name"], str) else command["name"][0]
         for command in commands_cfg

@@ -263,7 +263,7 @@ class Bump:
             )
         )
 
-        rules = TagRules.from_settings(cast("Settings", self.bump_settings))
+        rules = TagRules.from_settings(self.bump_settings)
         current_tag = rules.find_tag_for(git.get_tags(), current_version)
         current_tag_version = (
             current_tag.name if current_tag else rules.normalize_tag(current_version)
@@ -323,16 +323,14 @@ class Bump:
                 try:
                     Changelog(
                         self.config,
-                        cast(
-                            "ChangelogArgs",
-                            {**changelog_args, "dry_run": True},
-                        ),
+                        {**changelog_args, "dry_run": True},
                     )()
                 except DryRunExit:
                     pass
 
             changelog_cmd = Changelog(
                 self.config,
+                # TODO: remove cast once self.file_name is narrowed to str
                 cast(
                     "ChangelogArgs",
                     {

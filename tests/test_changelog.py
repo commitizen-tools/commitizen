@@ -1171,11 +1171,13 @@ def test_generate_tree_from_commits(gitcommits, tags, merge_prereleases):
     for release, expected_release in zip(tree, expected):
         assert release["version"] == expected_release["version"]
         assert release["date"] == expected_release["date"]
-        assert release["changes"].keys() == expected_release["changes"].keys()
-        for change_type in release["changes"]:
-            changes = release["changes"][change_type]
-            expected_changes = expected_release["changes"][change_type]
-            for change, expected_change in zip(changes, expected_changes):
+        changes = cast("dict[str, Any]", release["changes"])
+        expected_changes_map = cast("dict[str, Any]", expected_release["changes"])
+        assert changes.keys() == expected_changes_map.keys()
+        for change_type in changes:
+            change_list = changes[change_type]
+            expected_list = expected_changes_map[change_type]
+            for change, expected_change in zip(change_list, expected_list):
                 assert change["scope"] == expected_change["scope"]
                 assert change["breaking"] == expected_change["breaking"]
                 assert change["message"] == expected_change["message"]
