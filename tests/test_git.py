@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import inspect
 import os
-import platform
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
@@ -108,7 +108,7 @@ def test_get_log_as_str_list_empty():
     The behavior is different depending on the version of git.
     """
     try:
-        gitlog = git._get_log_as_str_list(start=None, end="HEAD", args="")
+        gitlog = git._get_log_as_str_list(start=None, end="HEAD", args=[])
     except GitCommandError:
         return
     assert len(gitlog) == 0, "list should be empty if no assert"
@@ -284,11 +284,11 @@ def test_get_latest_tag_name(util: UtilFixture):
 def test_is_staging_clean_when_adding_file():
     assert git.is_staging_clean() is True
 
-    cmd.run("touch test_file")
+    Path("test_file").touch()
 
     assert git.is_staging_clean() is True
 
-    cmd.run("git add test_file")
+    cmd.run(["git", "add", "test_file"])
 
     assert git.is_staging_clean() is False
 
@@ -297,17 +297,14 @@ def test_is_staging_clean_when_adding_file():
 def test_is_staging_clean_when_updating_file():
     assert git.is_staging_clean() is True
 
-    cmd.run("touch test_file")
-    cmd.run("git add test_file")
-    if os.name == "nt":
-        cmd.run('git commit -m "add test_file"')
-    else:
-        cmd.run("git commit -m 'add test_file'")
-    cmd.run("echo 'test' > test_file")
+    Path("test_file").touch()
+    cmd.run(["git", "add", "test_file"])
+    cmd.run(["git", "commit", "-m", "add test_file"])
+    Path("test_file").write_text("test")
 
     assert git.is_staging_clean() is True
 
-    cmd.run("git add test_file")
+    cmd.run(["git", "add", "test_file"])
 
     assert git.is_staging_clean() is False
 
@@ -316,13 +313,13 @@ def test_is_staging_clean_when_updating_file():
 def test_get_eol_for_open():
     assert git.EOLType.for_open() == os.linesep
 
-    cmd.run("git config core.eol lf")
+    cmd.run(["git", "config", "core.eol", "lf"])
     assert git.EOLType.for_open() == "\n"
 
-    cmd.run("git config core.eol crlf")
+    cmd.run(["git", "config", "core.eol", "crlf"])
     assert git.EOLType.for_open() == "\r\n"
 
-    cmd.run("git config core.eol native")
+    cmd.run(["git", "config", "core.eol", "native"])
     assert git.EOLType.for_open() == os.linesep
 
 
@@ -346,9 +343,7 @@ def test_create_tag_with_message(util: UtilFixture):
     tag_message = "test message"
     util.create_tag(tag_name, tag_message)
     assert git.get_latest_tag_name() == tag_name
-    assert git.get_tag_message(tag_name) == (
-        tag_message if platform.system() != "Windows" else f"'{tag_message}'"
-    )
+    assert git.get_tag_message(tag_name) == tag_message
 
 
 @pytest.mark.parametrize(
@@ -356,15 +351,15 @@ def test_create_tag_with_message(util: UtilFixture):
     [
         (
             "/tmp/temp file",
-            'git commit --signoff -F "/tmp/temp file"',
+            ["git", "commit", "--signoff", "-F", "/tmp/temp file"],
         ),
         (
             "/tmp dir/temp file",
-            'git commit --signoff -F "/tmp dir/temp file"',
+            ["git", "commit", "--signoff", "-F", "/tmp dir/temp file"],
         ),
         (
             "/tmp/tempfile",
-            'git commit --signoff -F "/tmp/tempfile"',
+            ["git", "commit", "--signoff", "-F", "/tmp/tempfile"],
         ),
     ],
     ids=[
@@ -374,16 +369,16 @@ def test_create_tag_with_message(util: UtilFixture):
     ],
 )
 def test_commit_with_spaces_in_path(
-    mocker: MockFixture, file_path: str, expected_cmd: str, util: UtilFixture
+    mocker: MockFixture, file_path: str, expected_cmd: list[str], util: UtilFixture
 ):
     mock_run = util.mock_cmd()
     mock_unlink = mocker.patch("os.unlink")
     mock_temp_file = mocker.patch("commitizen.git.NamedTemporaryFile")
     mock_temp_file.return_value.name = file_path
 
-    git.commit("feat: new feature", "--signoff")
+    git.commit("feat: new feature", ["--signoff"])
 
-    mock_run.assert_called_once_with(expected_cmd)
+    mock_run.assert_called_once_with(expected_cmd, env=None)
     mock_unlink.assert_called_once_with(file_path)
 
 
@@ -404,7 +399,7 @@ def test_get_filenames_in_commit_with_git_reference(util: UtilFixture):
     """Test get_filenames_in_commit with a specific git reference (commit SHA)."""
     first_filename = "first_feature.txt"
     util.create_file_and_commit("feat: first feature", filename=first_filename)
-    first_commit_rev = cmd.run("git rev-parse HEAD").out.strip()
+    first_commit_rev = cmd.run(["git", "rev-parse", "HEAD"]).out.strip()
 
     second_filename = "second_feature.txt"
     util.create_file_and_commit("feat: second feature", filename=second_filename)
@@ -474,29 +469,41 @@ def test_git_commit_from_rev_and_commit(linebreak):
 
 
 @pytest.mark.parametrize(
-    ("os_name", "committer_date", "expected_cmd"),
+    "committer_date",
     [
-        (
-            "nt",
-            "2024-03-20",
-            'cmd /v /c "set GIT_COMMITTER_DATE=2024-03-20&& git commit  -F "temp.txt""',
-        ),
-        (
-            "posix",
-            "2024-03-20",
-            'GIT_COMMITTER_DATE=2024-03-20 git commit  -F "temp.txt"',
-        ),
-        ("nt", None, 'git commit  -F "temp.txt"'),
-        ("posix", None, 'git commit  -F "temp.txt"'),
+        "2024-03-20",
+        None,
     ],
 )
-def test_create_commit_cmd_string(
-    mocker: MockFixture, os_name: str, committer_date: str, expected_cmd: str
-):
-    """Test the OS-specific behavior of _create_commit_cmd_string"""
-    mocker.patch("os.name", os_name)
-    result = git._create_commit_cmd_string("", committer_date, "temp.txt")
-    assert result == expected_cmd
+def test_commit_uses_list_args_and_env(mocker: MockFixture, committer_date: str | None):
+    """Test that git.commit uses list-based subprocess (no shell injection)."""
+    mock_run = mocker.patch("commitizen.cmd.run")
+    mock_run.return_value = cmd.Command("", "", b"", b"", 0)
+
+    # We need to mock NamedTemporaryFile to control the file name
+    mock_file = mocker.MagicMock()
+    mock_file.name = "temp.txt"
+    mock_file.__enter__ = mocker.MagicMock(return_value=mock_file)
+    mock_file.__exit__ = mocker.MagicMock(return_value=False)
+    mocker.patch("commitizen.git.NamedTemporaryFile", return_value=mock_file)
+    mocker.patch("os.unlink")
+
+    git.commit(
+        "test message", args=["-a", "--no-verify"], committer_date=committer_date
+    )
+
+    call_args = mock_run.call_args
+    # First positional arg should be a list (no shell injection)
+    cmd_list = call_args[0][0]
+    assert isinstance(cmd_list, list)
+    assert cmd_list == ["git", "commit", "-a", "--no-verify", "-F", "temp.txt"]
+
+    if committer_date:
+        env = call_args[1]["env"]
+        assert env == {"GIT_COMMITTER_DATE": committer_date}
+    else:
+        env = call_args[1]["env"]
+        assert env is None
 
 
 def test_get_default_branch_success(util: UtilFixture):

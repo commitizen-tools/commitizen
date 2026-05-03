@@ -257,7 +257,7 @@ class Changelog:
                     changelog_meta.latest_version_position = None
                     changelog_meta.unreleased_end = latest_full_release_info.index + 1
 
-        commits = git.get_commits(start=start_rev, end=end_rev, args="--topo-order")
+        commits = git.get_commits(start=start_rev, end=end_rev, args=["--topo-order"])
         if (
             not self.allow_no_commit
             and not commits

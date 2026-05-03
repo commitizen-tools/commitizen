@@ -55,7 +55,7 @@ class UtilFixture:
             filename = str(uuid.uuid4())
 
         Path(filename).touch()
-        c = cmd.run("git add .")
+        c = cmd.run(["git", "add", "."])
         if c.return_code != 0:
             raise exceptions.CommitError(c.err)
         c = git.commit(message, committer_date=committer_date)
@@ -65,29 +65,29 @@ class UtilFixture:
 
     def create_branch(self, name: str) -> None:
         """Create a new branch."""
-        c = cmd.run(f"git branch {name}")
+        c = cmd.run(["git", "branch", name])
         if c.return_code != 0:
             raise exceptions.GitCommandError(c.err)
 
     def switch_branch(self, branch: str) -> None:
         """Switch to given branch."""
-        c = cmd.run(f"git switch {branch}")
+        c = cmd.run(["git", "switch", branch])
         if c.return_code != 0:
             raise exceptions.GitCommandError(c.err)
 
     def merge_branch(self, branch: str) -> None:
         """Merge given branch into current branch."""
-        c = cmd.run(f"git merge {branch}")
+        c = cmd.run(["git", "merge", branch])
         if c.return_code != 0:
             raise exceptions.GitCommandError(c.err)
         self.tick()
 
     def get_current_branch(self) -> str:
         """Get current git branch name."""
-        c = cmd.run("git rev-parse --abbrev-ref HEAD")
+        c = cmd.run(["git", "rev-parse", "--abbrev-ref", "HEAD"])
         if c.return_code != 0:
             raise exceptions.GitCommandError(c.err)
-        return c.out
+        return c.out.strip()
 
     def create_tag(
         self, tag: str, message: str | None = None, annotated: bool | None = None

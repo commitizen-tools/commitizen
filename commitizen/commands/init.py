@@ -134,11 +134,12 @@ class Init:
                     "pre-commit is not installed in current environment."
                 )
 
-            cmd_str = "pre-commit install " + " ".join(
-                f"--hook-type {ty}" for ty in hook_types
-            )
-            c = cmd.run(cmd_str)
+            cmd_args = ["pre-commit", "install"]
+            for ty in hook_types:
+                cmd_args.extend(["--hook-type", ty])
+            c = cmd.run(cmd_args)
             if c.return_code != 0:
+                cmd_str = " ".join(cmd_args)
                 raise InitFailedError(
                     "Failed to install pre-commit hook.\n"
                     f"Error running {cmd_str}."

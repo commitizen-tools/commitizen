@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import inspect
 import re
+from pathlib import Path
 from textwrap import dedent
 from typing import TYPE_CHECKING
 from unittest.mock import call
@@ -28,8 +29,6 @@ from commitizen.exceptions import (
 )
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from pytest_mock import MockFixture
     from pytest_regressions.file_regression import FileRegressionFixture
 
@@ -64,7 +63,9 @@ def test_bump_minor_increment(commit_msg: str, util: UtilFixture):
     assert git.tag_exist("0.2.0") is True
     assert (
         "commit:refs/tags/0.2.0"
-        in cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"').out
+        in cmd.run(
+            ["git", "for-each-ref", "refs/tags", "--format", "%(objecttype):%(refname)"]
+        ).out
     )
 
 
@@ -76,7 +77,9 @@ def test_bump_minor_increment_annotated(commit_msg: str, util: UtilFixture):
     assert git.tag_exist("0.2.0") is True
     assert (
         "tag:refs/tags/0.2.0"
-        in cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"').out
+        in cmd.run(
+            ["git", "for-each-ref", "refs/tags", "--format", "%(objecttype):%(refname)"]
+        ).out
     )
 
     assert git.is_signed_tag("0.2.0") is False
@@ -90,7 +93,9 @@ def test_bump_minor_increment_signed(commit_msg: str, util: UtilFixture):
     assert git.tag_exist("0.2.0") is True
     assert (
         "tag:refs/tags/0.2.0"
-        in cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"').out
+        in cmd.run(
+            ["git", "for-each-ref", "refs/tags", "--format", "%(objecttype):%(refname)"]
+        ).out
     )
 
     assert git.is_signed_tag("0.2.0") is True
@@ -107,7 +112,9 @@ def test_bump_minor_increment_annotated_config_file(
     assert git.tag_exist("0.2.0") is True
     assert (
         "tag:refs/tags/0.2.0"
-        in cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"').out
+        in cmd.run(
+            ["git", "for-each-ref", "refs/tags", "--format", "%(objecttype):%(refname)"]
+        ).out
     )
 
     assert git.is_signed_tag("0.2.0") is False
@@ -125,7 +132,9 @@ def test_bump_minor_increment_signed_config_file(
     assert git.tag_exist("0.2.0") is True
     assert (
         "tag:refs/tags/0.2.0"
-        in cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"').out
+        in cmd.run(
+            ["git", "for-each-ref", "refs/tags", "--format", "%(objecttype):%(refname)"]
+        ).out
     )
 
     assert git.is_signed_tag("0.2.0") is True
@@ -283,10 +292,10 @@ def test_bump_command_prerelease_exact_mode(util: UtilFixture):
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_on_git_with_hooks_no_verify_disabled(util: UtilFixture):
     """Bump commit without --no-verify"""
-    cmd.run("mkdir .git/hooks")
+    Path(".git/hooks").mkdir(parents=True, exist_ok=True)
     with open(".git/hooks/pre-commit", "w", encoding="utf-8") as f:
         f.write('#!/usr/bin/env bash\necho "0.1.0"')
-    cmd.run("chmod +x .git/hooks/pre-commit")
+    Path(".git/hooks/pre-commit").chmod(0o755)
 
     # MINOR
     util.create_file_and_commit("feat: new file")
@@ -296,10 +305,10 @@ def test_bump_on_git_with_hooks_no_verify_disabled(util: UtilFixture):
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_tag_exists_raises_exception(util: UtilFixture):
-    cmd.run("mkdir .git/hooks")
+    Path(".git/hooks").mkdir(parents=True, exist_ok=True)
     with open(".git/hooks/post-commit", "w", encoding="utf-8") as f:
         f.write("#!/usr/bin/env bash\nexit 9")
-    cmd.run("chmod +x .git/hooks/post-commit")
+    Path(".git/hooks/post-commit").chmod(0o755)
 
     # MINOR
     util.create_file_and_commit("feat: new file")
@@ -312,10 +321,10 @@ def test_bump_tag_exists_raises_exception(util: UtilFixture):
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_on_git_with_hooks_no_verify_enabled(util: UtilFixture):
-    cmd.run("mkdir .git/hooks")
+    Path(".git/hooks").mkdir(parents=True, exist_ok=True)
     with open(".git/hooks/pre-commit", "w", encoding="utf-8") as f:
         f.write('#!/usr/bin/env bash\necho "0.1.0"')
-    cmd.run("chmod +x .git/hooks/pre-commit")
+    Path(".git/hooks/pre-commit").chmod(0o755)
 
     # MINOR
     util.create_file_and_commit("feat: new file")
