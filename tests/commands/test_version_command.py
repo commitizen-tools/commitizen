@@ -147,19 +147,30 @@ def test_version_just_minor(config, capsys, version: str, expected_version: str)
     assert expected_version == captured.out
 
 
-@pytest.mark.parametrize("argument", ["major", "minor", "patch"])
-def test_version_just_major_error_no_project(config, capsys, argument: str):
-    commands.Version(
-        config,
-        {
-            argument: True,  # type: ignore[misc]
-        },
-    )()
+@pytest.mark.parametrize(
+    ("args", "expected_error"),
+    [
+        (
+            {"major": True},
+            "can only be used with MANUAL_VERSION, --project or --verbose.",
+        ),
+        (
+            {"minor": True},
+            "can only be used with MANUAL_VERSION, --project or --verbose.",
+        ),
+        (
+            {"patch": True},
+            "can only be used with MANUAL_VERSION, --project or --verbose.",
+        ),
+        ({"tag": True}, "Tag can only be used with --project or --verbose."),
+    ],
+)
+def test_version_invalid_combinations(config, capsys, args: dict, expected_error: str):
+    """Test that certain flag combinations produce errors."""
+    commands.Version(config, args)()  # type: ignore[arg-type]
     captured = capsys.readouterr()
     assert not captured.out
-    assert (
-        "can only be used with MANUAL_VERSION, --project or --verbose." in captured.err
-    )
+    assert expected_error in captured.err
 
 
 @pytest.mark.parametrize(
@@ -186,19 +197,6 @@ def test_version_with_tag_format(
     )()
     captured = capsys.readouterr()
     assert captured.out == expected_output
-
-
-def test_version_tag_without_project_error(config, capsys):
-    """Test --tag requires --project or --verbose"""
-    commands.Version(
-        config,
-        {
-            "tag": True,
-        },
-    )()
-    captured = capsys.readouterr()
-    assert not captured.out
-    assert "Tag can only be used with --project or --verbose." in captured.err
 
 
 @pytest.mark.parametrize(
