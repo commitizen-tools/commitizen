@@ -119,7 +119,7 @@ data = {
     ],
     "subcommands": {
         "title": "commands",
-        "required": True,
+        "required": False,
         "commands": [
             {
                 "name": ["init"],
@@ -689,18 +689,6 @@ def main() -> None:
         parser.print_help(sys.stderr)
         raise ExpectedExit()
 
-    # TODO(bearomorphism): mark `cz version --commitizen` as deprecated after `cz version` feature is stable
-    if "--version" in sys.argv:
-        out.write(__version__)
-        raise ExpectedExit()
-
-    # TODO(bearomorphism): mark `cz version --report` as deprecated after `cz version` feature is stable
-    if "--report" in sys.argv:
-        out.write(f"Commitizen Version: {__version__}")
-        out.write(f"Python Version: {sys.version}")
-        out.write(f"Operating System: {platform.system()}")
-        raise ExpectedExit()
-
     # This is for the command required constraint in 2.0
     try:
         args, unknown_args = parser.parse_known_args()
@@ -708,6 +696,17 @@ def main() -> None:
         if e.code == 2:
             raise NoCommandFoundError()
         raise e
+
+    if not hasattr(args, "func"):
+        if getattr(args, "version", False):
+            out.write(__version__)
+            raise ExpectedExit()
+        if getattr(args, "report", False):
+            out.write(f"Commitizen Version: {__version__}")
+            out.write(f"Python Version: {sys.version}")
+            out.write(f"Operating System: {platform.system()}")
+            raise ExpectedExit()
+        raise NoCommandFoundError()
 
     arguments = vars(args)
     if unknown_args:

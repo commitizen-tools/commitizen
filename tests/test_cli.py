@@ -64,6 +64,14 @@ def test_cz_with_version_arg(util: UtilFixture, capsys):
     assert __version__ in out
 
 
+def test_cz_with_version_short_arg(util: UtilFixture, capsys):
+    """Test that cz shows the version when -v is used."""
+    with pytest.raises(ExpectedExit):
+        util.run_cli("-v")
+    out, _ = capsys.readouterr()
+    assert __version__ in out
+
+
 def test_cz_with_report_arg(util: UtilFixture, capsys):
     """Test that cz shows the report when --report is used."""
     with pytest.raises(ExpectedExit):
