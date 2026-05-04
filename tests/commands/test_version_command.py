@@ -296,3 +296,23 @@ def test_version_no_arguments_shows_commitizen_version(config, capsys):
     commands.Version(config, {})()
     captured = capsys.readouterr()
     assert captured.out.strip() == __version__
+
+
+def test_version_report_emits_deprecation_warning(config, capsys):
+    with pytest.warns(
+        DeprecationWarning,
+        match=r"`cz version --report` is deprecated.*Use `cz --report` instead",
+    ):
+        commands.Version(config, {"report": True})()
+    captured = capsys.readouterr()
+    assert f"Commitizen Version: {__version__}" in captured.out
+
+
+def test_version_commitizen_emits_deprecation_warning(config, capsys):
+    with pytest.warns(
+        DeprecationWarning,
+        match=r"`cz version --commitizen` is deprecated.*Use `cz --version` instead",
+    ):
+        commands.Version(config, {"commitizen": True})()
+    captured = capsys.readouterr()
+    assert __version__ in captured.out
