@@ -72,6 +72,14 @@ def test_cz_with_version_short_arg(util: UtilFixture, capsys):
     assert __version__ in out
 
 
+def test_cz_version_flag_takes_precedence_over_subcommand(util: UtilFixture, capsys):
+    """Test that --version takes precedence even when a subcommand is given."""
+    with pytest.raises(ExpectedExit):
+        util.run_cli("--version", "bump")
+    out, _ = capsys.readouterr()
+    assert __version__ in out
+
+
 def test_cz_with_report_arg(util: UtilFixture, capsys):
     """Test that cz shows the report when --report is used."""
     with pytest.raises(ExpectedExit):
@@ -80,6 +88,14 @@ def test_cz_with_report_arg(util: UtilFixture, capsys):
     assert "Commitizen Version:" in out
     assert "Python Version:" in out
     assert "Operating System:" in out
+
+
+def test_cz_report_flag_takes_precedence_over_subcommand(util: UtilFixture, capsys):
+    """Test that --report takes precedence over non-version subcommands."""
+    with pytest.raises(ExpectedExit):
+        util.run_cli("--report", "bump")
+    out, _ = capsys.readouterr()
+    assert "Commitizen Version:" in out
 
 
 def test_name(util: UtilFixture, capsys):
