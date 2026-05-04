@@ -697,15 +697,19 @@ def main() -> None:
             raise NoCommandFoundError()
         raise e
 
+    if getattr(args, "version", False):
+        out.write(__version__)
+        raise ExpectedExit()
+
+    if getattr(args, "report", False) and (
+        not hasattr(args, "func") or args.func is not commands.Version
+    ):
+        out.write(f"Commitizen Version: {__version__}")
+        out.write(f"Python Version: {sys.version}")
+        out.write(f"Operating System: {platform.system()}")
+        raise ExpectedExit()
+
     if not hasattr(args, "func"):
-        if getattr(args, "version", False):
-            out.write(__version__)
-            raise ExpectedExit()
-        if getattr(args, "report", False):
-            out.write(f"Commitizen Version: {__version__}")
-            out.write(f"Python Version: {sys.version}")
-            out.write(f"Operating System: {platform.system()}")
-            raise ExpectedExit()
         raise NoCommandFoundError()
 
     arguments = vars(args)
