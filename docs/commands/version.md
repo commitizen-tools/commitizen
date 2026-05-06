@@ -1,5 +1,12 @@
 Get the version of the installed Commitizen or the current project (default: installed commitizen).
 
+## Quick version and report
+
+The following top-level flags are available for convenience:
+
+- **`cz --version`** (or **`cz -v`**): print the installed Commitizen version and exit.
+- **`cz --report`**: print system information (Commitizen version, Python version, operating system) useful for bug reports, and exit.
+
 ## Usage
 
 ![cz version --help](../images/cli_help/cz_version___help.svg)
@@ -20,6 +27,8 @@ Get the version of the installed Commitizen or the current project (default: ins
 ## Examples
 
 ```bash
+cz --version              # quick: installed commitizen version
+cz --report               # quick: system info for bug reports
 cz version --project
 cz version 2.0.0 --next MAJOR
 cz version --project --major
