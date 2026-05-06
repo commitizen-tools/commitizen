@@ -114,6 +114,7 @@ data = {
         {
             "name": ["--report"],
             "action": "store_true",
+            "dest": "global_report",
             "help": "Show system information for reporting bugs",
         },
     ],
@@ -662,6 +663,7 @@ if TYPE_CHECKING:
         name: str | None = None
         no_raise: str | None = None  # comma-separated string, later parsed as list[int]
         report: bool = False
+        global_report: bool = False
         project: bool = False
         commitizen: bool = False
         verbose: bool = False
@@ -701,9 +703,7 @@ def main() -> None:
         out.write(__version__)
         raise ExpectedExit()
 
-    if getattr(args, "report", False) and (
-        not hasattr(args, "func") or args.func is not commands.Version
-    ):
+    if getattr(args, "global_report", False):
         out.write(f"Commitizen Version: {__version__}")
         out.write(f"Python Version: {sys.version}")
         out.write(f"Operating System: {platform.system()}")

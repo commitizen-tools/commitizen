@@ -98,6 +98,16 @@ def test_cz_report_flag_takes_precedence_over_subcommand(util: UtilFixture, caps
     assert "Commitizen Version:" in out
 
 
+def test_cz_report_flag_takes_precedence_over_version_subcommand(
+    util: UtilFixture, capsys
+):
+    """Test that top-level --report takes precedence over version subcommand."""
+    with pytest.raises(ExpectedExit):
+        util.run_cli("--report", "version")
+    out, _ = capsys.readouterr()
+    assert "Commitizen Version:" in out
+
+
 def test_name(util: UtilFixture, capsys):
     util.run_cli("-n", "cz_jira", "example")
     out, _ = capsys.readouterr()
