@@ -320,7 +320,7 @@ class TestWarnMultipleConfigFiles:
     ):
         """Test warning when same config filename exists in the current directory and in the git root."""
         monkeypatch.chdir(tmp_path)
-        cmd.run("git init")
+        cmd.run(["git", "init"])
 
         # Create config in git root
         (tmp_path / config_file).write_text(content)
@@ -378,7 +378,7 @@ class TestWarnMultipleConfigFiles:
         """Test that no warning is issued when user explicitly specifies config."""
         monkeypatch.chdir(tmp_path)
         if with_git:
-            cmd.run("git init")
+            cmd.run(["git", "init"])
 
         (tmp_path / config_file).write_text(content)
 

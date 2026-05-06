@@ -1,10 +1,11 @@
+import sys
 from pathlib import Path
 from unittest.mock import ANY
 
 import pytest
 from pytest_mock import MockFixture, MockType
 
-from commitizen import cmd, commands
+from commitizen import cli, cmd, commands
 from commitizen.cz.exceptions import CzException
 from commitizen.cz.utils import get_backup_file_path
 from commitizen.exceptions import (
@@ -99,7 +100,7 @@ def test_commit_retry_works(
     temp_file = commit_cmd.backup_file_path
     commit_cmd()
 
-    commit_mock.assert_called_with("backup commit", args="")
+    commit_mock.assert_called_with("backup commit", args=[])
     prompt_mock.assert_not_called()
     success_mock.assert_called_once()
     assert not Path(temp_file).exists()
@@ -112,7 +113,7 @@ def test_commit_retry_after_failure_no_backup(
     config.settings["retry_after_failure"] = True
     commands.Commit(config, {})()
 
-    commit_mock.assert_called_with("feat: user created\n\ncloses #21", args="")
+    commit_mock.assert_called_with("feat: user created\n\ncloses #21", args=[])
     prompt_mock_feat.assert_called_once()
     success_mock.assert_called_once()
 
@@ -128,7 +129,7 @@ def test_commit_retry_after_failure_works(
     temp_file = commit_cmd.backup_file_path
     commit_cmd()
 
-    commit_mock.assert_called_with("backup commit", args="")
+    commit_mock.assert_called_with("backup commit", args=[])
     prompt_mock.assert_not_called()
     success_mock.assert_called_once()
     assert not Path(temp_file).exists()
@@ -143,7 +144,7 @@ def test_commit_retry_after_failure_with_no_retry_works(
     temp_file = commit_cmd.backup_file_path
     commit_cmd()
 
-    commit_mock.assert_called_with("feat: user created\n\ncloses #21", args="")
+    commit_mock.assert_called_with("feat: user created\n\ncloses #21", args=[])
     prompt_mock_feat.assert_called_once()
     success_mock.assert_called_once()
     assert not Path(temp_file).exists()
@@ -178,7 +179,7 @@ def test_commit_command_with_signoff_option(
 ):
     commands.Commit(config, {"signoff": True})()
 
-    commit_mock.assert_called_once_with(ANY, args="-s")
+    commit_mock.assert_called_once_with(ANY, args=["-s"])
     success_mock.assert_called_once()
 
 
@@ -189,7 +190,7 @@ def test_commit_command_with_always_signoff_enabled(
     config.settings["always_signoff"] = True
     commands.Commit(config, {})()
 
-    commit_mock.assert_called_once_with(ANY, args="-s")
+    commit_mock.assert_called_once_with(ANY, args=["-s"])
     success_mock.assert_called_once()
 
 
@@ -198,9 +199,9 @@ def test_commit_command_with_gpgsign_and_always_signoff_enabled(
     config, success_mock: MockType, commit_mock: MockType
 ):
     config.settings["always_signoff"] = True
-    commands.Commit(config, {"extra_cli_args": "-S"})()
+    commands.Commit(config, {"extra_cli_args": ["-S"]})()
 
-    commit_mock.assert_called_once_with(ANY, args="-S -s")
+    commit_mock.assert_called_once_with(ANY, args=["-S", "-s"])
     success_mock.assert_called_once()
 
 
@@ -216,9 +217,9 @@ def test_commit_when_nothing_to_commit(config, mocker: MockFixture):
 
 @pytest.mark.usefixtures("staging_is_clean", "prompt_mock_feat")
 def test_commit_with_allow_empty(config, success_mock: MockType, commit_mock: MockType):
-    commands.Commit(config, {"extra_cli_args": "--allow-empty"})()
+    commands.Commit(config, {"extra_cli_args": ["--allow-empty"]})()
     commit_mock.assert_called_with(
-        "feat: user created\n\ncloses #21", args="--allow-empty"
+        "feat: user created\n\ncloses #21", args=["--allow-empty"]
     )
     success_mock.assert_called_once()
 
@@ -228,10 +229,10 @@ def test_commit_with_signoff_and_allow_empty(
     config, success_mock: MockType, commit_mock: MockType
 ):
     config.settings["always_signoff"] = True
-    commands.Commit(config, {"extra_cli_args": "--allow-empty"})()
+    commands.Commit(config, {"extra_cli_args": ["--allow-empty"]})()
 
     commit_mock.assert_called_with(
-        "feat: user created\n\ncloses #21", args="--allow-empty -s"
+        "feat: user created\n\ncloses #21", args=["--allow-empty", "-s"]
     )
     success_mock.assert_called_once()
 
@@ -282,9 +283,19 @@ def test_commit_command_with_all_option(
 def test_commit_command_with_extra_args(
     config, success_mock: MockType, commit_mock: MockType
 ):
-    commands.Commit(config, {"extra_cli_args": "-- -extra-args1 -extra-arg2"})()
-    commit_mock.assert_called_once_with(ANY, args="-- -extra-args1 -extra-arg2")
+    commands.Commit(config, {"extra_cli_args": ["--", "-extra-args1", "-extra-arg2"]})()
+    commit_mock.assert_called_once_with(ANY, args=["--", "-extra-args1", "-extra-arg2"])
     success_mock.assert_called_once()
+
+
+@pytest.mark.usefixtures(
+    "tmp_commitizen_project", "staging_is_clean", "prompt_mock_feat"
+)
+def test_commit_cli_extra_args_parsing(mocker: MockFixture, commit_mock: MockType):
+    """Test that extra args after -- are passed as a list through the CLI."""
+    mocker.patch.object(sys, "argv", ["cz", "commit", "--", "--no-verify"])
+    cli.main()
+    commit_mock.assert_called_once_with(ANY, args=["--no-verify"])
 
 
 @pytest.mark.usefixtures("staging_is_clean")

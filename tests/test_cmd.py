@@ -55,3 +55,41 @@ def test_always_fail_decode():
 
     with pytest.raises(CharacterSetDecodeError):
         cmd._try_decode(_bytes())
+
+
+def test_run_returns_command_with_shell_false():
+    """Test that cmd.run executes a list-based command without shell."""
+    c = cmd.run(["python", "-c", "print('hello')"])
+    assert c.return_code == 0
+    assert "hello" in c.out
+
+
+def test_run_shell_returns_command_with_shell_true():
+    """Test that cmd.run_shell executes a string command via the shell."""
+    c = cmd.run_shell("python -c \"print('hello')\"")
+    assert c.return_code == 0
+    assert "hello" in c.out
+
+
+def test_run_with_env():
+    """Test that cmd.run passes extra environment variables."""
+    c = cmd.run(
+        ["python", "-c", "import os; print(os.environ['CZ_TEST_VAR'])"],
+        env={"CZ_TEST_VAR": "test_value"},
+    )
+    assert c.return_code == 0
+    assert "test_value" in c.out
+
+
+def test_run_with_string_emits_deprecation_warning():
+    """Test that passing a string to cmd.run() emits a DeprecationWarning."""
+    import warnings
+
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        c = cmd.run("python -c \"print('deprecated')\"")
+        assert c.return_code == 0
+        assert "deprecated" in c.out
+        assert len(w) == 1
+        assert issubclass(w[0].category, DeprecationWarning)
+        assert "cmd.run()" in str(w[0].message)

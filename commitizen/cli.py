@@ -704,7 +704,7 @@ def main() -> None:
             logger.warning(
                 "\nWARN: Incomplete commit command: received -- separator without any following git arguments\n"
             )
-        extra_args = " ".join(unknown_args[1:])
+        extra_args = unknown_args[1:]
         arguments["extra_cli_args"] = extra_args
 
     conf = config.read_cfg(args.config)

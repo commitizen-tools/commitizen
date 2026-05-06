@@ -68,9 +68,9 @@ def test_bump_pre_commit_changelog(util: UtilFixture, retry, hook_runner):
             """
         )
     )
-    cmd.run("git add -A")
-    cmd.run('git commit -m "fix: _test"')
-    cmd.run(f"{hook_runner} install")
+    cmd.run(["git", "add", "-A"])
+    cmd.run(["git", "commit", "-m", "fix: _test"])
+    cmd.run_shell(f"{hook_runner} install")
     util.run_cli(*bump_args)
     # Pre-commit fixed last line adding extra indent and "\" char
     assert Path("CHANGELOG.md").read_text() == dedent(
@@ -106,9 +106,9 @@ def test_bump_pre_commit_changelog_fails_always(util: UtilFixture, retry, hook_r
             """
         )
     )
-    cmd.run("git add -A")
-    cmd.run('git commit -m "feat: forbid changelogs"')
-    cmd.run(f"{hook_runner} install")
+    cmd.run(["git", "add", "-A"])
+    cmd.run(["git", "commit", "-m", "feat: forbid changelogs"])
+    cmd.run_shell(f"{hook_runner} install")
     with pytest.raises(exceptions.BumpCommitFailedError):
         util.run_cli(*bump_args)
 
@@ -117,8 +117,8 @@ def test_bump_pre_commit_changelog_fails_always(util: UtilFixture, retry, hook_r
 def test_bump_with_build_metadata(util: UtilFixture):
     def _add_entry(test_str: str, args: list):
         Path(test_str).write_text("")
-        cmd.run("git add -A")
-        cmd.run(f'git commit -m "fix: test-{test_str}"')
+        cmd.run(["git", "add", "-A"])
+        cmd.run(["git", "commit", "-m", f"fix: test-{test_str}"])
         cz_args = ["bump", "--changelog", "--yes"] + args
         util.run_cli(*cz_args)
 

@@ -439,8 +439,8 @@ class Bump:
         else:
             out.success("Done!")
 
-    def _get_commit_args(self) -> str:
+    def _get_commit_args(self) -> list[str]:
         commit_args = ["-a"]
         if self.no_verify:
             commit_args.append("--no-verify")
-        return " ".join(commit_args)
+        return commit_args
