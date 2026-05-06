@@ -56,26 +56,19 @@ def test_cz_with_arg_but_without_command(util: UtilFixture):
     assert "Command is required" in str(excinfo.value)
 
 
-def test_cz_with_version_arg(util: UtilFixture, capsys):
-    """Test that cz shows the version when --version is used."""
+@pytest.mark.parametrize(
+    "args",
+    [
+        ("--version",),
+        ("-v",),
+        ("--version", "bump"),
+    ],
+    ids=["long-flag", "short-flag", "precedence-over-subcommand"],
+)
+def test_cz_with_version_arg(util: UtilFixture, capsys, args):
+    """Test that cz --version / -v shows the version and takes precedence."""
     with pytest.raises(ExpectedExit):
-        util.run_cli("--version")
-    out, _ = capsys.readouterr()
-    assert __version__ in out
-
-
-def test_cz_with_version_short_arg(util: UtilFixture, capsys):
-    """Test that cz shows the version when -v is used."""
-    with pytest.raises(ExpectedExit):
-        util.run_cli("-v")
-    out, _ = capsys.readouterr()
-    assert __version__ in out
-
-
-def test_cz_version_flag_takes_precedence_over_subcommand(util: UtilFixture, capsys):
-    """Test that --version takes precedence even when a subcommand is given."""
-    with pytest.raises(ExpectedExit):
-        util.run_cli("--version", "bump")
+        util.run_cli(*args)
     out, _ = capsys.readouterr()
     assert __version__ in out
 
