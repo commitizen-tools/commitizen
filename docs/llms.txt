@@ -1,0 +1,74 @@
+# Commitizen
+
+> Commitizen is a release management tool for teams that enforces Conventional Commits, automates semantic versioning bumps, and generates changelogs.
+
+This index highlights the most useful pages from the Commitizen documentation site for coding agents and other automated tools. Start with the introduction for installation and core workflows, then use the command and configuration sections for day-to-day usage. Tutorials cover CI integration, commit hooks, monorepos, and release automation.
+
+## Overview
+
+- [Introduction](https://commitizen-tools.github.io/commitizen/): Project overview, installation, quick start, and core release-management workflows.
+- [FAQ](https://commitizen-tools.github.io/commitizen/faq/): Answers to common setup and usage questions.
+- [Exit Codes](https://commitizen-tools.github.io/commitizen/exit_codes/): Reference for Commitizen CLI exit codes and failure modes.
+- [Feature request graveyard](https://commitizen-tools.github.io/commitizen/features_wont_add/): Features the project explicitly does not plan to add.
+- [History](https://commitizen-tools.github.io/commitizen/history/): Project release history.
+- [Resources](https://commitizen-tools.github.io/commitizen/external_links/): External links and related resources.
+
+## Commands
+
+- [init](https://commitizen-tools.github.io/commitizen/commands/init/): Initialize Commitizen configuration for a project.
+- [commit](https://commitizen-tools.github.io/commitizen/commands/commit/): Create standardized commits with the interactive Commitizen prompt.
+- [bump](https://commitizen-tools.github.io/commitizen/commands/bump/): Calculate the next version, update version files, and manage release tagging and changelog generation.
+- [check](https://commitizen-tools.github.io/commitizen/commands/check/): Validate commit messages against the configured convention.
+- [changelog](https://commitizen-tools.github.io/commitizen/commands/changelog/): Generate changelog entries from commits and tags.
+- [example](https://commitizen-tools.github.io/commitizen/commands/example/): Show example commit messages for the configured rules.
+- [info](https://commitizen-tools.github.io/commitizen/commands/info/): Show information about the active Commitizen configuration.
+- [ls](https://commitizen-tools.github.io/commitizen/commands/ls/): List supported commit message choices for the active rules.
+- [schema](https://commitizen-tools.github.io/commitizen/commands/schema/): Show the commit message schema for the active convention.
+- [version](https://commitizen-tools.github.io/commitizen/commands/version/): Show the installed or project version and inspect version components.
+
+## Configuration
+
+- [Configuration File](https://commitizen-tools.github.io/commitizen/config/configuration_file/): Where Commitizen configuration can live and how it is loaded.
+- [General](https://commitizen-tools.github.io/commitizen/config/option/): Global options such as commit rules, version, style, and customization settings.
+- [bump configuration](https://commitizen-tools.github.io/commitizen/config/bump/): Version bumping, tag creation, and version-file update settings.
+- [commit configuration](https://commitizen-tools.github.io/commitizen/config/commit/): Settings for interactive commit creation and prompts.
+- [check configuration](https://commitizen-tools.github.io/commitizen/config/check/): Settings for commit message validation.
+- [changelog configuration](https://commitizen-tools.github.io/commitizen/config/changelog/): Settings for changelog generation and formatting.
+- [Version Providers](https://commitizen-tools.github.io/commitizen/config/version_provider/): How Commitizen reads and writes versions for different project types.
+
+## Advanced Customization
+
+- [Customize via config file](https://commitizen-tools.github.io/commitizen/customization/config_file/): Define custom commit and bump rules directly in project configuration.
+- [Customized Python Class](https://commitizen-tools.github.io/commitizen/customization/python_class/): Implement a Python class for fully custom Commitizen behavior.
+- [Changelog Template](https://commitizen-tools.github.io/commitizen/customization/changelog_template/): Customize changelog output templates.
+
+## Tutorials
+
+- [Commit Message Best Practices](https://commitizen-tools.github.io/commitizen/tutorials/writing_commits/): Writing effective Conventional Commits with Commitizen.
+- [Managing tags formats](https://commitizen-tools.github.io/commitizen/tutorials/tag_format/): Configure and work with custom Git tag formats.
+- [Auto check commits](https://commitizen-tools.github.io/commitizen/tutorials/auto_check/): Enforce commit message checks automatically before commits are created.
+- [Auto prepare commit message](https://commitizen-tools.github.io/commitizen/tutorials/auto_prepare_commit_message/): Pre-fill commit messages before editing or validating them.
+- [GitLab CI](https://commitizen-tools.github.io/commitizen/tutorials/gitlab_ci/): Automate release workflows in GitLab CI.
+- [GitHub Actions](https://commitizen-tools.github.io/commitizen/tutorials/github_actions/): Automate release workflows in GitHub Actions.
+- [Jenkins pipeline](https://commitizen-tools.github.io/commitizen/tutorials/jenkins_pipeline/): Integrate Commitizen into Jenkins pipelines.
+- [Developmental releases](https://commitizen-tools.github.io/commitizen/tutorials/dev_releases/): Manage development and prerelease versioning workflows.
+- [Monorepo support](https://commitizen-tools.github.io/commitizen/tutorials/monorepo_guidance/): Configure Commitizen for monorepos and multi-package repositories.
+
+## Third-Party Plugins
+
+- [About third-party plugins](https://commitizen-tools.github.io/commitizen/third-party-plugins/about/): Overview of the third-party plugin ecosystem.
+- [commitizen-deno-provider](https://commitizen-tools.github.io/commitizen/third-party-plugins/commitizen-deno-provider/): Deno-oriented version provider plugin.
+- [Commitizen emoji](https://commitizen-tools.github.io/commitizen/third-party-plugins/commitizen-emoji/): Emoji-based commit convention plugin.
+- [Conventional JIRA](https://commitizen-tools.github.io/commitizen/third-party-plugins/conventional-jira/): JIRA-oriented conventional commit plugin.
+- [cz-ai](https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-ai/): AI-assisted commit message plugin.
+- [cz-conventional-gitmoji](https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-conventional-gitmoji/): Conventional commit workflow with Gitmoji support.
+- [cz-emoji](https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-emoji/): Emoji-based commit convention plugin.
+- [cz-legacy](https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-legacy/): Legacy conventional commit compatibility plugin.
+- [cz-path](https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-path/): Path-aware commit convention plugin.
+- [GitHub JIRA Conventional](https://commitizen-tools.github.io/commitizen/third-party-plugins/github-jira-conventional/): GitHub and JIRA integrated conventional commit plugin.
+
+## Contributing
+
+- [Contributing TL;DR](https://commitizen-tools.github.io/commitizen/contributing/contributing_tldr/): Fast path for setting up a local development workflow.
+- [Contributing](https://commitizen-tools.github.io/commitizen/contributing/contributing/): Full contributor guide for developing Commitizen.
+- [Pull Request Guidelines](https://commitizen-tools.github.io/commitizen/contributing/pull_request/): Project expectations for preparing and submitting pull requests.
