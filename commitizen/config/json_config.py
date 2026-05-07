@@ -65,6 +65,6 @@ class JsonConfig(BaseConfig):
             raise InvalidConfigurationError(f"Failed to parse {self.path}: {e}")
 
         try:
-            self.settings.update(doc["commitizen"])
+            self.update(doc["commitizen"])
         except KeyError:
             pass

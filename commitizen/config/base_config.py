@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from commitizen.defaults import DEFAULT_SETTINGS, Settings
+from commitizen.exceptions import InvalidConfigurationError
 
 if TYPE_CHECKING:
     import sys
@@ -13,6 +14,8 @@ if TYPE_CHECKING:
         from typing_extensions import Self
     else:
         from typing import Self
+
+_VALID_CONFIG_KEYS: frozenset[str] = frozenset(Settings.__annotations__)
 
 
 class BaseConfig:
@@ -47,6 +50,12 @@ class BaseConfig:
         raise NotImplementedError()
 
     def update(self, data: Settings) -> None:
+        if self._settings.get("strict_config"):
+            unknown = sorted(set(data) - _VALID_CONFIG_KEYS)
+            if unknown:
+                raise InvalidConfigurationError(
+                    f"Unknown commitizen config keys: {', '.join(unknown)}"
+                )
         self._settings.update(data)
 
     def _parse_setting(self, data: bytes | str) -> None:

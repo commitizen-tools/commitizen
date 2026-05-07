@@ -497,3 +497,65 @@ class TestYamlConfig:
         with pytest.raises(InvalidConfigurationError) as excinfo:
             YAMLConfig(data=existing_content, path=path)
         assert config_file in str(excinfo.value)
+
+
+class TestStrictConfig:
+    """Tests for the strict_config option that rejects unknown config keys."""
+
+    def test_toml_strict_config_raises_on_unknown_key(self, tmp_path):
+        data = """
+[tool.commitizen]
+strict_config = true
+tga_format = "v$version"
+"""
+        path = tmp_path / "pyproject.toml"
+        with pytest.raises(InvalidConfigurationError, match="tga_format"):
+            TomlConfig(data=data, path=path)
+
+    def test_json_strict_config_raises_on_unknown_key(self, tmp_path):
+        data = json.dumps(
+            {"commitizen": {"strict_config": True, "tga_format": "v$version"}}
+        )
+        path = tmp_path / ".cz.json"
+        with pytest.raises(InvalidConfigurationError, match="tga_format"):
+            JsonConfig(data=data, path=path)
+
+    def test_yaml_strict_config_raises_on_unknown_key(self, tmp_path):
+        data = "commitizen:\n  strict_config: true\n  tga_format: v$version\n"
+        path = tmp_path / ".cz.yaml"
+        with pytest.raises(InvalidConfigurationError, match="tga_format"):
+            YAMLConfig(data=data, path=path)
+
+    def test_strict_config_off_by_default_ignores_unknown_key(self, tmp_path):
+        data = """
+[tool.commitizen]
+tga_format = "v$version"
+"""
+        path = tmp_path / "pyproject.toml"
+        cfg = TomlConfig(data=data, path=path)
+        assert cfg.settings.get("strict_config") is False
+
+    def test_strict_config_allows_all_known_keys(self, tmp_path):
+        data = """
+[tool.commitizen]
+strict_config = true
+name = "cz_conventional_commits"
+tag_format = "v$version"
+"""
+        path = tmp_path / "pyproject.toml"
+        cfg = TomlConfig(data=data, path=path)
+        assert cfg.settings["strict_config"] is True
+        assert cfg.settings["tag_format"] == "v$version"
+
+    def test_strict_config_error_lists_all_unknown_keys(self, tmp_path):
+        data = """
+[tool.commitizen]
+strict_config = true
+typo_one = "foo"
+typo_two = "bar"
+"""
+        path = tmp_path / "pyproject.toml"
+        with pytest.raises(InvalidConfigurationError) as excinfo:
+            TomlConfig(data=data, path=path)
+        assert "typo_one" in str(excinfo.value)
+        assert "typo_two" in str(excinfo.value)

@@ -65,6 +65,6 @@ class TomlConfig(BaseConfig):
             raise InvalidConfigurationError(f"Failed to parse {self.path}: {e}")
 
         try:
-            self.settings.update(doc["tool"]["commitizen"])  # type: ignore[index,typeddict-item] # TODO: fix this
+            self.update(doc["tool"]["commitizen"])  # type: ignore[index,arg-type]
         except exceptions.NonExistentKey:
             pass
