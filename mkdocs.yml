@@ -113,3 +113,57 @@ markdown_extensions:
 plugins:
   - search
   - git-revision-date-localized
+  - llmstxt:
+      full_output: llms-full.txt
+      markdown_description: >
+        Commitizen is a release management tool for teams that enforce
+        Conventional Commits, automate semantic versioning bumps, and
+        generate changelogs. Start with the introduction for installation
+        and core workflows, then use the command and configuration sections
+        for day-to-day usage. Tutorials cover CI integration, commit hooks,
+        monorepos, and release automation.
+      sections:
+        Overview:
+          - README.md
+          - faq.md: Answers to common setup and usage questions.
+          - exit_codes.md: Reference for Commitizen CLI exit codes and failure modes.
+        Commands:
+          - commands/init.md: Initialize Commitizen configuration for a project.
+          - commands/commit.md: Create standardized commits with the interactive prompt.
+          - commands/bump.md: Calculate next version, update version files, and manage release tagging.
+          - commands/check.md: Validate commit messages against the configured convention.
+          - commands/changelog.md: Generate changelog entries from commits and tags.
+          - commands/example.md: Show example commit messages for the configured rules.
+          - commands/info.md: Show information about the active configuration.
+          - commands/ls.md: List supported commit message choices for the active rules.
+          - commands/schema.md: Show the commit message schema for the active convention.
+          - commands/version.md: Show the installed or project version.
+        Configuration:
+          - config/configuration_file.md: Where configuration can live and how it is loaded.
+          - config/option.md: Global options such as commit rules, version, and style.
+          - config/bump.md: Version bumping, tag creation, and version-file update settings.
+          - config/commit.md: Settings for interactive commit creation and prompts.
+          - config/check.md: Settings for commit message validation.
+          - config/changelog.md: Settings for changelog generation and formatting.
+          - config/version_provider.md: How Commitizen reads and writes versions for different project types.
+        Advanced Customization:
+          - customization/config_file.md: Define custom commit and bump rules in project configuration.
+          - customization/python_class.md: Implement a Python class for fully custom behavior.
+          - customization/changelog_template.md: Customize changelog output templates.
+        Tutorials:
+          - tutorials/writing_commits.md: Writing effective Conventional Commits.
+          - tutorials/tag_format.md: Configure and work with custom Git tag formats.
+          - tutorials/auto_check.md: Enforce commit message checks automatically.
+          - tutorials/auto_prepare_commit_message.md: Pre-fill commit messages before editing.
+          - tutorials/gitlab_ci.md: Automate release workflows in GitLab CI.
+          - tutorials/github_actions.md: Automate release workflows in GitHub Actions.
+          - tutorials/jenkins_pipeline.md: Integrate Commitizen into Jenkins pipelines.
+          - tutorials/dev_releases.md: Manage development and prerelease versioning.
+          - tutorials/monorepo_guidance.md: Configure Commitizen for monorepos.
+        Third-Party Plugins:
+          - third-party-plugins/about.md: Overview of the plugin ecosystem.
+          - third-party-plugins/*.md
+        Contributing:
+          - contributing/contributing_tldr.md: Fast path for setting up a local dev workflow.
+          - contributing/contributing.md: Full contributor guide.
+          - contributing/pull_request.md: Expectations for preparing and submitting PRs.
