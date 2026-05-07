@@ -1,0 +1,41 @@
+name: "Validate PR Description"
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, ready_for_review]
+
+jobs:
+  validate-pr:
+    if: >-
+      !github.event.pull_request.draft &&
+      github.actor != 'dependabot[bot]' &&
+      github.actor != 'renovate[bot]'
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR description sections
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const body = context.payload.pull_request.body || "";
+
+            const required = [
+              { header: /^##\s+Description\s*$/m, name: "Description" },
+              { header: /^##\s+Checklist\s*$/m, name: "Checklist" },
+              { header: /^##\s+Expected Behavior\s*$/m, name: "Expected Behavior" },
+              { header: /^##\s+Steps to Test This Pull Request\s*$/m, name: "Steps to Test This Pull Request" },
+            ];
+
+            const missing = required
+              .filter(s => !s.header.test(body))
+              .map(s => s.name);
+
+            if (missing.length > 0) {
+              core.setFailed(
+                `PR description is missing required sections: ${missing.join(", ")}.\n` +
+                `Please use the PR template from .github/pull_request_template.md.`
+              );
+            } else {
+              core.info("All required PR description sections are present.");
+            }
