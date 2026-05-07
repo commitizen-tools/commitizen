@@ -1,6 +1,6 @@
 # Commitizen
 
-> Commitizen is a release management tool for teams that enforces Conventional Commits, automates semantic versioning bumps, and generates changelogs.
+> Commitizen is a release management tool for teams that enforce Conventional Commits, automates semantic versioning bumps, and generates changelogs.
 
 This index highlights the most useful pages from the Commitizen documentation site for coding agents and other automated tools. Start with the introduction for installation and core workflows, then use the command and configuration sections for day-to-day usage. Tutorials cover CI integration, commit hooks, monorepos, and release automation.
 
@@ -45,7 +45,7 @@ This index highlights the most useful pages from the Commitizen documentation si
 ## Tutorials
 
 - [Commit Message Best Practices](https://commitizen-tools.github.io/commitizen/tutorials/writing_commits/): Writing effective Conventional Commits with Commitizen.
-- [Managing tags formats](https://commitizen-tools.github.io/commitizen/tutorials/tag_format/): Configure and work with custom Git tag formats.
+- [Managing tag formats](https://commitizen-tools.github.io/commitizen/tutorials/tag_format/): Configure and work with custom Git tag formats.
 - [Auto check commits](https://commitizen-tools.github.io/commitizen/tutorials/auto_check/): Enforce commit message checks automatically before commits are created.
 - [Auto prepare commit message](https://commitizen-tools.github.io/commitizen/tutorials/auto_prepare_commit_message/): Pre-fill commit messages before editing or validating them.
 - [GitLab CI](https://commitizen-tools.github.io/commitizen/tutorials/gitlab_ci/): Automate release workflows in GitLab CI.
