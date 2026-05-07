@@ -50,7 +50,7 @@ class BaseConfig:
         raise NotImplementedError()
 
     def update(self, data: Settings) -> None:
-        if self._settings.get("strict_config"):
+        if self._settings.get("strict_config") or data.get("strict_config"):
             unknown = sorted(set(data) - _VALID_CONFIG_KEYS)
             if unknown:
                 raise InvalidConfigurationError(
