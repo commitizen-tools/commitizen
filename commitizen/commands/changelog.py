@@ -31,17 +31,17 @@ class ChangelogArgs(TypedDict, total=False):
     change_type_order: list[str]
     current_version: str
     dry_run: bool
-    file_name: str
+    file_name: str | None
     incremental: bool
     merge_prerelease: bool
     rev_range: str
-    start_rev: str
-    tag_format: str
+    start_rev: str | None
+    tag_format: str | None
     unreleased_version: str | None
-    version_scheme: str
-    template: str
-    extras: dict[str, Any]
-    export_template: str
+    version_scheme: str | None
+    template: str | None
+    extras: dict[str, Any] | None
+    export_template: str | None
     during_version_bump: bool | None
     allow_no_commit: bool | None  # Internal-only when invoked by bump.
 
