@@ -97,7 +97,7 @@ dev = [
     "tox-uv",
 ]
 
-base = ["poethepoet>=0.34.0"]
+base = ["mkdocs-llmstxt>=0.5.0", "poethepoet>=0.34.0"]
 
 test = [
     "pytest>=9",
