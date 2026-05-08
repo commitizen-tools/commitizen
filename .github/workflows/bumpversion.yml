@@ -38,18 +38,29 @@ jobs:
           git-user-email: "${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
       - id: bump-version
         run: |
-          cz bump --yes
+          old_sha="$(git rev-parse HEAD)"
+          cz bump --yes --no-raise 21
+
+          if [ "$(git rev-parse HEAD)" = "$old_sha" ]; then
+            echo "No bump-eligible commits found, skipping release."
+            echo "bumped=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "bumped=true" >> $GITHUB_OUTPUT
           git push --follow-tags
           new_version="$(cz version -p)"
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
           new_version_tag="$(cz version -p --tag)"
           echo "new_version_tag=$new_version_tag" >> $GITHUB_OUTPUT
       - name: Build changelog for Release
+        if: steps.bump-version.outputs.bumped == 'true'
         env:
           NEW_VERSION: ${{ steps.bump-version.outputs.new_version }}
         run: |
           cz changelog --dry-run "${NEW_VERSION}" > .changelog.md
       - name: Release
+        if: steps.bump-version.outputs.bumped == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           NEW_VERSION_TAG: ${{ steps.bump-version.outputs.new_version_tag }}
