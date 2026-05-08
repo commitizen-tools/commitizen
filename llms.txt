@@ -1,0 +1,73 @@
+# Commitizen
+
+> commit rules, semantic version, conventional commits
+
+Commitizen is a release management tool for teams that enforce Conventional Commits, automate semantic versioning bumps, and generate changelogs. Start with the introduction for installation and core workflows, then use the command and configuration sections for day-to-day usage. Tutorials cover CI integration, commit hooks, monorepos, and release automation.
+
+
+## Overview
+
+- [Introduction](https://commitizen-tools.github.io/commitizen/index.md)
+- [FAQ](https://commitizen-tools.github.io/commitizen/faq/index.md): Answers to common setup and usage questions.
+- [Exit Codes](https://commitizen-tools.github.io/commitizen/exit_codes/index.md): Reference for Commitizen CLI exit codes and failure modes.
+
+## Commands
+
+- [init](https://commitizen-tools.github.io/commitizen/commands/init/index.md): Initialize Commitizen configuration for a project.
+- [commit](https://commitizen-tools.github.io/commitizen/commands/commit/index.md): Create standardized commits with the interactive prompt.
+- [bump](https://commitizen-tools.github.io/commitizen/commands/bump/index.md): Calculate next version, update version files, and manage release tagging.
+- [check](https://commitizen-tools.github.io/commitizen/commands/check/index.md): Validate commit messages against the configured convention.
+- [changelog](https://commitizen-tools.github.io/commitizen/commands/changelog/index.md): Generate changelog entries from commits and tags.
+- [example](https://commitizen-tools.github.io/commitizen/commands/example/index.md): Show example commit messages for the configured rules.
+- [info](https://commitizen-tools.github.io/commitizen/commands/info/index.md): Show information about the active configuration.
+- [ls](https://commitizen-tools.github.io/commitizen/commands/ls/index.md): List supported commit message choices for the active rules.
+- [schema](https://commitizen-tools.github.io/commitizen/commands/schema/index.md): Show the commit message schema for the active convention.
+- [version](https://commitizen-tools.github.io/commitizen/commands/version/index.md): Show the installed or project version.
+
+## Configuration
+
+- [Configuration File](https://commitizen-tools.github.io/commitizen/config/configuration_file/index.md): Where configuration can live and how it is loaded.
+- [General](https://commitizen-tools.github.io/commitizen/config/option/index.md): Global options such as commit rules, version, and style.
+- [bump](https://commitizen-tools.github.io/commitizen/config/bump/index.md): Version bumping, tag creation, and version-file update settings.
+- [commit](https://commitizen-tools.github.io/commitizen/config/commit/index.md): Settings for interactive commit creation and prompts.
+- [check](https://commitizen-tools.github.io/commitizen/config/check/index.md): Settings for commit message validation.
+- [changelog](https://commitizen-tools.github.io/commitizen/config/changelog/index.md): Settings for changelog generation and formatting.
+- [Version Provider](https://commitizen-tools.github.io/commitizen/config/version_provider/index.md): How Commitizen reads and writes versions for different project types.
+
+## Advanced Customization
+
+- [Customize via config file](https://commitizen-tools.github.io/commitizen/customization/config_file/index.md): Define custom commit and bump rules in project configuration.
+- [Customized Python Class](https://commitizen-tools.github.io/commitizen/customization/python_class/index.md): Implement a Python class for fully custom behavior.
+- [Changelog Template](https://commitizen-tools.github.io/commitizen/customization/changelog_template/index.md): Customize changelog output templates.
+
+## Tutorials
+
+- [Commit Message Best Practices](https://commitizen-tools.github.io/commitizen/tutorials/writing_commits/index.md): Writing effective Conventional Commits.
+- [Managing tags formats](https://commitizen-tools.github.io/commitizen/tutorials/tag_format/index.md): Configure and work with custom Git tag formats.
+- [Auto check commits](https://commitizen-tools.github.io/commitizen/tutorials/auto_check/index.md): Enforce commit message checks automatically.
+- [Auto prepare commit message](https://commitizen-tools.github.io/commitizen/tutorials/auto_prepare_commit_message/index.md): Pre-fill commit messages before editing.
+- [GitLab CI](https://commitizen-tools.github.io/commitizen/tutorials/gitlab_ci/index.md): Automate release workflows in GitLab CI.
+- [GitHub Actions](https://commitizen-tools.github.io/commitizen/tutorials/github_actions/index.md): Automate release workflows in GitHub Actions.
+- [Jenkins pipeline](https://commitizen-tools.github.io/commitizen/tutorials/jenkins_pipeline/index.md): Integrate Commitizen into Jenkins pipelines.
+- [Developmental releases](https://commitizen-tools.github.io/commitizen/tutorials/dev_releases/index.md): Manage development and prerelease versioning.
+- [Monorepo support](https://commitizen-tools.github.io/commitizen/tutorials/monorepo_guidance/index.md): Configure Commitizen for monorepos.
+
+## Third-Party Plugins
+
+- [About](https://commitizen-tools.github.io/commitizen/third-party-plugins/about/index.md)
+- [commitizen-deno-provider](https://commitizen-tools.github.io/commitizen/third-party-plugins/commitizen-deno-provider/index.md)
+- [Commitizen emoji (Unmaintained)](https://commitizen-tools.github.io/commitizen/third-party-plugins/commitizen-emoji/index.md)
+- [Conventional JIRA](https://commitizen-tools.github.io/commitizen/third-party-plugins/conventional-jira/index.md)
+- [cz-ai](https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-ai/index.md)
+- [cz-conventional-gitmoji](https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-conventional-gitmoji/index.md)
+- [cz-emoji](https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-emoji/index.md)
+- [Conventional Legacy (cz_legacy)](https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-legacy/index.md)
+- [cz-path](https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-path/index.md)
+- [GitHub JIRA Conventional](https://commitizen-tools.github.io/commitizen/third-party-plugins/github-jira-conventional/index.md)
+
+## Contributing
+
+- [Contributing TL;DR](https://commitizen-tools.github.io/commitizen/contributing/contributing_tldr/index.md): Fast path for setting up a local dev workflow.
+- [Contributing to Commitizen](https://commitizen-tools.github.io/commitizen/contributing/contributing/index.md): Full contributor guide.
+- [Pull Request Guidelines](https://commitizen-tools.github.io/commitizen/contributing/pull_request/index.md): Expectations for preparing and submitting PRs.
+

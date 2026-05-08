@@ -1,0 +1,187 @@
+## About
+
+Generates a changelog following the committing rules established.
+
+When changelog generation is triggered by `cz bump --allow-no-commit` (with `--changelog` or `update_changelog_on_bump = true`), Commitizen still creates a release entry even when no commits are found in the selected revision range.
+
+Tip
+
+To create the changelog automatically on bump, add the setting [update_changelog_on_bump](https://commitizen-tools.github.io/commitizen/config/bump/#update_changelog_on_bump)
+
+```
+[tool.commitizen]
+update_changelog_on_bump = true
+```
+
+## Usage
+
+## Examples
+
+```
+# Generate full changelog
+cz changelog
+
+# Or use the alias
+cz ch
+
+# Get the changelog for the given version
+cz changelog 0.3.0 --dry-run
+
+# Get the changelog for the given version range
+cz changelog 0.3.0..0.4.0 --dry-run
+```
+
+## Constraints
+
+Changelog generation is constrained only to **markdown** files.
+
+## Description
+
+These are the variables used by the changelog generator.
+
+```
+# <version> (<date>)
+
+## <change_type>
+
+- **<scope>**: <message>
+```
+
+Creates a full block like above per version found in the tags, and a list of the commits found. The `change_type` and `scope` are optional and don't need to be provided, but if your regex parses them, they will be rendered.
+
+The format followed by the changelog is from [keep a changelog](https://keepachangelog.com/) and the following variables are expected:
+
+| Variable      | Description                                                                                    | Source         |
+| ------------- | ---------------------------------------------------------------------------------------------- | -------------- |
+| `version`     | Version number which should follow [semver](https://semver.org/)                               | `tags`         |
+| `date`        | Date when the tag was created                                                                  | `tags`         |
+| `change_type` | The group where the commit belongs to, this is optional. Example: fix                          | `commit regex` |
+| `message`     | Information extracted from the commit message                                                  | `commit regex` |
+| `scope`       | Contextual information. Should be parsed using the regex from the message, it will be **bold** | `commit regex` |
+| `breaking`    | Whether it is a breaking change or not                                                         | `commit regex` |
+
+Note
+
+`message` is the only variable required to be parsed by the regex.
+
+## Command line options
+
+### `--extras`
+
+Provide your own changelog extra variables by using the `extras` settings or the `--extra/-e` parameter.
+
+```
+cz changelog --extra key=value -e short="quoted value"
+```
+
+### `--file-name`
+
+Specify the name of the output file. Note that changelog generation only works with Markdown files.
+
+```
+cz changelog --file-name="CHANGES.md"
+```
+
+This value can be updated in the configuration file with the key `changelog_file` under `tool.commitizen`.
+
+```
+[tool.commitizen]
+# ...
+changelog_file = "CHANGES.md"
+```
+
+### `--incremental`
+
+Build from the latest version found in changelog.
+
+Benefits:
+
+- Useful if you have an existing changelog and want to use commitizen to extend it.
+- Update unreleased area
+- Allows users to manually edit the changelog without it being completely rewritten.
+
+```
+cz changelog --incremental
+```
+
+This flag can be set in the configuration file with the key `changelog_incremental` under `tool.commitizen`.
+
+```
+[tool.commitizen]
+# ...
+changelog_incremental = true
+```
+
+### `--start-rev`
+
+Start from a given git rev to generate the changelog. Commits before that rev will not be considered. This is especially useful for long-running projects adopting conventional commits, where old commit messages might fail to be parsed for changelog generation.
+
+```
+cz changelog --start-rev="v0.2.0"
+```
+
+This value can be set in the configuration file with the key `changelog_start_rev` under `tool.commitizen`
+
+```
+[tool.commitizen]
+# ...
+changelog_start_rev = "v0.2.0"
+```
+
+### `--merge-prerelease`
+
+Collects changes from prereleases into the next non-prerelease version. If you have a prerelease version followed by a normal release, the changelog will show the prerelease changes as part of the normal release. If not set, prereleases will be included as separate entries in the changelog.
+
+```
+cz changelog --merge-prerelease
+```
+
+This flag can be set in the configuration file with the key `changelog_merge_prerelease` under `tool.commitizen`
+
+```
+[tool.commitizen]
+# ...
+changelog_merge_prerelease = true
+```
+
+### `--template`
+
+Provide your own changelog Jinja template by using the `template` settings or the `--template` parameter.
+
+```
+cz changelog --template="path/to/template.j2"
+```
+
+### `--unreleased-version`
+
+There is usually a chicken-and-egg situation when automatically bumping the version and creating the changelog:
+
+- If you bump the version first, you have no changelog yet, and it won't be included in the release of the created version.
+- If you create the changelog before bumping the version, you usually don't have the latest tag, and the *Unreleased* title appears.
+
+By using `--unreleased-version`, you can prevent this situation.
+
+Before bumping you can run:
+
+```
+cz changelog --unreleased-version="v1.0.0"
+```
+
+Remember to use the tag format instead of the raw version number.
+
+For example, if your tag format includes a `v` prefix (e.g., `v1.0.0`), use that format. If your tag is the same as the raw version (e.g., `1.0.0`), use the raw version.
+
+Alternatively, you can directly bump the version and create the changelog by running:
+
+```
+cz bump --changelog
+```
+
+## Hooks
+
+Supported hook methods:
+
+- Per parsed message: Useful to add links to commits or issues
+- End of changelog generation: Useful to send Slack or chat messages, or notify another department
+
+Read more about hooks in the [customization page](https://commitizen-tools.github.io/commitizen/customization/config_file/index.md)
