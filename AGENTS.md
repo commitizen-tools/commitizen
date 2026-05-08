@@ -22,13 +22,17 @@ Follow these instructions in addition to any higher-level system or tool rules.
 - **Preserve public behavior and CLI UX** — no breaking changes to APIs, CLI flags, or exit codes unless explicitly requested.
 - **Update or add tests/docs** when you change user-facing behavior.
 - **Commit messages** must follow [Conventional Commits](https://www.conventionalcommits.org/) (enforced by commitizen itself).
+- **Pull requests** must follow the [Pull Request Guidelines](docs/contributing/pull_request.md) and the template in `.github/pull_request_template.md`.
 
 ## Setup and Validation
+
+> Full contributor guidelines (prerequisites, workflow, PR process): [`docs/contributing/contributing.md`](docs/contributing/contributing.md).
 
 ### Bootstrap
 
 ```bash
 uv sync --frozen --group base --group test --group linters
+uv run poe setup-pre-commit   # install git hooks (uses prek, a pre-commit runner)
 ```
 
 ### Local commands
@@ -44,7 +48,7 @@ Always run at least `uv run ruff check --fix . && uv run ruff format .` before p
 ### CI pipeline
 
 - CI runs `poe ci` on a matrix of Python 3.10–3.14 × ubuntu/macos/windows.
-- Pre-commit hooks are defined in `.pre-commit-config.yaml` and run via `prek`.
+- Pre-commit hooks are defined in `.pre-commit-config.yaml` and run via [`prek`](https://github.com/j178/prek) (a `pre-commit` compatible runner).
 - The matrix is **fail-fast**: inspect the earliest failing job that completed; others are cancelled.
 
 ### Common CI failure patterns
