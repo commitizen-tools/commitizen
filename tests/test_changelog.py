@@ -1651,35 +1651,69 @@ def test_tags_rules_get_version_tags(capsys: pytest.CaptureFixture):
 
 
 @pytest.mark.usefixtures("in_repo_root")
-def test_changelog_file_name_from_args_and_config():
+@pytest.mark.parametrize(
+    ("args_file_name", "config_file_name", "config_path", "expected"),
+    [
+        # CLI-provided --file-name: must be used as-is (relative to cwd).
+        # The config-dir anchor must NOT be applied.
+        (
+            "CUSTOM.md",
+            "CHANGELOG.md",
+            Path("/my/project/pyproject.toml"),
+            "CUSTOM.md",
+        ),
+        # Config-provided changelog_file: must be resolved relative to the
+        # config file's parent directory, not the cwd.
+        (
+            None,
+            "CHANGELOG.md",
+            Path("/my/project/pyproject.toml"),
+            Path("/my/project/CHANGELOG.md").as_posix(),
+        ),
+        # Nested config-provided path: still resolved relative to config dir.
+        (
+            None,
+            "docs/CHANGELOG.md",
+            Path("/my/project/pyproject.toml"),
+            Path("/my/project/docs/CHANGELOG.md").as_posix(),
+        ),
+        # CLI-provided nested path: used as-is (relative to cwd).
+        (
+            "changelog/CHANGES.rst",
+            "CHANGELOG.md",
+            Path("/my/project/pyproject.toml"),
+            "changelog/CHANGES.rst",
+        ),
+    ],
+)
+def test_changelog_file_name_resolution(
+    args_file_name: str | None,
+    config_file_name: str,
+    config_path: Path,
+    expected: str,
+):
+    """CLI --file-name is relative to cwd; config changelog_file is relative to
+    the config file's directory.  Fixes https://github.com/commitizen-tools/commitizen/issues/1411
+    """
     mock_config = Mock(spec=BaseConfig)
     mock_path = Mock(spec=Path)
-    mock_path.parent = Path("/my/project")
+    mock_path.parent = config_path.parent
     mock_config.path = mock_path
     mock_config.settings = {
         "name": "cz_conventional_commits",
-        "changelog_file": "CHANGELOG.md",
+        "changelog_file": config_file_name,
         "encoding": "utf-8",
-        "changelog_start_rev": "v1.0.0",
+        "changelog_start_rev": None,
         "tag_format": "$version",
         "legacy_tag_formats": [],
         "ignored_tag_formats": [],
-        "incremental": True,
-        "changelog_merge_prerelease": True,
+        "changelog_incremental": False,
+        "changelog_merge_prerelease": False,
     }
 
-    args = {
-        "file_name": "CUSTOM.md",
-        "unreleased_version": "1.0.1",
-    }
-    changelog = Changelog(mock_config, args)
-    assert (
-        Path(changelog.file_name).resolve() == Path("/my/project/CUSTOM.md").resolve()
-    )
+    args: dict = {"unreleased_version": "1.0.1"}
+    if args_file_name is not None:
+        args["file_name"] = args_file_name
 
-    args = {"unreleased_version": "1.0.1"}
-    changelog = Changelog(mock_config, args)
-    assert (
-        Path(changelog.file_name).resolve()
-        == Path("/my/project/CHANGELOG.md").resolve()
-    )
+    cl = Changelog(mock_config, args)
+    assert cl.file_name == expected
