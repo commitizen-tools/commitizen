@@ -98,8 +98,8 @@ def update_version_in_files(
                         # certainly an inconsistent source we'd otherwise miss
                         # silently (#595).
                         bumped_line = line
-                        if _LIKELY_VERSION_VALUE_RE.search(line):
-                            inconsistent_lines.append((lineno, line.rstrip()))
+                        if check_consistency and _LIKELY_VERSION_VALUE_RE.search(line):
+                            inconsistent_lines.append((lineno, line.rstrip("\r\n")))
                 else:
                     bumped_line = line
 
