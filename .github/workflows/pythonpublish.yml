@@ -23,10 +23,19 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - name: Validate dispatch ref is a tag
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          TAG: ${{ github.event.inputs.ref }}
+        run: |
+          if ! git ls-remote --tags "https://github.com/${GITHUB_REPOSITORY}" "refs/tags/${TAG}" | grep -q .; then
+            echo "::error::Dispatch ref '${TAG}' is not an existing tag"
+            exit 1
+          fi
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          ref: ${{ inputs.ref || github.ref_name }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && format('refs/tags/{0}', github.event.inputs.ref) || github.ref }}
       - name: Set up Python
         uses: astral-sh/setup-uv@v7
       - name: Build
