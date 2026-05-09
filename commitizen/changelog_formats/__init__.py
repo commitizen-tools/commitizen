@@ -67,7 +67,9 @@ def get_changelog_format(
     """
     Get a format from its name
 
-    :raises FormatUnknown: if a non-empty name is provided but cannot be found in the known formats
+    :raises ChangelogFormatUnknown: if a non-empty name is provided but cannot
+        be found in the known formats, or if the filename's extension cannot
+        be matched to a known format and no ``changelog_format`` is set.
     """
     name: str | None = config.settings.get("changelog_format")
     format = (
@@ -75,7 +77,16 @@ def get_changelog_format(
     )
 
     if not format:
-        raise ChangelogFormatUnknown(f"Unknown changelog format '{name}'")
+        known = ", ".join(sorted(KNOWN_CHANGELOG_FORMATS)) or "(none registered)"
+        if name:
+            raise ChangelogFormatUnknown(
+                f"Unknown changelog format '{name}'. Known formats: {known}."
+            )
+        raise ChangelogFormatUnknown(
+            "Cannot infer changelog format from filename "
+            f"'{filename}'. Set the `changelog_format` setting "
+            f"explicitly. Known formats: {known}."
+        )
 
     return format(config)
 
