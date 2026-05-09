@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from pathlib import Path
 from typing import Any
 
@@ -514,7 +515,7 @@ class TestYamlConfig:
 
         rewritten = path.read_text(encoding="utf-8")
         assert "🚀" in rewritten
-        assert "\\U0001F680" not in rewritten
+        assert not re.search(r"\\U[0-9a-fA-F]{8}", rewritten)
 
     def test_init_empty_config_content_passes_allow_unicode(
         self, tmp_path, config_file, mocker

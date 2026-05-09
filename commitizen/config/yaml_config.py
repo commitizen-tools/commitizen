@@ -27,11 +27,10 @@ class YAMLConfig(BaseConfig):
         self._parse_setting(data)
 
     def init_empty_config_content(self) -> None:
-        with smart_open(
-            self.path, "a", encoding=self._settings["encoding"]
-        ) as json_file:
+        # Write YAML as UTF-8; YAML 1.2 requires UTF-8/16/32.
+        with smart_open(self.path, "a", encoding="utf-8") as yaml_file:
             yaml.dump(
-                {"commitizen": {}}, json_file, explicit_start=True, allow_unicode=True
+                {"commitizen": {}}, yaml_file, explicit_start=True, allow_unicode=True
             )
 
     def contains_commitizen_section(self) -> bool:
@@ -62,9 +61,8 @@ class YAMLConfig(BaseConfig):
             config_doc = yaml.load(yaml_file, Loader=yaml.FullLoader)
 
         config_doc["commitizen"][key] = value
-        with smart_open(
-            self.path, "w", encoding=self._settings["encoding"]
-        ) as yaml_file:
+        # Write YAML as UTF-8; YAML 1.2 requires UTF-8/16/32.
+        with smart_open(self.path, "w", encoding="utf-8") as yaml_file:
             yaml.dump(config_doc, yaml_file, explicit_start=True, allow_unicode=True)
 
         return self
