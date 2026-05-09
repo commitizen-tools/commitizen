@@ -2,7 +2,6 @@
 name: commitizen
 description: Use this skill for tasks involving Conventional Commits, commit message validation, Commitizen configuration, semantic version bumps, changelog generation, or CI/release automation with the Commitizen CLI.
 license: MIT
-compatibility: Git repository with Python and Commitizen available as `cz` or runnable from source. Network access is optional and mainly relevant for CI or release integrations.
 metadata:
   project: commitizen-tools/commitizen
   docs: https://commitizen-tools.github.io/commitizen/
@@ -45,24 +44,6 @@ Commitizen is a CLI for enforcing Conventional Commits, automating version bumps
 - `cz changelog` generates Markdown changelogs.
 - `cz commit` supports `--dry-run` and `--write-message-to-file`.
 - `cz check` can validate a literal message, a commit-msg file, or a git revision range.
-
-## Suggested references
-
-- Command docs:
-  - `docs/commands/commit.md`
-  - `docs/commands/bump.md`
-  - `docs/commands/changelog.md`
-  - `docs/commands/check.md`
-  - `docs/commands/init.md`
-- Config docs:
-  - `docs/config/configuration_file.md`
-  - `docs/config/option.md`
-  - `docs/config/bump.md`
-- Automation docs:
-  - `docs/tutorials/github_actions.md`
-  - `docs/tutorials/gitlab_ci.md`
-- Error handling:
-  - `docs/exit_codes.md`
 
 ## Examples
 
