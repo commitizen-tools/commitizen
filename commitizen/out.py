@@ -6,19 +6,20 @@ from termcolor import colored
 
 
 def _ensure_utf8_stdout(stream: object) -> None:
-    """Reconfigure ``stream`` to UTF-8 if its current encoding can't represent
-    the unicode characters commitizen emits (e.g. ``\U0001f680`` 🚀, the
-    ``\u2019`` typographic apostrophe).
+    """Reconfigure non-UTF-8 stdout streams to emit UTF-8 bytes.
 
-    Without this, ``print`` raises ``UnicodeEncodeError`` mid-output on:
+    The primary fix is switching stdout from locale-dependent encodings to
+    UTF-8 so normal Unicode output (for example, ``\U0001f680`` 🚀 or the
+    ``\u2019`` typographic apostrophe) does not raise ``UnicodeEncodeError`` on:
 
     * Windows ``cmd.exe`` defaulting to ``cp1252`` (the historical case),
     * Linux/macOS terminals with a non-UTF-8 ``LANG`` such as
       ``de_CH.ISO8859-1`` (#956).
 
-    ``errors="replace"`` is used as a safety net for terminals that
-    genuinely can't render the bytes, so commitizen falls back to a
-    placeholder character instead of crashing.
+    ``errors="replace"`` is a defensive fallback for genuinely
+    un-encodable input, such as lone surrogates produced by buggy callers.
+    It does not make terminals render bytes; rendering is handled after the
+    encoder has produced UTF-8 bytes.
     """
     if not isinstance(stream, io.TextIOWrapper):
         return

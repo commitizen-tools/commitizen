@@ -1,11 +1,11 @@
 """Tests for ``commitizen.out``.
 
 Mostly focused on the stdout-encoding helper introduced for #956: the
-function must reconfigure non-UTF-8 streams to UTF-8 with a permissive
-``errors="replace"`` strategy so commitizen output (emoji, typographic
-quotes) doesn't crash with ``UnicodeEncodeError`` on terminals using
-locale-dependent encodings such as ``cp1252`` (Windows) or
-``ISO8859-1`` (Linux/macOS).
+function must reconfigure non-UTF-8 streams to UTF-8 so commitizen output
+(emoji, typographic quotes) doesn't crash with ``UnicodeEncodeError`` on
+terminals using locale-dependent encodings such as ``cp1252`` (Windows) or
+``ISO8859-1`` (Linux/macOS). The helper also sets ``errors="replace"`` as a
+fallback for genuinely un-encodable input such as lone surrogates.
 """
 
 from __future__ import annotations
@@ -24,9 +24,12 @@ class _StubStream(io.TextIOWrapper):
     """
 
     reconfigure_calls: list[dict[str, Any]]
+    output: io.BytesIO
 
     def __init__(self, encoding: str) -> None:
-        super().__init__(io.BytesIO(), encoding=encoding)
+        output = io.BytesIO()
+        super().__init__(output, encoding=encoding)
+        self.output = output
         self.reconfigure_calls = []
 
     def reconfigure(self, **kwargs: Any) -> None:
@@ -78,8 +81,18 @@ def test_ensure_utf8_stdout_after_reconfigure_can_emit_emoji():
     stream = _StubStream(encoding="latin-1")
     _ensure_utf8_stdout(stream)
 
-    # Should not raise UnicodeEncodeError; ``errors="replace"`` lets
-    # genuinely-unrenderable bytes fall through as ``?`` instead of
-    # crashing the whole command.
+    # The primary regression guard: switching to UTF-8 means normal Unicode
+    # output, such as emoji, no longer raises UnicodeEncodeError.
     stream.write("Configuration complete \U0001f680")
     stream.flush()
+
+
+def test_ensure_utf8_stdout_replaces_lone_surrogate_on_write():
+    """``errors="replace"`` handles genuinely un-encodable input."""
+    stream = _StubStream(encoding="latin-1")
+    _ensure_utf8_stdout(stream)
+
+    stream.write("ok\udc00ok")
+    stream.flush()
+
+    assert stream.output.getvalue() == b"ok?ok"
