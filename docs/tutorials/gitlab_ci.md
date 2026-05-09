@@ -128,19 +128,25 @@ After merging the new changes into master, we have the final result:
 
 If you cannot or do not want to manage SSH keys (for example, when your runners do not have an SSH client, or when SSH egress is blocked), you can let the runner push back over `HTTPS` using a [GitLab Project Access Token](https://docs.gitlab.com/user/project/settings/project_access_tokens/). This keeps everything inside the GitLab UI — no key generation, no deploy keys.
 
+!!! note "Availability on GitLab.com"
+    On **GitLab.com**, Project Access Tokens require a **Premium or Ultimate** subscription. They are available with any license on GitLab Self-Managed and GitLab Dedicated. If you are on the Free tier of GitLab.com, use Option A (SSH key) or a Personal Access Token instead.
+
 !!! note "Group / personal tokens"
     The same approach works with [Group Access Tokens](https://docs.gitlab.com/user/group/settings/group_access_tokens/) (handy when several projects share automation) and [Personal Access Tokens](https://docs.gitlab.com/user/profile/personal_access_tokens/). Project Access Tokens are usually preferred because they are scoped to a single project.
 
 !!! warning "`CI_JOB_TOKEN` is not enough"
-    GitLab's built-in `CI_JOB_TOKEN` cannot push to the repository. You need a Project (or Group / Personal) Access Token with at least the `Developer` role and the `write_repository` scope.
+    GitLab's built-in `CI_JOB_TOKEN` can clone/fetch the repository, but it cannot `git push`. You need a Project (or Group / Personal) Access Token with the `write_repository` scope and a role that can push to your protected branch (typically `Developer` or higher).
 
 #### Step 1: Create a Project Access Token
+
+!!! info "Prerequisite"
+    You need at least the **Maintainer** role on the project to open `Settings > Access Tokens` and create a token. The `Developer` role mentioned in step 2 below is the role *assigned to the bot user* (i.e. the token's effective permission level when pushing), **not** the role you yourself need to create the token.
 
 1. In your GitLab project, go to `Settings > Access Tokens`.
 2. Create a new token:
     - **Name**: e.g. `commitizen-bump`.
-    - **Role**: `Developer` (or higher) — required to push to protected branches and tags.
-    - **Scopes**: tick `write_repository`. `read_repository` is implied.
+    - **Role**: `Developer` (or higher) — this is the bot user's role and must be allowed to push to your protected branches and tags.
+    - **Scopes**: tick `write_repository` (it grants both pull and push; `read_repository` does not need to be ticked separately).
     - **Expiration date**: pick a date that suits your rotation policy.
 3. Click `Create project access token` and **copy the token immediately** — GitLab only shows it once.
 
@@ -169,9 +175,15 @@ The pipeline below mirrors the SSH example but authenticates over HTTPS using th
 ```yaml
 image: python:3.10
 
-variables:
-  # Use the project URL exposed by GitLab so this works for any fork/mirror.
-  REPO_URL: "https://oauth2:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git"
+# Run a single pipeline per push or merge request to avoid duplicate pipelines
+# when a branch with an open MR is pushed.
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
 
 stages:
   - test
@@ -185,7 +197,7 @@ test:
     - pip install -e .
     - python -m pytest
   rules:
-    # Run on every branch and merge request, but skip the bump commit itself.
+    # Skip the bump commit itself; otherwise run on every branch and MR.
     - if: $CI_COMMIT_MESSAGE =~ /^bump:/
       when: never
     - when: on_success
@@ -196,8 +208,10 @@ bump:
     - pip install -U commitizen
     - git config --global user.email "${CI_EMAIL}"
     - git config --global user.name "${CI_USERNAME}"
-    # Replace the default fetch URL with one that includes the token so we can push.
-    - git remote set-url origin "${REPO_URL}"
+    # Build the authenticated push URL inline so the token is not stored in a
+    # CI/CD variable that is visible to project Maintainers, and is not written
+    # into git config on disk via a top-level `variables:` block.
+    - git remote set-url origin "https://oauth2:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git"
   script:
     # Re-attach HEAD to the branch (GitLab checks out a detached commit by default).
     - git checkout -B "${CI_COMMIT_REF_NAME}"
@@ -236,3 +250,9 @@ How the pipeline is wired:
 
 !!! tip "Token rotation"
     Project Access Tokens expire. Set a calendar reminder before the expiration date to rotate the token and update the `GITLAB_TOKEN` CI/CD variable; otherwise the `bump` job will start failing with `403`/`401` errors.
+
+!!! warning "Keep the token out of job logs"
+    GitLab's log masking hides the raw value of `GITLAB_TOKEN`, but it does **not** mask derived strings such as the full HTTPS URL `https://oauth2:<token>@…`. Avoid enabling runner debug tracing (`CI_DEBUG_TRACE: "true"`) and avoid `set -x` inside the `bump` job — git error messages or shell traces would otherwise print the URL with the token in clear text. The example above keeps the URL inside `git remote set-url` so it is never assigned to a CI/CD variable.
+
+!!! note "Self-managed instances on a non-standard port"
+    `CI_SERVER_HOST` is the hostname **without protocol or port**. If your GitLab instance listens on a non-standard HTTPS port (for example `gitlab.example.com:8443`), replace `${CI_SERVER_HOST}` with `${CI_SERVER_HOST}:${CI_SERVER_PORT}` (or use the `CI_SERVER_FQDN` predefined variable on GitLab 16.10+).
