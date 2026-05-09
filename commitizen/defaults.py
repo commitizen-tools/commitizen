@@ -41,6 +41,7 @@ class Settings(TypedDict, total=False):
     changelog_incremental: bool
     changelog_merge_prerelease: bool
     changelog_start_rev: str | None
+    changelog_subject_only: bool
     customize: CzSettings
     encoding: str
     extras: dict[str, Any]
@@ -103,6 +104,7 @@ DEFAULT_SETTINGS: Settings = {
     "changelog_incremental": False,
     "changelog_start_rev": None,
     "changelog_merge_prerelease": False,
+    "changelog_subject_only": False,
     "update_changelog_on_bump": False,
     "use_shortcuts": False,
     "major_version_zero": False,

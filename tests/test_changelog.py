@@ -1191,6 +1191,41 @@ def test_generate_tree_from_commits_with_no_commits(tags):
     assert tuple(tree) == ({"changes": {}, "date": "", "version": "Unreleased"},)
 
 
+def test_generate_tree_from_commits_subject_only_skips_body_blocks(tags):
+    """`subject_only=True` ignores parser-matching blocks inside `commit.body`.
+
+    Regression for #1267 where, e.g., a commit subject `feat: new feature`
+    with a body containing `refactor: cleanup` produced two changelog
+    entries instead of one.
+    """
+    parser = ConventionalCommitsCz.commit_parser
+    changelog_pattern = ConventionalCommitsCz.bump_pattern
+
+    commit = git.GitCommit(
+        rev="abc123",
+        title="feat: new feature",
+        body="some prose\n\nrefactor: incidental cleanup",
+        author="Commitizen",
+        author_email="author@cz.dev",
+    )
+
+    default_tree = list(
+        changelog.generate_tree_from_commits([commit], tags, parser, changelog_pattern)
+    )
+    assert default_tree[0]["changes"].keys() == {"feat", "refactor"}
+
+    subject_only_tree = list(
+        changelog.generate_tree_from_commits(
+            [commit],
+            tags,
+            parser,
+            changelog_pattern,
+            subject_only=True,
+        )
+    )
+    assert subject_only_tree[0]["changes"].keys() == {"feat"}
+
+
 @pytest.mark.parametrize(
     ("change_type_order", "expected_reordering"),
     [

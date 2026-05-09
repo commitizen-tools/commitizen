@@ -100,6 +100,7 @@ def generate_tree_from_commits(
     changelog_release_hook: ChangelogReleaseHook | None = None,
     rules: TagRules | None = None,
     during_version_bump: bool = False,
+    subject_only: bool = False,
 ) -> Generator[dict[str, Any], None, None]:
     pat = re.compile(changelog_pattern)
     map_pat = re.compile(commit_parser, re.MULTILINE)
@@ -147,11 +148,15 @@ def generate_tree_from_commits(
         if not pat.match(commit.message):
             continue
 
-        # Process subject and body from commit message
-        for message in chain(
-            [map_pat.match(commit.message)],
-            (body_map_pat.match(block) for block in commit.body.split("\n\n")),
-        ):
+        # Process subject; optionally also parse body blocks for nested entries
+        # (legacy default behaviour, controlled by `changelog_subject_only`).
+        subject_match = map_pat.match(commit.message)
+        body_matches: Iterable[re.Match[str] | None] = (
+            ()
+            if subject_only
+            else (body_map_pat.match(block) for block in commit.body.split("\n\n"))
+        )
+        for message in chain([subject_match], body_matches):
             if message:
                 process_commit_message(
                     changelog_message_builder_hook,

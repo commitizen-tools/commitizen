@@ -276,6 +276,7 @@ class Changelog:
             changelog_release_hook=self.cz.changelog_release_hook,
             rules=self.tag_rules,
             during_version_bump=self.during_version_bump,
+            subject_only=self.config.settings["changelog_subject_only"],
         )
         if self.change_type_order:
             tree = changelog.generate_ordered_changelog_tree(

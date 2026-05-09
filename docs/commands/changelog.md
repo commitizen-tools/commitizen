@@ -147,6 +147,26 @@ This flag can be set in the configuration file with the key `changelog_merge_pre
 changelog_merge_prerelease = true
 ```
 
+### `changelog_subject_only`
+
+By default, Commitizen parses both the subject line and any `\n\n`-separated body blocks of each commit against `commit_parser`, so a commit such as
+
+```
+feat: new feature
+
+refactor: incidental cleanup
+```
+
+produces *two* changelog entries (one under `feat`, one under `refactor`). Set this configuration to `true` to limit changelog parsing to the subject line only.
+
+```toml
+[tool.commitizen]
+# ...
+changelog_subject_only = true
+```
+
+The default (`false`) preserves the historical behaviour.
+
 ### `--template`
 
 Provide your own changelog Jinja template by using the `template` settings or the `--template` parameter.
