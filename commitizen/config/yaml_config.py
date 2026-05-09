@@ -51,9 +51,12 @@ class YAMLConfig(BaseConfig):
             raise InvalidConfigurationError(f"Failed to parse {self.path}: {e}")
 
         try:
-            self.settings.update(doc["commitizen"])
+            section = doc["commitizen"]
         except (KeyError, TypeError):
-            pass
+            return
+
+        self.settings.update(section)
+        self._validate_known_keys(section)
 
     def set_key(self, key: str, value: object) -> Self:
         with self.path.open("rb") as yaml_file:
