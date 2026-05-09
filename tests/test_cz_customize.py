@@ -634,6 +634,77 @@ def test_commit_parser_default_extracts_change_type():
     assert no_scope.group("message") == "tidy up"
 
 
+def test_commit_parser_default_keeps_non_conforming_subjects():
+    import re
+
+    config = BaseConfig()
+    config.settings.update(
+        {
+            "name": "cz_customize",
+            "customize": {
+                # No ``commit_parser`` provided -- exercises the new default.
+                "changelog_pattern": r".*",
+            },
+        }
+    )
+    cz = CustomizeCommitsCz(config)
+
+    pattern = re.compile(cz.commit_parser, re.MULTILINE)
+
+    cases = [
+        (
+            "bug fix: do stuff",
+            {
+                "change_type": None,
+                "scope": None,
+                "breaking": None,
+                "message": "bug fix: do stuff",
+            },
+        ),
+        (
+            "ticket-123 do stuff",
+            {
+                "change_type": None,
+                "scope": None,
+                "breaking": None,
+                "message": "ticket-123 do stuff",
+            },
+        ),
+        (
+            "✨ feature: shiny",
+            {
+                "change_type": None,
+                "scope": None,
+                "breaking": None,
+                "message": "✨ feature: shiny",
+            },
+        ),
+        (
+            "feat: ok",
+            {
+                "change_type": "feat",
+                "scope": None,
+                "breaking": None,
+                "message": "ok",
+            },
+        ),
+        (
+            "feat(api)!: bang",
+            {
+                "change_type": "feat",
+                "scope": "api",
+                "breaking": "!",
+                "message": "bang",
+            },
+        ),
+    ]
+
+    for subject, expected_groups in cases:
+        match = pattern.match(subject)
+        assert match is not None
+        assert match.groupdict() == expected_groups
+
+
 def test_changelog_pattern(config):
     cz = CustomizeCommitsCz(config)
     assert cz.changelog_pattern == "^(feature|bug fix)?(!)?"

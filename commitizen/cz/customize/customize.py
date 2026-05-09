@@ -32,14 +32,13 @@ class CustomizeCommitsCz(BaseCommitizen):
     # A conventional-commits-style default so that ``cz_customize`` users who
     # configure ``changelog_pattern`` (and optionally ``change_type_map`` /
     # ``change_type_order``) but no explicit ``commit_parser`` still get a
-    # changelog grouped by change type. It captures any word as
-    # ``change_type``, an optional scope, an optional ``!`` breaking marker,
-    # and the message subject. Users with a different commit format can
-    # still override this via ``customize.commit_parser`` (#466).
+    # changelog grouped by change type. The conventional prefix is optional,
+    # so non-conforming subjects remain included as ungrouped messages.
+    # Users with a different commit format can still override this via
+    # ``customize.commit_parser`` (#466).
     commit_parser = (
-        r"^(?P<change_type>\w+)"
-        r"(?:\((?P<scope>[^()\r\n]*)\))?"
-        r"(?P<breaking>!)?:\s*(?P<message>.*)$"
+        r"^((?P<change_type>[\w-]+)(?:\((?P<scope>[^()\r\n]*)\))?"
+        r"(?P<breaking>!)?:\s+)?(?P<message>.+)$"
     )
 
     def __init__(self, config: BaseConfig) -> None:
