@@ -30,7 +30,9 @@ class YAMLConfig(BaseConfig):
         with smart_open(
             self.path, "a", encoding=self._settings["encoding"]
         ) as json_file:
-            yaml.dump({"commitizen": {}}, json_file, explicit_start=True)
+            yaml.dump(
+                {"commitizen": {}}, json_file, explicit_start=True, allow_unicode=True
+            )
 
     def contains_commitizen_section(self) -> bool:
         with self.path.open("rb") as yaml_file:
@@ -63,6 +65,6 @@ class YAMLConfig(BaseConfig):
         with smart_open(
             self.path, "w", encoding=self._settings["encoding"]
         ) as yaml_file:
-            yaml.dump(config_doc, yaml_file, explicit_start=True)
+            yaml.dump(config_doc, yaml_file, explicit_start=True, allow_unicode=True)
 
         return self

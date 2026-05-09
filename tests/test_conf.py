@@ -497,3 +497,39 @@ class TestYamlConfig:
         with pytest.raises(InvalidConfigurationError) as excinfo:
             YAMLConfig(data=existing_content, path=path)
         assert config_file in str(excinfo.value)
+
+    def test_set_key_preserves_unicode(self, tmp_path, config_file):
+        """Regression test for #1164: emoji and other non-ASCII characters
+        must be preserved verbatim, not escaped to ``\\Uxxxx`` sequences."""
+        path = tmp_path / "commitizen" / config_file
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            "commitizen:\n"
+            '  bump_message: "🚀 chore: bump $current_version to $new_version"\n',
+            encoding="utf-8",
+        )
+
+        yaml_config = YAMLConfig(data=path.read_text(encoding="utf-8"), path=path)
+        yaml_config.set_key("version", "0.1.1")
+
+        rewritten = path.read_text(encoding="utf-8")
+        assert "🚀" in rewritten
+        assert "\\U0001F680" not in rewritten
+
+    def test_init_empty_config_content_passes_allow_unicode(
+        self, tmp_path, config_file, mocker
+    ):
+        """``init_empty_config_content`` must call ``yaml.dump`` with
+        ``allow_unicode=True`` so that any non-ASCII default content (for
+        future maintainers) is written verbatim. The current default
+        (``{"commitizen": {}}``) is ASCII-only, so this asserts the
+        keyword is passed rather than its observable behaviour."""
+        path = tmp_path / "commitizen" / config_file
+        path.parent.mkdir(parents=True, exist_ok=True)
+        dump_spy = mocker.spy(yaml, "dump")
+
+        yaml_config = YAMLConfig(data="{}", path=path)
+        yaml_config.init_empty_config_content()
+
+        dump_spy.assert_called_once()
+        assert dump_spy.call_args.kwargs.get("allow_unicode") is True
