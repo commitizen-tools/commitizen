@@ -127,7 +127,7 @@ You can find the complete workflow in our repository at [bumpversion.yml](https:
 
 To help reviewers spot unexpected version bumps before merging, you can run
 `cz bump --dry-run` on every pull request and post (or update) a sticky
-comment summarizing the would-be version bump and changelog entries.
+comment summarizing the would-be version bump.
 
 Create `.github/workflows/pr-bump-preview.yml`:
 
@@ -144,7 +144,13 @@ permissions:
 
 jobs:
   bump-preview:
-    if: ${{ github.event.pull_request.draft == false }}
+    # Skip drafts and fork PRs (see "How it works" below).
+    if: >
+      ${{
+        github.event.pull_request.draft == false &&
+        github.event.pull_request.head.repo.full_name ==
+          github.event.pull_request.base.repo.full_name
+      }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out PR head
@@ -153,6 +159,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: false
       - uses: commitizen-tools/setup-cz@main
         with:
           set-git-config: false
@@ -211,17 +218,29 @@ jobs:
 
 - **Trigger**: `pull_request_target` runs in the context of the base
   repository, which gives the workflow `pull-requests: write` permission
-  even for PRs from forks. The job only runs `cz bump --dry-run`, a
-  read-only command, so it does not execute any PR-controlled scripts.
+  even for PRs from forks. We deliberately gate the job to **same-repo PRs
+  only** (`head.repo == base.repo`); fork PRs are skipped. This is because
+  `cz bump` renders [Jinja templates from the working directory][jinja]
+  whenever [`update_changelog_on_bump`](../config/configuration_file.md) is
+  enabled, and the renderer is not sandboxed — running it against
+  fork-controlled files under a write token would risk arbitrary code
+  execution and token exfiltration. Same-repo PRs are written by
+  collaborators who already have push access, so the same risk doesn't
+  apply.
 - **Setup**: [`commitizen-tools/setup-cz`](https://github.com/commitizen-tools/setup-cz)
   installs the Commitizen CLI; no language-specific build tooling is required.
-- **Dry-run**: `cz bump --dry-run --yes` computes the next version and the
-  changelog entries that would be produced. Exit code `21` (`NoneIncrementExit`)
+- **Defense in depth**: `persist-credentials: false` on `actions/checkout`
+  keeps the workflow token out of the local git config.
+- **Dry-run**: `cz bump --dry-run --yes` computes the next version (and, if
+  `update_changelog_on_bump` is set in your config, also the changelog
+  entries that would be produced). Exit code `21` (`NoneIncrementExit`)
   is treated as "no eligible bump" rather than a failure.
 - **Sticky comment**: The hidden HTML marker `<!-- commitizen-bump-preview -->`
   lets [`peter-evans/create-or-update-comment`](https://github.com/peter-evans/create-or-update-comment)
   find and replace the previous preview on every push, instead of leaving a
   growing trail of comments.
+
+[jinja]: https://github.com/commitizen-tools/commitizen/blob/master/commitizen/changelog.py
 
 You can find the complete workflow in our repository at [pr-bump-preview.yml](https://github.com/commitizen-tools/commitizen/blob/master/.github/workflows/pr-bump-preview.yml).
 

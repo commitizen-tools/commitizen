@@ -10,19 +10,30 @@ permissions:
 
 jobs:
   bump-preview:
-    if: ${{ github.event.pull_request.draft == false }}
+    # Skip drafts, and skip fork PRs entirely. `pull_request_target` runs with
+    # the base repo's GITHUB_TOKEN (write access to PR comments). `cz bump`
+    # can render Jinja templates from the checked-out workspace whenever
+    # `update_changelog_on_bump` is set in config, and the renderer is not
+    # sandboxed (FileSystemLoader('.')) — running it against fork-controlled
+    # files would risk RCE / token exfiltration. Same-repo PRs are written by
+    # collaborators who already have push access, so the same risk doesn't
+    # apply.
+    if: >
+      ${{
+        github.event.pull_request.draft == false &&
+        github.event.pull_request.head.repo.full_name ==
+          github.event.pull_request.base.repo.full_name
+      }}
     runs-on: ubuntu-latest
     steps:
-      # Using pull_request_target means GITHUB_TOKEN has write access to PR
-      # comments even for fork PRs. We deliberately only run `cz bump --dry-run`
-      # against the checked-out PR commits — no PR-controlled scripts are
-      # executed, so this is safe.
       - name: Check out PR head
         uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           fetch-tags: true
+          # Defense in depth: don't write the workflow token to .git/config.
+          persist-credentials: false
 
       - name: Set up Commitizen
         uses: commitizen-tools/setup-cz@main
