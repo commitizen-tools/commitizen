@@ -6,9 +6,10 @@ usage: cz bump [-h] [--dry-run] [--files-only] [--version-files-only]
                [--increment-mode {linear,exact}] [--check-consistency]
                [--annotated-tag]
                [--annotated-tag-message ANNOTATED_TAG_MESSAGE] [--gpg-sign]
-               [--changelog-to-stdout] [--git-output-to-stderr] [--retry]
-               [--major-version-zero] [--template TEMPLATE] [--extra EXTRA]
-               [--file-name FILE_NAME] [--prerelease-offset PRERELEASE_OFFSET]
+               [--changelog-to-stdout] [--merge-prerelease]
+               [--git-output-to-stderr] [--retry] [--major-version-zero]
+               [--template TEMPLATE] [--extra EXTRA] [--file-name FILE_NAME]
+               [--prerelease-offset PRERELEASE_OFFSET]
                [--version-scheme {pep440,semver,semver2}]
                [--version-type {pep440,semver,semver2}]
                [--build-metadata BUILD_METADATA] [--get-next]
@@ -64,6 +65,9 @@ options:
   --gpg-sign, -s        Sign tag instead of lightweight one.
   --changelog-to-stdout
                         Output changelog to stdout.
+  --merge-prerelease    Collect all changes from prereleases into the next
+                        non-prerelease when generating the changelog.
+                        Overrides the `changelog_merge_prerelease` setting.
   --git-output-to-stderr
                         Redirect git output to stderr.
   --retry               Retry commit if it fails for the first time.

@@ -226,6 +226,16 @@ Useful when used with `--changelog-to-stdout` and piping the output to a file.
 
 For example, `git commit` output may pollute `stdout`, so it is recommended to use this flag when piping the output to a file.
 
+### `--merge-prerelease`
+
+Collect all changes from prereleases into the next non-prerelease entry when generating the incremental changelog.
+
+This mirrors the `--merge-prerelease` flag of `cz changelog` and overrides the [`changelog_merge_prerelease`](./changelog.md#--merge-prerelease) setting for a single bump invocation. It is useful when you want to keep prerelease entries in the changelog by default but collapse them on a release bump:
+
+```bash
+cz bump --changelog --merge-prerelease
+```
+
 ### `--retry`
 
 If you use tools like [pre-commit](https://pre-commit.com/), you can add this flag.

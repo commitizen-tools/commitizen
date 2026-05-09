@@ -56,6 +56,7 @@ class BumpArgs(Settings, total=False):
     increment: Increment | None
     local_version: bool
     manual_version: str | None
+    merge_prerelease: bool | None
     no_verify: bool
     prerelease: Prerelease | None
     retry: bool
@@ -319,6 +320,9 @@ class Bump:
                 # governs logic for merge_prerelease
                 "during_version_bump": self.arguments["prerelease"] is None,
             }
+            merge_prerelease = self.arguments.get("merge_prerelease")
+            if merge_prerelease is not None:
+                changelog_args["merge_prerelease"] = merge_prerelease
             if self.changelog_to_stdout:
                 try:
                     Changelog(

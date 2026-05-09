@@ -1426,6 +1426,37 @@ def test_is_initial_tag(mocker: MockFixture, tmp_commitizen_project, util: UtilF
 @pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2025-01-01")
+def test_changelog_cli_flag_merge_prerelease(
+    mocker: MockFixture,
+    util: UtilFixture,
+    changelog_path: Path,
+    config_path: Path,
+    file_regression: FileRegressionFixture,
+    test_input: str,
+):
+    """`cz bump --merge-prerelease` overrides the (default false) config setting."""
+    with config_path.open("a") as f:
+        f.write("update_changelog_on_bump = true\n")
+        f.write("annotated_tag = true\n")
+
+    util.create_file_and_commit("irrelevant commit")
+    mocker.patch("commitizen.git.GitTag.date", "1970-01-01")
+    git.tag("0.1.0")
+
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
+    util.run_cli("bump", "--prerelease", test_input, "--yes")
+
+    util.run_cli("bump", "--changelog", "--merge-prerelease")
+
+    out = changelog_path.read_text()
+
+    file_regression.check(out, extension=".md")
+
+
+@pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2025-01-01")
 def test_changelog_config_flag_merge_prerelease(
     mocker: MockFixture,
     util: UtilFixture,

@@ -313,6 +313,16 @@ data = {
                         "help": "Output changelog to stdout.",
                     },
                     {
+                        "name": "--merge-prerelease",
+                        "action": "store_true",
+                        "default": None,
+                        "help": (
+                            "Collect all changes from prereleases into the next non-prerelease "
+                            "when generating the changelog. "
+                            "Overrides the `changelog_merge_prerelease` setting."
+                        ),
+                    },
+                    {
                         "name": ["--git-output-to-stderr"],
                         "action": "store_true",
                         "default": False,
