@@ -23,15 +23,16 @@ class UvProvider(TomlProvider):
 
     def set_version(self, version: str) -> None:
         super().set_version(version)
-        self.set_lock_version(version)
+        # `uv.lock` is optional: a freshly initialised project (or a uv
+        # workspace member, since the lock lives at the workspace root)
+        # may not have one yet. Updating `pyproject.toml` is enough.
+        # Use `is_file()` (not `exists()`) to skip directories or other
+        # path-shaped artefacts as well, matching the convention in
+        # `cargo_provider.py` / `npm_provider.py`.
+        if self.lock_file.is_file():
+            self.set_lock_version(version)
 
     def set_lock_version(self, version: str) -> None:
-        if not self.lock_file.exists():
-            # `uv.lock` is optional: a freshly initialised project (or a uv
-            # workspace member, since the lock lives at the workspace root)
-            # may not have one yet. Updating `pyproject.toml` is enough.
-            return
-
         pyproject_toml_content = tomlkit.parse(
             self.file.read_text(encoding=self._get_encoding())
         )
