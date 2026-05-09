@@ -312,7 +312,7 @@ def is_staging_clean() -> bool:
 
 
 def has_pending_changes() -> bool:
-    """Check whether there are any tracked-file changes for `git commit -a` to commit.
+    """Check whether there are any tracked-file changes for ``git commit -a`` to commit.
 
     Returns ``True`` if there are staged or unstaged modifications to tracked
     files, ``False`` if the working tree is clean for tracked files. Untracked

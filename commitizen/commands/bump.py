@@ -62,6 +62,13 @@ class BumpArgs(Settings, total=False):
     yes: bool
 
 
+def _stage_updated_files(updated_files: list[str]) -> None:
+    c = git.add(*updated_files)
+    if c.return_code != 0:
+        err = c.err.strip() or c.out
+        raise BumpCommitFailedError(f'git.add error: "{err}"')
+
+
 class Bump:
     """Show prompt for the user to create a guided commit."""
 
@@ -380,8 +387,8 @@ class Bump:
         if self.arguments.get("version_files_only"):
             raise ExpectedExit()
 
-        # FIXME: check if any changes have been staged
-        git.add(*updated_files)
+        if updated_files:
+            _stage_updated_files(updated_files)
 
         # When there is nothing for the bump to commit (e.g. ``version_provider
         # = "scm"`` with no ``version_files`` and no ``--changelog``), skip the
@@ -395,7 +402,7 @@ class Bump:
                 # Maybe pre-commit reformatted some files? Retry once
                 logger.debug("1st git.commit error: %s", c.err)
                 logger.info("1st commit attempt failed; retrying once")
-                git.add(*updated_files)
+                _stage_updated_files(updated_files)
                 c = git.commit(message, args=self._get_commit_args())
             if c.return_code != 0:
                 err = c.err.strip() or c.out

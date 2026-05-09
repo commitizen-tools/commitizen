@@ -1376,7 +1376,7 @@ def test_bump_warn_but_dont_fail_on_invalid_tags(
 
 
 def test_bump_skips_commit_when_no_files_changed(
-    tmp_commitizen_project: Path, util: UtilFixture
+    mocker: MockFixture, tmp_commitizen_project: Path, util: UtilFixture
 ):
     """Regression test for #1530: with ``version_provider = "scm"`` and no
     ``version_files`` / ``--changelog``, ``cz bump`` should not fail with
@@ -1395,6 +1395,7 @@ def test_bump_skips_commit_when_no_files_changed(
         ),
     )
     util.create_file_and_commit("feat: first feature")
+    add_mock = mocker.patch("commitizen.git.add")
 
     util.run_cli("bump", "--yes")
 
@@ -1405,6 +1406,7 @@ def test_bump_skips_commit_when_no_files_changed(
     util.run_cli("bump", "--yes")
 
     assert git.tag_exist("v0.1.1") is True
+    add_mock.assert_not_called()
 
 
 def test_is_initial_tag(mocker: MockFixture, tmp_commitizen_project, util: UtilFixture):
