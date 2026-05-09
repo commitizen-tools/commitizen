@@ -72,23 +72,25 @@ def get_changelog_format(
         be matched to a known format and no ``changelog_format`` is set.
     """
     name: str | None = config.settings.get("changelog_format")
-    format = (
-        name and KNOWN_CHANGELOG_FORMATS.get(name) or _guess_changelog_format(filename)
-    )
+    known = ", ".join(sorted(KNOWN_CHANGELOG_FORMATS)) or "(none registered)"
 
-    if not format:
-        known = ", ".join(sorted(KNOWN_CHANGELOG_FORMATS)) or "(none registered)"
-        if name:
+    if name:
+        format_cls = KNOWN_CHANGELOG_FORMATS.get(name)
+        if format_cls is None:
             raise ChangelogFormatUnknown(
                 f"Unknown changelog format '{name}'. Known formats: {known}."
             )
+        return format_cls(config)
+
+    format_cls = _guess_changelog_format(filename)
+    if format_cls is None:
         raise ChangelogFormatUnknown(
             "Cannot infer changelog format from filename "
             f"'{filename}'. Set the `changelog_format` setting "
             f"explicitly. Known formats: {known}."
         )
 
-    return format(config)
+    return format_cls(config)
 
 
 def _guess_changelog_format(filename: str | None) -> type[ChangelogFormat] | None:

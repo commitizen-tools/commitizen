@@ -83,3 +83,12 @@ def test_get_format_unknown_name_lists_known_formats(config: BaseConfig):
     msg = str(excinfo.value)
     assert "definitely-not-a-format" in msg
     assert "Known formats" in msg
+
+
+def test_get_format_unknown_name_with_known_filename_raises(config: BaseConfig):
+    config.settings["changelog_format"] = "invalidformat"
+    with pytest.raises(ChangelogFormatUnknown) as excinfo:
+        get_changelog_format(config, "CHANGELOG.md")
+    msg = str(excinfo.value)
+    assert "invalidformat" in msg
+    assert "Known formats" in msg
