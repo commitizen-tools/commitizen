@@ -297,6 +297,10 @@ setup(
    version_provider = "my-provider"
    ```
 
+   Once installed, the provider is also offered as a choice during `cz init`,
+   labelled `my-provider: third-party version provider`. Built-in providers
+   keep their curated descriptions and appear first in the picker.
+
 ### Provider Implementation Guidelines
 
 When creating a custom provider, keep these guidelines in mind:

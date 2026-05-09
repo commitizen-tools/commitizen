@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from importlib import metadata
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -483,3 +484,70 @@ def test_construct_name_choice_from_registry(config: BaseConfig):
         choices[2].description
         == "<ignored text> <ISSUE_KEY> <ignored text> #<COMMAND> <optional COMMAND_ARGUMENTS>"
     )
+
+
+def test_construct_version_provider_choices_includes_builtins():
+    """Built-in providers appear first with curated descriptions."""
+    from commitizen.commands.init import _construct_version_provider_choices
+
+    choices = _construct_version_provider_choices()
+    values = [choice.value for choice in choices]
+    titles = [choice.title for choice in choices]
+
+    # All eight built-ins must be present.
+    for builtin in (
+        "commitizen",
+        "cargo",
+        "composer",
+        "npm",
+        "pep621",
+        "poetry",
+        "uv",
+        "scm",
+    ):
+        assert builtin in values
+
+    # And they must come with their curated descriptions, not the
+    # generic "third-party version provider" suffix.
+    assert "commitizen: Fetch and set version in commitizen config (default)" in titles
+    for title in titles[:8]:
+        assert "third-party" not in title
+
+
+def test_construct_version_provider_choices_discovers_third_party(
+    mocker: MockFixture,
+):
+    """Third-party providers registered under `commitizen.provider` are appended."""
+    from commitizen.commands.init import _construct_version_provider_choices
+    from commitizen.providers import PROVIDER_ENTRYPOINT
+
+    real_entry_points = metadata.entry_points
+
+    fake_third_party = metadata.EntryPoint(
+        name="my-third-party",
+        value="some.module:Provider",
+        group=PROVIDER_ENTRYPOINT,
+    )
+
+    def fake_entry_points(*args: Any, **kwargs: Any):
+        eps = real_entry_points(*args, **kwargs)
+        if kwargs.get("group") == PROVIDER_ENTRYPOINT:
+            return list(eps) + [fake_third_party]
+        return eps
+
+    mocker.patch(
+        "commitizen.commands.init.metadata.entry_points",
+        side_effect=fake_entry_points,
+    )
+
+    choices = _construct_version_provider_choices()
+    values = [choice.value for choice in choices]
+    titles = [choice.title for choice in choices]
+
+    assert "my-third-party" in values
+    assert "my-third-party: third-party version provider" in titles
+    # Built-in `pep621` already lives in the entry-point group; ensure we
+    # didn't duplicate it once with the curated description and again
+    # with the generic third-party suffix.
+    assert values.count("pep621") == 1
+    assert "pep621: third-party version provider" not in titles

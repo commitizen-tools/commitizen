@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from importlib import metadata
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, NamedTuple
 
@@ -17,6 +18,7 @@ from commitizen.exceptions import (
     NoAnswersError,
 )
 from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
+from commitizen.providers import PROVIDER_ENTRYPOINT
 from commitizen.version_schemes import (
     KNOWN_SCHEMES,
     VersionProtocol,
@@ -38,43 +40,66 @@ class _VersionProviderOption(NamedTuple):
         return f"{self.provider_name}: {self.description}"
 
 
-_VERSION_PROVIDER_CHOICES = tuple(
-    questionary.Choice(title=option.title, value=option.provider_name)
-    for option in (
-        _VersionProviderOption(
-            provider_name="commitizen",
-            description="Fetch and set version in commitizen config (default)",
-        ),
-        _VersionProviderOption(
-            provider_name="cargo",
-            description="Get and set version from Cargo.toml:project.version field",
-        ),
-        _VersionProviderOption(
-            provider_name="composer",
-            description="Get and set version from composer.json:project.version field",
-        ),
-        _VersionProviderOption(
-            provider_name="npm",
-            description="Get and set version from package.json:project.version field",
-        ),
-        _VersionProviderOption(
-            provider_name="pep621",
-            description="Get and set version from pyproject.toml:project.version field",
-        ),
-        _VersionProviderOption(
-            provider_name="poetry",
-            description="Get and set version from pyproject.toml:tool.poetry.version field",
-        ),
-        _VersionProviderOption(
-            provider_name="uv",
-            description="Get and set version from pyproject.toml and uv.lock",
-        ),
-        _VersionProviderOption(
-            provider_name="scm",
-            description="Fetch the version from git and does not need to set it back",
-        ),
-    )
+_BUILTIN_VERSION_PROVIDER_OPTIONS: tuple[_VersionProviderOption, ...] = (
+    _VersionProviderOption(
+        provider_name="commitizen",
+        description="Fetch and set version in commitizen config (default)",
+    ),
+    _VersionProviderOption(
+        provider_name="cargo",
+        description="Get and set version from Cargo.toml:project.version field",
+    ),
+    _VersionProviderOption(
+        provider_name="composer",
+        description="Get and set version from composer.json:project.version field",
+    ),
+    _VersionProviderOption(
+        provider_name="npm",
+        description="Get and set version from package.json:project.version field",
+    ),
+    _VersionProviderOption(
+        provider_name="pep621",
+        description="Get and set version from pyproject.toml:project.version field",
+    ),
+    _VersionProviderOption(
+        provider_name="poetry",
+        description="Get and set version from pyproject.toml:tool.poetry.version field",
+    ),
+    _VersionProviderOption(
+        provider_name="uv",
+        description="Get and set version from pyproject.toml and uv.lock",
+    ),
+    _VersionProviderOption(
+        provider_name="scm",
+        description="Fetch the version from git and does not need to set it back",
+    ),
 )
+
+
+def _construct_version_provider_choices() -> list[questionary.Choice]:
+    """Build the version-provider picker for `cz init`.
+
+    Built-in providers come first (with curated descriptions), then any
+    third-party providers that register themselves under the
+    `commitizen.provider` entry-point group. Third-party providers are
+    not loaded — only their entry-point name is used for the choice.
+    """
+    builtin_names = {
+        option.provider_name for option in _BUILTIN_VERSION_PROVIDER_OPTIONS
+    }
+    builtin_choices = [
+        questionary.Choice(title=option.title, value=option.provider_name)
+        for option in _BUILTIN_VERSION_PROVIDER_OPTIONS
+    ]
+    third_party_choices = [
+        questionary.Choice(
+            title=f"{ep.name}: third-party version provider",
+            value=ep.name,
+        )
+        for ep in metadata.entry_points(group=PROVIDER_ENTRYPOINT)
+        if ep.name not in builtin_names
+    ]
+    return [*builtin_choices, *third_party_choices]
 
 
 class Init:
@@ -254,7 +279,7 @@ class Init:
 
         version_provider: str = questionary.select(
             "Choose the source of the version:",
-            choices=_VERSION_PROVIDER_CHOICES,
+            choices=_construct_version_provider_choices(),
             style=self.cz.style,
             default=project_info.get_default_version_provider(),
         ).unsafe_ask()
