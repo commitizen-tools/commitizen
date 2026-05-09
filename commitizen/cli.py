@@ -705,10 +705,8 @@ def main() -> None:
         if unknown_args:
             try:
                 parser.parse_args()
-            except SystemExit as e:
-                if e.code == 2:
-                    raise NoCommandFoundError()
-                raise e
+            except SystemExit:
+                raise NoCommandFoundError()
         if getattr(args, "report", False):
             out.write(f"Commitizen Version: {__version__}")
             out.write(f"Python Version: {sys.version}")
