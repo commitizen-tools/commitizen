@@ -591,6 +591,49 @@ def test_commit_parser_unicode(config_with_unicode):
     )
 
 
+def test_commit_parser_default_extracts_change_type():
+    """Regression test for #466: when ``customize.commit_parser`` is not set,
+    the default must still extract a ``change_type`` named group so that the
+    changelog can be grouped by type (e.g. ``### Feat``, ``### Fix``).
+    Previously the default was ``r"(?P<message>.*)"`` -- inherited from
+    ``BaseCommitizen`` -- which left every commit ungrouped.
+    """
+    import re
+
+    config = BaseConfig()
+    config.settings.update(
+        {
+            "name": "cz_customize",
+            "customize": {
+                # No ``commit_parser`` provided -- exercises the new default.
+                "changelog_pattern": r"^(feat|fix|chore)(\(.+\))?(!)?",
+            },
+        }
+    )
+    cz = CustomizeCommitsCz(config)
+
+    pattern = re.compile(cz.commit_parser, re.MULTILINE)
+
+    feat = pattern.match("feat(scope): a feature")
+    assert feat is not None
+    assert feat.group("change_type") == "feat"
+    assert feat.group("scope") == "scope"
+    assert feat.group("breaking") is None
+    assert feat.group("message") == "a feature"
+
+    breaking = pattern.match("fix!: breaking fix")
+    assert breaking is not None
+    assert breaking.group("change_type") == "fix"
+    assert breaking.group("breaking") == "!"
+    assert breaking.group("message") == "breaking fix"
+
+    no_scope = pattern.match("chore: tidy up")
+    assert no_scope is not None
+    assert no_scope.group("change_type") == "chore"
+    assert no_scope.group("scope") is None
+    assert no_scope.group("message") == "tidy up"
+
+
 def test_changelog_pattern(config):
     cz = CustomizeCommitsCz(config)
     assert cz.changelog_pattern == "^(feature|bug fix)?(!)?"
