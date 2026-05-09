@@ -331,9 +331,9 @@ def test_is_git_project_accepts_loose_true_output(mocker: MockFixture):
 
 
 def test_is_git_project_returns_false_for_bare_repo(mocker: MockFixture):
-    """``git rev-parse`` exits 0 but says ``false`` when run from inside the
-    ``.git`` directory of a bare repo. ``is_git_project`` is meant to gate
-    work-tree commands, so this case should still return ``False``."""
+    """When ``git rev-parse --is-inside-work-tree`` returns ``false``
+    (inside ``.git/`` of a normal repo, or at the root of a bare repo),
+    ``is_git_project`` should return ``False``."""
     fake = cmd.Command("false\n", "", b"", b"", 0)
     mocker.patch("commitizen.cmd.run", return_value=fake)
     assert git.is_git_project() is False
@@ -343,10 +343,9 @@ def test_is_git_project_returns_false_for_bare_repo(mocker: MockFixture):
 def test_is_git_project_rejects_strings_containing_true_substring(
     mocker: MockFixture, noise: str
 ):
-    """The ``true`` token must be matched as a whole word at the end of the
-    output, not just any string ending in ``true``. Even though git itself
-    will never produce these strings, a defensive matcher shouldn't accept
-    them either."""
+    """After stripping ANSI escapes and whitespace, only the exact string
+    ``true`` is accepted; outputs like ``untrue``, ``nottrue``, or
+    ``true false`` are rejected."""
     fake = cmd.Command(f"{noise}\n", "", b"", b"", 0)
     mocker.patch("commitizen.cmd.run", return_value=fake)
     assert git.is_git_project() is False
