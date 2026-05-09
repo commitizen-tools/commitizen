@@ -21,6 +21,8 @@ class InputQuestion(TypedDict, total=False):
     name: str
     message: str
     filter: Callable[[str], str]
+    validate: Callable[[str], bool | str]
+    required: bool
 
 
 class ConfirmQuestion(TypedDict):

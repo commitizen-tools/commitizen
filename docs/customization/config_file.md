@@ -45,6 +45,7 @@ Example:
     type = "input"
     name = "message"
     message = "Body."
+    required = true
 
     [[tool.commitizen.customize.questions]]
     type = "confirm"
@@ -181,6 +182,7 @@ Example:
 | `default`   | `Any`  | `None`  | (OPTIONAL) The default value for this question.                                                                                                                                                 |
 | `filter`    | `str`  | `None`  | (OPTIONAL) Validator for user's answer. **(Work in Progress)**                                                                                                                                  |
 | `multiline` | `bool` | `False` | (OPTIONAL) Enable multiline support when `type = input`.                                                                                                                                        |
+| `required`  | `bool` | `False` | (OPTIONAL) When `true` and `type = input`, the user cannot submit an empty answer. An error message ("This answer is required.") is displayed until a non-blank value is entered.               |
 | `use_search_filter` | `bool` | `False` | (OPTIONAL) Enable search/filter functionality for list/select type questions. This allows users to type and filter through the choices.                                                  |
 | `use_jk_keys` | `bool` | `True` | (OPTIONAL) Enable/disable j/k keys for navigation in list/select type questions. Set to false if you prefer arrow keys only.                                                                    |
 

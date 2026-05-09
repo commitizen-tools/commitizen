@@ -609,3 +609,105 @@ def test_change_type_map(config):
 def test_change_type_map_unicode(config_with_unicode):
     cz = CustomizeCommitsCz(config_with_unicode)
     assert cz.change_type_map == {"✨ feature": "Feat", "🐛 bug fix": "Fix"}
+
+
+# ---------------------------------------------------------------------------
+# Tests for `required` field on input questions
+# ---------------------------------------------------------------------------
+
+TOML_WITH_REQUIRED = r"""
+    [tool.commitizen.customize]
+    message_template = "{{message}}"
+
+    [[tool.commitizen.customize.questions]]
+    type = "input"
+    name = "message"
+    message = "Body."
+    required = true
+
+    [[tool.commitizen.customize.questions]]
+    type = "input"
+    name = "optional_note"
+    message = "Optional note."
+"""
+
+TOML_WITHOUT_REQUIRED = r"""
+    [tool.commitizen.customize]
+    message_template = "{{message}}"
+
+    [[tool.commitizen.customize.questions]]
+    type = "input"
+    name = "message"
+    message = "Body."
+"""
+
+
+def test_required_question_has_validate_callable():
+    """A question with required=true should expose a validate callable."""
+    config = TomlConfig(data=TOML_WITH_REQUIRED, path=Path("not_exist.toml"))
+    cz = CustomizeCommitsCz(config)
+    questions = cz.questions()
+
+    required_q = questions[0]
+    assert "validate" in required_q
+    assert callable(required_q["validate"])
+
+
+def test_required_field_is_removed_from_question_dict():
+    """The `required` key must not be forwarded to questionary."""
+    config = TomlConfig(data=TOML_WITH_REQUIRED, path=Path("not_exist.toml"))
+    cz = CustomizeCommitsCz(config)
+    for q in cz.questions():
+        assert "required" not in q
+
+
+def test_required_validator_rejects_empty_input():
+    """Validator must reject empty and whitespace-only strings."""
+    config = TomlConfig(data=TOML_WITH_REQUIRED, path=Path("not_exist.toml"))
+    cz = CustomizeCommitsCz(config)
+    validate = cz.questions()[0]["validate"]
+
+    assert validate("") is not True
+    assert validate("   ") is not True
+    assert isinstance(validate(""), str)  # error message
+
+
+def test_required_validator_accepts_nonempty_input():
+    """Validator must accept any non-whitespace-only input."""
+    config = TomlConfig(data=TOML_WITH_REQUIRED, path=Path("not_exist.toml"))
+    cz = CustomizeCommitsCz(config)
+    validate = cz.questions()[0]["validate"]
+
+    assert validate("hello") is True
+    assert validate("  hi  ") is True
+
+
+def test_optional_question_has_no_validate():
+    """Questions without required=true must not get a validate callable."""
+    config = TomlConfig(data=TOML_WITHOUT_REQUIRED, path=Path("not_exist.toml"))
+    cz = CustomizeCommitsCz(config)
+    assert "validate" not in cz.questions()[0]
+
+
+def test_optional_question_in_mixed_config():
+    """Only questions with required=true receive a validator; others are unaffected."""
+    config = TomlConfig(data=TOML_WITH_REQUIRED, path=Path("not_exist.toml"))
+    cz = CustomizeCommitsCz(config)
+    questions = cz.questions()
+
+    required_q = questions[0]
+    optional_q = questions[1]
+
+    assert "validate" in required_q
+    assert "validate" not in optional_q
+
+
+def test_required_does_not_mutate_config_settings():
+    """Processing questions must not mutate the underlying config data."""
+    config = TomlConfig(data=TOML_WITH_REQUIRED, path=Path("not_exist.toml"))
+    cz = CustomizeCommitsCz(config)
+    # Call questions() twice; the second call must still work correctly.
+    cz.questions()
+    questions = cz.questions()
+    assert "required" not in questions[0]
+    assert "validate" in questions[0]

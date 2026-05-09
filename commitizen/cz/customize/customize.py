@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
+    from collections.abc import Iterable, Mapping
 
     from jinja2 import Template
 
@@ -22,6 +22,13 @@ from commitizen.cz.base import BaseCommitizen
 from commitizen.exceptions import MissingCzCustomizeConfigError
 
 __all__ = ["CustomizeCommitsCz"]
+
+_REQUIRED_ANSWER_MSG = "This answer is required."
+
+
+def _required_validator(val: str) -> bool | str:
+    """Return True when *val* is non-blank, otherwise an error message."""
+    return True if val.strip() else _REQUIRED_ANSWER_MSG
 
 
 class CustomizeCommitsCz(BaseCommitizen):
@@ -50,7 +57,16 @@ class CustomizeCommitsCz(BaseCommitizen):
                 setattr(self, attr_name, value)
 
     def questions(self) -> list[CzQuestion]:
-        return self.custom_settings.get("questions", [{}])  # type: ignore[return-value]
+        raw_questions: Iterable[CzQuestion] = self.custom_settings.get(
+            "questions", [{}]
+        )  # type: ignore[assignment]
+        result: list[CzQuestion] = []
+        for raw in raw_questions:
+            q: dict[str, Any] = dict(raw)
+            if q.get("type") == "input" and q.pop("required", False):
+                q["validate"] = _required_validator
+            result.append(q)  # type: ignore[arg-type]
+        return result
 
     def message(self, answers: Mapping[str, Any]) -> str:
         message_template = Template(self.custom_settings.get("message_template", ""))
