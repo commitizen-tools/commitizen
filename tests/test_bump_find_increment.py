@@ -133,7 +133,7 @@ DEPENDABOT_BODY = (
     "<summary>Commits</summary>\n"
     "<ul>\n"
     '<li><a href="...">b5b1a91</a>\n'
-    "fix: update <code>@​actions/artifact</code> to ^5.0.0 for Node.js 24\n"
+    "fix: update <code>@actions/artifact</code> to ^5.0.0 for Node.js 24\n"
     "punycode fix</li>\n"
     '<li><a href="...">5f643d3</a>\n'
     "chore: update license files</li>\n"
