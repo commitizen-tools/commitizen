@@ -5,6 +5,15 @@ on:
   push:
     tags:
       - "v*"
+  # Manual trigger for republishing a specific tag if the original push-on-tag
+  # run failed and is now too old to be re-run via the GitHub UI (#1790).
+  # ``ref`` should be a tag name like ``v4.11.1``.
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Tag to republish (e.g., v4.11.1)"
+        required: true
+        type: string
 
 jobs:
   deploy:
@@ -17,7 +26,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          ref: ${{ github.ref_name }}
+          ref: ${{ inputs.ref || github.ref_name }}
       - name: Set up Python
         uses: astral-sh/setup-uv@v7
       - name: Build
