@@ -311,6 +311,18 @@ def is_staging_clean() -> bool:
     return not bool(c.out)
 
 
+def has_pending_changes() -> bool:
+    """Check whether there are any tracked-file changes for `git commit -a` to commit.
+
+    Returns ``True`` if there are staged or unstaged modifications to tracked
+    files, ``False`` if the working tree is clean for tracked files. Untracked
+    files are intentionally ignored — they would be ignored by ``git commit -a``
+    too.
+    """
+    c = cmd.run(["git", "status", "--porcelain", "--untracked-files=no"])
+    return bool(c.out.strip())
+
+
 def is_git_project() -> bool:
     c = cmd.run(["git", "rev-parse", "--is-inside-work-tree"])
     return c.out.strip() == "true"

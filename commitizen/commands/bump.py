@@ -382,21 +382,31 @@ class Bump:
 
         # FIXME: check if any changes have been staged
         git.add(*updated_files)
-        c = git.commit(message, args=self._get_commit_args())
-        if self.retry and c.return_code != 0 and self.changelog_flag:
-            # Maybe pre-commit reformatted some files? Retry once
-            logger.debug("1st git.commit error: %s", c.err)
-            logger.info("1st commit attempt failed; retrying once")
-            git.add(*updated_files)
-            c = git.commit(message, args=self._get_commit_args())
-        if c.return_code != 0:
-            err = c.err.strip() or c.out
-            raise BumpCommitFailedError(f'2nd git.commit error: "{err}"')
 
-        for msg in (c.out, c.err):
-            if msg:
-                out_func = out.diagnostic if self.git_output_to_stderr else out.write
-                out_func(msg)
+        # When there is nothing for the bump to commit (e.g. ``version_provider
+        # = "scm"`` with no ``version_files`` and no ``--changelog``), skip the
+        # commit step and just tag ``HEAD``. Calling ``git commit`` here would
+        # fail with ``nothing to commit, working tree clean`` (#1530).
+        if not git.has_pending_changes():
+            out.info("No file changes; skipping bump commit and tagging HEAD.")
+        else:
+            c = git.commit(message, args=self._get_commit_args())
+            if self.retry and c.return_code != 0 and self.changelog_flag:
+                # Maybe pre-commit reformatted some files? Retry once
+                logger.debug("1st git.commit error: %s", c.err)
+                logger.info("1st commit attempt failed; retrying once")
+                git.add(*updated_files)
+                c = git.commit(message, args=self._get_commit_args())
+            if c.return_code != 0:
+                err = c.err.strip() or c.out
+                raise BumpCommitFailedError(f'2nd git.commit error: "{err}"')
+
+            for msg in (c.out, c.err):
+                if msg:
+                    out_func = (
+                        out.diagnostic if self.git_output_to_stderr else out.write
+                    )
+                    out_func(msg)
 
         c = git.tag(
             new_tag_version,

@@ -1375,6 +1375,38 @@ def test_bump_warn_but_dont_fail_on_invalid_tags(
     assert git.tag_exist("0.4.3") is True
 
 
+def test_bump_skips_commit_when_no_files_changed(
+    tmp_commitizen_project: Path, util: UtilFixture
+):
+    """Regression test for #1530: with ``version_provider = "scm"`` and no
+    ``version_files`` / ``--changelog``, ``cz bump`` should not fail with
+    ``nothing to commit, working tree clean`` -- it should just create the
+    tag on ``HEAD``.
+    """
+    project_root = tmp_commitizen_project
+    tmp_commitizen_cfg_file = project_root / "pyproject.toml"
+    tmp_commitizen_cfg_file.write_text(
+        "\n".join(
+            [
+                "[tool.commitizen]",
+                'version_provider = "scm"',
+                'tag_format = "v$version"',
+            ]
+        ),
+    )
+    util.create_file_and_commit("feat: first feature")
+
+    util.run_cli("bump", "--yes")
+
+    assert git.tag_exist("v0.1.0") is True
+
+    util.create_file_and_commit("fix: second change")
+
+    util.run_cli("bump", "--yes")
+
+    assert git.tag_exist("v0.1.1") is True
+
+
 def test_is_initial_tag(mocker: MockFixture, tmp_commitizen_project, util: UtilFixture):
     """Test the _is_initial_tag method behavior."""
     # Create a commit but no tags
