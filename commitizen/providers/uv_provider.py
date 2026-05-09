@@ -26,6 +26,12 @@ class UvProvider(TomlProvider):
         self.set_lock_version(version)
 
     def set_lock_version(self, version: str) -> None:
+        if not self.lock_file.exists():
+            # `uv.lock` is optional: a freshly initialised project (or a uv
+            # workspace member, since the lock lives at the workspace root)
+            # may not have one yet. Updating `pyproject.toml` is enough.
+            return
+
         pyproject_toml_content = tomlkit.parse(
             self.file.read_text(encoding=self._get_encoding())
         )
