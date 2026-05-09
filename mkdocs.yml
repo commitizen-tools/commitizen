@@ -47,6 +47,7 @@ nav:
     - info: "commands/info.md"
     - ls: "commands/ls.md"
     - schema: "commands/schema.md"
+    - dump-config: "commands/dump_config.md"
     - version: "commands/version.md"
   - Configuration:
     - Configuration File: "config/configuration_file.md"
@@ -137,6 +138,7 @@ plugins:
           - commands/info.md: Show information about the active configuration.
           - commands/ls.md: List supported commit message choices for the active rules.
           - commands/schema.md: Show the commit message schema for the active convention.
+          - commands/dump_config.md: Output the current commitizen configuration.
           - commands/version.md: Show the installed or project version.
         Configuration:
           - config/configuration_file.md: Where configuration can live and how it is loaded.
