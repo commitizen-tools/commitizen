@@ -55,20 +55,32 @@ class Changelog:
 
         self.config = config
 
-        changelog_file_name = arguments.get("file_name") or self.config.settings.get(
-            "changelog_file"
-        )
+        # Distinguish the source of the file name so we can apply the correct
+        # path resolution strategy:
+        #   • CLI-provided (--file-name): use as-is, relative to the current
+        #     working directory — standard CLI convention.
+        #   • Config-provided (changelog_file setting): resolve relative to the
+        #     config file's directory so the path is stable regardless of where
+        #     the user runs `cz` from.
+        file_name_from_args: str | None = arguments.get("file_name") or None
+        file_name_from_config: str | None = self.config.settings.get("changelog_file")
+        changelog_file_name = file_name_from_args or file_name_from_config
         if not isinstance(changelog_file_name, str):
             raise NotAllowed(
                 "Changelog file name is broken.\n"
                 "Check the flag `--file-name` in the terminal "
                 f"or the setting `changelog_file` in {self.config.path}"
             )
-        self.file_name = (
-            Path(self.config.path.parent, changelog_file_name).as_posix()
-            if self.config.path is not None
-            else changelog_file_name
-        )
+        if file_name_from_args:
+            # Explicit CLI argument — keep relative to cwd (or use as-is if absolute).
+            self.file_name = file_name_from_args
+        elif self.config.path is not None:
+            # From configuration — anchor to the config file's directory.
+            self.file_name = Path(
+                self.config.path.parent, changelog_file_name
+            ).as_posix()
+        else:
+            self.file_name = changelog_file_name
 
         self.cz = factory.committer_factory(self.config)
 
@@ -114,6 +126,9 @@ class Changelog:
             ignored_tag_formats=self.config.settings["ignored_tag_formats"],
             merge_prereleases=arguments.get("merge_prerelease")
             or self.config.settings["changelog_merge_prerelease"],
+            skip_prereleases=bool(
+                self.config.settings.get("changelog_skip_prereleases")
+            ),
         )
 
         self.template = (

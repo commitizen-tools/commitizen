@@ -40,6 +40,7 @@ class Settings(TypedDict, total=False):
     changelog_format: str | None
     changelog_incremental: bool
     changelog_merge_prerelease: bool
+    changelog_skip_prereleases: bool
     changelog_start_rev: str | None
     customize: CzSettings
     encoding: str
@@ -103,6 +104,7 @@ DEFAULT_SETTINGS: Settings = {
     "changelog_incremental": False,
     "changelog_start_rev": None,
     "changelog_merge_prerelease": False,
+    "changelog_skip_prereleases": False,
     "update_changelog_on_bump": False,
     "use_shortcuts": False,
     "major_version_zero": False,

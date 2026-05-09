@@ -86,6 +86,7 @@ class TagRules:
     legacy_tag_formats: Sequence[str] = field(default_factory=list)
     ignored_tag_formats: Sequence[str] = field(default_factory=list)
     merge_prereleases: bool = False
+    skip_prereleases: bool = False
 
     @property
     def tag_formats(self) -> Iterable[str]:
@@ -166,7 +167,13 @@ class TagRules:
             version = self.extract_version(tag)
         except InvalidVersion:
             return False
-        return not (self.merge_prereleases and version.is_prerelease)
+        if version.is_prerelease:
+            # skip_prereleases wins over merge_prereleases when both are set
+            if self.skip_prereleases:
+                return False
+            if self.merge_prereleases:
+                return False
+        return True
 
     def search_version(self, text: str, last: bool = False) -> VersionTag | None:
         """
@@ -265,6 +272,7 @@ class TagRules:
             legacy_tag_formats=settings["legacy_tag_formats"],
             ignored_tag_formats=settings["ignored_tag_formats"],
             merge_prereleases=settings["changelog_merge_prerelease"],
+            skip_prereleases=settings["changelog_skip_prereleases"],
         )
 
     def _extract_version(self, match: re.Match[str]) -> str:

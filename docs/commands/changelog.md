@@ -85,6 +85,8 @@ Specify the name of the output file. Note that changelog generation only works w
 cz changelog --file-name="CHANGES.md"
 ```
 
+When provided on the command line, the path is interpreted **relative to the current working directory** (standard CLI convention).
+
 This value can be updated in the configuration file with the key `changelog_file` under `tool.commitizen`.
 
 ```toml
@@ -92,6 +94,8 @@ This value can be updated in the configuration file with the key `changelog_file
 # ...
 changelog_file = "CHANGES.md"
 ```
+
+When set in the configuration file, the path is resolved **relative to the configuration file's directory** (usually the project root).  This means the location of the changelog is stable regardless of which directory you run `cz` from.
 
 ### `--incremental`
 
@@ -146,6 +150,30 @@ This flag can be set in the configuration file with the key `changelog_merge_pre
 # ...
 changelog_merge_prerelease = true
 ```
+
+### `changelog_skip_prereleases`
+
+Omits all prerelease versions (e.g. `rc`, `alpha`, `beta`, `dev`) from the changelog entirely. Stable-release entries are kept, but their commits are attributed only to the stable release — prerelease headers never appear.
+
+This is a configuration-only option (no CLI flag); enable it in your `pyproject.toml`:
+
+```toml
+[tool.commitizen]
+changelog_skip_prereleases = true
+```
+
+With this setting, a history such as:
+
+```
+0.1.0-a0  →  0.1.0-b0  →  0.1.0
+```
+
+will produce a changelog that shows only `0.1.0`, without `0.1.0-a0` or `0.1.0-b0` entries.
+
+!!! note
+    When both `changelog_skip_prereleases = true` and `changelog_merge_prerelease = true` are set,
+    `changelog_skip_prereleases` takes precedence and prerelease entries are dropped rather than
+    merged.
 
 ### `--template`
 

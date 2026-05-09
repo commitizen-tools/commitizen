@@ -600,6 +600,79 @@ def test_changelog_config_flag_merge_prerelease(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_config_flag_skip_prereleases(
+    capsys: pytest.CaptureFixture,
+    config_path: Path,
+    util: UtilFixture,
+):
+    """changelog_skip_prereleases = true must omit prerelease entries from changelog."""
+    with config_path.open("a", encoding="utf-8") as f:
+        f.write("changelog_skip_prereleases = true\n")
+
+    util.create_file_and_commit("feat: initial feature")
+    util.run_cli("bump", "--yes")
+    capsys.readouterr()
+
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
+
+    # bump to a prerelease
+    util.run_cli("bump", "--prerelease", "rc", "--yes")
+    capsys.readouterr()
+
+    util.create_file_and_commit("fix: another fix")
+    util.create_file_and_commit("feat: more stuff")
+
+    # bump to stable
+    util.run_cli("bump", "--yes")
+    capsys.readouterr()
+
+    with pytest.raises(DryRunExit):
+        util.run_cli("changelog", "--dry-run")
+
+    out, _ = capsys.readouterr()
+    # The prerelease version (e.g. 0.2.0rc1) must not appear
+    assert "rc" not in out
+    # Commit messages from stable releases must be present
+    assert "add new output" in out
+    assert "more stuff" in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_config_skip_prereleases_wins_over_merge_prerelease(
+    capsys: pytest.CaptureFixture,
+    config_path: Path,
+    util: UtilFixture,
+):
+    """When both skip_prereleases and merge_prerelease are set, skip wins."""
+    with config_path.open("a", encoding="utf-8") as f:
+        f.write("changelog_skip_prereleases = true\n")
+        f.write("changelog_merge_prerelease = true\n")
+
+    util.create_file_and_commit("feat: initial feature")
+    util.run_cli("bump", "--yes")
+    capsys.readouterr()
+
+    util.create_file_and_commit("feat: add new output")
+    util.run_cli("bump", "--prerelease", "alpha", "--yes")
+    capsys.readouterr()
+
+    util.create_file_and_commit("fix: another fix")
+    util.run_cli("bump", "--yes")
+    capsys.readouterr()
+
+    with pytest.raises(DryRunExit):
+        util.run_cli("changelog", "--dry-run")
+
+    out, _ = capsys.readouterr()
+    # Prerelease entries must not appear
+    assert "alpha" not in out
+    # Stable commit messages must be present
+    assert "add new output" in out
+    assert "another fix" in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_config_start_rev_option(
     capsys: pytest.CaptureFixture,
     config_path: Path,
