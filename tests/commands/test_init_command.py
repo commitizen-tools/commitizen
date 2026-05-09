@@ -551,3 +551,42 @@ def test_construct_version_provider_choices_discovers_third_party(
     # with the generic third-party suffix.
     assert values.count("pep621") == 1
     assert "pep621: third-party version provider" not in titles
+
+
+def test_construct_version_provider_choices_dedupes_duplicate_third_party(
+    mocker: MockFixture,
+):
+    """Two distributions registering the same provider name only show once."""
+    from commitizen.commands.init import _construct_version_provider_choices
+    from commitizen.providers import PROVIDER_ENTRYPOINT
+
+    real_entry_points = metadata.entry_points
+
+    duplicate_eps = [
+        metadata.EntryPoint(
+            name="duplicated",
+            value="dist_a.module:Provider",
+            group=PROVIDER_ENTRYPOINT,
+        ),
+        metadata.EntryPoint(
+            name="duplicated",
+            value="dist_b.module:Provider",
+            group=PROVIDER_ENTRYPOINT,
+        ),
+    ]
+
+    def fake_entry_points(*args: Any, **kwargs: Any):
+        eps = real_entry_points(*args, **kwargs)
+        if kwargs.get("group") == PROVIDER_ENTRYPOINT:
+            return list(eps) + duplicate_eps
+        return eps
+
+    mocker.patch(
+        "commitizen.commands.init.metadata.entry_points",
+        side_effect=fake_entry_points,
+    )
+
+    choices = _construct_version_provider_choices()
+    values = [choice.value for choice in choices]
+
+    assert values.count("duplicated") == 1

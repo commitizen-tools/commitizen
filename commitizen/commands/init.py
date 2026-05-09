@@ -83,6 +83,14 @@ def _construct_version_provider_choices() -> list[questionary.Choice]:
     third-party providers that register themselves under the
     `commitizen.provider` entry-point group. Third-party providers are
     not loaded — only their entry-point name is used for the choice.
+
+    Names already registered as built-ins are skipped to avoid showing
+    them twice (commitizen's own providers register under the same
+    entry-point group). When two distributions register a third-party
+    provider under the same name, the choice list deduplicates by name
+    so the user does not see ambiguous duplicate entries; the conflict
+    will surface with a clear error from `get_provider()` if the user
+    actually selects that name.
     """
     builtin_names = {
         option.provider_name for option in _BUILTIN_VERSION_PROVIDER_OPTIONS
@@ -91,14 +99,18 @@ def _construct_version_provider_choices() -> list[questionary.Choice]:
         questionary.Choice(title=option.title, value=option.provider_name)
         for option in _BUILTIN_VERSION_PROVIDER_OPTIONS
     ]
-    third_party_choices = [
-        questionary.Choice(
-            title=f"{ep.name}: third-party version provider",
-            value=ep.name,
+    third_party_choices: list[questionary.Choice] = []
+    seen_names: set[str] = set(builtin_names)
+    for ep in metadata.entry_points(group=PROVIDER_ENTRYPOINT):
+        if ep.name in seen_names:
+            continue
+        seen_names.add(ep.name)
+        third_party_choices.append(
+            questionary.Choice(
+                title=f"{ep.name}: third-party version provider",
+                value=ep.name,
+            )
         )
-        for ep in metadata.entry_points(group=PROVIDER_ENTRYPOINT)
-        if ep.name not in builtin_names
-    ]
     return [*builtin_choices, *third_party_choices]
 
 
