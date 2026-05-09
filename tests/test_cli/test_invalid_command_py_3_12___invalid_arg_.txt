@@ -1,0 +1,5 @@
+usage: cz [-h] [--config CONFIG] [--debug] [-n NAME] [-nr NO_RAISE] [-v]
+          [--report]
+          {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version}
+          ...
+cz: error: unrecognized arguments: --invalid-arg
