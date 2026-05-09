@@ -88,6 +88,32 @@ def test_changelog_with_different_cz(
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_subject_only_setting_skips_body_parsing(
+    util: UtilFixture,
+    config_path: Path,
+    capsys: pytest.CaptureFixture,
+):
+    """End-to-end coverage for `changelog_subject_only` (#1267 / #1974).
+
+    Verifies the config-key wiring in `commands/changelog.py`: when the
+    setting is `true`, parser-matching blocks in commit bodies are
+    ignored. Catches regressions where the setting key is mistyped or
+    not propagated to `generate_tree_from_commits`.
+    """
+    with config_path.open("a") as f:
+        f.write("changelog_subject_only = true\n")
+
+    util.create_file_and_commit("feat: add new output\n\nrefactor: incidental cleanup")
+
+    with pytest.raises(DryRunExit):
+        util.run_cli("changelog", "--dry-run")
+    out, _ = capsys.readouterr()
+
+    assert "add new output" in out
+    assert "incidental cleanup" not in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_changelog_from_start(
     changelog_format: ChangelogFormat,
     file_regression: FileRegressionFixture,
