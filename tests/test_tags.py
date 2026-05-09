@@ -126,3 +126,17 @@ def test_is_version_tag_accepts_semver2_prerelease_in_custom_tag_format():
     # And ``extract_version`` round-trips the prerelease portion.
     extracted = rules.extract_version(_git_tag("0.0-2rc.0"))
     assert str(extracted) == "0.0.2-rc.0"
+
+
+def test_is_version_tag_accepts_dotless_devrelease_in_custom_tag_format():
+    """Regression test for #1614: ``${devrelease}`` accepts both ``dev1``
+    and ``.dev1`` suffixes when a custom ``tag_format`` splits release and dev
+    portions explicitly.
+    """
+    rules = TagRules(tag_format="version-${major}.${minor}.${patch}${devrelease}")
+
+    assert rules.is_version_tag("version-1.2.3.dev1") is True
+    assert rules.is_version_tag("version-1.2.3dev1") is True
+
+    extracted = rules.extract_version(_git_tag("version-1.2.3dev1"))
+    assert str(extracted) == "1.2.3.dev1"
