@@ -31,7 +31,17 @@ def test_no_argv(util: UtilFixture, capsys, file_regression):
     "arg",
     [
         "--invalid-arg",
-        "invalidCommand",
+        pytest.param(
+            "invalidCommand",
+            marks=pytest.mark.skipif(
+                (3, 14, 5) <= sys.version_info < (3, 15),
+                reason=(
+                    "Python 3.14.5 restored argparse choice quoting (CPython "
+                    "gh-130750); the checked-in fixture matches the 3.14.0-4 "
+                    "unquoted format. See #1990."
+                ),
+            ),
+        ),
     ],
 )
 @pytest.mark.usefixtures("python_version", "consistent_terminal_output")
