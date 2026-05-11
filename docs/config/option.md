@@ -44,6 +44,31 @@ Custom rules for committing and bumping.
 
 See [customization](../customization/config_file.md) for more details.
 
+## `strict_config`
+
+When enabled, Commitizen raises an error if the configuration file contains
+keys that are not recognized as valid commitizen settings (for example because
+of a typo such as `update_changelog_on_bumb` instead of
+`update_changelog_on_bump`).
+
+When disabled (the default), unknown keys only produce a warning so they can be
+spotted without breaking existing setups.
+
+- Type: `bool`
+- Default: `False`
+
+**Example**
+
+```toml title="pyproject.toml"
+[tool.commitizen]
+name = "cz_conventional_commits"
+strict_config = true
+```
+
+If you intentionally need to keep additional plugin-specific data inside the
+commitizen section, put it under the `extras` setting so it is not flagged as
+unknown.
+
 ## `use_shortcuts`
 
 Show keyboard shortcuts when selecting from a list. When enabled, each choice shows a shortcut key; press that key or use the arrow keys to select.

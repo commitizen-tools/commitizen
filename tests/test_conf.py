@@ -112,6 +112,7 @@ _settings: dict[str, Any] = {
     "extras": {},
     "breaking_change_exclamation_in_title": False,
     "message_length_limit": 0,
+    "strict_config": False,
 }
 
 _new_settings: dict[str, Any] = {
@@ -152,6 +153,7 @@ _new_settings: dict[str, Any] = {
     "extras": {},
     "breaking_change_exclamation_in_title": False,
     "message_length_limit": 0,
+    "strict_config": False,
 }
 
 
@@ -497,3 +499,125 @@ class TestYamlConfig:
         with pytest.raises(InvalidConfigurationError) as excinfo:
             YAMLConfig(data=existing_content, path=path)
         assert config_file in str(excinfo.value)
+
+
+class TestUnknownConfigKeys:
+    """Validate handling of unknown keys in the commitizen section."""
+
+    @pytest.mark.parametrize(
+        ("config_file", "content_template"),
+        [
+            (
+                "pyproject.toml",
+                '[tool.commitizen]\nname = "cz_conventional_commits"\n{extra}\n',
+            ),
+            (
+                ".cz.toml",
+                '[tool.commitizen]\nname = "cz_conventional_commits"\n{extra}\n',
+            ),
+            (
+                ".cz.json",
+                '{{"commitizen": {{"name": "cz_conventional_commits"{extra}}}}}',
+            ),
+            (
+                ".cz.yaml",
+                "commitizen:\n  name: cz_conventional_commits\n{extra}\n",
+            ),
+        ],
+    )
+    def test_warns_on_unknown_keys_by_default(
+        self, tmp_path, monkeypatch, capsys, config_file, content_template
+    ):
+        monkeypatch.chdir(tmp_path)
+        if config_file == ".cz.json":
+            extra = ', "update_changelog_on_bumb": true, "another_typo": 1'
+        elif config_file == ".cz.yaml":
+            extra = "  update_changelog_on_bumb: true\n  another_typo: 1"
+        else:
+            extra = "update_changelog_on_bumb = true\nanother_typo = 1"
+        (tmp_path / config_file).write_text(content_template.format(extra=extra))
+
+        cfg = config.read_cfg()
+        captured = capsys.readouterr()
+
+        assert "Unknown commitizen configuration keys" in captured.err
+        assert "'another_typo'" in captured.err
+        assert "'update_changelog_on_bumb'" in captured.err
+        # The unknown keys are still loaded into settings (back-compat) but flagged.
+        assert cfg.settings["name"] == "cz_conventional_commits"
+
+    @pytest.mark.parametrize(
+        ("config_file", "content"),
+        [
+            (
+                "pyproject.toml",
+                "[tool.commitizen]\n"
+                'name = "cz_conventional_commits"\n'
+                "strict_config = true\n"
+                "update_changelog_on_bumb = true\n",
+            ),
+            (
+                ".cz.json",
+                json.dumps(
+                    {
+                        "commitizen": {
+                            "name": "cz_conventional_commits",
+                            "strict_config": True,
+                            "update_changelog_on_bumb": True,
+                        }
+                    }
+                ),
+            ),
+            (
+                ".cz.yaml",
+                "commitizen:\n"
+                "  name: cz_conventional_commits\n"
+                "  strict_config: true\n"
+                "  update_changelog_on_bumb: true\n",
+            ),
+        ],
+    )
+    def test_raises_on_unknown_keys_when_strict(
+        self, tmp_path, monkeypatch, config_file, content
+    ):
+        monkeypatch.chdir(tmp_path)
+        (tmp_path / config_file).write_text(content)
+
+        with pytest.raises(InvalidConfigurationError) as excinfo:
+            config.read_cfg()
+        assert "update_changelog_on_bumb" in str(excinfo.value)
+
+    @pytest.mark.parametrize(
+        ("config_file", "content_template"),
+        [
+            (
+                "pyproject.toml",
+                '[tool.commitizen]\nname = "cz_conventional_commits"\n{extra}',
+            ),
+            (
+                ".cz.json",
+                '{{"commitizen": {{"name": "cz_conventional_commits"{extra}}}}}',
+            ),
+            (
+                ".cz.yaml",
+                "commitizen:\n  name: cz_conventional_commits\n{extra}",
+            ),
+        ],
+    )
+    def test_no_warning_for_known_keys(
+        self, tmp_path, monkeypatch, capsys, config_file, content_template
+    ):
+        monkeypatch.chdir(tmp_path)
+        if config_file == ".cz.json":
+            extra = ', "update_changelog_on_bump": true'
+        elif config_file == ".cz.yaml":
+            extra = "  update_changelog_on_bump: true"
+        else:
+            extra = "update_changelog_on_bump = true"
+
+        (tmp_path / config_file).write_text(content_template.format(extra=extra))
+
+        config.read_cfg()
+        captured = capsys.readouterr()
+
+        assert "Unknown commitizen configuration" not in captured.err
