@@ -861,10 +861,8 @@ def test_changelog_from_rev_range_not_found(
     util.create_file_and_commit("feat: new file")
     util.create_tag("1.0.0")
 
-    with pytest.raises(NoCommitsFoundError) as excinfo:
+    with pytest.raises(NoCommitsFoundError, match="Could not find a valid revision"):
         util.run_cli("changelog", rev_range)  # it shouldn't exist
-
-    assert "Could not find a valid revision" in str(excinfo)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")

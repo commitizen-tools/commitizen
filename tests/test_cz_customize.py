@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 import pytest
@@ -377,10 +378,11 @@ def config_with_unicode(request):
 
 def test_initialize_cz_customize_failed():
     config = BaseConfig()
-    with pytest.raises(MissingCzCustomizeConfigError) as excinfo:
+    with pytest.raises(
+        MissingCzCustomizeConfigError,
+        match=re.escape(MissingCzCustomizeConfigError.message),
+    ):
         CustomizeCommitsCz(config)
-
-    assert MissingCzCustomizeConfigError.message in str(excinfo.value)
 
 
 def test_bump_pattern(config):
