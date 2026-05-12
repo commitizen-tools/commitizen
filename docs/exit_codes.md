@@ -57,6 +57,24 @@ The `--no-raise` (or `-nr`) flag allows you to specify exit codes that should no
 
 Multiple exit codes can be specified as a comma-separated list.
 
+!!! warning "Flag placement"
+    `--no-raise` / `-nr` is a **top-level Commitizen flag**, so it must be passed
+    **before** the subcommand:
+
+    ```sh
+    cz --no-raise 21 bump --yes        # ✅ correct
+    cz -nr 21 bump --yes               # ✅ correct (short form)
+    ```
+
+    Placing it after the subcommand fails with exit code 18
+    (`InvalidCommandArgumentError`):
+
+    ```sh
+    cz bump --yes --no-raise 21        # ❌ wrong
+    # Invalid commitizen arguments were found: `--no-raise`.
+    # Please use -- separator for extra git args
+    ```
+
 ### Common Use Cases
 
 #### Ignoring No Increment Errors
