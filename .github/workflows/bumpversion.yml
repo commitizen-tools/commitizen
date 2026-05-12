@@ -39,7 +39,7 @@ jobs:
       - id: bump-version
         run: |
           old_sha="$(git rev-parse HEAD)"
-          cz bump --yes --no-raise 21
+          cz --no-raise 21 bump --yes
 
           if [ "$(git rev-parse HEAD)" = "$old_sha" ]; then
             echo "No bump-eligible commits found, skipping release."
