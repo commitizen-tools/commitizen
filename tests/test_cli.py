@@ -44,6 +44,15 @@ def test_no_argv(util: UtilFixture, capsys, file_regression):
         ),
     ],
 )
+@pytest.mark.skipif(
+    sys.version_info[:2] == (3, 12) and sys.version_info < (3, 12, 7),
+    reason=(
+        "argparse stopped quoting choices in 3.13 (CPython gh-129019), "
+        "backported to 3.12.7. The reference snapshot reflects the "
+        "no-quote format, so older 3.12.x patches (3.12.0-3.12.6) print "
+        "quoted choices and fail. See commitizen-tools/commitizen#1864."
+    ),
+)
 @pytest.mark.usefixtures("python_version", "consistent_terminal_output")
 def test_invalid_command(util: UtilFixture, capsys, file_regression, arg):
     with pytest.raises(NoCommandFoundError):
