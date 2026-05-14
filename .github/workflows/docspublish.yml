@@ -41,6 +41,7 @@ jobs:
 
           if [[ -n "$(git status --porcelain)" ]]; then
             git commit -m "docs(cli/screenshots): update CLI screenshots" -m "[skip ci]"
+            git pull --rebase origin master
             git push
           else
             echo "No changes to commit. Skipping."

@@ -34,7 +34,7 @@ class CommitArgs(TypedDict, total=False):
     all: bool
     dry_run: bool
     edit: bool
-    extra_cli_args: str
+    extra_cli_args: list[str]
     message_length_limit: int
     no_retry: bool
     signoff: bool
@@ -132,7 +132,7 @@ class Commit:
         return self._get_message_by_prompt_commit_questions()
 
     def __call__(self) -> None:
-        extra_args = self.arguments.get("extra_cli_args", "")
+        extra_args: list[str] = self.arguments.get("extra_cli_args", [])
         dry_run = bool(self.arguments.get("dry_run"))
         write_message_to_file = self.arguments.get("write_message_to_file")
         signoff = bool(self.arguments.get("signoff"))
@@ -167,7 +167,7 @@ class Commit:
             raise DryRunExit()
 
         if self.config.settings["always_signoff"] or signoff:
-            extra_args = f"{extra_args} -s".strip()
+            extra_args = [*extra_args, "-s"]
 
         c = git.commit(commit_message, args=extra_args)
         if c.return_code != 0:

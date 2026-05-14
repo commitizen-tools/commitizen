@@ -330,7 +330,11 @@ class Bump:
 
             changelog_cmd = Changelog(
                 self.config,
-                {**changelog_args, "file_name": self.file_name},  # type: ignore[typeddict-item]
+                {
+                    **changelog_args,  # type: ignore[typeddict-item]
+                    "file_name": self.file_name,
+                    "allow_no_commit": bool(self.arguments["allow_no_commit"]),
+                },
             )
             changelog_cmd()
             changelog_file_name = changelog_cmd.file_name
@@ -435,8 +439,8 @@ class Bump:
         else:
             out.success("Done!")
 
-    def _get_commit_args(self) -> str:
+    def _get_commit_args(self) -> list[str]:
         commit_args = ["-a"]
         if self.no_verify:
             commit_args.append("--no-verify")
-        return " ".join(commit_args)
+        return commit_args

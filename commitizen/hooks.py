@@ -17,14 +17,9 @@ def run(hooks: str | list[str], _env_prefix: str = "CZ_", **env: object) -> None
     for hook in hooks:
         out.info(f"Running hook '{hook}'")
 
-        c = cmd.run(hook, env=_format_env(_env_prefix, env))
+        return_code = cmd.run_interactive(hook, env=_format_env(_env_prefix, env))
 
-        if c.out:
-            out.write(c.out)
-        if c.err:
-            out.error(c.err)
-
-        if c.return_code != 0:
+        if return_code != 0:
             raise RunHookError(f"Running hook '{hook}' failed")
 
 

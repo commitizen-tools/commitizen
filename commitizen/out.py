@@ -9,35 +9,35 @@ if sys.platform == "win32":
         sys.stdout.reconfigure(encoding="utf-8")
 
 
-def write(value: str, *args: object) -> None:
+def write(value: object, *args: object) -> None:
     """Intended to be used when value is multiline."""
     print(value, *args)
 
 
-def line(value: str, *args: object, **kwargs: Any) -> None:
+def line(value: object, *args: object, **kwargs: Any) -> None:
     """Wrapper in case I want to do something different later."""
     print(value, *args, **kwargs)
 
 
-def error(value: str) -> None:
-    message = colored(value, "red")
+def error(value: object) -> None:
+    message = colored(str(value), "red")
     line(message, file=sys.stderr)
 
 
-def success(value: str) -> None:
-    message = colored(value, "green")
+def success(value: object) -> None:
+    message = colored(str(value), "green")
     line(message)
 
 
-def info(value: str) -> None:
-    message = colored(value, "blue")
+def info(value: object) -> None:
+    message = colored(str(value), "blue")
     line(message)
 
 
-def diagnostic(value: str) -> None:
+def diagnostic(value: object) -> None:
     line(value, file=sys.stderr)
 
 
-def warn(value: str) -> None:
-    message = colored(value, "magenta")
+def warn(value: object) -> None:
+    message = colored(str(value), "magenta")
     line(message, file=sys.stderr)

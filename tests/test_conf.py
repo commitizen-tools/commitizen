@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from pathlib import Path
 from typing import Any
 
@@ -320,7 +321,7 @@ class TestWarnMultipleConfigFiles:
     ):
         """Test warning when same config filename exists in the current directory and in the git root."""
         monkeypatch.chdir(tmp_path)
-        cmd.run("git init")
+        cmd.run(["git", "init"])
 
         # Create config in git root
         (tmp_path / config_file).write_text(content)
@@ -378,7 +379,7 @@ class TestWarnMultipleConfigFiles:
         """Test that no warning is issued when user explicitly specifies config."""
         monkeypatch.chdir(tmp_path)
         if with_git:
-            cmd.run("git init")
+            cmd.run(["git", "init"])
 
         (tmp_path / config_file).write_text(content)
 
@@ -440,9 +441,8 @@ class TestTomlConfig:
         path = tmp_path / "commitizen" / config_file
         path.parent.mkdir(parents=True, exist_ok=True)
 
-        with pytest.raises(InvalidConfigurationError) as excinfo:
+        with pytest.raises(InvalidConfigurationError, match=re.escape(config_file)):
             TomlConfig(data=existing_content, path=path)
-        assert config_file in str(excinfo.value)
 
 
 @pytest.mark.parametrize(
@@ -467,9 +467,8 @@ class TestJsonConfig:
         path = tmp_path / "commitizen" / config_file
         path.parent.mkdir(parents=True, exist_ok=True)
 
-        with pytest.raises(InvalidConfigurationError) as excinfo:
+        with pytest.raises(InvalidConfigurationError, match=re.escape(config_file)):
             JsonConfig(data=existing_content, path=path)
-        assert config_file in str(excinfo.value)
 
 
 @pytest.mark.parametrize(
@@ -494,6 +493,5 @@ class TestYamlConfig:
         path = tmp_path / "commitizen" / config_file
         path.parent.mkdir(parents=True, exist_ok=True)
 
-        with pytest.raises(InvalidConfigurationError) as excinfo:
+        with pytest.raises(InvalidConfigurationError, match=re.escape(config_file)):
             YAMLConfig(data=existing_content, path=path)
-        assert config_file in str(excinfo.value)

@@ -1,18 +1,29 @@
-usage: cz version [-h] [-r | -p | -c | -v] [--major | --minor | --tag]
+usage: cz version [-h] [-r | -p | -c | -v]
+                  [--major | --minor | --tag | --patch | --next [{USE_GIT_COMMITS,NONE,PATCH,MINOR,MAJOR}]]
+                  [MANUAL_VERSION]
 
 Get the version of the installed commitizen or the current project (default:
 installed commitizen)
 
+positional arguments:
+  MANUAL_VERSION        Use the version provided instead of the version from
+                        the project. Can be used to test the selected version
+                        scheme.
+
 options:
-  -h, --help        show this help message and exit
-  -r, --report      Output the system information for reporting bugs.
-  -p, --project     Output the version of the current project.
-  -c, --commitizen  Output the version of the installed commitizen.
-  -v, --verbose     Output the version of both the installed commitizen and
-                    the current project.
-  --major           Output just the major version. Must be used with --project
-                    or --verbose.
-  --minor           Output just the minor version. Must be used with --project
-                    or --verbose.
-  --tag             get the version with tag prefix. Need to be used with
-                    --project or --verbose.
+  -h, --help            show this help message and exit
+  -r, --report          Output the system information for reporting bugs.
+  -p, --project         Output the version of the current project.
+  -c, --commitizen      Output the version of the installed commitizen.
+  -v, --verbose         Output the version of both the installed commitizen
+                        and the current project.
+  --major               Output just the major version. Must be used with
+                        MANUAL_VERSION, --project, or --verbose.
+  --minor               Output just the minor version. Must be used with
+                        MANUAL_VERSION, --project, or --verbose.
+  --tag                 get the version with tag prefix. Need to be used with
+                        --project or --verbose.
+  --patch               Output the patch version only. Must be used with
+                        MANUAL_VERSION, --project, or --verbose.
+  --next [{USE_GIT_COMMITS,NONE,PATCH,MINOR,MAJOR}]
+                        Output the next version.

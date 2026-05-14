@@ -1,5 +1,6 @@
 name: Upload Python Package
 
+# The tag is now triggered by the Github App: CommitizenBot
 on:
   push:
     tags:
@@ -15,8 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
           fetch-depth: 0
+          ref: ${{ github.ref_name }}
       - name: Set up Python
         uses: astral-sh/setup-uv@v7
       - name: Build

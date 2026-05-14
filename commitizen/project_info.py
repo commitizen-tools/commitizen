@@ -39,9 +39,9 @@ def get_default_config_filename() -> Literal["pyproject.toml", ".cz.toml"]:
     return "pyproject.toml" if Path("pyproject.toml").is_file() else ".cz.toml"
 
 
-def get_default_version_scheme() -> Literal["pep440", "semver"]:
+def get_default_version_scheme() -> Literal["pep440", "semver2"]:
     return (
         "pep440"
         if Path("pyproject.toml").is_file() or Path("setup.py").is_file()
-        else "semver"
+        else "semver2"
     )

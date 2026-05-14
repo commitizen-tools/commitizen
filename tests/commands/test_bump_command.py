@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import inspect
 import re
+from pathlib import Path
 from textwrap import dedent
 from typing import TYPE_CHECKING
 from unittest.mock import call
@@ -28,8 +29,6 @@ from commitizen.exceptions import (
 )
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from pytest_mock import MockFixture
     from pytest_regressions.file_regression import FileRegressionFixture
 
@@ -64,7 +63,9 @@ def test_bump_minor_increment(commit_msg: str, util: UtilFixture):
     assert git.tag_exist("0.2.0") is True
     assert (
         "commit:refs/tags/0.2.0"
-        in cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"').out
+        in cmd.run(
+            ["git", "for-each-ref", "refs/tags", "--format", "%(objecttype):%(refname)"]
+        ).out
     )
 
 
@@ -76,7 +77,9 @@ def test_bump_minor_increment_annotated(commit_msg: str, util: UtilFixture):
     assert git.tag_exist("0.2.0") is True
     assert (
         "tag:refs/tags/0.2.0"
-        in cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"').out
+        in cmd.run(
+            ["git", "for-each-ref", "refs/tags", "--format", "%(objecttype):%(refname)"]
+        ).out
     )
 
     assert git.is_signed_tag("0.2.0") is False
@@ -90,7 +93,9 @@ def test_bump_minor_increment_signed(commit_msg: str, util: UtilFixture):
     assert git.tag_exist("0.2.0") is True
     assert (
         "tag:refs/tags/0.2.0"
-        in cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"').out
+        in cmd.run(
+            ["git", "for-each-ref", "refs/tags", "--format", "%(objecttype):%(refname)"]
+        ).out
     )
 
     assert git.is_signed_tag("0.2.0") is True
@@ -107,7 +112,9 @@ def test_bump_minor_increment_annotated_config_file(
     assert git.tag_exist("0.2.0") is True
     assert (
         "tag:refs/tags/0.2.0"
-        in cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"').out
+        in cmd.run(
+            ["git", "for-each-ref", "refs/tags", "--format", "%(objecttype):%(refname)"]
+        ).out
     )
 
     assert git.is_signed_tag("0.2.0") is False
@@ -125,7 +132,9 @@ def test_bump_minor_increment_signed_config_file(
     assert git.tag_exist("0.2.0") is True
     assert (
         "tag:refs/tags/0.2.0"
-        in cmd.run('git for-each-ref refs/tags --format "%(objecttype):%(refname)"').out
+        in cmd.run(
+            ["git", "for-each-ref", "refs/tags", "--format", "%(objecttype):%(refname)"]
+        ).out
     )
 
     assert git.is_signed_tag("0.2.0") is True
@@ -283,10 +292,10 @@ def test_bump_command_prerelease_exact_mode(util: UtilFixture):
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_on_git_with_hooks_no_verify_disabled(util: UtilFixture):
     """Bump commit without --no-verify"""
-    cmd.run("mkdir .git/hooks")
+    Path(".git/hooks").mkdir(parents=True, exist_ok=True)
     with open(".git/hooks/pre-commit", "w", encoding="utf-8") as f:
         f.write('#!/usr/bin/env bash\necho "0.1.0"')
-    cmd.run("chmod +x .git/hooks/pre-commit")
+    Path(".git/hooks/pre-commit").chmod(0o755)
 
     # MINOR
     util.create_file_and_commit("feat: new file")
@@ -296,26 +305,25 @@ def test_bump_on_git_with_hooks_no_verify_disabled(util: UtilFixture):
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_tag_exists_raises_exception(util: UtilFixture):
-    cmd.run("mkdir .git/hooks")
+    Path(".git/hooks").mkdir(parents=True, exist_ok=True)
     with open(".git/hooks/post-commit", "w", encoding="utf-8") as f:
         f.write("#!/usr/bin/env bash\nexit 9")
-    cmd.run("chmod +x .git/hooks/post-commit")
+    Path(".git/hooks/post-commit").chmod(0o755)
 
     # MINOR
     util.create_file_and_commit("feat: new file")
     git.tag("0.2.0")
 
-    with pytest.raises(BumpTagFailedError) as excinfo:
+    with pytest.raises(BumpTagFailedError, match=re.escape("0.2.0")):
         util.run_cli("bump", "--yes")
-    assert "0.2.0" in str(excinfo.value)  # This should be a fatal error
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_on_git_with_hooks_no_verify_enabled(util: UtilFixture):
-    cmd.run("mkdir .git/hooks")
+    Path(".git/hooks").mkdir(parents=True, exist_ok=True)
     with open(".git/hooks/pre-commit", "w", encoding="utf-8") as f:
         f.write('#!/usr/bin/env bash\necho "0.1.0"')
-    cmd.run("chmod +x .git/hooks/pre-commit")
+    Path(".git/hooks/pre-commit").chmod(0o755)
 
     # MINOR
     util.create_file_and_commit("feat: new file")
@@ -329,17 +337,16 @@ def test_bump_when_bumping_is_not_support(util: UtilFixture):
         "feat: new user interface\n\nBREAKING CHANGE: age is no longer supported"
     )
 
-    with pytest.raises(NoPatternMapError) as excinfo:
+    with pytest.raises(NoPatternMapError, match="'cz_jira' rule does not support bump"):
         util.run_cli("-n", "cz_jira", "bump", "--yes")
-    assert "'cz_jira' rule does not support bump" in str(excinfo.value)
 
 
 @pytest.mark.usefixtures("tmp_git_project")
 def test_bump_when_version_is_not_specify(util: UtilFixture):
-    with pytest.raises(NoVersionSpecifiedError) as excinfo:
+    with pytest.raises(
+        NoVersionSpecifiedError, match=re.escape(NoVersionSpecifiedError.message)
+    ):
         util.run_cli("bump")
-
-    assert NoVersionSpecifiedError.message in str(excinfo.value)
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -351,10 +358,10 @@ def test_bump_when_no_new_commit(util: UtilFixture):
     util.run_cli("bump", "--yes")
 
     # bump without a new commit.
-    with pytest.raises(NoCommitsFoundError) as excinfo:
+    with pytest.raises(
+        NoCommitsFoundError, match=r"\[NO_COMMITS_FOUND\]\nNo new commits found\."
+    ):
         util.run_cli("bump", "--yes")
-
-    assert "[NO_COMMITS_FOUND]\nNo new commits found." in str(excinfo.value)
 
 
 def test_bump_when_version_inconsistent_in_version_files(
@@ -369,10 +376,11 @@ def test_bump_when_version_inconsistent_in_version_files(
 
     util.create_file_and_commit("feat: new file")
 
-    with pytest.raises(CurrentVersionNotFoundError) as excinfo:
+    with pytest.raises(
+        CurrentVersionNotFoundError,
+        match=re.escape("Current version 0.1.0 is not found in"),
+    ):
         util.run_cli("bump", "--yes", "--check-consistency")
-
-    assert "Current version 0.1.0 is not found in" in str(excinfo.value)
 
 
 def test_bump_major_version_zero_when_major_is_not_zero(
@@ -394,12 +402,13 @@ def test_bump_major_version_zero_when_major_is_not_zero(
     util.create_tag("v1.0.0")
     util.create_file_and_commit("feat(user)!: new file")
 
-    with pytest.raises(NotAllowed) as excinfo:
+    with pytest.raises(
+        NotAllowed,
+        match=re.escape(
+            "--major-version-zero is meaningless for current version 1.0.0"
+        ),
+    ):
         util.run_cli("bump", "--yes", "--major-version-zero")
-
-    assert "--major-version-zero is meaningless for current version 1.0.0" in str(
-        excinfo.value
-    )
 
 
 def test_bump_files_only(tmp_commitizen_project, util: UtilFixture):
@@ -530,12 +539,13 @@ def test_prevent_prerelease_when_no_increment_detected(
 
     util.create_file_and_commit("test: new file")
 
-    with pytest.raises(NoCommitsFoundError) as excinfo:
+    with pytest.raises(
+        NoCommitsFoundError,
+        match=re.escape(
+            "[NO_COMMITS_FOUND]\nNo commits found to generate a pre-release."
+        ),
+    ):
         util.run_cli("bump", "-pr", "beta")
-
-    assert "[NO_COMMITS_FOUND]\nNo commits found to generate a pre-release." in str(
-        excinfo.value
-    )
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -654,9 +664,9 @@ version = "0.1.0"
             "--yes",
         ),
     ],
-    ids=lambda cmd_tuple: " ".join(["cz", *cmd_tuple])
-    if isinstance(cmd_tuple, tuple)
-    else cmd_tuple,
+    ids=lambda cmd_tuple: (
+        " ".join(["cz", *cmd_tuple]) if isinstance(cmd_tuple, tuple) else cmd_tuple
+    ),
 )
 def test_bump_changelog_command_commits_untracked_changelog_and_version_files(
     tmp_commitizen_project,
@@ -726,13 +736,13 @@ def test_bump_invalid_manual_version_raises_exception(
 ):
     util.create_file_and_commit("feat: new file")
 
-    with pytest.raises(InvalidManualVersion) as excinfo:
+    with pytest.raises(
+        InvalidManualVersion,
+        match=re.escape(
+            f"[INVALID_MANUAL_VERSION]\nInvalid manual version: '{manual_version}'"
+        ),
+    ):
         util.run_cli("bump", "--yes", manual_version)
-
-    assert (
-        f"[INVALID_MANUAL_VERSION]\nInvalid manual version: '{manual_version}'"
-        in str(excinfo.value)
-    )
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
@@ -761,12 +771,11 @@ def test_bump_manual_version(util: UtilFixture, manual_version):
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_manual_version_disallows_major_version_zero(util: UtilFixture):
     util.create_file_and_commit("feat: new file")
-    with pytest.raises(NotAllowed) as excinfo:
+    with pytest.raises(
+        NotAllowed,
+        match="--major-version-zero cannot be combined with MANUAL_VERSION",
+    ):
         util.run_cli("bump", "--yes", "--major-version-zero", "0.2.0")
-
-    assert "--major-version-zero cannot be combined with MANUAL_VERSION" in str(
-        excinfo.value
-    )
 
 
 @pytest.mark.parametrize(
@@ -1537,3 +1546,18 @@ def test_changelog_merge_preserves_header(
     out = changelog_path.read_text()
 
     file_regression.check(out, extension=".md")
+
+
+@pytest.mark.freeze_time("2025-01-01")
+def test_bump_allow_no_commit_issue(
+    tmp_commitizen_project_initial,
+    util: UtilFixture,
+) -> None:
+    """Issue #1866: bump command called changelog command with allow_no_commit=True, but changelog command raised NoCommitsFoundError"""
+    tmp_commitizen_project_initial(
+        version="1.0.0", config_extra="update_changelog_on_bump = true\n"
+    )
+    util.run_cli("bump", "--yes", "--allow-no-commit", "--prerelease", "beta")
+    util.run_cli(
+        "bump", "--allow-no-commit", "--prerelease", "rc"
+    )  # Should not fail when changelog generation runs with no new commits

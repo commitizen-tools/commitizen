@@ -58,12 +58,12 @@ jobs:
           uv run --no-sync poe ci
         shell: bash
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         if: ${{ needs.detect_changes.outputs.relevant == 'true' }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
       - name: Upload test results to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         if: ${{ needs.detect_changes.outputs.relevant == 'true' && !cancelled() }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

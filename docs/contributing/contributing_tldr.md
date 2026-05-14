@@ -2,38 +2,29 @@
 
 Feel free to send a PR to update this file if you find anything useful. 🙇
 
-## Environment
+For prerequisites and initial setup, see [Contributing to Commitizen](contributing.md#prerequisites-setup).
 
-- Python `>=3.10`
-- [uv](https://docs.astral.sh/uv/getting-started/installation/) `>=0.9.0`
+## Command Cheat Sheet
 
-## Useful commands
-
-Please check the [pyproject.toml](https://github.com/commitizen-tools/commitizen/blob/master/pyproject.toml) for a comprehensive list of commands.
-
-### Code Changes
+See [pyproject.toml](https://github.com/commitizen-tools/commitizen/blob/master/pyproject.toml) for the full list of poe tasks.
 
 ```bash
-# Ensure you have the correct dependencies
-uv sync --dev --frozen
-
-# Make ruff happy
+# Format code (ruff check --fix + ruff format)
 uv run poe format
 
-# Check if ruff and mypy are happy
+# Lint (ruff check + mypy)
 uv run poe lint
 
-# Check if mypy is happy in python 3.10
-mypy --python-version 3.10
+# Check mypy against a specific Python version
+uv run mypy --python-version 3.10
 
-# Run tests in parallel.
-pytest -n auto # This may take a while.
-pytest -n auto <test_suite>
-```
+# Run tests in parallel (may take a while)
+uv run pytest -n auto
+uv run pytest -n auto <test_suite>
 
-### Documentation Changes
-
-```bash
-# Build the documentation locally and check for broken links
+# Build and preview docs locally
 uv run poe doc
+
+# Run everything (format + lint + check-commit + coverage)
+uv run poe all
 ```

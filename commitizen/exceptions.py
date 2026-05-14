@@ -49,6 +49,9 @@ class ExitCode(IntEnum):
 
 
 class CommitizenException(Exception):
+    exit_code: ExitCode
+    message: str
+
     def __init__(self, *args: str, **kwargs: Any) -> None:
         self.output_method = kwargs.get("output_method") or out.error
         self.exit_code: ExitCode = self.__class__.exit_code
