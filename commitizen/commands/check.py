@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import re
 import sys
 from pathlib import Path
@@ -41,6 +42,8 @@ class Check:
         self.commit_msg_file = arguments.get("commit_msg_file")
         self.commit_msg = arguments.get("message")
         self.rev_range = arguments.get("rev_range")
+        if self.rev_range is not None:
+            self.rev_range = os.path.expandvars(self.rev_range)
         self.allow_abort = bool(
             arguments.get("allow_abort", config.settings["allow_abort"])
         )
