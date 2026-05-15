@@ -156,8 +156,17 @@ def get_tag_regexes(
         "major": r"(?P<major>\d+)",
         "minor": r"(?P<minor>\d+)",
         "patch": r"(?P<patch>\d+)",
-        "prerelease": r"(?P<prerelease>\w+\d+)?",
-        "devrelease": r"(?P<devrelease>\.dev\d+)?",
+        # Allow ``\w+`` (PEP-440 ``rc0``) as well as ``\w+\.\w+(\.\w+)*``
+        # (SemVer2 ``rc.0``, ``alpha.beta.1``). The original ``\w+\d+`` only
+        # matched the PEP-440 form and produced "Invalid version tag" warnings
+        # for SemVer2-style tags created by commitizen itself (#1614).
+        "prerelease": r"(?P<prerelease>\w+(?:\.\w+)*)?",
+        # Match either ``.dev1`` (PEP-440 with leading dot) or ``dev1``
+        # (SemVer / SemVer2 / users substituting ``${devrelease}`` directly
+        # in a ``tag_format`` -- see #1615). A bare ``\d+`` after the prefix
+        # would let the regex match arbitrary numeric suffixes, so the
+        # ``dev`` literal is required.
+        "devrelease": r"(?P<devrelease>\.?dev\d+)?",
     }
     return {
         **{f"${k}": v for k, v in regexes.items()},

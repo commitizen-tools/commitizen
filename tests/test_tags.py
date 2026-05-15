@@ -99,3 +99,44 @@ def test_find_tag_for_partial_version_ignores_invalid_tags():
 
     assert found is not None
     assert found.name == "1.2.1"
+
+
+def test_is_version_tag_accepts_semver2_prerelease_in_custom_tag_format():
+    """Regression test for #1614: a SemVer2-style prerelease segment such as
+    ``rc.0`` (with a literal dot) must be recognised when it appears at the
+    position of ``${prerelease}`` in a custom ``tag_format``. Before the
+    prerelease regex was widened from ``\\w+\\d+`` to ``\\w+(?:\\.\\w+)*``,
+    the tag commitizen itself just created emitted "Invalid version tag"
+    warnings on the next changelog/bump.
+    """
+    from commitizen.version_schemes import get_version_scheme
+
+    scheme = get_version_scheme({"version_scheme": "semver2"})
+    rules = TagRules(
+        scheme=scheme,
+        tag_format="${major}.${minor}-${patch}${prerelease}",
+    )
+
+    assert rules.is_version_tag("0.0-2rc.0") is True
+    # Plain releases (no prerelease) are still accepted.
+    assert rules.is_version_tag("0.0-2") is True
+    # Multi-segment SemVer2 prereleases too.
+    assert rules.is_version_tag("0.0-2alpha.beta.1") is True
+
+    # And ``extract_version`` round-trips the prerelease portion.
+    extracted = rules.extract_version(_git_tag("0.0-2rc.0"))
+    assert str(extracted) == "0.0.2-rc.0"
+
+
+def test_is_version_tag_accepts_dotless_devrelease_in_custom_tag_format():
+    """Regression test for #1614: ``${devrelease}`` accepts both ``dev1``
+    and ``.dev1`` suffixes when a custom ``tag_format`` splits release and dev
+    portions explicitly.
+    """
+    rules = TagRules(tag_format="version-${major}.${minor}.${patch}${devrelease}")
+
+    assert rules.is_version_tag("version-1.2.3.dev1") is True
+    assert rules.is_version_tag("version-1.2.3dev1") is True
+
+    extracted = rules.extract_version(_git_tag("version-1.2.3dev1"))
+    assert str(extracted) == "1.2.3.dev1"
