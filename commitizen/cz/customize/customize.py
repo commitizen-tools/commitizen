@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import OrderedDict
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -19,9 +20,27 @@ else:
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
+from commitizen.defaults import MAJOR, MINOR
 from commitizen.exceptions import MissingCzCustomizeConfigError
 
 __all__ = ["CustomizeCommitsCz"]
+
+
+def _derive_major_version_zero(
+    bump_map: Mapping[str, str],
+) -> OrderedDict[str, str]:
+    """Derive a ``bump_map_major_version_zero`` from a user-supplied
+    ``bump_map`` by demoting any ``MAJOR`` rule to ``MINOR``.
+
+    See #1728: when a ``cz_customize`` user supplies ``bump_map`` but not
+    ``bump_map_major_version_zero``, the latter previously fell through to
+    ``defaults.BUMP_MAP_MAJOR_VERSION_ZERO``, silently overriding the
+    user's intent during ``major_version_zero = true`` bumps.
+    """
+    return OrderedDict(
+        (pattern, MINOR if increment == MAJOR else increment)
+        for pattern, increment in bump_map.items()
+    )
 
 
 class CustomizeCommitsCz(BaseCommitizen):
@@ -48,6 +67,16 @@ class CustomizeCommitsCz(BaseCommitizen):
         ]:
             if value := self.custom_settings.get(attr_name):
                 setattr(self, attr_name, value)
+
+        # When the user supplies a custom ``bump_map`` but no matching
+        # ``bump_map_major_version_zero``, derive the latter so that bumps
+        # under ``major_version_zero = true`` use the user's mapping rather
+        # than the (totally unrelated) ``defaults.BUMP_MAP_MAJOR_VERSION_ZERO``
+        # fallback. See #1728.
+        if self.custom_settings.get("bump_map") and not self.custom_settings.get(
+            "bump_map_major_version_zero"
+        ):
+            self.bump_map_major_version_zero = _derive_major_version_zero(self.bump_map)
 
     def questions(self) -> list[CzQuestion]:
         return self.custom_settings.get("questions", [{}])  # type: ignore[return-value]
