@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 import pytest
@@ -377,10 +378,11 @@ def config_with_unicode(request):
 
 def test_initialize_cz_customize_failed():
     config = BaseConfig()
-    with pytest.raises(MissingCzCustomizeConfigError) as excinfo:
+    with pytest.raises(
+        MissingCzCustomizeConfigError,
+        match=re.escape(MissingCzCustomizeConfigError.message),
+    ):
         CustomizeCommitsCz(config)
-
-    assert MissingCzCustomizeConfigError.message in str(excinfo.value)
 
 
 def test_bump_pattern(config):
@@ -410,6 +412,86 @@ def test_bump_map_unicode(config_with_unicode):
         "✨ feat": "MINOR",
         "🐛 bug fix": "MINOR",
     }
+
+
+def test_bump_map_major_version_zero_is_derived_from_bump_map():
+    """Regression test for #1728: when the user provides ``bump_map`` but no
+    explicit ``bump_map_major_version_zero``, the latter is derived from the
+    former (``MAJOR`` → ``MINOR``) instead of falling through to the default
+    ``defaults.BUMP_MAP_MAJOR_VERSION_ZERO``."""
+    config = BaseConfig()
+    config.settings.update(
+        {
+            "name": "cz_customize",
+            "customize": {
+                "bump_pattern": r"^(feat|fix|docs)",
+                "bump_map": {
+                    "break": "MAJOR",
+                    "feat": "PATCH",
+                    "docs": "PATCH",
+                },
+            },
+        }
+    )
+
+    cz = CustomizeCommitsCz(config)
+
+    # Same patterns, MAJOR demoted to MINOR.
+    assert dict(cz.bump_map_major_version_zero) == {
+        "break": "MINOR",
+        "feat": "PATCH",
+        "docs": "PATCH",
+    }
+
+
+def test_bump_map_major_version_zero_explicit_user_value_wins():
+    """If the user explicitly sets ``bump_map_major_version_zero``, that
+    value is used verbatim (no derivation)."""
+    config = BaseConfig()
+    config.settings.update(
+        {
+            "name": "cz_customize",
+            "customize": {
+                "bump_pattern": r"^(feat|fix|docs)",
+                "bump_map": {
+                    "break": "MAJOR",
+                    "feat": "PATCH",
+                },
+                "bump_map_major_version_zero": {
+                    "break": "MAJOR",  # NB: kept as MAJOR
+                    "feat": "PATCH",
+                },
+            },
+        }
+    )
+
+    cz = CustomizeCommitsCz(config)
+
+    assert dict(cz.bump_map_major_version_zero) == {
+        "break": "MAJOR",
+        "feat": "PATCH",
+    }
+
+
+def test_bump_map_major_version_zero_falls_back_to_defaults_without_bump_map():
+    """When the user provides neither ``bump_map`` nor
+    ``bump_map_major_version_zero``, the class default applies."""
+    from commitizen import defaults
+
+    config = BaseConfig()
+    config.settings.update(
+        {
+            "name": "cz_customize",
+            "customize": {
+                # No bump_map, no bump_map_major_version_zero.
+                "schema_pattern": r"^(feat|fix): (.*)$",
+            },
+        }
+    )
+
+    cz = CustomizeCommitsCz(config)
+
+    assert cz.bump_map_major_version_zero is defaults.BUMP_MAP_MAJOR_VERSION_ZERO
 
 
 def test_change_type_order(config):

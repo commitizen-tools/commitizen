@@ -5,7 +5,7 @@ license: MIT
 metadata:
   project: commitizen-tools/commitizen
   docs: https://commitizen-tools.github.io/commitizen/
-  install: "pip install commitizen"
+  install: "pipx install commitizen"
 ---
 
 # Commitizen
@@ -38,7 +38,7 @@ Commitizen is a CLI for enforcing Conventional Commits, automating version bumps
 
 ## Important domain details
 
-- Commitizen installs with `pip install commitizen` or `uv add commitizen`.
+- Commitizen supports both global installation (recommended for the `cz` CLI) and project-local installation; see the installation section in `docs/README.md` for the full matrix of supported tools.
 - The default version scheme is PEP 440; `semver` and `semver2` are also supported.
 - Common version providers include `commitizen`, `pep621`, `poetry`, `cargo`, `npm`, `composer`, `uv`, and `scm`.
 - `cz changelog` generates Markdown changelogs.
