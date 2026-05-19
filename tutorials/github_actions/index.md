@@ -129,6 +129,107 @@ jobs:
 
 You can find the complete workflow in our repository at [bumpversion.yml](https://github.com/commitizen-tools/commitizen/blob/master/.github/workflows/bumpversion.yml).
 
+### Previewing the version bump on pull requests
+
+To help reviewers spot unexpected version bumps before merging, you can run `cz bump --dry-run` on every pull request and post (or update) a sticky comment summarizing the would-be version bump.
+
+Create `.github/workflows/pr-bump-preview.yml`:
+
+.github/workflows/pr-bump-preview.yml
+
+````
+name: PR bump preview
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  bump-preview:
+    # Skip drafts and fork PRs (see "How it works" below).
+    if: >
+      ${{
+        github.event.pull_request.draft == false &&
+        github.event.pull_request.head.repo.full_name ==
+          github.event.pull_request.base.repo.full_name
+      }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PR head
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+      - uses: commitizen-tools/setup-cz@main
+        with:
+          set-git-config: false
+      - name: Run cz bump --dry-run
+        id: dry-run
+        run: |
+          set +e
+          output="$(cz bump --dry-run --yes 2>&1)"
+          status=$?
+          set -e
+          {
+            echo "status=${status}"
+            echo "output<<__CZ_BUMP_PREVIEW__"
+            printf '%s\n' "${output}"
+            echo "__CZ_BUMP_PREVIEW__"
+          } >> "$GITHUB_OUTPUT"
+      - name: Build comment body
+        env:
+          STATUS: ${{ steps.dry-run.outputs.status }}
+          OUTPUT: ${{ steps.dry-run.outputs.output }}
+        run: |
+          {
+            echo "<!-- commitizen-bump-preview -->"
+            echo "## 🔍 Commitizen bump preview"
+            echo ""
+            case "${STATUS}" in
+              0)
+                echo "Merging this PR will produce the following bump:"
+                echo ""
+                echo '```'
+                printf '%s\n' "${OUTPUT}"
+                echo '```'
+                ;;
+              21)
+                echo "No commits in this PR are eligible for a version bump."
+                ;;
+              *)
+                echo "⚠️ \`cz bump --dry-run\` exited with status \`${STATUS}\`:"
+                echo ""
+                echo '```'
+                printf '%s\n' "${OUTPUT}"
+                echo '```'
+                ;;
+            esac
+          } > comment.md
+      - uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: comment.md
+          body-includes: "<!-- commitizen-bump-preview -->"
+          edit-mode: replace
+````
+
+#### How it works
+
+- **Trigger**: `pull_request_target` runs in the context of the base repository, which gives the workflow `pull-requests: write` permission even for PRs from forks. We deliberately gate the job to **same-repo PRs only** (`head.repo == base.repo`); fork PRs are skipped. This is because `cz bump` renders [Jinja templates from the working directory](https://github.com/commitizen-tools/commitizen/blob/master/commitizen/changelog.py) whenever [`update_changelog_on_bump`](https://commitizen-tools.github.io/commitizen/config/configuration_file/index.md) is enabled, and the renderer is not sandboxed — running it against fork-controlled files under a write token would risk arbitrary code execution and token exfiltration. Same-repo PRs are written by collaborators who already have push access, so the same risk doesn't apply.
+- **Setup**: [`commitizen-tools/setup-cz`](https://github.com/commitizen-tools/setup-cz) installs the Commitizen CLI; no language-specific build tooling is required.
+- **Defense in depth**: `persist-credentials: false` on `actions/checkout` keeps the workflow token out of the local git config.
+- **Dry-run**: `cz bump --dry-run --yes` computes the next version (and, if `update_changelog_on_bump` is set in your config, also the changelog entries that would be produced). Exit code `21` (`NoneIncrementExit`) is treated as "no eligible bump" rather than a failure.
+- **Sticky comment**: The hidden HTML marker `<!-- commitizen-bump-preview -->` lets [`peter-evans/create-or-update-comment`](https://github.com/peter-evans/create-or-update-comment) find and replace the previous preview on every push, instead of leaving a growing trail of comments.
+
+You can find the complete workflow in our repository at [pr-bump-preview.yml](https://github.com/commitizen-tools/commitizen/blob/master/.github/workflows/pr-bump-preview.yml).
+
 ### Publishing a Python package
 
 After a new version tag is created by the bump workflow, you can automatically publish your package to PyPI.
