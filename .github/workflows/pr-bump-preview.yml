@@ -1,0 +1,94 @@
+name: PR bump preview
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  bump-preview:
+    # Skip drafts, and skip fork PRs entirely. `pull_request_target` runs with
+    # the base repo's GITHUB_TOKEN (write access to PR comments). `cz bump`
+    # can render Jinja templates from the checked-out workspace whenever
+    # `update_changelog_on_bump` is set in config, and the renderer is not
+    # sandboxed (FileSystemLoader('.')) — running it against fork-controlled
+    # files would risk RCE / token exfiltration. Same-repo PRs are written by
+    # collaborators who already have push access, so the same risk doesn't
+    # apply.
+    if: >
+      ${{
+        github.event.pull_request.draft == false &&
+        github.event.pull_request.head.repo.full_name ==
+          github.event.pull_request.base.repo.full_name
+      }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PR head
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          fetch-tags: true
+          # Defense in depth: don't write the workflow token to .git/config.
+          persist-credentials: false
+
+      - name: Set up Commitizen
+        uses: commitizen-tools/setup-cz@main
+        with:
+          set-git-config: false
+
+      - name: Run cz bump --dry-run
+        id: dry-run
+        run: |
+          set +e
+          output="$(cz bump --dry-run --yes 2>&1)"
+          status=$?
+          set -e
+          {
+            echo "status=${status}"
+            echo "output<<__CZ_BUMP_PREVIEW__"
+            printf '%s\n' "${output}"
+            echo "__CZ_BUMP_PREVIEW__"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Build comment body
+        env:
+          STATUS: ${{ steps.dry-run.outputs.status }}
+          OUTPUT: ${{ steps.dry-run.outputs.output }}
+        run: |
+          {
+            echo "<!-- commitizen-bump-preview -->"
+            echo "## 🔍 Commitizen bump preview"
+            echo ""
+            case "${STATUS}" in
+              0)
+                echo "Merging this PR will produce the following bump:"
+                echo ""
+                echo '```'
+                printf '%s\n' "${OUTPUT}"
+                echo '```'
+                ;;
+              21)
+                echo "No commits in this PR are eligible for a version bump."
+                ;;
+              *)
+                echo "⚠️ \`cz bump --dry-run\` exited with status \`${STATUS}\`:"
+                echo ""
+                echo '```'
+                printf '%s\n' "${OUTPUT}"
+                echo '```'
+                ;;
+            esac
+          } > comment.md
+
+      - name: Post or update PR comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: comment.md
+          body-includes: "<!-- commitizen-bump-preview -->"
+          edit-mode: replace
