@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from io import StringIO
 from typing import TYPE_CHECKING, Any
 
@@ -448,3 +449,25 @@ def test_check_command_with_custom_validator_failed(
         util.run_cli(
             "--name", "cz_custom_validator", "check", "--commit-msg-file", "some_file"
         )
+
+
+@pytest.mark.parametrize(
+    ("rev_range", "expected"),
+    [
+        ("HEAD~5..HEAD", "HEAD~5..HEAD"),
+        ("$PRE_COMMIT_FROM_REF..$PRE_COMMIT_TO_REF", "v1.0.0..v1.1.0"),
+        ("${PRE_COMMIT_FROM_REF}..${PRE_COMMIT_TO_REF}", "v1.0.0..v1.1.0"),
+    ],
+)
+def test_check_command_expands_env_vars_in_rev_range(
+    config, mocker: MockFixture, rev_range: str, expected: str
+):
+    git_get_commits = mocker.patch(
+        "commitizen.git.get_commits", return_value=_build_fake_git_commits(COMMIT_LOG)
+    )
+    mocker.patch.dict(
+        os.environ,
+        {"PRE_COMMIT_FROM_REF": "v1.0.0", "PRE_COMMIT_TO_REF": "v1.1.0"},
+    )
+    commands.Check(config=config, arguments={"rev_range": rev_range})()
+    git_get_commits.assert_called_once_with(None, expected)
