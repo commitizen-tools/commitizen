@@ -240,6 +240,70 @@ from tests.utils import VersionSchemeTestArgs
             ),
             "1.0.0",
         ),
+        # arbitrary semver pre-release labels (issue #950)
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0-reallyweird",
+                increment="PATCH",
+                prerelease="reallyweird",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-reallyweird.1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="v0.7.1-release",
+                increment="PATCH",
+                prerelease="release",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.7.1-release.1",
+        ),
+        (
+            VersionSchemeTestArgs(
+                current_version="v0.0.1-SNAPSHOT",
+                increment="PATCH",
+                prerelease="SNAPSHOT",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "0.0.1-snapshot.1",
+        ),
+        # hyphenated pre-release label (issue #950)
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0-pre-release",
+                increment="PATCH",
+                prerelease="pre-release",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-pre-release.1",
+        ),
+        # arbitrary label with local segment (lookahead fix)
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0-release+local123",
+                increment="PATCH",
+                prerelease="release",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-release.1",
+        ),
+        # transition from arbitrary label to standard prerelease
+        (
+            VersionSchemeTestArgs(
+                current_version="1.0.0-weird",
+                increment="PATCH",
+                prerelease="alpha",
+                prerelease_offset=0,
+                devrelease=None,
+            ),
+            "1.0.0-alpha.0",
+        ),
         # simple_flow
         (
             VersionSchemeTestArgs(
