@@ -35,15 +35,6 @@ When two documents could host a piece of guidance, this table is the tie-breaker
 
 The repo-root [`AGENTS.md`](https://github.com/commitizen-tools/commitizen/blob/master/AGENTS.md) is the auto-loaded entry point for most agent tools. It holds the rules an agent needs in every session; this page is the deeper reference.
 
-## Agent-specific deltas
-
-Humans absorb these rules through review; agents need them stated:
-
-1. **Complete the PR template fully**, including the AI-disclosure checkbox and the `Generated-by:` trailer. The maintainers re-run the commands you list under "Steps to Test This Pull Request" — make them exact.
-2. **`uv run poe all` is the pre-push verification command** named in the PR template. `poe ci` is the CI-equivalent runner (uses `prek` and does not auto-format); run it too if you want to mirror CI exactly. See the [Validation Guide](validation.md#choosing-a-final-check) for the distinction.
-3. **Do not touch generated artifacts.** See the do-not-touch list in [`AGENTS.md`](https://github.com/commitizen-tools/commitizen/blob/master/AGENTS.md).
-4. **Prefer targeted test selectors during iteration** — see the [targeted-test map](validation.md#targeted-test-map). The full suite is fine for a final pre-push run.
-
 ## Playbooks
 
 Recipes for recurring task types. Each playbook is self-contained: trigger, files to read first, ordered steps, verification commands, and known pitfalls. They link out to the human-facing concept docs rather than restating concepts.
