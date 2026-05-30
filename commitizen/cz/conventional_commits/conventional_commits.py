@@ -1,13 +1,16 @@
 from __future__ import annotations
 
+from collections import OrderedDict
 from pathlib import Path
 from typing import TYPE_CHECKING, TypedDict
 
 from commitizen import defaults
 from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.utils import multiple_line_breaker, required_validator
+from commitizen.question import Choice
 
 if TYPE_CHECKING:
+    from commitizen.config import BaseConfig
     from commitizen.question import CzQuestion
 
 __all__ = ["ConventionalCommitsCz"]
@@ -41,7 +44,115 @@ class ConventionalCommitsCz(BaseCommitizen):
         "refactor": "Refactor",
         "perf": "Perf",
     }
+    change_type_choices = [
+        Choice(
+            value="fix",
+            name=("fix: A bug fix. Correlates with PATCH in SemVer"),
+            key="x",
+        ),
+        Choice(
+            value="feat",
+            name="feat: A new feature. Correlates with MINOR in SemVer",
+            key="f",
+        ),
+        Choice(
+            value="docs",
+            name="docs: Documentation only changes",
+            key="d",
+        ),
+        Choice(
+            value="style",
+            name=(
+                "style: Changes that do not affect the "
+                "meaning of the code (white-space, formatting,"
+                " missing semi-colons, etc)"
+            ),
+            key="s",
+        ),
+        Choice(
+            value="refactor",
+            name=(
+                "refactor: A code change that neither fixes a bug nor adds a feature"
+            ),
+            key="r",
+        ),
+        Choice(
+            value="perf",
+            name="perf: A code change that improves performance",
+            key="p",
+        ),
+        Choice(
+            value="test",
+            name="test: Adding missing or correcting existing tests",
+            key="t",
+        ),
+        Choice(
+            value="build",
+            name=(
+                "build: Changes that affect the build system or "
+                "external dependencies (example scopes: pip, docker, npm)"
+            ),
+            key="b",
+        ),
+        Choice(
+            value="ci",
+            name=(
+                "ci: Changes to CI configuration files and "
+                "scripts (example scopes: GitLabCI)"
+            ),
+            key="c",
+        ),
+    ]
+
     changelog_pattern = defaults.BUMP_PATTERN
+
+    def __init__(self, config: BaseConfig) -> None:
+        super().__init__(config)
+        self._isolate_mutable_defaults()
+
+        if override_settings := self.config.settings.get("override"):
+            self._apply_override_settings(override_settings)
+        elif extend_settings := self.config.settings.get("extend"):
+            self._apply_extend_settings(extend_settings)
+
+    def _isolate_mutable_defaults(self) -> None:
+        # Keep mutable class defaults isolated per instance.
+        self.bump_map = OrderedDict(self.bump_map)
+        self.bump_map_major_version_zero = OrderedDict(self.bump_map_major_version_zero)
+        self.change_type_map = dict(self.change_type_map)
+        self.change_type_choices = [*self.change_type_choices]
+
+    def _apply_override_settings(self, settings: defaults.CzOverrideSettings) -> None:
+        if bump_pattern := settings.get("bump_pattern"):
+            self.bump_pattern = bump_pattern
+        if bump_map := settings.get("bump_map"):
+            self.bump_map = OrderedDict(bump_map)
+        if bump_map_major_version_zero := settings.get("bump_map_major_version_zero"):
+            self.bump_map_major_version_zero = OrderedDict(bump_map_major_version_zero)
+        if commit_parser := settings.get("commit_parser"):
+            self.commit_parser = commit_parser
+        if changelog_pattern := settings.get("changelog_pattern"):
+            self.changelog_pattern = changelog_pattern
+        if change_type_map := settings.get("change_type_map"):
+            self.change_type_map = dict(change_type_map)
+        if change_type_choices := settings.get("change_type_choices"):
+            self.change_type_choices = [*change_type_choices]
+
+    def _apply_extend_settings(self, settings: defaults.CzExtendSettings) -> None:
+        if bump_pattern := settings.get("bump_pattern"):
+            self.bump_pattern = bump_pattern
+        if bump_map := settings.get("bump_map"):
+            self.bump_map.update(bump_map)
+        if bump_map_major_version_zero := settings.get("bump_map_major_version_zero"):
+            self.bump_map_major_version_zero.update(bump_map_major_version_zero)
+        if commit_parser := settings.get("commit_parser"):
+            self.commit_parser = commit_parser
+        if changelog_pattern := settings.get("changelog_pattern"):
+            self.changelog_pattern = changelog_pattern
+        if change_type_map := settings.get("change_type_map"):
+            self.change_type_map.update(change_type_map)
+        if change_type_choices := settings.get("change_type_choices"):
+            self.change_type_choices.extend(change_type_choices)
 
     def questions(self) -> list[CzQuestion]:
         return [
@@ -49,66 +160,7 @@ class ConventionalCommitsCz(BaseCommitizen):
                 "type": "list",
                 "name": "prefix",
                 "message": "Select the type of change you are committing",
-                "choices": [
-                    {
-                        "value": "fix",
-                        "name": "fix: A bug fix. Correlates with PATCH in SemVer",
-                        "key": "x",
-                    },
-                    {
-                        "value": "feat",
-                        "name": "feat: A new feature. Correlates with MINOR in SemVer",
-                        "key": "f",
-                    },
-                    {
-                        "value": "docs",
-                        "name": "docs: Documentation only changes",
-                        "key": "d",
-                    },
-                    {
-                        "value": "style",
-                        "name": (
-                            "style: Changes that do not affect the "
-                            "meaning of the code (white-space, formatting,"
-                            " missing semi-colons, etc)"
-                        ),
-                        "key": "s",
-                    },
-                    {
-                        "value": "refactor",
-                        "name": (
-                            "refactor: A code change that neither fixes "
-                            "a bug nor adds a feature"
-                        ),
-                        "key": "r",
-                    },
-                    {
-                        "value": "perf",
-                        "name": "perf: A code change that improves performance",
-                        "key": "p",
-                    },
-                    {
-                        "value": "test",
-                        "name": ("test: Adding missing or correcting existing tests"),
-                        "key": "t",
-                    },
-                    {
-                        "value": "build",
-                        "name": (
-                            "build: Changes that affect the build system or "
-                            "external dependencies (example scopes: pip, docker, npm)"
-                        ),
-                        "key": "b",
-                    },
-                    {
-                        "value": "ci",
-                        "name": (
-                            "ci: Changes to CI configuration files and "
-                            "scripts (example scopes: GitLabCI)"
-                        ),
-                        "key": "c",
-                    },
-                ],
+                "choices": self.change_type_choices,
             },
             {
                 "type": "input",

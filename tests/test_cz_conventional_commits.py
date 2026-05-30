@@ -173,3 +173,95 @@ def test_info(config):
     conventional_commits = ConventionalCommitsCz(config)
     info = conventional_commits.info()
     assert isinstance(info, str)
+
+
+def test_override_takes_precedence_over_extend(config):
+    config.settings["override"] = {
+        "bump_map": {
+            "^bar": "PATCH",
+        }
+    }
+    config.settings["extend"] = {
+        "bump_map": {
+            "^foo": "MINOR",
+        }
+    }
+
+    conventional_commits = ConventionalCommitsCz(config)
+    assert conventional_commits.bump_map == {"^bar": "PATCH"}
+
+
+@pytest.mark.parametrize("mode", ["override", "extend"])
+def test_apply_supported_settings(mode, config):
+    config.settings[mode] = {
+        "bump_pattern": r"^foo:",
+        "bump_map": {r"^foo": "MINOR"},
+        "bump_map_major_version_zero": {r"^foo": "PATCH"},
+        "commit_parser": r"^(?P<change_type>foo):\s(?P<message>.*)$",
+        "changelog_pattern": r"^(foo)",
+        "change_type_map": {"foo": "Foo"},
+        "change_type_choices": [
+            {
+                "value": "foo",
+                "name": "foo: custom type",
+                "key": "o",
+            }
+        ],
+    }
+
+    conventional_commits = ConventionalCommitsCz(config)
+
+    assert conventional_commits.bump_pattern == r"^foo:"
+    assert (
+        conventional_commits.commit_parser
+        == r"^(?P<change_type>foo):\s(?P<message>.*)$"
+    )
+    assert conventional_commits.changelog_pattern == r"^(foo)"
+
+    if mode == "override":
+        assert conventional_commits.bump_map == {r"^foo": "MINOR"}
+        assert conventional_commits.bump_map_major_version_zero == {r"^foo": "PATCH"}
+        assert conventional_commits.change_type_map == {"foo": "Foo"}
+        assert conventional_commits.change_type_choices == [
+            {
+                "value": "foo",
+                "name": "foo: custom type",
+                "key": "o",
+            }
+        ]
+    else:
+        assert conventional_commits.bump_map[r"^foo"] == "MINOR"
+        assert conventional_commits.bump_map_major_version_zero[r"^foo"] == "PATCH"
+        assert conventional_commits.change_type_map["foo"] == "Foo"
+        assert r"^feat" in conventional_commits.bump_map
+        assert any(
+            choice["value"] == "foo"
+            for choice in conventional_commits.change_type_choices
+        )
+        assert any(
+            choice["value"] == "fix"
+            for choice in conventional_commits.change_type_choices
+        )
+
+
+def test_extend_settings_do_not_leak_to_other_instances(config):
+    config.settings["extend"] = {
+        "bump_map": {r"^foo": "MINOR"},
+        "change_type_choices": [
+            {
+                "value": "foo",
+                "name": "foo: custom type",
+                "key": "o",
+            }
+        ],
+    }
+    first = ConventionalCommitsCz(config)
+
+    clean_config = config.__class__()
+    clean_config.settings.update({"name": "cz_conventional_commits"})
+    second = ConventionalCommitsCz(clean_config)
+
+    assert r"^foo" in first.bump_map
+    assert any(choice["value"] == "foo" for choice in first.change_type_choices)
+    assert r"^foo" not in second.bump_map
+    assert all(choice["value"] != "foo" for choice in second.change_type_choices)
