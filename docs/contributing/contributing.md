@@ -3,9 +3,7 @@
 First, thank you for taking the time to contribute! 🎉 Your contributions help make Commitizen better for everyone.
 
 !!! tip "Using an AI assistant?"
-    See [For AI Agents](agents/index.md) for agent-shaped recipes, a
-    targeted-test map, and CI-failure playbooks that complement (and
-    aggressively link back to) this human-facing guide.
+    See [For AI Agents](agents/index.md) for agent-shaped recipes, a targeted-test map, and CI-failure playbooks that complement (and aggressively link back to) this human-facing guide.
 
 When contributing to Commitizen, we encourage you to:
 

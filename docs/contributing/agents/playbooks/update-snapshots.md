@@ -1,41 +1,28 @@
 # Playbook: Update Generated Snapshots and Screenshots
 
-Commitizen has two kinds of generated artifacts that look like regular
-files in `git status` but are produced by poe tasks:
+Commitizen has two kinds of generated artifacts that look like regular files in `git status` but are produced by poe tasks:
 
-1. **Test regression snapshots** — used by `pytest-regressions`. Stored
-   under `tests/` next to the tests that produce them.
-2. **CLI `--help` screenshots and demo GIFs** — used in the rendered
-   docs. Stored under `docs/images/cli_help/` and
-   `docs/images/cli_interactive/`.
+1. **Test regression snapshots** — used by `pytest-regressions`. Stored under `tests/` next to the tests that produce them.
+2. **CLI `--help` screenshots and demo GIFs** — used in the rendered docs. Stored under `docs/images/cli_help/` and `docs/images/cli_interactive/`.
 
-Both need to be regenerated whenever the underlying behavior changes —
-test snapshots when output intentionally changes, and CLI screenshots
-when flags or help text change.
+Both need to be regenerated whenever the underlying behavior changes — test snapshots when output intentionally changes, and CLI screenshots when flags or help text change.
 
 ## Trigger
 
-- A test fails with `pytest-regressions` complaining about a snapshot
-  mismatch, **and** the new output is the intended output.
-- A CLI flag was added or renamed (see
-  [add-cli-flag playbook](add-cli-flag.md)).
+- A test fails with `pytest-regressions` complaining about a snapshot mismatch, **and** the new output is the intended output.
+- A CLI flag was added or renamed (see [add-cli-flag playbook](add-cli-flag.md)).
 - A subcommand's `--help` text changed.
 
 ## Read first
 
-- `pyproject.toml:tool.poe.tasks` — see the `test:regen`,
-  `doc:screenshots`, and `test:all` task definitions.
-- `scripts/gen_cli_help_screenshots.py` and
-  `scripts/gen_cli_interactive_gifs.py` — the screenshot generators.
+- `pyproject.toml:tool.poe.tasks` — see the `test:regen`, `doc:screenshots`, and `test:all` task definitions.
+- `scripts/gen_cli_help_screenshots.py` and `scripts/gen_cli_interactive_gifs.py` — the screenshot generators.
 - `docs/images/*.tape` — `vhs` tape files that drive the GIF generation.
-- The failing test, to confirm the snapshot file path and that the diff
-  is intentional.
+- The failing test, to confirm the snapshot file path and that the diff is intentional.
 
 ## Regenerating test snapshots
 
-The `test:regen` task runs both single-Python and all-Python regenerations
-because some snapshots are Python-version-specific (their names start
-with `py_`):
+The `test:regen` task runs both single-Python and all-Python regenerations because some snapshots are Python-version-specific (their names start with `py_`):
 
 ```bash
 uv run poe test:regen
@@ -50,9 +37,7 @@ Under the hood:
 ]
 ```
 
-The `test:all` half requires `tox` and the supported Python interpreters
-to be installed locally. If only the version-agnostic snapshots changed,
-run just the first half:
+The `test:all` half requires `tox` and the supported Python interpreters to be installed locally. If only the version-agnostic snapshots changed, run just the first half:
 
 ```bash
 uv run pytest -k 'not py_' --regen-all -n auto
@@ -60,17 +45,12 @@ uv run pytest -k 'not py_' --regen-all -n auto
 
 After regeneration:
 
-1. Inspect every changed file with `git --no-pager diff`. The new
-   content must be what the code was **supposed** to produce — do not
-   blanket-commit snapshot diffs without reading them.
-2. Stage and commit the snapshots in the same commit as the code change
-   that motivated them. Reviewers need both halves to validate
-   intentionality.
+1. Inspect every changed file with `git --no-pager diff`. The new content must be what the code was **supposed** to produce — do not blanket-commit snapshot diffs without reading them.
+2. Stage and commit the snapshots in the same commit as the code change that motivated them. Reviewers need both halves to validate intentionality.
 
 ## Regenerating CLI help screenshots
 
-After any flag, help-text, or subcommand change, regenerate the SVGs and
-GIFs displayed in the docs:
+After any flag, help-text, or subcommand change, regenerate the SVGs and GIFs displayed in the docs:
 
 ```bash
 uv run poe doc:screenshots
@@ -78,22 +58,16 @@ uv run poe doc:screenshots
 
 This runs two scripts in parallel:
 
-- `scripts/gen_cli_help_screenshots.py` → updates SVGs under
-  `docs/images/cli_help/`.
-- `scripts/gen_cli_interactive_gifs.py` → updates GIFs under
-  `docs/images/cli_interactive/` using
-  [`vhs`](https://github.com/charmbracelet/vhs) and the `.tape` files
-  under `docs/images/`.
+- `scripts/gen_cli_help_screenshots.py` → updates SVGs under `docs/images/cli_help/`.
+- `scripts/gen_cli_interactive_gifs.py` → updates GIFs under `docs/images/cli_interactive/` using [`vhs`](https://github.com/charmbracelet/vhs) and the `.tape` files under `docs/images/`.
 
-GIF generation requires `vhs` to be installed on `PATH`. If it is not
-available locally, run only the SVG half:
+GIF generation requires `vhs` to be installed on `PATH`. If it is not available locally, run only the SVG half:
 
 ```bash
 uv run python -m scripts.gen_cli_help_screenshots
 ```
 
-and skip the GIFs — surface in the PR description that the GIFs need to
-be regenerated by a maintainer.
+and skip the GIFs — surface in the PR description that the GIFs need to be regenerated by a maintainer.
 
 ## Validate
 
@@ -106,28 +80,14 @@ uv run poe all                # final pre-push
 
 ## Pitfalls
 
-- **Regenerating without reading the diff.** `--regen-all` overwrites
-  every snapshot the test touches. If a bug in your code changed the
-  output, the snapshot will faithfully record the bug.
-- **Committing snapshots separately from the code change.** Reviewers
-  cannot tell intent from a snapshot-only commit.
-- **`vhs` not installed.** The GIF script silently fails or produces an
-  empty file. Inspect `docs/images/cli_interactive/*.gif` after running
-  and check file sizes are non-zero.
-- **Python-version-specific snapshots.** Tests whose names start with
-  `py_` (e.g., `tests/test_x.py::test_py_3_12_specific`) need
-  `test:all` to regenerate across all interpreters. Skipping that step
-  passes locally but breaks CI on the other matrix rows.
-- **Encoding-dependent snapshots.** On Windows, `pytest-regressions` may
-  write CRLF line endings. Configure git or your editor to normalize, or
-  the diff will be all-lines-changed.
+- **Regenerating without reading the diff.** `--regen-all` overwrites every snapshot the test touches. If a bug in your code changed the output, the snapshot will faithfully record the bug.
+- **Committing snapshots separately from the code change.** Reviewers cannot tell intent from a snapshot-only commit.
+- **`vhs` not installed.** The GIF script silently fails or produces an empty file. Inspect `docs/images/cli_interactive/*.gif` after running and check file sizes are non-zero.
+- **Python-version-specific snapshots.** Tests whose names start with `py_` (e.g., `tests/test_x.py::test_py_3_12_specific`) need `test:all` to regenerate across all interpreters. Skipping that step passes locally but breaks CI on the other matrix rows.
+- **Encoding-dependent snapshots.** On Windows, `pytest-regressions` may write CRLF line endings. Configure git or your editor to normalize, or the diff will be all-lines-changed.
 
 ## Stop and ask if
 
-- A snapshot regenerates with a diff that does not match what your code
-  change should produce — there is a bug. Do not commit the snapshot.
-- The CI failure asks for snapshot regeneration but you cannot reproduce
-  the diff locally — Python-version mismatch is the most likely cause;
-  flag it in the PR.
-- `doc:screenshots` requires installing `vhs` and you are running in a
-  sandboxed environment that cannot install system packages.
+- A snapshot regenerates with a diff that does not match what your code change should produce — there is a bug. Do not commit the snapshot.
+- The CI failure asks for snapshot regeneration but you cannot reproduce the diff locally — Python-version mismatch is the most likely cause; flag it in the PR.
+- `doc:screenshots` requires installing `vhs` and you are running in a sandboxed environment that cannot install system packages.

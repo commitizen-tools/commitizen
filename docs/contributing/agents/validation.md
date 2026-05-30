@@ -1,19 +1,12 @@
 # Validation Guide
 
-How to verify a change to Commitizen without running the full CI matrix every
-time. This page is the agent-facing counterpart to the human
-[Contributing TL;DR](../contributing_tldr.md), focused on **which** selector
-to run for a given change and **how** to recognize CI failures.
+How to verify a change to Commitizen without running the full CI matrix every time. This page is the agent-facing counterpart to the human [Contributing TL;DR](../contributing_tldr.md), focused on **which** selector to run for a given change and **how** to recognize CI failures.
 
-For the full poe command reference, see
-[Contributing TL;DR](../contributing_tldr.md#command-cheat-sheet).
+For the full poe command reference, see [Contributing TL;DR](../contributing_tldr.md#command-cheat-sheet).
 
 ## Targeted test map
 
-During iteration, prefer running only the tests that cover what you changed.
-The full suite is for the final pre-push run. Tests mirror the source tree
-(see [Architecture Overview § Tests mirror the source tree](../architecture.md#tests-mirror-the-source-tree));
-the table below picks the most useful selectors.
+During iteration, prefer running only the tests that cover what you changed. The full suite is for the final pre-push run. Tests mirror the source tree (see [Architecture Overview § Tests mirror the source tree](../architecture.md#tests-mirror-the-source-tree)); the table below picks the most useful selectors.
 
 | Changing... | Targeted selector |
 |---|---|
@@ -31,15 +24,13 @@ the table below picks the most useful selectors.
 | A deprecation | `uv run pytest tests/test_deprecated.py -n auto` plus the affected subsystem's tests |
 | Exception classes | `uv run pytest tests/test_exceptions.py -n auto` |
 
-Run mypy against the oldest supported Python version when adding type
-annotations:
+Run mypy against the oldest supported Python version when adding type annotations:
 
 ```bash
 uv run mypy --python-version 3.10
 ```
 
-This catches `typing-extensions` vs stdlib import issues that the default
-mypy run does not flag.
+This catches `typing-extensions` vs stdlib import issues that the default mypy run does not flag.
 
 ## Choosing a final check
 
@@ -59,9 +50,7 @@ Recommended sequence:
 
 ## CI failure recipes
 
-The CI matrix is fail-fast across Python 3.10–3.14 × ubuntu/macos/windows
-(see `.github/workflows/`). Inspect the earliest failing job; the others are
-cancelled.
+The CI matrix is fail-fast across Python 3.10–3.14 × ubuntu/macos/windows (see `.github/workflows/`). Inspect the earliest failing job; the others are cancelled.
 
 ### "Format Python code...Failed"
 
@@ -74,8 +63,7 @@ git add -u && git commit --amend --no-edit
 
 ### mypy `[arg-type]` on a TypedDict construction
 
-Dynamically constructed dicts (e.g., from `pytest.mark.parametrize`) passed
-to a TypedDict-typed parameter need an explicit ignore:
+Dynamically constructed dicts (e.g., from `pytest.mark.parametrize`) passed to a TypedDict-typed parameter need an explicit ignore:
 
 ```python
 @pytest.mark.parametrize("settings", [{"version_scheme": "pep440"}])
@@ -85,9 +73,7 @@ def test_x(settings: Settings) -> None:  # type: ignore[arg-type]
 
 ### `pathspec 'vX.Y.Z' did not match`
 
-`.pre-commit-config.yaml` pins a specific tag of this repo as a hook source.
-When your branch is older than that tag, the hook fails because the tag is
-unknown. Fix by rebasing onto the latest master:
+`.pre-commit-config.yaml` pins a specific tag of this repo as a hook source. When your branch is older than that tag, the hook fails because the tag is unknown. Fix by rebasing onto the latest master:
 
 ```bash
 git fetch origin master
@@ -96,44 +82,30 @@ git rebase origin/master
 
 ### `VersionProtocol` + `issubclass` `TypeError`
 
-`commitizen/version_schemes.py:VersionProtocol` has non-method members
-(properties), so it cannot be passed to `issubclass()`. For runtime
-validation, use `hasattr` checks against the concrete members or duck-type
-the value instead of subclass-checking.
+`commitizen/version_schemes.py:VersionProtocol` has non-method members (properties), so it cannot be passed to `issubclass()`. For runtime validation, use `hasattr` checks against the concrete members or duck-type the value instead of subclass-checking.
 
 ### Tests pass locally but fail in CI on Windows only
 
 Most often a path-separator or encoding assumption:
 
 - Use `pathlib.Path` and `Path(...).as_posix()` for string comparisons.
-- Read files with `encoding=` (the convention is to honor
-  `config.settings["encoding"]`; see
-  `commitizen/providers/base_provider.py:_get_encoding`).
-- Avoid hardcoded `"\n"` when comparing file contents — use `splitlines()`
-  or set `newline=""` when writing.
+- Read files with `encoding=` (the convention is to honor `config.settings["encoding"]`; see `commitizen/providers/base_provider.py:_get_encoding`).
+- Avoid hardcoded `"\n"` when comparing file contents — use `splitlines()` or set `newline=""` when writing.
 
 ### `cz check` rejects a fixup or merge commit on the branch
 
-`poe check-commit` runs `cz --no-raise 3 check --rev-range origin/master..`.
-Squash or amend the offending commit so the branch contains only
-Conventional-Commit-shaped messages, or rebase to drop it.
+`poe check-commit` runs `cz --no-raise 3 check --rev-range origin/master..`. Squash or amend the offending commit so the branch contains only Conventional-Commit-shaped messages, or rebase to drop it.
 
 ### Coverage drop on CodeCov
 
-The `cover` task generates `coverage.xml` consumed by CodeCov. If coverage
-drops, add tests for the new code paths before pushing. Inspect
-`coverage.xml` locally or re-run `uv run poe cover` and inspect the
-terminal report.
+The `cover` task generates `coverage.xml` consumed by CodeCov. If coverage drops, add tests for the new code paths before pushing. Inspect `coverage.xml` locally or re-run `uv run poe cover` and inspect the terminal report.
 
 ## Pre-commit hooks
 
-Hooks are defined in `.pre-commit-config.yaml` and executed via
-[`prek`](https://github.com/j178/prek), a `pre-commit`-compatible runner.
-Install once:
+Hooks are defined in `.pre-commit-config.yaml` and executed via [`prek`](https://github.com/j178/prek), a `pre-commit`-compatible runner. Install once:
 
 ```bash
 uv run poe setup-pre-commit
 ```
 
-After install, `prek` runs on every `git commit`. `poe ci` invokes
-`prek run --all-files` to mirror what CI will do.
+After install, `prek` runs on every `git commit`. `poe ci` invokes `prek run --all-files` to mirror what CI will do.
