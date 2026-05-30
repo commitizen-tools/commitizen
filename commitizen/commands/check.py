@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import re
 import sys
 from pathlib import Path
@@ -40,7 +41,11 @@ class Check:
         """
         self.commit_msg_file = arguments.get("commit_msg_file")
         self.commit_msg = arguments.get("message")
-        self.rev_range = arguments.get("rev_range")
+        rev_range = arguments.get("rev_range")
+        # Expand env vars so the packaged ``commitizen-branch`` pre-push hook
+        # (which passes the literal ``$PRE_COMMIT_FROM_REF..$PRE_COMMIT_TO_REF``)
+        # keeps working after the ``shell=False`` switch in #1941. See #2003.
+        self.rev_range = os.path.expandvars(rev_range) if rev_range else rev_range
         self.allow_abort = bool(
             arguments.get("allow_abort", config.settings["allow_abort"])
         )

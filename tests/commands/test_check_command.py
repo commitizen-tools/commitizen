@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-from commitizen import commands, git
+from commitizen import cmd, commands, git
 from commitizen.cz import registry
 from commitizen.cz.base import BaseCommitizen
 from commitizen.exceptions import (
@@ -172,6 +172,53 @@ def test_check_a_range_of_git_commits_and_failed(config, mocker: MockFixture):
         commands.Check(config=config, arguments={"rev_range": "HEAD~10..master"})()
 
 
+def test_check_rev_range_expands_env_vars(
+    config, success_mock: MockType, mocker: MockFixture, monkeypatch: pytest.MonkeyPatch
+):
+    """The ``commitizen-branch`` pre-push hook passes the literal string
+    ``$PRE_COMMIT_FROM_REF..$PRE_COMMIT_TO_REF`` and relies on env-var
+    expansion. Regression test for
+    https://github.com/commitizen-tools/commitizen/issues/2003.
+    """
+    monkeypatch.setenv("PRE_COMMIT_FROM_REF", "abc123")
+    monkeypatch.setenv("PRE_COMMIT_TO_REF", "def456")
+    get_commits = mocker.patch(
+        "commitizen.git.get_commits",
+        return_value=_build_fake_git_commits(COMMIT_LOG),
+    )
+
+    commands.Check(
+        config=config,
+        arguments={"rev_range": "$PRE_COMMIT_FROM_REF..$PRE_COMMIT_TO_REF"},
+    )()
+
+    success_mock.assert_called_once()
+    get_commits.assert_called_once_with(None, "abc123..def456")
+
+
+def test_check_rev_range_leaves_unset_env_vars_literal(
+    config, mocker: MockFixture, monkeypatch: pytest.MonkeyPatch
+):
+    """Unset env-var references should pass through unchanged so git can
+    surface a clear ``ambiguous argument`` error instead of being silently
+    rewritten to an empty range."""
+    monkeypatch.delenv("PRE_COMMIT_FROM_REF", raising=False)
+    monkeypatch.delenv("PRE_COMMIT_TO_REF", raising=False)
+    get_commits = mocker.patch(
+        "commitizen.git.get_commits",
+        return_value=_build_fake_git_commits(COMMIT_LOG),
+    )
+
+    commands.Check(
+        config=config,
+        arguments={"rev_range": "$PRE_COMMIT_FROM_REF..$PRE_COMMIT_TO_REF"},
+    )()
+
+    get_commits.assert_called_once_with(
+        None, "$PRE_COMMIT_FROM_REF..$PRE_COMMIT_TO_REF"
+    )
+
+
 def test_check_command_with_invalid_argument(config):
     with pytest.raises(
         InvalidCommandArgumentError,
@@ -191,6 +238,49 @@ def test_check_command_with_empty_range(config: BaseConfig, util: UtilFixture):
         NoCommitsFoundError, match="No commit found with range: 'master..master'"
     ):
         commands.Check(config=config, arguments={"rev_range": "master..master"})()
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_check_rev_range_pre_commit_branch_hook_regression(
+    config: BaseConfig,
+    util: UtilFixture,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """End-to-end regression test for the packaged ``commitizen-branch``
+    pre-push hook.
+
+    The hook in ``.pre-commit-hooks.yaml`` runs::
+
+        cz check --rev-range "$PRE_COMMIT_FROM_REF..$PRE_COMMIT_TO_REF"
+
+    ``pre-commit`` exports those refs as environment variables but does
+    *not* expand them in argv, so the literal string reaches ``cz check``.
+    Before this fix, ``Check`` forwarded that literal to ``git log`` via
+    ``shell=False`` (PR #1941, CWE-78 hardening) and git aborted with
+    ``fatal: ambiguous argument '$PRE_COMMIT_FROM_REF..$PRE_COMMIT_TO_REF'``.
+
+    This test exercises the real subprocess path -- no mocks on
+    ``git.get_commits`` -- to guard against any future regression that
+    bypasses env-var expansion in the rev-range argument.
+
+    See https://github.com/commitizen-tools/commitizen/issues/2003.
+    """
+    util.create_file_and_commit("feat: initial")
+    util.create_file_and_commit("fix: second commit")
+
+    from_ref = cmd.run(["git", "rev-parse", "HEAD~1"]).out.strip()
+    to_ref = cmd.run(["git", "rev-parse", "HEAD"]).out.strip()
+    monkeypatch.setenv("PRE_COMMIT_FROM_REF", from_ref)
+    monkeypatch.setenv("PRE_COMMIT_TO_REF", to_ref)
+
+    commands.Check(
+        config=config,
+        arguments={"rev_range": "$PRE_COMMIT_FROM_REF..$PRE_COMMIT_TO_REF"},
+    )()
+
+    captured = capsys.readouterr()
+    assert "Commit validation: successful!" in captured.out
 
 
 def test_check_a_range_of_failed_git_commits(config, mocker: MockFixture):
