@@ -173,3 +173,83 @@ def test_info(config):
     conventional_commits = ConventionalCommitsCz(config)
     info = conventional_commits.info()
     assert isinstance(info, str)
+
+
+def test_override_change_type_choices(config):
+    config.settings["override"] = {
+        "change_type_choices": [
+            {
+                "value": "foo",
+                "name": "foo: non standard change",
+                "key": "o",
+            }
+        ]
+    }
+
+    conventional_commits = ConventionalCommitsCz(config)
+    questions = conventional_commits.questions()
+    change_type_question = next(q for q in questions if q["name"] == "prefix")
+    choices = change_type_question["choices"]
+    assert choices == [
+        {
+            "value": "foo",
+            "name": "foo: non standard change",
+            "key": "o",
+        }
+    ]
+
+
+def test_extend_bump_map_merges(config, monkeypatch):
+    monkeypatch.setattr(
+        ConventionalCommitsCz, "bump_map", dict(ConventionalCommitsCz.bump_map)
+    )
+    config.settings["extend"] = {
+        "bump_map": {
+            "^foo": "MINOR",
+        }
+    }
+
+    conventional_commits = ConventionalCommitsCz(config)
+    assert conventional_commits.bump_map["^foo"] == "MINOR"
+    assert r"^feat" in conventional_commits.bump_map
+
+
+def test_extend_change_type_choices_appends(config, monkeypatch):
+    monkeypatch.setattr(
+        ConventionalCommitsCz,
+        "change_type_choices",
+        [*ConventionalCommitsCz.change_type_choices],
+    )
+    config.settings["extend"] = {
+        "change_type_choices": [
+            {
+                "value": "foo",
+                "name": "foo: non standard change",
+                "key": "o",
+            }
+        ]
+    }
+
+    conventional_commits = ConventionalCommitsCz(config)
+    questions = conventional_commits.questions()
+    change_type_question = next(q for q in questions if q["name"] == "prefix")
+    choice_values = {choice["value"] for choice in change_type_question["choices"]}
+
+    assert "fix" in choice_values
+    assert "foo" in choice_values
+
+
+def test_override_takes_precedence_over_extend(config):
+    config.settings["override"] = {
+        "bump_map": {
+            "^bar": "PATCH",
+        }
+    }
+    config.settings["extend"] = {
+        "bump_map": {
+            "^foo": "MINOR",
+        }
+    }
+
+    conventional_commits = ConventionalCommitsCz(config)
+    assert conventional_commits.bump_map == {"^bar": "PATCH"}
