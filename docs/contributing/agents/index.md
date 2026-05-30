@@ -7,20 +7,6 @@ These pages are written for AI agents contributing to Commitizen. Human contribu
 > definition at `.agents/skills/commitizen/SKILL.md` in the repo root.
 > The pages here are for working **on** Commitizen itself.
 
-## Source-of-truth map
-
-When two documents could host a piece of guidance, this table is the tie-breaker. Agent pages that drift from it should be fixed, not the human pages.
-
-| Topic | Lives in | Why |
-|---|---|---|
-| Setup, dev workflow, PR lifecycle, labels | [Contributing](../contributing.md) | Same for humans and agents |
-| poe command reference | [Contributing TL;DR](../contributing_tldr.md) | One canonical cheat sheet |
-| PR etiquette, AI-assisted policy | [Pull Request Guidelines](../pull_request.md) and [PR template](https://github.com/commitizen-tools/commitizen/blob/master/.github/pull_request_template.md) | One canonical policy |
-| Codebase topology and extension points | [Architecture Overview](../architecture.md) | Useful to humans too |
-| Always-loaded agent rules | [`AGENTS.md`](https://github.com/commitizen-tools/commitizen/blob/master/AGENTS.md) | Auto-loaded as system context every session |
-| Targeted test selectors and CI failure recipes | [Validation Guide](validation.md) | Agent-specific |
-| Recipes for recurring task types | [Playbooks](#playbooks) | Agent-specific |
-
 ## When to read what
 
 | You want to... | Read |
@@ -45,14 +31,8 @@ Recipes for recurring task types. Each playbook is self-contained: trigger, file
 - [Deprecate a public API](playbooks/deprecate-public-api.md)
 - [Update generated snapshots and screenshots](playbooks/update-snapshots.md)
 
-If your task does not match a playbook, fall back to the general flow:
-
-1. Read the [Architecture Overview](../architecture.md) for the relevant subsystem.
-2. Read 1–2 existing examples in the same directory to match local conventions.
-3. Make the change, plus tests, plus user-facing docs.
-4. Iterate with targeted tests; finish with `uv run poe all`.
-5. Open the PR using the template; check the AI-disclosure box.
+If no playbook matches, read the [Architecture Overview](../architecture.md) for the relevant subsystem and follow 1-2 existing examples in the same directory before changing code.
 
 ## Updating these pages
 
-Treat these pages like any other code change: open a PR, follow the template, run `uv run poe doc:build` to verify the mkdocs build, and check internal links for breakage. If you find yourself restating something that already lives in a human-facing doc, link to it instead and shorten the agent doc.
+Treat these pages like any other code change: open a PR, follow the template, run `uv run poe doc:build` to verify the mkdocs build, and check internal links. If you find yourself restating something that already lives in a human-facing doc, link to it instead and shorten the agent doc.

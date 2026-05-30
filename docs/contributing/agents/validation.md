@@ -24,14 +24,6 @@ During iteration, prefer running only the tests that cover what you changed. The
 | A deprecation | `uv run pytest tests/test_deprecated.py -n auto` plus the affected subsystem's tests |
 | Exception classes | `uv run pytest tests/test_exceptions.py -n auto` |
 
-Run mypy against the oldest supported Python version when adding type annotations:
-
-```bash
-uv run mypy --python-version 3.10
-```
-
-This catches `typing-extensions` vs stdlib import issues that the default mypy run does not flag.
-
 ## Choosing a final check
 
 | Command | When to run | What it does |
@@ -99,13 +91,3 @@ Most often a path-separator or encoding assumption:
 ### Coverage drop on CodeCov
 
 The `cover` task generates `coverage.xml` consumed by CodeCov. If coverage drops, add tests for the new code paths before pushing. Inspect `coverage.xml` locally or re-run `uv run poe cover` and inspect the terminal report.
-
-## Pre-commit hooks
-
-Hooks are defined in `.pre-commit-config.yaml` and executed via [`prek`](https://github.com/j178/prek), a `pre-commit`-compatible runner. Install once:
-
-```bash
-uv run poe setup-pre-commit
-```
-
-After install, `prek` runs on every `git commit`. `poe ci` invokes `prek run --all-files` to mirror what CI will do.

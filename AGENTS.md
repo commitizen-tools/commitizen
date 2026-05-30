@@ -56,10 +56,7 @@ These are easy to miss when working from an agent and are required by the PR tem
 1. **Complete the AI disclosure**. Check "Was generative AI tooling used to co-author this PR?" and fill in the `Generated-by:` trailer with the tool name. Details: [Pull Request Guidelines § AI-Assisted Contributions](docs/contributing/pull_request.md#ai-assisted-contributions).
 2. **Run `uv run poe all` before pushing**. This is the command named in the PR template; it auto-formats then runs the same lint/check/test pipeline as CI. To mirror CI exactly afterwards, run `uv run poe ci` (uses `prek`, does not auto-format).
 3. **Fill in "Steps to Test This Pull Request"** with the exact commands you ran locally — the maintainers re-run them.
-4. **Follow Conventional Commits** — the project uses itself to validate commit messages.
 
 ## When unsure
 
-- Read the existing tests and user docs to understand the expected behavior before changing code.
-- When behavior is ambiguous, assume **backward compatibility with current tests and docs** is required. Add a deprecation window instead of breaking it; see the [deprecate-public-api playbook](docs/contributing/agents/playbooks/deprecate-public-api.md).
-- Cross-platform parity matters — if you cannot test on macOS or Windows locally, surface that in the PR description.
+When behavior is ambiguous, assume **backward compatibility with current tests and docs** is required. Add a deprecation window instead of breaking it; see the [deprecate-public-api playbook](docs/contributing/agents/playbooks/deprecate-public-api.md).
