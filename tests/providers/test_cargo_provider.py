@@ -451,3 +451,80 @@ checksum = "123abc"
     assert file.read_text() == dedent(expected_workspace_toml)
     # The lock file should remain unchanged since the member doesn't inherit workspace version
     assert lock_file.read_text() == dedent(expected_lock_content)
+
+
+def test_cargo_provider_workspace_member_with_fixed_version(
+    config: BaseConfig,
+    chdir: Path,
+):
+    """Regression test for https://github.com/commitizen-tools/commitizen/issues/2001.
+
+    A workspace member with a hardcoded ``version = "x.y.z"`` string (rather
+    than ``version.workspace = true``) used to crash ``set_lock_version`` with
+    ``TypeError: string indices must be integers, not 'str'`` because the code
+    unconditionally subscripted ``package["version"]["workspace"]``.
+    """
+    workspace_toml = """\
+[workspace]
+members = ["member_with_fixed_version"]
+
+[workspace.package]
+version = "0.1.0"
+"""
+
+    # Real Cargo syntax for a workspace member that opts out of the
+    # workspace-inherited version by pinning its own.
+    member_content = """\
+[package]
+name = "member_with_fixed_version"
+version = "0.9.0"
+"""
+
+    lock_content = """\
+[[package]]
+name = "member_with_fixed_version"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+"""
+
+    expected_workspace_toml = """\
+[workspace]
+members = ["member_with_fixed_version"]
+
+[workspace.package]
+version = "42.1"
+"""
+
+    # The pinned member must not be bumped because it does not inherit the
+    # workspace version.
+    expected_lock_content = """\
+[[package]]
+name = "member_with_fixed_version"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+"""
+
+    filename = CargoProvider.filename
+    file = chdir / filename
+    file.write_text(dedent(workspace_toml))
+
+    os.mkdir(chdir / "member_with_fixed_version")
+    member_file = chdir / "member_with_fixed_version" / "Cargo.toml"
+    member_file.write_text(dedent(member_content))
+
+    lock_filename = CargoProvider.lock_filename
+    lock_file = chdir / lock_filename
+    lock_file.write_text(dedent(lock_content))
+
+    config.settings["version_provider"] = "cargo"
+
+    provider = get_provider(config)
+    assert isinstance(provider, CargoProvider)
+    assert provider.get_version() == "0.1.0"
+
+    # Must not raise TypeError: string indices must be integers, not 'str'.
+    provider.set_version("42.1")
+    assert file.read_text() == dedent(expected_workspace_toml)
+    assert lock_file.read_text() == dedent(expected_lock_content)
