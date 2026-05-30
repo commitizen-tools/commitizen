@@ -1,4 +1,5 @@
 import os
+import re
 import subprocess
 import sys
 import types
@@ -17,6 +18,29 @@ from commitizen.exceptions import (
 )
 from tests.utils import UtilFixture
 
+ARGPARSE_CHOICES_PATTERN = re.compile(r"\(choose from (?P<choices>[^)]*)\)")
+ARGPARSE_QUOTED_CHOICE_PATTERN = re.compile(r"'([^']*)'")
+
+
+def normalize_argparse_choice_quotes(text: str) -> str:
+    def normalize_match(match: re.Match[str]) -> str:
+        choices = ARGPARSE_QUOTED_CHOICE_PATTERN.sub(r"\1", match.group("choices"))
+        return f"(choose from {choices})"
+
+    return ARGPARSE_CHOICES_PATTERN.sub(normalize_match, text)
+
+
+def test_normalize_argparse_choice_quotes():
+    text = (
+        "cz: error: argument {init,commit}: invalid choice: 'invalidCommand' "
+        "(choose from 'init', 'commit')"
+    )
+
+    assert normalize_argparse_choice_quotes(text) == (
+        "cz: error: argument {init,commit}: invalid choice: 'invalidCommand' "
+        "(choose from init, commit)"
+    )
+
 
 @pytest.mark.usefixtures("python_version", "consistent_terminal_output")
 def test_no_argv(util: UtilFixture, capsys, file_regression):
@@ -29,29 +53,7 @@ def test_no_argv(util: UtilFixture, capsys, file_regression):
 
 @pytest.mark.parametrize(
     "arg",
-    [
-        "--invalid-arg",
-        pytest.param(
-            "invalidCommand",
-            marks=pytest.mark.skipif(
-                (3, 14, 5) <= sys.version_info < (3, 15),
-                reason=(
-                    "Python 3.14.5 restored argparse choice quoting (CPython "
-                    "gh-130750); the checked-in fixture matches the 3.14.0-4 "
-                    "unquoted format. See #1990."
-                ),
-            ),
-        ),
-    ],
-)
-@pytest.mark.skipif(
-    sys.version_info[:2] == (3, 12) and sys.version_info < (3, 12, 7),
-    reason=(
-        "argparse stopped quoting choices in 3.13 (CPython gh-129019), "
-        "backported to 3.12.7. The reference snapshot reflects the "
-        "no-quote format, so older 3.12.x patches (3.12.0-3.12.6) print "
-        "quoted choices and fail. See commitizen-tools/commitizen#1864."
-    ),
+    ["--invalid-arg", "invalidCommand"],
 )
 @pytest.mark.usefixtures("python_version", "consistent_terminal_output")
 def test_invalid_command(util: UtilFixture, capsys, file_regression, arg):
@@ -59,6 +61,8 @@ def test_invalid_command(util: UtilFixture, capsys, file_regression, arg):
         util.run_cli(arg)
     out, err = capsys.readouterr()
     assert out == ""
+    if arg == "invalidCommand":
+        err = normalize_argparse_choice_quotes(err)
     file_regression.check(err, extension=".txt")
 
 
