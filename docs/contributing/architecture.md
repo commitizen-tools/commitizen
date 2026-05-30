@@ -37,7 +37,7 @@ Commitizen is plugin-friendly. Four kinds of extensions can be registered by ext
 | Version scheme | `commitizen.scheme` | `pep440`, `semver`, `semver2` | `commitizen/version_schemes.py:VersionProtocol` |
 | Changelog format | `commitizen.changelog_format` | `markdown`, `asciidoc`, `textile`, `restructuredtext` | `commitizen/changelog_formats/base.py:BaseFormat` |
 
-Each kind is loaded lazily via `importlib.metadata.entry_points(...)`. To add a new built-in implementation you register it in `pyproject.toml` under the appropriate `[project.entry-points."..."]` table.
+Each kind is registered as a Python entry point and resolved through `importlib.metadata.entry_points(...)`. To add a new built-in implementation you register it in `pyproject.toml` under the appropriate `[project.entry-points."..."]` table.
 
 End-user documentation for these extension points lives elsewhere — see [Version Provider](../config/version_provider.md), [Customized Python Class](../customization/python_class.md), and [Changelog Template](../customization/changelog_template.md). This page focuses on where the source lives and how it is wired together.
 

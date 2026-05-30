@@ -13,11 +13,11 @@ Architectural context: [Architecture § Extension points](../../architecture.md#
 ## Read first
 
 - `commitizen/changelog_formats/__init__.py` — `ChangelogFormat` Protocol, entry-point group `commitizen.changelog_format`, `KNOWN_CHANGELOG_FORMATS` registry, `_guess_changelog_format` extension-based fallback.
-- `commitizen/changelog_formats/base.py:BaseFormat` — abstract implementation; you only need to override `parse_version_from_title` and `parse_title_level`.
+- `commitizen/changelog_formats/base.py:BaseFormat` — provides a default `get_metadata_from_file` that walks the file once for **line-anchored** titles. You override `parse_version_from_title` and `parse_title_level` to fit your markup.
 - A close-match existing format:
-    - Heading-prefix-based: `commitizen/changelog_formats/markdown.py` (uses `#`, `##` prefixes).
-    - Underline-based: `commitizen/changelog_formats/restructuredtext.py` (uses `===`, `---` lines).
-- `commitizen/templates/` — Jinja2 templates named `CHANGELOG.<ext>.j2` control rendering.
+    - Line-anchored heading prefix (`#`, `=`, `h1.`): `commitizen/changelog_formats/markdown.py`, `asciidoc.py`, or `textile.py` — each overrides only the two `parse_*` methods.
+    - Multi-line titles (overline/underline, as in reStructuredText): `commitizen/changelog_formats/restructuredtext.py` — overrides `get_metadata_from_file` directly because the base class assumes one-line titles.
+- `commitizen/templates/` — Jinja2 templates named `CHANGELOG.<ext>.j2` (e.g. `CHANGELOG.md.j2`, `CHANGELOG.rst.j2`, `CHANGELOG.adoc.j2`); the file extension comes from the `extension` class attribute, not the format name.
 - `tests/test_changelog_format_<name>.py` — every format has parity tests; copy the closest one.
 
 ## Steps
@@ -25,9 +25,11 @@ Architectural context: [Architecture § Extension points](../../architecture.md#
 1. **Create the format module** at `commitizen/changelog_formats/<name>.py`. Subclass `BaseFormat`. Set the class attributes:
     - `extension: ClassVar[str]` — primary file extension (no dot).
     - `alternative_extensions: ClassVar[set[str]]` — other accepted extensions for the same format.
-2. **Implement two methods**:
+2. **Implement two methods** for line-anchored formats:
     - `parse_version_from_title(line: str) -> VersionTag | None` — given one line, return a `VersionTag` if the line is a release heading.
     - `parse_title_level(line: str) -> int | None` — return the heading level (1, 2, 3, ...) if the line is a heading. The base class `BaseFormat.get_metadata_from_file` walks the file once and calls both methods per line.
+
+    If your format's titles span multiple lines (overline/title/underline, as in reStructuredText), override `get_metadata_from_file` directly instead — see `RestructuredText` for the algorithm.
 3. **Add the Jinja2 template** at `commitizen/templates/CHANGELOG.<ext>.j2`. Mirror the structure of `CHANGELOG.md.j2` — same blocks, different markup. Make sure the loops over `tree`, `entries`, and `change_type` match.
 4. **Register the built-in** in `pyproject.toml` under `[project.entry-points."commitizen.changelog_format"]`:
 

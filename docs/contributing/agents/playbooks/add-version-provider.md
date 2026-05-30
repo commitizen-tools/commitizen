@@ -15,9 +15,10 @@ Architectural context: [Architecture § Extension points](../../architecture.md#
 - `commitizen/providers/__init__.py` — registration helper `get_provider`, entry-point group `commitizen.provider`, default provider name.
 - `commitizen/providers/base_provider.py` — `VersionProvider`, `FileProvider`, `JsonProvider`, `TomlProvider` base classes.
 - An existing provider that resembles your target:
-    - JSON file with non-standard layout: `commitizen/providers/composer_provider.py`
-    - TOML file with multi-file updates: `commitizen/providers/uv_provider.py`
-    - SCM tag-based, no file write: `commitizen/providers/scm_provider.py`
+    - Simplest JSON case (single file, top-level `version` key): `commitizen/providers/composer_provider.py` — only sets `filename` and `indent`.
+    - JSON with multi-file updates (package + lockfile + shrinkwrap): `commitizen/providers/npm_provider.py` — overrides `get_version`/`set_version`.
+    - TOML with multi-file updates (`pyproject.toml` + `uv.lock`): `commitizen/providers/uv_provider.py`.
+    - SCM tag-based, no file write: `commitizen/providers/scm_provider.py`.
 - Test for the closest existing provider: `tests/providers/test_<name>_provider.py`.
 - `commitizen/config/base_config.py:BaseConfig` — what your provider's `__init__(config)` will receive.
 
