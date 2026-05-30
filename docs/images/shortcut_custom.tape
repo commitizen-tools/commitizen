@@ -83,23 +83,21 @@ Type "cz commit"
 Sleep 500ms
 Enter
 
-# Wait for first prompt to appear
-Sleep 2s
-
-# Question 1: Select the type of change (press d to "docs")
+# Q1: prefix -- press "d" shortcut for "docs"
+Wait+Screen /Select the type of change/
 Sleep 1s
 Type "d"
 Sleep 2s
 Enter
-Sleep 1s
 
-# Question 2: Commit body
+# Q2: Commit body
+Wait+Screen /Commit body/
+Sleep 500ms
 Type "demo with custom keys"
 Sleep 500ms
 Enter
-Sleep 500ms
 
 # Wait for commit success message
-Sleep 1s
+Sleep 2s
 
 Source shared/cleanup.tape
