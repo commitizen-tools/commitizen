@@ -1,4 +1,4 @@
 Hide
-Type "cd /tmp && rm -rf /tmp/commitizen-example"
+Type `cd "${TMPDIR:-/tmp}" && rm -rf "$WORKDIR"`
 Enter
 Sleep 200ms
