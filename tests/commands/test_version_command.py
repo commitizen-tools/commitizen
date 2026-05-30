@@ -31,10 +31,14 @@ def test_version_for_showing_project_version(config, capsys):
 
 @pytest.mark.parametrize("project", [True, False])
 def test_version_for_showing_commitizen_version(config, capsys, project: bool):
-    commands.Version(
-        config,
-        {"project": project, "commitizen": True},
-    )()
+    with pytest.warns(
+        DeprecationWarning,
+        match=r"`cz version --commitizen` is deprecated.*Use `cz --version` instead",
+    ):
+        commands.Version(
+            config,
+            {"project": project, "commitizen": True},
+        )()
     captured = capsys.readouterr()
     assert f"{__version__}" in captured.out
 
@@ -63,10 +67,14 @@ def test_version_for_showing_both_versions(config, capsys):
 
 
 def test_version_for_showing_commitizen_system_info(config, capsys):
-    commands.Version(
-        config,
-        {"report": True},
-    )()
+    with pytest.warns(
+        DeprecationWarning,
+        match=r"`cz version --report` is deprecated.*Use `cz --report` instead",
+    ):
+        commands.Version(
+            config,
+            {"report": True},
+        )()
     captured = capsys.readouterr()
     assert f"Commitizen Version: {__version__}" in captured.out
     assert f"Python Version: {sys.version}" in captured.out
