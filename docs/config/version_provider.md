@@ -102,6 +102,40 @@ name = "my-package"
 version = "0.1.0"  # Managed by Commitizen
 ```
 
+### `pep751`
+
+Manages version in `pyproject.toml` (`project.version`) and updates the project's own entry in [PEP 751](https://peps.python.org/pep-0751/) `pylock.toml` lock files. Only updates `[[packages]]` entries that reference the project as a local directory source (`[packages.directory]`), since those are the only entries safe to edit without invalidating hashes and URLs.
+
+!!! note
+    `pylock.toml` is a standardized Python lock file format (PEP 751). Unlike `package-lock.json` or `uv.lock`, it has no root-level project version — the project may appear as a `[[packages]]` entry with a `[packages.directory]` source. This provider handles that case automatically. If your project doesn't appear in its own lock file (the common case), it behaves identically to `pep621`.
+
+**Use when:**
+
+- You're using a PEP 751-compliant lock tool and have `pylock.toml` files
+- You want version synchronization between `pyproject.toml` and `pylock.toml`
+
+**Configuration:**
+```toml
+[tool.commitizen]
+version_provider = "pep751"
+```
+
+**Example `pylock.toml` entry that gets updated:**
+```toml
+lock-version = "1.0"
+created-by = "uv"
+
+[[packages]]
+name = "my-package"
+version = "0.1.0"  # Updated by Commitizen
+
+[packages.directory]
+path = "."
+editable = true
+```
+
+Also handles named lock files like `pylock.dev.toml`, `pylock.prod.toml`, etc.
+
 ### `uv`
 
 Manages version in both `pyproject.toml` (`project.version`) and `uv.lock` (`package.version` for the matching package name). This ensures consistency between your project metadata and lock file.
@@ -203,6 +237,7 @@ version_provider = "composer"
 | `commitizen` | Commitizen config file              | No        | General use, flexible projects    |
 | `scm`        | None (reads from Git tags)          | Yes       | `setuptools-scm` users            |
 | `pep621`     | `pyproject.toml` (`project.version`) | No        | Modern Python (PEP 621)           |
+| `pep751`     | `pyproject.toml` + `pylock*.toml`    | No        | PEP 751 lock file users           |
 | `poetry`     | `pyproject.toml` (`tool.poetry.version`) | No    | Poetry projects                   |
 | `uv`         | `pyproject.toml` + `uv.lock`        | No        | uv package manager                |
 | `cargo`      | `Cargo.toml` + `Cargo.lock`          | No        | Rust/Cargo projects               |
@@ -338,6 +373,7 @@ Select a version provider based on your project's characteristics:
 
 - **Python projects**
     - **with `uv`**: Use `uv`
+    - **with PEP 751 lock files (`pylock.toml`)**: Use `pep751`
     - **with `pyproject.toml` that follows PEP 621**: Use `pep621`
     - **with Poetry**: Use `poetry`
     - **setuptools-scm**: Use `scm`
