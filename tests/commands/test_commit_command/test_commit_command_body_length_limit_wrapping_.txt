@@ -1,0 +1,4 @@
+feat: add feature
+
+This is a very long line that exceeds 72 characters and should be
+automatically wrapped by the system to fit within the limit
