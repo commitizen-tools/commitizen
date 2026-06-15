@@ -83,12 +83,13 @@ class CargoProvider(TomlProvider):
                     if TYPE_CHECKING:
                         assert isinstance(package_content, dict)
                     try:
-                        version_workspace = package_content["version"]["workspace"]
-                        if version_workspace is True:
-                            package_name = package_content["name"]
-                            if TYPE_CHECKING:
-                                assert isinstance(package_name, str)
-                            members_inheriting.append(package_name)
+                        if not isinstance(package_content["version"], str):
+                            version_workspace = package_content["version"]["workspace"]
+                            if version_workspace is True:
+                                package_name = package_content["name"]
+                                if TYPE_CHECKING:
+                                    assert isinstance(package_name, str)
+                                members_inheriting.append(package_name)
                     except NonExistentKey:
                         pass
 

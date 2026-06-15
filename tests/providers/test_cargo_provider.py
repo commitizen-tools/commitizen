@@ -378,6 +378,77 @@ checksum = "123abc"
     assert lock_file.read_text() == dedent(expected_lock_content)
 
 
+def test_cargo_provider_workspace_member_with_fixed_version_key(
+    config: BaseConfig,
+    chdir: Path,
+):
+    """Test workspace member that has fixed version key (should not crash)."""
+    workspace_toml = """\
+[workspace]
+members = ["member_with_fixed_version"]
+
+[workspace.package]
+version = "0.1.0"
+"""
+
+    # Create a member that has fixed version key
+    member_content = """\
+[package]
+name = "member_with_fixed_version"
+version = "1.0.0"
+"""
+
+    lock_content = """\
+[[package]]
+name = "member_with_fixed_version"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+"""
+
+    expected_workspace_toml = """\
+[workspace]
+members = ["member_with_fixed_version"]
+
+[workspace.package]
+version = "42.1"
+"""
+
+    expected_lock_content = """\
+[[package]]
+name = "member_with_fixed_version"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+"""
+
+    # Create the workspace file
+    filename = CargoProvider.filename
+    file = chdir / filename
+    file.write_text(dedent(workspace_toml))
+
+    # Create the member directory and file
+    os.mkdir(chdir / "member_with_fixed_version")
+    member_file = chdir / "member_with_fixed_version" / "Cargo.toml"
+    member_file.write_text(dedent(member_content))
+
+    # Create the lock file
+    lock_filename = CargoProvider.lock_filename
+    lock_file = chdir / lock_filename
+    lock_file.write_text(dedent(lock_content))
+
+    config.settings["version_provider"] = "cargo"
+
+    provider = get_provider(config)
+    assert isinstance(provider, CargoProvider)
+    assert provider.get_version() == "0.1.0"
+
+    # This should not crash even though the member has fixed version key
+    provider.set_version("42.1")
+    assert file.read_text() == dedent(expected_workspace_toml)
+    assert lock_file.read_text() == dedent(expected_lock_content)
+
+
 def test_cargo_provider_workspace_member_without_workspace_key(
     config: BaseConfig,
     chdir: Path,
