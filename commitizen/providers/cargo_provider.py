@@ -79,7 +79,41 @@ class CargoProvider(TomlProvider):
                     cargo_lock_content["package"][i]["version"] = version  # type: ignore[index]
                     break
         except NonExistentKey:
+<<<<<<< HEAD
             members_inheriting = _get_workspace_members(cargo_toml_content, self._get_encoding())
+=======
+            workspace = cargo_toml_content.get("workspace", {})
+            if TYPE_CHECKING:
+                assert isinstance(workspace, dict)
+            workspace_members = workspace.get("members", [])
+            excluded_workspace_members = workspace.get("exclude", [])
+            members_inheriting: list[str] = []
+
+            for member in workspace_members:
+                for path in glob.glob(member, recursive=True):
+                    if any(
+                        fnmatch.fnmatch(path, pattern)
+                        for pattern in excluded_workspace_members
+                    ):
+                        continue
+
+                    cargo_file = Path(path) / "Cargo.toml"
+                    package_content = parse(
+                        cargo_file.read_text(encoding=self._get_encoding())
+                    ).get("package", {})
+                    if TYPE_CHECKING:
+                        assert isinstance(package_content, dict)
+                    try:
+                        if not isinstance(package_content["version"], str):
+                            version_workspace = package_content["version"]["workspace"]
+                            if version_workspace is True:
+                                package_name = package_content["name"]
+                                if TYPE_CHECKING:
+                                    assert isinstance(package_name, str)
+                                members_inheriting.append(package_name)
+                    except NonExistentKey:
+                        pass
+>>>>>>> e74d2d46 (fix: workspace member with fixed version key)
 
             for i, package in enumerate(packages):
                 if package["name"] in members_inheriting:
