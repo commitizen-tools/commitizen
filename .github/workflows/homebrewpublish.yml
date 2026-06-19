@@ -12,7 +12,7 @@ jobs:
     if: ${{ github.repository == 'commitizen-tools/commitizen' && github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Set up Python
         uses: astral-sh/setup-uv@v7
       - name: Install dependencies
