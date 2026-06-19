@@ -522,3 +522,226 @@ checksum = "123abc"
     assert file.read_text() == dedent(expected_workspace_toml)
     # The lock file should remain unchanged since the member doesn't inherit workspace version
     assert lock_file.read_text() == dedent(expected_lock_content)
+
+
+def test_cargo_provider_inheriting_workspace_member_with_version_in_toml(
+    config: BaseConfig,
+    chdir: Path,
+):
+    """Test workspace member that has version key but no workspace subkey."""
+    workspace_toml = """\
+[workspace]
+members = ["inheriting_member"]
+
+[workspace.package]
+version = "0.1.0"
+
+[workspace.dependencies]
+inheriting_member = "0.1.0"
+"""
+
+    member_content = """\
+[package]
+name = "inheriting_member"
+version.workspace = true
+"""
+
+    lock_content = """\
+[[package]]
+name = "inheriting_member"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+"""
+
+    expected_workspace_toml = """\
+[workspace]
+members = ["inheriting_member"]
+
+[workspace.package]
+version = "42.1"
+
+[workspace.dependencies]
+inheriting_member = "42.1"
+"""
+
+    expected_lock_content = """\
+[[package]]
+name = "inheriting_member"
+version = "42.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+"""
+
+    # Create the workspace file
+    filename = CargoProvider.filename
+    file = chdir / filename
+    file.write_text(dedent(workspace_toml))
+
+    # Create the member directory and file
+    os.mkdir(chdir / "inheriting_member")
+    member_file = chdir / "inheriting_member" / "Cargo.toml"
+    member_file.write_text(dedent(member_content))
+
+    # Create the lock file
+    lock_filename = CargoProvider.lock_filename
+    lock_file = chdir / lock_filename
+    lock_file.write_text(dedent(lock_content))
+
+    config.settings["version_provider"] = "cargo"
+
+    provider = get_provider(config)
+    assert isinstance(provider, CargoProvider)
+    assert provider.get_version() == "0.1.0"
+
+    provider.set_version("42.1")
+    assert file.read_text() == dedent(expected_workspace_toml)
+    assert lock_file.read_text() == dedent(expected_lock_content)
+
+def test_cargo_provider_inheriting_workspace_member_with_version_dict_in_toml(
+    config: BaseConfig,
+    chdir: Path,
+):
+    """Test workspace member that has version key but no workspace subkey."""
+    workspace_toml = """\
+[workspace]
+members = ["inheriting_member"]
+
+[workspace.package]
+version = "0.1.0"
+
+[workspace.dependencies]
+inheriting_member = { version = "0.1.0" }
+"""
+
+    member_content = """\
+[package]
+name = "inheriting_member"
+version.workspace = true
+"""
+
+    lock_content = """\
+[[package]]
+name = "inheriting_member"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+"""
+
+    expected_workspace_toml = """\
+[workspace]
+members = ["inheriting_member"]
+
+[workspace.package]
+version = "42.1"
+
+[workspace.dependencies]
+inheriting_member = { version = "42.1" }
+"""
+
+    expected_lock_content = """\
+[[package]]
+name = "inheriting_member"
+version = "42.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+"""
+
+    # Create the workspace file
+    filename = CargoProvider.filename
+    file = chdir / filename
+    file.write_text(dedent(workspace_toml))
+
+    # Create the member directory and file
+    os.mkdir(chdir / "inheriting_member")
+    member_file = chdir / "inheriting_member" / "Cargo.toml"
+    member_file.write_text(dedent(member_content))
+
+    # Create the lock file
+    lock_filename = CargoProvider.lock_filename
+    lock_file = chdir / lock_filename
+    lock_file.write_text(dedent(lock_content))
+
+    config.settings["version_provider"] = "cargo"
+
+    provider = get_provider(config)
+    assert isinstance(provider, CargoProvider)
+    assert provider.get_version() == "0.1.0"
+
+    provider.set_version("42.1")
+    assert file.read_text() == dedent(expected_workspace_toml)
+    assert lock_file.read_text() == dedent(expected_lock_content)
+
+def test_cargo_provider_inheriting_workspace_member_with_version_and_package_in_toml(
+    config: BaseConfig,
+    chdir: Path,
+):
+    """Test workspace member that has version key but no workspace subkey."""
+    workspace_toml = """\
+[workspace]
+members = ["mypath/original_name"]
+
+[workspace.package]
+version = "0.1.0"
+
+[workspace.dependencies]
+renamed_inheriting_member = { version = "0.1.0", path = "mypath/original_name", package = "original_name" }
+"""
+
+    member_content = """\
+[package]
+name = "original_name"
+version.workspace = true
+"""
+
+    lock_content = """\
+[[package]]
+name = "original_name"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+"""
+
+    expected_workspace_toml = """\
+[workspace]
+members = ["mypath/original_name"]
+
+[workspace.package]
+version = "42.1"
+
+[workspace.dependencies]
+renamed_inheriting_member = { version = "42.1", path = "mypath/original_name", package = "original_name" }
+"""
+
+    expected_lock_content = """\
+[[package]]
+name = "original_name"
+version = "42.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "123abc"
+"""
+
+    # Create the workspace file
+    filename = CargoProvider.filename
+    file = chdir / filename
+    file.write_text(dedent(workspace_toml))
+
+    # Create the member directory and file
+    os.makedirs(chdir / "mypath/original_name")
+    member_file = chdir / "mypath/original_name" / "Cargo.toml"
+    member_file.write_text(dedent(member_content))
+
+    # Create the lock file
+    lock_filename = CargoProvider.lock_filename
+    lock_file = chdir / lock_filename
+    lock_file.write_text(dedent(lock_content))
+
+    config.settings["version_provider"] = "cargo"
+
+    provider = get_provider(config)
+    assert isinstance(provider, CargoProvider)
+    assert provider.get_version() == "0.1.0"
+
+    provider.set_version("42.1")
+    assert file.read_text() == dedent(expected_workspace_toml)
+    assert lock_file.read_text() == dedent(expected_lock_content)
