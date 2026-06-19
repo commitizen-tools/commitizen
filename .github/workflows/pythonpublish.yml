@@ -32,7 +32,7 @@ jobs:
             echo "::error::Dispatch ref '${TAG}' is not an existing tag"
             exit 1
           fi
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           ref: ${{ github.event_name == 'workflow_dispatch' && format('refs/tags/{0}', github.event.inputs.ref) || github.ref }}
