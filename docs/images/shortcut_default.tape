@@ -42,39 +42,41 @@ Type "cz commit"
 Sleep 500ms
 Enter
 
-# Wait for first prompt to appear
-Sleep 2s
-
-# Question 1: Select the type of change (press d to "docs")
+# Q1: prefix -- press "d" shortcut for "docs"
+Wait+Screen /Select the type of change/
 Sleep 1s
 Type "d"
 Sleep 2s
 Enter
-Sleep 1s
 
-# Question 2: Scope (optional, skip)
+# Q2: scope (optional, skip)
+Wait+Screen /What is the scope/
+Sleep 500ms
 Enter
-Sleep 1s
 
-# Question 3: Subject
+# Q3: subject
+Wait+Screen /imperative summary/
+Sleep 500ms
 Type "demo with custom keys"
 Sleep 500ms
 Enter
-Sleep 500ms
 
-# Question 4: Is this a BREAKING CHANGE? (No)
-Enter
+# Q4: body (optional, skip)
+Wait+Screen /additional contextual information/
 Sleep 500ms
+Enter
 
-# Question 5: Body (optional, skip)
-Enter
+# Q5: is_breaking_change (No)
+Wait+Screen /BREAKING CHANGE\?/
 Sleep 500ms
+Enter
 
-# Question 6: Footer (optional, skip)
-Enter
+# Q6: footer (optional, skip)
+Wait+Screen /Footer\. Information/
 Sleep 500ms
+Enter
 
 # Wait for commit success message
-Sleep 1s
+Sleep 2s
 
 Source shared/cleanup.tape

@@ -29,38 +29,41 @@ Type "cz commit"
 Sleep 500ms
 Enter
 
-# Wait for first prompt to appear
-Sleep 1s
-
-# Question 1: Select the type of change (move down to "feat")
+# Q1: prefix -- select the type of change (move down to "feat")
+Wait+Screen /Select the type of change/
+Sleep 500ms
 Down
 Sleep 500ms
 Enter
-Sleep 1s
 
-# Question 2: Scope (optional, skip)
+# Q2: scope (optional, skip)
+Wait+Screen /What is the scope/
+Sleep 500ms
 Enter
-Sleep 1s
 
-# Question 3: Subject
+# Q3: subject
+Wait+Screen /imperative summary/
+Sleep 500ms
 Type "awesome new feature"
 Sleep 500ms
 Enter
-Sleep 1s
 
-# Question 4: Is this a BREAKING CHANGE? (No)
+# Q4: body (optional, skip)
+Wait+Screen /additional contextual information/
+Sleep 500ms
 Enter
-Sleep 1s
 
-# Question 5: Body (optional, skip)
+# Q5: is_breaking_change (No)
+Wait+Screen /BREAKING CHANGE\?/
+Sleep 500ms
 Enter
-Sleep 1s
 
-# Question 6: Footer (optional, skip)
+# Q6: footer (optional, skip)
+Wait+Screen /Footer\. Information/
+Sleep 500ms
 Enter
-Sleep 1s
 
 # Wait for commit success message
-Sleep 1s
+Sleep 2s
 
 Source shared/cleanup.tape

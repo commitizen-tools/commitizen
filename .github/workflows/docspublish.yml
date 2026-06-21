@@ -25,7 +25,9 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y ffmpeg ttyd
-          go install github.com/charmbracelet/vhs@latest
+          # Pin VHS to a known version so gif rendering is deterministic across runs.
+          # Bump this version intentionally when you want to refresh all interactive screenshots.
+          go install github.com/charmbracelet/vhs@v0.11.0
       - name: Install dependencies
         run: |
           uv --version
@@ -33,6 +35,33 @@ jobs:
       - name: Update CLI screenshots
         run: |
           uv run --no-sync poe doc:screenshots
+      - name: Discard cli_interactive regeneration when render inputs are unchanged
+        # VHS gif output drifts by a few bytes between runs even when sources are
+        # identical, which used to produce a noisy stream of `docs(cli/screenshots)`
+        # commits. Keep regenerated gifs only when something that can actually
+        # change the rendered content has changed in this push (the tape sources,
+        # or any commitizen source code the tapes execute), or when manually
+        # dispatched.
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "Manual run; keeping any regenerated cli_interactive gifs."
+            exit 0
+          fi
+          before="${{ github.event.before }}"
+          if [[ -z "$before" || "$before" == "0000000000000000000000000000000000000000" ]]; then
+            echo "No previous SHA available (first push or new branch); keeping any regenerated cli_interactive gifs."
+            exit 0
+          fi
+          if ! git rev-parse --verify "$before^{commit}" >/dev/null 2>&1; then
+            echo "Previous SHA $before is unreachable; keeping any regenerated cli_interactive gifs."
+            exit 0
+          fi
+          if git diff --quiet "$before" HEAD -- docs/images/'*.tape' docs/images/shared/ commitizen/; then
+            echo "Tape sources and commitizen/ unchanged since $before; discarding cli_interactive gif regeneration to avoid byte-level churn."
+            git checkout -- docs/images/cli_interactive/
+          else
+            echo "Render inputs changed since $before (tapes or commitizen/); keeping regenerated cli_interactive gifs."
+          fi
       - name: Commit and push updated CLI screenshots
         run: |
           git config --global user.name "github-actions[bot]"

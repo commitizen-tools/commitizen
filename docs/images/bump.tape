@@ -57,12 +57,17 @@ Type "cz bump"
 Sleep 500ms
 Enter
 
-# Wait for the "Is this the first tag created?" prompt
-Sleep 2s
+# Wait for the "Is this the first tag created?" prompt to render
+Wait+Screen /Is this the first tag/
+
+# Small visual pause so the prompt is readable before the answer
+Sleep 500ms
 
 # Answer Yes to "Is this the first tag created?" (default is Yes, just press Enter)
 Enter
-Sleep 3s
+
+# Wait for cz bump to finish (the "Done!" success line is printed last)
+Wait+Screen /Done!/
 
 # Step 3: Show new version after bump
 Type "cz version --project"

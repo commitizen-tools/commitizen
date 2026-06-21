@@ -15,51 +15,55 @@ Type "cz init"
 Sleep 500ms
 Enter
 
-# Wait for welcome message and first prompt
-Sleep 500ms
-Sleep 1s
-
-# Question 1: Please choose a supported config file
+# Q1: Please choose a supported config file
 # Default is .cz.toml, just press Enter
+Wait+Screen /Please choose a supported config/
+Sleep 500ms
 Enter
-Sleep 1s
 
-# Question 2: Please choose a cz (commit rule)
+# Q2: Please choose a cz (commit rule)
 # Default is cz_conventional_commits, just press Enter
+Wait+Screen /Please choose a cz/
+Sleep 500ms
 Enter
-Sleep 1s
 
-# Question 3: Choose the source of the version
-# Default is "commitizen: Fetch and set version in commitizen config, just press Enter"
+# Q3: Choose the source of the version
+# Default is "commitizen", just press Enter
+Wait+Screen /Choose the source of the version/
+Sleep 500ms
 Enter
-Sleep 1s
 
-# Question 4: Choose version scheme
+# Q4: Choose version scheme
 # Default is semver, just press Enter
+Wait+Screen /Choose version scheme/
+Sleep 500ms
 Enter
-Sleep 1s
 
-# Question 5: Please enter the correct version format
+# Q5: Please enter the correct version format
 # Default is "$version", just press Enter
+Wait+Screen /Please enter the correct version format/
+Sleep 500ms
 Enter
-Sleep 1s
 
-# Question 6: Create changelog automatically on bump
+# Q6: Create changelog automatically on bump
 # Default is Yes, just press Enter
+Wait+Screen /Create changelog automatically on bump/
+Sleep 500ms
 Enter
-Sleep 1s
 
-# Question 7: Keep major version zero (0.x) during breaking changes
+# Q7: Keep major version zero (0.x) during breaking changes
 # Default is Yes, just press Enter
+Wait+Screen /Keep major version zero/
+Sleep 500ms
 Enter
-Sleep 1s
 
-# Question 8: What types of pre-commit hook you want to install?
-# Default is [commit-msg], just press Enter to accept
+# Q8: What types of pre-commit hook you want to install?
+# Default is [], just press Enter to accept
+Wait+Screen /types of pre-commit hook/
+Sleep 500ms
 Enter
-Sleep 1s
 
 # Wait for completion message
-Sleep 1s
+Sleep 2s
 
 Source shared/cleanup.tape
