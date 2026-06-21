@@ -84,11 +84,27 @@ jobs:
             esac
           } > comment.md
 
+      # Look up an existing preview comment so the next step edits it in
+      # place instead of appending a new one on every run.
+      # `peter-evans/create-or-update-comment` does not search by body
+      # itself -- it only creates new comments, or updates a specific
+      # `comment-id`.
+      - name: Find existing preview comment
+        id: find-comment
+        uses: peter-evans/find-comment@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: "<!-- commitizen-bump-preview -->"
+
       - name: Post or update PR comment
         uses: peter-evans/create-or-update-comment@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          # When empty (no prior comment found) a new one is created;
+          # otherwise the existing comment is edited in place.
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
           body-path: comment.md
-          body-includes: "<!-- commitizen-bump-preview -->"
           edit-mode: replace
