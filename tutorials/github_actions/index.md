@@ -211,12 +211,20 @@ jobs:
                 ;;
             esac
           } > comment.md
-      - uses: peter-evans/create-or-update-comment@v4
+      - name: Find existing preview comment
+        id: find-comment
+        uses: peter-evans/find-comment@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
-          body-path: comment.md
+          comment-author: "github-actions[bot]"
           body-includes: "<!-- commitizen-bump-preview -->"
+      - uses: peter-evans/create-or-update-comment@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: comment.md
           edit-mode: replace
 ````
 
@@ -226,7 +234,7 @@ jobs:
 - **Setup**: [`commitizen-tools/setup-cz`](https://github.com/commitizen-tools/setup-cz) installs the Commitizen CLI; no language-specific build tooling is required.
 - **Defense in depth**: `persist-credentials: false` on `actions/checkout` keeps the workflow token out of the local git config.
 - **Dry-run**: `cz bump --dry-run --yes` computes the next version (and, if `update_changelog_on_bump` is set in your config, also the changelog entries that would be produced). Exit code `21` (`NoneIncrementExit`) is treated as "no eligible bump" rather than a failure.
-- **Sticky comment**: The hidden HTML marker `<!-- commitizen-bump-preview -->` lets [`peter-evans/create-or-update-comment`](https://github.com/peter-evans/create-or-update-comment) find and replace the previous preview on every push, instead of leaving a growing trail of comments.
+- **Sticky comment**: [`peter-evans/find-comment`](https://github.com/peter-evans/find-comment) looks up an existing comment by the hidden HTML marker `<!-- commitizen-bump-preview -->` and bot author, then [`peter-evans/create-or-update-comment`](https://github.com/peter-evans/create-or-update-comment) edits it in place (or creates a new one on the first run when the marker is not yet present), instead of leaving a growing trail of comments.
 
 You can find the complete workflow in our repository at [pr-bump-preview.yml](https://github.com/commitizen-tools/commitizen/blob/master/.github/workflows/pr-bump-preview.yml).
 

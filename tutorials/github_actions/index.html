@@ -2557,12 +2557,20 @@ comment summarizing the would-be version bump.</p>
 <span class="w">                </span><span class="no">;;</span>
 <span class="w">            </span><span class="no">esac</span>
 <span class="w">          </span><span class="no">} &gt; comment.md</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">peter-evans/create-or-update-comment@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Find existing preview comment</span>
+<span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">find-comment</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">peter-evans/find-comment@v3</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.GITHUB_TOKEN }}</span>
 <span class="w">          </span><span class="nt">issue-number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.event.pull_request.number }}</span>
-<span class="w">          </span><span class="nt">body-path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">comment.md</span>
+<span class="w">          </span><span class="nt">comment-author</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;github-actions[bot]&quot;</span>
 <span class="w">          </span><span class="nt">body-includes</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;!--</span><span class="nv"> </span><span class="s">commitizen-bump-preview</span><span class="nv"> </span><span class="s">--&gt;&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">peter-evans/create-or-update-comment@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.GITHUB_TOKEN }}</span>
+<span class="w">          </span><span class="nt">comment-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ steps.find-comment.outputs.comment-id }}</span>
+<span class="w">          </span><span class="nt">issue-number</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.event.pull_request.number }}</span>
+<span class="w">          </span><span class="nt">body-path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">comment.md</span>
 <span class="w">          </span><span class="nt">edit-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">replace</span>
 </code></pre></div>
 <h4 id="how-it-works_1">How it works<a class="headerlink" href="#how-it-works_1" title="Permanent link">&para;</a></h4>
@@ -2586,10 +2594,13 @@ comment summarizing the would-be version bump.</p>
   <code>update_changelog_on_bump</code> is set in your config, also the changelog
   entries that would be produced). Exit code <code>21</code> (<code>NoneIncrementExit</code>)
   is treated as "no eligible bump" rather than a failure.</li>
-<li><strong>Sticky comment</strong>: The hidden HTML marker <code>&lt;!-- commitizen-bump-preview --&gt;</code>
-  lets <a href="https://github.com/peter-evans/create-or-update-comment"><code>peter-evans/create-or-update-comment</code></a>
-  find and replace the previous preview on every push, instead of leaving a
-  growing trail of comments.</li>
+<li><strong>Sticky comment</strong>: <a href="https://github.com/peter-evans/find-comment"><code>peter-evans/find-comment</code></a>
+  looks up an existing comment by the hidden HTML marker
+  <code>&lt;!-- commitizen-bump-preview --&gt;</code> and bot author, then
+  <a href="https://github.com/peter-evans/create-or-update-comment"><code>peter-evans/create-or-update-comment</code></a>
+  edits it in place (or creates a new one on the first run when the
+  marker is not yet present), instead of leaving a growing trail of
+  comments.</li>
 </ul>
 <p>You can find the complete workflow in our repository at <a href="https://github.com/commitizen-tools/commitizen/blob/master/.github/workflows/pr-bump-preview.yml">pr-bump-preview.yml</a>.</p>
 <h3 id="publishing-a-python-package">Publishing a Python package<a class="headerlink" href="#publishing-a-python-package" title="Permanent link">&para;</a></h3>
@@ -2677,7 +2688,7 @@ comment summarizing the would-be version bump.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 19, 2026 14:47:27 UTC">May 19, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 21, 2026 13:32:28 UTC">June 21, 2026</span>
   </span>
 
     
