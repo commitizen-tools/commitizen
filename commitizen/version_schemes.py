@@ -18,11 +18,13 @@ from typing import (
 from packaging.version import InvalidVersion  # noqa: F401 (expose the common exception)
 from packaging.version import Version as _BaseVersion
 
-from commitizen.defaults import MAJOR, MINOR, PATCH, Settings
+from commitizen.bump_rule import VersionIncrement
 from commitizen.exceptions import VersionSchemeUnknown
 
 if TYPE_CHECKING:
     import sys
+
+    from commitizen.defaults import Settings
 
     # Self is Python 3.11+ but backported in typing-extensions
     if sys.version_info < (3, 11):
@@ -31,8 +33,9 @@ if TYPE_CHECKING:
         from typing import Self
 
 
-Increment: TypeAlias = Literal["MAJOR", "MINOR", "PATCH"]  # TODO: deprecate
 Prerelease: TypeAlias = Literal["alpha", "beta", "rc"]
+
+
 _DEFAULT_VERSION_PARSER = re.compile(
     r"v?(?P<version>([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z.]+)?(\w+)?)"
 )
@@ -120,7 +123,7 @@ class VersionProtocol(Protocol):
 
     def bump(
         self,
-        increment: Increment | None,
+        increment: VersionIncrement,
         prerelease: Prerelease | None = None,
         prerelease_offset: int = 0,
         devrelease: int | None = None,
@@ -212,26 +215,34 @@ class BaseVersion(_BaseVersion):
 
         return f"+{build_metadata}"
 
-    def increment_base(self, increment: Increment | None = None) -> str:
-        prev_release = list(self.release)
-        increments = [MAJOR, MINOR, PATCH]
-        base = dict(zip_longest(increments, prev_release, fillvalue=0))
+    def increment_base(self, increment: VersionIncrement) -> str:
+        base = dict(
+            zip_longest(
+                (
+                    VersionIncrement.MAJOR,
+                    VersionIncrement.MINOR,
+                    VersionIncrement.PATCH,
+                ),
+                self.release,
+                fillvalue=0,
+            )
+        )
 
-        if increment == MAJOR:
-            base[MAJOR] += 1
-            base[MINOR] = 0
-            base[PATCH] = 0
-        elif increment == MINOR:
-            base[MINOR] += 1
-            base[PATCH] = 0
-        elif increment == PATCH:
-            base[PATCH] += 1
+        if increment == VersionIncrement.MAJOR:
+            base[VersionIncrement.MAJOR] += 1
+            base[VersionIncrement.MINOR] = 0
+            base[VersionIncrement.PATCH] = 0
+        elif increment == VersionIncrement.MINOR:
+            base[VersionIncrement.MINOR] += 1
+            base[VersionIncrement.PATCH] = 0
+        elif increment == VersionIncrement.PATCH:
+            base[VersionIncrement.PATCH] += 1
 
-        return f"{base[MAJOR]}.{base[MINOR]}.{base[PATCH]}"
+        return f"{base[VersionIncrement.MAJOR]}.{base[VersionIncrement.MINOR]}.{base[VersionIncrement.PATCH]}"
 
     def bump(
         self,
-        increment: Increment | None,
+        increment: VersionIncrement,
         prerelease: Prerelease | None = None,
         prerelease_offset: int = 0,
         devrelease: int | None = None,
@@ -273,13 +284,16 @@ class BaseVersion(_BaseVersion):
         )  # type: ignore[return-value]
 
     def _get_increment_base(
-        self, increment: Increment | None, exact_increment: bool
+        self, increment: VersionIncrement, exact_increment: bool
     ) -> str:
         if (
             not self.is_prerelease
             or exact_increment
-            or (increment == MINOR and self.micro != 0)
-            or (increment == MAJOR and (self.minor != 0 or self.micro != 0))
+            or (increment == VersionIncrement.MINOR and self.micro != 0)
+            or (
+                increment == VersionIncrement.MAJOR
+                and (self.minor != 0 or self.micro != 0)
+            )
         ):
             return self.increment_base(increment)
         return f"{self.major}.{self.minor}.{self.micro}"

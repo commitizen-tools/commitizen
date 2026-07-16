@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
-from collections.abc import Iterable, Mapping
+from functools import cached_property
 from typing import TYPE_CHECKING, Any, NamedTuple, Protocol
 
 from jinja2 import BaseLoader, PackageLoader
 from prompt_toolkit.styles import Style
 
-from commitizen.exceptions import CommitMessageLengthExceededError
+from commitizen.bump_rule import BumpRule, CustomBumpRule, VersionIncrement
+from commitizen.exceptions import CommitMessageLengthExceededError, NoPatternMapError
 
 if TYPE_CHECKING:
     import re
@@ -36,9 +37,13 @@ class ValidationResult(NamedTuple):
 
 
 class BaseCommitizen(metaclass=ABCMeta):
+    _bump_rule: BumpRule | None = None
+
+    # TODO: decide if these should be removed
     bump_pattern: str | None = None
     bump_map: dict[str, str] | None = None
     bump_map_major_version_zero: dict[str, str] | None = None
+
     default_style_config: list[tuple[str, str]] = [
         ("qmark", "fg:#ff9d00 bold"),
         ("question", "bold"),
@@ -93,6 +98,47 @@ class BaseCommitizen(metaclass=ABCMeta):
                 *BaseCommitizen.default_style_config,
                 *self.config.settings["style"],
             ]
+        )
+
+    @cached_property
+    def bump_rule(self) -> BumpRule:
+        """Get the bump rule for version incrementing.
+
+        This property returns a BumpRule instance that determines how version numbers
+        should be incremented based on commit messages. It first checks if a custom
+        bump rule was set via `_bump_rule`. If not, it falls back to creating a
+        CustomBumpRule using the class's bump pattern and maps.
+
+        ``bump_pattern`` and ``bump_map`` are required.
+        ``bump_map_major_version_zero`` is optional, mirroring legacy behaviour:
+        plugins that don't define it will only fail if a bump is attempted with
+        ``major_version_zero = True``.
+
+        Returns:
+            BumpRule: A rule instance that determines version increments
+
+        Raises:
+            NoPatternMapError: If ``bump_pattern`` or ``bump_map`` are not defined.
+        """
+        if self._bump_rule:
+            return self._bump_rule
+
+        # Fallback to custom bump rule if no bump rule is provided
+        if not self.bump_pattern or not self.bump_map:
+            raise NoPatternMapError(
+                f"'{self.config.settings['name']}' rule does not support bump: "
+                f"{self.bump_pattern=}, {self.bump_map=}"
+            )
+
+        bump_map_major_version_zero = (
+            VersionIncrement.safe_cast_dict(self.bump_map_major_version_zero)
+            if self.bump_map_major_version_zero
+            else None
+        )
+        return CustomBumpRule(
+            self.bump_pattern,
+            VersionIncrement.safe_cast_dict(self.bump_map),
+            bump_map_major_version_zero,
         )
 
     @abstractmethod

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 
+from commitizen.bump_rule import VersionIncrement
 from commitizen.version_schemes import SemVer, VersionProtocol
 from tests.utils import VersionSchemeTestArgs
 
@@ -12,7 +13,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.1.1",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -22,7 +23,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.1.1",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -32,7 +33,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="2.1.1",
-                increment="MAJOR",
+                increment=VersionIncrement.MAJOR,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -42,7 +43,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.9.0",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=None,
@@ -52,7 +53,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.9.0",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=None,
@@ -62,7 +63,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.9.0",
-                increment="MAJOR",
+                increment=VersionIncrement.MAJOR,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=None,
@@ -72,7 +73,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.9.0",
-                increment="MAJOR",
+                increment=VersionIncrement.MAJOR,
                 prerelease="alpha",
                 prerelease_offset=1,
                 devrelease=None,
@@ -82,7 +83,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0a2",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="beta",
                 prerelease_offset=0,
                 devrelease=None,
@@ -92,7 +93,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0a2",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="beta",
                 prerelease_offset=1,
                 devrelease=None,
@@ -102,7 +103,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0beta1",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="rc",
                 prerelease_offset=0,
                 devrelease=None,
@@ -112,7 +113,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0rc1",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="rc",
                 prerelease_offset=0,
                 devrelease=None,
@@ -122,7 +123,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0-a0",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="rc",
                 prerelease_offset=0,
                 devrelease=None,
@@ -132,7 +133,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0-alpha1",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=None,
@@ -143,7 +144,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.1",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -153,7 +154,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -163,7 +164,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1",
-                increment="MAJOR",
+                increment=VersionIncrement.MAJOR,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -173,7 +174,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1a0",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=None,
@@ -183,7 +184,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1a0",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="alpha",
                 prerelease_offset=1,
                 devrelease=None,
@@ -193,7 +194,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="beta",
                 prerelease_offset=0,
                 devrelease=None,
@@ -203,7 +204,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="beta",
                 prerelease_offset=1,
                 devrelease=None,
@@ -213,7 +214,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1beta",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="beta",
                 prerelease_offset=0,
                 devrelease=None,
@@ -223,7 +224,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0alpha1",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=None,
@@ -233,7 +234,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="rc",
                 prerelease_offset=0,
                 devrelease=None,
@@ -243,7 +244,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0rc1+e20d7b57f3eb",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -254,7 +255,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.1.0",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -264,7 +265,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.1.0",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=1,
@@ -274,7 +275,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.2.0",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -284,7 +285,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.2.0",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=1,
@@ -294,7 +295,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.3.0",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -304,7 +305,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.3.0",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=None,
@@ -314,7 +315,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.3.1a0",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=None,
@@ -324,7 +325,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.3.0",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease="alpha",
                 prerelease_offset=1,
                 devrelease=None,
@@ -334,7 +335,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.3.1a0",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="alpha",
                 prerelease_offset=1,
                 devrelease=None,
@@ -344,7 +345,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.3.1a0",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -354,7 +355,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.3.1",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -364,7 +365,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.4.2",
-                increment="MAJOR",
+                increment=VersionIncrement.MAJOR,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=None,
@@ -374,7 +375,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0a0",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=None,
@@ -384,7 +385,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0a1",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=None,
@@ -394,7 +395,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0a1",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=1,
@@ -404,7 +405,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0a2.dev0",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=1,
@@ -414,7 +415,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0a2.dev0",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=0,
@@ -424,7 +425,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0a1",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="beta",
                 prerelease_offset=0,
                 devrelease=None,
@@ -434,7 +435,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0b0",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="beta",
                 prerelease_offset=0,
                 devrelease=None,
@@ -444,7 +445,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0b1",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="rc",
                 prerelease_offset=0,
                 devrelease=None,
@@ -454,7 +455,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0rc0",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="rc",
                 prerelease_offset=0,
                 devrelease=None,
@@ -464,7 +465,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0rc0",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="rc",
                 prerelease_offset=0,
                 devrelease=1,
@@ -474,7 +475,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0rc0",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -484,7 +485,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0a3.dev0",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="beta",
                 prerelease_offset=0,
                 devrelease=None,
@@ -494,7 +495,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -504,7 +505,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.1",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -514,7 +515,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.0.2",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -524,7 +525,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.1.0",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -534,7 +535,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.2.0",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -544,7 +545,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="1.2.1",
-                increment="MAJOR",
+                increment=VersionIncrement.MAJOR,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -555,7 +556,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.1.1b1",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=None,
@@ -565,7 +566,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.1.1rc0",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=None,
@@ -575,7 +576,7 @@ from tests.utils import VersionSchemeTestArgs
         (
             VersionSchemeTestArgs(
                 current_version="0.1.1rc0",
-                increment=None,
+                increment=VersionIncrement.NONE,
                 prerelease="beta",
                 prerelease_offset=0,
                 devrelease=None,
@@ -606,7 +607,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -616,7 +617,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -627,7 +628,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0a1",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease="beta",
                 prerelease_offset=0,
                 devrelease=None,
@@ -638,7 +639,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0b0",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease="beta",
                 prerelease_offset=0,
                 devrelease=None,
@@ -649,7 +650,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0b1",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease="rc",
                 prerelease_offset=0,
                 devrelease=None,
@@ -660,7 +661,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0rc0",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease="rc",
                 prerelease_offset=0,
                 devrelease=None,
@@ -671,7 +672,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0rc0",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease="rc",
                 prerelease_offset=0,
                 devrelease=1,
@@ -682,7 +683,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0a1",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 prerelease="beta",
                 prerelease_offset=0,
                 devrelease=None,
@@ -693,7 +694,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0b0",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 prerelease="beta",
                 prerelease_offset=0,
                 devrelease=None,
@@ -704,7 +705,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0b1",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 prerelease="rc",
                 prerelease_offset=0,
                 devrelease=None,
@@ -715,7 +716,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0rc0",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 prerelease="rc",
                 prerelease_offset=0,
                 devrelease=None,
@@ -726,7 +727,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="1.0.0rc0",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 prerelease="rc",
                 prerelease_offset=0,
                 devrelease=1,
@@ -737,7 +738,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="2.0.0b0",
-                increment="MAJOR",
+                increment=VersionIncrement.MAJOR,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -748,7 +749,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="2.0.0b0",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -759,7 +760,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="2.0.0b0",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -770,7 +771,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="2.0.0b0",
-                increment="MAJOR",
+                increment=VersionIncrement.MAJOR,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=None,
@@ -781,7 +782,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="2.0.0b0",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=None,
@@ -792,7 +793,7 @@ def test_bump_semver_version(
         (
             VersionSchemeTestArgs(
                 current_version="2.0.0b0",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease="alpha",
                 prerelease_offset=0,
                 devrelease=None,
@@ -824,7 +825,7 @@ def test_bump_semver_version_force(
         (
             VersionSchemeTestArgs(
                 current_version="4.5.0+0.1.0",
-                increment="PATCH",
+                increment=VersionIncrement.PATCH,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -834,7 +835,7 @@ def test_bump_semver_version_force(
         (
             VersionSchemeTestArgs(
                 current_version="4.5.0+0.1.1",
-                increment="MINOR",
+                increment=VersionIncrement.MINOR,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
@@ -844,7 +845,7 @@ def test_bump_semver_version_force(
         (
             VersionSchemeTestArgs(
                 current_version="4.5.0+0.2.0",
-                increment="MAJOR",
+                increment=VersionIncrement.MAJOR,
                 prerelease=None,
                 prerelease_offset=0,
                 devrelease=None,
