@@ -147,6 +147,10 @@ version_provider = "uv"
 version_scheme = "pep440"
 annotated_tag = true
 
+[tool.uv.pip]
+# Synchroonize with scripts/ci/prek/upgrade_important_versions.py
+exclude-newer = "4 days"
+
 [tool.uv.build-backend]
 module-name = "commitizen"
 module-root = ""
