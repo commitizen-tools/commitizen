@@ -198,6 +198,20 @@ data = {
                 "func": commands.Schema,
             },
             {
+                "name": "dump-config",
+                "description": "Output the current commitizen configuration",
+                "help": "Output the current commitizen configuration.",
+                "func": commands.DumpConfig,
+                "arguments": [
+                    {
+                        "name": ["--format", "-f"],
+                        "choices": ["toml", "yaml", "json"],
+                        "default": "toml",
+                        "help": "Output format (default: toml).",
+                    }
+                ],
+            },
+            {
                 "name": "bump",
                 "description": "Bump semantic version based on the git log",
                 "help": "Bump semantic version based on the git log.",
@@ -660,6 +674,7 @@ if TYPE_CHECKING:
             | commands.Example  # example
             | commands.Info  # info
             | commands.Schema  # schema
+            | commands.DumpConfig  # dump-config
             | commands.Bump  # bump
             | commands.Changelog  # changelog (ch)
             | commands.Check  # check
