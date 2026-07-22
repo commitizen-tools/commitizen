@@ -89,6 +89,16 @@ nav:
     - "contributing/contributing_tldr.md"
     - "contributing/contributing.md"
     - "contributing/pull_request.md"
+    - Architecture Overview: "contributing/architecture.md"
+  - "For AI Agents":
+    - "contributing/agents/index.md"
+    - Validation Guide: "contributing/agents/validation.md"
+    - Playbooks:
+      - Add a version provider: "contributing/agents/playbooks/add-version-provider.md"
+      - Add a changelog format: "contributing/agents/playbooks/add-changelog-format.md"
+      - Add or modify a CLI flag: "contributing/agents/playbooks/add-cli-flag.md"
+      - Deprecate a public API: "contributing/agents/playbooks/deprecate-public-api.md"
+      - Update snapshots and screenshots: "contributing/agents/playbooks/update-snapshots.md"
   - "history.md"
   - Resources: "external_links.md"
 
@@ -167,3 +177,12 @@ plugins:
           - contributing/contributing_tldr.md: Fast path for setting up a local dev workflow.
           - contributing/contributing.md: Full contributor guide.
           - contributing/pull_request.md: Expectations for preparing and submitting PRs.
+          - contributing/architecture.md: Map of Commitizen's subsystems and extension points.
+        For AI Agents:
+          - contributing/agents/index.md: Router and source-of-truth map for agent-shaped contributor docs.
+          - contributing/agents/validation.md: Targeted-test map, choosing a final check, and CI failure recipes.
+          - contributing/agents/playbooks/add-version-provider.md: Recipe for adding a built-in version provider.
+          - contributing/agents/playbooks/add-changelog-format.md: Recipe for adding a built-in changelog format.
+          - contributing/agents/playbooks/add-cli-flag.md: Recipe for adding or modifying a CLI flag.
+          - contributing/agents/playbooks/deprecate-public-api.md: Recipe for adding a deprecation window before removal.
+          - contributing/agents/playbooks/update-snapshots.md: Regenerating pytest-regressions snapshots and CLI help screenshots.
