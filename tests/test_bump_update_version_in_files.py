@@ -303,6 +303,61 @@ def test_update_version_in_files_with_check_consistency_true_failure(
         )
 
 
+def test_update_version_in_files_check_consistency_detects_sibling_version(tmp_path):
+    """Regression test for #595: when a single file's version regex matches
+    multiple version-shaped values (typical pyproject.toml with
+    ``[tool.poetry].version`` and ``[tool.commitizen].version``),
+    ``--check-consistency`` should flag the lines whose version doesn't match
+    the current one instead of silently leaving the sibling out of date.
+    """
+    pyproject = tmp_path / "pyproject.toml"
+    pyproject.write_text(
+        '[tool.poetry]\nversion = "2.5.7"\n\n[tool.commitizen]\nversion = "2.5.2"\n',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(CurrentVersionNotFoundError) as excinfo:
+        bump.update_version_in_files(
+            current_version="2.5.2",
+            new_version="2.6.0",
+            version_files=[f"{pyproject}:version"],
+            check_consistency=True,
+            encoding="utf-8",
+        )
+
+    msg = str(excinfo.value)
+    assert "2.5.7" in msg
+    assert "2.5.2" in msg
+    # The original file must NOT have been rewritten when consistency fails.
+    # (We re-read it to confirm the bump didn't proceed.)
+    assert '"2.5.2"' in pyproject.read_text(encoding="utf-8")
+
+
+def test_update_version_in_files_check_consistency_off_keeps_legacy_behaviour(
+    tmp_path,
+):
+    """Without ``check_consistency``, the old behaviour is preserved: only
+    the lines that contain the current version are updated, and sibling
+    versions are left alone (no exception)."""
+    pyproject = tmp_path / "pyproject.toml"
+    pyproject.write_text(
+        '[tool.poetry]\nversion = "2.5.7"\n\n[tool.commitizen]\nversion = "2.5.2"\n',
+        encoding="utf-8",
+    )
+
+    bump.update_version_in_files(
+        current_version="2.5.2",
+        new_version="2.6.0",
+        version_files=[f"{pyproject}:version"],
+        check_consistency=False,
+        encoding="utf-8",
+    )
+
+    rewritten = pyproject.read_text(encoding="utf-8")
+    assert '[tool.poetry]\nversion = "2.5.7"' in rewritten
+    assert '[tool.commitizen]\nversion = "2.6.0"' in rewritten
+
+
 @pytest.mark.parametrize(
     ("encoding", "filename"),
     [
