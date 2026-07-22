@@ -1,5 +1,6 @@
 import platform
 import sys
+import warnings
 from typing import TypedDict
 
 from packaging.version import InvalidVersion
@@ -45,6 +46,12 @@ class Version:
 
     def __call__(self) -> None:
         if self.arguments.get("report"):
+            warnings.warn(
+                "`cz version --report` is deprecated and will be removed in v5. "
+                "Use `cz --report` instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
             out.write(f"Commitizen Version: {__version__}")
             out.write(f"Python Version: {sys.version}")
             out.write(f"Operating System: {platform.system()}")
@@ -54,6 +61,12 @@ class Version:
             out.write(f"Installed Commitizen Version: {__version__}")
 
         if self.arguments.get("commitizen"):
+            warnings.warn(
+                "`cz version --commitizen` is deprecated and will be removed in v5. "
+                "Use `cz --version` instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
             out.write(__version__)
             return
 
