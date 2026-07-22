@@ -122,3 +122,51 @@ def test_find_increment_sve(messages, expected_type):
         commits, regex=semantic_version_pattern, increments_map=semantic_version_map
     )
     assert increment_type == expected_type
+
+
+# Mimics the dependabot pull request body that triggered #1772: a ``ci:``
+# title with a commit body that quotes upstream changelog lines, including
+# ``fix: ...`` text. None of the body lines should bump the version.
+DEPENDABOT_BODY = (
+    "Bumps actions/upload-artifact from 5 to 6.\n"
+    "<details>\n"
+    "<summary>Commits</summary>\n"
+    "<ul>\n"
+    '<li><a href="...">b5b1a91</a>\n'
+    "fix: update <code>@actions/artifact</code> to ^5.0.0 for Node.js 24\n"
+    "punycode fix</li>\n"
+    '<li><a href="...">5f643d3</a>\n'
+    "chore: update license files</li>\n"
+    "</ul>\n"
+    "</details>\n"
+)
+
+
+def test_find_increment_ignores_type_tokens_in_commit_body():
+    """Regression test for #1772: a ``ci:`` commit whose body lists upstream
+    commit messages -- including ones that look like ``fix:`` -- must not
+    trigger a PATCH bump. Only the title's commit type counts."""
+    commit = GitCommit(rev="test", title="ci: bump dep", body=DEPENDABOT_BODY)
+    increment_type = bump.find_increment(
+        [commit],
+        regex=ConventionalCommitsCz.bump_pattern,
+        increments_map=ConventionalCommitsCz.bump_map,
+    )
+    assert increment_type is None
+
+
+def test_find_increment_still_honors_breaking_change_in_body():
+    """The ``BREAKING CHANGE:`` / ``BREAKING-CHANGE:`` footer in a commit body
+    must still trigger a MAJOR bump even after the #1772 fix; only commit
+    *types* are now restricted to the title."""
+    commit = GitCommit(
+        rev="test",
+        title="feat: new user interface",
+        body="some body content\n\nBREAKING CHANGE: age is no longer supported",
+    )
+    increment_type = bump.find_increment(
+        [commit],
+        regex=ConventionalCommitsCz.bump_pattern,
+        increments_map=ConventionalCommitsCz.bump_map,
+    )
+    assert increment_type == "MAJOR"
