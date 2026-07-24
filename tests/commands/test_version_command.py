@@ -7,6 +7,9 @@ from pytest_mock import MockerFixture
 from commitizen import commands
 from commitizen.__version__ import __version__
 from commitizen.config.base_config import BaseConfig
+from commitizen.cz.base import BaseCommitizen
+from commitizen.exceptions import NoCommitsFoundError, NoPatternMapError
+from tests.utils import UtilFixture
 
 
 def test_version_for_showing_project_version_error(config, capsys):
@@ -282,14 +285,172 @@ def test_version_unknown_scheme(config, capsys):
     assert "Unknown version scheme." in captured.err
 
 
-def test_version_use_git_commits_not_implemented(config, capsys):
+@pytest.mark.parametrize(
+    ("commit_message", "expected_version"),
+    [
+        ("feat: new feature", "1.1.0"),
+        ("fix: a bug", "1.0.1"),
+        ("feat!: breaking change", "2.0.0"),
+        ("docs: update readme", "1.0.0"),
+    ],
+)
+@pytest.mark.usefixtures("tmp_git_project")
+def test_version_next_use_git_commits(
+    config: BaseConfig,
+    capsys: pytest.CaptureFixture,
+    util: UtilFixture,
+    commit_message: str,
+    expected_version: str,
+):
+    """USE_GIT_COMMITS derives the next version from commits since the last tag."""
     config.settings["version"] = "1.0.0"
+    util.create_file_and_commit("feat: initial commit")
+    util.create_tag("1.0.0")
+    util.create_file_and_commit(commit_message)
+
     commands.Version(
         config,
         {"project": True, "next": "USE_GIT_COMMITS"},
     )()
+
     captured = capsys.readouterr()
-    assert "USE_GIT_COMMITS is not implemented" in captured.err
+    assert captured.out == f"{expected_version}\n"
+
+
+@pytest.mark.usefixtures("tmp_git_project")
+def test_version_next_use_git_commits_manual_version(
+    config: BaseConfig, capsys: pytest.CaptureFixture, util: UtilFixture
+):
+    """USE_GIT_COMMITS also works with an explicit MANUAL_VERSION."""
+    util.create_file_and_commit("feat: initial commit")
+    util.create_tag("1.0.0")
+    util.create_file_and_commit("feat: new feature")
+
+    commands.Version(
+        config,
+        {"manual_version": "1.0.0", "next": "USE_GIT_COMMITS"},
+    )()
+
+    captured = capsys.readouterr()
+    assert captured.out == "1.1.0\n"
+
+
+@pytest.mark.usefixtures("tmp_git_project")
+def test_version_next_use_git_commits_without_matching_tag(
+    config: BaseConfig, capsys: pytest.CaptureFixture, util: UtilFixture
+):
+    """When no tag matches the current version, all commits are considered."""
+    config.settings["version"] = "2.0.0"
+    util.create_file_and_commit("feat: initial commit")
+    util.create_file_and_commit("feat: new feature")
+
+    commands.Version(
+        config,
+        {"project": True, "next": "USE_GIT_COMMITS"},
+    )()
+
+    captured = capsys.readouterr()
+    assert captured.out == "2.1.0\n"
+
+
+@pytest.mark.usefixtures("tmp_git_project")
+def test_version_next_use_git_commits_major_version_zero(
+    config: BaseConfig, capsys: pytest.CaptureFixture, util: UtilFixture
+):
+    """major_version_zero uses the zero bump map so no major bump is emitted."""
+    config.settings["version"] = "0.1.0"
+    config.settings["major_version_zero"] = True
+    util.create_file_and_commit("feat: initial commit")
+    util.create_tag("0.1.0")
+    util.create_file_and_commit("feat!: breaking change")
+
+    commands.Version(
+        config,
+        {"project": True, "next": "USE_GIT_COMMITS"},
+    )()
+
+    captured = capsys.readouterr()
+    assert captured.out == "0.2.0\n"
+
+
+@pytest.mark.usefixtures("tmp_git_project")
+def test_version_next_use_git_commits_prerelease_without_commits(
+    config: BaseConfig, capsys: pytest.CaptureFixture, util: UtilFixture
+):
+    """A prerelease with no new commits finalizes into its release version."""
+    config.settings["version"] = "1.0.0rc1"
+    util.create_file_and_commit("feat: initial commit")
+    util.create_tag("1.0.0rc1")
+
+    commands.Version(
+        config,
+        {"project": True, "next": "USE_GIT_COMMITS"},
+    )()
+
+    captured = capsys.readouterr()
+    assert captured.out == "1.0.0\n"
+
+
+@pytest.mark.usefixtures("tmp_git_project")
+def test_version_next_use_git_commits_no_commits_raises(
+    config: BaseConfig, util: UtilFixture
+):
+    """No new commits since the last (non-prerelease) tag raises an error."""
+    config.settings["version"] = "1.0.0"
+    util.create_file_and_commit("feat: initial commit")
+    util.create_tag("1.0.0")
+
+    with pytest.raises(NoCommitsFoundError):
+        commands.Version(
+            config,
+            {"project": True, "next": "USE_GIT_COMMITS"},
+        )()
+
+
+class _NoBumpRulesCz(BaseCommitizen):
+    """A commitizen rule without bump pattern or map to trigger NoPatternMapError."""
+
+    bump_pattern = None
+    bump_map = None
+
+    def questions(self):
+        return []
+
+    def message(self, answers):
+        return ""
+
+    def example(self) -> str:
+        return ""
+
+    def schema(self) -> str:
+        return ""
+
+    def schema_pattern(self) -> str:
+        return ""
+
+    def info(self) -> str:
+        return ""
+
+
+@pytest.mark.usefixtures("tmp_git_project")
+def test_version_next_use_git_commits_no_pattern_map_raises(
+    config: BaseConfig, util: UtilFixture, mocker: MockerFixture
+):
+    """A rule that does not support bumping raises NoPatternMapError."""
+    config.settings["version"] = "1.0.0"
+    mocker.patch(
+        "commitizen.factory.committer_factory",
+        return_value=_NoBumpRulesCz(config),
+    )
+    util.create_file_and_commit("feat: initial commit")
+    util.create_tag("1.0.0")
+    util.create_file_and_commit("feat: new feature")
+
+    with pytest.raises(NoPatternMapError):
+        commands.Version(
+            config,
+            {"project": True, "next": "USE_GIT_COMMITS"},
+        )()
 
 
 def test_version_no_arguments_shows_commitizen_version(config, capsys):
