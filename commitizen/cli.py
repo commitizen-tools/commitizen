@@ -583,7 +583,6 @@ data = {
                         "const": "USE_GIT_COMMITS",
                         "choices": ["USE_GIT_COMMITS"]
                         + [str(increment) for increment in VersionIncrement],
-                        "exclusive_group": "group2",
                     },
                     {
                         "name": "manual_version",

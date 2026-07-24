@@ -4,14 +4,19 @@ from typing import TypedDict
 
 from packaging.version import InvalidVersion
 
-from commitizen import out
+from commitizen import bump, factory, git, out
 from commitizen.__version__ import __version__
 from commitizen.config import BaseConfig
-from commitizen.exceptions import NoVersionSpecifiedError, VersionSchemeUnknown
+from commitizen.exceptions import (
+    NoCommitsFoundError,
+    NoPatternMapError,
+    NoVersionSpecifiedError,
+    VersionSchemeUnknown,
+)
 from commitizen.providers import get_provider
 from commitizen.tags import TagRules
 from commitizen.version_increment import VersionIncrement
-from commitizen.version_schemes import Increment, get_version_scheme
+from commitizen.version_schemes import Increment, VersionProtocol, get_version_scheme
 
 
 class VersionArgs(TypedDict, total=False):
@@ -42,6 +47,7 @@ class Version:
     def __init__(self, config: BaseConfig, arguments: VersionArgs) -> None:
         self.config: BaseConfig = config
         self.arguments = arguments
+        self.cz = factory.committer_factory(self.config)
 
     def __call__(self) -> None:
         if self.arguments.get("report"):
@@ -87,8 +93,7 @@ class Version:
                     # TODO: implement USE_GIT_COMMITS by deriving the increment from
                     # git history. This requires refactoring the bump logic out of
                     # `commitizen/commands/bump.py` so it can be reused here. See #1678.
-                    out.error("--next USE_GIT_COMMITS is not implemented yet.")
-                    return
+                    version = self._get_next_git_version(version)
 
                 next_increment = VersionIncrement.from_value(next_increment_str)
                 increment: Increment | None
@@ -100,6 +105,9 @@ class Version:
                     increment = "MINOR"
                 else:
                     increment = "MAJOR"
+
+                # TODO: Consider adding all the parameters `.bump` supports:
+                # prerelease, prerelease_offset,exact_increment, etc...
                 version = version.bump(increment=increment)
 
             if self.arguments.get("major"):
@@ -139,3 +147,39 @@ class Version:
 
         # If no arguments are provided, just show the installed commitizen version
         out.write(__version__)
+
+    def _get_next_git_version(
+        self, current_version: VersionProtocol
+    ) -> VersionProtocol:
+        """Calculate the next version based on commits."""
+        rules = TagRules.from_settings(self.config.settings)
+        current_tag = rules.find_tag_for(git.get_tags(), current_version)
+        commits = git.get_commits(current_tag.name if current_tag else None)
+
+        # No commits, there is no need to create an empty tag.
+        # Unless we previously had a prerelease.
+        if not commits and not current_version.is_prerelease:
+            raise NoCommitsFoundError("[NO_COMMITS_FOUND]\nNo new commits found.")
+
+        bump_map = (
+            self.cz.bump_map_major_version_zero
+            if self.config.settings["major_version_zero"]
+            else self.cz.bump_map
+        )
+        bump_pattern = self.cz.bump_pattern
+
+        if not bump_map or not bump_pattern:
+            raise NoPatternMapError(
+                f"'{self.config.settings['name']}' rule does not support bump"
+            )
+        increment = bump.find_increment(
+            commits, regex=bump_pattern, increments_map=bump_map
+        )
+
+        # TODO: Consider adding all the parameters `.bump` supports:
+        # prerelease, prerelease_offset,exact_increment, etc..
+        new_version = current_version.bump(
+            increment,
+        )
+
+        return new_version
