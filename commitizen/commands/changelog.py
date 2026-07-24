@@ -31,7 +31,7 @@ class ChangelogArgs(TypedDict, total=False):
     change_type_order: list[str]
     current_version: str
     dry_run: bool
-    file_name: str
+    file_name: str | None
     incremental: bool
     merge_prerelease: bool
     rev_range: str
