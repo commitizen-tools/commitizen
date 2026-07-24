@@ -76,8 +76,38 @@ Always run at least `uv run ruff check --fix . && uv run ruff format .` before p
 - **Types**: Preserve or improve existing type hints.
 - **Errors**: Prefer `commitizen/exceptions.py` error types; keep messages clear for CLI users.
 - **Output**: Use `commitizen/out.py`; do not add noisy logging.
+- **Testing**: Follow the Arrange, Act, Assert (AAA) pattern. Visually separate these phases with blank lines or comments.
 
 ## When Unsure
 
 - Prefer **reading tests and documentation first** to understand the expected behavior.
 - When behavior is ambiguous, **assume backward compatibility** with current tests and docs is required.
+
+## Documentation Guidelines
+
+- 100% Coverage: Every new module, class, method, and function MUST have a docstring. No exceptions
+- Even simple functions or internal helpers require documentation to explain their context
+
+### Docstring Format: Modified Google Style
+
+Use Google Docstring Style with these major modifications:
+
+1. **NEVER include type hints in the docstring.** We rely exclusively on Python's PEP 484 type signatures.
+2. **Classes MUST include an example.** Any class documentation must contain a brief usage example formatted in Markdown.
+3. **Class Attributes MUST be documented.** The class docstring must document the instance variables initialized in `__init__` within an `Attributes:` section.
+
+**Format Rules:**
+
+- `Args:`, `Returns:`, and `Attributes:` sections must describe the _semantic meaning_ and _constraints_ of the variables, not their types.
+- Omit the type in the lists (e.g., use `user_id: The ID of the user`, NOT `user_id (int): The ID of the user`).
+
+### Content Focus: The "What" and "Why"
+
+Code explains _how_. Your docstrings must explain _what_ and _why_. Every complex function or class MUST include a **Considerations** section if architectural choices were made.
+
+When documenting, you must include:
+
+1. **The Core Intent:** What business or technical rule is this solving?
+2. **Notes / Why:** Why was this approach chosen over the obvious alternative?
+3. **Discarded Approaches:** If a simpler method wasn't used (e.g., avoiding an ORM feature for raw SQL, or caching strategies), explain what was discarded and why.
+4. **Edge Cases & Gotchas:** What weird scenarios does this code handle?
