@@ -237,6 +237,55 @@ def test_bump_command_prerelease(util: UtilFixture):
     assert git.tag_exist("0.2.0") is True
 
 
+def test_bump_devrelease_with_incremental_changelog(
+    tmp_commitizen_project: Path, util: UtilFixture, changelog_path: Path
+):
+    config_path = tmp_commitizen_project / "pyproject.toml"
+    config_path.write_text(
+        dedent(
+            """\
+            [project]
+            name = "dev-project"
+            version = "0.1.0"
+
+            [tool.commitizen]
+            version_provider = "uv"
+            update_changelog_on_bump = true
+            changelog_incremental = true
+            """
+        ),
+        encoding="utf-8",
+    )
+    lock_path = tmp_commitizen_project / "uv.lock"
+    lock_path.write_text(
+        dedent(
+            """\
+            version = 1
+            revision = 1
+
+            [[package]]
+            name = "dev-project"
+            version = "0.1.0"
+            source = { virtual = "." }
+            """
+        ),
+        encoding="utf-8",
+    )
+
+    util.create_file_and_commit("feat: first development release")
+    util.run_cli("bump", "--devrelease", "0", "--yes")
+    assert git.tag_exist("0.2.0.dev0") is True
+
+    util.create_file_and_commit("feat: next development release")
+    util.run_cli("bump", "--devrelease", "1", "--yes")
+    assert git.tag_exist("0.2.0.dev1") is True
+    changelog = changelog_path.read_text(encoding="utf-8")
+    assert "0.2.0.dev1" in changelog
+    assert "next development release" in changelog
+    assert 'version = "0.2.0.dev1"' in config_path.read_text(encoding="utf-8")
+    assert 'version = "0.2.0.dev1"' in lock_path.read_text(encoding="utf-8")
+
+
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_bump_command_prerelease_increment(util: UtilFixture):
     # FINAL RELEASE
