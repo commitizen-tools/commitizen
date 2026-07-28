@@ -2,63 +2,29 @@
 
 ## Purpose
 
-This file provides **project-specific guidance for AI agents** (and other automated tools) working on the `commitizen` repository.
-Follow these instructions in addition to any higher-level system or tool rules.
+This file is the auto-loaded entry point for AI agents working on the `commitizen` repository. It holds the rules an agent needs in **every** session. Deeper guidance lives in:
 
-## Project Overview
+- [Contributing](docs/contributing/contributing.md) — setup, dev workflow, PR lifecycle.
+- [Contributing TL;DR](docs/contributing/contributing_tldr.md) — poe command cheat sheet.
+- [Pull Request Guidelines](docs/contributing/pull_request.md) — PR etiquette and AI-assisted policy.
+- [Architecture Overview](docs/contributing/architecture.md) — codebase topology and extension points.
+- [For AI Agents](docs/contributing/agents/index.md) — agent-shaped recipes, validation map, playbooks.
 
-- **Project**: `commitizen` - a tool to help enforce and automate conventional commits, version bumps, and changelog generation.
-- **Primary language**: Python (library + CLI).
-- **Cross-platform**: Tests run on Linux, macOS, and Windows. Avoid POSIX-only assumptions in code (paths, subprocesses, line endings).
+Follow these instructions in addition to any higher-level tool or system rules.
+
+## Project at a glance
+
+- **Project**: `commitizen` — Python CLI for enforcing Conventional Commits, automating version bumps, and generating changelogs.
+- **Library + CLI**: code is reachable both via `cz` and `import commitizen`.
+- **Cross-platform**: tests run on Linux/macOS/Windows × Python 3.10–3.14. Avoid POSIX-only assumptions (paths, subprocesses, line endings).
 - **Key entrypoints**:
-  - `commitizen/cli.py` - main CLI implementation.
-  - `commitizen/commands/` - subcommands such as `bump`, `commit`, `changelog`, `check`, etc.
-  - `commitizen/config/` - configuration discovery and loading.
-  - `commitizen/providers/` - version providers (e.g., `pep621`, `poetry`, `npm`, `uv`).
-- **Config sources**: `pyproject.toml` (project config, poe tasks, ruff, mypy), `.pre-commit-config.yaml` (hooks), `.github/workflows/` (CI).
+    - `commitizen/cli.py` — CLI definition (decli + argparse).
+    - `commitizen/commands/` — one module per `cz` subcommand.
+    - `commitizen/config/` — configuration discovery and parsing.
+    - `commitizen/providers/` — version providers.
+    - `commitizen/changelog_formats/` — changelog file formats.
 
-## General Expectations
-
-- **Preserve public behavior and CLI UX** — no breaking changes to APIs, CLI flags, or exit codes unless explicitly requested.
-- **Update or add tests/docs** when you change user-facing behavior.
-- **Commit messages** must follow [Conventional Commits](https://www.conventionalcommits.org/) (enforced by commitizen itself).
-- **Pull requests** must follow the [Pull Request Guidelines](docs/contributing/pull_request.md) and the template in `.github/pull_request_template.md`.
-
-## Setup and Validation
-
-> Full contributor guidelines (prerequisites, workflow, PR process): [`docs/contributing/contributing.md`](docs/contributing/contributing.md).
-
-### Bootstrap
-
-```bash
-uv sync --frozen --group base --group test --group linters
-uv run poe setup-pre-commit   # install git hooks (uses prek, a pre-commit runner)
-```
-
-### Local commands
-
-- **Format**: `uv run poe format` (runs `ruff check --fix` then `ruff format`)
-- **Lint**: `uv run poe lint` (runs `ruff check` then `mypy`)
-- **Test**: `uv run poe test` (runs `pytest -n auto`)
-- **CI-equivalent**: `uv run poe ci` (commit check + pre-commit hooks via `prek` + test with coverage)
-- **Full local check**: `uv run poe all` (format + lint + check-commit + coverage)
-
-Always run at least `uv run ruff check --fix . && uv run ruff format .` before pushing. CI will fail if the formatter modifies any files.
-
-### CI pipeline
-
-- CI runs `poe ci` on a matrix of Python 3.10–3.14 × ubuntu/macos/windows.
-- Pre-commit hooks are defined in `.pre-commit-config.yaml` and run via [`prek`](https://github.com/j178/prek) (a `pre-commit` compatible runner).
-- The matrix is **fail-fast**: inspect the earliest failing job that completed; others are cancelled.
-
-### Common CI failure patterns
-
-- **"Format Python code...Failed"**: Run `uv run poe format` and commit the result.
-- **mypy `[arg-type]` on TypedDict**: Dynamically-constructed dicts (e.g., from `pytest.mark.parametrize`) passed to TypedDict-typed params need `# type: ignore[arg-type]`.
-- **"pathspec 'vX.Y.Z' did not match"**: `.pre-commit-config.yaml` pins a tag of this repo. Rebase onto master to pick up the tag.
-- **`VersionProtocol` + `issubclass`**: This Protocol has non-method members (properties), so `issubclass()` raises `TypeError`. Use `hasattr` checks for runtime validation.
-
-## What to Read Before Changing
+## Read before changing
 
 | Changing... | Read first |
 |---|---|
@@ -66,18 +32,31 @@ Always run at least `uv run ruff check --fix . && uv run ruff format .` before p
 | Bump logic | `commitizen/bump.py`, `commitizen/commands/bump.py`, `docs/commands/bump.md` |
 | Changelog generation | `commitizen/changelog.py`, `commitizen/changelog_formats/`, `docs/commands/changelog.md` |
 | Version schemes | `commitizen/version_schemes.py`, `tests/test_version_schemes.py` |
-| Version providers | `commitizen/providers/`, `tests/test_providers.py`, `docs/config/version_provider.md` |
+| Version providers | `commitizen/providers/`, `tests/providers/`, `docs/config/version_provider.md` |
 | Config resolution | `commitizen/config/`, `tests/test_conf.py`, `docs/config/` |
 | Tag handling | `commitizen/tags.py`, `tests/test_tags.py` |
 | Pre-commit / CI | `.pre-commit-config.yaml`, `.github/workflows/`, `pyproject.toml` (poe tasks) |
 
-## Coding Guidelines
+For recurring task types (add a provider, deprecate an API, regenerate snapshots, ...), use the matching playbook in [For AI Agents § Playbooks](docs/contributing/agents/index.md#playbooks) instead of reinventing the workflow.
 
-- **Types**: Preserve or improve existing type hints.
-- **Errors**: Prefer `commitizen/exceptions.py` error types; keep messages clear for CLI users.
-- **Output**: Use `commitizen/out.py`; do not add noisy logging.
+## Do not touch
 
-## When Unsure
+These files are regenerated by Commitizen-specific tooling, so hand-edits get reverted on the next release or doc rebuild:
 
-- Prefer **reading tests and documentation first** to understand the expected behavior.
-- When behavior is ambiguous, **assume backward compatibility** with current tests and docs is required.
+- `CHANGELOG.md` — produced by `cz changelog`. Hand-edits will be overwritten on the next release.
+- `commitizen/__version__.py` — bumped by `cz bump` via the configured version provider.
+- `.pre-commit-config.yaml:rev:` lines under the `Commitizen` repo — bumped by `cz bump` (`version_files` in `pyproject.toml`).
+- `docs/images/cli_help/*.svg` and `docs/images/cli_interactive/*.gif` — regenerated by `uv run poe doc:screenshots`. See the [update-snapshots playbook](docs/contributing/agents/playbooks/update-snapshots.md).
+- `tests/**/*` snapshot files used by `pytest-regressions` — regenerated via `uv run poe test:regen`.
+
+## Mandatory PR reminders
+
+These are easy to miss when working from an agent and are required by the PR template:
+
+1. **Complete the AI disclosure**. Check "Was generative AI tooling used to co-author this PR?" and fill in the `Generated-by:` trailer with the tool name. Details: [Pull Request Guidelines § AI-Assisted Contributions](docs/contributing/pull_request.md#ai-assisted-contributions).
+2. **Run `uv run poe all` before pushing**. This is the command named in the PR template; it auto-formats then runs the same lint/check/test pipeline as CI. To mirror CI exactly afterwards, run `uv run poe ci` (uses `prek`, does not auto-format).
+3. **Fill in "Steps to Test This Pull Request"** with the exact commands you ran locally — the maintainers re-run them.
+
+## When unsure
+
+When behavior is ambiguous, assume **backward compatibility with current tests and docs** is required. Add a deprecation window instead of breaking it; see the [deprecate-public-api playbook](docs/contributing/agents/playbooks/deprecate-public-api.md).
