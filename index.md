@@ -302,8 +302,6 @@ After installation, you can verify the completion is working by:
 
 For more detailed information about argcomplete configuration and troubleshooting, visit the [argcomplete documentation](https://kislyuk.github.io/argcomplete/).
 
-## Star History
-
 ## Sponsors
 
 These are our cool sponsors!

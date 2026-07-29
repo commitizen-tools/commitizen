@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://commitizen-tools.github.io/commitizen/third-party-plugins/commitizen-deno-provider/">
+        <link rel="canonical" href="https://commitizen-tools.github.io/commitizen/tutorials/release-scm/">
       
       
-        <link rel="prev" href="../about/">
+        <link rel="prev" href="../monorepo_guidance/">
       
       
-        <link rel="next" href="../commitizen-emoji/">
+        <link rel="next" href="../../faq/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>commitizen-deno-provider - Commitizen</title>
+        <title>Release with SCM Version Provider - Commitizen</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#commitizen-deno-provider" class="md-skip">
+        <a href="#releasing-with-the-scm-version-provider" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              commitizen-deno-provider
+              Release with SCM Version Provider
             
           </span>
         </div>
@@ -1014,18 +1014,20 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -1046,7 +1048,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1064,7 +1066,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/writing_commits/" class="md-nav__link">
+      <a href="../writing_commits/" class="md-nav__link">
         
   
   
@@ -1092,7 +1094,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/tag_format/" class="md-nav__link">
+      <a href="../tag_format/" class="md-nav__link">
         
   
   
@@ -1120,7 +1122,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/auto_check/" class="md-nav__link">
+      <a href="../auto_check/" class="md-nav__link">
         
   
   
@@ -1148,7 +1150,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/auto_prepare_commit_message/" class="md-nav__link">
+      <a href="../auto_prepare_commit_message/" class="md-nav__link">
         
   
   
@@ -1176,7 +1178,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/gitlab_ci/" class="md-nav__link">
+      <a href="../gitlab_ci/" class="md-nav__link">
         
   
   
@@ -1204,7 +1206,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/github_actions/" class="md-nav__link">
+      <a href="../github_actions/" class="md-nav__link">
         
   
   
@@ -1232,7 +1234,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/jenkins_pipeline/" class="md-nav__link">
+      <a href="../jenkins_pipeline/" class="md-nav__link">
         
   
   
@@ -1260,7 +1262,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/dev_releases/" class="md-nav__link">
+      <a href="../dev_releases/" class="md-nav__link">
         
   
   
@@ -1288,7 +1290,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/monorepo_guidance/" class="md-nav__link">
+      <a href="../monorepo_guidance/" class="md-nav__link">
         
   
   
@@ -1313,10 +1315,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../tutorials/release-scm/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release with SCM Version Provider
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1332,6 +1361,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#about" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        About
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-new-version-tag-manually" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating a New Version Tag Manually
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-cant-i-bump-with-scm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Can't I Bump with SCM?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-action-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Github action example
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1429,20 +1522,18 @@
       
   
   
-    
   
   
-  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
         
           
           <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
@@ -1463,7 +1554,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1481,7 +1572,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/" class="md-nav__link">
+      <a href="../../third-party-plugins/about/" class="md-nav__link">
         
   
   
@@ -1506,37 +1597,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    commitizen-deno-provider
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../third-party-plugins/commitizen-deno-provider/" class="md-nav__link">
         
   
   
@@ -1552,48 +1616,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1606,7 +1628,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../commitizen-emoji/" class="md-nav__link">
+      <a href="../../third-party-plugins/commitizen-emoji/" class="md-nav__link">
         
   
   
@@ -1634,7 +1656,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conventional-jira/" class="md-nav__link">
+      <a href="../../third-party-plugins/conventional-jira/" class="md-nav__link">
         
   
   
@@ -1662,7 +1684,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cz-ai/" class="md-nav__link">
+      <a href="../../third-party-plugins/cz-ai/" class="md-nav__link">
         
   
   
@@ -1690,7 +1712,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cz-conventional-gitmoji/" class="md-nav__link">
+      <a href="../../third-party-plugins/cz-conventional-gitmoji/" class="md-nav__link">
         
   
   
@@ -1718,7 +1740,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cz-emoji/" class="md-nav__link">
+      <a href="../../third-party-plugins/cz-emoji/" class="md-nav__link">
         
   
   
@@ -1746,7 +1768,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cz-legacy/" class="md-nav__link">
+      <a href="../../third-party-plugins/cz-legacy/" class="md-nav__link">
         
   
   
@@ -1774,7 +1796,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cz-path/" class="md-nav__link">
+      <a href="../../third-party-plugins/cz-path/" class="md-nav__link">
         
   
   
@@ -1802,7 +1824,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../github-jira-conventional/" class="md-nav__link">
+      <a href="../../third-party-plugins/github-jira-conventional/" class="md-nav__link">
         
   
   
@@ -2049,10 +2071,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#about" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        About
       
     </span>
   </a>
@@ -2060,10 +2082,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
+  <a href="#creating-a-new-version-tag-manually" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Usage
+        Creating a New Version Tag Manually
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-cant-i-bump-with-scm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Can't I Bump with SCM?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-action-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Github action example
       
     </span>
   </a>
@@ -2087,24 +2131,62 @@
 
 
 
-<h1 id="commitizen-deno-provider"><a href="https://pypi.org/project/commitizen-deno-provider/">commitizen-deno-provider</a><a class="headerlink" href="#commitizen-deno-provider" title="Permanent link">&para;</a></h1>
-<p>A provider for <strong>Deno</strong> projects. The provider updates the version in <code>deno.json</code> and <code>jsr.json</code> files.</p>
-<!-- TODO: What features does the plugin provide? -->
-
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>commitizen-deno-provider
+<h1 id="releasing-with-the-scm-version-provider">Releasing with the SCM Version Provider<a class="headerlink" href="#releasing-with-the-scm-version-provider" title="Permanent link">&para;</a></h1>
+<h2 id="about">About<a class="headerlink" href="#about" title="Permanent link">&para;</a></h2>
+<p>When <code>version_provider</code> is set to <code>scm</code>, Commitizen reads the version directly from your Git tags instead of a config file.
+This provider is <strong>read-only</strong>: it can determine the current version, but it cannot write a new one for you.</p>
+<div class="highlight"><span class="filename">.cz.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;v${version}&quot;</span>
+<span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;scm&quot;</span>
 </code></pre></div>
-<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
-<p>Add <code>deno-provider</code> to your configuration file.</p>
-<p>Example for <code>.cz.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nn">---</span>
-<span class="nt">commitizen</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">major_version_zero</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cz_conventional_commits</span>
-<span class="w">  </span><span class="nt">tag_format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$version</span>
-<span class="w">  </span><span class="nt">update_changelog_on_bump</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">version_provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deno-provider</span>
-<span class="w">  </span><span class="nt">version_scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">semver</span>
+<p>This means <code>cz bump</code> cannot complete its usual job of writing the new version anywhere (see <a href="#why-cant-i-bump-with-scm">Why can't I bump with SCM?</a> below).</p>
+<h2 id="creating-a-new-version-tag-manually">Creating a New Version Tag Manually<a class="headerlink" href="#creating-a-new-version-tag-manually" title="Permanent link">&para;</a></h2>
+<p>To release a new version without an extra commit, compute the next tag yourself and create it directly:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">next_version</span><span class="o">=</span><span class="k">$(</span>cz<span class="w"> </span>version<span class="w"> </span>--project<span class="w"> </span>--next<span class="w"> </span>--tag<span class="k">)</span>
+git<span class="w"> </span>tag<span class="w"> </span>--annotate<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$next_version</span><span class="s2">&quot;</span><span class="w"> </span>--message<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$next_version</span><span class="s2">&quot;</span>
+git<span class="w"> </span>push<span class="w"> </span>--follow-tags
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Wrap this in a CI job to fully automate releases when using the <code>scm</code> provider using <a href="github.com/commitizen-tools/setup-cz">setup-cz</a></p>
+</div>
+<h2 id="why-cant-i-bump-with-scm">Why Can't I Bump with SCM?<a class="headerlink" href="#why-cant-i-bump-with-scm" title="Permanent link">&para;</a></h2>
+<p>When you run <code>cz bump</code>, Commitizen normally creates a new commit that updates the version somewhere,
+either in <code>.cz.toml</code>, or in <code>pyproject.toml</code> if you're using Python, or <code>Cargo.toml</code> for rust.
+It may also update <code>version_files</code> and regenerate <code>CHANGELOG.md</code>.</p>
+<p>Commitizen deliberately bundles a new release into a single commit.
+This is core to its philosophy: the version should live in the code itself, not only in a Git tag,
+so anyone can read the current version straight from the source, without needing to inspect the tags.
+When a Git tag is the sole source of truth, that guarantee disappears,
+the version becomes metadata layered on top of your history instead of something visible within the code itself.</p>
+<h2 id="github-action-example">Github action example<a class="headerlink" href="#github-action-example" title="Permanent link">&para;</a></h2>
+<div class="highlight"><span class="filename">.github/workflows/bump-version.yml</span><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bump version</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">bump</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">permissions</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
+<span class="w">      </span><span class="nt">actions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v7</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${{</span><span class="nv"> </span><span class="s">secrets.PERSONAL_ACCESS_TOKEN</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">          </span><span class="nt">fetch-depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">          </span><span class="nt">fetch-tags</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">commitizen-tools/setup-cz@main</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.x&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bump-version</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">next_version=$(cz version --project --next --tag)</span>
+<span class="w">          </span><span class="no">git tag --annotate &quot;$next_version&quot; --message &quot;$next_version&quot;</span>
+<span class="w">          </span><span class="no">git push --follow-tags</span>
 </code></pre></div>
 
 
@@ -2126,7 +2208,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 20, 2025 17:21:19 UTC">November 20, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 29, 2026 09:41:14 UTC">July 29, 2026</span>
   </span>
 
     
