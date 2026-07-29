@@ -70,6 +70,7 @@ nav:
     - Jenkins pipeline: "tutorials/jenkins_pipeline.md"
     - Developmental releases: "tutorials/dev_releases.md"
     - Monorepo support: "tutorials/monorepo_guidance.md"
+    - Release with SCM Version Provider: "tutorials/release-scm.md"
   - FAQ: "faq.md"
   - "features_wont_add.md"
   - Exit Codes: "exit_codes.md"
