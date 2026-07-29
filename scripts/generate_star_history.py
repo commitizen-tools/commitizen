@@ -21,8 +21,8 @@ the repo's `stargazers_count`, which needs only `metadata=read`. A run that
 can reach neither fails rather than drawing an invented curve.
 
 Usage:
-    GITHUB_TOKEN=... scripts/generate-star-history [--repo owner/name] [--out path]
-    scripts/generate-star-history --seed "2019-03-01:0,2026-07-29:5000" --out path
+    GITHUB_TOKEN=... python scripts/generate_star_history.py [--repo owner/name] [--out path]
+    python scripts/generate_star_history.py --seed "2019-03-01:0,2026-07-29:5000" --out path
 
 `--seed` renders a chart from explicit `date:count` points without touching
 the network — used to commit an initial chart and for offline testing; it

@@ -33,7 +33,7 @@ jobs:
           ## Optional fallback: a collaborator PAT, only needed if GitHub
           ## ever stops granting the workflow token stargazer access.
           STAR_HISTORY_TOKEN: ${{ secrets.STAR_HISTORY_TOKEN }}
-        run: python scripts/generate-star-history --repo "$GITHUB_REPOSITORY"
+        run: python scripts/generate_star_history.py --repo "$GITHUB_REPOSITORY"
 
       - name: Commit updated chart
         run: |
