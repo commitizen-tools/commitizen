@@ -1,0 +1,536 @@
+#!/usr/bin/env python3
+"""Generate a static star-history SVG chart for the README.
+
+GitHub restricted detailed stargazer history (the `starred_at` timestamps
+behind `Accept: application/vnd.github.star+json`) to repository admins and
+collaborators, which broke star-history.com's unauthenticated README embed.
+This script regenerates the chart from the GitHub API using an authenticated
+token (the workflow's GITHUB_TOKEN) and writes a self-contained SVG that the
+README references as a normal committed file.
+
+The chart renders as a dark "night sky" card so it reads well on both GitHub
+light and dark themes. Everything is deterministic for a given (repo, data,
+date) — the starfield is seeded from the repo name — so reruns with unchanged
+data produce byte-identical output and the workflow's "chart unchanged" check
+keeps working.
+
+Two data sources, in preference order. Exact per-star history rebuilds the
+whole curve and is used whenever the stargazers endpoint is reachable. When it
+refuses, the run keeps the history banked in `--series` and extends it with
+the repo's `stargazers_count`, which needs only `metadata=read`. A run that
+can reach neither fails rather than drawing an invented curve.
+
+Usage:
+    GITHUB_TOKEN=... scripts/generate-star-history [--repo owner/name] [--out path]
+    scripts/generate-star-history --seed "2019-03-01:0,2026-07-29:5000" --out path
+
+`--seed` renders a chart from explicit `date:count` points without touching
+the network — used to commit an initial chart and for offline testing; it
+neither reads nor writes the series.
+
+Stdlib only; no dependencies.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import math
+import os
+import sys
+import urllib.error
+import urllib.request
+import zlib
+from datetime import date, datetime, timezone
+
+API_ROOT = "https://api.github.com"
+# The stargazers endpoint is capped at 400 pages (40k stars) by GitHub.
+MAX_PAGES = 400
+PER_PAGE = 100
+
+WIDTH = 700
+HEIGHT = 360
+MARGIN_LEFT = 64
+MARGIN_RIGHT = 24
+MARGIN_TOP = 56
+MARGIN_BOTTOM = 52
+
+# Night-sky palette; the card supplies its own background so the same SVG
+# works on GitHub light and dark themes alike.
+CARD_TOP = "#101527"
+CARD_BOTTOM = "#1a2033"
+CARD_BORDER = "#2e3650"
+TEXT_BRIGHT = "#e6edf3"
+TEXT_MUTED = "#8b95a7"
+GRID_COLOR = "#4a5470"
+LINE_START = "#4f9cff"
+LINE_END = "#ffd166"
+GOLD = "#ffd166"
+
+
+class StargazerFetchError(SystemExit):
+    """A refused stargazers request, carrying the full diagnostic.
+
+    Derives from SystemExit so an uncaught one still exits 1 with the message
+    printed, while callers that have a stored series can catch it specifically
+    and carry on.
+    """
+
+
+def describe_http_error(err: urllib.error.HTTPError, url: str, token_source: str) -> str:
+    """Explain a refused stargazers request using GitHub's own answer."""
+    try:
+        api_message = json.loads(err.read().decode("utf-8", "replace")).get("message")
+    except (ValueError, OSError):
+        api_message = None
+
+    headers = err.headers or {}
+    remaining = headers.get("x-ratelimit-remaining")
+    retry_after = headers.get("retry-after")
+    throttled_message = bool(api_message) and "rate limit" in api_message.lower()
+    rate_limited = err.code == 429 or (
+        err.code == 403 and (remaining == "0" or retry_after is not None or throttled_message)
+    )
+
+    lines = [
+        f"GitHub API returned {err.code} for {url}.",
+        f'GitHub says: "{api_message}"' if api_message else "GitHub returned no message body.",
+        f"Token used: {token_source}.",
+    ]
+
+    if rate_limited:
+        detail = []
+        if remaining is not None:
+            detail.append(f"{remaining} requests remaining")
+        reset = headers.get("x-ratelimit-reset")
+        if reset and reset.isdigit():
+            detail.append(
+                "resets "
+                + datetime.fromtimestamp(int(reset), timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+            )
+        if retry_after:
+            detail.append(f"retry after {retry_after}s")
+        suffix = f" ({'; '.join(detail)})" if detail else ""
+        lines.append(f"Rate limited{suffix}. Retry later.")
+    elif err.code == 401:
+        lines.append(
+            "The credential itself was rejected — the token is expired, revoked, "
+            "or malformed. Issue a new collaborator PAT and update the "
+            "STAR_HISTORY_TOKEN secret."
+        )
+    elif err.code == 403:
+        lines.append(
+            "The token is live but not authorized for this repo's stargazer "
+            "history. Check, in order: the org's personal-access-token policy "
+            "(a policy change can revoke a working token), whether the token's "
+            "approval or repository-access grant was withdrawn, and whether it "
+            "has expired. Note the workflow's built-in GITHUB_TOKEN is a GitHub "
+            "App token, not a collaborator, and is always refused here."
+        )
+    elif err.code == 404:
+        lines.append(
+            f"The token cannot see {url.split('/repos/')[-1].split('/stargazers')[0]} "
+            "at all — check the repo name and the token's repository access."
+        )
+
+    return "\n".join(lines)
+
+
+def fetch_star_dates(repo: str, token: str, token_source: str = "STAR_HISTORY_TOKEN") -> list[date]:
+    """Return the starred_at date of every stargazer, oldest first."""
+    dates: list[date] = []
+    for page in range(1, MAX_PAGES + 1):
+        url = f"{API_ROOT}/repos/{repo}/stargazers?per_page={PER_PAGE}&page={page}"
+        req = urllib.request.Request(
+            url,
+            headers={
+                "Accept": "application/vnd.github.star+json",
+                "Authorization": f"Bearer {token}",
+                "X-GitHub-Api-Version": "2022-11-28",
+            },
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                batch = json.load(resp)
+        except urllib.error.HTTPError as err:
+            if 400 <= err.code < 500:
+                raise StargazerFetchError(describe_http_error(err, url, token_source)) from err
+            raise
+        if not batch:
+            break
+        for entry in batch:
+            starred_at = entry.get("starred_at")
+            if starred_at:
+                dates.append(datetime.fromisoformat(starred_at.replace("Z", "+00:00")).date())
+        if len(batch) < PER_PAGE:
+            break
+    dates.sort()
+    return dates
+
+
+def fetch_star_count(repo: str, token: str, token_source: str) -> int:
+    """Return the repo's current stargazers_count.
+
+    Deliberately a different endpoint from fetch_star_dates: /repos/{repo}
+    answers on `metadata=read` alone and kept working even when the stargazers
+    list started demanding `contents=write`. It gives a total but no history,
+    which is why the series file exists.
+    """
+    url = f"{API_ROOT}/repos/{repo}"
+    req = urllib.request.Request(
+        url,
+        headers={
+            "Accept": "application/vnd.github+json",
+            "Authorization": f"Bearer {token}",
+            "X-GitHub-Api-Version": "2022-11-28",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            payload = json.load(resp)
+    except urllib.error.HTTPError as err:
+        if 400 <= err.code < 500:
+            raise StargazerFetchError(describe_http_error(err, url, token_source)) from err
+        raise
+    count = payload.get("stargazers_count")
+    if not isinstance(count, int):
+        raise StargazerFetchError(f"{url} returned no stargazers_count")
+    return count
+
+
+def load_series(path: str, repo: str) -> list[tuple[date, int]]:
+    """Read the accumulated (date, count) series for `repo`, or [] if absent."""
+    try:
+        with open(path, encoding="utf-8") as fh:
+            raw = fh.read()
+    except FileNotFoundError:
+        return []
+    if not raw.strip():
+        return []
+    try:
+        payload = json.loads(raw)
+    except ValueError as err:
+        raise SystemExit(f"{path} is not valid JSON: {err}") from err
+
+    stored = payload.get("repo")
+    if stored and stored != repo:
+        raise SystemExit(
+            f"{path} holds the series for {stored}, not {repo}. Point --series "
+            f"at that repo's file, or delete it to start a fresh series — "
+            f"grafting one repo's history onto another would corrupt both."
+        )
+    points = [(date.fromisoformat(d), int(c)) for d, c in payload.get("points", [])]
+    return sorted(points)
+
+
+def save_series(path: str, repo: str, points: list[tuple[date, int]]) -> None:
+    """Write the series, stamped with the repo it belongs to."""
+    payload = {
+        "repo": repo,
+        "points": [[d.isoformat(), c] for d, c in points],
+    }
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(payload, fh, indent=1)
+        fh.write("\n")
+
+
+def append_today(series: list[tuple[date, int]], count: int, today: date) -> list[tuple[date, int]]:
+    """Extend the series with today's total, replacing a same-day point."""
+    points = [(d, c) for d, c in series if d != today]
+    points.append((today, count))
+    return sorted(points)
+
+
+def cumulative_points(star_dates: list[date]) -> list[tuple[date, int]]:
+    """Collapse per-star dates into (date, cumulative_count) steps."""
+    points: list[tuple[date, int]] = []
+    count = 0
+    for day in star_dates:
+        count += 1
+        if points and points[-1][0] == day:
+            points[-1] = (day, count)
+        else:
+            points.append((day, count))
+    today = datetime.now(timezone.utc).date()
+    if points and points[-1][0] != today:
+        points.append((today, count))
+    return points
+
+
+def parse_seed(seed: str) -> list[tuple[date, int]]:
+    points = []
+    for chunk in seed.split(","):
+        day, _, count = chunk.strip().partition(":")
+        points.append((date.fromisoformat(day), int(count)))
+    return sorted(points)
+
+
+def _nice_axis(value: int) -> tuple[int, int]:
+    """Pick a (y_max, step) so the curve fills the plot."""
+    value = max(value, 1)
+    headroom = value * 1.06
+    best: tuple[int, int] | None = None
+    magnitude = 1
+    while magnitude <= headroom * 10:
+        for factor in (1.0, 2.0, 2.5, 5.0):
+            step = factor * magnitude
+            if step != int(step):
+                continue
+            step = int(step)
+            intervals = -(-int(headroom + 1) // step)  # ceil
+            if 3 <= intervals <= 5:
+                y_max = step * intervals
+                if best is None or y_max < best[0] or (y_max == best[0] and step > best[1]):
+                    best = (y_max, step)
+        magnitude *= 10
+    if best is None:
+        y_max = value + 1
+        return y_max, max(1, y_max // 4)
+    return best
+
+
+def _fmt(n: int) -> str:
+    return f"{n:,}"
+
+
+def _starfield(repo: str) -> str:
+    """Deterministic background stars, seeded from the repo name."""
+    state = zlib.crc32(repo.encode()) or 1
+
+    def rnd() -> float:
+        nonlocal state
+        state = (state * 1103515245 + 12345) % (1 << 31)
+        return state / (1 << 31)
+
+    parts = []
+    for _ in range(60):
+        x = round(8 + rnd() * (WIDTH - 16), 1)
+        y = round(8 + rnd() * (HEIGHT - 16), 1)
+        r = round(0.4 + rnd() * 0.9, 2)
+        opacity = round(0.12 + rnd() * 0.55, 2)
+        tint = "#cfe1ff" if rnd() < 0.7 else "#ffe9b8"
+        parts.append(f'<circle cx="{x}" cy="{y}" r="{r}" fill="{tint}" opacity="{opacity}"/>')
+    for i in range(4):
+        x = round(8 + rnd() * (WIDTH - 16), 1)
+        y = round(8 + rnd() * (HEIGHT * 0.45), 1)
+        parts.append(
+            f'<path d="{_star_path(x, y, 3.2)}" fill="#f4f8ff" opacity="0.8">'
+            f'<animate attributeName="opacity" values="0.8;0.2;0.8" '
+            f'dur="{3.4 + i * 1.1:.1f}s" begin="{i * 0.9:.1f}s" repeatCount="indefinite"/>'
+            "</path>"
+        )
+    return "".join(parts)
+
+
+def _star_path(cx: float, cy: float, r: float) -> str:
+    """Five-point star path centered on (cx, cy)."""
+    pts = []
+    for i in range(10):
+        radius = r if i % 2 == 0 else r * 0.42
+        angle = math.pi / 2 + i * math.pi / 5
+        pts.append(f"{cx + radius * math.cos(angle):.1f},{cy - radius * math.sin(angle):.1f}")
+    return "M" + " L".join(pts) + " Z"
+
+
+def _month_ticks(x0: int, x1: int) -> list[tuple[date, str]]:
+    """Ticks at month starts, thinned to at most 5."""
+    firsts = []
+    d = date.fromordinal(x0)
+    year, month = d.year, d.month
+    while True:
+        month += 1
+        if month == 13:
+            year, month = year + 1, 1
+        first = date(year, month, 1)
+        if first.toordinal() > x1:
+            break
+        firsts.append(first)
+    if len(firsts) >= 2:
+        step = -(-len(firsts) // 5)
+        firsts = firsts[::step]
+        labels = []
+        prev_year = None
+        for d in firsts:
+            labels.append(
+                (d, d.strftime("%b %Y") if d.year != prev_year else d.strftime("%b"))
+            )
+            prev_year = d.year
+        return labels
+    span = max(x1 - x0, 1)
+    ticks = []
+    for i in range(4):
+        day = date.fromordinal(x0 + round(span * i / 3))
+        ticks.append((day, day.strftime("%b %d")))
+    return ticks
+
+
+def render_svg(points: list[tuple[date, int]], repo: str) -> str:
+    if len(points) < 2:
+        raise SystemExit("need at least 2 data points to draw a chart")
+
+    x0, x1 = points[0][0].toordinal(), points[-1][0].toordinal()
+    x_span = max(x1 - x0, 1)
+    y_max, y_step = _nice_axis(points[-1][1])
+    plot_w = WIDTH - MARGIN_LEFT - MARGIN_RIGHT
+    plot_h = HEIGHT - MARGIN_TOP - MARGIN_BOTTOM
+    baseline = MARGIN_TOP + plot_h
+
+    def px(d: date) -> float:
+        return MARGIN_LEFT + (d.toordinal() - x0) / x_span * plot_w
+
+    def py(count: int) -> float:
+        return MARGIN_TOP + plot_h - (count / y_max) * plot_h
+
+    poly = " ".join(f"{px(d):.1f},{py(c):.1f}" for d, c in points)
+    area = (
+        f"{px(points[0][0]):.1f},{baseline:.1f} "
+        + poly
+        + f" {px(points[-1][0]):.1f},{baseline:.1f}"
+    )
+
+    grid_lines = []
+    for value in range(0, y_max + 1, y_step):
+        y = py(value)
+        dash = "" if value == 0 else ' stroke-dasharray="3 5"'
+        opacity = "0.9" if value == 0 else "0.45"
+        grid_lines.append(
+            f'<line x1="{MARGIN_LEFT}" y1="{y:.1f}" x2="{WIDTH - MARGIN_RIGHT}" '
+            f'y2="{y:.1f}" stroke="{GRID_COLOR}" stroke-opacity="{opacity}" '
+            f'stroke-width="1"{dash}/>'
+            f'<text x="{MARGIN_LEFT - 10}" y="{y + 4:.1f}" text-anchor="end" '
+            f'font-size="11" fill="{TEXT_MUTED}">{_fmt(value)}</text>'
+        )
+
+    x_labels = []
+    for day, label in _month_ticks(x0, x1):
+        x = px(day)
+        x_labels.append(
+            f'<line x1="{x:.1f}" y1="{baseline:.1f}" x2="{x:.1f}" y2="{baseline + 5:.1f}" '
+            f'stroke="{GRID_COLOR}" stroke-width="1"/>'
+            f'<text x="{x:.1f}" y="{baseline + 20:.1f}" text-anchor="middle" '
+            f'font-size="11" fill="{TEXT_MUTED}">{label}</text>'
+        )
+
+    last_date, last_count = points[-1]
+    end_x, end_y = px(last_date), py(last_count)
+    badge_text = f"{_fmt(last_count)} stars"
+    badge_w = round(len(badge_text) * 7.0 + 20)
+    badge_h = 22
+    badge_x = end_x - 14 - badge_w
+    badge_y = min(max(end_y - badge_h / 2, MARGIN_TOP - 18), baseline - badge_h)
+
+    generated = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    parts = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{WIDTH}" height="{HEIGHT}"',
+        f' viewBox="0 0 {WIDTH} {HEIGHT}" role="img" aria-label="Star history of {repo}">\n',
+        f"  <title>Star history of {repo}</title>\n",
+        "  <defs>\n",
+        '    <linearGradient id="cardGrad" x1="0" y1="0" x2="0" y2="1">\n',
+        f'      <stop offset="0" stop-color="{CARD_TOP}"/>',
+        f'<stop offset="1" stop-color="{CARD_BOTTOM}"/>\n',
+        "    </linearGradient>\n",
+        '    <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">\n',
+        f'      <stop offset="0" stop-color="{LINE_START}"/>',
+        f'<stop offset="1" stop-color="{LINE_END}"/>\n',
+        "    </linearGradient>\n",
+        '    <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">\n',
+        f'      <stop offset="0" stop-color="{LINE_START}" stop-opacity="0.30"/>\n',
+        f'      <stop offset="1" stop-color="{LINE_START}" stop-opacity="0.02"/>\n',
+        "    </linearGradient>\n",
+        '    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">\n',
+        '      <feGaussianBlur stdDeviation="3.5"/>\n',
+        "    </filter>\n",
+        "  </defs>\n",
+        f'  <rect x="0.5" y="0.5" width="{WIDTH - 1}" height="{HEIGHT - 1}" rx="10"',
+        f' fill="url(#cardGrad)" stroke="{CARD_BORDER}"/>\n',
+        f"  {_starfield(repo)}\n",
+        "  <g font-family=\"-apple-system, BlinkMacSystemFont, 'Segoe UI',"
+        ' Helvetica, Arial, sans-serif">\n',
+        f'    <path d="{_star_path(30, 25, 7)}" fill="{GOLD}"/>\n',
+        '    <text x="44" y="30" font-size="15" font-weight="600"',
+        f' fill="{TEXT_BRIGHT}">{repo}</text>\n',
+        f'    <text x="{WIDTH - 24}" y="30" text-anchor="end" font-size="12"',
+        f' fill="{TEXT_MUTED}">GitHub stars over time</text>\n    ',
+        "".join(grid_lines),
+        "\n    ",
+        "".join(x_labels),
+        f'\n    <polygon points="{area}" fill="url(#areaGrad)"/>\n',
+        f'    <polyline points="{poly}" fill="none" stroke="url(#lineGrad)"',
+        ' stroke-width="6" stroke-opacity="0.35" stroke-linejoin="round"',
+        ' stroke-linecap="round" filter="url(#glow)"/>\n',
+        f'    <polyline points="{poly}" fill="none" stroke="url(#lineGrad)"',
+        ' stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>\n',
+        f'    <line x1="{badge_x + badge_w:.1f}" y1="{end_y:.1f}"',
+        f' x2="{end_x:.1f}" y2="{end_y:.1f}"',
+        f' stroke="{GOLD}" stroke-opacity="0.5" stroke-width="1"/>\n',
+        f'    <rect x="{badge_x:.1f}" y="{badge_y:.1f}"',
+        f' width="{badge_w}" height="{badge_h}" rx="11"',
+        f' fill="{CARD_TOP}" fill-opacity="0.92" stroke="{CARD_BORDER}"/>\n',
+        f'    <text x="{badge_x + badge_w / 2:.1f}" y="{badge_y + 15:.1f}" text-anchor="middle"',
+        f' font-size="13" font-weight="600" fill="{GOLD}">{badge_text}</text>\n',
+        f'    <circle cx="{end_x:.1f}" cy="{end_y:.1f}" r="6" fill="{GOLD}"',
+        ' opacity="0.4" filter="url(#glow)"/>\n',
+        f'    <path d="{_star_path(end_x, end_y, 7)}" fill="{GOLD}"/>\n',
+        f'    <text x="{WIDTH - 16}" y="{HEIGHT - 10}" text-anchor="end"',
+        f' font-size="10" fill="{TEXT_MUTED}" fill-opacity="0.8">',
+        f"updated {generated}</text>\n",
+        "  </g>\n</svg>\n",
+    ]
+    return "".join(parts)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--repo", default="commitizen-tools/commitizen")
+    parser.add_argument("--out", default="docs/images/star-history.svg")
+    parser.add_argument(
+        "--series",
+        default="docs/images/star-history.json",
+        help="accumulated date:count points, carried between runs so the "
+        "chart survives the stargazers endpoint being unavailable",
+    )
+    parser.add_argument(
+        "--seed",
+        help="comma-separated date:count points to render offline "
+        '(e.g. "2019-03-01:0,2026-07-29:5000")',
+    )
+    args = parser.parse_args()
+
+    if args.seed:
+        points = parse_seed(args.seed)
+    else:
+        token_source = "STAR_HISTORY_TOKEN"
+        token = os.environ.get("STAR_HISTORY_TOKEN")
+        if not token:
+            token_source = "GITHUB_TOKEN (fallback)"
+            token = os.environ.get("GITHUB_TOKEN")
+        if not token:
+            raise SystemExit("set GITHUB_TOKEN (or STAR_HISTORY_TOKEN), or use --seed")
+
+        series = load_series(args.series, args.repo)
+        try:
+            star_dates = fetch_star_dates(args.repo, token, token_source)
+            if not star_dates:
+                raise SystemExit(f"no stargazer data returned for {args.repo}")
+            points = cumulative_points(star_dates)
+        except StargazerFetchError as err:
+            if not series:
+                raise
+            print(
+                f"stargazer history unavailable, extending the stored series "
+                f"with today's total instead.\n{err}",
+                file=sys.stderr,
+            )
+            count = fetch_star_count(args.repo, token, token_source)
+            points = append_today(series, count, datetime.now(timezone.utc).date())
+
+        save_series(args.series, args.repo, points)
+
+    svg = render_svg(points, args.repo)
+    with open(args.out, "w", encoding="utf-8") as fh:
+        fh.write(svg)
+    print(f"wrote {args.out} ({len(points)} points, {points[-1][1]} stars)")
+
+
+if __name__ == "__main__":
+    main()

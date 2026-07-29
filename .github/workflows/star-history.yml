@@ -1,0 +1,50 @@
+name: Star history chart
+
+## Regenerates the README's star-history chart. GitHub restricted
+## detailed stargazer history to repo admins/collaborators, which broke
+## star-history.com's unauthenticated embed — so we render the chart
+## ourselves with the repo-scoped workflow token and commit the SVG.
+on:
+  workflow_dispatch:
+  schedule:
+    ## Weekly, Monday 06:20 UTC — off the top of the hour to dodge the
+    ## scheduled-workflow load spike.
+    - cron: "20 6 * * 1"
+
+permissions:
+  contents: write
+
+jobs:
+  update-chart:
+    runs-on: ubuntu-latest
+    ## Scheduled runs on forks would fail (no stargazer access) and spam.
+    if: github.repository == 'commitizen-tools/commitizen'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate chart
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ## Optional fallback: a collaborator PAT, only needed if GitHub
+          ## ever stops granting the workflow token stargazer access.
+          STAR_HISTORY_TOKEN: ${{ secrets.STAR_HISTORY_TOKEN }}
+        run: python scripts/generate-star-history --repo "$GITHUB_REPOSITORY"
+
+      - name: Commit updated chart
+        run: |
+          ## Stage first so a brand-new (untracked) chart is detected too —
+          ## `git diff --quiet` alone ignores untracked files.
+          git add docs/images/star-history.svg docs/images/star-history.json
+          if git diff --staged --quiet; then
+            echo "chart unchanged, nothing to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: update star history chart [skip ci]"
+          git push

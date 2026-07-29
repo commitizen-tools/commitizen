@@ -305,7 +305,13 @@ For more detailed information about argcomplete configuration and troubleshootin
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=commitizen-tools/commitizen)](https://star-history.com/#commitizen-tools/commitizen)
+<!-- Regenerated weekly by .github/workflows/star-history.yml:
+     GitHub restricted stargazer history to repo collaborators, which broke
+     star-history.com's unauthenticated embed, so the chart is now rendered
+     in CI and committed here. -->
+<a href="https://github.com/commitizen-tools/commitizen/stargazers">
+  <img src="images/star-history.svg" alt="Star History Chart" width="700">
+</a>
 
 
 ## Sponsors
