@@ -303,17 +303,6 @@ After installation, you can verify the completion is working by:
 
 For more detailed information about argcomplete configuration and troubleshooting, visit the [argcomplete documentation](https://kislyuk.github.io/argcomplete/).
 
-## Star History
-
-<!-- Regenerated weekly by .github/workflows/star-history.yml:
-     GitHub restricted stargazer history to repo collaborators, which broke
-     star-history.com's unauthenticated embed, so the chart is now rendered
-     in CI and committed here. -->
-<a href="https://github.com/commitizen-tools/commitizen/stargazers">
-  <img src="images/star-history.svg" alt="Star History Chart" width="700">
-</a>
-
-
 ## Sponsors
 
 These are our cool sponsors!
