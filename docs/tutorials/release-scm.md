@@ -24,7 +24,7 @@ git push --follow-tags
 ```
 
 !!! tip
-    Wrap this in a CI job to fully automate releases when using the `scm` provider using [setup-cz](github.com/commitizen-tools/setup-cz)
+    Wrap this in a CI job to fully automate releases when using the `scm` provider using [setup-cz](https://github.com/commitizen-tools/setup-cz)
 
 ## Why Can't I Bump with SCM?
 
