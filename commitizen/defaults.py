@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any, TypedDict
 if TYPE_CHECKING:
     import pathlib
 
-    from commitizen.question import CzQuestion
+    from commitizen.question import Choice, CzQuestion
 
 
 class CzSettings(TypedDict, total=False):
@@ -29,6 +29,14 @@ class CzSettings(TypedDict, total=False):
     change_type_map: dict[str, str] | None
 
 
+class CzOverrideSettings(CzSettings, total=False):
+    change_type_choices: list[Choice]
+
+
+class CzExtendSettings(CzSettings, total=False):
+    change_type_choices: list[Choice]
+
+
 class Settings(TypedDict, total=False):
     allow_abort: bool
     allowed_prefixes: list[str]
@@ -43,6 +51,7 @@ class Settings(TypedDict, total=False):
     changelog_start_rev: str | None
     customize: CzSettings
     encoding: str
+    extend: CzExtendSettings
     extras: dict[str, Any]
     gpg_sign: bool
     ignored_tag_formats: Sequence[str]
@@ -50,6 +59,7 @@ class Settings(TypedDict, total=False):
     major_version_zero: bool
     message_length_limit: int
     name: str
+    override: CzOverrideSettings
     post_bump_hooks: list[str] | None
     pre_bump_hooks: list[str] | None
     prerelease_offset: int
