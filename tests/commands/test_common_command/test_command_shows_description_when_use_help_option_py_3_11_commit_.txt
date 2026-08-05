@@ -1,6 +1,7 @@
 usage: cz commit [-h] [--retry] [--no-retry] [--dry-run]
                  [--write-message-to-file FILE_PATH] [-s] [-a] [-e]
-                 [-l MESSAGE_LENGTH_LIMIT] [--]
+                 [-l MESSAGE_LENGTH_LIMIT]
+                 [--body-length-limit BODY_LENGTH_LIMIT] [--]
 
 Create new commit
 
@@ -22,4 +23,8 @@ options:
   -l MESSAGE_LENGTH_LIMIT, --message-length-limit MESSAGE_LENGTH_LIMIT
                         Set the length limit of the commit message; 0 for no
                         limit.
+  --body-length-limit BODY_LENGTH_LIMIT
+                        Set the length limit of the commit body. Commit
+                        message in body will be rewrapped to this length; 0
+                        for no limit.
   --                    Positional arguments separator (recommended).

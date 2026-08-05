@@ -1,0 +1,3 @@
+feat: add feature
+
+This is a very long line that exceeds 72 characters and should NOT be wrapped when body_length_limit is set to 0
