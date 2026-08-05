@@ -34,7 +34,7 @@ if TYPE_CHECKING:
 Increment: TypeAlias = Literal["MAJOR", "MINOR", "PATCH"]  # TODO: deprecate
 Prerelease: TypeAlias = Literal["alpha", "beta", "rc"]
 _DEFAULT_VERSION_PARSER = re.compile(
-    r"v?(?P<version>([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z.]+)?(\w+)?)"
+    r"v?(?P<version>([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\w+)?(?:\.dev\d+)?(?:\+[0-9A-Za-z.]+)?)"
 )
 
 
