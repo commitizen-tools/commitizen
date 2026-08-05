@@ -13,6 +13,7 @@ import commitizen.commands.bump as bump
 from commitizen import cmd, defaults, git, hooks
 from commitizen.config.base_config import BaseConfig
 from commitizen.exceptions import (
+    BumpCommitFailedError,
     BumpTagFailedError,
     CommitizenException,
     CurrentVersionNotFoundError,
@@ -1373,6 +1374,76 @@ def test_bump_warn_but_dont_fail_on_invalid_tags(
 
     assert err.count("Invalid version tag: '0.4.3.deadbeaf'") == 1
     assert git.tag_exist("0.4.3") is True
+
+
+def test_bump_skips_commit_when_no_files_changed(
+    mocker: MockFixture, tmp_commitizen_project: Path, util: UtilFixture
+):
+    """Regression test for #1530: with ``version_provider = "scm"`` and no
+    ``version_files`` / ``--changelog``, ``cz bump`` should not fail with
+    ``nothing to commit, working tree clean`` -- it should just create the
+    tag on ``HEAD``.
+    """
+    project_root = tmp_commitizen_project
+    tmp_commitizen_cfg_file = project_root / "pyproject.toml"
+    tmp_commitizen_cfg_file.write_text(
+        "\n".join(
+            [
+                "[tool.commitizen]",
+                'version_provider = "scm"',
+                'tag_format = "v$version"',
+            ]
+        ),
+    )
+    util.create_file_and_commit("feat: first feature")
+    add_mock = mocker.patch("commitizen.git.add")
+
+    util.run_cli("bump", "--yes")
+
+    assert git.tag_exist("v0.1.0") is True
+
+    util.create_file_and_commit("fix: second change")
+
+    util.run_cli("bump", "--yes")
+
+    assert git.tag_exist("v0.1.1") is True
+    add_mock.assert_not_called()
+
+
+def test_bump_raises_when_git_add_fails(
+    mocker: MockFixture, tmp_commitizen_project: Path, util: UtilFixture
+):
+    """Regression test: ``cz bump`` reports a failing ``git.add``."""
+    project_root = tmp_commitizen_project
+    tmp_commitizen_cfg_file = project_root / "pyproject.toml"
+    tmp_commitizen_cfg_file.write_text(
+        "\n".join(
+            [
+                "[tool.commitizen]",
+                'version = "0.1.0"',
+                'tag_format = "v$version"',
+                'version_files = ["pyproject.toml:version"]',
+            ]
+        ),
+    )
+    util.create_file_and_commit("feat: first feature")
+
+    mocker.patch(
+        "commitizen.git.add",
+        return_value=cmd.Command(
+            out="",
+            err="fatal: pathspec did not match any files",
+            stdout=b"",
+            stderr=b"fatal: pathspec did not match any files",
+            return_code=128,
+        ),
+    )
+
+    with pytest.raises(BumpCommitFailedError) as exc_info:
+        util.run_cli("bump", "--yes")
+
+    assert "git.add error" in str(exc_info.value)
+    assert "fatal: pathspec" in str(exc_info.value)
 
 
 def test_is_initial_tag(mocker: MockFixture, tmp_commitizen_project, util: UtilFixture):
