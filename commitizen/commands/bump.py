@@ -115,7 +115,11 @@ class Bump:
         self.scheme = get_version_scheme(
             self.config.settings, arguments["version_scheme"] or deprecated_version_type
         )
-        self.file_name = arguments["file_name"] or self.config.settings.get(
+        # Track whether file_name came from the CLI.  Only CLI-provided names are
+        # forwarded to Changelog; config-provided names are resolved by Changelog
+        # itself so they are anchored to the config-file directory (not cwd).
+        self._cli_file_name: str | None = arguments.get("file_name") or None
+        self.file_name = self._cli_file_name or self.config.settings.get(
             "changelog_file"
         )
         self.changelog_format = get_changelog_format(self.config, self.file_name)
@@ -332,7 +336,14 @@ class Bump:
                 self.config,
                 {
                     **changelog_args,  # type: ignore[typeddict-item]
-                    "file_name": self.file_name,
+                    # Only forward file_name when it came from the CLI (--file-name).
+                    # If absent, Changelog resolves it from config, anchored to the
+                    # config-file's directory rather than the current working directory.
+                    **(
+                        {"file_name": self._cli_file_name}
+                        if self._cli_file_name
+                        else {}
+                    ),
                     "allow_no_commit": bool(self.arguments["allow_no_commit"]),
                 },
             )

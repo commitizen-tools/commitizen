@@ -2,6 +2,7 @@ from .bump import Bump
 from .changelog import Changelog
 from .check import Check
 from .commit import Commit
+from .dump_config import DumpConfig
 from .example import Example
 from .info import Info
 from .init import Init
@@ -14,6 +15,7 @@ __all__ = (
     "Changelog",
     "Check",
     "Commit",
+    "DumpConfig",
     "Example",
     "Info",
     "Init",
