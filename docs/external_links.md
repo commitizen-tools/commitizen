@@ -16,4 +16,23 @@
 - [How to Write Better Git Commit Messages – A Step-By-Step Guide](https://www.freecodecamp.org/news/how-to-write-better-git-commit-messages/?utm_source=tldrnewsletter) (English)
 - [Continuous delivery made easy (in Python)](https://blog.devgenius.io/continuous-delivery-made-easy-in-python-c085e9c82e69)
 
+## Recommended Reading on Versioning
+
+The following articles, surfaced in the discussion of [issue #515][issue-515],
+provide useful background on the strengths and limitations of semantic
+versioning and on alternative versioning strategies. They can help calibrate
+expectations about what a version bump can — and cannot — guarantee to
+downstream consumers.
+
+- [Semantic Versioning Will Not Save You](https://hynek.me/articles/semver-will-not-save-you/) by Hynek Schlawack
+- [Why I don't like SemVer anymore](https://snarky.ca/why-i-dont-like-semver/) by Brett Cannon
+- [Versioning Software](https://caremad.io/posts/2016/02/versioning-software/) by Donald Stufft
+- [Hyrum's Law](https://www.hyrumslaw.com/) — on implicit behavioral contracts beyond the documented API
+- [0ver — Zero-based Versioning](https://0ver.org/)
+- [CalVer — Calendar Versioning](https://calver.org/)
+- [PEP 440 — Version Identification and Dependency Specification](https://peps.python.org/pep-0440/)
+- [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)
+- [Semantic Versioning 2.0.0](https://semver.org/)
+
 [automatizando]: https://youtu.be/t3aE2M8UPBo
+[issue-515]: https://github.com/commitizen-tools/commitizen/issues/515
