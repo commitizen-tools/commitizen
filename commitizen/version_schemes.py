@@ -121,7 +121,10 @@ class VersionProtocol(Protocol):
     def bump(
         self,
         increment: Increment | None,
-        prerelease: Prerelease | None = None,
+        # str instead of Prerelease to support arbitrary semver pre-release labels
+        # (e.g., "release", "SNAPSHOT") parsed from existing tags. The CLI still
+        # restricts user input to alpha/beta/rc via argparse choices.
+        prerelease: str | None = None,
         prerelease_offset: int = 0,
         devrelease: int | None = None,
         is_local_version: bool = False,
@@ -143,6 +146,52 @@ class VersionProtocol(Protocol):
 # With PEP 440 and SemVer semantics, a scheme is the class; a version is an instance.
 Version: TypeAlias = VersionProtocol
 VersionScheme: TypeAlias = type[VersionProtocol]
+
+
+# Custom version pattern for SemVer schemes that extends packaging's PEP 440
+# regex to support arbitrary semver pre-release labels (e.g., -release, -SNAPSHOT,
+# -pre-release). Python's packaging library does not use semver; it predates it.
+# We cannot fully rely on packaging.version for semver-compatible parsing.
+# This pattern is NOT applied to Pep440 scheme, which retains strict PEP 440 parsing.
+# See: https://github.com/pypa/packaging/blob/14b83e15dbb9caa87c63646ba7808b2b5e460ce6/src/packaging/version.py#L117
+_SEMVER_VERSION_PATTERN = r"""^\s*
+    v?
+    (?:
+        (?:(?P<epoch>[0-9]+)!)?                           # epoch
+        (?P<release>[0-9]+(?:\.[0-9]+)*)                  # release segment
+        (?P<pre>                                          # pre-release
+            [-_\.]?
+            (?P<pre_l>
+                (?!                                       # negative lookahead to prevent
+                    [-_\.]?                               # matching post, rev, r, dev
+                    (post|rev|r|dev)                      # (reserved PEP 440 segments)
+                    [-_\.]?
+                    ([0-9]+)?
+                (\+|$))                                   # terminated by local segment or EOL
+                [a-z]+(?:-[a-z]+)*                        # letters with optional hyphen-separated parts
+            )
+            [-_\.]?
+            (?P<pre_n>[0-9]+)?
+        )?
+        (?P<post>                                         # post release
+            (?:-(?P<post_n1>[0-9]+))
+            |
+            (?:
+                [-_\.]?
+                (?P<post_l>post|rev|r)
+                [-_\.]?
+                (?P<post_n2>[0-9]+)?
+            )
+        )?
+        (?P<dev>                                          # dev release
+            [-_\.]?
+            (?P<dev_l>dev)
+            [-_\.]?
+            (?P<dev_n>[0-9]+)?
+        )?
+    )
+    (?:\+(?P<local>[a-z0-9]+(?:[-_\.][a-z0-9]+)*))?       # local version
+\s*$"""
 
 
 class BaseVersion(_BaseVersion):
@@ -184,8 +233,26 @@ class BaseVersion(_BaseVersion):
         # https://packaging.python.org/en/latest/specifications/version-specifiers/#pre-releases
         # https://semver.org/#spec-item-11
         if self.is_prerelease and self.pre:
-            prerelease = max(prerelease, self.pre[0])
-            if prerelease.startswith(self.pre[0]):
+            current_pre_label = self.pre[0]
+            # packaging normalizes "alpha"→"a", "beta"→"b", "rc"→"rc"
+            _LABEL_TO_NORMALIZED = {"alpha": "a", "beta": "b", "rc": "rc"}
+            _KNOWN_PRE_LABELS = {"a", "b", "rc"}
+            normalized_prerelease = _LABEL_TO_NORMALIZED.get(
+                prerelease, prerelease.lower()
+            )
+
+            # The ordering logic (max) only makes sense for the known PEP 440
+            # labels where "a" < "b" < "rc" lexicographically. For arbitrary
+            # semver labels (e.g., "release", "SNAPSHOT"), we use strict equality
+            # since there's no defined ordering between them.
+            if (
+                current_pre_label in _KNOWN_PRE_LABELS
+                and normalized_prerelease in _KNOWN_PRE_LABELS
+            ):
+                prerelease = max(normalized_prerelease, current_pre_label)
+                if prerelease == current_pre_label:
+                    offset = self.pre[1] + 1
+            elif normalized_prerelease == current_pre_label:
                 offset = self.pre[1] + 1
 
         return f"{prerelease}{offset}"
@@ -232,7 +299,7 @@ class BaseVersion(_BaseVersion):
     def bump(
         self,
         increment: Increment | None,
-        prerelease: Prerelease | None = None,
+        prerelease: str | None = None,  # str to support arbitrary semver labels
         prerelease_offset: int = 0,
         devrelease: int | None = None,
         is_local_version: bool = False,
@@ -299,6 +366,12 @@ class SemVer(BaseVersion):
 
     See: https://semver.org/spec/v1.0.0.html
     """
+
+    # Override the PEP 440 regex to accept arbitrary semver pre-release labels
+    # (e.g., -release, -SNAPSHOT, -pre-release). SemVer2 inherits this.
+    _regex: re.Pattern = re.compile(
+        _SEMVER_VERSION_PATTERN, re.VERBOSE | re.IGNORECASE
+    )
 
     def __str__(self) -> str:
         parts: list[str] = []
