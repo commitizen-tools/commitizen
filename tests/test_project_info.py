@@ -19,17 +19,26 @@ def _create_project_files(files: dict[str, str | None]) -> None:
 
 
 @pytest.mark.parametrize(
-    ("which_return", "expected"),
+    ("which_map", "expected"),
     [
-        ("/usr/local/bin/pre-commit", True),
-        ("/usr/local/bin/prek", True),
-        (None, False),
-        ("", False),
+        ({"pre-commit": "/usr/local/bin/pre-commit"}, ["pre-commit"]),
+        ({"prek": "/usr/local/bin/prek"}, ["prek"]),
+        (
+            {
+                "pre-commit": "/usr/local/bin/pre-commit",
+                "prek": "/usr/local/bin/prek",
+            },
+            ["pre-commit", "prek"],
+        ),
+        ({}, []),
+        ({"pre-commit": "", "prek": None}, []),
     ],
 )
-def test_is_pre_commit_installed(mocker, which_return, expected):
-    mocker.patch("shutil.which", return_value=which_return)
-    assert project_info.is_pre_commit_installed() is expected
+def test_available_hook_installers(mocker, which_map, expected):
+    mocker.patch("shutil.which", side_effect=lambda name: which_map.get(name))
+
+    assert project_info.available_hook_installers() == expected
+    assert project_info.is_pre_commit_installed() is bool(expected)
 
 
 @pytest.mark.parametrize(

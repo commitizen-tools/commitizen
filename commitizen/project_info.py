@@ -4,9 +4,22 @@ import shutil
 from pathlib import Path
 from typing import Literal
 
+_HOOK_INSTALLERS = ("pre-commit", "prek")
+
+
+def available_hook_installers() -> list[str]:
+    """Return hook installer CLIs found on PATH.
+
+    ``pre-commit`` and ``prek`` are interchangeable. ``pre-commit`` is
+    listed first when both are present so existing setups keep a stable
+    default unless the user is asked to choose.
+    """
+    return [tool for tool in _HOOK_INSTALLERS if shutil.which(tool)]
+
 
 def is_pre_commit_installed() -> bool:
-    return any(shutil.which(tool) for tool in ("pre-commit", "prek"))
+    """Return whether any supported hook installer is on PATH."""
+    return bool(available_hook_installers())
 
 
 def get_default_version_provider() -> Literal[
