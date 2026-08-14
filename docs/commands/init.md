@@ -43,7 +43,7 @@ During the initialization process, you'll be prompted to configure the following
     - `pep440`: Python Package Versioning
 6. **Changelog Generation**: Configure whether to automatically generate changelog during version bumps
 7. **Alpha Versioning**: Option to keep major version at 0 for alpha/beta software
-8. **Pre-commit Hooks**: Set up Git pre-commit hooks for automated commit message validation
+8. **Pre-commit Hooks**: Set up Git hooks for automated commit message validation. If you choose to install hooks, Commitizen uses `pre-commit` or `prek` (whichever is on PATH). If both are installed, you are asked which one to use.
 
 See [Configuration Options][configuration_options] for more details.
 

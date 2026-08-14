@@ -121,10 +121,10 @@ def test_init_without_choosing_tag(
 
 @pytest.fixture
 def pre_commit_installed(mocker: MockFixture):
-    # Assume the `pre-commit` is installed
+    # Assume only `pre-commit` is installed
     mocker.patch(
-        "commitizen.project_info.is_pre_commit_installed",
-        return_value=True,
+        "commitizen.project_info.available_hook_installers",
+        return_value=["pre-commit"],
     )
     # And installation success (i.e. no exception raised)
     mocker.patch(
@@ -232,14 +232,115 @@ class TestNoPreCommitInstalled:
     def test_pre_commit_not_installed(
         self, mocker: MockFixture, config: BaseConfig, tmp_path, monkeypatch
     ):
-        # Assume `pre-commit` is not installed
+        # Assume neither `pre-commit` nor `prek` is installed
         mocker.patch(
-            "commitizen.project_info.is_pre_commit_installed",
-            return_value=False,
+            "commitizen.project_info.available_hook_installers",
+            return_value=[],
         )
         monkeypatch.chdir(tmp_path)
         with pytest.raises(InitFailedError):
             commands.Init(config)()
+
+
+def _init_hook_answers(mocker: MockFixture) -> None:
+    """Stub the interactive init prompts and select hook installation."""
+    mocker.patch(
+        "questionary.select",
+        side_effect=[
+            FakeQuestion("pyproject.toml"),
+            FakeQuestion("cz_conventional_commits"),
+            FakeQuestion("commitizen"),
+            FakeQuestion("semver"),
+        ],
+    )
+    mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+    mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+    mocker.patch(
+        "questionary.checkbox",
+        return_value=FakeQuestion(["commit-msg", "pre-push"]),
+    )
+
+
+class TestHookInstallerSelection:
+    def test_uses_prek_when_only_prek_is_installed(
+        self, mocker: MockFixture, config: BaseConfig, tmp_path, monkeypatch
+    ):
+        _init_hook_answers(mocker)
+        mocker.patch(
+            "commitizen.project_info.available_hook_installers",
+            return_value=["prek"],
+        )
+        run = mocker.patch(
+            "commitizen.cmd.run",
+            return_value=cmd.Command("", "", b"", b"", 0),
+        )
+        monkeypatch.chdir(tmp_path)
+
+        commands.Init(config)()
+
+        run.assert_any_call(
+            ["prek", "install", "--hook-type", "commit-msg", "--hook-type", "pre-push"]
+        )
+
+    def test_asks_when_both_installers_are_present(
+        self, mocker: MockFixture, config: BaseConfig, tmp_path, monkeypatch
+    ):
+        mocker.patch(
+            "questionary.select",
+            side_effect=[
+                FakeQuestion("pyproject.toml"),
+                FakeQuestion("cz_conventional_commits"),
+                FakeQuestion("commitizen"),
+                FakeQuestion("semver"),
+                FakeQuestion("prek"),
+            ],
+        )
+        mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+        mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+        mocker.patch(
+            "questionary.checkbox",
+            return_value=FakeQuestion(["commit-msg"]),
+        )
+        mocker.patch(
+            "commitizen.project_info.available_hook_installers",
+            return_value=["pre-commit", "prek"],
+        )
+        run = mocker.patch(
+            "commitizen.cmd.run",
+            return_value=cmd.Command("", "", b"", b"", 0),
+        )
+        monkeypatch.chdir(tmp_path)
+
+        commands.Init(config)()
+
+        run.assert_any_call(["prek", "install", "--hook-type", "commit-msg"])
+
+    def test_uses_pre_commit_when_only_pre_commit_is_installed(
+        self, mocker: MockFixture, config: BaseConfig, tmp_path, monkeypatch
+    ):
+        _init_hook_answers(mocker)
+        mocker.patch(
+            "commitizen.project_info.available_hook_installers",
+            return_value=["pre-commit"],
+        )
+        run = mocker.patch(
+            "commitizen.cmd.run",
+            return_value=cmd.Command("", "", b"", b"", 0),
+        )
+        monkeypatch.chdir(tmp_path)
+
+        commands.Init(config)()
+
+        run.assert_any_call(
+            [
+                "pre-commit",
+                "install",
+                "--hook-type",
+                "commit-msg",
+                "--hook-type",
+                "pre-push",
+            ]
+        )
 
 
 class TestAskTagFormat:
