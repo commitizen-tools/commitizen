@@ -9,7 +9,7 @@ import yaml
 
 from commitizen import cmd, commands
 from commitizen.__version__ import __version__
-from commitizen.exceptions import NoAnswersError
+from commitizen.exceptions import InitFailedError, NoAnswersError
 
 if TYPE_CHECKING:
     from pytest_mock import MockFixture
@@ -356,6 +356,32 @@ class TestHookInstallerSelection:
                 "--hook-type",
                 "pre-push",
             ]
+        )
+
+    def test_fails_when_installer_disappears_between_prompt_and_install(
+        self, mocker: MockFixture, config: BaseConfig, tmp_path, monkeypatch
+    ):
+        _init_hook_answers(mocker)
+        # First call (during _ask_hook_types) finds pre-commit; second call
+        # (during _ask_hook_installer, after the config is written) finds none,
+        # e.g. the tool was uninstalled or the PATH changed in between.
+        mocker.patch(
+            "commitizen.project_info.available_hook_installers",
+            side_effect=[["pre-commit"], []],
+        )
+        run = mocker.patch(
+            "commitizen.cmd.run",
+            return_value=cmd.Command("", "", b"", b"", 0),
+        )
+        monkeypatch.chdir(tmp_path)
+
+        with pytest.raises(InitFailedError):
+            commands.Init(config)()
+
+        # Other subprocess calls (git describe, git config) may still happen,
+        # but no hook installer may have been invoked.
+        assert not any(
+            "--hook-type" in " ".join(call.args[0]) for call in run.call_args_list
         )
 
 
