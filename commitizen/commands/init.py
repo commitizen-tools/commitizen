@@ -109,13 +109,7 @@ class Init:
             tag_format = self._ask_tag_format(tag)  # confirm & text
             update_changelog_on_bump = self._ask_update_changelog_on_bump()  # confirm
             major_version_zero = self._ask_major_version_zero(version)  # confirm
-            hook_types: list[str] | None = questionary.checkbox(
-                "What types of pre-commit hook you want to install? (Leave blank if you don't want to install)",
-                choices=[
-                    questionary.Choice("commit-msg", checked=False),
-                    questionary.Choice("pre-push", checked=False),
-                ],
-            ).unsafe_ask()
+            hook_types = self._ask_hook_types()
         except KeyboardInterrupt:
             raise InitFailedError("Stopped by user")
 
@@ -159,6 +153,25 @@ class Init:
         out.write("\nYou can bump the version running:\n")
         out.info("\tcz bump\n")
         out.success("Configuration complete 🚀")
+
+    def _ask_hook_types(self) -> list[str] | None:
+        """Ask which pre-commit hook types to install.
+
+        Skip the question when neither ``pre-commit`` nor ``prek`` is
+        installed, so users who do not use those tools are not prompted.
+        """
+        if not project_info.available_hook_installers():
+            out.info("No pre-commit hook detected, skipping question")
+            return None
+
+        hook_types: list[str] | None = questionary.checkbox(
+            "What types of pre-commit hook you want to install? (Leave blank if you don't want to install)",
+            choices=[
+                questionary.Choice("commit-msg", checked=False),
+                questionary.Choice("pre-push", checked=False),
+            ],
+        ).unsafe_ask()
+        return hook_types
 
     def _ask_hook_installer(self) -> str:
         """Choose ``pre-commit`` or ``prek`` when installing Git hooks.

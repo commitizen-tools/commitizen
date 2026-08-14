@@ -9,7 +9,7 @@ import yaml
 
 from commitizen import cmd, commands
 from commitizen.__version__ import __version__
-from commitizen.exceptions import InitFailedError, NoAnswersError
+from commitizen.exceptions import NoAnswersError
 
 if TYPE_CHECKING:
     from pytest_mock import MockFixture
@@ -228,18 +228,34 @@ class TestPreCommitCases:
 
 
 class TestNoPreCommitInstalled:
-    @pytest.mark.usefixtures("default_choice")
-    def test_pre_commit_not_installed(
-        self, mocker: MockFixture, config: BaseConfig, tmp_path, monkeypatch
+    def test_skips_hook_question_when_neither_installer_is_installed(
+        self, mocker: MockFixture, config: BaseConfig, tmp_path, monkeypatch, capsys
     ):
-        # Assume neither `pre-commit` nor `prek` is installed
+        mocker.patch(
+            "questionary.select",
+            side_effect=[
+                FakeQuestion("pyproject.toml"),
+                FakeQuestion("cz_conventional_commits"),
+                FakeQuestion("commitizen"),
+                FakeQuestion("semver"),
+            ],
+        )
+        mocker.patch("questionary.confirm", return_value=FakeQuestion(True))
+        mocker.patch("questionary.text", return_value=FakeQuestion("$version"))
+        checkbox = mocker.patch("questionary.checkbox")
         mocker.patch(
             "commitizen.project_info.available_hook_installers",
             return_value=[],
         )
         monkeypatch.chdir(tmp_path)
-        with pytest.raises(InitFailedError):
-            commands.Init(config)()
+
+        commands.Init(config)()
+
+        checkbox.assert_not_called()
+        captured = capsys.readouterr()
+        assert "No pre-commit hook detected, skipping question" in captured.out
+        assert Path("pyproject.toml").read_text(encoding="utf-8") == expected_config
+        assert not Path(pre_commit_config_filename).exists()
 
 
 def _init_hook_answers(mocker: MockFixture) -> None:
