@@ -119,6 +119,7 @@ linters = [
     "types-PyYAML>=5.4.3",
     "types-termcolor>=0.1.1",
     "types-colorama>=0.4.15.20240311",
+    "types-jsonschema>=4.26.0",
     "prek>=0.2.28",
 ]
 
