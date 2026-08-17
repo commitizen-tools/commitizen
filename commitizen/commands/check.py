@@ -22,8 +22,8 @@ class CheckArgs(TypedDict, total=False):
     commit_msg: str
     rev_range: str
     allow_abort: bool
-    message_length_limit: int
-    allowed_prefixes: list[str]
+    message_length_limit: int | None
+    allowed_prefixes: list[str] | None
     message: str
     use_default_range: bool
 

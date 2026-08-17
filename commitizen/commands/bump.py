@@ -47,7 +47,7 @@ class BumpArgs(Settings, total=False):
     check_consistency: bool
     devrelease: int | None
     dry_run: bool
-    file_name: str
+    file_name: str | None
     files_only: bool | None
     version_files_only: bool | None
     get_next: bool  # TODO: maybe rename to `next_version_to_stdout`
