@@ -1,0 +1,5 @@
+feat: add feature
+
+Line1 is shorter than the limit but has newline
+Line2 is shorter than the limit but has newline
+Line3 is shorter than the limit but has newline
