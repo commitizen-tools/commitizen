@@ -1,3 +1,92 @@
+## Unreleased
+
+## v4.18.0 (2026-08-19)
+
+### Feat
+
+- **commit**: add a tag(--body-length-limit) and a function for command commit (#1849)
+
+## v4.17.1 (2026-08-17)
+
+### Fix
+
+- **init**: skip hook question when no installer is present
+- **init**: use prek when installing hooks if pre-commit is missing
+
+## v4.17.0 (2026-07-29)
+
+### Feat
+
+- **cmd/version**: add support for `--next USE_GIT_COMMITS`
+
+### Fix
+
+- robuster agents
+- **version**: remove next from exclusive group
+- **bump**: use correct type for calling changelog
+
+## v4.16.5 (2026-07-16)
+
+### Fix
+
+- exclude star-history API from lychee link checker (#2029)
+
+## v4.16.4 (2026-06-22)
+
+### Fix
+
+- **providers/cargo**: don't crash on workspace member with fixed version
+
+## v4.16.3 (2026-05-30)
+
+### Fix
+
+- **check**: expand env vars in --rev-range (#2005)
+
+## v4.16.2 (2026-05-15)
+
+### Fix
+
+- **tags**: widen prerelease and devrelease tag regexes for SemVer2 (#1972)
+
+## v4.16.1 (2026-05-15)
+
+### Fix
+
+- **cz_customize**: derive bump_map_major_version_zero from bump_map (#1977)
+
+## v4.16.0 (2026-05-12)
+
+### Feat
+
+- **hooks**: support interactive hooks scripts
+
+## v4.15.1 (2026-05-06)
+
+### Fix
+
+- **security**: prevent command injection via shell=True (CWE-78) (#1941)
+
+## v4.15.0 (2026-05-03)
+
+### Feat
+
+- **version**: add MANUAL_VERSION, --next and --patch to version command (#1724)
+
+## v4.14.0 (2026-05-03)
+
+### Feat
+
+- add `--allow-no-commit` to `changelog` command (#1868)
+
+## v4.13.10 (2026-04-11)
+
+### Fix
+
+- **ci**: use commitizen bot to push tags and commits
+- **init**: set semver2 as default if not python
+- change deprecated value and bump versions
+
 ## v4.13.9 (2026-02-25)
 
 ### Fix

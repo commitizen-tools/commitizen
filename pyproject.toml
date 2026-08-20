@@ -146,6 +146,8 @@ version_files = [
 version_provider = "uv"
 version_scheme = "pep440"
 annotated_tag = true
+update_changelog_on_bump = true
+changelog_incremental = true
 
 [tool.uv.build-backend]
 module-name = "commitizen"
