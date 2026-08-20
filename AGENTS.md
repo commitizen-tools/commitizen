@@ -24,6 +24,21 @@ Follow these instructions in addition to any higher-level system or tool rules.
 - **Commit messages** must follow [Conventional Commits](https://www.conventionalcommits.org/) (enforced by commitizen itself).
 - **Pull requests** must follow the [Pull Request Guidelines](docs/contributing/pull_request.md) and the template in `.github/pull_request_template.md`.
 
+### Commit and Pull Request Types
+
+Choose the Conventional Commit type based on the change's release impact, not
+the files or subsystem it touches. The type controls automated version bumps:
+
+- `feat` triggers a minor release.
+- `fix`, `perf`, and `refactor` trigger a patch release.
+- `ci`, `docs`, `test`, `build`, and `chore` do not trigger a release.
+- A breaking-change marker triggers a major release.
+
+Use the same rule for pull request titles because squash merges use the title as
+the resulting commit message. In particular, use `ci:` for changes limited to
+workflows or release automation. A scope does not change release impact:
+`fix(ci): ...` still triggers a patch release.
+
 ## Setup and Validation
 
 > Full contributor guidelines (prerequisites, workflow, PR process): [`docs/contributing/contributing.md`](docs/contributing/contributing.md).
