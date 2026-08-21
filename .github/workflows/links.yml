@@ -28,14 +28,29 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+            const reportTitle = 'Broken Links Report';
+            const openIssues = await github.paginate(
+              github.rest.issues.listForRepo,
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                per_page: 100
+              }
+            );
 
-            // Read the markdown file
-            // Ensure the path is correct relative to the workspace root
+            if (openIssues.some(issue =>
+              !issue.pull_request && issue.title === reportTitle
+            )) {
+              core.info(`An open "${reportTitle}" issue already exists; skipping.`);
+              return;
+            }
+
             const reportBody = fs.readFileSync('./lychee/out.md', 'utf8');
 
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: 'Broken Links Report',
+              title: reportTitle,
               body: reportBody
             });
