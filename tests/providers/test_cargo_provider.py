@@ -598,6 +598,7 @@ checksum = "123abc"
     assert file.read_text() == dedent(expected_workspace_toml)
     assert lock_file.read_text() == dedent(expected_lock_content)
 
+
 def test_cargo_provider_inheriting_workspace_member_with_version_dict_in_toml(
     config: BaseConfig,
     chdir: Path,
@@ -671,6 +672,7 @@ checksum = "123abc"
     provider.set_version("42.1")
     assert file.read_text() == dedent(expected_workspace_toml)
     assert lock_file.read_text() == dedent(expected_lock_content)
+
 
 def test_cargo_provider_inheriting_workspace_member_with_version_and_package_in_toml(
     config: BaseConfig,
