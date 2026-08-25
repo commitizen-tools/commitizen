@@ -1,0 +1,5 @@
+feat: add feature
+
+Line1 is shorter than the limit but has paragraph break
+
+Line2 stays in a separate paragraph

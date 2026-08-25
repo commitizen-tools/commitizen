@@ -120,9 +120,12 @@ class Commit:
         if len(lines) < 3:
             return message
 
-        # First line is subject, second is blank line, rest are body lines
+        # Preserve intentional blank (or whitespace-only) lines while wrapping
+        # non-empty body lines. textwrap.wrap() returns [] for such lines, so
+        # they must be special-cased to avoid being silently dropped.
         wrapped_body_lines = chain.from_iterable(
-            textwrap.wrap(line, width=body_length_limit) for line in lines[2:]
+            textwrap.wrap(line, width=body_length_limit) if line.strip() else [line]
+            for line in lines[2:]
         )
         return "\n".join(chain(lines[:2], wrapped_body_lines))
 
