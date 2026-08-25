@@ -36,6 +36,7 @@ class ValidationResult(NamedTuple):
 
 
 class BaseCommitizen(metaclass=ABCMeta):
+    bump_commit_filter_pattern: str | None = None
     bump_pattern: str | None = None
     bump_map: dict[str, str] | None = None
     bump_map_major_version_zero: dict[str, str] | None = None

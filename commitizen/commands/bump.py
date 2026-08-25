@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, cast
 
 import questionary
 
-from commitizen import bump, factory, git, hooks, out
+from commitizen import bump, defaults, factory, git, hooks, out
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.commands.changelog import Changelog
 from commitizen.defaults import Settings
@@ -158,7 +158,18 @@ class Bump:
             raise NoPatternMapError(
                 f"'{self.config.settings['name']}' rule does not support bump"
             )
-        return bump.find_increment(commits, regex=bump_pattern, increments_map=bump_map)
+        default_filter_pattern = defaults.DEFAULT_SETTINGS["bump_commit_filter_pattern"]
+        bump_commit_filter_pattern = self.cz.bump_commit_filter_pattern
+        if bump_commit_filter_pattern in (None, default_filter_pattern):
+            bump_commit_filter_pattern = self.config.settings.get(
+                "bump_commit_filter_pattern"
+            )
+        if bump_commit_filter_pattern is None:
+            bump_commit_filter_pattern = default_filter_pattern
+        filtered_commits = bump.filter_commits(commits, bump_commit_filter_pattern)
+        return bump.find_increment(
+            filtered_commits, regex=bump_pattern, increments_map=bump_map
+        )
 
     def _validate_arguments(self, current_version: VersionProtocol) -> None:
         errors: list[str] = []

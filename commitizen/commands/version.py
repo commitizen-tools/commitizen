@@ -4,7 +4,7 @@ from typing import TypedDict
 
 from packaging.version import InvalidVersion
 
-from commitizen import bump, factory, git, out
+from commitizen import bump, defaults, factory, git, out
 from commitizen.__version__ import __version__
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
@@ -180,8 +180,17 @@ class Version:
             raise NoPatternMapError(
                 f"'{self.config.settings['name']}' rule does not support bump"
             )
+        default_filter_pattern = defaults.DEFAULT_SETTINGS["bump_commit_filter_pattern"]
+        bump_commit_filter_pattern = self.cz.bump_commit_filter_pattern
+        if bump_commit_filter_pattern in (None, default_filter_pattern):
+            bump_commit_filter_pattern = self.config.settings.get(
+                "bump_commit_filter_pattern"
+            )
+        if bump_commit_filter_pattern is None:
+            bump_commit_filter_pattern = default_filter_pattern
+        filtered_commits = bump.filter_commits(commits, bump_commit_filter_pattern)
         increment = bump.find_increment(
-            commits, regex=bump_pattern, increments_map=bump_map
+            filtered_commits, regex=bump_pattern, increments_map=bump_map
         )
 
         # TODO: Consider adding all the parameters `.bump` supports:
