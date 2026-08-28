@@ -33,6 +33,25 @@ Style for the prompts.
 
 It will merge this value with default style. See [Styling your prompts with your favorite colors](https://github.com/tmbo/questionary#additional-features) for more details.
 
+## `strict_config`
+
+Reject unknown keys in the `[tool.commitizen]` (or `commitizen`) section of the configuration file.
+
+- Type: `bool`
+- Default: `false`
+
+When enabled, any unknown top-level key makes Commitizen fail with an `InvalidConfigurationError` listing the offending keys. This is useful to catch typos such as `bump_mesage` instead of silently ignoring them.
+
+Keys nested under `customize` and `extras` are plugin-owned and are not checked.
+
+**Example**
+
+```toml title="pyproject.toml"
+[tool.commitizen]
+name = "cz_conventional_commits"
+strict_config = true
+```
+
 ## `customize`
 
 Custom rules for committing and bumping.

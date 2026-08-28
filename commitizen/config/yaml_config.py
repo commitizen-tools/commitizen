@@ -51,7 +51,9 @@ class YAMLConfig(BaseConfig):
             raise InvalidConfigurationError(f"Failed to parse {self.path}: {e}")
 
         try:
-            self.settings.update(doc["commitizen"])
+            commitizen_section = doc["commitizen"]
+            self.settings.update(commitizen_section)
+            self._check_unknown_keys(commitizen_section.keys())
         except (KeyError, TypeError):
             pass
 

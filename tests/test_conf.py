@@ -109,6 +109,7 @@ _settings: dict[str, Any] = {
     "prerelease_offset": 0,
     "encoding": "utf-8",
     "always_signoff": False,
+    "strict_config": False,
     "template": None,
     "extras": {},
     "breaking_change_exclamation_in_title": False,
@@ -150,6 +151,7 @@ _new_settings: dict[str, Any] = {
     "prerelease_offset": 0,
     "encoding": "utf-8",
     "always_signoff": False,
+    "strict_config": False,
     "template": None,
     "extras": {},
     "breaking_change_exclamation_in_title": False,
@@ -497,3 +499,61 @@ class TestYamlConfig:
 
         with pytest.raises(InvalidConfigurationError, match=re.escape(config_file)):
             YAMLConfig(data=existing_content, path=path)
+
+
+class TestStrictConfig:
+    @pytest.mark.parametrize(
+        ("config_content", "config_path"),
+        [
+            pytest.param(
+                '[tool.commitizen]\nname = "cz_conventional_commits"\n'
+                'strict_config = true\nbump_mesage = "typo"\n',
+                "pyproject.toml",
+                id="toml",
+            ),
+            pytest.param(
+                '{"commitizen": {"name": "cz_conventional_commits", '
+                '"strict_config": true, "bump_mesage": "typo"}}',
+                ".cz.json",
+                id="json",
+            ),
+            pytest.param(
+                "commitizen:\n  name: cz_conventional_commits\n"
+                "  strict_config: true\n  bump_mesage: typo\n",
+                ".cz.yaml",
+                id="yaml",
+            ),
+        ],
+    )
+    def test_strict_config_rejects_unknown_keys(
+        self, tmp_path, config_content, config_path
+    ):
+        path = tmp_path / config_path
+        path.write_text(config_content, encoding="utf-8")
+
+        with pytest.raises(InvalidConfigurationError, match="bump_mesage"):
+            config.create_config(data=config_content, path=path)
+
+    def test_unknown_keys_allowed_when_strict_config_disabled(self, tmp_path):
+        path = tmp_path / "pyproject.toml"
+        path.write_text(
+            '[tool.commitizen]\nname = "cz_conventional_commits"\nunknown_key = 1\n',
+            encoding="utf-8",
+        )
+
+        conf = config.create_config(data=path.read_text(), path=path)
+
+        assert conf.settings["name"] == "cz_conventional_commits"
+
+    def test_known_keys_accepted_when_strict_config_enabled(self, tmp_path):
+        path = tmp_path / "pyproject.toml"
+        path.write_text(
+            '[tool.commitizen]\nname = "cz_conventional_commits"\n'
+            'strict_config = true\nannotated_tag_message = "bump: $current_version"\n',
+            encoding="utf-8",
+        )
+
+        conf = config.create_config(data=path.read_text(), path=path)
+
+        assert conf.settings["strict_config"] is True
+        assert conf.settings["annotated_tag_message"] == "bump: $current_version"

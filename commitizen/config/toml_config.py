@@ -10,7 +10,9 @@ from .base_config import BaseConfig
 
 if TYPE_CHECKING:
     import sys
+    from collections.abc import Mapping
     from pathlib import Path
+    from typing import Any
 
     # Self is Python 3.11+ but backported in typing-extensions
     if sys.version_info < (3, 11):
@@ -65,6 +67,8 @@ class TomlConfig(BaseConfig):
             raise InvalidConfigurationError(f"Failed to parse {self.path}: {e}")
 
         try:
-            self.settings.update(doc["tool"]["commitizen"])  # type: ignore[index,typeddict-item] # TODO: fix this
+            commitizen_section: Mapping[str, Any] = doc["tool"]["commitizen"]  # type: ignore[index, assignment]
+            self.settings.update(commitizen_section)  # type: ignore[typeddict-item] # TODO: fix this
+            self._check_unknown_keys(commitizen_section.keys())
         except exceptions.NonExistentKey:
             pass

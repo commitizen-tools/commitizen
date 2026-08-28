@@ -237,6 +237,7 @@ Key configuration categories include:
 - **Changelog**: `changelog_file`, `changelog_format`, `changelog_incremental`, `update_changelog_on_bump`
 - **Bumping**: `bump_message`, `major_version_zero`, `prerelease_offset`, `pre_bump_hooks`, `post_bump_hooks`
 - **Commit Validation**: `allowed_prefixes`, `message_length_limit`, `allow_abort`, `retry_after_failure`
+- **Configuration Validation**: `strict_config` - reject unknown keys in the configuration file
 - **Customization**: `customize`, `style`, `use_shortcuts`, `template`, `extras`
 
 ## Customization
