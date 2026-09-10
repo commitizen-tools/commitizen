@@ -34,7 +34,20 @@ def find_increment(
     increment: str | None = None
 
     for commit in commits:
-        for message in commit.message.split("\n"):
+        # We only consider:
+        #   * the commit title (the first line, where the commit type lives), and
+        #   * lines in the body that are a ``BREAKING CHANGE:`` /
+        #     ``BREAKING-CHANGE:`` footer (per the Conventional Commits spec).
+        # Scanning every body line for type-prefixed text matches generated
+        # commit bodies (e.g. Dependabot quoting an upstream changelog with a
+        # ``fix:`` line) and produces false-positive bumps -- see #1772.
+        candidate_lines = [commit.title]
+        for body_line in commit.body.split("\n"):
+            stripped = body_line.lstrip()
+            if stripped.startswith(("BREAKING CHANGE:", "BREAKING-CHANGE:")):
+                candidate_lines.append(stripped)
+
+        for message in candidate_lines:
             result = select_pattern.search(message)
 
             if result:
