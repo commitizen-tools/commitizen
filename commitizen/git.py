@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import os
+import re
 from enum import Enum
 from functools import lru_cache
+from logging import getLogger
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import TYPE_CHECKING
@@ -12,6 +14,15 @@ from commitizen.exceptions import GitCommandError
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
+
+
+logger = getLogger("commitizen")
+
+
+# Match common ANSI control sequences (CSI ``\x1b[...letter`` and SGR resets)
+# so wrappers that wrap git's output in colour codes don't break the
+# ``true`` / ``false`` parse in :func:`is_git_project` (#1497).
+_ANSI_ESCAPE = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
 
 
 class EOLType(Enum):
@@ -312,8 +323,32 @@ def is_staging_clean() -> bool:
 
 
 def is_git_project() -> bool:
+    """Check whether we're inside a git work tree.
+
+    Trusts ``git rev-parse``'s exit code as the primary signal: if the command
+    exits non-zero, we're not in a git context. The textual output (``true`` /
+    ``false``) is then used to distinguish a work tree from a bare-repo
+    interior. ANSI colour codes (which some shell wrappers inject) are
+    stripped before the exact-match check, so legitimate-looking strings like
+    ``untrue`` / ``nottrue`` are still rejected (#1497).
+    """
     c = cmd.run(["git", "rev-parse", "--is-inside-work-tree"])
-    return c.out.strip() == "true"
+    if c.return_code != 0:
+        logger.debug(
+            "is_git_project: git rev-parse failed (rc=%d) out=%r err=%r",
+            c.return_code,
+            c.out,
+            c.err,
+        )
+        return False
+    cleaned = _ANSI_ESCAPE.sub("", c.out).strip().lower()
+    inside_work_tree = cleaned == "true"
+    if not inside_work_tree:
+        logger.debug(
+            "is_git_project: git rev-parse said not a work tree: out=%r",
+            c.out,
+        )
+    return inside_work_tree
 
 
 def get_core_editor() -> str | None:
