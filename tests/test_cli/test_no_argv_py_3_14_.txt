@@ -1,4 +1,5 @@
-usage: cz [-h] [--config CONFIG] [--debug] [-n NAME] [-nr NO_RAISE]
+usage: cz [-h] [--config CONFIG] [--debug] [-n NAME] [-nr NO_RAISE] [-v]
+          [--report]
           {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version} ...
 
 Commitizen is a powerful release management tool that helps teams maintain consistent and meaningful commit messages while automating version management.
@@ -15,6 +16,8 @@ options:
                         e.g., cz -nr 1,2,3 bump. See codes at
                         https://commitizen-
                         tools.github.io/commitizen/exit_codes/
+  -v, --version         Show the version of the installed commitizen
+  --report              Show system information for reporting bugs
 
 commands:
   {init,commit,c,ls,example,info,schema,bump,changelog,ch,check,version}

@@ -227,6 +227,8 @@ Commitizen provides a comprehensive CLI with various commands. Here's the comple
 
 | Command | Description | Alias |
 |---------|-------------|-------|
+| `cz --version` | Show installed Commitizen version | `cz -v` |
+| `cz --report` | Show system information for bug reports | - |
 | `cz init` | Initialize Commitizen configuration | - |
 | `cz commit` | Create a new commit | `cz c` |
 | `cz bump` | Bump version and update changelog | - |
