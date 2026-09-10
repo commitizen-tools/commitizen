@@ -34,7 +34,11 @@ Here is a step-by-step example using two libraries, `library-b` and `library-z`:
     version = "0.0.0"
     tag_format = "${version}-library-b" # the component name can be a prefix or suffix with or without a separator
     ignored_tag_formats = ["${version}-library-*"] # Avoid noise from other tags
+    bump_commit_filter_pattern = "^(feat|fix)\\(library-b\\)(!)?:"
     update_changelog_on_bump = true
+
+    [tool.commitizen.customize]
+    changelog_pattern = "^(feat|fix)\\(library-b\\)(!)?:"
     ```
 
     ```toml
@@ -44,7 +48,11 @@ Here is a step-by-step example using two libraries, `library-b` and `library-z`:
     version = "0.0.0"
     tag_format = "${version}-library-z"
     ignored_tag_formats = ["${version}-library-*"] # Avoid noise from other tags
+    bump_commit_filter_pattern = "^(feat|fix)\\(library-z\\)(!)?:"
     update_changelog_on_bump = true
+
+    [tool.commitizen.customize]
+    changelog_pattern = "^(feat|fix)\\(library-z\\)(!)?:"
     ```
 
 3. **Bump each component independently**
@@ -55,7 +63,7 @@ Here is a step-by-step example using two libraries, `library-b` and `library-z`:
     ```
 
 
-## Changelog per component
+## Bump and changelog per component
 
 To filter the correct commits for each component, you'll need to define a strategy.
 
@@ -70,17 +78,18 @@ For example:
 
 ### Example with scope in conventional commits
 
-In this example, we want `library-b`'s changelog to only include commits that use the `library-b` scope.
-To achieve this, we configure Commitizen to match only commit messages with that scope.
+In this example, we want `library-b`'s bump calculation and changelog to only
+include commits that use the `library-b` scope. These are filtered separately:
 
-Here is an example configuration for `library-b`:
+- `bump_commit_filter_pattern` selects the commits used to calculate the version
+  bump.
+- `changelog_pattern` selects the commits included in the changelog.
 
-```toml
-[tool.commitizen.customize]
-changelog_pattern = "^(feat|fix)\\(library-b\\)(!)?:" # the type pattern can be a wildcard or any types you wish to include
-```
+The `library-b` configuration in step 2 sets both patterns to ensure that the
+bump calculation and changelog include the same component-specific commits.
 
-With this configuration, a commit message like the following would be included in `library-b`'s changelog:
+With these patterns, a commit message like the following would affect
+`library-b`'s bump calculation and be included in its changelog:
 
 ```text
 fix(library-b): Some awesome message

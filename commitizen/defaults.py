@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 
 
 class CzSettings(TypedDict, total=False):
+    bump_commit_filter_pattern: str
     bump_pattern: str
     bump_map: OrderedDict[str, str]
     bump_map_major_version_zero: OrderedDict[str, str]
@@ -34,6 +35,7 @@ class Settings(TypedDict, total=False):
     allowed_prefixes: list[str]
     always_signoff: bool
     annotated_tag: bool
+    bump_commit_filter_pattern: str
     bump_message: str | None
     change_type_map: dict[str, str]
     changelog_file: str
@@ -88,6 +90,7 @@ DEFAULT_SETTINGS: Settings = {
     "tag_format": "$version",  # example v$version
     "legacy_tag_formats": [],
     "ignored_tag_formats": [],
+    "bump_commit_filter_pattern": r".*",
     "bump_message": None,  # bumped v$current_version to $new_version
     "retry_after_failure": False,
     "allow_abort": False,

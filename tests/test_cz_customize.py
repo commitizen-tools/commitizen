@@ -562,6 +562,14 @@ def test_questions_unicode(config_with_unicode):
     assert list(questions) == expected_questions
 
 
+def test_bump_commit_filter_pattern_sets_customize_attribute(config):
+    config.settings["customize"]["bump_commit_filter_pattern"] = r"^fix\(foo\):"
+
+    cz = CustomizeCommitsCz(config)
+
+    assert cz.bump_commit_filter_pattern == r"^fix\(foo\):"
+
+
 def test_answer(config):
     cz = CustomizeCommitsCz(config)
     answers = {

@@ -8,6 +8,7 @@ from commitizen import commands
 from commitizen.__version__ import __version__
 from commitizen.config.base_config import BaseConfig
 from commitizen.cz.base import BaseCommitizen
+from commitizen.cz.conventional_commits import ConventionalCommitsCz
 from commitizen.exceptions import (
     NoCommitsFoundError,
     NoPatternMapError,
@@ -378,6 +379,26 @@ def test_version_next_use_git_commits_major_version_zero(
 
 
 @pytest.mark.usefixtures("tmp_git_project")
+def test_version_next_use_git_commits_respects_bump_commit_filter_pattern(
+    config: BaseConfig, capsys: pytest.CaptureFixture, util: UtilFixture
+):
+    config.settings["version"] = "1.0.0"
+    config.settings["bump_commit_filter_pattern"] = r"^fix\(library-b\):"
+    util.create_file_and_commit("feat: initial commit")
+    util.create_tag("1.0.0")
+    util.create_file_and_commit("feat(library-a): new feature")
+    util.create_file_and_commit("fix(library-b): patch release issue")
+
+    commands.Version(
+        config,
+        {"project": True, "next": "USE_GIT_COMMITS"},
+    )()
+
+    captured = capsys.readouterr()
+    assert captured.out == "1.0.1\n"
+
+
+@pytest.mark.usefixtures("tmp_git_project")
 def test_version_next_use_git_commits_prerelease_without_commits(
     config: BaseConfig, capsys: pytest.CaptureFixture, util: UtilFixture
 ):
@@ -393,6 +414,34 @@ def test_version_next_use_git_commits_prerelease_without_commits(
 
     captured = capsys.readouterr()
     assert captured.out == "1.0.0\n"
+
+
+@pytest.mark.usefixtures("tmp_git_project")
+def test_version_next_use_git_commits_defaults_filter_when_not_configured(
+    config: BaseConfig,
+    capsys: pytest.CaptureFixture,
+    util: UtilFixture,
+    mocker: MockerFixture,
+):
+    config.settings["version"] = "1.0.0"
+    config.settings["bump_commit_filter_pattern"] = None  # type: ignore[typeddict-item]
+    conventional_commits_cz = ConventionalCommitsCz(config)
+    conventional_commits_cz.bump_commit_filter_pattern = None  # type: ignore[assignment]
+    mocker.patch(
+        "commitizen.factory.committer_factory",
+        return_value=conventional_commits_cz,
+    )
+    util.create_file_and_commit("feat: initial commit")
+    util.create_tag("1.0.0")
+    util.create_file_and_commit("fix: a bug")
+
+    commands.Version(
+        config,
+        {"project": True, "next": "USE_GIT_COMMITS"},
+    )()
+
+    captured = capsys.readouterr()
+    assert captured.out == "1.0.1\n"
 
 
 @pytest.mark.usefixtures("tmp_git_project")

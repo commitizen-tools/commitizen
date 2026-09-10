@@ -62,6 +62,17 @@ def find_increment(
     return cast("Increment", increment)
 
 
+def filter_commits(commits: list[GitCommit], pattern: str) -> list[GitCommit]:
+    """Filter commits before applying bump-pattern matching.
+
+    This keeps the existing line-by-line ``bump_pattern`` behavior intact while
+    allowing repository-specific configuration to exclude unrelated commits from
+    the bump calculation entirely.
+    """
+    select_pattern = re.compile(pattern)
+    return [commit for commit in commits if select_pattern.match(commit.message)]
+
+
 def update_version_in_files(
     current_version: str,
     new_version: str,
