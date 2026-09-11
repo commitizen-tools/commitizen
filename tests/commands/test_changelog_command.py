@@ -1693,3 +1693,173 @@ def test_changelog_template_incremental_variable(
     util.run_cli("changelog", "--file-name", target, "--incremental")
     out = Path(target).read_text(encoding="utf-8")
     file_regression.check(out, extension=".incremental.md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2026-09-02")
+def test_changelog_previous_release_skips_unreachable_tags(
+    config_path: Path,
+    changelog_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    util: UtilFixture,
+):
+    """Regression test for #2083.
+
+    ``cz changelog`` resolves the previous-release tag by walking the
+    creatordate-sorted tag list. A parallel maintenance branch's tag must
+    be skipped if it is not an ancestor of HEAD — otherwise the rendered
+    range pulls in commits from a branch that is not part of the current
+    release line.
+    """
+    # Arrange — bare tag format, then a parallel v4 line and a main line.
+    with config_path.open("a", encoding="utf-8") as f:
+        f.write('tag_format = "$version"\n')
+
+    # The fixture resets GIT_COMMITTER_DATE on every ``tick``/
+    # ``patch_env``, so ``util.create_tag`` would clobber the date set
+    # here. Drive ``git tag -a`` directly via ``cmd.run`` to keep the
+    # creatordate stable, then restore the fixture-managed env so
+    # subsequent ``util.tick`` calls keep advancing frozen time as
+    # expected.
+    from commitizen import cmd as _cmd
+
+    def _tag_at(tag, iso_date):
+        """Create an annotated tag pinned to ``iso_date`` regardless of the
+        fixture's frozen time, then restore the fixture env.
+        """
+        monkeypatch.setenv("GIT_COMMITTER_DATE", iso_date)
+        result = _cmd.run(["git", "tag", "-a", tag, "-m", tag])
+        assert result.return_code == 0, result.err
+        util.patch_env()
+
+    # Main line: 5.3.1, then branch off to v4, then 5.4.0.
+    util.create_file_and_commit("feat: main feature a")
+    _tag_at("5.3.1", "2026-06-29T00:00:00")
+
+    util.create_branch("v4")
+    util.switch_branch("v4")
+    util.create_file_and_commit("feat: v4 feature a")
+
+    util.switch_branch("master")
+    util.create_file_and_commit("feat: main feature b")
+    _tag_at("5.4.0", "2026-09-02T00:00:00")
+
+    # v4 line ships 4.12.0 between 5.3.1 and 5.4.0 in time. 4.12.0's tag
+    # is NOT an ancestor of master — it sits on the v4 branch HEAD which
+    # is never merged back.
+    util.switch_branch("v4")
+    util.create_file_and_commit("feat: v4 feature b")
+    _tag_at("4.12.0", "2026-07-14T00:00:00")
+    util.switch_branch("master")
+
+    # Spy on git.get_tags so the test fails when the production call site
+    # drops ``reachable_only=True``. Without the spy, reverting the
+    # production fix would still pass because the test only checks
+    # render output.
+    from commitizen import git as cz_git
+
+    get_tags_calls: list[dict] = []
+
+    real_get_tags = cz_git.get_tags
+
+    def _tracked_get_tags(*args, **kwargs):
+        """Wrap the real ``git.get_tags`` to record every call.
+
+        The wrap must call through the imported ``real_get_tags`` rather
+        than the module attribute, which the test itself patches and so
+        would recurse forever.
+        """
+        get_tags_calls.append({"args": args, "kwargs": kwargs})
+        return real_get_tags(*args, **kwargs)
+
+    monkeypatch.setattr("commitizen.commands.changelog.git.get_tags", _tracked_get_tags)
+
+    # Act — single-version form goes through ``get_oldest_and_newest_rev``
+    # because ``rev_range`` carries the version string.
+    util.run_cli("changelog", "5.4.0", "--file-name", str(changelog_path))
+    out = changelog_path.read_text(encoding="utf-8")
+
+    # Assert — the production call site must ask git for reachable tags
+    # only. If a future change drops ``reachable_only=True`` from the
+    # call site the spy flags it.
+    assert get_tags_calls, "production call site never invoked git.get_tags"
+    assert all(
+        call["kwargs"].get("reachable_only") is True for call in get_tags_calls
+    ), f"git.get_tags called without reachable_only=True: {get_tags_calls!r}"
+
+    # And the rendered output must contain the 5.4.0 entry whose body
+    # only carries main-line commits; the v4-line commits must not leak
+    # in via the wrong previous-release tag (which would otherwise
+    # include the 4.12.0 commit on the v4 branch once the date-sorted
+    # tag list resolves to 4.12.0 as the previous tag).
+    assert "## 5.4.0" in out
+    assert "main feature b" in out
+    assert "v4 feature a" not in out
+    assert "v4 feature b" not in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2026-09-02")
+def test_changelog_explicit_rev_range_when_head_on_unrelated_branch(
+    config_path: Path,
+    changelog_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    util: UtilFixture,
+):
+    """Explicit ``cz changelog X..Y`` must resolve tags by name even when
+    HEAD is on a branch that does not have those tags as ancestors.
+
+    The reachability filter from #2083 only applies to implicit
+    previous-release lookup. An explicit range the user typed should
+    not be rejected just because the resolved tags are not reachable
+    from HEAD.
+    """
+    with config_path.open("a", encoding="utf-8") as f:
+        f.write('tag_format = "$version"\n')
+
+    from commitizen import cmd as _cmd
+
+    def _tag_at(tag, iso_date):
+        """Create an annotated tag pinned to ``iso_date``."""
+        monkeypatch.setenv("GIT_COMMITTER_DATE", iso_date)
+        result = _cmd.run(["git", "tag", "-a", tag, "-m", tag])
+        assert result.return_code == 0, result.err
+        util.patch_env()
+
+    # Main line: 4.11.0 then 4.12.0.
+    util.create_file_and_commit("feat: main feature a")
+    _tag_at("4.11.0", "2026-08-01T00:00:00")
+    util.create_file_and_commit("feat: main feature b")
+    _tag_at("4.12.0", "2026-09-01T00:00:00")
+
+    # Create an orphan branch (git checkout --orphan) which has no
+    # relationship to the master branch. HEAD is now on a completely
+    # separate history line. Neither 4.11.0 nor 4.12.0 is reachable.
+    _cmd.run(["git", "checkout", "--orphan", "unrelated"])
+    _cmd.run(["git", "rm", "-rfq", "."])
+    util.create_file_and_commit("feat: unrelated change")
+    import subprocess
+
+    subprocess.run(["git", "clean", "-fd"], check=True, capture_output=True)
+
+    # Sanity-check: confirm tags are NOT reachable.
+    reachable = (
+        subprocess.check_output(
+            ["git", "tag", "--format=%(refname:strip=2)", "--merged"], cwd="."
+        )
+        .decode()
+        .split()
+    )
+    assert reachable == [], f"setup error: tags are reachable from HEAD: {reachable}"
+
+    # Act — explicit rev range. The user typed both endpoints, so the
+    # lookup must accept them by name even though they are not
+    # reachable from HEAD.
+    util.run_cli("changelog", "4.11.0..4.12.0", "--file-name", str(changelog_path))
+    out = changelog_path.read_text(encoding="utf-8")
+
+    # Assert — the main-line commit between 4.11.0 and 4.12.0 lands in
+    # the rendered output. The unresolved error from the broad fix would
+    # be ``NoCommitsFoundError``.
+    assert "## 4.12.0" in out
+    assert "main feature b" in out
