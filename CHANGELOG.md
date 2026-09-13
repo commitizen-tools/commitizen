@@ -1,4 +1,8 @@
-## Unreleased
+## v4.18.1 (2026-09-13)
+
+### Fix
+
+- preserve blank lines with body length limit (#2080)
 
 ## v4.18.0 (2026-08-19)
 
