@@ -1,6 +1,7 @@
 usage: cz changelog [-h] [--dry-run] [--file-name FILE_NAME]
-                    [--unreleased-version UNRELEASED_VERSION] [--incremental]
-                    [--start-rev START_REV] [--merge-prerelease]
+                    [--unreleased-version UNRELEASED_VERSION]
+                    [--incremental | --no-incremental] [--start-rev START_REV]
+                    [--merge-prerelease]
                     [--version-scheme {pep440,semver,semver2}]
                     [--export-template EXPORT_TEMPLATE] [--template TEMPLATE]
                     [--extra EXTRA] [--tag-format TAG_FORMAT]
@@ -20,8 +21,12 @@ options:
   --unreleased-version UNRELEASED_VERSION
                         Set the value for the new version (use the tag value),
                         instead of using unreleased versions.
-  --incremental         Generate changelog from the last created version,
+  --incremental, --no-incremental
+                        Generate changelog from the last created version,
                         useful if the changelog has been manually modified.
+                        Use `--no-incremental` to override a
+                        `changelog_incremental` setting enabled in the
+                        configuration.
   --start-rev START_REV
                         Start rev of the changelog. If not set, it will
                         generate changelog from the beginning.

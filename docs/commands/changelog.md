@@ -115,6 +115,16 @@ This flag can be set in the configuration file with the key `changelog_increment
 changelog_incremental = true
 ```
 
+Pass `--no-incremental` on the command line to disable incremental generation
+for a single run, even when `changelog_incremental = true` is set in the
+configuration. This is useful, for example, when generating a one-off
+changelog for a specific `rev_range`, since `--incremental` cannot be combined
+with a `rev_range`.
+
+```bash
+cz changelog --no-incremental "v1.0.0..v1.1.0"
+```
+
 ### `--start-rev`
 
 Start from a given git rev to generate the changelog. Commits before that rev will not be considered. This is especially useful for long-running projects adopting conventional commits, where old commit messages might fail to be parsed for changelog generation.
