@@ -58,7 +58,7 @@ jobs:
         env:
           NEW_VERSION: ${{ steps.bump-version.outputs.new_version }}
         run: |
-          cz changelog --dry-run "${NEW_VERSION}" > .changelog.md
+          cz changelog --no-incremental --dry-run "${NEW_VERSION}" > .changelog.md
       - name: Release
         if: steps.bump-version.outputs.bumped == 'true'
         env:
