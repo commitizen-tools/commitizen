@@ -32,7 +32,7 @@ class ChangelogArgs(TypedDict, total=False):
     current_version: str
     dry_run: bool
     file_name: str | None
-    incremental: bool
+    incremental: bool | None
     merge_prerelease: bool
     rev_range: str
     start_rev: str
@@ -78,9 +78,16 @@ class Changelog:
 
         self.changelog_format = get_changelog_format(self.config, self.file_name)
 
-        self.incremental = bool(
-            arguments.get("incremental")
-            or self.config.settings.get("changelog_incremental")
+        # `--incremental`/`--no-incremental` on the CLI always takes precedence over
+        # the `changelog_incremental` setting. When neither flag is passed, the
+        # argument is `None` and we fall back to the config value. This lets a
+        # one-off invocation (e.g. `cz changelog <rev_range>`) opt out of an
+        # incremental default enabled in the configuration.
+        incremental_arg = arguments.get("incremental")
+        self.incremental = (
+            incremental_arg
+            if incremental_arg is not None
+            else bool(self.config.settings.get("changelog_incremental"))
         )
         self.dry_run = bool(arguments.get("dry_run"))
 

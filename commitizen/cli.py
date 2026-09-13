@@ -413,11 +413,13 @@ data = {
                     },
                     {
                         "name": "--incremental",
-                        "action": "store_true",
-                        "default": False,
+                        "action": argparse.BooleanOptionalAction,
+                        "default": None,
                         "help": (
                             "Generate changelog from the last created version, "
-                            "useful if the changelog has been manually modified."
+                            "useful if the changelog has been manually modified. "
+                            "Use `--no-incremental` to override a `changelog_incremental` "
+                            "setting enabled in the configuration."
                         ),
                     },
                     {
