@@ -464,6 +464,32 @@ def test_changelog_incremental_with_revision(util: UtilFixture):
         util.run_cli("changelog", "--incremental", "0.2.0")
 
 
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_no_incremental_overrides_config_with_revision(
+    config_path: Path, util: UtilFixture
+):
+    """--no-incremental must override a config-enabled `changelog_incremental`.
+
+    Regression test for a one-off `cz changelog <rev_range>` invocation
+    (e.g. used to build release notes for a specific version) that previously
+    always raised `NotAllowed` once `changelog_incremental = true` was set,
+    with no CLI-side way to opt out.
+    """
+    with config_path.open("a", encoding="utf-8") as f:
+        f.write("changelog_incremental = true\n")
+
+    util.create_file_and_commit("feat: new file")
+    util.create_tag("0.2.0")
+
+    # Config-enabled incremental mode still conflicts with a rev_range...
+    with pytest.raises(NotAllowed):
+        util.run_cli("changelog", "0.2.0")
+
+    # ...unless explicitly overridden with --no-incremental.
+    with pytest.raises(DryRunExit):
+        util.run_cli("changelog", "--no-incremental", "--dry-run", "0.2.0")
+
+
 @pytest.mark.usefixtures("chdir")
 def test_changelog_in_non_git_project(util: UtilFixture):
     with pytest.raises(NotAGitProjectError):

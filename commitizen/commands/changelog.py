@@ -81,8 +81,8 @@ class Changelog:
         # `--incremental`/`--no-incremental` on the CLI always takes precedence over
         # the `changelog_incremental` setting. When neither flag is passed, the
         # argument is `None` and we fall back to the config value. This lets a
-        # one-off invocation (e.g. `cz changelog <rev_range>`) opt out of an
-        # incremental default enabled in the configuration.
+        # one-off invocation (e.g. `cz changelog --no-incremental <rev_range>`) opt
+        # out of an incremental default enabled in the configuration.
         incremental_arg = arguments.get("incremental")
         self.incremental = (
             incremental_arg
