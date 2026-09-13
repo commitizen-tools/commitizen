@@ -391,6 +391,11 @@ def test_commit_command_with_config_message_length_limit(
             id="preserves_line_breaks",
         ),
         pytest.param(
+            "Line1 is shorter than the limit but has paragraph break\n\nLine2 stays in a separate paragraph",
+            100,
+            id="preserves_blank_lines",
+        ),
+        pytest.param(
             "This is a very long line that exceeds 72 characters and should NOT be wrapped when body_length_limit is set to 0",
             0,
             id="disabled",
@@ -441,3 +446,49 @@ def test_commit_command_body_length_limit(
         assert len(body_lines) == 1, (
             "Body should not be wrapped when body_length_limit is set to 0"
         )
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_body_length_limit_preserves_whitespace_only_lines(
+    config,
+    success_mock: MockType,
+    commit_mock,
+    mocker: MockFixture,
+):
+    """A whitespace-only body line must be kept, not just an empty one.
+
+    ``textwrap.wrap`` returns ``[]`` for a whitespace-only string just like it
+    does for an empty one, so ``_wrap_body`` must special-case it the same
+    way to avoid silently dropping the paragraph separator. This is asserted
+    directly (not via ``file_regression``) because the repository's
+    trailing-whitespace pre-commit hook would strip the whitespace-only line
+    from any committed fixture file, invalidating the comparison.
+    """
+    body = (
+        "Line1 is shorter than the limit but has paragraph break"
+        "\n   \n"
+        "Line2 stays in a separate paragraph"
+    )
+
+    mocker.patch(
+        "questionary.prompt",
+        return_value={
+            "prefix": "feat",
+            "subject": "add feature",
+            "scope": "",
+            "is_breaking_change": False,
+            "body": body,
+            "footer": "",
+        },
+    )
+
+    commands.Commit(config, {"body_length_limit": 100})()
+    success_mock.assert_called_once()
+    committed_message = commit_mock.call_args[0][0]
+    body_lines = committed_message.split("\n")[2:]
+
+    assert body_lines == [
+        "Line1 is shorter than the limit but has paragraph break",
+        "   ",
+        "Line2 stays in a separate paragraph",
+    ], "Whitespace-only body line should be preserved, not dropped"
