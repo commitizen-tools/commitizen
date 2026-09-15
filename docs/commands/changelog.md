@@ -85,6 +85,8 @@ Specify the name of the output file. Note that changelog generation only works w
 cz changelog --file-name="CHANGES.md"
 ```
 
+When provided on the command line, the path is interpreted **relative to the current working directory** (standard CLI convention).
+
 This value can be updated in the configuration file with the key `changelog_file` under `tool.commitizen`.
 
 ```toml
@@ -92,6 +94,8 @@ This value can be updated in the configuration file with the key `changelog_file
 # ...
 changelog_file = "CHANGES.md"
 ```
+
+When set in the configuration file, the path is resolved **relative to the configuration file's directory** (usually the project root). This means the location of the changelog is stable regardless of which directory you run `cz` from.
 
 ### `--incremental`
 
