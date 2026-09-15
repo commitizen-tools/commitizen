@@ -101,6 +101,27 @@ def test_find_tag_for_partial_version_ignores_invalid_tags():
     assert found.name == "1.2.1"
 
 
+def test_find_tag_for_full_version_matching_regex_only_legacy_tag_format():
+    """Regression test for #2015: a legacy tag format containing regex-only
+    parts (here ``\\+.*`` for build metadata) cannot be rendered back into a tag
+    name, so the tag must be found by comparing its extracted version.
+    """
+    tags = [
+        _git_tag("not-a-version"),
+        _git_tag("1.2.3foo"),
+        _git_tag("1.0.0"),
+        _git_tag("1.0.1rc0+gha"),
+    ]
+
+    rules = TagRules(legacy_tag_formats=[r"$major.$minor.$patch$prerelease\+.*"])
+
+    found = rules.find_tag_for(tags, "1.0.1rc0")
+
+    assert found is not None
+    assert found.name == "1.0.1rc0+gha"
+    assert rules.find_tag_for(tags, "1.0.2") is None
+
+
 def test_is_version_tag_accepts_semver2_prerelease_in_custom_tag_format():
     """Regression test for #1614: a SemVer2-style prerelease segment such as
     ``rc.0`` (with a literal dot) must be recognised when it appears at the
