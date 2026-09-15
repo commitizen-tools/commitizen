@@ -122,3 +122,15 @@ def test_find_increment_sve(messages, expected_type):
         commits, regex=semantic_version_pattern, increments_map=semantic_version_map
     )
     assert increment_type == expected_type
+
+
+def test_filter_commits():
+    commits = [
+        GitCommit(rev="1", title="feat(library-a): add command"),
+        GitCommit(rev="2", title="fix(library-b): patch regression"),
+        GitCommit(rev="3", title="docs: update README"),
+    ]
+
+    filtered_commits = bump.filter_commits(commits, r"^(feat|fix)\(library-b\)(!)?:")
+
+    assert filtered_commits == [commits[1]]

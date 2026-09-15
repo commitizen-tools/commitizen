@@ -11,6 +11,22 @@ When set to `true`, `cz bump` is equivalent to `cz bump --annotated-tag`.
 annotated_tag = true
 ```
 
+## `bump_commit_filter_pattern`
+
+- Type: `str`
+- Default: `".*"`
+
+Regular expression used to decide which commits `cz bump` should consider
+before applying the commit rule's `bump_pattern`.
+
+This is useful in monorepos where a component should ignore commits that belong
+to other applications or packages.
+
+```toml title="pyproject.toml"
+[tool.commitizen]
+bump_commit_filter_pattern = "^(feat|fix)\\(library-b\\)(!)?:"
+```
+
 ## `bump_message`
 
 Template used to specify the commit message generated when bumping.

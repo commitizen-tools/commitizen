@@ -4,7 +4,7 @@ import inspect
 import re
 from pathlib import Path
 from textwrap import dedent
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 from unittest.mock import call
 
 import pytest
@@ -12,6 +12,7 @@ import pytest
 import commitizen.commands.bump as bump
 from commitizen import cmd, defaults, git, hooks
 from commitizen.config.base_config import BaseConfig
+from commitizen.cz.conventional_commits import ConventionalCommitsCz
 from commitizen.exceptions import (
     BumpTagFailedError,
     CommitizenException,
@@ -67,6 +68,88 @@ def test_bump_minor_increment(commit_msg: str, util: UtilFixture):
             ["git", "for-each-ref", "refs/tags", "--format", "%(objecttype):%(refname)"]
         ).out
     )
+
+
+def test_bump_commit_filter_pattern_ignores_unrelated_commits(
+    tmp_commitizen_project_initial, util: UtilFixture
+):
+    config_extra = (
+        'bump_commit_filter_pattern = "^(feat|fix)\\\\(library-b\\\\)(!)?:"\n'
+    )
+    tmp_commitizen_project_initial(
+        config_extra=config_extra, initial_commit="feat(library-a): add initial feature"
+    )
+    util.create_file_and_commit("fix(library-b): patch release issue")
+
+    util.run_cli("bump", "--yes")
+
+    assert git.tag_exist("0.1.1") is True
+    assert git.tag_exist("0.2.0") is False
+
+
+def test_bump_commit_filter_pattern_excludes_all_commits(
+    tmp_commitizen_project_initial, util: UtilFixture
+):
+    config_extra = (
+        'bump_commit_filter_pattern = "^(feat|fix)\\\\(library-b\\\\)(!)?:"\n'
+    )
+    tmp_commitizen_project_initial(
+        config_extra=config_extra, initial_commit="feat(library-a): add initial feature"
+    )
+
+    with pytest.raises(
+        NoneIncrementExit,
+        match=r"\[NO_COMMITS_TO_BUMP\]\nThe commits found are not eligible to be bumped",
+    ):
+        util.run_cli("bump", "--yes")
+
+
+def test_bump_commit_filter_pattern_defaults_when_not_configured(
+    tmp_commitizen_project_initial,
+    util: UtilFixture,
+    config: BaseConfig,
+    mocker: MockFixture,
+):
+    tmp_commitizen_project_initial()
+    config.settings["version"] = "0.1.0"
+    config.settings["bump_commit_filter_pattern"] = None  # type: ignore[typeddict-item]
+    conventional_commits_cz = ConventionalCommitsCz(config)
+    conventional_commits_cz.bump_commit_filter_pattern = None  # type: ignore[assignment]
+    mocker.patch(
+        "commitizen.commands.bump.factory.committer_factory",
+        return_value=conventional_commits_cz,
+    )
+    util.create_file_and_commit("feat: initial commit")
+    util.create_tag("0.1.0")
+    util.create_file_and_commit("fix: patch release issue")
+
+    arguments = cast(
+        "bump.BumpArgs",
+        {
+            "changelog": False,
+            "changelog_to_stdout": False,
+            "check_consistency": False,
+            "dry_run": False,
+            "extras": None,
+            "file_name": None,
+            "files_only": False,
+            "get_next": False,
+            "git_output_to_stderr": False,
+            "local_version": False,
+            "no_verify": False,
+            "retry": False,
+            "template": None,
+            "version_scheme": None,
+            "version_files_only": False,
+            "yes": True,
+        },
+    )
+    bump_command = bump.Bump(config, arguments)
+
+    commits = git.get_commits("0.1.0")
+    increment = bump_command._find_increment(commits)
+
+    assert increment == "PATCH"
 
 
 @pytest.mark.parametrize("commit_msg", ["feat: new file", "feat(user): new file"])
@@ -1208,6 +1291,23 @@ def test_bump_get_next(util: UtilFixture, capsys: pytest.CaptureFixture):
 
     with pytest.raises(DryRunExit):
         util.run_cli("bump", "--yes", "--get-next")
+
+    out, _ = capsys.readouterr()
+    assert "0.2.0" in out
+    assert git.tag_exist("0.2.0") is False
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_get_next_warns_when_changelog_flag_is_set(
+    util: UtilFixture, capsys: pytest.CaptureFixture
+):
+    util.create_file_and_commit("feat: new file")
+
+    with pytest.warns(
+        UserWarning, match="--changelog has no effect when used with --get-next"
+    ):
+        with pytest.raises(DryRunExit):
+            util.run_cli("bump", "--yes", "--get-next", "--changelog")
 
     out, _ = capsys.readouterr()
     assert "0.2.0" in out

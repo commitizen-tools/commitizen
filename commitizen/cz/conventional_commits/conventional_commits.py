@@ -31,6 +31,7 @@ class ConventionalCommitsAnswers(TypedDict):
 
 
 class ConventionalCommitsCz(BaseCommitizen):
+    bump_commit_filter_pattern = defaults.DEFAULT_SETTINGS["bump_commit_filter_pattern"]
     bump_pattern = defaults.BUMP_PATTERN
     bump_map = defaults.BUMP_MAP
     bump_map_major_version_zero = defaults.BUMP_MAP_MAJOR_VERSION_ZERO
