@@ -4,10 +4,11 @@ import sys
 import pytest
 from pytest_mock import MockerFixture
 
-from commitizen import commands
+from commitizen import commands, git
 from commitizen.__version__ import __version__
 from commitizen.config.base_config import BaseConfig
 from commitizen.cz.base import BaseCommitizen
+from commitizen.cz.conventional_commits import ConventionalCommitsCz
 from commitizen.exceptions import (
     NoCommitsFoundError,
     NoPatternMapError,
@@ -319,6 +320,51 @@ def test_version_next_use_git_commits(
 
     captured = capsys.readouterr()
     assert captured.out == f"{expected_version}\n"
+
+
+@pytest.mark.usefixtures("tmp_git_project")
+def test_version_next_use_git_commits_filters_before_finding_increment(
+    config: BaseConfig,
+    capsys: pytest.CaptureFixture,
+    util: UtilFixture,
+    mocker: MockerFixture,
+):
+    """Commit-derived versions use the same filtering hook as bump."""
+
+    def filter_app_a_commits(
+        self: ConventionalCommitsCz, commits: list[git.GitCommit]
+    ) -> list[git.GitCommit]:
+        """Keep commits whose full message declares AppA."""
+        return [
+            commit
+            for commit in commits
+            if "'AppA'" in commit.message.partition("Applications:")[2]
+        ]
+
+    mocker.patch.object(
+        ConventionalCommitsCz,
+        "filter_commits_before_bump",
+        filter_app_a_commits,
+    )
+    config.settings["version"] = "1.0.0"
+    util.create_file_and_commit("feat: initial commit")
+    util.create_tag("1.0.0")
+    util.create_file_and_commit(
+        "feat: add AppB feature\n\nApplications: ['AppB']",
+        filename="app-b",
+    )
+    util.create_file_and_commit(
+        "fix: correct shared behavior\n\nApplications: ['AppA', 'AppB']",
+        filename="app-a",
+    )
+
+    commands.Version(
+        config,
+        {"project": True, "next": "USE_GIT_COMMITS"},
+    )()
+
+    captured = capsys.readouterr()
+    assert captured.out == "1.0.1\n"
 
 
 @pytest.mark.usefixtures("tmp_git_project")

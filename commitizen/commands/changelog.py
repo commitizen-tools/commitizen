@@ -265,6 +265,7 @@ class Changelog:
         ):
             raise NoCommitsFoundError("No commits found")
 
+        commits = self.cz.filter_commits_before_changelog(commits)
         tree = changelog.generate_tree_from_commits(
             commits,
             tags,
