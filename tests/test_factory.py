@@ -5,7 +5,7 @@ from textwrap import dedent
 
 import pytest
 
-from commitizen import BaseCommitizen, defaults, factory
+from commitizen import BaseCommitizen, defaults, factory, git
 from commitizen.config import BaseConfig
 from commitizen.cz import discover_plugins
 from commitizen.cz.conventional_commits import ConventionalCommitsCz
@@ -27,6 +27,34 @@ def test_factory():
     config.settings.update({"name": defaults.DEFAULT_SETTINGS["name"]})
     r = factory.committer_factory(config)
     assert isinstance(r, BaseCommitizen)
+
+
+def test_default_commit_filters_keep_all_commits(config: BaseConfig):
+    """Default filtering hooks preserve the original commit list."""
+    cz = ConventionalCommitsCz(config)
+    commits = [git.GitCommit(rev="1", title="feat: add filtering")]
+
+    assert cz.filter_commits(commits) is commits
+    assert cz.filter_commits_before_bump(commits) is commits
+    assert cz.filter_commits_before_changelog(commits) is commits
+
+
+def test_operation_commit_filters_delegate_to_shared_filter(config: BaseConfig, mocker):
+    """Operation-specific hooks delegate to a shared custom filter."""
+    cz = ConventionalCommitsCz(config)
+    commits = [
+        git.GitCommit(rev="1", title="feat: app a"),
+        git.GitCommit(rev="2", title="feat: app b"),
+    ]
+    filtered_commits = commits[:1]
+    filter_commits = mocker.patch.object(
+        cz, "filter_commits", return_value=filtered_commits
+    )
+
+    assert cz.filter_commits_before_bump(commits) is filtered_commits
+    assert cz.filter_commits_before_changelog(commits) is filtered_commits
+    assert filter_commits.call_count == 2
+    filter_commits.assert_any_call(commits)
 
 
 def test_factory_fails():

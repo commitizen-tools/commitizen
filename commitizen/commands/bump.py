@@ -158,7 +158,11 @@ class Bump:
             raise NoPatternMapError(
                 f"'{self.config.settings['name']}' rule does not support bump"
             )
-        return bump.find_increment(commits, regex=bump_pattern, increments_map=bump_map)
+        return bump.find_increment(
+            self.cz.filter_commits_before_bump(commits),
+            regex=bump_pattern,
+            increments_map=bump_map,
+        )
 
     def _validate_arguments(self, current_version: VersionProtocol) -> None:
         errors: list[str] = []

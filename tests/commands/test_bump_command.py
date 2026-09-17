@@ -12,6 +12,7 @@ import pytest
 import commitizen.commands.bump as bump
 from commitizen import cmd, defaults, git, hooks
 from commitizen.config.base_config import BaseConfig
+from commitizen.cz.conventional_commits import ConventionalCommitsCz
 from commitizen.exceptions import (
     BumpTagFailedError,
     CommitizenException,
@@ -67,6 +68,56 @@ def test_bump_minor_increment(commit_msg: str, util: UtilFixture):
             ["git", "for-each-ref", "refs/tags", "--format", "%(objecttype):%(refname)"]
         ).out
     )
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_filters_commits_before_finding_increment(
+    util: UtilFixture, mocker: MockFixture
+):
+    """Bump calculation considers only commits retained by the rule hook."""
+
+    def filter_app_a_commits(
+        self: ConventionalCommitsCz, commits: list[git.GitCommit]
+    ) -> list[git.GitCommit]:
+        """Keep commits whose full message declares AppA."""
+        return [
+            commit
+            for commit in commits
+            if "'AppA'" in commit.message.partition("Applications:")[2]
+        ]
+
+    mocker.patch.object(
+        ConventionalCommitsCz,
+        "filter_commits_before_bump",
+        filter_app_a_commits,
+    )
+    util.create_file_and_commit(
+        "feat: add AppB feature\n\nApplications: ['AppB']",
+        filename="app-b",
+    )
+    util.create_file_and_commit(
+        "fix: correct shared behavior\n\nApplications: ['AppA', 'AppB']",
+        filename="app-a",
+    )
+
+    util.run_cli("bump", "--yes")
+
+    assert git.tag_exist("0.1.1") is True
+    assert git.tag_exist("0.2.0") is False
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_handles_all_commits_filtered_out(util: UtilFixture, mocker: MockFixture):
+    """An empty filtered selection follows existing no-increment handling."""
+    mocker.patch.object(
+        ConventionalCommitsCz,
+        "filter_commits_before_bump",
+        return_value=[],
+    )
+    util.create_file_and_commit("feat: add an unrelated feature")
+
+    with pytest.raises(NoneIncrementExit):
+        util.run_cli("bump", "--yes")
 
 
 @pytest.mark.parametrize("commit_msg", ["feat: new file", "feat(user): new file"])
