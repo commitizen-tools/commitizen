@@ -78,6 +78,52 @@ class BaseCommitizen(metaclass=ABCMeta):
         if not self.config.settings.get("style"):
             self.config.settings.update({"style": BaseCommitizen.default_style_config})
 
+    def filter_commits(self, commits: list[git.GitCommit]) -> list[git.GitCommit]:
+        """Select commits shared by bump and changelog operations.
+
+        Custom rules can override this method when both operations should use the
+        same subset of commits.
+
+        Args:
+            commits: The commits available to the current operation.
+
+        Returns:
+            The commits that the rule considers relevant.
+        """
+        return commits
+
+    def filter_commits_before_bump(
+        self, commits: list[git.GitCommit]
+    ) -> list[git.GitCommit]:
+        """Select commits before calculating a version increment.
+
+        This operation-specific hook delegates to `filter_commits` so custom rules
+        can share filtering by default or override only bump behavior.
+
+        Args:
+            commits: The commits available for bump calculation.
+
+        Returns:
+            The commits that should contribute to the version increment.
+        """
+        return self.filter_commits(commits)
+
+    def filter_commits_before_changelog(
+        self, commits: list[git.GitCommit]
+    ) -> list[git.GitCommit]:
+        """Select commits before generating a changelog.
+
+        This operation-specific hook delegates to `filter_commits` so custom rules
+        can share filtering by default or override only changelog behavior.
+
+        Args:
+            commits: The commits available for changelog generation.
+
+        Returns:
+            The commits that should contribute to the changelog.
+        """
+        return self.filter_commits(commits)
+
     @abstractmethod
     def questions(self) -> list[CzQuestion]:
         """Questions regarding the commit message."""

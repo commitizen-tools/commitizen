@@ -181,7 +181,9 @@ class Version:
                 f"'{self.config.settings['name']}' rule does not support bump"
             )
         increment = bump.find_increment(
-            commits, regex=bump_pattern, increments_map=bump_map
+            self.cz.filter_commits_before_bump(commits),
+            regex=bump_pattern,
+            increments_map=bump_map,
         )
 
         # TODO: Consider adding all the parameters `.bump` supports:

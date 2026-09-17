@@ -10,6 +10,7 @@ from jinja2 import FileSystemLoader
 
 from commitizen import git
 from commitizen.commands.changelog import Changelog
+from commitizen.cz.conventional_commits import ConventionalCommitsCz
 from commitizen.exceptions import (
     DryRunExit,
     InvalidCommandArgumentError,
@@ -85,6 +86,46 @@ def test_changelog_with_different_cz(
         util.run_cli("-n", "cz_jira", "changelog", "--dry-run")
     out, _ = capsys.readouterr()
     file_regression.check(out, extension=".md")
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_changelog_filters_commits_before_generating_tree(
+    capsys: pytest.CaptureFixture,
+    util: UtilFixture,
+    mocker: MockFixture,
+):
+    """Changelog generation excludes commits rejected by the rule hook."""
+
+    def filter_app_a_commits(
+        self: ConventionalCommitsCz, commits: list[git.GitCommit]
+    ) -> list[git.GitCommit]:
+        """Keep commits whose full message declares AppA."""
+        return [
+            commit
+            for commit in commits
+            if "'AppA'" in commit.message.partition("Applications:")[2]
+        ]
+
+    mocker.patch.object(
+        ConventionalCommitsCz,
+        "filter_commits_before_changelog",
+        filter_app_a_commits,
+    )
+    util.create_file_and_commit(
+        "feat: add AppB feature\n\nApplications: ['AppB']",
+        filename="app-b",
+    )
+    util.create_file_and_commit(
+        "fix: correct shared behavior\n\nApplications: ['AppA', 'AppB']",
+        filename="app-a",
+    )
+
+    with pytest.raises(DryRunExit):
+        util.run_cli("changelog", "--dry-run")
+
+    out, _ = capsys.readouterr()
+    assert "correct shared behavior" in out
+    assert "add AppB feature" not in out
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
