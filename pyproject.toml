@@ -180,6 +180,7 @@ omit = [
     '*/virtualenv/*',
     '*/virtualenvs/*',
     '*/tests/*',
+    'commitizen/question.py',
 ]
 
 
