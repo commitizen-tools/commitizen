@@ -48,6 +48,17 @@ class CustomizeCommitsCz(BaseCommitizen):
     bump_map = defaults.BUMP_MAP
     bump_map_major_version_zero = defaults.BUMP_MAP_MAJOR_VERSION_ZERO
     change_type_order = defaults.CHANGE_TYPE_ORDER
+    # A conventional-commits-style default so that ``cz_customize`` users who
+    # configure ``changelog_pattern`` (and optionally ``change_type_map`` /
+    # ``change_type_order``) but no explicit ``commit_parser`` still get a
+    # changelog grouped by change type. The conventional prefix is optional,
+    # so non-conforming subjects remain included as ungrouped messages.
+    # Users with a different commit format can still override this via
+    # ``customize.commit_parser`` (#466).
+    commit_parser = (
+        r"^((?P<change_type>[\w-]+)(?:\((?P<scope>[^()\r\n]*)\))?"
+        r"(?P<breaking>!)?:\s+)?(?P<message>.+)$"
+    )
 
     def __init__(self, config: BaseConfig) -> None:
         super().__init__(config)
