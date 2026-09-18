@@ -1,0 +1,8 @@
+usage: cz dump-config [-h] [--format {toml,yaml,json}]
+
+Output the current commitizen configuration
+
+options:
+  -h, --help            show this help message and exit
+  --format, -f {toml,yaml,json}
+                        Output format (default: toml).
