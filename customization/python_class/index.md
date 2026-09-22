@@ -125,6 +125,96 @@ That's it, your Commitizen now supports custom rules, and you can run.
 cz -n cz_strange bump
 ```
 
+### Filter commits before bump and changelog generation
+
+Custom rules can select which commits are relevant before Commitizen calculates a version increment or generates a changelog.
+
+| Method                            | Used by                                              | Default behavior             |
+| --------------------------------- | ---------------------------------------------------- | ---------------------------- |
+| `filter_commits`                  | Shared by the operation-specific methods             | Return all commits unchanged |
+| `filter_commits_before_bump`      | `cz bump` and `cz version --next USE_GIT_COMMITS`    | Call `filter_commits`        |
+| `filter_commits_before_changelog` | `cz changelog`, including changelogs created by bump | Call `filter_commits`        |
+
+Override `filter_commits` when bump and changelog generation should use the same selection. Override an operation-specific method when their selections should differ. These methods do not affect `cz check`.
+
+For example, a monorepo can use a full commit-message metadata line to associate commits with applications:
+
+```
+feat: add shared library
+
+Applications: ['AppA', 'AppB']
+```
+
+A plugin can retain the built-in Conventional Commits behavior while filtering on that metadata:
+
+cz_applications.py
+
+```
+import re
+
+from commitizen import git
+from commitizen.cz.conventional_commits import ConventionalCommitsCz
+from commitizen.exceptions import InvalidConfigurationError
+
+
+class ApplicationsCommitizen(ConventionalCommitsCz):
+    """Apply Conventional Commits rules to one configured application.
+
+    Example:
+        Configure `app = "AppA"` to keep commits whose `Applications:` metadata
+        includes `AppA`.
+    """
+
+    def filter_commits(self, commits: list[git.GitCommit]) -> list[git.GitCommit]:
+        """Keep commits associated with the configured application.
+
+        Args:
+            commits: The commits available to the current operation.
+
+        Returns:
+            Commits whose full message lists the configured application.
+
+        Raises:
+            InvalidConfigurationError: If the plugin's `app` setting is missing.
+        """
+        application = dict(self.config.settings).get("app")
+        if not isinstance(application, str) or not application:
+            raise InvalidConfigurationError(
+                "cz_applications requires a non-empty 'app' setting"
+            )
+
+        application_line = re.compile(
+            rf"""^Applications:\s*\[[^\]]*['"]{re.escape(application)}['"][^\]]*\]\s*$""",
+            re.MULTILINE,
+        )
+        return [commit for commit in commits if application_line.search(commit.message)]
+```
+
+Expose the class through the plugin package:
+
+pyproject.toml
+
+```
+[project.entry-points."commitizen.plugin"]
+cz_applications = "cz_applications:ApplicationsCommitizen"
+```
+
+Then select the plugin and application in each component's configuration:
+
+app-a/.cz.toml
+
+```
+[tool.commitizen]
+name = "cz_applications"
+app = "AppA"
+version = "1.0.0"
+tag_format = "$version-app-a"
+```
+
+`app` is owned and interpreted by this plugin; it is not a built-in Commitizen setting. TOML keys under `[tool.commitizen]` are available through `self.config.settings`. The declarative `[tool.commitizen.customize]` section cannot override Python methods, so this use case requires a Python plugin.
+
+Filtering happens before the existing rule processing. The retained commits are still interpreted by `bump_pattern` and `bump_map` for version increments and by `changelog_pattern` and `commit_parser` for changelog entries.
+
 ### Custom commit validation and error message
 
 The commit message validation can be customized by overriding the `validate_commit_message` and `format_error_message` methods from `BaseCommitizen`. This allows for a more detailed feedback to the user where the error originates from.

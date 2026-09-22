@@ -1039,6 +1039,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#filter-commits-before-bump-and-changelog-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter commits before bump and changelog generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#custom-commit-validation-and-error-message" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2139,6 +2150,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#filter-commits-before-bump-and-changelog-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter commits before bump and changelog generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#custom-commit-validation-and-error-message" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2336,6 +2358,103 @@ doing <code>pip install .</code></p>
 <p>That's it, your Commitizen now supports custom rules, and you can run.</p>
 <div class="highlight"><pre><span></span><code>cz<span class="w"> </span>-n<span class="w"> </span>cz_strange<span class="w"> </span>bump
 </code></pre></div>
+<h3 id="filter-commits-before-bump-and-changelog-generation">Filter commits before bump and changelog generation<a class="headerlink" href="#filter-commits-before-bump-and-changelog-generation" title="Permanent link">&para;</a></h3>
+<p>Custom rules can select which commits are relevant before Commitizen calculates a
+version increment or generates a changelog.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Used by</th>
+<th>Default behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filter_commits</code></td>
+<td>Shared by the operation-specific methods</td>
+<td>Return all commits unchanged</td>
+</tr>
+<tr>
+<td><code>filter_commits_before_bump</code></td>
+<td><code>cz bump</code> and <code>cz version --next USE_GIT_COMMITS</code></td>
+<td>Call <code>filter_commits</code></td>
+</tr>
+<tr>
+<td><code>filter_commits_before_changelog</code></td>
+<td><code>cz changelog</code>, including changelogs created by bump</td>
+<td>Call <code>filter_commits</code></td>
+</tr>
+</tbody>
+</table>
+<p>Override <code>filter_commits</code> when bump and changelog generation should use the same
+selection. Override an operation-specific method when their selections should
+differ. These methods do not affect <code>cz check</code>.</p>
+<p>For example, a monorepo can use a full commit-message metadata line to associate
+commits with applications:</p>
+<div class="highlight"><pre><span></span><code>feat: add shared library
+
+Applications: [&#39;AppA&#39;, &#39;AppB&#39;]
+</code></pre></div>
+<p>A plugin can retain the built-in Conventional Commits behavior while filtering
+on that metadata:</p>
+<div class="highlight"><span class="filename">cz_applications.py</span><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">commitizen</span><span class="w"> </span><span class="kn">import</span> <span class="n">git</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.cz.conventional_commits</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConventionalCommitsCz</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">commitizen.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidConfigurationError</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ApplicationsCommitizen</span><span class="p">(</span><span class="n">ConventionalCommitsCz</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply Conventional Commits rules to one configured application.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        Configure `app = &quot;AppA&quot;` to keep commits whose `Applications:` metadata</span>
+<span class="sd">        includes `AppA`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter_commits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">git</span><span class="o">.</span><span class="n">GitCommit</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">git</span><span class="o">.</span><span class="n">GitCommit</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Keep commits associated with the configured application.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            commits: The commits available to the current operation.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Commits whose full message lists the configured application.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            InvalidConfigurationError: If the plugin&#39;s `app` setting is missing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">application</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">settings</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;app&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">application</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidConfigurationError</span><span class="p">(</span>
+                <span class="s2">&quot;cz_applications requires a non-empty &#39;app&#39; setting&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">application_line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+            <span class="sa">rf</span><span class="s2">&quot;&quot;&quot;^Applications:\s*\[[^\]]*[&#39;&quot;]</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">application</span><span class="p">)</span><span class="si">}</span><span class="s2">[&#39;&quot;][^\]]*\]\s*$&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">commit</span> <span class="k">for</span> <span class="n">commit</span> <span class="ow">in</span> <span class="n">commits</span> <span class="k">if</span> <span class="n">application_line</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">commit</span><span class="o">.</span><span class="n">message</span><span class="p">)]</span>
+</code></pre></div>
+<p>Expose the class through the plugin package:</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[project.entry-points.</span><span class="s2">&quot;commitizen.plugin&quot;</span><span class="k">]</span>
+<span class="n">cz_applications</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cz_applications:ApplicationsCommitizen&quot;</span>
+</code></pre></div>
+<p>Then select the plugin and application in each component's configuration:</p>
+<div class="highlight"><span class="filename">app-a/.cz.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cz_applications&quot;</span>
+<span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;AppA&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span>
+<span class="n">tag_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;$version-app-a&quot;</span>
+</code></pre></div>
+<p><code>app</code> is owned and interpreted by this plugin; it is not a built-in Commitizen
+setting. TOML keys under <code>[tool.commitizen]</code> are available through
+<code>self.config.settings</code>. The declarative <code>[tool.commitizen.customize]</code> section
+cannot override Python methods, so this use case requires a Python plugin.</p>
+<p>Filtering happens before the existing rule processing. The retained commits are
+still interpreted by <code>bump_pattern</code> and <code>bump_map</code> for version increments and by
+<code>changelog_pattern</code> and <code>commit_parser</code> for changelog entries.</p>
 <h3 id="custom-commit-validation-and-error-message">Custom commit validation and error message<a class="headerlink" href="#custom-commit-validation-and-error-message" title="Permanent link">&para;</a></h3>
 <p>The commit message validation can be customized by overriding the <code>validate_commit_message</code> and <code>format_error_message</code>
 methods from <code>BaseCommitizen</code>. This allows for a more detailed feedback to the user where the error originates from.</p>
@@ -2559,7 +2678,7 @@ Migration should be straight-forward for legacy plugins:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 19, 2025 09:12:08 UTC">November 19, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 17, 2026 19:44:31 UTC">September 17, 2026</span>
   </span>
 
     
