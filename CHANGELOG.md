@@ -1,3 +1,9 @@
+## v4.19.0 (2026-09-22)
+
+### Feat
+
+- add extensible commit filters
+
 ## v4.18.1 (2026-09-13)
 
 ### Fix
