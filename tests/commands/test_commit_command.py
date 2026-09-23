@@ -449,6 +449,35 @@ def test_commit_command_body_length_limit(
 
 
 @pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_uses_configured_body_length_limit_when_cli_option_is_omitted(
+    config,
+    commit_mock,
+    mocker: MockFixture,
+):
+    config.settings["body_length_limit"] = 20
+    mocker.patch(
+        "questionary.prompt",
+        return_value={
+            "prefix": "feat",
+            "subject": "add feature",
+            "scope": "",
+            "is_breaking_change": False,
+            "body": "This body line should wrap at the configured limit",
+            "footer": "",
+        },
+    )
+
+    commands.Commit(config, {"body_length_limit": None})()
+
+    committed_message = commit_mock.call_args[0][0]
+    assert committed_message.split("\n")[2:] == [
+        "This body line",
+        "should wrap at the",
+        "configured limit",
+    ]
+
+
+@pytest.mark.usefixtures("staging_is_clean")
 def test_commit_command_body_length_limit_preserves_whitespace_only_lines(
     config,
     success_mock: MockType,
