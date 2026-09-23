@@ -38,7 +38,7 @@ class CommitArgs(TypedDict, total=False):
     edit: bool
     extra_cli_args: list[str]
     message_length_limit: int
-    body_length_limit: int
+    body_length_limit: int | None
     no_retry: bool
     signoff: bool
     write_message_to_file: Path | None
@@ -109,9 +109,9 @@ class Commit:
         Wrap the body of the commit message to the --body-length-limit length.
         """
 
-        body_length_limit = self.arguments.get(
-            "body_length_limit", self.config.settings["body_length_limit"]
-        )
+        body_length_limit = self.arguments.get("body_length_limit")
+        if body_length_limit is None:
+            body_length_limit = self.config.settings["body_length_limit"]
         # By the contract, body_length_limit is set to 0 for no limit
         if not body_length_limit or body_length_limit <= 0:
             return message
