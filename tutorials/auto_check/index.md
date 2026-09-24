@@ -47,6 +47,20 @@ Using the latest version
 
 Replace `v4.10.0` with the latest commitizen version. You can find the latest version on [GitHub releases](https://github.com/commitizen-tools/commitizen/releases) or use a specific commit SHA for pinning to an exact version.
 
+Using a third-party commitizen plugin
+
+If your project uses a [third-party plugin](https://commitizen-tools.github.io/commitizen/third-party-plugins/about/index.md) (for example, a custom `name` such as `cz_gitmoji` from [cz-conventional-gitmoji](https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-conventional-gitmoji/index.md)), add the plugin package to `additional_dependencies`. `prek`/`pre-commit` installs each hook in its own isolated environment, so the plugin is not available unless it is listed explicitly, and the hook fails with an error such as `The committer has not been found in the system`:
+
+```
+repos:
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.10.0  # Use the latest version or a specific version
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+        additional_dependencies: ["cz-conventional-gitmoji"]
+```
+
 #### Step 3: Install the hook
 
 Install the configuration into Git's hook system:
