@@ -209,7 +209,16 @@ class Changelog:
         if not self.file_name:
             raise NotAllowed("filename is required.")
 
-        tags = self.tag_rules.get_version_tags(git.get_tags(), warn=True)
+        # Reachability filtering matters only when the previous-release tag
+        # is being inferred from date order. Explicit ``X..Y`` ranges must
+        # still resolve by name regardless of HEAD ancestry (e.g. when the
+        # user is on an unrelated release branch looking up history that
+        # is not reachable from HEAD).
+        if self.rev_range and ".." in self.rev_range:
+            all_tags = git.get_tags()
+        else:
+            all_tags = git.get_tags(reachable_only=True)
+        tags = self.tag_rules.get_version_tags(all_tags, warn=True)
         changelog_meta = changelog.Metadata()
         if self.incremental:
             changelog_meta = self.changelog_format.get_metadata(self.file_name)
