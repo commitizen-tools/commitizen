@@ -79,6 +79,7 @@ nav:
     # Please sort the plugins alphabetically
     - "third-party-plugins/commitizen-deno-provider.md"
     - "third-party-plugins/commitizen-emoji.md"
+    - "third-party-plugins/commitizen-galaxy-provider.md"
     - "third-party-plugins/conventional-jira.md"
     - "third-party-plugins/cz-ai.md"
     - "third-party-plugins/cz-conventional-gitmoji.md"
