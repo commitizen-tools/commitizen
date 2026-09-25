@@ -57,6 +57,7 @@ Commitizen is a release management tool for teams that enforce Conventional Comm
 - [About](https://commitizen-tools.github.io/commitizen/third-party-plugins/about/index.md)
 - [commitizen-deno-provider](https://commitizen-tools.github.io/commitizen/third-party-plugins/commitizen-deno-provider/index.md)
 - [Commitizen emoji (Unmaintained)](https://commitizen-tools.github.io/commitizen/third-party-plugins/commitizen-emoji/index.md)
+- [commitizen-galaxy-provider](https://commitizen-tools.github.io/commitizen/third-party-plugins/commitizen-galaxy-provider/index.md)
 - [Conventional JIRA](https://commitizen-tools.github.io/commitizen/third-party-plugins/conventional-jira/index.md)
 - [cz-ai](https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-ai/index.md)
 - [cz-conventional-gitmoji](https://commitizen-tools.github.io/commitizen/third-party-plugins/cz-conventional-gitmoji/index.md)
