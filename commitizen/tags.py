@@ -21,7 +21,7 @@ from commitizen.version_schemes import (
 
 if TYPE_CHECKING:
     import sys
-    from collections.abc import Iterable, Sequence
+    from collections.abc import Iterable, Iterator, Sequence
 
     # Self is Python 3.11+ but backported in typing-extensions
     if sys.version_info < (3, 11):
@@ -232,15 +232,11 @@ class TagRules:
         # If the requested version is incomplete (e.g., "1.2"), try to find the latest
         # matching tag that shares the provided prefix.
         if len(release) < 3:
-            matching_versions: list[tuple[VersionProtocol, GitTag]] = []
-            for tag in tags:
-                try:
-                    tag_version = self.extract_version(tag)
-                except InvalidVersion:
-                    continue
-                if tag_version.release[: len(release)] != release:
-                    continue
-                matching_versions.append((tag_version, tag))
+            matching_versions = [
+                (tag_version, tag)
+                for tag_version, tag in self._parse_tag_versions(tags)
+                if tag_version.release[: len(release)] == release
+            ]
 
             if matching_versions:
                 _, latest_tag = max(matching_versions, key=lambda vt: vt[0])
@@ -248,6 +244,14 @@ class TagRules:
 
         possible_tags = set(self.normalize_tag(version, f) for f in self.tag_formats)
         candidates = [t for t in tags if t.name in possible_tags]
+        if not candidates:
+            # Tag formats with regex-only parts (e.g. `\+.*`) cannot be rendered
+            # by `normalize_tag`, so fall back to comparing extracted versions.
+            candidates = [
+                tag
+                for tag_version, tag in self._parse_tag_versions(tags)
+                if tag_version == version
+            ]
         if len(candidates) > 1:
             warnings.warn(
                 UserWarning(
@@ -279,3 +283,19 @@ class TagRules:
         if devrelease := groups.get("devrelease"):
             parts.append(devrelease)
         return "".join(parts)
+
+    def _parse_tag_versions(
+        self, tags: Iterable[GitTag]
+    ) -> Iterator[tuple[VersionProtocol, GitTag]]:
+        """
+        Yield each tag with its extracted version, skipping invalid tags.
+
+        Used when searching tags by version: a tag that matches no tag format,
+        or whose version is rejected by the version scheme, is unrelated to the
+        search and must not abort it.
+        """
+        for tag in tags:
+            try:
+                yield self.extract_version(tag), tag
+            except InvalidVersion:
+                continue

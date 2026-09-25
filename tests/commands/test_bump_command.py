@@ -1396,6 +1396,43 @@ def test_bump_detect_legacy_tags_from_scm(
     assert git.tag_exist("v0.4.3") is True
 
 
+def test_bump_detect_legacy_tag_with_build_metadata_from_scm(
+    tmp_commitizen_project: Path, util: UtilFixture, capsys: pytest.CaptureFixture
+):
+    """Regression test for #2015."""
+    tmp_commitizen_cfg_file = tmp_commitizen_project / "pyproject.toml"
+    tmp_commitizen_cfg_file.write_text(
+        "\n".join(
+            [
+                "[tool.commitizen]",
+                'version_provider = "scm"',
+                'version_scheme = "pep440"',
+                'tag_format = "$version"',
+                "legacy_tag_formats = [",
+                "  '$major.$minor.$patch$prerelease\\+.*'",
+                "]",
+            ]
+        ),
+    )
+    util.create_file_and_commit("feat: initial")
+    util.create_tag("1.0.1rc0+gha")
+    util.create_file_and_commit("fix: bar")
+
+    with pytest.raises(DryRunExit):
+        util.run_cli(
+            "bump",
+            "--yes",
+            "--prerelease",
+            "rc",
+            "--build-metadata",
+            "gha",
+            "--get-next",
+        )
+
+    out, _ = capsys.readouterr()
+    assert out.strip() == "1.0.1rc1+gha"
+
+
 def test_bump_warn_but_dont_fail_on_invalid_tags(
     tmp_commitizen_project: Path,
     util: UtilFixture,
