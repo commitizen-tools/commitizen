@@ -1,0 +1,407 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://json.schemastore.org/commitizen.json",
+  "title": "commitizen",
+  "description": "Configuration for commitizen, the conventional commit tool. Describes the contents of the commitizen section: the [tool.commitizen] table in pyproject.toml (referenced with a #:schema comment) or the commitizen key in a .cz.json file (referenced with a $schema key).",
+  "type": "object",
+  "properties": {
+    "allow_abort": {
+      "type": "boolean",
+      "default": false,
+      "description": "Allow aborting the commit prompt with an empty message."
+    },
+    "allowed_prefixes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        "Merge",
+        "Revert",
+        "Pull request",
+        "fixup!",
+        "squash!",
+        "amend!"
+      ],
+      "description": "Commit message prefixes that are exempt from validation."
+    },
+    "always_signoff": {
+      "type": "boolean",
+      "default": false,
+      "description": "Append a Signed-off-by trailer to every commit."
+    },
+    "annotated_tag": {
+      "type": "boolean",
+      "description": "Create annotated tags when bumping."
+    },
+    "bump_message": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Template for the bump commit message."
+    },
+    "change_type_map": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Map commit types to changelog change types."
+    },
+    "changelog_file": {
+      "type": "string",
+      "default": "CHANGELOG.md",
+      "description": "Path of the generated changelog file."
+    },
+    "changelog_format": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Changelog output format (for example markdown, asciidoc, textile)."
+    },
+    "changelog_incremental": {
+      "type": "boolean",
+      "default": false,
+      "description": "Only add new changelog entries since the last release."
+    },
+    "changelog_merge_prerelease": {
+      "type": "boolean",
+      "default": false,
+      "description": "Merge prerelease changelog entries into the latest stable release."
+    },
+    "changelog_start_rev": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Git revision from which changelog generation starts."
+    },
+    "customize": {
+      "type": "object",
+      "properties": {
+        "bump_pattern": {
+          "type": "string"
+        },
+        "bump_map": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "bump_map_major_version_zero": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "change_type_order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "list"
+                    ]
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "choices": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "key": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "use_shortcuts": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "input"
+                    ]
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "filter": {}
+                }
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "confirm"
+                    ]
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "default": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "default",
+                  "message",
+                  "name",
+                  "type"
+                ]
+              }
+            ]
+          }
+        },
+        "example": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "schema_pattern": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "info_path": {
+          "type": "string"
+        },
+        "info": {
+          "type": "string"
+        },
+        "message_template": {
+          "type": "string"
+        },
+        "commit_parser": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "changelog_pattern": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "change_type_map": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Settings for the custom commit rule (cz_customize)."
+    },
+    "encoding": {
+      "type": "string",
+      "default": "utf-8",
+      "description": "Encoding used to read and write configuration files."
+    },
+    "extras": {
+      "type": "object",
+      "additionalProperties": {},
+      "default": {},
+      "description": "Additional plugin-specific configuration."
+    },
+    "gpg_sign": {
+      "type": "boolean",
+      "description": "Sign commits and tags with GPG when bumping."
+    },
+    "ignored_tag_formats": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Tag formats ignored when detecting the latest version."
+    },
+    "legacy_tag_formats": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Tag formats used only to detect the latest version."
+    },
+    "major_version_zero": {
+      "type": "boolean",
+      "default": false,
+      "description": "Treat breaking changes as minor bumps while on major version 0."
+    },
+    "message_length_limit": {
+      "type": "integer",
+      "default": 0,
+      "description": "Maximum allowed commit message length (0 means no limit)."
+    },
+    "name": {
+      "type": "string",
+      "default": "cz_conventional_commits",
+      "description": "Name of the commit rule (cz) plugin to use."
+    },
+    "post_bump_hooks": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Commands executed after a successful version bump."
+    },
+    "pre_bump_hooks": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Commands executed before a version bump."
+    },
+    "prerelease_offset": {
+      "type": "integer",
+      "default": 0,
+      "description": "Offset applied when bumping a prerelease version."
+    },
+    "retry_after_failure": {
+      "type": "boolean",
+      "default": false,
+      "description": "Retry the commit prompt when validation fails."
+    },
+    "style": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "string"
+          }
+        ],
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "description": "Questionary style pairs applied to the interactive prompt."
+    },
+    "tag_format": {
+      "type": "string",
+      "default": "$version",
+      "description": "Format of version tags, for example v$version."
+    },
+    "template": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Template used to render the commit message."
+    },
+    "update_changelog_on_bump": {
+      "type": "boolean",
+      "default": false,
+      "description": "Update the changelog automatically on bump."
+    },
+    "use_shortcuts": {
+      "type": "boolean",
+      "default": false,
+      "description": "Enable interactive prompt shortcuts."
+    },
+    "version_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Files (optionally with a :key suffix) updated with the new version on bump."
+    },
+    "version_provider": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": "commitizen",
+      "description": "Version provider (commitizen, pep621, poetry, npm, scm, uv, ...)."
+    },
+    "version_scheme": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Version scheme (pep440, semver, semver2)."
+    },
+    "version_type": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Deprecated alias for version_scheme."
+    },
+    "version": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null,
+      "description": "Current project version."
+    },
+    "breaking_change_exclamation_in_title": {
+      "type": "boolean",
+      "default": false,
+      "description": "Treat an exclamation mark in the commit title as a breaking change."
+    }
+  },
+  "additionalProperties": true
+}
