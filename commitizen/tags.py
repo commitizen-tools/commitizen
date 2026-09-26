@@ -212,6 +212,12 @@ class TagRules:
 
         major, minor, patch = (list(version.release) + [0, 0, 0])[:3]
         prerelease = version.prerelease or ""
+        # `dev` is the integer dev-release number (e.g. 1 for "0.1.0.dev1")
+        # or None if this version isn't a dev release. We render it as
+        # `dev<N>` to match how dev releases appear in PEP-440 / SemVer
+        # version strings.
+        dev = getattr(version, "dev", None)
+        devrelease = f"dev{dev}" if dev is not None else ""
 
         t = Template(tag_format)
         return t.safe_substitute(
@@ -220,6 +226,7 @@ class TagRules:
             minor=minor,
             patch=patch,
             prerelease=prerelease,
+            devrelease=devrelease,
         )
 
     def find_tag_for(
