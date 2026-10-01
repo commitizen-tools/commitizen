@@ -17,5 +17,5 @@ class DocsOnlyPatchCommitizen(ConventionalCommitsCz):
         bump_map: Maps ``docs`` to no increment and ``fix`` to a patch bump.
     """
 
-    bump_pattern = r"^(docs|fix)(?:\([^()\r\n]*\))?!?:"
+    bump_pattern = r"^(docs|fix)(?:\([^()\r\n]*\))?:"
     bump_map = {"docs": None, "fix": "PATCH"}

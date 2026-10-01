@@ -99,13 +99,17 @@ def test_documented_python_plugin_docs_commit_does_not_bump(
 
 @pytest.mark.parametrize(
     "commit_message",
-    ["fixup! rebase cleanup", "fixture: rename helper"],
+    [
+        "fix!: drop old API",
+        "fixup! rebase cleanup",
+        "fixture: rename helper",
+    ],
 )
 @pytest.mark.usefixtures("tmp_commitizen_project")
-def test_documented_python_plugin_ignores_fix_prefix_false_positives(
+def test_documented_python_plugin_ignores_nonmatching_fix_prefixes(
     util: UtilFixture, documented_plugin_name: str, commit_message: str
 ) -> None:
-    """Only full Conventional Commit types participate in bumping."""
+    """Only plain fix commits with an optional scope participate in bumping."""
     util.create_file_and_commit("fix: seed release")
     util.run_cli("--name", documented_plugin_name, "bump", "--yes")
     util.create_file_and_commit(commit_message)
