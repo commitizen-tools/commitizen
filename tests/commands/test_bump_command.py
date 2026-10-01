@@ -1406,6 +1406,26 @@ def test_bump_allow_no_commit_with_string_none_bump_map_raises(
     assert git.tag_exist("0.1.2") is False
 
 
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_python_plugin_none_bump_map_is_a_supported_no_bump_value(
+    util: UtilFixture, mock_plugin: BaseCommitizen
+) -> None:
+    """A Python plugin may use ``None`` to match without bumping."""
+    mock_plugin.bump_pattern = r"^(docs|fix)"
+    mock_plugin.bump_map = {"docs": None, "fix": "PATCH"}
+    mock_plugin.bump_map_major_version_zero = {"docs": None, "fix": "PATCH"}
+
+    util.create_file_and_commit("fix: seed release")
+    util.run_cli("bump", "--yes")
+    util.create_file_and_commit("docs: update guide")
+
+    with pytest.raises(NoneIncrementExit):
+        util.run_cli("bump", "--yes")
+
+    util.run_cli("bump", "--yes", "--allow-no-commit")
+    assert git.tag_exist("0.1.2") is True
+
+
 def test_bump_allow_no_commit_with_increment(
     tmp_commitizen_project, monkeypatch, util: UtilFixture, capsys
 ):

@@ -13,8 +13,8 @@ if TYPE_CHECKING:
 
 class CzSettings(TypedDict, total=False):
     bump_pattern: str
-    bump_map: OrderedDict[str, str]
-    bump_map_major_version_zero: OrderedDict[str, str]
+    bump_map: OrderedDict[str, str | None]
+    bump_map_major_version_zero: OrderedDict[str, str | None]
     change_type_order: list[str]
 
     questions: Iterable[CzQuestion]

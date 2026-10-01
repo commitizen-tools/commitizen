@@ -27,8 +27,8 @@ __all__ = ["CustomizeCommitsCz"]
 
 
 def _derive_major_version_zero(
-    bump_map: Mapping[str, str],
-) -> OrderedDict[str, str]:
+    bump_map: Mapping[str, str | None],
+) -> OrderedDict[str, str | None]:
     """Derive a ``bump_map_major_version_zero`` from a user-supplied
     ``bump_map`` by demoting any ``MAJOR`` rule to ``MINOR``.
 
@@ -45,8 +45,10 @@ def _derive_major_version_zero(
 
 class CustomizeCommitsCz(BaseCommitizen):
     bump_pattern = defaults.BUMP_PATTERN
-    bump_map = defaults.BUMP_MAP
-    bump_map_major_version_zero = defaults.BUMP_MAP_MAJOR_VERSION_ZERO
+    bump_map: Mapping[str, str | None] = defaults.BUMP_MAP
+    bump_map_major_version_zero: Mapping[str, str | None] = (
+        defaults.BUMP_MAP_MAJOR_VERSION_ZERO
+    )
     change_type_order = defaults.CHANGE_TYPE_ORDER
 
     def __init__(self, config: BaseConfig) -> None:
