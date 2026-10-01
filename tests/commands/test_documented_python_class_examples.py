@@ -48,12 +48,19 @@ def documented_plugin_name(mocker: MockFixture) -> str:
 
 
 @pytest.mark.parametrize("major_version_zero", [False, True])
+@pytest.mark.parametrize(
+    "commit_message",
+    ["fix: ship executable docs example", "fix(api): ship executable docs example"],
+)
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_documented_python_plugin_fix_commit_bumps_patch(
-    util: UtilFixture, documented_plugin_name: str, major_version_zero: bool
+    util: UtilFixture,
+    documented_plugin_name: str,
+    major_version_zero: bool,
+    commit_message: str,
 ) -> None:
     """The documented example bumps a fix commit as a patch release."""
-    util.create_file_and_commit("fix: ship executable docs example")
+    util.create_file_and_commit(commit_message)
 
     args = ["--name", documented_plugin_name, "bump", "--yes"]
     if major_version_zero:
@@ -64,9 +71,16 @@ def test_documented_python_plugin_fix_commit_bumps_patch(
 
 
 @pytest.mark.parametrize("major_version_zero", [False, True])
+@pytest.mark.parametrize(
+    "commit_message",
+    ["docs: expand plugin guide", "docs(api): expand plugin guide"],
+)
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_documented_python_plugin_docs_commit_does_not_bump(
-    util: UtilFixture, documented_plugin_name: str, major_version_zero: bool
+    util: UtilFixture,
+    documented_plugin_name: str,
+    major_version_zero: bool,
+    commit_message: str,
 ) -> None:
     """The documented example treats docs commits as a no-bump match."""
     first_bump_args = ["--name", documented_plugin_name, "bump", "--yes"]
@@ -75,9 +89,28 @@ def test_documented_python_plugin_docs_commit_does_not_bump(
 
     util.create_file_and_commit("fix: seed release")
     util.run_cli(*first_bump_args)
-    util.create_file_and_commit("docs: expand plugin guide")
+    util.create_file_and_commit(commit_message)
 
     with pytest.raises(NoneIncrementExit):
         util.run_cli(*first_bump_args)
+
+    assert git.tag_exist("0.1.2") is False
+
+
+@pytest.mark.parametrize(
+    "commit_message",
+    ["fixup! rebase cleanup", "fixture: rename helper"],
+)
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_documented_python_plugin_ignores_fix_prefix_false_positives(
+    util: UtilFixture, documented_plugin_name: str, commit_message: str
+) -> None:
+    """Only full Conventional Commit types participate in bumping."""
+    util.create_file_and_commit("fix: seed release")
+    util.run_cli("--name", documented_plugin_name, "bump", "--yes")
+    util.create_file_and_commit(commit_message)
+
+    with pytest.raises(NoneIncrementExit):
+        util.run_cli("--name", documented_plugin_name, "bump", "--yes")
 
     assert git.tag_exist("0.1.2") is False
