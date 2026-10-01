@@ -106,9 +106,11 @@ keeps the example executable while still overriding the bump rules. The module
 below is the same file exercised by Commitizen's test suite and type-checked by
 mypy.
 
+<!-- blacken-docs:off -->
 ```python title="cz_docs_only.py"
 --8<-- "docs/examples/cz_docs_only.py"
 ```
+<!-- blacken-docs:on -->
 
 Package and install `cz_docs_only.py` just like the earlier `cz_jira.py`
 example, and expose it through the same `commitizen.plugin` entry point group,
