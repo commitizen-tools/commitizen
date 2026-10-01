@@ -47,28 +47,37 @@ def documented_plugin_name(mocker: MockFixture) -> str:
     return plugin_name
 
 
+@pytest.mark.parametrize("major_version_zero", [False, True])
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_documented_python_plugin_fix_commit_bumps_patch(
-    util: UtilFixture, documented_plugin_name: str
+    util: UtilFixture, documented_plugin_name: str, major_version_zero: bool
 ) -> None:
     """The documented example bumps a fix commit as a patch release."""
     util.create_file_and_commit("fix: ship executable docs example")
 
-    util.run_cli("--name", documented_plugin_name, "bump", "--yes")
+    args = ["--name", documented_plugin_name, "bump", "--yes"]
+    if major_version_zero:
+        args.append("--major-version-zero")
+    util.run_cli(*args)
 
     assert git.tag_exist("0.1.1") is True
 
 
+@pytest.mark.parametrize("major_version_zero", [False, True])
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_documented_python_plugin_docs_commit_does_not_bump(
-    util: UtilFixture, documented_plugin_name: str
+    util: UtilFixture, documented_plugin_name: str, major_version_zero: bool
 ) -> None:
     """The documented example treats docs commits as a no-bump match."""
+    first_bump_args = ["--name", documented_plugin_name, "bump", "--yes"]
+    if major_version_zero:
+        first_bump_args.append("--major-version-zero")
+
     util.create_file_and_commit("fix: seed release")
-    util.run_cli("--name", documented_plugin_name, "bump", "--yes")
+    util.run_cli(*first_bump_args)
     util.create_file_and_commit("docs: expand plugin guide")
 
     with pytest.raises(NoneIncrementExit):
-        util.run_cli("--name", documented_plugin_name, "bump", "--yes")
+        util.run_cli(*first_bump_args)
 
     assert git.tag_exist("0.1.2") is False

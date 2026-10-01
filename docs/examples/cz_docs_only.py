@@ -15,10 +15,7 @@ class DocsOnlyPatchCommitizen(ConventionalCommitsCz):
     Attributes:
         bump_pattern: Extracts the commit types that participate in bump logic.
         bump_map: Maps ``docs`` to no increment and ``fix`` to a patch bump.
-        bump_map_major_version_zero: Reuses the same behavior when
-            ``major_version_zero`` mode is enabled.
     """
 
     bump_pattern = r"^(docs|fix)"
     bump_map = {"docs": None, "fix": "PATCH"}
-    bump_map_major_version_zero = bump_map
