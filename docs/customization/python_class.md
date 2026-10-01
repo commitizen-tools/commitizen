@@ -101,21 +101,19 @@ You need to define 2 parameters inside your custom `BaseCommitizen`.
 | `bump_pattern` | `str`  | `None`  | Regex to extract information from commit (subject and body)                                           |
 | `bump_map`     | `dict` | `None`  | Dictionary mapping the extracted information to a `SemVer` increment type (`MAJOR`, `MINOR`, `PATCH`). Use `None` when a matched rule should not bump the version. |
 
-Let's see an example.
+If you only need to customize bump behavior, subclassing an existing rule set
+keeps the example executable while still overriding the bump rules. The module
+below is the same file exercised by Commitizen's test suite and type-checked by
+mypy.
 
-```python title="cz_strange.py"
-from commitizen.cz.base import BaseCommitizen
-
-
-class StrangeCommitizen(BaseCommitizen):
-    bump_pattern = r"^(break|new|fix|hotfix)"
-    bump_map = {"break": "MAJOR", "new": "MINOR", "fix": "PATCH", "hotfix": "PATCH"}
+```python title="cz_docs_only.py"
+--8<-- "docs/examples/cz_docs_only.py"
 ```
 
 That's it, your Commitizen now supports custom rules, and you can run.
 
 ```bash
-cz -n cz_strange bump
+cz -n cz_docs_only bump
 ```
 
 ### Filter commits before bump and changelog generation
