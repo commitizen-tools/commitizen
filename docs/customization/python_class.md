@@ -110,7 +110,11 @@ mypy.
 --8<-- "docs/examples/cz_docs_only.py"
 ```
 
-That's it, your Commitizen now supports custom rules, and you can run.
+Package and install `cz_docs_only.py` just like the earlier `cz_jira.py`
+example, and expose it through the same `commitizen.plugin` entry point group,
+for example with `cz_docs_only = cz_docs_only:DocsOnlyPatchCommitizen`.
+After installing that package, your Commitizen now supports custom rules, and
+you can run:
 
 ```bash
 cz -n cz_docs_only bump

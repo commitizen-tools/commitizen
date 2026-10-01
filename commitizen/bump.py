@@ -4,16 +4,37 @@ import os
 import re
 from glob import iglob
 from string import Template
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from commitizen.defaults import BUMP_MESSAGE
 from commitizen.exceptions import CurrentVersionNotFoundError
 from commitizen.git import smart_open
+from commitizen.version_increment import VersionIncrement
 
 if TYPE_CHECKING:
-    from collections.abc import Generator, Iterable
+    from collections.abc import Generator, Iterable, Mapping
 
-    from commitizen.version_schemes import VersionProtocol
+    from commitizen.git import GitCommit
+    from commitizen.version_schemes import Increment, VersionProtocol
+
+
+def find_increment(
+    commits: list[GitCommit], regex: str, increments_map: Mapping[str, object]
+) -> Increment | None:
+    """Preserve the legacy bump helper as a compatibility shim.
+
+    This public helper remains available for integrations importing
+    ``commitizen.bump.find_increment`` while delegating the real increment
+    comparison and extraction logic to ``VersionIncrement``.
+    """
+    increment = VersionIncrement.get_highest_by_messages(
+        (commit.message for commit in commits),
+        regex,
+        increments_map,
+    )
+    if increment == VersionIncrement.NONE:
+        return None
+    return cast("Increment", str(increment))
 
 
 def update_version_in_files(
