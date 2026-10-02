@@ -160,8 +160,9 @@ class Bump:
                 f"'{self.config.settings['name']}' rule does not support bump"
             )
 
+        commit_messages =  (commit.message for commit in self.cz.filter_commits_before_bump(commits))   
         increment = VersionIncrement.get_highest_by_messages(
-            (commit.message for commit in self.cz.filter_commits_before_bump(commits)),
+            commit_messages,
             bump_pattern,
             bump_map,
         )
