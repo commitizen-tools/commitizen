@@ -101,10 +101,10 @@ And that's it. You can install it without uploading to PyPI by simply doing `pip
 
 You need to define 2 parameters inside your custom `BaseCommitizen`.
 
-| Parameter      | Type   | Default | Description                                                                                           |
-| -------------- | ------ | ------- | ----------------------------------------------------------------------------------------------------- |
-| `bump_pattern` | `str`  | `None`  | Regex to extract information from commit (subject and body)                                           |
-| `bump_map`     | `dict` | `None`  | Dictionary mapping the extracted information to a `SemVer` increment type (`MAJOR`, `MINOR`, `PATCH`) |
+| Parameter      | Type   | Default | Description                                                                                                                                                        |
+| -------------- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `bump_pattern` | `str`  | `None`  | Regex to extract information from commit (subject and body)                                                                                                        |
+| `bump_map`     | `dict` | `None`  | Dictionary mapping the extracted information to a `SemVer` increment type (`MAJOR`, `MINOR`, `PATCH`). Use `None` when a matched rule should not bump the version. |
 
 Let's see an example.
 
