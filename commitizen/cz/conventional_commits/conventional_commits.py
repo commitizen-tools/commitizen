@@ -8,6 +8,8 @@ from commitizen.cz.base import BaseCommitizen
 from commitizen.cz.utils import multiple_line_breaker, required_validator
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
+
     from commitizen.question import CzQuestion
 
 __all__ = ["ConventionalCommitsCz"]
@@ -32,8 +34,10 @@ class ConventionalCommitsAnswers(TypedDict):
 
 class ConventionalCommitsCz(BaseCommitizen):
     bump_pattern = defaults.BUMP_PATTERN
-    bump_map = defaults.BUMP_MAP
-    bump_map_major_version_zero = defaults.BUMP_MAP_MAJOR_VERSION_ZERO
+    bump_map: Mapping[str, str | None] = defaults.BUMP_MAP
+    bump_map_major_version_zero: Mapping[str, str | None] = (
+        defaults.BUMP_MAP_MAJOR_VERSION_ZERO
+    )
     commit_parser = r"^((?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE)(?:\((?P<scope>[^()\r\n]*)\)|\()?(?P<breaking>!)?|\w+!):\s(?P<message>.*)?"
     change_type_map = {
         "feat": "Feat",

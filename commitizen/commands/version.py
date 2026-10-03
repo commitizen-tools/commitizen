@@ -4,7 +4,7 @@ from typing import TypedDict
 
 from packaging.version import InvalidVersion
 
-from commitizen import bump, factory, git, out
+from commitizen import factory, git, out
 from commitizen.__version__ import __version__
 from commitizen.config import BaseConfig
 from commitizen.exceptions import (
@@ -180,11 +180,20 @@ class Version:
             raise NoPatternMapError(
                 f"'{self.config.settings['name']}' rule does not support bump"
             )
-        increment = bump.find_increment(
-            self.cz.filter_commits_before_bump(commits),
-            regex=bump_pattern,
-            increments_map=bump_map,
+        next_increment = VersionIncrement.get_highest_by_messages(
+            (commit.message for commit in self.cz.filter_commits_before_bump(commits)),
+            bump_pattern,
+            bump_map,
         )
+        increment: Increment | None
+        if next_increment == VersionIncrement.NONE:
+            increment = None
+        elif next_increment == VersionIncrement.PATCH:
+            increment = "PATCH"
+        elif next_increment == VersionIncrement.MINOR:
+            increment = "MINOR"
+        else:
+            increment = "MAJOR"
 
         # TODO: Consider adding all the parameters `.bump` supports:
         # prerelease, prerelease_offset,exact_increment, etc..

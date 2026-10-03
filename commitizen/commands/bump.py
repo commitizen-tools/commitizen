@@ -24,6 +24,7 @@ from commitizen.exceptions import (
 )
 from commitizen.providers import get_provider
 from commitizen.tags import TagRules
+from commitizen.version_increment import VersionIncrement
 from commitizen.version_schemes import (
     Increment,
     InvalidVersion,
@@ -145,8 +146,8 @@ class Bump:
         return bool(questionary.confirm("Is this the first tag created?").ask())
 
     def _find_increment(self, commits: list[git.GitCommit]) -> Increment | None:
+        """Determine the highest configured increment across candidate commits."""
         # Update the bump map to ensure major version doesn't increment.
-        # self.cz.bump_map = defaults.bump_map_major_version_zero
         bump_map = (
             self.cz.bump_map_major_version_zero
             if self.bump_settings["major_version_zero"]
@@ -158,11 +159,18 @@ class Bump:
             raise NoPatternMapError(
                 f"'{self.config.settings['name']}' rule does not support bump"
             )
-        return bump.find_increment(
-            self.cz.filter_commits_before_bump(commits),
-            regex=bump_pattern,
-            increments_map=bump_map,
+
+        commit_messages = (
+            commit.message for commit in self.cz.filter_commits_before_bump(commits)
         )
+        increment = VersionIncrement.get_highest_by_messages(
+            commit_messages,
+            bump_pattern,
+            bump_map,
+        )
+        if increment == VersionIncrement.NONE:
+            return None
+        return cast("Increment", str(increment))
 
     def _validate_arguments(self, current_version: VersionProtocol) -> None:
         errors: list[str] = []

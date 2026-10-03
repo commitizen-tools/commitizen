@@ -37,8 +37,8 @@ class ValidationResult(NamedTuple):
 
 class BaseCommitizen(metaclass=ABCMeta):
     bump_pattern: str | None = None
-    bump_map: dict[str, str] | None = None
-    bump_map_major_version_zero: dict[str, str] | None = None
+    bump_map: Mapping[str, str | None] | None = None
+    bump_map_major_version_zero: Mapping[str, str | None] | None = None
     default_style_config: list[tuple[str, str]] = [
         ("qmark", "fg:#ff9d00 bold"),
         ("question", "bold"),

@@ -1330,6 +1330,102 @@ def test_bump_allow_no_commit_with_no_eligible_commit(
     assert "bump: version 1.0.0 → 1.0.1" in out
 
 
+def test_bump_allow_no_commit_with_invalid_custom_bump_map_raises(
+    tmp_commitizen_project: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    util: UtilFixture,
+) -> None:
+    """An invalid matched custom bump-map value must fail before PATCH fallback."""
+    monkeypatch.chdir(tmp_commitizen_project)
+    (tmp_commitizen_project / "pyproject.toml").write_text(
+        dedent(
+            """
+            [tool.commitizen]
+            name = "cz_customize"
+            version = "0.1.0"
+
+            [tool.commitizen.customize]
+            bump_pattern = "^(new|fix)"
+            bump_map = { new = "MINORR", fix = "PATCH" }
+            change_type_map = { new = "Features", fix = "Bugs" }
+            changelog_pattern = "^(new|fix)"
+            commit_parser = '^(?P<change_type>new|fix):\\s(?P<message>.+)$'
+            schema_pattern = ".*"
+            questions = []
+            """
+        ).strip()
+        + "\n",
+        encoding="utf-8",
+    )
+
+    util.create_file_and_commit("fix: seed release")
+    util.run_cli("bump", "--yes")
+    util.create_file_and_commit("new: add endpoint")
+
+    with pytest.raises(ValueError, match="MINORR"):
+        util.run_cli("bump", "--yes", "--allow-no-commit")
+
+    assert git.tag_exist("0.1.2") is False
+
+
+def test_bump_allow_no_commit_with_string_none_bump_map_raises(
+    tmp_commitizen_project: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    util: UtilFixture,
+) -> None:
+    """A matched bump-map string NONE must fail instead of falling back to PATCH."""
+    monkeypatch.chdir(tmp_commitizen_project)
+    (tmp_commitizen_project / "pyproject.toml").write_text(
+        dedent(
+            """
+            [tool.commitizen]
+            name = "cz_customize"
+            version = "0.1.0"
+
+            [tool.commitizen.customize]
+            bump_pattern = "^(docs|fix)"
+            bump_map = { docs = "NONE", fix = "PATCH" }
+            change_type_map = { docs = "Docs", fix = "Bugs" }
+            changelog_pattern = "^(docs|fix)"
+            commit_parser = '^(?P<change_type>docs|fix):\\s(?P<message>.+)$'
+            schema_pattern = ".*"
+            questions = []
+            """
+        ).strip()
+        + "\n",
+        encoding="utf-8",
+    )
+
+    util.create_file_and_commit("fix: seed release")
+    util.run_cli("bump", "--yes")
+    util.create_file_and_commit("docs: update guide")
+
+    with pytest.raises(ValueError, match="NONE"):
+        util.run_cli("bump", "--yes", "--allow-no-commit")
+
+    assert git.tag_exist("0.1.2") is False
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_python_plugin_none_bump_map_is_a_supported_no_bump_value(
+    util: UtilFixture, mock_plugin: BaseCommitizen
+) -> None:
+    """A Python plugin may use ``None`` to match without bumping."""
+    mock_plugin.bump_pattern = r"^(docs|fix)"
+    mock_plugin.bump_map = {"docs": None, "fix": "PATCH"}
+    mock_plugin.bump_map_major_version_zero = {"docs": None, "fix": "PATCH"}
+
+    util.create_file_and_commit("fix: seed release")
+    util.run_cli("bump", "--yes")
+    util.create_file_and_commit("docs: update guide")
+
+    with pytest.raises(NoneIncrementExit):
+        util.run_cli("bump", "--yes")
+
+    util.run_cli("bump", "--yes", "--allow-no-commit")
+    assert git.tag_exist("0.1.2") is True
+
+
 def test_bump_allow_no_commit_with_increment(
     tmp_commitizen_project, monkeypatch, util: UtilFixture, capsys
 ):
