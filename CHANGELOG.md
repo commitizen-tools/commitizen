@@ -1,3 +1,9 @@
+## v4.19.1 (2026-10-03)
+
+### Refactor
+
+- **bump**: use VersionIncrement ordering for bump detection (#2097)
+
 ## v4.19.0 (2026-09-22)
 
 ### Feat
