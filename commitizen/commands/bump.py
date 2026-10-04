@@ -102,7 +102,7 @@ class Bump:
         self.git_output_to_stderr = arguments["git_output_to_stderr"]
         self.no_verify = arguments["no_verify"]
         self.check_consistency = arguments["check_consistency"]
-        # retry if --retry is passed or retry_bump_after_failure is set in confic
+        # retry if --retry is passed or retry_bump_after_failure is set in config
         self.retry = arguments["retry"] or self.config.settings.get(
             "retry_bump_after_failure", False
         )
