@@ -55,6 +55,7 @@ class Settings(TypedDict, total=False):
     pre_bump_hooks: list[str] | None
     prerelease_offset: int
     retry_after_failure: bool
+    retry_bump_after_failure: bool  # same as retry_after_failure, but for cz bump
     style: list[tuple[str, str]]
     tag_format: str
     template: str | None

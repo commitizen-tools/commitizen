@@ -1708,3 +1708,22 @@ def test_bump_allow_no_commit_issue(
     util.run_cli(
         "bump", "--allow-no-commit", "--prerelease", "rc"
     )  # Should not fail when changelog generation runs with no new commits
+
+
+def test_bump_retry_bump_after_failure_config(
+    mocker: MockFixture, util: UtilFixture, pyproject: Path
+):
+    """'cz bump' retries a failed commit when retry_bump_after_failure is true"""
+    with pyproject.open("a", encoding="utf-8") as f:
+        f.write("retry_bump_after_failure = true\n")
+    util.create_file_and_commit("feat: new file")
+
+    # first commit fails (like when a pre-commit hook edits a file), second works
+    failed = cmd.Command("", "hook failed", b"", b"", 1)
+    passed = cmd.Command("", "", b"", b"", 0)
+    commit_mock = mocker.patch.object(git, "commit", side_effect=[failed, passed])
+
+    # bump only retries the commit when it also updates the changelog
+    util.run_cli("bump", "--changelog", "--yes")
+
+    assert commit_mock.call_count == 2

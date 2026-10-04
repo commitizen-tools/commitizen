@@ -102,7 +102,10 @@ class Bump:
         self.git_output_to_stderr = arguments["git_output_to_stderr"]
         self.no_verify = arguments["no_verify"]
         self.check_consistency = arguments["check_consistency"]
-        self.retry = arguments["retry"]
+        # retry if --retry is passed or retry_bump_after_failure is set in confic
+        self.retry = arguments["retry"] or self.config.settings.get(
+            "retry_bump_after_failure", False
+        )
         self.pre_bump_hooks = self.config.settings["pre_bump_hooks"]
         self.post_bump_hooks = self.config.settings["post_bump_hooks"]
         deprecated_version_type = arguments.get("version_type")
