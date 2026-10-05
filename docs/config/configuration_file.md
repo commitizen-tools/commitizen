@@ -235,7 +235,7 @@ Key configuration categories include:
 - **Version Management**: `version`, `version_provider`, `version_scheme`, `version_files`
 - **Tagging**: `tag_format`, `legacy_tag_formats`, `ignored_tag_formats`, `gpg_sign`, `annotated_tag`
 - **Changelog**: `changelog_file`, `changelog_format`, `changelog_incremental`, `update_changelog_on_bump`
-- **Bumping**: `bump_message`, `major_version_zero`, `prerelease_offset`, `pre_bump_hooks`, `post_bump_hooks`
+- **Bumping**: `bump_message`, `major_version_zero`, `prerelease_offset`, `pre_bump_hooks`, `post_bump_hooks`, `retry_bump_after_failure`
 - **Commit Validation**: `allowed_prefixes`, `message_length_limit`, `allow_abort`, `retry_after_failure`
 - **Customization**: `customize`, `style`, `use_shortcuts`, `template`, `extras`
 

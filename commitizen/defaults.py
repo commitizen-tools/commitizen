@@ -91,6 +91,7 @@ DEFAULT_SETTINGS: Settings = {
     "ignored_tag_formats": [],
     "bump_message": None,  # bumped v$current_version to $new_version
     "retry_after_failure": False,
+    "retry_bump_after_failure": False,
     "allow_abort": False,
     "allowed_prefixes": [
         "Merge",
