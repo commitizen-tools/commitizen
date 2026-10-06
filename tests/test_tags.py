@@ -140,3 +140,25 @@ def test_is_version_tag_accepts_dotless_devrelease_in_custom_tag_format():
 
     extracted = rules.extract_version(_git_tag("version-1.2.3dev1"))
     assert str(extracted) == "1.2.3.dev1"
+
+
+def test_is_version_tag_accepts_pep440_devrelease():
+    rules = TagRules()
+
+    versions = [
+        ("0.2.0.dev0", "0.2.0.dev0"),
+        ("0.2.0dev0", "0.2.0.dev0"),
+        ("0.2.0.dev0+build.1", "0.2.0.dev0+build.1"),
+        ("0.2.0a1.dev0", "0.2.0a1.dev0"),
+        ("0.2.0a1.dev0+build.1", "0.2.0a1.dev0+build.1"),
+    ]
+    for tag, expected in versions:
+        assert rules.is_version_tag(tag) is True
+        assert str(rules.extract_version(_git_tag(tag))) == expected
+
+    assert rules.is_version_tag("0.2.0.not-a-release") is False
+
+    custom_rules = TagRules(tag_format="release-$version-final")
+    custom_tag = _git_tag("release-0.2.0.dev0-final")
+    assert custom_rules.is_version_tag(custom_tag) is True
+    assert str(custom_rules.extract_version(custom_tag)) == "0.2.0.dev0"
