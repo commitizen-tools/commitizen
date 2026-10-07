@@ -1,3 +1,5 @@
+import pytest
+
 from commitizen.git import GitTag
 from commitizen.tags import TagRules
 
@@ -140,3 +142,81 @@ def test_is_version_tag_accepts_dotless_devrelease_in_custom_tag_format():
 
     extracted = rules.extract_version(_git_tag("version-1.2.3dev1"))
     assert str(extracted) == "1.2.3.dev1"
+
+
+def test_monorepo_ignored_tag_formats_keep_own_tags(capsys: pytest.CaptureFixture):
+    """Regression test for the monorepo workflow in
+    ``docs/tutorials/monorepo_guidance.md``.
+
+    Each component configures a suffixed ``tag_format`` and ignores sibling
+    component tags with a wildcard.
+
+    Ignoring sibling tags must not reject the component's own tags. Ignored
+    tags are expected noise, so they must not emit "Invalid version tag"
+    warnings; only truly unexpected tags warn.
+    """
+    library_foo_rules = TagRules(
+        tag_format="${version}-library-foo",
+        ignored_tag_formats=["${version}-library-(?!foo$).*"],
+    )
+    library_zoo_rules = TagRules(
+        tag_format="${version}-library-zoo",
+        ignored_tag_formats=["${version}-library-(?!zoo$).*"],
+    )
+
+    # Own tags remain version tags, sibling tags are filtered out.
+    assert library_foo_rules.is_version_tag("1.0.0-library-foo") is True
+    assert library_foo_rules.is_version_tag("1.0.0-library-zoo") is False
+
+    assert library_zoo_rules.is_version_tag("1.0.0-library-zoo") is True
+    assert library_zoo_rules.is_version_tag("1.0.0-library-foo") is False
+
+    # Check also for prefix
+    assert library_foo_rules.is_ignored_tag("1.0.0-library-foobar") is True
+
+    # The own tag is parseable, so a rejection above is a filtering problem,
+    # not a parsing one.
+    extracted = library_foo_rules.extract_version(_git_tag("1.0.0-library-foo"))
+    assert str(extracted) == "1.0.0"
+
+    # Ignored tags do not warn. Unknown tags still do.
+    library_foo_rules.is_version_tag("1.0.0-library-zoo", warn=True)
+    library_foo_rules.is_version_tag("unexpected-tag", warn=True)
+    captured = capsys.readouterr()
+    assert "1.0.0-library-zoo" not in captured.err
+    assert "unexpected-tag" in captured.err
+
+
+def test_monorepo_get_version_tags_filters_sibling_components(
+    capsys: pytest.CaptureFixture,
+):
+    """``get_version_tags`` keeps only the component's own tags when the
+    repository also contains sibling component tags, as configured in
+    ``docs/tutorials/monorepo_guidance.md``.
+
+    The changelog and the ``scm`` version provider use this filtering, so the
+    ignored wildcard must silence sibling tags without dropping this
+    component's own tags.
+    """
+    tags = [
+        _git_tag("1.0.0-library-b"),
+        _git_tag("1.0.0-library-z"),
+        _git_tag("1.1.0-library-b"),
+        _git_tag("unexpected-tag"),
+    ]
+    rules = TagRules(
+        tag_format="${version}-library-b",
+        ignored_tag_formats=["${version}-library-(?!b$).*"],
+    )
+
+    version_tags = rules.get_version_tags(tags, warn=True)
+
+    assert [t.name for t in version_tags] == [
+        "1.0.0-library-b",
+        "1.1.0-library-b",
+    ]
+
+    # Only the truly unexpected tag warns; sibling tags are known noise.
+    captured = capsys.readouterr()
+    assert "unexpected-tag" in captured.err
+    assert "1.0.0-library-z" not in captured.err
