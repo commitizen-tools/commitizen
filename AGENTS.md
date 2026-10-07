@@ -1,130 +1,57 @@
-# AGENTS instructions
+# AGENT
+
+- When writing something intended for human consumption (comment, commit message, reply to prompt, documentation, etc.), keep answers short and concise
+- Technical prose only, be direct. Use ASD-STE100 (Simplified Technical English)
+- Use concise, clear, simple language. Define unavoidable jargon before using it
+- Code explains the how. You must always document the code's what and why
+- Always disclose if it was made by an AI model (commit footer, pull request body) with `Assisted By: AI`
+- Ask for clarification if in doubt, don't assume. And if the user provides insightful context, add it to the documentation
+- Always write and maintain the documentation under `docs/`, if it doesn't exist create it, use the context and intuition gathered while coding and interacting with the user.
+- Don't touch blocks of code unrelated to the feature you implement. E.g. Don't add comments to a block of code if you did not create it or modify it
+- Follow the Liskov substitution principle: design by contract
+- Pull requests must follow the [guidelines](docs/contributing/pull_request.md) and the template in `.github/pull_request_template.md`.
+- Commit messages must follow [docs/tutorials/writing_commits.md](docs/tutorials/writing_commits.md).
 
 ## Purpose
 
-This file provides **project-specific guidance for AI agents** (and other automated tools) working on the `commitizen` repository.
-Follow these instructions in addition to any higher-level system or tool rules.
+`commitizen` is a tool for release management, with automatic version bump (git tag and file updates), changelog generation, and commit message enforcement (defaults to "conventional commits").
 
-## Project Overview
+## Coding
 
-- **Project**: `commitizen` - a tool to help enforce and automate conventional commits, version bumps, and changelog generation.
-- **Primary language**: Python (library + CLI).
-- **Cross-platform**: Tests run on Linux, macOS, and Windows. Avoid POSIX-only assumptions in code (paths, subprocesses, line endings).
-- **Key entrypoints**:
-  - `commitizen/cli.py` - main CLI implementation.
-  - `commitizen/commands/` - subcommands such as `bump`, `commit`, `changelog`, `check`, etc.
-  - `commitizen/config/` - configuration discovery and loading.
-  - `commitizen/providers/` - version providers (e.g., `pep621`, `poetry`, `npm`, `uv`).
-- **Config sources**: `pyproject.toml` (project config, poe tasks, ruff, mypy), `.pre-commit-config.yaml` (hooks), `.github/workflows/` (CI).
+Review [`docs/contributing/contributing.md`](docs/contributing/contributing.md)
 
-## General Expectations
+Main commands
 
-- **Preserve public behavior and CLI UX** — no breaking changes to APIs, CLI flags, or exit codes unless explicitly requested.
-- **Update or add tests/docs** when you change user-facing behavior.
-- **Commit messages** must follow [Conventional Commits](https://www.conventionalcommits.org/) (enforced by commitizen itself).
-- **Pull requests** must follow the [Pull Request Guidelines](docs/contributing/pull_request.md) and the template in `.github/pull_request_template.md`.
-
-### Commit and Pull Request Types
-
-Choose the Conventional Commit type based on the change's release impact, not
-the files or subsystem it touches. The type controls automated version bumps:
-
-- `feat` triggers a minor release.
-- `fix`, `perf`, and `refactor` trigger a patch release.
-- `ci`, `docs`, `test`, `build`, and `chore` do not trigger a release.
-- A breaking-change marker triggers a major release.
-
-Use the same rule for pull request titles because squash merges use the title as
-the resulting commit message. In particular, use `ci:` for changes limited to
-workflows or release automation. A scope does not change release impact:
-`fix(ci): ...` still triggers a patch release.
-
-## Setup and Validation
-
-> Full contributor guidelines (prerequisites, workflow, PR process): [`docs/contributing/contributing.md`](docs/contributing/contributing.md).
-
-### Bootstrap
-
-```bash
-uv sync --frozen --group base --group test --group linters
-uv run poe setup-pre-commit   # install git hooks (uses prek, a pre-commit runner)
+```
+uv run poe format
+uv run poe lint
+uv run poe test
+uv run poe ci  # commit check + pre-commit hooks via `prek` + test with coverage
+uv run poe all  # format + lint + check-commit + coverage
 ```
 
-### Local commands
+## Python
 
-- **Format**: `uv run poe format` (runs `ruff check --fix` then `ruff format`)
-- **Lint**: `uv run poe lint` (runs `ruff check` then `mypy`)
-- **Test**: `uv run poe test` (runs `pytest -n auto`)
-- **CI-equivalent**: `uv run poe ci` (commit check + pre-commit hooks via `prek` + test with coverage)
-- **Full local check**: `uv run poe all` (format + lint + check-commit + coverage)
+- Write the Python code with strict type hinting
+- Prefer `enum.StrEnum` to represent states
+- Preserve public behavior and CLI UX (`commitizen/cli.py`), no breaking changes to APIs, CLI flags, or exit codes unless explicitly requested.
+- Errors: Prefer `commitizen/exceptions.py` error types; keep messages clear for CLI users.
 
-Always run at least `uv run ruff check --fix . && uv run ruff format .` before pushing. CI will fail if the formatter modifies any files.
+### Testing
 
-### CI pipeline
+You MUST exclusively use `pytest`.
+You MUST adhere to the following standards:
 
-- CI runs `poe ci` on a matrix of Python 3.10–3.14 × ubuntu/macos/windows.
-- Pre-commit hooks are defined in `.pre-commit-config.yaml` and run via [`prek`](https://github.com/j178/prek) (a `pre-commit` compatible runner).
-- The matrix is **fail-fast**: inspect the earliest failing job that completed; others are cancelled.
-
-### Common CI failure patterns
-
-- **"Format Python code...Failed"**: Run `uv run poe format` and commit the result.
-- **mypy `[arg-type]` on TypedDict**: Dynamically-constructed dicts (e.g., from `pytest.mark.parametrize`) passed to TypedDict-typed params need `# type: ignore[arg-type]`.
-- **"pathspec 'vX.Y.Z' did not match"**: `.pre-commit-config.yaml` pins a tag of this repo. Rebase onto master to pick up the tag.
-- **`VersionProtocol` + `issubclass`**: This Protocol has non-method members (properties), so `issubclass()` raises `TypeError`. Use `hasattr` checks for runtime validation.
-
-## What to Read Before Changing
-
-| Changing... | Read first |
-|---|---|
-| CLI flags/arguments | `commitizen/cli.py`, `docs/commands/<cmd>.md`, `tests/test_cli/` |
-| Bump logic | `commitizen/bump.py`, `commitizen/commands/bump.py`, `docs/commands/bump.md` |
-| Changelog generation | `commitizen/changelog.py`, `commitizen/changelog_formats/`, `docs/commands/changelog.md` |
-| Version schemes | `commitizen/version_schemes.py`, `tests/test_version_schemes.py` |
-| Version providers | `commitizen/providers/`, `tests/test_providers.py`, `docs/config/version_provider.md` |
-| Config resolution | `commitizen/config/`, `tests/test_conf.py`, `docs/config/` |
-| Tag handling | `commitizen/tags.py`, `tests/test_tags.py` |
-| Pre-commit / CI | `.pre-commit-config.yaml`, `.github/workflows/`, `pyproject.toml` (poe tasks) |
-
-## Coding Guidelines
-
-- **Types**: Preserve or improve existing type hints.
-- **Errors**: Prefer `commitizen/exceptions.py` error types; keep messages clear for CLI users.
-- **Output**: Use `commitizen/out.py`; do not add noisy logging.
-- **Testing**: Follow the Arrange, Act, Assert (AAA) pattern. Visually separate these phases with blank lines or comments.
-
-## When Unsure
-
-- Prefer **reading tests and documentation first** to understand the expected behavior.
-- When behavior is ambiguous, **assume backward compatibility** with current tests and docs is required.
+- Structure: Follow the Arrange, Act, Assert (AAA) pattern. Visually separate these phases with blank lines and comments
+- Fixtures over Inline Setup: Use existing `pytest` fixtures to create git projects, files, tags, etc. Do not pollute the test body with complex setup logic if it can be abstracted into a fixture
+- Test Documentation: Complex tests must include a brief docstring explaining the business scenario or edge case being validated, or issue worked on.
 
 ## Documentation Guidelines
 
-- 100% Coverage: Every new module, class, method, and function MUST have a docstring. No exceptions
+- ALWAYS document functions and classes
+- Use Google Docstring Style with these major modifications:
+  - NEVER include type hints in the docstring. We rely exclusively on Python's PEP 484 type signatures
+  - Classes MUST include an example. Any class documentation must contain a brief usage example formatted in markdown
+  - Class Attributes MUST be documented. The class docstring must document the instance variables initialized in `__init__` within an `Attributes:` section
+- If the code is too complex or solutions are discarded, document them in a **Notes** section
 - Even simple functions or internal helpers require documentation to explain their context
-
-### Docstring Format: Modified Google Style
-
-Use Google Docstring Style with these major modifications:
-
-1. **NEVER include type hints in the docstring.** We rely exclusively on Python's PEP 484 type signatures.
-2. **Classes MUST include an example.** Any class documentation must contain a brief usage example formatted in Markdown.
-3. **Class Attributes MUST be documented.** The class docstring must document the instance variables initialized in `__init__` within an `Attributes:` section.
-
-**Format Rules:**
-
-- `Args:`, `Returns:`, and `Attributes:` sections must describe the _semantic meaning_ and _constraints_ of the variables, not their types.
-- Omit the type in the lists (e.g., use `user_id: The ID of the user`, NOT `user_id (int): The ID of the user`).
-
-### Content Focus: The "What" and "Why"
-
-Code explains _how_. Your docstrings must explain _what_ and _why_.
-
-When documenting, you may include:
-
-1. **The Core Intent** What business or technical rule is this solving?
-2. **Considerations:** Architectural choices. Why was this approach chosen over the obvious alternative? Why the complexity (if introduced)?
-3. **Discarded Approaches:** If a simpler method wasn't used (e.g., avoiding an ORM feature for raw SQL, or caching strategies), explain what was discarded and why.
-4. **Edge Cases & Gotchas:** What weird scenarios does this code handle?
-
-In the end, the reader must understand the intention behind the decisions, to avoid making the same mistakes.
