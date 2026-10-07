@@ -13,11 +13,11 @@ Before setting up the workflow, you'll need:
 1. A personal access token with repository write permissions
 1. Commitizen configured in your project (see [configuration documentation](https://commitizen-tools.github.io/commitizen/config/configuration_file/index.md))
 
-### Automatic version bumping
+### Automatic Version Bumping
 
 To automatically execute `cz bump` in your CI and push the new commit and tag back to your repository, follow these steps:
 
-#### Step 1: Create a personal access token
+#### Step 1: Create a Personal Access Token
 
 1. Go to [GitHub Settings > Developer settings > Personal access tokens](https://github.com/settings/tokens)
 1. Click "Generate new token (classic)"
@@ -29,7 +29,7 @@ Important: Use Personal Access Token, not GITHUB_TOKEN
 
 If you use `GITHUB_TOKEN` instead of `PERSONAL_ACCESS_TOKEN`, the workflow won't trigger another workflow run. This is a GitHub security feature to prevent infinite loops. The `GITHUB_TOKEN` is treated like using `[skip ci]` in other CI systems.
 
-#### Step 2: Add the token as a repository secret
+#### Step 2: Add the Token as a Repository Secret
 
 1. Go to your repository on GitHub
 1. Navigate to `Settings > Secrets and variables > Actions`
@@ -38,11 +38,11 @@ If you use `GITHUB_TOKEN` instead of `PERSONAL_ACCESS_TOKEN`, the workflow won't
 1. Paste the token you copied in Step 1
 1. Click "Add secret"
 
-#### Step 3: Create the workflow file
+#### Step 3: Create the Workflow File
 
-Create a new file `.github/workflows/bumpversion.yml` in your repository with the following content:
+Create a new file `.github/workflows/bump-version.yml` in your repository with the following content:
 
-.github/workflows/bumpversion.yml
+.github/workflows/bump-version.yml
 
 ```
 name: Bump version
@@ -50,88 +50,71 @@ name: Bump version
 on:
   push:
     branches:
-      - master  # or 'main' if that's your default branch
+      - main
 
 jobs:
-  bump-version:
-    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+  bump:
     runs-on: ubuntu-latest
-    name: "Bump version and create changelog with commitizen"
+    permissions:
+      contents: write
+      actions: write
     steps:
-      - name: Check out
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
-          token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
           fetch-depth: 0
-      - name: Create bump and changelog
-        uses: commitizen-tools/commitizen-action@master
+          fetch-tags: true
+      - uses: commitizen-tools/setup-cz@main
         with:
-          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          python-version: "3.x"
+      - id: bump-version
+        run: |
+          old_sha="$(git rev-parse HEAD)"
+
+          cz --no-raise 21 bump --yes --annotated-tag
+
+          if [ "$(git rev-parse HEAD)" = "$old_sha" ]; then
+            echo "No bump-eligible commits found, skipping release."
+            echo "bumped=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "bumped=true" >> $GITHUB_OUTPUT
+          git push --follow-tags
+          new_version="$(cz version -p)"
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+          new_version_tag="$(cz version -p --tag)"
+          echo "new_version_tag=$new_version_tag" >> $GITHUB_OUTPUT
+      - name: Github Release
+        if: steps.bump-version.outputs.bumped == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NEW_VERSION: ${{ steps.bump-version.outputs.new_version }}
+          NEW_VERSION_TAG: ${{ steps.bump-version.outputs.new_version_tag }}
+        run: |
+          gh release create "${NEW_VERSION_TAG}" --notes-file .changelog.md
+          cz changelog --dry-run "${NEW_VERSION}" > .changelog.md
 ```
 
 #### How it works
 
-- **Trigger**: The workflow runs on every push to the `master` branch (or `main` if you change it)
-- **Conditional check**: The `if` condition prevents infinite loops by skipping the job if the commit message starts with `bump:`
-- **Checkout**: Uses your personal access token to check out the repository with full history (`fetch-depth: 0`)
-- **Bump**: The `commitizen-action` automatically:
+- The action will trigger the workflow on every push to the `main` branch.
+- The job requests `contents: write` and `actions: write` so it can push the bump commit and tag, and trigger dependent workflows.
+- **Setup**: The `setup-cz` action installs the Commitizen CLI with the requested Python version
+- **Bump**: The `cz bump --yes --annotated-tag` command automatically:
   - Determines the version increment based on your commit messages
   - Updates version files (as configured in your `pyproject.toml` or other config)
-  - Creates a new git tag
+  - Creates a new annotated git tag
   - Generates/updates the changelog
-  - Pushes the commit and tag back to the repository
+- **Push**: `git push --follow-tags` pushes the bump commit along with the new tag back to the repository
+- **Github Release**: creates a Github Release
 
 Once you push this workflow file to your repository, it will automatically run on the next push to your default branch.
 
-Check out [commitizen-action](https://github.com/commitizen-tools/commitizen-action) for more details.
+Check out [commitizen-tools/setup-cz](https://github.com/commitizen-tools/setup-cz) for more details.
 
-### Creating a GitHub release
+### Previewing the Version Bump on Pull Requests
 
-To automatically create a GitHub release when a new version is bumped, you can extend the workflow above.
-
-The `commitizen-action` creates an environment variable called `REVISION` containing the newly created version. You can use this to create a release with the changelog content.
-
-.github/workflows/bumpversion.yml
-
-```
-name: Bump version
-
-on:
-  push:
-    branches:
-      - master  # or 'main' if that's your default branch
-
-jobs:
-  bump-version:
-    if: "!startsWith(github.event.head_commit.message, 'bump:')"
-    runs-on: ubuntu-latest
-    name: "Bump version and create changelog with commitizen"
-    steps:
-      - name: Check out
-        uses: actions/checkout@v6
-        with:
-          token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
-          fetch-depth: 0
-      - name: Create bump and changelog
-        uses: commitizen-tools/commitizen-action@master
-        with:
-          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          changelog_increment_filename: body.md
-      - name: Release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: v${{ env.REVISION }}
-          bodyFile: "body.md"
-          skipIfReleaseExists: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-```
-
-You can find the complete workflow in our repository at [bumpversion.yml](https://github.com/commitizen-tools/commitizen/blob/master/.github/workflows/bumpversion.yml).
-
-### Previewing the version bump on pull requests
-
-To help reviewers spot unexpected version bumps before merging, you can run `cz bump --dry-run` on every pull request and post (or update) a sticky comment summarizing the would-be version bump.
+To help reviewers spot unexpected version bumps before merging, you can run `cz version -p` on every pull request and post (or update) a sticky comment summarizing the would-be version bump.
 
 Create `.github/workflows/pr-bump-preview.yml`:
 
@@ -159,21 +142,20 @@ jobs:
       }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check out PR head
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
       - uses: commitizen-tools/setup-cz@main
         with:
+          python-version: "3.x"
           set-git-config: false
-      - name: Run cz bump --dry-run
+      - name: Run cz version
         id: dry-run
         run: |
           set +e
-          output="$(cz bump --dry-run --yes 2>&1)"
+          output="$(cz version -p --next 2>&1)"
           status=$?
           set -e
           {
@@ -228,17 +210,9 @@ jobs:
           edit-mode: replace
 ````
 
-#### How it works
-
-- **Trigger**: `pull_request_target` runs in the context of the base repository, which gives the workflow `pull-requests: write` permission even for PRs from forks. We deliberately gate the job to **same-repo PRs only** (`head.repo == base.repo`); fork PRs are skipped. This is because `cz bump` renders [Jinja templates from the working directory](https://github.com/commitizen-tools/commitizen/blob/master/commitizen/changelog.py) whenever [`update_changelog_on_bump`](https://commitizen-tools.github.io/commitizen/config/configuration_file/index.md) is enabled, and the renderer is not sandboxed — running it against fork-controlled files under a write token would risk arbitrary code execution and token exfiltration. Same-repo PRs are written by collaborators who already have push access, so the same risk doesn't apply.
-- **Setup**: [`commitizen-tools/setup-cz`](https://github.com/commitizen-tools/setup-cz) installs the Commitizen CLI; no language-specific build tooling is required.
-- **Defense in depth**: `persist-credentials: false` on `actions/checkout` keeps the workflow token out of the local git config.
-- **Dry-run**: `cz bump --dry-run --yes` computes the next version (and, if `update_changelog_on_bump` is set in your config, also the changelog entries that would be produced). Exit code `21` (`NoneIncrementExit`) is treated as "no eligible bump" rather than a failure.
-- **Sticky comment**: [`peter-evans/find-comment`](https://github.com/peter-evans/find-comment) looks up an existing comment by the hidden HTML marker `<!-- commitizen-bump-preview -->` and bot author, then [`peter-evans/create-or-update-comment`](https://github.com/peter-evans/create-or-update-comment) edits it in place (or creates a new one on the first run when the marker is not yet present), instead of leaving a growing trail of comments.
-
 You can find the complete workflow in our repository at [pr-bump-preview.yml](https://github.com/commitizen-tools/commitizen/blob/master/.github/workflows/pr-bump-preview.yml).
 
-### Publishing a Python package
+### Publishing a Python Package
 
 After a new version tag is created by the bump workflow, you can automatically publish your package to PyPI.
 
@@ -264,7 +238,7 @@ Instead of API tokens, consider using [PyPI trusted publishing](https://docs.pyp
 1. Paste the PyPI token
 1. Click "Add secret"
 
-#### Step 3: Create the publish workflow
+#### Step 3: Create the Publish Workflow
 
 Create a new file `.github/workflows/pythonpublish.yml` that triggers on tag pushes:
 
@@ -282,31 +256,22 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
           python-version: "3.x"
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          version: latest
-          virtualenvs-in-project: true
-          virtualenvs-create: true
-      - name: Install dependencies
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v10
+      - name: publish
         run: |
-          poetry --version
-          poetry install
-      - name: Build and publish
-        env:
-          POETRY_HTTP_BASIC_PYPI_USERNAME: __token__
-          POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        run: poetry publish --build
+          uv sync
+          uv publish --username "${PYPI_USERNAME}" --password "${PYPI_PASSWORD}"
 ```
 
-This workflow uses Poetry to build and publish the package. You can find the complete workflow in our repository at [pythonpublish.yml](https://github.com/commitizen-tools/commitizen/blob/master/.github/workflows/pythonpublish.yml).
+This workflow uses uv to build and publish the package. You can find the complete workflow in our repository at [pythonpublish.yml](https://github.com/commitizen-tools/commitizen/blob/master/.github/workflows/pythonpublish.yml).
 
 Alternative publishing methods
 
