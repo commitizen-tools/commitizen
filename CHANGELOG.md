@@ -1,3 +1,9 @@
+## v4.19.2 (2026-10-07)
+
+### Fix
+
+- **tags**: give ignored tag formats precedence over version formats
+
 ## v4.19.1 (2026-10-03)
 
 ### Refactor
