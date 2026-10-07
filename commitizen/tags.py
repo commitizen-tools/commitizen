@@ -127,15 +127,18 @@ class TagRules:
         if `warn` is `True`, it will print a warning message if the tag is not a version tag.
         """
         tag = tag.name if isinstance(tag, GitTag) else tag
+        if self.is_ignored_tag(tag):
+            return False
+
         is_legit = any(regex.fullmatch(tag) for regex in self.version_regexes)
-        if warn and not is_legit and not self.is_ignored_tag(tag):
+        if warn and not is_legit:
             out.warn(self._version_tag_error(tag))
         return is_legit
 
     def is_ignored_tag(self, tag: str | GitTag) -> bool:
         """True if a given tag can be ignored"""
         tag = tag.name if isinstance(tag, GitTag) else tag
-        return any(regex.match(tag) for regex in self.ignored_regexes)
+        return any(regex.fullmatch(tag) for regex in self.ignored_regexes)
 
     def get_version_tags(
         self, tags: Iterable[GitTag], warn: bool = False

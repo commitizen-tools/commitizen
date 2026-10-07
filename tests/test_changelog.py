@@ -1591,6 +1591,16 @@ def test_tag_rules_with_ignored_tags(tag: TagDef):
     assert rules.is_ignored_tag(tag.name) is tag.is_ignored
 
 
+def test_ignored_version_tag_is_not_version_tag(capsys: pytest.CaptureFixture):
+    rules = changelog.TagRules(
+        scheme=Pep440, tag_format="$version", ignored_tag_formats=["$version-hotfix-1"]
+    )
+
+    assert rules.is_version_tag("1.2.3-hotfix-1", warn=True) is False
+    assert rules.is_version_tag("1.2.3", warn=True) is True
+    assert capsys.readouterr().err == ""
+
+
 def test_tags_rules_get_version_tags(capsys: pytest.CaptureFixture):
     tags = [
         git.GitTag("v1.1.0", "17efb44d2cd16f6621413691a543e467c7d2dda6", "2019-04-14"),
