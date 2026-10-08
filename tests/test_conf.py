@@ -86,6 +86,7 @@ _settings: dict[str, Any] = {
     "bump_message": None,
     "retry_after_failure": False,
     "allow_abort": False,
+    "allow_dirty": True,
     "allowed_prefixes": [
         "Merge",
         "Revert",
@@ -127,6 +128,7 @@ _new_settings: dict[str, Any] = {
     "bump_message": None,
     "retry_after_failure": False,
     "allow_abort": False,
+    "allow_dirty": True,
     "allowed_prefixes": [
         "Merge",
         "Revert",

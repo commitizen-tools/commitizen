@@ -390,6 +390,26 @@ cz bump --allow-no-commit 2.0.0
 
     This makes the new release visible in the changelog while still showing that no commit-based changes were included.
 
+### `--allow-dirty`
+
+By default, `cz bump` creates the bump commit with `git commit -a`, so any uncommitted change to a tracked file is included in the release commit.
+This is convenient in CI, but on a local machine it can let unrelated work-in-progress end up in a release.
+
+Use `--no-allow-dirty` (or set [`allow_dirty = false`](../config/bump.md#allow_dirty)) to make `cz bump` stop with exit code `33` (`DirtyWorkingTreeError`) and list the affected files instead.
+`--allow-dirty` overrides the configuration for a single run.
+
+```sh
+# Refuse to bump if tracked files have pending changes
+cz bump --no-allow-dirty
+
+# The configuration sets `allow_dirty = false`, but bump anyway this time
+cz bump --allow-dirty
+```
+
+!!! note
+    Untracked files never block the bump, because `git commit -a` does not include them.
+    The check is skipped for `--dry-run`, `--get-next`, and `--version-files-only`, since those do not create a commit.
+
 ### `--tag-format`
 
 `tag_format` and [version_scheme][version_scheme] are combined to make Git tag names from versions.

@@ -42,6 +42,7 @@ All exit codes are defined in [commitizen/exceptions.py](https://github.com/comm
 | `ConfigFileNotFound`         | 30        | The configuration file is not found                                                                  |
 | `ConfigFileIsEmpty`          | 31        | The configuration file is empty                                                                            |
 | `CommitMessageLengthLimitExceededError`| 32        | The commit message length exceeds the given limit.                                               |
+| `DirtyWorkingTreeError`      | 33        | Tracked files have uncommitted changes and `allow_dirty` is disabled                                       |
 
 ## Ignoring Exit Codes
 
