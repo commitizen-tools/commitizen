@@ -86,3 +86,49 @@ ignored_tag_formats = [
     "v${major}.${minor}",
 ]
 ```
+
+## Why does `cz bump` also change a dependency that has the same version as my project?
+
+When an entry in [`version_files`](https://commitizen-tools.github.io/commitizen/config/bump/#version_files) has no pattern, or a loose one, Commitizen replaces the current version on every line that matches it. If a dependency happens to use the same version string as your project, that line gets bumped too:
+
+pyproject.toml
+
+```
+[tool.poetry]
+version = "6.1.0"
+
+[tool.poetry.dependencies]
+smart-open = {version = ">=5.2.0,<6.1.0", extras = ["s3"]}  # also becomes <6.2.0
+
+[tool.commitizen]
+version = "6.1.0"
+version_files = ["pyproject.toml:version"]
+```
+
+There are two ways to avoid this.
+
+### Option 1 (recommended): use a version provider
+
+Let a [version provider](https://commitizen-tools.github.io/commitizen/config/version_provider/index.md) update the version field directly instead of listing the file in `version_files`. Providers edit the exact key (for example `tool.poetry.version` or `project.version`), so dependencies are never touched:
+
+pyproject.toml
+
+```
+[tool.commitizen]
+version_provider = "poetry"  # or "pep621", "uv", "npm", "cargo", ...
+```
+
+See also the [PEP621 FAQ entry](#support-for-pep621) above.
+
+### Option 2: anchor the `version_files` pattern
+
+The part after the colon in a `version_files` entry is a regular expression, matched against each line. Anchor it with `^` so only lines that *start* with `version` are updated:
+
+pyproject.toml
+
+```
+[tool.commitizen]
+version_files = ["pyproject.toml:^version"]
+```
+
+See [`version_files`](https://commitizen-tools.github.io/commitizen/config/bump/#version_files) for more details on the `file:pattern` syntax.

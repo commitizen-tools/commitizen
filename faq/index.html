@@ -1476,6 +1476,45 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#why-does-cz-bump-also-change-a-dependency-that-has-the-same-version-as-my-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does cz bump also change a dependency that has the same version as my project?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why does cz bump also change a dependency that has the same version as my project?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-recommended-use-a-version-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 1 (recommended): use a version provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-anchor-the-version_files-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 2: anchor the version_files pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2184,6 +2223,45 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#why-does-cz-bump-also-change-a-dependency-that-has-the-same-version-as-my-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does cz bump also change a dependency that has the same version as my project?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why does cz bump also change a dependency that has the same version as my project?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-recommended-use-a-version-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 1 (recommended): use a version provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-anchor-the-version_files-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 2: anchor the version_files pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2260,6 +2338,34 @@ your Commitizen configuration will look like this:</p>
 <span class="w">    </span><span class="s2">&quot;v${major}.${minor}&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 </code></pre></div>
+<h2 id="why-does-cz-bump-also-change-a-dependency-that-has-the-same-version-as-my-project">Why does <code>cz bump</code> also change a dependency that has the same version as my project?<a class="headerlink" href="#why-does-cz-bump-also-change-a-dependency-that-has-the-same-version-as-my-project" title="Permanent link">&para;</a></h2>
+<p>When an entry in <a href="../config/bump/#version_files"><code>version_files</code></a> has no pattern, or a loose one, Commitizen replaces the current version on every line that matches it.
+If a dependency happens to use the same version string as your project, that line gets bumped too:</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.poetry]</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;6.1.0&quot;</span>
+
+<span class="k">[tool.poetry.dependencies]</span>
+<span class="n">smart-open</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">version</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;&gt;=5.2.0,&lt;6.1.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">extras</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;s3&quot;</span><span class="p">]}</span><span class="w">  </span><span class="c1"># also becomes &lt;6.2.0</span>
+
+<span class="k">[tool.commitizen]</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;6.1.0&quot;</span>
+<span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyproject.toml:version&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>There are two ways to avoid this.</p>
+<h3 id="option-1-recommended-use-a-version-provider">Option 1 (recommended): use a version provider<a class="headerlink" href="#option-1-recommended-use-a-version-provider" title="Permanent link">&para;</a></h3>
+<p>Let a <a href="../config/version_provider/">version provider</a> update the version field directly instead of listing the file in <code>version_files</code>.
+Providers edit the exact key (for example <code>tool.poetry.version</code> or <code>project.version</code>), so dependencies are never touched:</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;poetry&quot;</span><span class="w">  </span><span class="c1"># or &quot;pep621&quot;, &quot;uv&quot;, &quot;npm&quot;, &quot;cargo&quot;, ...</span>
+</code></pre></div>
+<p>See also the <a href="#support-for-pep621">PEP621 FAQ entry</a> above.</p>
+<h3 id="option-2-anchor-the-version_files-pattern">Option 2: anchor the <code>version_files</code> pattern<a class="headerlink" href="#option-2-anchor-the-version_files-pattern" title="Permanent link">&para;</a></h3>
+<p>The part after the colon in a <code>version_files</code> entry is a regular expression, matched against each line.
+Anchor it with <code>^</code> so only lines that <em>start</em> with <code>version</code> are updated:</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[tool.commitizen]</span>
+<span class="n">version_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyproject.toml:^version&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>See <a href="../config/bump/#version_files"><code>version_files</code></a> for more details on the <code>file:pattern</code> syntax.</p>
 
 
 
@@ -2280,7 +2386,7 @@ your Commitizen configuration will look like this:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="January 7, 2026 10:36:36 UTC">January 7, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 6, 2026 22:49:25 UTC">October 6, 2026</span>
   </span>
 
     
