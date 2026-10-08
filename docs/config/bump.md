@@ -128,7 +128,7 @@ prerelease_offset = 1
 
 ## `retry_bump_after_failure`
 
-when set to `true`, `cz bump` is equivalent to `cz bump --retry`. If the bump commit fails the first time (for example because a pre-commit hook reformatted a file), it is retried once. The retry only happens when the changelog is also updated (`--changelog` or `update_changelog_on_bump = true`).
+When set to `true`, `cz bump` is equivalent to `cz bump --retry`. If the bump commit fails the first time (for example because a pre-commit hook reformatted a file), it is retried once. The retry only happens when the changelog is also updated (`--changelog` or `update_changelog_on_bump = true`).
 
 If not specified, defaults to `false`.
 
