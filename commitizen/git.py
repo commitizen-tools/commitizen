@@ -311,6 +311,27 @@ def is_staging_clean() -> bool:
     return not bool(c.out)
 
 
+def get_uncommitted_tracked_files() -> list[str]:
+    """Return the tracked files that have staged or unstaged modifications.
+
+    `cz bump` commits with `git commit -a`, which sweeps every modified tracked
+    file into the release commit. This lists exactly those files so callers can
+    refuse to bump from a dirty working tree.
+
+    Untracked files are deliberately excluded: `git commit -a` never picks them
+    up, so they cannot leak into the release commit.
+
+    Returns:
+        The paths reported by `git status`, relative to the repository root.
+        Empty when the working tree is clean.
+    """
+    c = cmd.run(["git", "status", "--porcelain", "--untracked-files=no"])
+    if c.return_code != 0:
+        raise GitCommandError(c.err)
+    # Each porcelain line is "XY <path>" (or "XY <orig> -> <path>" for renames).
+    return [line[3:] for line in c.out.splitlines() if line.strip()]
+
+
 def is_git_project() -> bool:
     c = cmd.run(["git", "rev-parse", "--is-inside-work-tree"])
     return c.out.strip() == "true"

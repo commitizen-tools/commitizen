@@ -516,3 +516,25 @@ def test_get_default_branch_error(util: UtilFixture):
     )
     with pytest.raises(GitCommandError):
         git.get_default_branch()
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_get_uncommitted_tracked_files():
+    # Arrange
+    Path("committed.txt").touch()
+    Path("staged.txt").touch()
+    cmd.run(["git", "add", "committed.txt", "staged.txt"])
+    cmd.run(["git", "commit", "-m", "add files"])
+    assert git.get_uncommitted_tracked_files() == []
+
+    # Act
+    Path("committed.txt").write_text("unstaged change")
+    Path("staged.txt").write_text("staged change")
+    cmd.run(["git", "add", "staged.txt"])
+    Path("untracked.txt").touch()
+
+    # Assert
+    assert sorted(git.get_uncommitted_tracked_files()) == [
+        "committed.txt",
+        "staged.txt",
+    ]

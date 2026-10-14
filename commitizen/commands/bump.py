@@ -13,6 +13,7 @@ from commitizen.defaults import Settings
 from commitizen.exceptions import (
     BumpCommitFailedError,
     BumpTagFailedError,
+    DirtyWorkingTreeError,
     DryRunExit,
     ExpectedExit,
     InvalidManualVersion,
@@ -79,6 +80,7 @@ class Bump:
                 **{
                     k: v
                     for k in (
+                        "allow_dirty",
                         "annotated_tag_message",
                         "annotated_tag",
                         "bump_message",
@@ -196,6 +198,32 @@ class Bump:
         if errors:
             raise NotAllowed("\n".join(errors))
 
+    def _ensure_clean_working_tree(self) -> None:
+        """Abort the bump if tracked files have uncommitted changes.
+
+        The bump commit is created with `git commit -a`, so any pending edit to
+        a tracked file silently ends up in the release. When `allow_dirty` is
+        disabled we refuse to continue instead.
+
+        This runs before Commitizen touches any file (changelog, version files,
+        provider), so every reported change is one the user made. That is why
+        no exclusion list for `version_files` or the changelog is needed.
+        """
+        if self.bump_settings.get("allow_dirty", True):
+            return
+
+        dirty_files = git.get_uncommitted_tracked_files()
+        if not dirty_files:
+            return
+
+        raise DirtyWorkingTreeError(
+            "[DIRTY_WORKING_TREE]\n"
+            "Tracked files have uncommitted changes that would be included "
+            "in the bump commit:\n"
+            + "\n".join(f"  {path}" for path in dirty_files)
+            + "\nCommit or stash them, or use --allow-dirty to bump anyway."
+        )
+
     def _resolve_increment_and_new_version(
         self, current_version: VersionProtocol, current_tag: git.GitTag | None
     ) -> tuple[Increment | None, VersionProtocol]:
@@ -257,6 +285,17 @@ class Bump:
         self._validate_arguments(current_version)
 
         next_version_to_stdout = self.arguments["get_next"]
+
+        # Only guard runs that will create a commit, and do it before any
+        # interactive prompt so the user isn't asked questions for nothing.
+        if not (
+            next_version_to_stdout
+            or self.arguments["dry_run"]
+            or self.arguments.get("files_only")
+            or self.arguments.get("version_files_only")
+        ):
+            self._ensure_clean_working_tree()
+
         if next_version_to_stdout:
             for value, option in (
                 (self.changelog_flag, "--changelog"),
