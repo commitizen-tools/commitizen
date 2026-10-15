@@ -53,11 +53,42 @@ def test_get_format_empty_filename(config: BaseConfig, filename: str | None):
 @pytest.mark.parametrize("filename", [None, ""])
 def test_get_format_empty_filename_no_setting(config: BaseConfig, filename: str | None):
     config.settings["changelog_format"] = None
-    with pytest.raises(ChangelogFormatUnknown):
+    with pytest.raises(ChangelogFormatUnknown) as excinfo:
         get_changelog_format(config, filename)
+    # The error message should hint at setting `changelog_format` and list
+    # the known formats so users on non-standard file extensions know what
+    # to do (#894).
+    msg = str(excinfo.value)
+    assert "changelog_format" in msg
+    assert "Known formats" in msg
 
 
 @pytest.mark.parametrize("filename", ["extensionless", "file.unknown"])
 def test_get_format_unknown(config: BaseConfig, filename: str | None):
-    with pytest.raises(ChangelogFormatUnknown):
+    with pytest.raises(ChangelogFormatUnknown) as excinfo:
         get_changelog_format(config, filename)
+    # Same hint when the filename extension is unknown.
+    msg = str(excinfo.value)
+    assert "changelog_format" in msg
+    assert "Known formats" in msg
+
+
+def test_get_format_unknown_name_lists_known_formats(config: BaseConfig):
+    """Regression test for #894: when ``changelog_format`` is set to an
+    unknown value, the error must list the registered formats so users
+    can self-correct."""
+    config.settings["changelog_format"] = "definitely-not-a-format"
+    with pytest.raises(ChangelogFormatUnknown) as excinfo:
+        get_changelog_format(config)
+    msg = str(excinfo.value)
+    assert "definitely-not-a-format" in msg
+    assert "Known formats" in msg
+
+
+def test_get_format_unknown_name_with_known_filename_raises(config: BaseConfig):
+    config.settings["changelog_format"] = "invalidformat"
+    with pytest.raises(ChangelogFormatUnknown) as excinfo:
+        get_changelog_format(config, "CHANGELOG.md")
+    msg = str(excinfo.value)
+    assert "invalidformat" in msg
+    assert "Known formats" in msg
