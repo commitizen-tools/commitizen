@@ -200,8 +200,51 @@ def test_questions_accept_any_question_shape(gen_module: Any) -> None:
     }
 
 
-def test_questions_accept_documented_questionary_shapes(gen_module: Any) -> None:
-    """Documented select prompts, string choices, and default-less confirms validate."""
+@pytest.mark.parametrize(
+    "prompt_type",
+    [
+        "list",
+        "select",
+        "input",
+        "text",
+        "path",
+        "editor",
+        "checkbox",
+        "password",
+        "rawselect",
+        "autocomplete",
+        "confirm",
+    ],
+)
+def test_questions_accept_questionary_prompt_types(
+    gen_module: Any, prompt_type: str
+) -> None:
+    """Runtime questionary prompt types should not be rejected by the schema."""
+    question: dict[str, Any] = {
+        "type": prompt_type,
+        "name": f"{prompt_type}_answer",
+        "message": f"Prompt for {prompt_type}",
+    }
+    if prompt_type in {"list", "select", "checkbox", "rawselect", "autocomplete"}:
+        question["choices"] = [
+            "feature",
+            {"value": "fix", "name": "Fix", "key": "f"},
+        ]
+
+    instance = {
+        **VALID_CONFIG,
+        "customize": {
+            **VALID_CONFIG["customize"],
+            "questions": [question],
+        },
+    }
+    jsonschema.validate(instance, gen_module.generate_schema())
+
+
+def test_questions_accept_documented_string_choices_and_optional_confirm_default(
+    gen_module: Any,
+) -> None:
+    """Documented string choices and confirms without an explicit default validate."""
     instance = {
         **VALID_CONFIG,
         "customize": {
@@ -233,7 +276,6 @@ def test_questions_require_dispatch_fields(gen_module: Any) -> None:
 
     with pytest.raises(jsonschema.ValidationError):
         jsonschema.validate(instance, gen_module.generate_schema())
-
 
 
 def test_wrapper_schema_matches_committed_file(gen_module: Any) -> None:
