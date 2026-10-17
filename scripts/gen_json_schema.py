@@ -33,7 +33,11 @@ from commitizen.defaults import DEFAULT_SETTINGS, Settings
 SCHEMA_PATH = (
     Path(__file__).resolve().parents[1] / "schemas" / "commitizen-config.schema.json"
 )
+SETTINGS_SCHEMA_ID = "https://raw.githubusercontent.com/commitizen-tools/commitizen/master/schemas/commitizen-config.schema.json"
 SCHEMA_ID = "https://json.schemastore.org/commitizen.json"
+WRAPPER_SCHEMA_PATH = (
+    Path(__file__).resolve().parents[1] / "schemas" / "commitizen-wrapper.schema.json"
+)
 META_SCHEMA = "https://json-schema.org/draft/2020-12/schema"
 
 _ARRAY_ORIGINS = (list, Sequence, Iterable)
@@ -228,13 +232,56 @@ def _apply_defaults(schema: dict[str, Any], defaults: Mapping[str, Any]) -> None
             schema["properties"][name]["default"] = value
 
 
-def generate_schema() -> dict[str, Any]:
-    """Build the JSON Schema document for the commitizen configuration.
+def _questions_schema() -> dict[str, Any]:
+    """Describe the questionary configuration accepted by the runtime.
 
-    The top-level object mirrors the ``Settings`` TypedDict; the ``customize``
-    property embeds the ``CzSettings`` TypedDict. Unknown keys are permitted
-    because commitizen stores them (the ``extras`` setting) and plugins may
-    extend the settings in the future.
+    The runtime supports questionary prompt types beyond the narrower legacy
+    ``CzQuestion`` TypedDict union. Keep common fields typed, require fields
+    needed by the prompt dispatcher, and allow plugin/questionary-specific
+    options instead of rejecting valid configuration.
+    """
+    choice_schema = {
+        "anyOf": [
+            {"type": "string"},
+            {
+                "type": "object",
+                "properties": {
+                    "value": {},
+                    "name": {"type": "string"},
+                    "key": {"type": "string"},
+                },
+                "required": ["value"],
+                "additionalProperties": True,
+            },
+        ]
+    }
+    return {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "type": {"type": "string", "minLength": 1},
+                "name": {"type": "string", "minLength": 1},
+                "message": {"type": "string"},
+                "choices": {"type": "array", "items": choice_schema},
+                "default": {},
+                "use_shortcuts": {"type": "boolean"},
+                "use_search_filter": {"type": "boolean"},
+                "use_jk_keys": {"type": "boolean"},
+            },
+            "required": ["type", "name", "message"],
+            "additionalProperties": True,
+        },
+    }
+
+
+def generate_schema() -> dict[str, Any]:
+    """Build the schema for the settings object used in ``[tool.commitizen]``.
+
+    Unknown keys are permitted because plugins may extend the settings in the
+    future. The runtime accepts more questionary prompt types than the legacy
+    ``CzQuestion`` type union, so questions use a permissive runtime-aligned
+    schema with the common fields validated.
     """
     settings_schema = _typed_dict_to_schema(Settings)
     _apply_defaults(settings_schema, DEFAULT_SETTINGS)
@@ -242,19 +289,45 @@ def generate_schema() -> dict[str, Any]:
         description = SETTING_DESCRIPTIONS.get(name)
         if description is not None:
             settings_schema["properties"][name]["description"] = description
+    customize = settings_schema["properties"].get("customize", {})
+    customize_properties = customize.get("properties", {})
+    if "questions" in customize_properties:
+        customize_properties["questions"] = _questions_schema()
     return {
         "$schema": META_SCHEMA,
-        "$id": SCHEMA_ID,
-        "title": "commitizen",
+        "$id": SETTINGS_SCHEMA_ID,
+        "title": "commitizen settings",
         "description": (
-            "Configuration for commitizen, the conventional commit tool. "
-            "Describes the contents of the commitizen section: the "
-            "[tool.commitizen] table in pyproject.toml (referenced with a "
-            "#:schema comment) or the commitizen key in a .cz.json file "
-            "(referenced with a $schema key)."
+            "Settings for Commitizen. Use this schema for the [tool.commitizen] "
+            "table in pyproject.toml; .cz.json and .cz.yaml files wrap these "
+            "settings in a top-level 'commitizen' key."
         ),
         "type": "object",
         "properties": settings_schema["properties"],
+        "additionalProperties": True,
+    }
+
+
+def generate_wrapper_schema() -> dict[str, Any]:
+    """Build the schema for .cz.json/.cz.yaml documents with a wrapper key."""
+    settings = generate_schema()
+    return {
+        "$schema": META_SCHEMA,
+        "$id": SCHEMA_ID,
+        "title": "Commitizen JSON configuration",
+        "description": (
+            "Configuration file for Commitizen. JSON and YAML configuration "
+            "files place settings inside the top-level 'commitizen' object."
+        ),
+        "type": "object",
+        "properties": {
+            "commitizen": {
+                "type": "object",
+                "properties": settings["properties"],
+                "additionalProperties": True,
+            }
+        },
+        "required": ["commitizen"],
         "additionalProperties": True,
     }
 
@@ -276,25 +349,31 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--output",
         type=Path,
-        default=SCHEMA_PATH,
-        help=f"Schema output path (default: {SCHEMA_PATH}).",
+        default=None,
+        help=(
+            "Optional output path for the settings-only schema. By default both "
+            "the settings schema and the .cz.json/.cz.yaml wrapper schema are written."
+        ),
     )
     args = parser.parse_args(argv)
 
-    generated = json.dumps(generate_schema(), indent=2) + "\n"
-    output: Path = args.output
-
-    if args.check:
-        if not output.is_file() or output.read_text(encoding="utf-8") != generated:
-            print(
-                f"schema out of date: run 'python scripts/gen_json_schema.py' "
-                f"to regenerate {output}",
-                file=sys.stderr,
-            )
-            return 1
-        return 0
-
-    output.write_text(generated, encoding="utf-8")
+    targets = (
+        [(args.output, generate_schema)]
+        if args.output is not None
+        else [(SCHEMA_PATH, generate_schema), (WRAPPER_SCHEMA_PATH, generate_wrapper_schema)]
+    )
+    for output, generate in targets:
+        generated = json.dumps(generate(), indent=2) + "\n"
+        if args.check:
+            if not output.is_file() or output.read_text(encoding="utf-8") != generated:
+                print(
+                    f"schema out of date: run 'python scripts/gen_json_schema.py' "
+                    f"to regenerate {output}",
+                    file=sys.stderr,
+                )
+                return 1
+            continue
+        output.write_text(generated, encoding="utf-8")
     return 0
 
 
