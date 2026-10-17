@@ -295,6 +295,7 @@ def test_wrapped_json_config_validates(gen_module: Any) -> None:
     with pytest.raises(jsonschema.ValidationError):
         jsonschema.validate(invalid, gen_module.generate_wrapper_schema())
 
+
 def test_valid_config_validates(gen_module: Any) -> None:
     """A realistic configuration passes validation."""
     jsonschema.validate(VALID_CONFIG, gen_module.generate_schema())
