@@ -89,13 +89,19 @@
         "bump_map": {
           "type": "object",
           "additionalProperties": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "bump_map_major_version_zero": {
           "type": "object",
           "additionalProperties": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "change_type_order": {
