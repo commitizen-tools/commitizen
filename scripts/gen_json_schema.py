@@ -1,20 +1,14 @@
-"""Generate the JSON Schema for the commitizen configuration file.
+"""Generate JSON Schemas for Commitizen settings and config files.
 
-The schema is derived from the ``Settings`` and ``CzSettings`` TypedDicts in
-:mod:`commitizen.defaults` plus the runtime defaults in ``DEFAULT_SETTINGS``,
-so it cannot drift from the configuration model. The generated document is
-committed at ``schemas/commitizen-config.schema.json`` and kept in sync by
-``tests/test_json_schema.py``.
+The settings schema is derived from the ``Settings`` and ``CzSettings``
+TypedDicts plus ``DEFAULT_SETTINGS``. A second schema wraps those settings in
+the top-level ``commitizen`` key used by `.cz.json` and `.cz.yaml` files.
+The generated documents are kept in sync by ``tests/test_json_schema.py``.
 
 Usage::
 
-    python scripts/gen_json_schema.py                # write the schema file
-    python scripts/gen_json_schema.py --check        # exit 1 if out of date
-
-The ``$id`` points at the future schemastore.org location (see issue #1565);
-the schema describes the contents of the ``commitizen`` section (the
-``[tool.commitizen]`` table in ``pyproject.toml`` or the ``commitizen`` key
-in ``.cz.json`` / ``.cz.yaml``).
+    python scripts/gen_json_schema.py          # write both schema files
+    python scripts/gen_json_schema.py --check  # verify both generated files
 """
 
 from __future__ import annotations
@@ -33,7 +27,10 @@ from commitizen.defaults import DEFAULT_SETTINGS, Settings
 SCHEMA_PATH = (
     Path(__file__).resolve().parents[1] / "schemas" / "commitizen-config.schema.json"
 )
-SETTINGS_SCHEMA_ID = "https://raw.githubusercontent.com/commitizen-tools/commitizen/master/schemas/commitizen-config.schema.json"
+SETTINGS_SCHEMA_ID = (
+    "https://raw.githubusercontent.com/commitizen-tools/commitizen/master/"
+    "schemas/commitizen-config.schema.json"
+)
 SCHEMA_ID = "https://json.schemastore.org/commitizen.json"
 WRAPPER_SCHEMA_PATH = (
     Path(__file__).resolve().parents[1] / "schemas" / "commitizen-wrapper.schema.json"
