@@ -266,6 +266,10 @@
           "default": 0,
           "description": "Maximum allowed commit message length (0 means no limit)."
         },
+        "body_length_limit": {
+          "type": "integer",
+          "default": 0
+        },
         "name": {
           "type": "string",
           "default": "cz_conventional_commits",
