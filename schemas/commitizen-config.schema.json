@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://json.schemastore.org/commitizen.json",
-  "title": "commitizen",
-  "description": "Configuration for commitizen, the conventional commit tool. Describes the contents of the commitizen section: the [tool.commitizen] table in pyproject.toml (referenced with a #:schema comment) or the commitizen key in a .cz.json file (referenced with a $schema key).",
+  "$id": "https://raw.githubusercontent.com/commitizen-tools/commitizen/master/schemas/commitizen-config.schema.json",
+  "title": "commitizen settings",
+  "description": "Settings for Commitizen. Use this schema for the [tool.commitizen] table in pyproject.toml; .cz.json and .cz.yaml files wrap these settings in a top-level 'commitizen' key.",
   "type": "object",
   "properties": {
     "allow_abort": {
@@ -107,86 +107,62 @@
         "questions": {
           "type": "array",
           "items": {
-            "anyOf": [
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "enum": [
-                      "list"
-                    ]
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "message": {
-                    "type": "string"
-                  },
-                  "choices": {
-                    "type": "array",
-                    "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "minLength": 1
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "message": {
+                "type": "string"
+              },
+              "choices": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
                       "type": "object",
                       "properties": {
-                        "value": {
-                          "type": "string"
-                        },
+                        "value": {},
                         "name": {
                           "type": "string"
                         },
                         "key": {
                           "type": "string"
                         }
-                      }
+                      },
+                      "required": [
+                        "value"
+                      ],
+                      "additionalProperties": true
                     }
-                  },
-                  "use_shortcuts": {
-                    "type": "boolean"
-                  }
+                  ]
                 }
               },
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "enum": [
-                      "input"
-                    ]
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "message": {
-                    "type": "string"
-                  },
-                  "filter": {}
-                }
+              "default": {},
+              "use_shortcuts": {
+                "type": "boolean"
               },
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "enum": [
-                      "confirm"
-                    ]
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "message": {
-                    "type": "string"
-                  },
-                  "default": {
-                    "type": "boolean"
-                  }
-                },
-                "required": [
-                  "default",
-                  "message",
-                  "name",
-                  "type"
-                ]
+              "use_search_filter": {
+                "type": "boolean"
+              },
+              "use_jk_keys": {
+                "type": "boolean"
               }
-            ]
+            },
+            "required": [
+              "type",
+              "name",
+              "message"
+            ],
+            "additionalProperties": true
           }
         },
         "example": {
