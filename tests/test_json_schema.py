@@ -15,6 +15,7 @@ from commitizen.defaults import DEFAULT_SETTINGS, CzSettings, Settings
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_PATH = REPO_ROOT / "scripts" / "gen_json_schema.py"
 SCHEMA_PATH = REPO_ROOT / "schemas" / "commitizen-config.schema.json"
+WRAPPER_SCHEMA_PATH = REPO_ROOT / "schemas" / "commitizen-wrapper.schema.json"
 
 VALID_CONFIG: dict[str, Any] = {
     "name": "cz_conventional_commits",
@@ -185,14 +186,72 @@ def test_type_mapping(gen_module: Any) -> None:
 
 
 def test_questions_accept_any_question_shape(gen_module: Any) -> None:
-    """CzQuestion is a union of TypedDicts, surfaced as an anyOf."""
+    """Question schema supports runtime prompt types and validates required fields."""
     questions = gen_module.generate_schema()["properties"]["customize"]["properties"][
         "questions"
     ]
 
     assert questions["type"] == "array"
-    assert len(questions["items"]["anyOf"]) == 3
+    assert questions["items"]["type"] == "object"
+    assert questions["items"]["required"] == ["type", "name", "message"]
+    assert questions["items"]["additionalProperties"] is True
+    assert questions["items"]["properties"]["choices"]["items"]["anyOf"][0] == {
+        "type": "string"
+    }
 
+
+def test_questions_accept_documented_questionary_shapes(gen_module: Any) -> None:
+    """Documented select prompts, string choices, and default-less confirms validate."""
+    instance = {
+        **VALID_CONFIG,
+        "customize": {
+            **VALID_CONFIG["customize"],
+            "questions": [
+                {
+                    "type": "select",
+                    "name": "change_type",
+                    "message": "Select a change type",
+                    "choices": ["feature", "fix"],
+                },
+                {"type": "confirm", "name": "breaking", "message": "Breaking change?"},
+            ],
+        },
+    }
+
+    jsonschema.validate(instance, gen_module.generate_schema())
+
+
+def test_questions_require_dispatch_fields(gen_module: Any) -> None:
+    """A prompt missing a required runtime dispatch field is rejected."""
+    instance = {
+        **VALID_CONFIG,
+        "customize": {
+            **VALID_CONFIG["customize"],
+            "questions": [{"type": "input", "message": "Missing name"}],
+        },
+    }
+
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(instance, gen_module.generate_schema())
+
+
+
+def test_wrapper_schema_matches_committed_file(gen_module: Any) -> None:
+    """The wrapper schema must be regenerated whenever settings change."""
+    expected = WRAPPER_SCHEMA_PATH.read_text(encoding="utf-8")
+    actual = json.dumps(gen_module.generate_wrapper_schema(), indent=2) + "\n"
+
+    assert actual == expected
+
+
+def test_wrapped_json_config_validates(gen_module: Any) -> None:
+    """A .cz.json document validates the nested settings, not just the wrapper."""
+    wrapped = {"commitizen": VALID_CONFIG}
+    jsonschema.validate(wrapped, gen_module.generate_wrapper_schema())
+
+    invalid = {"commitizen": {**VALID_CONFIG, "allow_abort": "yes"}}
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(invalid, gen_module.generate_wrapper_schema())
 
 def test_valid_config_validates(gen_module: Any) -> None:
     """A realistic configuration passes validation."""
