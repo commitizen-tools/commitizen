@@ -357,7 +357,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     targets = (
         [(args.output, generate_schema)]
         if args.output is not None
-        else [(SCHEMA_PATH, generate_schema), (WRAPPER_SCHEMA_PATH, generate_wrapper_schema)]
+        else [
+            (SCHEMA_PATH, generate_schema),
+            (WRAPPER_SCHEMA_PATH, generate_wrapper_schema),
+        ]
     )
     for output, generate in targets:
         generated = json.dumps(generate(), indent=2) + "\n"
