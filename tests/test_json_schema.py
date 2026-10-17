@@ -169,10 +169,10 @@ def test_type_mapping(gen_module: Any) -> None:
     assert properties["version_files"]["type"] == "array"
     assert properties["version_files"]["items"] == {"type": "string"}
     assert customize["bump_map"]["type"] == "object"
-    assert customize["bump_map"]["additionalProperties"] == {"type": "string"}
+    assert customize["bump_map"]["additionalProperties"] == {"type": ["string", "null"]}
     assert customize["bump_map_major_version_zero"]["type"] == "object"
     assert customize["bump_map_major_version_zero"]["additionalProperties"] == {
-        "type": "string"
+        "type": ["string", "null"]
     }
     assert properties["style"]["items"]["prefixItems"] == [
         {"type": "string"},
