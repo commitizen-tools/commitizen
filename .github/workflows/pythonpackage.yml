@@ -23,6 +23,8 @@ jobs:
             relevant:
               - "commitizen/**"
               - "tests/**"
+              - "schemas/**"
+              - "scripts/**"
               - ".github/workflows/**"
   python-check:
     needs: detect_changes
