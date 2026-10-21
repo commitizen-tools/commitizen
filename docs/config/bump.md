@@ -2,6 +2,19 @@
 
 <!-- When adding a new option, please keep the alphabetical order. -->
 
+## `allow_dirty`
+
+- Type: `bool`
+- Default: `true`
+
+When set to `false`, `cz bump` aborts if any tracked file has uncommitted changes, instead of silently including them in the bump commit.
+Equivalent to `cz bump --no-allow-dirty`. See [`--allow-dirty`](../commands/bump.md#-allow-dirty).
+
+```toml title="pyproject.toml"
+[tool.commitizen]
+allow_dirty = false
+```
+
 ## `annotated_tag`
 
 When set to `true`, `cz bump` is equivalent to `cz bump --annotated-tag`.
