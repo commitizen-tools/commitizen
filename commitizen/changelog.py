@@ -31,6 +31,7 @@ import re
 from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
 from datetime import date
+from enum import Enum
 from itertools import chain
 from typing import TYPE_CHECKING, Any
 
@@ -85,6 +86,13 @@ class IncrementalMergeInfo:
     index: int | None = None
 
 
+class AuthorSource(str, Enum):
+    """Source of the author shown in each changelog entry (`--add-author`)"""
+
+    AUTHOR = "author"
+    SIGNED_OFF_BY = "signed-off-by"
+
+
 def get_commit_tag(commit: GitCommit, tags: list[GitTag]) -> GitTag | None:
     return next((tag for tag in tags if tag.rev == commit.rev), None)
 
@@ -100,6 +108,7 @@ def generate_tree_from_commits(
     changelog_release_hook: ChangelogReleaseHook | None = None,
     rules: TagRules | None = None,
     during_version_bump: bool = False,
+    author_source: AuthorSource | None = None,
 ) -> Generator[dict[str, Any], None, None]:
     pat = re.compile(changelog_pattern)
     map_pat = re.compile(commit_parser, re.MULTILINE)
@@ -159,6 +168,7 @@ def generate_tree_from_commits(
                     commit,
                     changes,
                     change_type_map,
+                    author_source,
                 )
 
     release = {
@@ -171,12 +181,33 @@ def generate_tree_from_commits(
     yield release
 
 
+def resolve_changelog_author(
+    commit: GitCommit, author_source: AuthorSource
+) -> tuple[str, str]:
+    """Get the author name and email to show in a changelog entry.
+
+    Args:
+        commit: The commit of the changelog entry.
+        author_source: Where to read the author from.
+
+    Returns:
+        A `(name, email)` tuple. For `SIGNED_OFF_BY`, it is the first
+        `Signed-off-by` trailer, or the commit author when there is no trailer.
+    """
+    if author_source is AuthorSource.SIGNED_OFF_BY and (
+        signed_off_by := commit.signed_off_by
+    ):
+        return signed_off_by
+    return commit.author, commit.author_email
+
+
 def process_commit_message(
     hook: MessageBuilderHook | None,
     parsed: re.Match[str],
     commit: GitCommit,
     ref_changes: MutableMapping[str | None, list],
     change_type_map: Mapping[str, str] | None = None,
+    author_source: AuthorSource | None = None,
 ) -> None:
     message: dict[str, Any] = {
         "sha1": commit.rev,
@@ -185,6 +216,10 @@ def process_commit_message(
         "author_email": commit.author_email,
         **parsed.groupdict(),
     }
+    if author_source is not None:
+        name, email = resolve_changelog_author(commit, author_source)
+        message["changelog_author"] = name
+        message["changelog_author_email"] = email
 
     processed_msg = hook(message, commit) if hook else message
     if not processed_msg:

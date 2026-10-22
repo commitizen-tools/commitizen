@@ -79,6 +79,19 @@ tpl_arguments = (
         "metavar": "EXTRA",
         "help": "Changelog extra variables (in the form 'key=value').",
     },
+    {
+        "name": ["--add-author"],
+        "nargs": "?",
+        "const": "author",
+        "default": None,
+        "choices": ["author", "signed-off-by"],
+        "help": (
+            "Add the author to each changelog entry. "
+            "'author' (default) uses the commit author. "
+            "'signed-off-by' uses the first Signed-off-by trailer, "
+            "or the commit author if the commit has no trailer."
+        ),
+    },
 )
 
 data = {

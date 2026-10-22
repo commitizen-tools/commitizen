@@ -3,7 +3,8 @@ usage: cz changelog [-h] [--dry-run] [--file-name FILE_NAME]
                     [--start-rev START_REV] [--merge-prerelease]
                     [--version-scheme {pep440,semver,semver2}]
                     [--export-template EXPORT_TEMPLATE] [--template TEMPLATE]
-                    [--extra EXTRA] [--tag-format TAG_FORMAT]
+                    [--extra EXTRA] [--add-author [{author,signed-off-by}]]
+                    [--tag-format TAG_FORMAT]
                     [rev_range]
 
 Generate changelog (note that it will overwrite existing files)
@@ -38,5 +39,10 @@ options:
                         working directory).
   --extra EXTRA, -e EXTRA
                         Changelog extra variables (in the form 'key=value').
+  --add-author [{author,signed-off-by}]
+                        Add the author to each changelog entry. 'author'
+                        (default) uses the commit author. 'signed-off-by' uses
+                        the first Signed-off-by trailer, or the commit author
+                        if the commit has no trailer.
   --tag-format TAG_FORMAT
                         The format of the tag, wrap around simple quotes.
