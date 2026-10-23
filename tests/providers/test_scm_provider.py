@@ -140,3 +140,23 @@ def test_scm_provider_detect_legacy_tags(config: BaseConfig, util: UtilFixture):
     util.create_file_and_commit("test: fake commit")
     util.create_tag("v0.5.0")
     assert provider.get_version() == "0.5.0"
+
+
+@pytest.mark.usefixtures("tmp_git_project")
+def test_scm_provider_prefers_full_version_over_floating_tags(
+    config: BaseConfig, util: UtilFixture
+):
+    """Floating tags (`v1.0`, `v1`) must not hide the full `v1.0.0` version."""
+    # Arrange
+    util.create_file_and_commit("feat: initial commit")
+    util.create_tag("v1.0.0")
+    util.create_tag("v1.0")
+    util.create_tag("v1")
+    config.settings["version_provider"] = "scm"
+    config.settings["tag_format"] = "v$version"
+
+    # Act
+    provider = get_provider(config)
+
+    # Assert
+    assert provider.get_version() == "1.0.0"
