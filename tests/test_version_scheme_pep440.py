@@ -1320,3 +1320,21 @@ def test_pep440_scheme_property():
 
 def test_pep440_implement_version_protocol():
     assert isinstance(Pep440("0.0.1"), VersionProtocol)
+
+
+def test_pep440_rejects_arbitrary_prerelease_labels():
+    """Pep440 scheme must NOT accept arbitrary semver pre-release labels.
+
+    Only SemVer/SemVer2 schemes accept labels like 'release' or 'SNAPSHOT'.
+    This ensures the relaxed regex is scoped to SemVer schemes only.
+    """
+    from packaging.version import InvalidVersion
+
+    with pytest.raises(InvalidVersion):
+        Pep440("1.0.0-release")
+
+    with pytest.raises(InvalidVersion):
+        Pep440("1.0.0-SNAPSHOT")
+
+    with pytest.raises(InvalidVersion):
+        Pep440("1.0.0-pre-release")
