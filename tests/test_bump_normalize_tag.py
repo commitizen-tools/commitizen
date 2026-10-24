@@ -12,6 +12,11 @@ conversion = [
     (("1.2.3+1.0.0", "v$version"), "v1.2.3+1.0.0"),
     (("1.2.3+1.0.0", "v$version-local"), "v1.2.3+1.0.0-local"),
     (("1.2.3+1.0.0", "ver$major.$minor.$patch"), "ver1.2.3"),
+    # `${devrelease}` substitution (#1615): rendered as `dev<N>` when the
+    # version has a dev release, and as the empty string otherwise.
+    (("1.2.3.dev1", "v$major.$minor.$patch.$devrelease"), "v1.2.3.dev1"),
+    (("1.2.3.dev0", "$major.$minor.$patch$devrelease"), "1.2.3dev0"),
+    (("1.2.3", "$major.$minor.$patch$devrelease"), "1.2.3"),
 ]
 
 
