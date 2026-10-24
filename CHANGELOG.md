@@ -1,3 +1,9 @@
+## v4.19.3 (2026-10-24)
+
+### Fix
+
+- **scm-provider**: prefer full version over floating tags
+
 ## v4.19.2 (2026-10-07)
 
 ### Fix
