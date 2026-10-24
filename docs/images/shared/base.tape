@@ -40,6 +40,6 @@ Type "PS1='$ '"
 Enter
 Sleep 300ms
 
-Type "rm -rf /tmp/commitizen-example && mkdir -p /tmp/commitizen-example && cd /tmp/commitizen-example"
+Type `WORKDIR=$(mktemp -d "${TMPDIR:-/tmp}/commitizen-example.XXXXXX") && cd "$WORKDIR"`
 Enter
 Sleep 500ms
