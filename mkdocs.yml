@@ -101,6 +101,7 @@ markdown_extensions:
   - codehilite
   - extra
   - pymdownx.highlight
+  - pymdownx.snippets
   - pymdownx.superfences
   - toc:
       permalink: true
