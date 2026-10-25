@@ -119,3 +119,24 @@ def test_uv_provider(
 
     file_regression.check(updated_pyproject_toml_content, extension=".toml")
     file_regression.check(updated_uv_lock_content, extension=".lock")
+
+
+def test_uv_provider_without_lock_file(config: BaseConfig, tmp_path, monkeypatch):
+    """Regression for #1383: a freshly initialised uv project (or a uv
+    workspace member) has no `uv.lock` yet; bumping must still update
+    `pyproject.toml` instead of raising `FileNotFoundError`."""
+    monkeypatch.chdir(tmp_path)
+    pyproject_toml_file = tmp_path / UvProvider.filename
+    pyproject_toml_file.write_text(PYPROJECT_TOML, encoding="utf-8")
+    assert not (tmp_path / UvProvider.lock_filename).exists()
+
+    config.settings["version_provider"] = "uv"
+
+    provider = get_provider(config)
+    assert isinstance(provider, UvProvider)
+    assert provider.get_version() == "4.2.1"
+
+    provider.set_version("100.100.100")
+    assert provider.get_version() == "100.100.100"
+    assert "100.100.100" in pyproject_toml_file.read_text(encoding="utf-8")
+    assert not (tmp_path / UvProvider.lock_filename).exists()
