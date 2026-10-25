@@ -17,6 +17,7 @@ from commitizen.exceptions import (
     BumpTagFailedError,
     CommitizenException,
     CurrentVersionNotFoundError,
+    DirtyWorkingTreeError,
     DryRunExit,
     ExitCode,
     ExpectedExit,
@@ -1708,3 +1709,117 @@ def test_bump_allow_no_commit_issue(
     util.run_cli(
         "bump", "--allow-no-commit", "--prerelease", "rc"
     )  # Should not fail when changelog generation runs with no new commits
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_no_allow_dirty_aborts_with_uncommitted_changes(util: UtilFixture):
+    # Arrange
+    util.create_file_and_commit("feat: new file", filename="tracked.txt")
+    Path("tracked.txt").write_text("work in progress")
+
+    # Act / Assert
+    with pytest.raises(DirtyWorkingTreeError, match=r"\[DIRTY_WORKING_TREE\]"):
+        util.run_cli("bump", "--yes", "--no-allow-dirty")
+
+    assert git.tag_exist("0.2.0") is False
+    assert 'version="0.1.0"' in Path("pyproject.toml").read_text()
+    assert Path("tracked.txt").read_text() == "work in progress"
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_no_allow_dirty_lists_dirty_files(util: UtilFixture):
+    # Arrange
+    util.create_file_and_commit("feat: new file", filename="tracked.txt")
+    Path("tracked.txt").write_text("work in progress")
+
+    # Act
+    with pytest.raises(DirtyWorkingTreeError) as exc_info:
+        util.run_cli("bump", "--yes", "--no-allow-dirty")
+
+    # Assert
+    assert exc_info.value.exit_code == ExitCode.DIRTY_WORKING_TREE
+    assert "  tracked.txt\n" in exc_info.value.message
+
+
+def test_bump_allow_dirty_false_in_config_aborts(
+    tmp_commitizen_project, util: UtilFixture
+):
+    # Arrange
+    with (tmp_commitizen_project / "pyproject.toml").open("a", encoding="utf-8") as f:
+        f.write("allow_dirty = false\n")
+    util.create_file_and_commit("feat: new file", filename="tracked.txt")
+    Path("tracked.txt").write_text("work in progress")
+
+    # Act / Assert
+    with pytest.raises(DirtyWorkingTreeError):
+        util.run_cli("bump", "--yes")
+
+    assert git.tag_exist("0.2.0") is False
+
+
+def test_bump_allow_dirty_flag_overrides_config(
+    tmp_commitizen_project, util: UtilFixture
+):
+    # Arrange
+    with (tmp_commitizen_project / "pyproject.toml").open("a", encoding="utf-8") as f:
+        f.write("allow_dirty = false\n")
+    util.create_file_and_commit("feat: new file", filename="tracked.txt")
+    Path("tracked.txt").write_text("work in progress")
+
+    # Act
+    util.run_cli("bump", "--yes", "--allow-dirty")
+
+    # Assert
+    assert git.tag_exist("0.2.0") is True
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_dirty_tree_is_allowed_by_default(util: UtilFixture):
+    """Existing behavior is preserved: pending changes land in the bump commit."""
+    # Arrange
+    util.create_file_and_commit("feat: new file", filename="tracked.txt")
+    Path("tracked.txt").write_text("work in progress")
+
+    # Act
+    util.run_cli("bump", "--yes")
+
+    # Assert
+    assert git.tag_exist("0.2.0") is True
+    assert "tracked.txt" in git.get_filenames_in_commit()
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_no_allow_dirty_ignores_untracked_files(util: UtilFixture):
+    # Arrange
+    util.create_file_and_commit("feat: new file")
+    Path("untracked.txt").write_text("not part of the repo")
+
+    # Act
+    util.run_cli("bump", "--yes", "--no-allow-dirty")
+
+    # Assert
+    assert git.tag_exist("0.2.0") is True
+    assert "untracked.txt" not in git.get_filenames_in_commit()
+
+
+@pytest.mark.parametrize(
+    ("extra_args", "expected_exception"),
+    [
+        (["--dry-run"], DryRunExit),
+        (["--get-next"], DryRunExit),
+        (["--version-files-only"], ExpectedExit),
+    ],
+)
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_no_allow_dirty_skipped_when_no_commit_is_made(
+    util: UtilFixture,
+    extra_args: list[str],
+    expected_exception: type[Exception],
+):
+    # Arrange
+    util.create_file_and_commit("feat: new file", filename="tracked.txt")
+    Path("tracked.txt").write_text("work in progress")
+
+    # Act / Assert
+    with pytest.raises(expected_exception):
+        util.run_cli("bump", "--yes", "--no-allow-dirty", *extra_args)
