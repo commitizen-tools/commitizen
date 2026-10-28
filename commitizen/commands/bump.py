@@ -40,6 +40,7 @@ logger = getLogger("commitizen")
 
 
 class BumpArgs(Settings, total=False):
+    add_author: str | None
     allow_no_commit: bool | None
     annotated_tag_message: str | None
     build_metadata: str | None
@@ -330,6 +331,7 @@ class Bump:
                 "dry_run": dry_run,
                 # governs logic for merge_prerelease
                 "during_version_bump": self.arguments["prerelease"] is None,
+                "add_author": self.arguments.get("add_author"),
             }
             if self.changelog_to_stdout:
                 try:
