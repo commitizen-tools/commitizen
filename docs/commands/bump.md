@@ -30,6 +30,11 @@ The version follows the `MAJOR.MINOR.PATCH` format, with increments determined b
 | `MINOR`   | New features                | `feat`                  |
 | `PATCH`   | Fixes and improvements      | `fix`, `perf`, `refactor`|
 
+Other Conventional Commit types recognized by Commitizen (such as `docs`, `style`, `test`, `build`, `ci`, and `chore`) do not bump the version unless they include a `BREAKING CHANGE`. You can customize this behavior with the [`bump_map`](../config/bump.md) and [`bump_pattern`](../config/bump.md) settings.
+
+!!! tip "Recommended reading on versioning"
+    For background on the strengths and limitations of semantic versioning, and on alternative versioning strategies, see the [Recommended Reading on Versioning](../external_links.md#recommended-reading-on-versioning).
+
 ## Command line options
 
 ![cz bump --help](../images/cli_help/cz_bump___help.svg)
