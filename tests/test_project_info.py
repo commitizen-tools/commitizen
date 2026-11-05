@@ -15,7 +15,7 @@ def _create_project_files(files: dict[str, str | None]) -> None:
         if content is None:
             path.touch()
         else:
-            path.write_text(content)
+            path.write_text(content, encoding="utf-8")
 
 
 @pytest.mark.parametrize(
@@ -46,6 +46,11 @@ def test_available_hook_installers(mocker, which_map, expected):
     [
         (
             {"pyproject.toml": '[tool.poetry]\nname = "test"\nversion = "0.1.0"'},
+            "poetry",
+        ),
+        (
+            # Non-ASCII text that the cp949 and cp1252 code pages cannot decode
+            {"pyproject.toml": '[tool.poetry]\nname = "test"\nauthors = ["Łukasz ✨"]'},
             "poetry",
         ),
         ({"pyproject.toml": "", "uv.lock": ""}, "uv"),
