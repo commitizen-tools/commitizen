@@ -136,12 +136,15 @@ class Commit:
         exec_path = shutil.which(editor)
         if exec_path is None:
             raise RuntimeError(f"Editor '{editor}' not found.")
-        with tempfile.NamedTemporaryFile(mode="w", delete=False) as file:
+        encoding = self.config.settings["encoding"]
+        with tempfile.NamedTemporaryFile(
+            mode="w", delete=False, encoding=encoding
+        ) as file:
             file.write(message)
         file_path = file.name
         argv = [exec_path, file_path]
         subprocess.call(argv)
-        message = Path(file_path).read_text().strip()
+        message = Path(file_path).read_text(encoding=encoding).strip()
         os.unlink(file.name)
         return message
 

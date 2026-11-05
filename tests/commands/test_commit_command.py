@@ -320,6 +320,35 @@ def test_manual_edit(editor, config, mocker: MockFixture, tmp_path):
         assert edited_message == test_message.strip()
 
 
+@pytest.mark.usefixtures("staging_is_clean")
+def test_manual_edit_keeps_non_ascii_message(config, mocker: MockFixture):
+    """The editor file uses the configured encoding, not the locale encoding.
+
+    On Windows the locale encoding is a legacy code page (e.g. cp1252), which
+    cannot encode this message.
+    """
+    # Arrange
+    message = "feat: add 안녕하세요 greeting ✨"
+    edited_message = "feat: add 안녕하세요 greeting ✨ (edited)"
+    mocker.patch("commitizen.git.get_core_editor", return_value="vim")
+    mocker.patch("shutil.which", return_value="vim")
+
+    def edit_in_editor(argv: list[str]) -> int:
+        message_file = Path(argv[1])
+        assert message_file.read_text(encoding="utf-8") == message
+        message_file.write_text(edited_message, encoding="utf-8")
+        return 0
+
+    mocker.patch("subprocess.call", side_effect=edit_in_editor)
+    commit_cmd = commands.Commit(config, {"edit": True})
+
+    # Act
+    result = commit_cmd.manual_edit(message)
+
+    # Assert
+    assert result == edited_message
+
+
 @pytest.mark.usefixtures("staging_is_clean", "prompt_mock_feat")
 @pytest.mark.parametrize(
     "out", ["no changes added to commit", "nothing added to commit"]
