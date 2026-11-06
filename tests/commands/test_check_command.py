@@ -144,6 +144,22 @@ def test_check_conventional_commit(
     success_mock.assert_called_once()
 
 
+def test_check_commit_msg_file_uses_commit_encoding(
+    config, success_mock: MockType, tmp_path
+):
+    """`--commit-msg-file` reads the file with `commit_encoding`."""
+    # Arrange
+    config.settings["commit_encoding"] = "utf-16"
+    commit_msg_file = tmp_path / "temp_commit_file"
+    commit_msg_file.write_text("feat: add 안녕하세요 ✨", encoding="utf-16")
+
+    # Act
+    commands.Check(config=config, arguments={"commit_msg_file": commit_msg_file})()
+
+    # Assert
+    success_mock.assert_called_once()
+
+
 def test_check_command_when_commit_file_not_found(config):
     with pytest.raises(FileNotFoundError):
         commands.Check(config=config, arguments={"commit_msg_file": "no_such_file"})()
