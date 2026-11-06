@@ -11,6 +11,20 @@ When true, breaking changes will be also indicated by an exclamation mark in the
 
 When false, breaking changes will be only indicated by `BREAKING CHANGE:` in the footer. See [writing commits](../tutorials/writing_commits.md) for more details.
 
+## `commit_encoding`
+
+- Type: `str`
+- Default: `None`
+
+Sets the character encoding of the files that hold a commit message:
+
+- the file that `cz commit --edit` opens in the editor
+- the file that `cz commit --write-message-to-file` writes
+- the backup file that `cz commit --retry` reads
+- the file that `cz check --commit-msg-file` reads
+
+If it is not set, Commitizen uses [`encoding`](#encoding). Set it when your editor saves commit messages in a different encoding from your other files.
+
 ## `encoding`
 
 - Type: `str`

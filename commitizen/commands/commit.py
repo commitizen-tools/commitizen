@@ -57,6 +57,15 @@ class Commit:
         self.arguments = arguments
         self.backup_file_path = get_backup_file_path()
 
+    def _get_commit_encoding(self) -> str:
+        """Return the encoding of the files that hold the commit message.
+
+        `commit_encoding` falls back to `encoding` when it is not set.
+        """
+        return (
+            self.config.settings["commit_encoding"] or self.config.settings["encoding"]
+        )
+
     def _read_backup_message(self) -> str | None:
         # Check the commit backup file exists
         if not self.backup_file_path.is_file():
@@ -64,7 +73,7 @@ class Commit:
 
         # Read commit message from backup
         return self.backup_file_path.read_text(
-            encoding=self.config.settings["encoding"]
+            encoding=self._get_commit_encoding()
         ).strip()
 
     def _get_message_by_prompt_commit_questions(self) -> str:
@@ -130,18 +139,30 @@ class Commit:
         return "\n".join(chain(lines[:2], wrapped_body_lines))
 
     def manual_edit(self, message: str) -> str:
+        """Open the message in the git editor and return the edited message.
+
+        The temporary file uses `commit_encoding` (or `encoding`) instead of the
+        locale encoding. On Windows, the locale encoding is a legacy code page
+        that cannot encode all characters.
+
+        Raises:
+            RuntimeError: If no editor is set or the editor is not found.
+        """
         editor = git.get_core_editor()
         if editor is None:
             raise RuntimeError("No 'editor' value given and no default available.")
         exec_path = shutil.which(editor)
         if exec_path is None:
             raise RuntimeError(f"Editor '{editor}' not found.")
-        with tempfile.NamedTemporaryFile(mode="w", delete=False) as file:
+        encoding = self._get_commit_encoding()
+        with tempfile.NamedTemporaryFile(
+            mode="w", delete=False, encoding=encoding
+        ) as file:
             file.write(message)
         file_path = file.name
         argv = [exec_path, file_path]
         subprocess.call(argv)
-        message = Path(file_path).read_text().strip()
+        message = Path(file_path).read_text(encoding=encoding).strip()
         os.unlink(file.name)
         return message
 
@@ -188,7 +209,7 @@ class Commit:
 
         if write_message_to_file:
             with smart_open(
-                write_message_to_file, "w", encoding=self.config.settings["encoding"]
+                write_message_to_file, "w", encoding=self._get_commit_encoding()
             ) as file:
                 file.write(commit_message)
 
@@ -204,7 +225,7 @@ class Commit:
 
             # Create commit backup
             with smart_open(
-                self.backup_file_path, "w", encoding=self.config.settings["encoding"]
+                self.backup_file_path, "w", encoding=self._get_commit_encoding()
             ) as f:
                 f.write(commit_message)
 
