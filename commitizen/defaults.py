@@ -41,6 +41,7 @@ class Settings(TypedDict, total=False):
     changelog_incremental: bool
     changelog_merge_prerelease: bool
     changelog_start_rev: str | None
+    commit_encoding: str | None
     customize: CzSettings
     encoding: str
     extras: dict[str, Any]
@@ -111,6 +112,7 @@ DEFAULT_SETTINGS: Settings = {
     "post_bump_hooks": [],
     "prerelease_offset": 0,
     "encoding": ENCODING,
+    "commit_encoding": None,  # default to encoding
     "always_signoff": False,
     "template": None,  # default provided by plugin
     "extras": {},

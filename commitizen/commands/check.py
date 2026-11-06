@@ -124,7 +124,8 @@ class Check:
 
         # Get commit message from file (--commit-msg-file)
         return Path(self.commit_msg_file).read_text(
-            encoding=self.config.settings["encoding"]
+            encoding=self.config.settings["commit_encoding"]
+            or self.config.settings["encoding"]
         )
 
     def _get_commits(self) -> list[git.GitCommit]:
