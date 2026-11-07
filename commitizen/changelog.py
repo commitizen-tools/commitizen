@@ -293,8 +293,10 @@ def incremental_build(
     return output_lines
 
 
-def get_next_tag_name_after_version(tags: Iterable[GitTag], version: str) -> str | None:
-    it = iter(tag.name for tag in tags)
+def get_next_tag_name_after_version(
+    tags: Iterable[GitTag], rules: TagRules, version: str
+) -> str | None:
+    it = iter(tag.name for tag in tags if rules.include_in_changelog(tag))
     for name in it:
         if name == version:
             return next(it, None)
@@ -358,7 +360,7 @@ def get_oldest_and_newest_rev(
     oldest_tag_name = get_tag_name(oldest_version) if oldest_version else None
 
     oldest_rev = get_next_tag_name_after_version(
-        tags, oldest_tag_name or newest_tag_name
+        tags, rules, oldest_tag_name or newest_tag_name
     )
 
     # Return None for oldest_rev if:
