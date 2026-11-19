@@ -310,6 +310,48 @@ def test_is_staging_clean_when_updating_file():
 
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
+def test_is_git_project_inside_work_tree():
+    assert git.is_git_project() is True
+
+
+def test_is_git_project_outside_repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """When ``git rev-parse`` exits non-zero (no repo above us),
+    ``is_git_project`` returns ``False``."""
+    monkeypatch.chdir(tmp_path)
+    assert git.is_git_project() is False
+
+
+def test_is_git_project_accepts_loose_true_output(mocker: MockFixture):
+    """Regression test for #1497: shell wrappers that prepend ANSI colour
+    codes or trailing whitespace to ``git rev-parse``'s output must not flip
+    ``is_git_project`` to ``False``."""
+    fake = cmd.Command("\x1b[0mtrue\r\n", "", b"", b"", 0)
+    mocker.patch("commitizen.cmd.run", return_value=fake)
+    assert git.is_git_project() is True
+
+
+def test_is_git_project_returns_false_for_bare_repo(mocker: MockFixture):
+    """When ``git rev-parse --is-inside-work-tree`` returns ``false``
+    (inside ``.git/`` of a normal repo, or at the root of a bare repo),
+    ``is_git_project`` should return ``False``."""
+    fake = cmd.Command("false\n", "", b"", b"", 0)
+    mocker.patch("commitizen.cmd.run", return_value=fake)
+    assert git.is_git_project() is False
+
+
+@pytest.mark.parametrize("noise", ["untrue", "nottrue", "test true false"])
+def test_is_git_project_rejects_strings_containing_true_substring(
+    mocker: MockFixture, noise: str
+):
+    """After stripping ANSI escapes and whitespace, only the exact string
+    ``true`` is accepted; outputs like ``untrue``, ``nottrue``, or
+    ``true false`` are rejected."""
+    fake = cmd.Command(f"{noise}\n", "", b"", b"", 0)
+    mocker.patch("commitizen.cmd.run", return_value=fake)
+    assert git.is_git_project() is False
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
 def test_get_eol_for_open():
     assert git.EOLType.for_open() == os.linesep
 
