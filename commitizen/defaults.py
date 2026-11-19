@@ -31,6 +31,7 @@ class CzSettings(TypedDict, total=False):
 
 class Settings(TypedDict, total=False):
     allow_abort: bool
+    allow_dirty: bool
     allowed_prefixes: list[str]
     always_signoff: bool
     annotated_tag: bool
@@ -91,6 +92,7 @@ DEFAULT_SETTINGS: Settings = {
     "bump_message": None,  # bumped v$current_version to $new_version
     "retry_after_failure": False,
     "allow_abort": False,
+    "allow_dirty": True,
     "allowed_prefixes": [
         "Merge",
         "Revert",

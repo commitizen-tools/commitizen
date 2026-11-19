@@ -40,6 +40,7 @@ class ExitCode(IntEnum):
     CONFIG_FILE_NOT_FOUND = 30
     CONFIG_FILE_IS_EMPTY = 31
     COMMIT_MESSAGE_LENGTH_LIMIT_EXCEEDED = 32
+    DIRTY_WORKING_TREE = 33
 
     @classmethod
     def from_str(cls, value: str) -> ExitCode:
@@ -282,6 +283,12 @@ class CommitMessageLengthExceededError(CommitizenException):
 
     exit_code = ExitCode.COMMIT_MESSAGE_LENGTH_LIMIT_EXCEEDED
     message = "Length of commit message exceeds the given limit."
+
+
+class DirtyWorkingTreeError(CommitizenException):
+    """Tracked files have uncommitted changes and `allow_dirty` is disabled."""
+
+    exit_code = ExitCode.DIRTY_WORKING_TREE
 
 
 # When adding / updating a new exit code, please update the documentation of the exit codes in docs/exit_codes.md
