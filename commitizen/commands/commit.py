@@ -37,7 +37,7 @@ class CommitArgs(TypedDict, total=False):
     dry_run: bool
     edit: bool
     extra_cli_args: list[str]
-    message_length_limit: int
+    message_length_limit: int | None
     body_length_limit: int | None
     no_retry: bool
     signoff: bool
@@ -89,9 +89,10 @@ class Commit:
         return message
 
     def _validate_subject_length(self, message: str) -> None:
-        message_length_limit = self.arguments.get(
-            "message_length_limit", self.config.settings.get("message_length_limit", 0)
-        )
+        """Enforce the configured subject limit unless the CLI overrides it."""
+        message_length_limit = self.arguments.get("message_length_limit")
+        if message_length_limit is None:
+            message_length_limit = self.config.settings.get("message_length_limit", 0)
         # By the contract, message_length_limit is set to 0 for no limit
         if (
             message_length_limit is None or message_length_limit <= 0
