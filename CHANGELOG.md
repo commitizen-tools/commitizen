@@ -1,3 +1,9 @@
+## v4.19.4 (2026-11-19)
+
+### Fix
+
+- **commit**: honor configured body length limit
+
 ## v4.19.3 (2026-10-24)
 
 ### Fix
