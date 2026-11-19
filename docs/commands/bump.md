@@ -390,6 +390,26 @@ cz bump --allow-no-commit 2.0.0
 
     This makes the new release visible in the changelog while still showing that no commit-based changes were included.
 
+### `--no-commit`
+
+Create the tag without the bump commit. Commitizen still updates the [`version_files`][version_files] and the changelog, runs the hooks, and creates the tag, but the tag points to the current `HEAD` and the updated files stay uncommitted in the working tree.
+
+```bash
+cz bump --no-commit
+```
+
+Use it when the version lives in the Git tags only (for example with the `scm` [version provider][version_provider]) and you do not want a release commit, such as a CI job that tags the commit that triggered it:
+
+```bash
+cz bump --yes --no-commit
+git push --tags
+```
+
+!!! note
+    `--no-commit` is not `--allow-no-commit`: `--allow-no-commit` bumps the version when there are no eligible commits, `--no-commit` bumps the version without creating a commit.
+
+    `--version-files-only` also skips the commit, but it skips the tag and the hooks as well.
+
 ### `--tag-format`
 
 `tag_format` and [version_scheme][version_scheme] are combined to make Git tag names from versions.
@@ -539,3 +559,4 @@ Commitizen supports the [PEP 440][pep440] version format, which includes several
 [pep440]: https://www.python.org/dev/peps/pep-0440/
 [semver]: https://semver.org/
 [version_files]: ../config/bump.md#version_files
+[version_provider]: ../config/version_provider.md
