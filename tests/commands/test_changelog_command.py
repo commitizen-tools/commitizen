@@ -750,6 +750,38 @@ def test_changelog_incremental_with_prerelease_version_to_prerelease_version(
     file_regression.check(out, extension=".md")
 
 
+@pytest.mark.usefixtures("tmp_commitizen_project")
+@pytest.mark.freeze_time("2021-06-11")
+def test_changelog_incremental_with_devrelease(
+    changelog_path: Path,
+    file_regression: FileRegressionFixture,
+    util: UtilFixture,
+):
+    """Regression test for #1367: bumping with ``--devrelease`` twice must
+    update the incremental changelog.
+
+    The second devrelease bump used to fail with
+    "No tag found to do an incremental changelog" because the PEP 440
+    development-release tag (e.g. ``0.2.0.dev0``) was not recognised as a
+    version tag by the default version parser.
+    """
+    util.create_file_and_commit("irrelevant commit")
+    util.create_tag("1.0.0", annotated=True)
+
+    util.create_file_and_commit("feat: add new output")
+    util.create_file_and_commit("fix: output glitch")
+
+    util.run_cli("bump", "--changelog", "--devrelease", "0", "--yes")
+
+    util.create_file_and_commit("feat: add more stuff")
+
+    util.run_cli("bump", "--changelog", "--devrelease", "1", "--yes")
+
+    out = changelog_path.read_text()
+
+    file_regression.check(out, extension=".md")
+
+
 @pytest.mark.parametrize("test_input", ["rc", "alpha", "beta"])
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2025-12-29")

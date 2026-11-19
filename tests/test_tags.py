@@ -144,6 +144,26 @@ def test_is_version_tag_accepts_dotless_devrelease_in_custom_tag_format():
     assert str(extracted) == "1.2.3.dev1"
 
 
+def test_is_version_tag_accepts_pep440_devrelease_in_default_tag_format():
+    """Regression test for #1367: a PEP 440 development release tag such as
+    ``0.2.0.dev1`` (created by ``cz bump --devrelease``) must be recognised as
+    a version tag. Previously the default version parser only accepted
+    ``.dev`` suffixes after a hyphen, so the tag was dropped and the
+    incremental changelog failed with "No tag found to do an incremental
+    changelog".
+    """
+    rules = TagRules()
+
+    assert rules.is_version_tag("0.2.0.dev1") is True
+    assert rules.is_version_tag("0.2.0.dev0") is True
+    assert rules.is_version_tag("1.2.3.dev1+build.5") is True
+    assert rules.is_version_tag("1.0.0a2.dev1") is True
+
+    extracted = rules.extract_version(_git_tag("0.2.0.dev1"))
+    assert str(extracted) == "0.2.0.dev1"
+    assert extracted.dev == 1
+
+
 def test_monorepo_ignored_tag_formats_keep_own_tags(capsys: pytest.CaptureFixture):
     """Regression test for the monorepo workflow in
     ``docs/tutorials/monorepo_guidance.md``.
