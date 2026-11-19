@@ -1,6 +1,6 @@
 # Releasing with the SCM Version Provider
 
-In this tutorial, you will learn how to bump the version using the `scp` version provider; as you can't use `cz bump`.
+In this tutorial, you will learn how to bump the version using the `scm` version provider, where `cz bump` has nothing to write the new version to.
 
 ## About
 
@@ -14,6 +14,10 @@ version_provider = "scm"
 ```
 
 This means `cz bump` cannot complete its usual job of writing the new version anywhere (see [Why can't I bump with SCM?](#why-cant-i-bump-with-scm) below). In the next section, you will learn how to do it anyways.
+
+!!! tip
+    `cz bump --no-commit` creates the tag on the current commit without a release commit, so it works with the `scm` provider.
+    See [`--no-commit`](../commands/bump.md#-no-commit). The next section shows how to do the same with `git` directly.
 
 ## Creating a New Version Tag Manually
 

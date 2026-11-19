@@ -485,6 +485,61 @@ def test_bump_files_only(tmp_commitizen_project, util: UtilFixture):
     assert "0.3.0" in tmp_commitizen_cfg_file.read_text(encoding="utf-8")
 
 
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_no_commit_tags_head_and_leaves_files_uncommitted(
+    util: UtilFixture, mocker: MockFixture, capsys: pytest.CaptureFixture
+):
+    """Issue 753: `--no-commit` creates the tag without a bump commit.
+
+    The new version is still written to the config file, but the file stays
+    unstaged and uncommitted in the working tree, and the tag points to the
+    commit that was already `HEAD` before the bump.
+    """
+    # Arrange
+    util.create_file_and_commit("feat: new file")
+    head_before = cmd.run(["git", "rev-parse", "HEAD"]).out.strip()
+    git_commit_spy = mocker.spy(git, "commit")
+
+    # Act
+    util.run_cli("bump", "--yes", "--no-commit")
+    out, _ = capsys.readouterr()
+
+    # Assert
+    assert git.tag_exist("0.2.0") is True
+    assert cmd.run(["git", "rev-list", "-n", "1", "0.2.0"]).out.strip() == head_before
+    assert cmd.run(["git", "rev-parse", "HEAD"]).out.strip() == head_before
+    git_commit_spy.assert_not_called()
+    assert "0.2.0" in Path("pyproject.toml").read_text(encoding="utf-8")
+    assert cmd.run(["git", "status", "--porcelain"]).out.splitlines() == [
+        " M pyproject.toml"
+    ]
+    assert "--no-commit: skipping the bump commit" in out
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_bump_no_commit_with_changelog_to_stdout(
+    util: UtilFixture, capsys: pytest.CaptureFixture, changelog_path: Path
+):
+    """`--no-commit` keeps stdout for the changelog and leaves the changelog file untracked."""
+    # Arrange
+    util.create_file_and_commit("feat(user): this should appear in stdout")
+
+    # Act
+    util.run_cli("bump", "--yes", "--no-commit", "--changelog-to-stdout")
+    out, err = capsys.readouterr()
+
+    # Assert
+    assert git.tag_exist("0.2.0") is True
+    assert out.startswith("#")
+    assert "this should appear in stdout" in out
+    assert "--no-commit" not in out
+    assert "--no-commit: skipping the bump commit" in err
+    assert "0.2.0" in changelog_path.read_text(encoding="utf-8")
+    status = cmd.run(["git", "status", "--porcelain"]).out
+    assert "?? CHANGELOG.md" in status
+    assert " M pyproject.toml" in status
+
+
 def test_bump_local_version(tmp_commitizen_project, util: UtilFixture):
     tmp_version_file = tmp_commitizen_project / "__version__.py"
     tmp_version_file.write_text("4.5.1+0.1.0")

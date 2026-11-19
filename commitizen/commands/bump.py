@@ -57,6 +57,7 @@ class BumpArgs(Settings, total=False):
     increment: Increment | None
     local_version: bool
     manual_version: str | None
+    no_commit: bool
     no_verify: bool
     prerelease: Prerelease | None
     retry: bool
@@ -250,6 +251,53 @@ class Bump:
             exact_increment=self.arguments["increment_mode"] == "exact",
         )
 
+    def _commit(self, message: str, updated_files: list[str]) -> None:
+        """Stage the files changed by the bump and create the bump commit.
+
+        When ``--retry`` is set and the changelog was generated, a failed commit
+        (for example, a pre-commit hook that reformatted a file) is attempted once
+        more after staging the files again.
+
+        Args:
+            message: The bump commit message.
+            updated_files: Paths of the files the bump modified.
+
+        Raises:
+            BumpCommitFailedError: If the commit fails (after the optional retry).
+        """
+        # FIXME: check if any changes have been staged
+        git.add(*updated_files)
+        c = git.commit(message, args=self._get_commit_args())
+        if self.retry and c.return_code != 0 and self.changelog_flag:
+            # Maybe pre-commit reformatted some files? Retry once
+            logger.debug("1st git.commit error: %s", c.err)
+            logger.info("1st commit attempt failed; retrying once")
+            git.add(*updated_files)
+            c = git.commit(message, args=self._get_commit_args())
+        if c.return_code != 0:
+            err = c.err.strip() or c.out
+            raise BumpCommitFailedError(f'2nd git.commit error: "{err}"')
+
+        for msg in (c.out, c.err):
+            if msg:
+                out_func = out.diagnostic if self.git_output_to_stderr else out.write
+                out_func(msg)
+
+    def _report_skipped_commit(self) -> None:
+        """Tell the user that ``--no-commit`` left the bump uncommitted.
+
+        The files the bump modified stay in the working tree, neither staged nor
+        committed, and the tag is created on the current ``HEAD``.
+        """
+        information = (
+            "--no-commit: skipping the bump commit, tagging the current HEAD "
+            "(updated files stay uncommitted)"
+        )
+        # Keep stdout clean when the changelog is written to it (same as the
+        # bump information above).
+        out_func = out.diagnostic if self.changelog_to_stdout else out.write
+        out_func(information)
+
     def __call__(self) -> None:
         """Steps executed to bump."""
         provider = get_provider(self.config)
@@ -392,23 +440,10 @@ class Bump:
         if self.arguments.get("version_files_only"):
             raise ExpectedExit()
 
-        # FIXME: check if any changes have been staged
-        git.add(*updated_files)
-        c = git.commit(message, args=self._get_commit_args())
-        if self.retry and c.return_code != 0 and self.changelog_flag:
-            # Maybe pre-commit reformatted some files? Retry once
-            logger.debug("1st git.commit error: %s", c.err)
-            logger.info("1st commit attempt failed; retrying once")
-            git.add(*updated_files)
-            c = git.commit(message, args=self._get_commit_args())
-        if c.return_code != 0:
-            err = c.err.strip() or c.out
-            raise BumpCommitFailedError(f'2nd git.commit error: "{err}"')
-
-        for msg in (c.out, c.err):
-            if msg:
-                out_func = out.diagnostic if self.git_output_to_stderr else out.write
-                out_func(msg)
+        if self.arguments.get("no_commit"):
+            self._report_skipped_commit()
+        else:
+            self._commit(message, updated_files)
 
         c = git.tag(
             new_tag_version,
