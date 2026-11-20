@@ -19,6 +19,8 @@ See [commitizen_cz_template](https://github.com/commitizen-tools/commitizen_cz_t
 
 See [Third-party plugins](../third-party-plugins/about.md) for more details on how to create a third-party Commitizen plugin.
 
+See [Testing plugins](testing_plugins.md) for automated tests of your custom rules.
+
 ## Custom commit rules
 
 Create a Python module, for example `cz_jira.py`.
