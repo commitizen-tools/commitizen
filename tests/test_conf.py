@@ -85,6 +85,7 @@ _settings: dict[str, Any] = {
     "ignored_tag_formats": [],
     "bump_message": None,
     "retry_after_failure": False,
+    "retry_bump_after_failure": False,
     "allow_abort": False,
     "allowed_prefixes": [
         "Merge",
@@ -126,6 +127,7 @@ _new_settings: dict[str, Any] = {
     "ignored_tag_formats": [],
     "bump_message": None,
     "retry_after_failure": False,
+    "retry_bump_after_failure": False,
     "allow_abort": False,
     "allowed_prefixes": [
         "Merge",
