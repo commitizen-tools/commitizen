@@ -14,7 +14,14 @@ import questionary
 
 from commitizen import factory, git, out
 from commitizen.cz.exceptions import CzException
-from commitizen.cz.utils import get_backup_file_path
+from commitizen.cz.utils import (
+    break_multiple_line,
+    get_backup_file_path,
+    required_validator,
+    required_validator_scope,
+    required_validator_subject_strip,
+    required_validator_title_strip,
+)
 from commitizen.exceptions import (
     CommitError,
     CommitMessageLengthExceededError,
@@ -69,9 +76,27 @@ class Commit:
 
     def _get_message_by_prompt_commit_questions(self) -> str:
         # Prompt user for the commit message
-        questions = self.cz.questions()
+        questions = [dict(question) for question in self.cz.questions()]
+
         for question in (q for q in questions if q["type"] == "list"):
             question["use_shortcuts"] = self.config.settings["use_shortcuts"]
+
+        for question in filter(
+            lambda q: isinstance(q.get("filter", None), str), questions
+        ):
+            if question["filter"] == "break_multiple_line":
+                question["filter"] = break_multiple_line
+            elif question["filter"] == "required_validator":
+                question["filter"] = required_validator
+            elif question["filter"] == "required_validator_scope":
+                question["filter"] = required_validator_scope
+            elif question["filter"] == "required_validator_subject_strip":
+                question["filter"] = required_validator_subject_strip
+            elif question["filter"] == "required_validator_title_strip":
+                question["filter"] = required_validator_title_strip
+            else:
+                raise NotAllowed(f"Unknown value filter: {question['filter']}")
+
         try:
             answers = questionary.prompt(questions, style=self.cz.style)
         except ValueError as err:
