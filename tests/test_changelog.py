@@ -1183,6 +1183,81 @@ def test_generate_tree_from_commits(gitcommits, tags, merge_prereleases):
                 assert "parents" in change
 
 
+SIGNED_BODY = "Signed-off-by: test <test@mail.com>"
+
+
+@pytest.mark.parametrize(
+    ("author_source", "body", "expected"),
+    [
+        pytest.param(
+            changelog.AuthorSource.AUTHOR,
+            SIGNED_BODY,
+            ("Commitizen", "author@cz.dev"),
+            id="author-ignores-trailer",
+        ),
+        pytest.param(
+            changelog.AuthorSource.SIGNED_OFF_BY,
+            SIGNED_BODY,
+            ("test", "test@mail.com"),
+            id="signed-off-by",
+        ),
+        pytest.param(
+            changelog.AuthorSource.SIGNED_OFF_BY,
+            "",
+            ("Commitizen", "author@cz.dev"),
+            id="signed-off-by-fallback-to-author",
+        ),
+    ],
+)
+def test_generate_tree_from_commits_with_author_source(
+    tags,
+    author_source: changelog.AuthorSource,
+    body: str,
+    expected: tuple[str, str],
+):
+    """Each change gets `changelog_author` and `changelog_author_email` (`--add-author`)."""
+    # Arrange
+    commit = git.GitCommit(
+        "test_rev",
+        "feat: add author",
+        body=body,
+        author="Commitizen",
+        author_email="author@cz.dev",
+    )
+
+    # Act
+    tree = changelog.generate_tree_from_commits(
+        [commit],
+        tags,
+        ConventionalCommitsCz.commit_parser,
+        ConventionalCommitsCz.changelog_pattern,
+        author_source=author_source,
+    )
+
+    # Assert
+    (change,) = next(tree)["changes"]["feat"]
+    assert (change["changelog_author"], change["changelog_author_email"]) == expected
+
+
+def test_generate_tree_from_commits_without_author_source(tags):
+    """Without `--add-author`, the change has no extra keys (backward compatible)."""
+    # Arrange
+    commit = git.GitCommit("test_rev", "feat: no author", body=SIGNED_BODY)
+
+    # Act
+    tree = changelog.generate_tree_from_commits(
+        [commit],
+        tags,
+        ConventionalCommitsCz.commit_parser,
+        ConventionalCommitsCz.changelog_pattern,
+    )
+
+    # Assert
+    (change,) = next(tree)["changes"]["feat"]
+    assert "changelog_author" not in change
+    assert "changelog_author_email" not in change
+
+
 def test_generate_tree_from_commits_with_no_commits(tags):
     parser = ConventionalCommitsCz.commit_parser
     changelog_pattern = ConventionalCommitsCz.bump_pattern

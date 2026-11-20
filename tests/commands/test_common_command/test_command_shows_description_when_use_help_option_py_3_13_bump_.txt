@@ -8,7 +8,8 @@ usage: cz bump [-h] [--dry-run] [--files-only] [--version-files-only]
                [--annotated-tag-message ANNOTATED_TAG_MESSAGE] [--gpg-sign]
                [--changelog-to-stdout] [--git-output-to-stderr] [--retry]
                [--major-version-zero] [--template TEMPLATE] [--extra EXTRA]
-               [--file-name FILE_NAME] [--prerelease-offset PRERELEASE_OFFSET]
+               [--add-author [{author,signed-off-by}]] [--file-name FILE_NAME]
+               [--prerelease-offset PRERELEASE_OFFSET]
                [--version-scheme {pep440,semver,semver2}]
                [--version-type {pep440,semver,semver2}]
                [--build-metadata BUILD_METADATA] [--get-next]
@@ -72,6 +73,11 @@ options:
                         Changelog template file name (relative to the current
                         working directory).
   --extra, -e EXTRA     Changelog extra variables (in the form 'key=value').
+  --add-author [{author,signed-off-by}]
+                        Add the author to each changelog entry. 'author'
+                        (default) uses the commit author. 'signed-off-by' uses
+                        the first Signed-off-by trailer, or the commit author
+                        if the commit has no trailer.
   --file-name FILE_NAME
                         File name of changelog (default: 'CHANGELOG.md').
   --prerelease-offset PRERELEASE_OFFSET

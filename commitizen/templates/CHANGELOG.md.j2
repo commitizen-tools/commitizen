@@ -10,9 +10,9 @@
 
 {% for change in changes %}
 {% if change.scope %}
-- **{{ change.scope }}**: {{ change.message }}
+- **{{ change.scope }}**: {{ change.message }}{{ " (" ~ change.changelog_author ~ " <" ~ change.changelog_author_email ~ ">)" if change.changelog_author }}
 {% elif change.message %}
-- {{ change.message }}
+- {{ change.message }}{{ " (" ~ change.changelog_author ~ " <" ~ change.changelog_author_email ~ ">)" if change.changelog_author }}
 {% endif %}
 {% endfor %}
 {% endfor %}
