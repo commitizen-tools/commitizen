@@ -1530,23 +1530,33 @@ def test_get_smart_tag_range_returns_an_extra_for_a_single_tag(tags):
     assert 2 == len(res)
 
 
-def test_get_next_tag_name_after_version(tags):
+@pytest.mark.parametrize("merge_prereleases", [True, False])
+def test_get_next_tag_name_after_version(tags, merge_prereleases):
     # Test finding next tag after a version
-    next_tag_name = changelog.get_next_tag_name_after_version(tags, "v1.2.0")
+    rules = changelog.TagRules(
+        merge_prereleases=merge_prereleases,
+    )
+    next_tag_name = changelog.get_next_tag_name_after_version(tags, rules, "v1.2.0")
     assert next_tag_name == "v1.1.1"
 
-    next_tag_name = changelog.get_next_tag_name_after_version(tags, "v1.1.0")
+    next_tag_name = changelog.get_next_tag_name_after_version(tags, rules, "v1.1.0")
     assert next_tag_name == "v1.0.0"
 
+    next_tag_name = changelog.get_next_tag_name_after_version(tags, rules, "v1.0.0")
+    if merge_prereleases:
+        assert next_tag_name == "v0.9.11"
+    else:
+        assert next_tag_name == "1.0.0b2"
+
     # Test finding last tag when given version is last
-    last_tag_name = changelog.get_next_tag_name_after_version(tags, "v0.9.1")
+    last_tag_name = changelog.get_next_tag_name_after_version(tags, rules, "v0.9.1")
     assert last_tag_name is None
 
     # Test error when version not found
     with pytest.raises(
         changelog.NoCommitsFoundError, match="Could not find a valid revision range"
     ):
-        changelog.get_next_tag_name_after_version(tags, "nonexistent")
+        changelog.get_next_tag_name_after_version(tags, rules, "nonexistent")
 
 
 @dataclass
