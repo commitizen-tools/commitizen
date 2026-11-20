@@ -204,6 +204,7 @@ def test_check_rev_range_leaves_unset_env_vars_literal(
     rewritten to an empty range."""
     monkeypatch.delenv("PRE_COMMIT_FROM_REF", raising=False)
     monkeypatch.delenv("PRE_COMMIT_TO_REF", raising=False)
+    monkeypatch.delenv("PRE_COMMIT_LOCAL_BRANCH", raising=False)
     get_commits = mocker.patch(
         "commitizen.git.get_commits",
         return_value=_build_fake_git_commits(COMMIT_LOG),
@@ -217,6 +218,26 @@ def test_check_rev_range_leaves_unset_env_vars_literal(
     get_commits.assert_called_once_with(
         None, "$PRE_COMMIT_FROM_REF..$PRE_COMMIT_TO_REF"
     )
+
+
+def test_check_rev_range_falls_back_to_pushed_branch_on_root_push(
+    config, mocker: MockFixture, monkeypatch: pytest.MonkeyPatch
+):
+    """pre-commit omits the from/to refs when a push includes the root commit."""
+    monkeypatch.delenv("PRE_COMMIT_FROM_REF", raising=False)
+    monkeypatch.delenv("PRE_COMMIT_TO_REF", raising=False)
+    monkeypatch.setenv("PRE_COMMIT_LOCAL_BRANCH", "refs/heads/main")
+    get_commits = mocker.patch(
+        "commitizen.git.get_commits",
+        return_value=_build_fake_git_commits(COMMIT_LOG),
+    )
+
+    commands.Check(
+        config=config,
+        arguments={"rev_range": "$PRE_COMMIT_FROM_REF..$PRE_COMMIT_TO_REF"},
+    )()
+
+    get_commits.assert_called_once_with(None, "refs/heads/main")
 
 
 def test_check_command_with_invalid_argument(config):

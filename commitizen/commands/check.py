@@ -42,6 +42,13 @@ class Check:
         self.commit_msg_file = arguments.get("commit_msg_file")
         self.commit_msg = arguments.get("message")
         rev_range = arguments.get("rev_range")
+        if (
+            rev_range == "$PRE_COMMIT_FROM_REF..$PRE_COMMIT_TO_REF"
+            and "PRE_COMMIT_FROM_REF" not in os.environ
+            and "PRE_COMMIT_LOCAL_BRANCH" in os.environ
+        ):
+            # pre-commit omits the refs when the push includes the root commit
+            rev_range = "$PRE_COMMIT_LOCAL_BRANCH"
         # Expand env vars so the packaged ``commitizen-branch`` pre-push hook
         # (which passes the literal ``$PRE_COMMIT_FROM_REF..$PRE_COMMIT_TO_REF``)
         # keeps working after the ``shell=False`` switch in #1941. See #2003.
