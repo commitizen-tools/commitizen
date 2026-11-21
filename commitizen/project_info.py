@@ -27,7 +27,8 @@ def get_default_version_provider() -> Literal[
 ]:
     pyproject_path = Path("pyproject.toml")
     if pyproject_path.is_file():
-        if "[tool.poetry]" in pyproject_path.read_text():
+        # TOML files are UTF-8 by specification, whatever the locale encoding
+        if "[tool.poetry]" in pyproject_path.read_text(encoding="utf-8"):
             return "poetry"
         if Path("uv.lock").is_file():
             return "uv"

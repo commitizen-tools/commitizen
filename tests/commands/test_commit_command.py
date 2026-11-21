@@ -83,6 +83,43 @@ def test_commit_backup_on_failure(
     assert Path(temp_file).exists()
 
 
+@pytest.mark.usefixtures("staging_is_clean", "prompt_mock_feat")
+def test_commit_backup_uses_commit_encoding(config, mocker: MockFixture):
+    """A failed commit writes the backup file with `commit_encoding`."""
+    # Arrange
+    config.settings["commit_encoding"] = "utf-16"
+    mocker.patch(
+        "commitizen.git.commit", return_value=cmd.Command("", "error", b"", b"", 9)
+    )
+    mocker.patch("commitizen.out.error")
+    commit_cmd = commands.Commit(config, {})
+
+    # Act
+    with pytest.raises(CommitError):
+        commit_cmd()
+
+    # Assert
+    assert (
+        commit_cmd.backup_file_path.read_text(encoding="utf-16")
+        == "feat: user created\n\ncloses #21"
+    )
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_retry_reads_backup_with_commit_encoding(config, commit_mock: MockType):
+    """`cz commit --retry` reads the backup file with `commit_encoding`."""
+    # Arrange
+    config.settings["commit_encoding"] = "utf-16"
+    commit_cmd = commands.Commit(config, {"retry": True})
+    commit_cmd.backup_file_path.write_text("feat: add 안녕하세요 ✨", encoding="utf-16")
+
+    # Act
+    commit_cmd()
+
+    # Assert
+    commit_mock.assert_called_with("feat: add 안녕하세요 ✨", args=[])
+
+
 @pytest.mark.usefixtures("staging_is_clean", "commit_mock")
 def test_commit_retry_fails_no_backup(config):
     with pytest.raises(
@@ -166,6 +203,22 @@ def test_commit_command_with_write_message_to_file_option(
     success_mock.assert_called_once()
     assert tmp_file.exists()
     assert "feat: user created" in tmp_file.read_text()
+
+
+@pytest.mark.usefixtures("staging_is_clean", "commit_mock", "prompt_mock_feat")
+def test_commit_command_with_write_message_to_file_uses_commit_encoding(
+    config, tmp_path
+):
+    """`--write-message-to-file` writes the message with `commit_encoding`."""
+    # Arrange
+    config.settings["commit_encoding"] = "utf-16"
+    tmp_file = tmp_path / "message"
+
+    # Act
+    commands.Commit(config, {"write_message_to_file": tmp_file})()
+
+    # Assert
+    assert tmp_file.read_text(encoding="utf-16") == "feat: user created\n\ncloses #21"
 
 
 @pytest.mark.usefixtures("staging_is_clean", "prompt_mock_feat")
@@ -318,6 +371,51 @@ def test_manual_edit(editor, config, mocker: MockFixture, tmp_path):
         edited_message = commit_cmd.manual_edit(test_message)
         subprocess_mock.assert_called_once_with(["vim", str(temp_file)])
         assert edited_message == test_message.strip()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+@pytest.mark.parametrize(
+    ("encoding", "commit_encoding", "file_encoding"),
+    [
+        ("utf-8", None, "utf-8"),
+        ("utf-16", None, "utf-16"),
+        ("utf-8", "utf-16", "utf-16"),
+    ],
+)
+def test_manual_edit_keeps_non_ascii_message(
+    encoding: str,
+    commit_encoding: str | None,
+    file_encoding: str,
+    config,
+    mocker: MockFixture,
+):
+    """The editor file uses `commit_encoding`, or `encoding` if it is not set.
+
+    The locale encoding is not used. On Windows, it is a legacy code page
+    (e.g. cp1252), which cannot encode this message.
+    """
+    # Arrange
+    config.settings["encoding"] = encoding
+    config.settings["commit_encoding"] = commit_encoding
+    message = "feat: add 안녕하세요 greeting ✨"
+    edited_message = "feat: add 안녕하세요 greeting ✨ (edited)"
+    mocker.patch("commitizen.git.get_core_editor", return_value="vim")
+    mocker.patch("shutil.which", return_value="vim")
+
+    def edit_in_editor(argv: list[str]) -> int:
+        message_file = Path(argv[1])
+        assert message_file.read_text(encoding=file_encoding) == message
+        message_file.write_text(edited_message, encoding=file_encoding)
+        return 0
+
+    mocker.patch("subprocess.call", side_effect=edit_in_editor)
+    commit_cmd = commands.Commit(config, {"edit": True})
+
+    # Act
+    result = commit_cmd.manual_edit(message)
+
+    # Assert
+    assert result == edited_message
 
 
 @pytest.mark.usefixtures("staging_is_clean", "prompt_mock_feat")
