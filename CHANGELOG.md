@@ -1,3 +1,14 @@
+## v4.20.0 (2026-11-23)
+
+### Feat
+
+- **config**: add the commit_encoding setting for commit message files
+
+### Fix
+
+- **init**: read pyproject.toml as UTF-8
+- **commit**: use the configured encoding for the --edit message file
+
 ## v4.19.4 (2026-11-19)
 
 ### Fix
