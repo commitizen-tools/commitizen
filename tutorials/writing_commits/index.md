@@ -154,6 +154,8 @@ Commitizen supports Unicode characters (including emojis) in commit messages. Th
 
 By default, Commitizen uses `utf-8` encoding. You can configure a different encoding through the `encoding` [configuration option](https://commitizen-tools.github.io/commitizen/config/commit/#encoding).
 
+Files that hold a commit message, such as the file that `cz commit --edit` opens in your editor, use the [`commit_encoding`](https://commitizen-tools.github.io/commitizen/config/commit/#commit_encoding) option. If it is not set, they use `encoding`.
+
 ## Related Documentation
 
 - [Conventional Commits Specification](https://www.conventionalcommits.org)
