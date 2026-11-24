@@ -96,9 +96,7 @@ class CargoProvider(TomlProvider):
                 if package["name"] in members_inheriting:
                     cargo_lock_content["package"][i]["version"] = version  # type: ignore[index]
 
-        self.lock_file.write_text(
-            dumps(cargo_lock_content), encoding=self._get_encoding()
-        )
+        self._write_text(self.lock_file, dumps(cargo_lock_content))
 
 
 def _try_get_workspace(document: TOMLDocument) -> dict:

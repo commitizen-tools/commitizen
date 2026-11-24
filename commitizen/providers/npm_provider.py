@@ -46,18 +46,18 @@ class NpmProvider(JsonProvider):
             json.loads(self.package_file.read_text(encoding=self._get_encoding())),
             version,
         )
-        self.package_file.write_text(
+        self._write_text(
+            self.package_file,
             json.dumps(package_document, indent=self.indent) + "\n",
-            encoding=self._get_encoding(),
         )
         if self.lock_file.is_file():
             lock_document = self.set_lock_version(
                 json.loads(self.lock_file.read_text(encoding=self._get_encoding())),
                 version,
             )
-            self.lock_file.write_text(
+            self._write_text(
+                self.lock_file,
                 json.dumps(lock_document, indent=self.indent) + "\n",
-                encoding=self._get_encoding(),
             )
         if self.shrinkwrap_file.is_file():
             shrinkwrap_document = self.set_shrinkwrap_version(
@@ -66,9 +66,9 @@ class NpmProvider(JsonProvider):
                 ),
                 version,
             )
-            self.shrinkwrap_file.write_text(
+            self._write_text(
+                self.shrinkwrap_file,
                 json.dumps(shrinkwrap_document, indent=self.indent) + "\n",
-                encoding=self._get_encoding(),
             )
 
     def get_package_version(self, document: Mapping[str, str]) -> str:
