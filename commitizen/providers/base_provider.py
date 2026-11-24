@@ -7,6 +7,8 @@ from typing import TYPE_CHECKING, Any, ClassVar
 
 import tomlkit
 
+from commitizen.git import smart_open
+
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
@@ -52,6 +54,15 @@ class FileProvider(VersionProvider):
     def _get_encoding(self) -> str:
         return self.config.settings["encoding"]
 
+    def _write_text(self, path: Path, content: str) -> None:
+        """Write `content` to `path` with the configured encoding.
+
+        The file is opened with `smart_open`, so the line ending follows
+        `git config core.eol`, as it does for `version_files` and the changelog.
+        """
+        with smart_open(path, "w", encoding=self._get_encoding()) as file:
+            file.write(content)
+
 
 class JsonProvider(FileProvider):
     """
@@ -67,10 +78,7 @@ class JsonProvider(FileProvider):
     def set_version(self, version: str) -> None:
         document = json.loads(self.file.read_text(encoding=self._get_encoding()))
         self.set(document, version)
-        self.file.write_text(
-            json.dumps(document, indent=self.indent) + "\n",
-            encoding=self._get_encoding(),
-        )
+        self._write_text(self.file, json.dumps(document, indent=self.indent) + "\n")
 
     def get(self, document: Mapping[str, str]) -> str:
         return document["version"]
@@ -91,7 +99,7 @@ class TomlProvider(FileProvider):
     def set_version(self, version: str) -> None:
         document = tomlkit.parse(self.file.read_text(encoding=self._get_encoding()))
         self.set(document, version)
-        self.file.write_text(tomlkit.dumps(document), encoding=self._get_encoding())
+        self._write_text(self.file, tomlkit.dumps(document))
 
     def get(self, document: tomlkit.TOMLDocument) -> str:
         return document["project"]["version"]  # type: ignore[index,return-value]

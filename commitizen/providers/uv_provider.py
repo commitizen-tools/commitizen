@@ -41,6 +41,4 @@ class UvProvider(TomlProvider):
             if package["name"] == normalized_project_name:
                 document["package"][i]["version"] = version  # type: ignore[index]
                 break
-        self.lock_file.write_text(
-            tomlkit.dumps(document), encoding=self._get_encoding()
-        )
+        self._write_text(self.lock_file, tomlkit.dumps(document))
