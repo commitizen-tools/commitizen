@@ -1,3 +1,9 @@
+## v4.20.1 (2026-11-24)
+
+### Fix
+
+- **providers**: write files with the line ending from git core.eol
+
 ## v4.20.0 (2026-11-23)
 
 ### Feat
