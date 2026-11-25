@@ -99,10 +99,12 @@ class Bump:
         self.cz = factory.committer_factory(self.config)
         self.changelog_flag = arguments["changelog"]
         self.changelog_to_stdout = arguments["changelog_to_stdout"]
-        self.git_output_to_stderr = arguments["git_output_to_stderr"]
-        self.no_verify = arguments["no_verify"]
         self.check_consistency = arguments["check_consistency"]
-        self.retry = arguments["retry"]
+        self.git_publisher = GitReleasePublisher(
+            no_verify=arguments["no_verify"],
+            retry=arguments["retry"],
+            git_output_to_stderr=arguments["git_output_to_stderr"],
+        )
         self.pre_bump_hooks = self.config.settings["pre_bump_hooks"]
         self.post_bump_hooks = self.config.settings["post_bump_hooks"]
         deprecated_version_type = arguments.get("version_type")
@@ -370,22 +372,10 @@ class Bump:
             raise ExpectedExit()
 
         # FIXME: check if any changes have been staged
-        git.add(*updated_files)
-        commit_result = git.commit(message, args=self._get_commit_args())
-        if self._should_retry_commit(commit_result):
-            # Maybe pre-commit reformatted some files? Retry once
-            logger.debug("1st git.commit error: %s", commit_result.err)
-            logger.info("1st commit attempt failed; retrying once")
-            git.add(*updated_files)
-            commit_result = git.commit(message, args=self._get_commit_args())
-        if commit_result.return_code != 0:
-            err = commit_result.err.strip() or commit_result.out
-            raise BumpCommitFailedError(f'2nd git.commit error: "{err}"')
+        self.git_publisher.commit(
+            message, updated_files, changelog_was_updated=self.changelog_flag
+        )
 
-        for msg in (commit_result.out, commit_result.err):
-            if msg:
-                out_func = out.diagnostic if self.git_output_to_stderr else out.write
-                out_func(msg)
         should_sign_tag = any(
             (
                 self.bump_settings.get("gpg_sign"),
@@ -399,15 +389,13 @@ class Bump:
                 self.bump_settings.get("annotated_tag_message"),
             )
         )
-        tag_result = git.tag(
+        self.git_publisher.tag(
             new_tag_version,
             signed=should_sign_tag,
             annotated=should_annotate_tag,
             msg=self.bump_settings.get("annotated_tag_message", None),
             # TODO: also get from self.config.settings?
         )
-        if tag_result.return_code != 0:
-            raise BumpTagFailedError(tag_result.err)
 
         if self.post_bump_hooks:
             hooks.run(
@@ -468,14 +456,77 @@ class Bump:
         """No increment was detected and the tag would not change."""
         return increment is None and new_tag_version == current_tag_version
 
-    def _should_retry_commit(self, commit_result: cmd.Command) -> bool:
+
+class GitReleasePublisher:
+    """Commit the bumped files and create the release tag.
+
+    Bump decides what to release. This class writes the release to git.
+
+    Attributes:
+        no_verify: Skip the git hooks on commit.
+        retry: Retry a failed commit once when the changelog was updated.
+        git_output_to_stderr: Write the git output to stderr, not stdout.
+
+    Example:
+        ```python
+        publisher = GitReleasePublisher(no_verify=False, retry=True, git_output_to_stderr=False)
+        publisher.commit("bump: 1.0.0 → 1.1.0", ["pyproject.toml"], changelog_was_updated=False)
+        publisher.tag("v1.1.0", signed=False, annotated=True, msg=None)
+        ```
+    """
+
+    def __init__(
+        self, *, no_verify: bool, retry: bool, git_output_to_stderr: bool
+    ) -> None:
+        self.no_verify = no_verify
+        self.retry = retry
+        self.git_output_to_stderr = git_output_to_stderr
+
+    def commit(
+        self, message: str, files: list[str], *, changelog_was_updated: bool
+    ) -> None:
+        """Stage the files and commit them.
+
+        Raises:
+            BumpCommitFailedError: The commit failed.
+        """
+        git.add(*files)
+        commit_result = git.commit(message, args=self._get_commit_args())
+        if self._should_retry_commit(commit_result, changelog_was_updated):
+            # Maybe pre-commit reformatted some files? Retry once
+            logger.debug("1st git.commit error: %s", commit_result.err)
+            logger.info("1st commit attempt failed; retrying once")
+            git.add(*files)
+            commit_result = git.commit(message, args=self._get_commit_args())
+        if commit_result.return_code != 0:
+            err = commit_result.err.strip() or commit_result.out
+            raise BumpCommitFailedError(f'2nd git.commit error: "{err}"')
+
+        for msg in (commit_result.out, commit_result.err):
+            if msg:
+                out_func = out.diagnostic if self.git_output_to_stderr else out.write
+                out_func(msg)
+
+    def tag(self, name: str, *, signed: bool, annotated: bool, msg: str | None) -> None:
+        """Create the release tag.
+
+        Raises:
+            BumpTagFailedError: The tag could not be created.
+        """
+        tag_result = git.tag(name, signed=signed, annotated=annotated, msg=msg)
+        if tag_result.return_code != 0:
+            raise BumpTagFailedError(tag_result.err)
+
+    def _should_retry_commit(
+        self, commit_result: cmd.Command, changelog_was_updated: bool
+    ) -> bool:
         """Retry once if the commit failed and a changelog was generated.
 
         A pre-commit hook may have reformatted the changelog, so a second
         attempt can succeed.
         """
         commit_failed = commit_result.return_code != 0
-        return self.retry and commit_failed and self.changelog_flag
+        return self.retry and commit_failed and changelog_was_updated
 
     def _get_commit_args(self) -> list[str]:
         commit_args = ["-a"]
