@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any, ClassVar
 
 import tomlkit
 
-from commitizen.git import smart_open
+from commitizen.eol import smart_open
 
 if TYPE_CHECKING:
     from collections.abc import Mapping

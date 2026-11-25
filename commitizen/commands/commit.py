@@ -15,6 +15,7 @@ import questionary
 from commitizen import factory, git, out
 from commitizen.cz.exceptions import CzException
 from commitizen.cz.utils import get_backup_file_path
+from commitizen.eol import smart_open
 from commitizen.exceptions import (
     CommitError,
     CommitMessageLengthExceededError,
@@ -26,7 +27,6 @@ from commitizen.exceptions import (
     NotAllowed,
     NothingToCommitError,
 )
-from commitizen.git import smart_open
 
 if TYPE_CHECKING:
     from commitizen.config import BaseConfig

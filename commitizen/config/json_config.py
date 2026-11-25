@@ -3,8 +3,8 @@ from __future__ import annotations
 import json
 from typing import TYPE_CHECKING
 
+from commitizen.eol import smart_open
 from commitizen.exceptions import InvalidConfigurationError
-from commitizen.git import smart_open
 
 from .base_config import BaseConfig
 

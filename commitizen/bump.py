@@ -7,8 +7,8 @@ from string import Template
 from typing import TYPE_CHECKING
 
 from commitizen.defaults import BUMP_MESSAGE
+from commitizen.eol import smart_open
 from commitizen.exceptions import CurrentVersionNotFoundError
-from commitizen.git import smart_open
 
 if TYPE_CHECKING:
     from collections.abc import Generator, Iterable

@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any, TypedDict, cast
 from commitizen import changelog, defaults, factory, git, out
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.cz.utils import strip_local_version
+from commitizen.eol import smart_open
 from commitizen.exceptions import (
     DryRunExit,
     NoCommitsFoundError,
@@ -16,7 +17,6 @@ from commitizen.exceptions import (
     NotAGitProjectError,
     NotAllowed,
 )
-from commitizen.git import GitTag, smart_open
 from commitizen.tags import TagRules
 from commitizen.version_schemes import get_version_scheme
 
@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from collections.abc import Generator, Iterable
 
     from commitizen.config import BaseConfig
+    from commitizen.git import GitTag
 
 
 class ChangelogArgs(TypedDict, total=False):

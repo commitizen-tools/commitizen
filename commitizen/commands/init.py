@@ -11,12 +11,13 @@ from commitizen.__version__ import __version__
 from commitizen.config.factory import create_config
 from commitizen.cz import registry
 from commitizen.defaults import CONFIG_FILES, DEFAULT_SETTINGS
+from commitizen.eol import smart_open
 from commitizen.exceptions import (
     InitFailedError,
     MissingCzCustomizeConfigError,
     NoAnswersError,
 )
-from commitizen.git import get_latest_tag_name, get_tag_names, smart_open
+from commitizen.git import get_latest_tag_name, get_tag_names
 from commitizen.version_schemes import (
     KNOWN_SCHEMES,
     VersionProtocol,
