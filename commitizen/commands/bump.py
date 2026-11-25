@@ -394,23 +394,23 @@ class Bump:
 
         # FIXME: check if any changes have been staged
         git.add(*updated_files)
-        c = git.commit(message, args=self._get_commit_args())
-        if self.retry and c.return_code != 0 and self.changelog_flag:
+        commit_result = git.commit(message, args=self._get_commit_args())
+        if self.retry and commit_result.return_code != 0 and self.changelog_flag:
             # Maybe pre-commit reformatted some files? Retry once
-            logger.debug("1st git.commit error: %s", c.err)
+            logger.debug("1st git.commit error: %s", commit_result.err)
             logger.info("1st commit attempt failed; retrying once")
             git.add(*updated_files)
-            c = git.commit(message, args=self._get_commit_args())
-        if c.return_code != 0:
-            err = c.err.strip() or c.out
+            commit_result = git.commit(message, args=self._get_commit_args())
+        if commit_result.return_code != 0:
+            err = commit_result.err.strip() or commit_result.out
             raise BumpCommitFailedError(f'2nd git.commit error: "{err}"')
 
-        for msg in (c.out, c.err):
+        for msg in (commit_result.out, commit_result.err):
             if msg:
                 out_func = out.diagnostic if self.git_output_to_stderr else out.write
                 out_func(msg)
 
-        c = git.tag(
+        tag_result = git.tag(
             new_tag_version,
             signed=any(
                 (
@@ -428,8 +428,8 @@ class Bump:
             msg=self.bump_settings.get("annotated_tag_message", None),
             # TODO: also get from self.config.settings?
         )
-        if c.return_code != 0:
-            raise BumpTagFailedError(c.err)
+        if tag_result.return_code != 0:
+            raise BumpTagFailedError(tag_result.err)
 
         if self.post_bump_hooks:
             hooks.run(
