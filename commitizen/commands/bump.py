@@ -409,22 +409,23 @@ class Bump:
             if msg:
                 out_func = out.diagnostic if self.git_output_to_stderr else out.write
                 out_func(msg)
-
+        should_sign_tag = any(
+            (
+                self.bump_settings.get("gpg_sign"),
+                self.config.settings.get("gpg_sign"),
+            )
+        )
+        should_annotate_tag = any(
+            (
+                self.bump_settings.get("annotated_tag"),
+                self.config.settings.get("annotated_tag"),
+                self.bump_settings.get("annotated_tag_message"),
+            )
+        )
         tag_result = git.tag(
             new_tag_version,
-            signed=any(
-                (
-                    self.bump_settings.get("gpg_sign"),
-                    self.config.settings.get("gpg_sign"),
-                )
-            ),
-            annotated=any(
-                (
-                    self.bump_settings.get("annotated_tag"),
-                    self.config.settings.get("annotated_tag"),
-                    self.bump_settings.get("annotated_tag_message"),
-                )
-            ),
+            signed=should_sign_tag,
+            annotated=should_annotate_tag,
             msg=self.bump_settings.get("annotated_tag_message", None),
             # TODO: also get from self.config.settings?
         )
