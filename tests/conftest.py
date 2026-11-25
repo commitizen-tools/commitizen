@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -123,12 +123,22 @@ def tmp_commitizen_project_initial(
 
 
 def _get_gpg_keyid(signer_mail):
-    _new_key = cmd.run(["gpg", "--list-secret-keys", signer_mail])
-    _m = re.search(
-        r"[a-zA-Z0-9 \[\]-_]*\n[ ]*([0-9A-Za-z]*)\n[\na-zA-Z0-9 \[\]-_<>@]*",
-        _new_key.out,
-    )
-    return _m.group(1) if _m else None
+    """Return the primary fingerprint of the first secret key matching ``signer_mail``.
+
+    Uses the stable ``--with-colons`` machine-readable format so we don't rely
+    on ``gpg``'s human-friendly layout, which differs between platforms (notably
+    CRLF on Windows).
+    """
+    _new_key = cmd.run(["gpg", "--with-colons", "--list-secret-keys", signer_mail])
+    in_sec = False
+    for line in _new_key.out.splitlines():
+        if line.startswith("sec:"):
+            in_sec = True
+        elif in_sec and line.startswith("fpr:"):
+            fields = line.split(":")
+            # Field index 9 holds the fingerprint per gpg(1) DETAILS.
+            return fields[9] if len(fields) > 9 and fields[9] else None
+    return None
 
 
 @pytest.fixture
@@ -139,6 +149,12 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
     old_gnupghome = os.environ.get("GNUPGHOME")
     if os.name != "nt":
         os.environ["GNUPGHOME"] = gpg_home.name  # tempdir = temp keyring
+
+    # Resolve the absolute path to the gpg binary used by this fixture so that
+    # git invokes the same one (and therefore the same keyring). This matters
+    # on Windows where Git for Windows ships its own gpg binary that has a
+    # different keyring than a system-wide GnuPG/Gpg4win install.
+    gpg_binary = shutil.which("gpg")
 
     try:
         # create a key (a keyring will be generated within GPUPGHOME)
@@ -161,6 +177,8 @@ def tmp_commitizen_project_with_gpg(tmp_commitizen_project):
         # configure git to use gpg signing
         cmd.run(["git", "config", "commit.gpgsign", "true"])
         cmd.run(["git", "config", "user.signingkey", key_id])
+        if gpg_binary:
+            cmd.run(["git", "config", "gpg.program", gpg_binary])
 
         yield tmp_commitizen_project
     finally:
