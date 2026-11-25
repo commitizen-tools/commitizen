@@ -100,5 +100,8 @@ class CustomizeCommitsCz(BaseCommitizen):
 
     def info(self) -> str:
         if info_path := self.custom_settings.get("info_path"):
-            return Path(info_path).read_text(encoding=self.config.settings["encoding"])
+            path = Path(info_path)
+            if not path.is_absolute() and self.config.path is not None:
+                path = self.config.path.parent / path
+            return path.read_text(encoding=self.config.settings["encoding"])
         return self.custom_settings.get("info") or ""

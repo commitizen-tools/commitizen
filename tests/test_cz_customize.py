@@ -655,6 +655,24 @@ def test_info_with_info_path(tmp_path, monkeypatch, config_info):
     assert "Test info" in cz.info()
 
 
+def test_info_with_info_path_outside_cwd(tmp_path, monkeypatch, config_info):
+    """Regression test for resolving info_path from the config file directory."""
+    # Arrange
+    config_dir = tmp_path / "project"
+    config_dir.mkdir()
+    (config_dir / "info.txt").write_text("Test info")
+    config_info.path = config_dir / config_info.path.name
+    work_dir = tmp_path / "subdirectory"
+    work_dir.mkdir()
+    monkeypatch.chdir(work_dir)
+
+    # Act
+    info = CustomizeCommitsCz(config_info).info()
+
+    # Assert
+    assert "Test info" in info
+
+
 def test_info_without_info(config_without_info):
     cz = CustomizeCommitsCz(config_without_info)
     assert cz.info() == ""
