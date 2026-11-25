@@ -495,6 +495,25 @@ def test_check_command_cli_overrides_config_message_length_limit(
         success_mock.assert_called_once()
 
 
+def test_check_command_uses_configured_message_length_limit_when_cli_option_is_omitted(
+    config: BaseConfig, success_mock: MockType
+) -> None:
+    """Reject an oversized subject when argparse supplies no CLI override."""
+    # Arrange
+    message = "fix(scope): some commit message"
+    config.settings["message_length_limit"] = len(message) - 1
+
+    # Act
+    with pytest.raises(CommitMessageLengthExceededError):
+        commands.Check(
+            config,
+            {"message": message, "message_length_limit": None},
+        )()
+
+    # Assert
+    success_mock.assert_not_called()
+
+
 class ValidationCz(BaseCommitizen):
     def questions(self) -> list[CzQuestion]:
         return [

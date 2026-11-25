@@ -24,4 +24,6 @@ List of prefixes that commitizen ignores when verifying messages.
 Maximum length of the commit message. Setting it to `0` disables the length limit.
 
 !!! note
-    This option can be overridden by the `-l/--message-length-limit` command line argument.
+    Both `cz commit` and `cz check` use this setting when `-l/--message-length-limit`
+    is omitted. An explicit CLI value overrides the configuration. Use `-l 0` to
+    disable the limit, even when a limit is configured.

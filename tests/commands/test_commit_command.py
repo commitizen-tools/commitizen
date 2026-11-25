@@ -1,10 +1,12 @@
+from __future__ import annotations
+
 import re
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
 from unittest.mock import ANY
 
 import pytest
-from pytest_mock import MockFixture, MockType
 
 from commitizen import cli, cmd, commands
 from commitizen.cz.exceptions import CzException
@@ -20,6 +22,11 @@ from commitizen.exceptions import (
     NotAllowed,
     NothingToCommitError,
 )
+
+if TYPE_CHECKING:
+    from pytest_mock import MockFixture, MockType
+
+    from commitizen.config import BaseConfig
 
 
 @pytest.fixture
@@ -472,6 +479,26 @@ def test_commit_command_with_config_message_length_limit(
     success_mock.reset_mock()
     commands.Commit(config, {"message_length_limit": 0})()
     success_mock.assert_called_once()
+
+
+@pytest.mark.usefixtures("staging_is_clean")
+def test_commit_command_uses_configured_message_length_limit_when_cli_option_is_omitted(
+    config: BaseConfig,
+    commit_mock: MockType,
+    prompt_mock_feat: MockType,
+) -> None:
+    """Reject an oversized subject when argparse supplies no CLI override."""
+    # Arrange
+    prefix = prompt_mock_feat.return_value["prefix"]
+    subject = prompt_mock_feat.return_value["subject"]
+    config.settings["message_length_limit"] = len(f"{prefix}: {subject}") - 1
+
+    # Act
+    with pytest.raises(CommitMessageLengthExceededError):
+        commands.Commit(config, {"message_length_limit": None})()
+
+    # Assert
+    commit_mock.assert_not_called()
 
 
 @pytest.mark.usefixtures("staging_is_clean")
