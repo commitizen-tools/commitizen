@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import json
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-from commitizen.exceptions import InvalidConfigurationError
 from commitizen.git import smart_open
 
 from .base_config import BaseConfig
@@ -20,6 +19,9 @@ if TYPE_CHECKING:
 
 
 class JsonConfig(BaseConfig):
+    _parse_errors = (json.JSONDecodeError,)
+    _missing_section_errors = (KeyError,)
+
     def __init__(self, *, data: bytes | str, path: Path) -> None:
         super().__init__()
         self.path = path
@@ -48,7 +50,7 @@ class JsonConfig(BaseConfig):
             json.dump(config_doc, f, indent=2)
         return self
 
-    def _parse_setting(self, data: bytes | str) -> None:
+    def _load_document(self, data: bytes | str) -> Any:
         """We expect to have a section in .cz.json looking like
 
         ```
@@ -59,12 +61,7 @@ class JsonConfig(BaseConfig):
         }
         ```
         """
-        try:
-            doc = json.loads(data)
-        except json.JSONDecodeError as e:
-            raise InvalidConfigurationError(f"Failed to parse {self.path}: {e}")
+        return json.loads(data)
 
-        try:
-            self.settings.update(doc["commitizen"])
-        except KeyError:
-            pass
+    def _get_commitizen_section(self, doc: Any) -> Any:
+        return doc["commitizen"]

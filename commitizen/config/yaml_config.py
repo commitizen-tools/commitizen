@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import yaml
 
-from commitizen.exceptions import InvalidConfigurationError
 from commitizen.git import smart_open
 
 from .base_config import BaseConfig
@@ -21,6 +20,9 @@ if TYPE_CHECKING:
 
 
 class YAMLConfig(BaseConfig):
+    _parse_errors = (yaml.YAMLError,)
+    _missing_section_errors = (KeyError, TypeError)
+
     def __init__(self, *, data: bytes | str, path: Path) -> None:
         super().__init__()
         self.path = path
@@ -37,7 +39,7 @@ class YAMLConfig(BaseConfig):
             config_doc = yaml.load(yaml_file, Loader=yaml.FullLoader)
         return config_doc is not None and config_doc.get("commitizen") is not None
 
-    def _parse_setting(self, data: bytes | str) -> None:
+    def _load_document(self, data: bytes | str) -> Any:
         """We expect to have a section in cz.yaml looking like
 
         ```
@@ -45,15 +47,10 @@ class YAMLConfig(BaseConfig):
           name: cz_conventional_commits
         ```
         """
-        try:
-            doc = yaml.safe_load(data)
-        except yaml.YAMLError as e:
-            raise InvalidConfigurationError(f"Failed to parse {self.path}: {e}")
+        return yaml.safe_load(data)
 
-        try:
-            self.settings.update(doc["commitizen"])
-        except (KeyError, TypeError):
-            pass
+    def _get_commitizen_section(self, doc: Any) -> Any:
+        return doc["commitizen"]
 
     def set_key(self, key: str, value: object) -> Self:
         with self.path.open("rb") as yaml_file:

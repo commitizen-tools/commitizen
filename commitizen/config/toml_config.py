@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from tomlkit import TOMLDocument, exceptions, parse, table
-
-from commitizen.exceptions import InvalidConfigurationError
 
 from .base_config import BaseConfig
 
@@ -20,6 +18,9 @@ if TYPE_CHECKING:
 
 
 class TomlConfig(BaseConfig):
+    _parse_errors = (exceptions.ParseError,)
+    _missing_section_errors = (exceptions.NonExistentKey,)
+
     def __init__(self, *, data: bytes | str, path: Path) -> None:
         super().__init__()
         self.path = path
@@ -51,7 +52,7 @@ class TomlConfig(BaseConfig):
 
         return self
 
-    def _parse_setting(self, data: bytes | str) -> None:
+    def _load_document(self, data: bytes | str) -> Any:
         """We expect to have a section in pyproject looking like
 
         ```
@@ -59,12 +60,7 @@ class TomlConfig(BaseConfig):
         name = "cz_conventional_commits"
         ```
         """
-        try:
-            doc = parse(data)
-        except exceptions.ParseError as e:
-            raise InvalidConfigurationError(f"Failed to parse {self.path}: {e}")
+        return parse(data)
 
-        try:
-            self.settings.update(doc["tool"]["commitizen"])  # type: ignore[index,typeddict-item] # TODO: fix this
-        except exceptions.NonExistentKey:
-            pass
+    def _get_commitizen_section(self, doc: Any) -> Any:
+        return doc["tool"]["commitizen"]
