@@ -326,34 +326,7 @@ class Bump:
         changelog_file_name = None
         dry_run = self.arguments["dry_run"]
         if self.changelog_flag:
-            changelog_args = {
-                "unreleased_version": new_tag_version,
-                "template": self.template,
-                "extras": self.extras,
-                "incremental": True,
-                "dry_run": dry_run,
-                # governs logic for merge_prerelease
-                "during_version_bump": self.arguments["prerelease"] is None,
-            }
-            if self.changelog_to_stdout:
-                try:
-                    Changelog(
-                        self.config,
-                        {**changelog_args, "dry_run": True},  # type: ignore[typeddict-item]
-                    )()
-                except DryRunExit:
-                    pass
-
-            changelog_cmd = Changelog(
-                self.config,
-                {
-                    **changelog_args,  # type: ignore[typeddict-item]
-                    "file_name": self.file_name,
-                    "allow_no_commit": bool(self.arguments["allow_no_commit"]),
-                },
-            )
-            changelog_cmd()
-            changelog_file_name = changelog_cmd.file_name
+            changelog_file_name = self._update_changelog(new_tag_version, dry_run)
             updated_files.append(changelog_file_name)
 
         # Do not perform operations over files or git.
@@ -455,6 +428,36 @@ class Bump:
             out.diagnostic("Done!")
         else:
             out.success("Done!")
+
+    def _update_changelog(self, new_tag_version: str, dry_run: bool) -> str:
+        """Generate the changelog for the new version and return its file name."""
+        changelog_args = {
+            "unreleased_version": new_tag_version,
+            "template": self.template,
+            "extras": self.extras,
+            "incremental": True,
+            "dry_run": dry_run,
+            # governs logic for merge_prerelease
+            "during_version_bump": self.arguments["prerelease"] is None,
+        }
+        if self.changelog_to_stdout:
+            try:
+                Changelog(
+                    self.config,
+                    {**changelog_args, "dry_run": True},  # type: ignore[typeddict-item]
+                )()
+            except DryRunExit:
+                pass
+        changelog_cmd = Changelog(
+            self.config,
+            {
+                **changelog_args,  # type: ignore[typeddict-item]
+                "file_name": self.file_name,
+                "allow_no_commit": bool(self.arguments["allow_no_commit"]),
+            },
+        )
+        changelog_cmd()
+        return changelog_cmd.file_name
 
     @staticmethod
     def _is_not_eligible_for_bump(
