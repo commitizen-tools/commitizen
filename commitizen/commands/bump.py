@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, cast
 
 import questionary
 
-from commitizen import bump, factory, git, hooks, out
+from commitizen import bump, cmd, factory, git, hooks, out
 from commitizen.changelog_formats import get_changelog_format
 from commitizen.commands.changelog import Changelog
 from commitizen.defaults import Settings
@@ -289,7 +289,9 @@ class Bump:
 
         new_tag_version = rules.normalize_tag(new_version)
         if next_version_to_stdout:
-            if increment is None and new_tag_version == current_tag_version:
+            if self._is_not_eligible_for_bump(
+                increment, new_tag_version, current_tag_version
+            ):
                 raise NoneIncrementExit(
                     "[NO_COMMITS_TO_BUMP]\n"
                     "The commits found are not eligible to be bumped"
@@ -313,7 +315,9 @@ class Bump:
         else:
             out.write(information)
 
-        if increment is None and new_tag_version == current_tag_version:
+        if self._is_not_eligible_for_bump(
+            increment, new_tag_version, current_tag_version
+        ):
             raise NoneIncrementExit(
                 "[NO_COMMITS_TO_BUMP]\nThe commits found are not eligible to be bumped"
             )
@@ -395,7 +399,7 @@ class Bump:
         # FIXME: check if any changes have been staged
         git.add(*updated_files)
         commit_result = git.commit(message, args=self._get_commit_args())
-        if self.retry and commit_result.return_code != 0 and self.changelog_flag:
+        if self._should_retry_commit(commit_result):
             # Maybe pre-commit reformatted some files? Retry once
             logger.debug("1st git.commit error: %s", commit_result.err)
             logger.info("1st commit attempt failed; retrying once")
@@ -451,6 +455,24 @@ class Bump:
             out.diagnostic("Done!")
         else:
             out.success("Done!")
+
+    @staticmethod
+    def _is_not_eligible_for_bump(
+        increment: Increment | None,
+        new_tag_version: str,
+        current_tag_version: str,
+    ) -> bool:
+        """No increment was detected and the tag would not change."""
+        return increment is None and new_tag_version == current_tag_version
+
+    def _should_retry_commit(self, commit_result: cmd.Command) -> bool:
+        """Retry once if the commit failed and a changelog was generated.
+
+        A pre-commit hook may have reformatted the changelog, so a second
+        attempt can succeed.
+        """
+        commit_failed = commit_result.return_code != 0
+        return self.retry and commit_failed and self.changelog_flag
 
     def _get_commit_args(self) -> list[str]:
         commit_args = ["-a"]
