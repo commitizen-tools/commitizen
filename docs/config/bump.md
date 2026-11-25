@@ -126,6 +126,17 @@ prerelease_offset = 1
 !!! note
     Under some circumstances, a prerelease cannot start with `0`-for example, in embedded projects where individual characters are encoded as bytes. You can specify an offset from which to start counting.
 
+## `retry_bump_after_failure`
+
+When set to `true`, `cz bump` is equivalent to `cz bump --retry`. If the bump commit fails the first time (for example because a pre-commit hook reformatted a file), it is retried once. The retry only happens when the changelog is also updated (`--changelog` or `update_changelog_on_bump = true`).
+
+If not specified, defaults to `false`.
+
+```toml title="pyproject.toml"
+[tool.commitizen]
+retry_bump_after_failure = true
+```
+
 ## `tag_format`
 
 See [`--tag-format`](../commands/bump.md#-tag-format).
