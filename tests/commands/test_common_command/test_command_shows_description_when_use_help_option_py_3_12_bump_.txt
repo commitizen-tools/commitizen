@@ -12,7 +12,7 @@ usage: cz bump [-h] [--dry-run] [--files-only] [--version-files-only]
                [--version-scheme {pep440,semver,semver2}]
                [--version-type {pep440,semver,semver2}]
                [--build-metadata BUILD_METADATA] [--get-next]
-               [--allow-no-commit]
+               [--allow-no-commit] [--allow-dirty | --no-allow-dirty]
                [MANUAL_VERSION]
 
 Bump semantic version based on the git log
@@ -85,3 +85,8 @@ options:
                         Add additional build-metadata to the version-number.
   --get-next            Determine the next version and write to stdout.
   --allow-no-commit     Bump version without eligible commits.
+  --allow-dirty, --no-allow-dirty
+                        Allow bumping when tracked files have uncommitted
+                        changes, which get included in the bump commit
+                        (default: allowed). Use --no-allow-dirty to abort
+                        instead.

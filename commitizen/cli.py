@@ -382,6 +382,16 @@ data = {
                         "help": "Bump version without eligible commits.",
                         "action": "store_true",
                     },
+                    {
+                        "name": ["--allow-dirty"],
+                        "action": argparse.BooleanOptionalAction,
+                        "default": None,
+                        "help": (
+                            "Allow bumping when tracked files have uncommitted changes, "
+                            "which get included in the bump commit (default: allowed). "
+                            "Use --no-allow-dirty to abort instead."
+                        ),
+                    },
                 ],
             },
             {
