@@ -12,6 +12,7 @@ from tests.utils import UtilFixture
         "changelog",
         "check",
         "commit",
+        "dump-config",
         "example",
         "info",
         "init",
