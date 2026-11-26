@@ -40,6 +40,7 @@ class ExitCode(IntEnum):
     CONFIG_FILE_NOT_FOUND = 30
     CONFIG_FILE_IS_EMPTY = 31
     COMMIT_MESSAGE_LENGTH_LIMIT_EXCEEDED = 32
+    CHANGELOG_WRITE_FAILED = 33
 
     @classmethod
     def from_str(cls, value: str) -> ExitCode:
@@ -224,6 +225,12 @@ class GitCommandError(CommitizenException):
     """Unexpected failure while calling a git command"""
 
     exit_code = ExitCode.GIT_COMMAND_ERROR
+
+
+class UnableToWriteChangelog(CommitizenException):
+    """The changelog file could not be written"""
+
+    exit_code = ExitCode.CHANGELOG_WRITE_FAILED
 
 
 class InvalidManualVersion(CommitizenException):

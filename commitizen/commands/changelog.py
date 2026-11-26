@@ -15,6 +15,7 @@ from commitizen.exceptions import (
     NoRevisionError,
     NotAGitProjectError,
     NotAllowed,
+    UnableToWriteChangelog,
 )
 from commitizen.git import GitTag, smart_open
 from commitizen.tags import TagRules
@@ -163,9 +164,16 @@ class Changelog:
     def _write_changelog(
         self, changelog_out: str, lines: list[str], changelog_meta: changelog.Metadata
     ) -> None:
-        with smart_open(
-            self.file_name, "w", encoding=self.config.settings["encoding"]
-        ) as changelog_file:
+        try:
+            changelog_handle = smart_open(
+                self.file_name, "w", encoding=self.config.settings["encoding"]
+            )
+        except OSError as error:
+            raise UnableToWriteChangelog(
+                f"Unable to write the changelog file '{self.file_name}': {error}"
+            ) from error
+
+        with changelog_handle as changelog_file:
             partial_changelog: str | None = None
             if self.incremental:
                 new_lines = changelog.incremental_build(

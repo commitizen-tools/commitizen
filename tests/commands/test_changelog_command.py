@@ -6,6 +6,7 @@ from textwrap import dedent
 from typing import TYPE_CHECKING
 
 import pytest
+from unittest.mock import Mock
 from jinja2 import FileSystemLoader
 
 from commitizen import git
@@ -18,6 +19,7 @@ from commitizen.exceptions import (
     NoRevisionError,
     NotAGitProjectError,
     NotAllowed,
+    UnableToWriteChangelog,
 )
 
 if TYPE_CHECKING:
@@ -183,6 +185,36 @@ def test_changelog_replacing_unreleased_using_incremental(
 
 @pytest.mark.usefixtures("tmp_commitizen_project")
 @pytest.mark.freeze_time("2022-08-14")
+@pytest.mark.usefixtures("in_repo_root")
+def test_changelog_unwritable_file(tmp_path: Path):
+    blocker = tmp_path / "blocker"
+    blocker.write_text("not a directory", encoding="utf-8")
+
+    mock_config = Mock()
+    mock_path = Mock(spec=Path)
+    mock_path.parent = tmp_path
+    mock_config.path = mock_path
+    mock_config.settings = {
+        "name": "cz_conventional_commits",
+        "changelog_file": "CHANGELOG.md",
+        "encoding": "utf-8",
+        "tag_format": "$version",
+        "legacy_tag_formats": [],
+        "ignored_tag_formats": [],
+        "incremental": False,
+        "changelog_merge_prerelease": False,
+    }
+    changelog = Changelog(
+        mock_config,
+        {"file_name": str(blocker / "CHANGELOG.md"), "unreleased_version": "1.0.1"},
+    )
+
+    with pytest.raises(UnableToWriteChangelog) as error:
+        changelog._write_changelog("changelog body", [], Mock())
+
+    assert "Unable to write the changelog file" in str(error.value)
+
+
 def test_changelog_is_persisted_using_incremental(
     changelog_path: Path,
     file_regression: FileRegressionFixture,
