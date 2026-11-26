@@ -382,6 +382,12 @@ data = {
                         "help": "Bump version without eligible commits.",
                         "action": "store_true",
                     },
+                    {
+                        "name": ["--no-commit"],
+                        "default": False,
+                        "help": "Do not create the bump commit; tag the current HEAD and leave the updated files uncommitted.",
+                        "action": "store_true",
+                    },
                 ],
             },
             {
