@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import re
 from enum import Enum
 from functools import lru_cache
 from pathlib import Path
@@ -12,6 +13,12 @@ from commitizen.exceptions import GitCommandError
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
+
+
+_SIGNED_OFF_BY_PATTERN = re.compile(
+    r"^Signed-off-by:\s*(?P<name>.+?)\s*<(?P<email>[^>]+)>\s*$",
+    re.MULTILINE | re.IGNORECASE,
+)
 
 
 class EOLType(Enum):
@@ -77,6 +84,18 @@ class GitCommit(GitObject):
     @property
     def message(self) -> str:
         return f"{self.title}\n\n{self.body}".strip()
+
+    @property
+    def signed_off_by(self) -> tuple[str, str] | None:
+        """Get the first `Signed-off-by` trailer of the commit body.
+
+        Returns:
+            `(name, email)` tuple, or `None` when the body has no trailer.
+        """
+        match = _SIGNED_OFF_BY_PATTERN.search(self.body)
+        if match is None:
+            return None
+        return match.group("name"), match.group("email")
 
     @classmethod
     def from_rev_and_commit(cls, rev_and_commit: str) -> GitCommit:

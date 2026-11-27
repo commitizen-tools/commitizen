@@ -101,6 +101,50 @@ def test_git_message_with_empty_body():
     assert commit.message == commit_title
 
 
+@pytest.mark.parametrize(
+    ("body", "expected"),
+    [
+        pytest.param(
+            "Some body\n\nSigned-off-by: test <test@mail.com>",
+            ("test", "test@mail.com"),
+            id="one-trailer",
+        ),
+        pytest.param(
+            "signed-off-by: test <test@mail.com>",
+            ("test", "test@mail.com"),
+            id="lowercase-key",
+        ),
+        pytest.param("Some body without trailer", None, id="no-trailer"),
+        pytest.param("", None, id="empty-body"),
+    ],
+)
+def test_git_commit_signed_off_by(body: str, expected: tuple[str, str] | None):
+    """Read the first `Signed-off-by` trailer from the commit body."""
+    # Arrange
+    commit = git.GitCommit("test_rev", "feat: title", body=body)
+
+    # Act
+    result = commit.signed_off_by
+
+    # Assert
+    assert result == expected
+
+
+@pytest.mark.usefixtures("tmp_commitizen_project")
+def test_get_commits_signed_off_by(util: UtilFixture):
+    """`git log` keeps the trailer in the body, so `signed_off_by` can read it."""
+    # Arrange
+    util.create_file_and_commit(
+        "feat: signed commit\n\nSigned-off-by: test <test@mail.com>"
+    )
+
+    # Act
+    commit = git.get_commits()[0]
+
+    # Assert
+    assert commit.signed_off_by == ("test", "test@mail.com")
+
+
 @pytest.mark.usefixtures("tmp_commitizen_project")
 def test_get_log_as_str_list_empty():
     """

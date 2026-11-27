@@ -44,6 +44,7 @@ class ChangelogArgs(TypedDict, total=False):
     export_template: str
     during_version_bump: bool | None
     allow_no_commit: bool | None  # Internal-only when invoked by bump.
+    add_author: str | None
 
 
 class Changelog:
@@ -127,6 +128,8 @@ class Changelog:
         self.during_version_bump: bool = arguments.get("during_version_bump") or False
         # Internal flag used when changelog is invoked from `cz bump --allow-no-commit`.
         self.allow_no_commit: bool = bool(arguments.get("allow_no_commit"))
+        add_author = arguments.get("add_author")
+        self.author_source = changelog.AuthorSource(add_author) if add_author else None
 
     def _find_incremental_rev(self, latest_version: str, tags: Iterable[GitTag]) -> str:
         """Try to find the 'start_rev'.
@@ -277,6 +280,7 @@ class Changelog:
             changelog_release_hook=self.cz.changelog_release_hook,
             rules=self.tag_rules,
             during_version_bump=self.during_version_bump,
+            author_source=self.author_source,
         )
         if self.change_type_order:
             tree = changelog.generate_ordered_changelog_tree(
